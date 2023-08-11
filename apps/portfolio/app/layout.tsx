@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { Noto_Sans_JP } from "next/font/google";
 
 import "./globals.css";
@@ -9,6 +10,12 @@ const notoSansJP = Noto_Sans_JP({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-noto-sans-jp",
 });
+
+export const metadata: Metadata = {
+  title: "K2.B.G. Technology",
+  description: "K2.B.G. Technologyが提供できる価値を紹介いたします。",
+};
+
 export default function RootLayout({
   children,
 }: {
