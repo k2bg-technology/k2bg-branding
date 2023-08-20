@@ -1,0 +1,30 @@
+/* ---------- DESIGN SYSTEM ----------  */
+
+/* :warning: 1rem is 10px. defined 62.5% in html font size. */
+
+:root {
+  /* ----- TYPOGRAPHY ----- */
+
+  /* font sizes */
+  --advert: 8rem;
+  --slogan-lg: 7.2rem;
+  --slogan-sm: 6.4rem;
+  --header-lg: 4.8rem;
+  --header-sm: 4rem;
+  --heading-1: 4.5rem;
+  --heading-2: 3.5rem;
+  --heading-3: 2.5rem;
+  --heading-4: 2.0rem;
+  --heading-5: 1.8rem;
+  --heading-6: 1.6rem;
+  --body-lg: 1.8rem;
+  --body-md: 1.6rem;
+  --body-sm: 1.4rem;
+  --caption: 1.2rem;
+  --button-lg: 1.6rem;
+  --button-md: 1.4rem;
+  --button-sm: 1.2rem;
+
+  /* font leading */
+  --leading-rate: 1.7;
+}
