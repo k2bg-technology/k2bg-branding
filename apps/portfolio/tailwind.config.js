@@ -37,7 +37,7 @@ module.exports = {
         "button-sm": "var(--button-sm)",
       },
       textColor: {
-        "color-base": "var(--color-base-8)",
+        "color-base": "rgb(var(--color-base-8) / <alpha-value>)",
       },
       lineHeight: {
         advert: "calc(var(--advert)*var(--leading-rate))",
@@ -60,12 +60,12 @@ module.exports = {
         "button-sm": "calc(var(--button-sm)*var(--leading-rate))",
       },
       colors: {
-        main: "var(--color-main)",
-        "main-light": "var(--color-main-light)",
-        "main-dark": "var(--color-main-dark)",
-        accent: "var(--color-accent)",
-        "accent-light": "var(--color-accent-light)",
-        "accent-dark": "var(--color-accent-dark)",
+        main: "rgb(var(--color-main) / <alpha-value>)",
+        "main-light": "rgb(var(--color-main-light) / <alpha-value>)",
+        "main-dark": "rgb(var(--color-main-dark) / <alpha-value>)",
+        accent: "rgb(var(--color-accent) / <alpha-value>)",
+        "accent-light": "rgb(var(--color-accent-light) / <alpha-value>)",
+        "accent-dark": "rgb(var(--color-accent-dark) / <alpha-value>)",
       },
     },
   },

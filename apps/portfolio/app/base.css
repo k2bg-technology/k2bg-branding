@@ -31,26 +31,26 @@
   /* ----- COLORS ----- */
 
   /* main */
-  --color-main: #219ebc;
-  --color-main-light: #8ecae6;
-  --color-main-dark: #023047;
+  --color-main: 33 158 188;
+  --color-main-light: 142 202 230;
+  --color-main-dark: 2 48 71;
 
   /* accent */
-  --color-accent: #dda15e;
-  --color-accent-light: #fefae0;
-  --color-accent-dark: #bc6c25;
+  --color-accent: 221 161 94;
+  --color-accent-light: 254 250 224;
+  --color-accent-dark: 188 108 37;
 
   /* base */
-  --color-base-0: #f8f9fa;
-  --color-base-1: #f1f3f5;
-  --color-base-2: #e9ecef;
-  --color-base-3: #dee2e6;
-  --color-base-4: #ced4da;
-  --color-base-5: #adb5bd;
-  --color-base-6: #868e96;
-  --color-base-7: #495057;
-  --color-base-8: #343a40;
-  --color-base-9: #212529;
+  --color-base-0: 248 249 250;
+  --color-base-1: 241 243 245;
+  --color-base-2: 233 236 239;
+  --color-base-3: 222 226 230;
+  --color-base-4: 206 212 218;
+  --color-base-5: 173 181 189;
+  --color-base-6: 134 142 150;
+  --color-base-7: 73 80 87;
+  --color-base-8: 52 58 64;
+  --color-base-9: 33 37 41;
 
   /* hover */
   --hover: rgba(0, 0, 0, 0.075);
