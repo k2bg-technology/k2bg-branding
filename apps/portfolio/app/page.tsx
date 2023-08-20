@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import Icon from "./components/icon";
 
 export default function Page() {
@@ -6,31 +8,49 @@ export default function Page() {
       <main>
         {/* HERO */}
         <section>
-          <div>
-            <hgroup>
-              <h1>K2. B. G. Technology</h1>
-              <p>KK Bit Growth Technology</p>
+          <div className="h-full">
+            <figure className="relative w-full h-[30rem]">
+              <Image
+                src="/hero.jpg"
+                fill={true}
+                alt="Hero Image"
+                className="object-contain"
+              />
+            </figure>
+            <div>
+              <hgroup>
+                <h1>K2. B. G. Technology</h1>
+                <p>KK Bit Growth Technology</p>
+                <p>
+                  <strong>ITの力でビジネスのスケールアップを実現します</strong>
+                </p>
+              </hgroup>
               <p>
-                <strong>ITの力でビジネスのスケールアップを実現します</strong>
+                現代のビジネスは、ITとデジタル技術の活用が不可欠になっています。しかし、ITの進歩は急速で、その効果的な利用は専門知識を必要とし、難易度が高いものとなっています。
               </p>
-            </hgroup>
-            <p>
-              現代のビジネスは、ITとデジタル技術の活用が不可欠になっています。しかし、ITの進歩は急速で、その効果的な利用は専門知識を必要とし、難易度が高いものとなっています。
-            </p>
-            <p>
-              私自身、非IT業界からスタートアップまで、幅広い業界での経験を通じて、伝統的なビジネスプロセスからITを活用した効率的なプロセスへの移行の難しさを感じてきました。しかし、一方で、ITを導入することでビジネスの生産性を向上させ、自由度を高め、リスクを回避できるというメリットを体感してきました。
-            </p>
-            <p>
-              その経験を活かし、IT化を推進して業務のプロセスを改善したい企業様の
-              「<em>アプリケーション開発</em>」「<em>データ分析</em>」「
-              <em>DXの推進</em>」
-              を支援し、良きパートナーとして共に成長することこそが、提供できる最大の価値だと考えております。
-            </p>
+              <p>
+                私自身、非IT業界からスタートアップまで、幅広い業界での経験を通じて、伝統的なビジネスプロセスからITを活用した効率的なプロセスへの移行の難しさを感じてきました。しかし、一方で、ITを導入することでビジネスの生産性を向上させ、自由度を高め、リスクを回避できるというメリットを体感してきました。
+              </p>
+              <p>
+                その経験を活かし、IT化を推進して業務のプロセスを改善したい企業様の
+                「<em>アプリケーション開発</em>」「<em>データ分析</em>」「
+                <em>DXの推進</em>」
+                を支援し、良きパートナーとして共に成長することこそが、提供できる最大の価値だと考えております。
+              </p>
+            </div>
           </div>
         </section>
         <hr /> {/* TODO: DELETE SEPARATOR */}
         {/* BACKGROUND */}
         <section>
+          <figure className="relative w-full h-[30rem]">
+            <Image
+              src="/background-pattern.jpg"
+              fill={true}
+              alt="Background Pattern Image"
+              className="object-contain"
+            />
+          </figure>
           <div>
             <h2>経歴</h2>
             <p>情報理工学専攻 学部卒。</p>
@@ -56,6 +76,14 @@ export default function Page() {
         <hr /> {/* TODO: DELETE SEPARATOR */}
         {/* SKILL */}
         <section>
+          <figure className="relative w-full h-[30rem]">
+            <Image
+              src="/skill-pattern.jpg"
+              fill={true}
+              alt="Skill Pattern Image"
+              className="object-contain"
+            />
+          </figure>
           <div>
             <h2>スキル</h2>
             <h3>プログラミング・フレームワーク</h3>
@@ -126,6 +154,14 @@ export default function Page() {
           {/* GALLERY */}
           <div>
             <article>
+              <figure className="relative w-full h-[30rem]">
+                <Image
+                  src="/stock.jpg"
+                  fill={true}
+                  alt="Stock Image"
+                  className="object-contain"
+                />
+              </figure>
               <h3>Webアプリ開発</h3>
               <h4>使用技術</h4>
               <p>
@@ -138,6 +174,14 @@ export default function Page() {
               </p>
             </article>
             <article>
+              <figure className="relative w-full h-[30rem]">
+                <Image
+                  src="/mobile.jpg"
+                  fill={true}
+                  alt="Mobile Image"
+                  className="object-contain"
+                />
+              </figure>
               <h3>モバイルアプリ開発</h3>
               <h4>使用技術</h4>
               <p>Node.js、Typescript、React Native、Golang、Mysql、Docker</p>
@@ -147,6 +191,14 @@ export default function Page() {
               </p>
             </article>
             <article>
+              <figure className="relative w-full h-[30rem]">
+                <Image
+                  src="/web.jpg"
+                  fill={true}
+                  alt="Web Image"
+                  className="object-contain"
+                />
+              </figure>
               <h3>Webスクレイピング</h3>
               <h4>使用技術</h4>
               <p>Python、Scrapy、Selenium、Docker、Bigquery</p>
@@ -156,6 +208,14 @@ export default function Page() {
               </p>
             </article>
             <article>
+              <figure className="relative w-full h-[30rem]">
+                <Image
+                  src="/blog.jpg"
+                  fill={true}
+                  alt="Blog Image"
+                  className="object-contain"
+                />
+              </figure>
               <h3>WordPressブログ運営</h3>
               <h4>使用技術</h4>
               <p>
@@ -172,6 +232,14 @@ export default function Page() {
         <hr /> {/* TODO: DELETE SEPARATOR */}
         {/* CONTACT */}
         <section>
+          <figure className="relative w-full h-[30rem]">
+            <Image
+              src="/contact-pattern.jpg"
+              fill={true}
+              alt="Contact Pattern Image"
+              className="object-contain"
+            />
+          </figure>
           <div>
             <h2>お問い合わせ</h2>
             <p>
