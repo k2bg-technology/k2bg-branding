@@ -1,3 +1,5 @@
+import Icon from "./components/icon";
+
 export default function Page() {
   return (
     <>
@@ -72,18 +74,42 @@ export default function Page() {
           </div>
           <div>
             <ul>
-              <li>typescript logo</li>
-              <li>python logo</li>
-              <li>golang logo</li>
-              <li>react logo</li>
-              <li>figma logo</li>
-              <li>wordpress logo</li>
-              <li>jupyter logo</li>
-              <li>tensorflow logo</li>
-              <li>aws logo</li>
-              <li>google cloud logo</li>
-              <li>docker logo</li>
-              <li>circleci logo</li>
+              <li>
+                <Icon name="typescript" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="python" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="golang" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="react" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="figma" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="wordpress" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="jupyter" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="tensorflow" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="aws" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="googleCloud" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="docker" className="w-20 h-20" />
+              </li>
+              <li>
+                <Icon name="circleci" className="w-20 h-20" />
+              </li>
             </ul>
           </div>
         </section>
@@ -204,6 +230,7 @@ export default function Page() {
           <div>
             <ul>
               <li>
+                <Icon name="github" className="w-20 h-20" />
                 <a
                   href="https://github.com/stranger1989"
                   target="_blank"
@@ -213,6 +240,7 @@ export default function Page() {
                 </a>
               </li>
               <li>
+                <Icon name="x" className="w-20 h-20" />
                 <a
                   href="https://twitter.com/BykkLearn"
                   target="_blank"
