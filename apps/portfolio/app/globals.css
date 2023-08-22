@@ -6,9 +6,9 @@
 
 @layer base {
   html {
-    @apply text-[62.5%] bg-gradient-to-r from-gray-100 via-white to-gray-100;
+    @apply bg-gradient-to-r from-gray-100 via-white to-gray-100 h-full text-[62.5%];
   }
   body {
-    @apply font-original text-body-md text-color-base;
+    @apply h-full text-color-base font-original text-body-md;
   }
 }
