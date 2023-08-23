@@ -10,7 +10,7 @@ export default function Page() {
   return (
     <div className="grid absolute top-1/2 auto-rows-min gap-2 -translate-y-1/2 px-32">
       <main>
-        <div className="grid grid-flow-col auto-cols-max max-h-[60rem] overflow-hidden">
+        <div className="grid grid-flow-col auto-cols-max rounded-3xl shadow-2xl max-h-[60rem] overflow-hidden">
           <Hero />
           <Background />
           <Skill />
