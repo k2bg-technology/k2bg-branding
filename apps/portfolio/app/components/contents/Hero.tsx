@@ -1,5 +1,4 @@
-import React from "react";
-import Image from "next/image";
+import Image from 'next/image';
 
 export function Hero() {
   return (
@@ -8,7 +7,7 @@ export function Hero() {
         <div className="relative w-[35rem]">
           <Image
             src="/hero.jpg"
-            fill={true}
+            fill
             alt="Hero Image"
             className="object-cover"
           />
@@ -28,10 +27,13 @@ export function Hero() {
             私自身、非IT業界からスタートアップまで、幅広い業界での経験を通じて、伝統的なビジネスプロセスからITを活用した効率的なプロセスへの移行の難しさを感じてきました。しかし、一方で、ITを導入することでビジネスの生産性を向上させ、自由度を高め、リスクを回避できるというメリットを体感してきました。
           </p>
           <p>
-            その経験を活かし、IT化を推進して業務のプロセスを改善したい企業様の
-            「<em>アプリケーション開発</em>」「<em>データ分析</em>」「
-            <em>DXの推進</em>」
-            を支援し、良きパートナーとして共に成長することこそが、提供できる最大の価値だと考えております。
+            その経験を活かし、IT化を推進して業務のプロセスを改善したい企業様の「
+            <em>アプリケーション開発</em>
+            」「
+            <em>データ分析</em>
+            」「
+            <em>DXの推進</em>
+            」を支援し、良きパートナーとして共に成長することこそが、提供できる最大の価値だと考えております。
           </p>
         </div>
       </div>

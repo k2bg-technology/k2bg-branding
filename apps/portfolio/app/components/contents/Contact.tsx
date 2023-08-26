@@ -1,18 +1,13 @@
-import React from "react";
-import Image from "next/image";
+import Image from 'next/image';
 
-import Icon from "../icon";
+import SvgIcon from '../icon';
 
 export function Contact() {
   return (
     <section>
       <div className="relative p-20 w-[90rem] h-[60rem]">
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
-          <Image
-            src="/contact-pattern.jpg"
-            fill={true}
-            alt="Contact Pattern Image"
-          />
+          <Image src="/contact-pattern.jpg" fill alt="Contact Pattern Image" />
         </div>
         <div>
           <h2>お問い合わせ</h2>
@@ -72,7 +67,7 @@ export function Contact() {
         <div>
           <ul>
             <li>
-              <Icon name="github" className="w-20 h-20" />
+              <SvgIcon name="github" className="w-20 h-20" />
               <a
                 href="https://github.com/stranger1989"
                 target="_blank"
@@ -82,7 +77,7 @@ export function Contact() {
               </a>
             </li>
             <li>
-              <Icon name="x" className="w-20 h-20" />
+              <SvgIcon name="x" className="w-20 h-20" />
               <a
                 href="https://twitter.com/BykkLearn"
                 target="_blank"

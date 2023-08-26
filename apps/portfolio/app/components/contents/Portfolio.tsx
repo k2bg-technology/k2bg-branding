@@ -1,5 +1,4 @@
-import React from "react";
-import Image from "next/image";
+import Image from 'next/image';
 
 export function Portfolio() {
   return (
@@ -8,8 +7,7 @@ export function Portfolio() {
         <div className="p-20 w-[30rem]">
           <h2>ポートフォリオ</h2>
           <p>
-            具体的なアプリケーション開発事例を紹介致します。
-            業務で開発したものは守秘義務の観点から掲載できませんので、個人開発にて開発したものを中心に載せております。
+            具体的なアプリケーション開発事例を紹介致します。業務で開発したものは守秘義務の観点から掲載できませんので、個人開発にて開発したものを中心に載せております。
           </p>
         </div>
         <div className="grid grid-cols-4">
@@ -18,7 +16,7 @@ export function Portfolio() {
               <div className="absolute top-0 left-0 -z-10 w-full h-full">
                 <Image
                   src="/stock.jpg"
-                  fill={true}
+                  fill
                   alt="Stock Image"
                   className="object-cover"
                 />
@@ -40,7 +38,7 @@ export function Portfolio() {
               <div className="absolute top-0 left-0 -z-10 w-full h-full">
                 <Image
                   src="/mobile.jpg"
-                  fill={true}
+                  fill
                   alt="Mobile Image"
                   className="object-cover"
                 />
@@ -59,7 +57,7 @@ export function Portfolio() {
               <div className="absolute top-0 left-0 -z-10 w-full h-full">
                 <Image
                   src="/web.jpg"
-                  fill={true}
+                  fill
                   alt="Web Image"
                   className="object-cover"
                 />
@@ -78,7 +76,7 @@ export function Portfolio() {
               <div className="absolute top-0 left-0 -z-10 w-full h-full">
                 <Image
                   src="/blog.jpg"
-                  fill={true}
+                  fill
                   alt="Blog Image"
                   className="object-cover"
                 />

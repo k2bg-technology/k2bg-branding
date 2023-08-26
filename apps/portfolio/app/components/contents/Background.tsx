@@ -1,5 +1,4 @@
-import React from "react";
-import Image from "next/image";
+import Image from 'next/image';
 
 export function Background() {
   return (
@@ -8,7 +7,7 @@ export function Background() {
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
           <Image
             src="/background-pattern.jpg"
-            fill={true}
+            fill
             alt="Background Pattern Image"
           />
         </div>
@@ -18,8 +17,7 @@ export function Background() {
           初期のキャリアでは印刷メーカーにおいて、商業印刷物のデザイン・レイアウト・フォトレタッチを担当。その後、貿易商社に転職し、キッチンウェアの商品仕入れ及び販売データ分析に従事。
         </p>
         <p>
-          非IT業界での実務経験を通じて、業務効率の向上及び問題解決に対するITの可能性を痛感。この認識をもとに、Webアプリケーションエンジニアへの転身を決意。
-          以降、「ヘルスケア」「ECマーケティング」「オンラインコミュニケーション」等、多様な事業領域でのアプリケーション開発に携わる。
+          非IT業界での実務経験を通じて、業務効率の向上及び問題解決に対するITの可能性を痛感。この認識をもとに、Webアプリケーションエンジニアへの転身を決意。以降、「ヘルスケア」「ECマーケティング」「オンラインコミュニケーション」等、多様な事業領域でのアプリケーション開発に携わる。
         </p>
         <p>
           現在はフリーランスエンジニアとして、「UI・UXデザイン」と「データ分析」の専門性を強みに、IT企業向けのアプリケーション開発支援や、自身のメディアを通じた知見の発信を主軸に活動を展開している。
