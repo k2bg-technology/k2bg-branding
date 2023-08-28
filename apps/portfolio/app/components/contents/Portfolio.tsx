@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { Button } from 'ui';
 
 export function Portfolio() {
   return (
@@ -44,6 +45,7 @@ export function Portfolio() {
               <p className="text-body-sm leading-body-sm">
                 株価分析・予測アプリケーションです。株価の過去データを元に、株価の予測を行うことができます。現状は「過去の株価データの確認」と「ポートフォリオの作成」のみの機能提供ですが、今後は株価予測API機能をバックエンド側で実装し、アプリケーションで可視化できるようにしていきます。
               </p>
+              <Button>Preview</Button>
             </div>
           </article>
           <article>
