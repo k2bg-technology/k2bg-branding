@@ -38,7 +38,7 @@ interface IconProps extends SVGProps<SVGSVGElement> {
   name: keyof typeof ICONS;
 }
 
-export default function SvgIcon({ name, ...rest }: IconProps) {
+export function SvgIcon({ name, ...rest }: IconProps) {
   const Icon = ICONS[name];
 
   // eslint-disable-next-line react/jsx-props-no-spreading

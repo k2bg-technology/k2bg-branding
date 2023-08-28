@@ -1,6 +1,5 @@
 import Image from 'next/image';
-
-import SvgIcon from '../icon';
+import { SvgIcon } from 'ui';
 
 export function Contact() {
   return (
