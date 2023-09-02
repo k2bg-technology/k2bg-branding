@@ -1,5 +1,64 @@
 import Image from 'next/image';
-import { Button } from 'ui';
+import { Button, ExternalLinkButton, Dialog } from 'ui';
+
+import { PORTFOLIO_DATA } from '../../data/portfolio-data';
+
+interface DocumentProps {
+  title: string;
+  techStack: string;
+  overview: string;
+  backgroundImage: string;
+  siteLink?: { buttonText: string; url: string }[];
+  preview?: { buttonText: string; onClick?: () => void; video?: string };
+}
+
+function Document(props: DocumentProps) {
+  const { title, techStack, overview, backgroundImage, siteLink, preview } =
+    props;
+
+  return (
+    <div className="flex relative flex-col gap-5 p-20 w-[60rem] h-full">
+      <div className="absolute top-0 left-0 -z-10 w-full h-full">
+        <Image
+          src={backgroundImage}
+          fill
+          alt="Stock Image"
+          className="object-cover brightness-50"
+        />
+      </div>
+      <h3 className="text-heading-3 leading-heading-3 font-bold">{title}</h3>
+      <h4 className="text-heading-4 leading-heading-4 font-bold">使用技術</h4>
+      <p className="text-body-sm leading-body-sm whitespace-pre-line">
+        {techStack}
+      </p>
+      <h4 className="text-heading-4 leading-heading-4 font-bold">概要</h4>
+      <p className="text-body-sm leading-body-sm  whitespace-pre-line">
+        {overview}
+      </p>
+      <Dialog
+        trigger={<Button>{preview?.buttonText}</Button>}
+        content={
+          <div className="flex justify-center items-center w-full h-full">
+            <video
+              controls
+              muted
+              autoPlay
+              className="max-h-full object-contain aspect-video"
+            >
+              <source src={preview?.video} type="video/mp4" />
+              <p>Your browser support HTML5 video.</p>
+            </video>
+          </div>
+        }
+      />
+      {siteLink?.map((site) => (
+        <ExternalLinkButton key={site.url} href={site.url} target="_blank">
+          {site.buttonText}
+        </ExternalLinkButton>
+      ))}
+    </div>
+  );
+}
 
 export function Portfolio() {
   return (
@@ -9,7 +68,7 @@ export function Portfolio() {
           <h2 className="text-heading-2 leading-heading-2 font-bold">
             ポートフォリオ
           </h2>
-          <div>
+          <div className="flex flex-col justify-center gap-5">
             <p className="text-body-sm leading-body-sm">
               具体的なアプリケーション開発事例を紹介致します。
             </p>
@@ -19,117 +78,12 @@ export function Portfolio() {
           </div>
         </div>
         <div className="grid grid-cols-4 text-white">
-          <article>
-            <div className="flex relative flex-col gap-5 p-20 w-[50rem] h-full">
-              <div className="absolute top-0 left-0 -z-10 w-full h-full">
-                <Image
-                  src="/stock.jpg"
-                  fill
-                  alt="Stock Image"
-                  className="object-cover brightness-50"
-                />
-              </div>
-              <h3 className="text-heading-3 leading-heading-3 font-bold">
-                Webアプリ開発
-              </h3>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                使用技術
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                Node.js、Typescript、React、Next.js、Python、FastAPI、Jupyter
-                Notebook
-              </p>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                概要
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                株価分析・予測アプリケーションです。株価の過去データを元に、株価の予測を行うことができます。現状は「過去の株価データの確認」と「ポートフォリオの作成」のみの機能提供ですが、今後は株価予測API機能をバックエンド側で実装し、アプリケーションで可視化できるようにしていきます。
-              </p>
-              <Button>Preview</Button>
-            </div>
-          </article>
-          <article>
-            <div className="flex relative flex-col gap-5 p-20 w-[50rem] h-full">
-              <div className="absolute top-0 left-0 -z-10 w-full h-full">
-                <Image
-                  src="/mobile.jpg"
-                  fill
-                  alt="Mobile Image"
-                  className="object-cover brightness-50"
-                />
-              </div>
-              <h3 className="text-heading-3 leading-heading-3 font-bold">
-                モバイルアプリ開発
-              </h3>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                使用技術
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                Node.js、Typescript、React Native、Golang、Mysql、Docker
-              </p>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                概要
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                商品仕入れ管理用のアプリケーションです。商品原価・商品在庫などをモバイルから手軽に入力・確認できるようになっています。仕入れや検品などのフィールドワーク時に、いちいちPCを開いて商品情報をExcelで確認・入力・管理することの不便さを解決するために開発致しました。
-              </p>
-            </div>
-          </article>
-          <article>
-            <div className="flex relative flex-col gap-5 p-20 w-[50rem] h-full">
-              <div className="absolute top-0 left-0 -z-10 w-full h-full">
-                <Image
-                  src="/web.jpg"
-                  fill
-                  alt="Web Image"
-                  className="object-cover brightness-50"
-                />
-              </div>
-              <h3 className="text-heading-3 leading-heading-3 font-bold">
-                Webスクレイピング
-              </h3>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                使用技術
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                Python、Scrapy、Selenium、Docker、Bigquery
-              </p>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                概要
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                多くのデータを保有することが資産と呼べる時代に、豊富なデータが存在するWebから情報を得ることは必須だと考えます。クローリングフレームワークScrapyを活用して、静的・動的（SPAなどのJS）ページ問わず情報収集できる、かつPipelineを通して、CSVやBigqueryなどにデータを流し込めるスニペットを開発致しました。
-              </p>
-            </div>
-          </article>
-          <article>
-            <div className="flex relative flex-col gap-5 p-20 w-[50rem] h-full">
-              <div className="absolute top-0 left-0 -z-10 w-full h-full">
-                <Image
-                  src="/blog.jpg"
-                  fill
-                  alt="Blog Image"
-                  className="object-cover brightness-50"
-                />
-              </div>
-              <h3 className="text-heading-3 leading-heading-3 font-bold">
-                WordPressブログ運営
-              </h3>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                使用技術
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                HTML、CSS（SASS）、Javascript、PHP、Mysql、Wordpress、Google
-                Analytics、Google AdSense
-              </p>
-              <h4 className="text-heading-4 leading-heading-4 font-bold">
-                概要
-              </h4>
-              <p className="text-body-sm leading-body-sm">
-                プログラミング・マーケティング・デザイン・ファイナンス・海外などのテーマのコンテンツ記事をwordpressを使用し自分の経験に基づいて作成しております。
-              </p>
-            </div>
-          </article>
+          {PORTFOLIO_DATA.map(({ key, ...rest }) => (
+            <article key={key}>
+              {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+              <Document {...rest} />
+            </article>
+          ))}
         </div>
       </div>
     </section>
