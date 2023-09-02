@@ -2,11 +2,11 @@ module.exports = {
   extends: [
     'next',
     'turbo',
-    'prettier',
     'airbnb',
     'airbnb/hooks',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
+    'prettier',
   ],
   plugins: ['react', '@typescript-eslint', 'import'],
   parser: '@typescript-eslint/parser',
@@ -19,6 +19,8 @@ module.exports = {
     'max-len': 'off',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
+    'react/require-default-props': 'off',
+    'react/jsx-wrap-multilines': ['error', { prop: false }],
     'import/order': [
       'error',
       {

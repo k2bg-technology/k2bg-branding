@@ -33,11 +33,11 @@ export function Hero() {
             </p>
             <p className="text-body-sm leading-body-sm">
               その経験を活かし、IT化を推進して業務のプロセスを改善したい企業様の「
-              <em>アプリケーション開発</em>
+              <span className="font-bold">アプリケーション開発</span>
               」「
-              <em>データ分析</em>
+              <span className="font-bold">データ分析</span>
               」「
-              <em>DXの推進</em>
+              <span className="font-bold">DXの推進</span>
               」を支援し、良きパートナーとして共に成長することこそが、提供できる最大の価値だと考えております。
             </p>
           </div>
