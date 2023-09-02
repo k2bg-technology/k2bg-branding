@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { SvgIcon } from 'ui';
+import { InputButton, SvgIcon } from 'ui';
 
 export function Contact() {
   return (
@@ -8,7 +8,7 @@ export function Contact() {
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
           <Image src="/contact-pattern.jpg" fill alt="Contact Pattern Image" />
         </div>
-        <div className="flex flex-col justify-center gap-5 p-20 w-[50rem] text-white h-full">
+        <div className="flex flex-col justify-center gap-5 p-20 w-[60rem] text-white h-full">
           <h2 className="text-heading-2 leading-heading-2 font-bold">
             お問い合わせ
           </h2>
@@ -21,14 +21,14 @@ export function Contact() {
             案件によってはお受けするのが難しい場合もございますので、適宜ご相談いただけると幸いです。
           </p>
         </div>
-        <div className="p-20 h-full">
+        <div className="p-20 w-[60rem] h-full">
           <form
             method="post"
             action="https://formspree.io/f/mjvjargb"
             className="flex flex-col justify-center gap-16 h-full"
           >
             <div className="flex gap-10">
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 w-full">
                 <label
                   className="text-body-sm leading-body-sm text-white font-bold"
                   htmlFor="name"
@@ -41,10 +41,10 @@ export function Contact() {
                   id="name"
                   placeholder="Yamada Taro"
                   required
-                  className="text-body-sm leading-body-sm"
+                  className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 w-full">
                 <label
                   className="text-body-sm leading-body-sm text-white font-bold"
                   htmlFor="email"
@@ -57,11 +57,11 @@ export function Contact() {
                   id="email"
                   placeholder="test@mail.com"
                   required
-                  className="text-body-sm leading-body-sm"
+                  className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 w-full">
               <label
                 className="text-body-sm leading-body-sm text-white font-bold"
                 htmlFor="message"
@@ -74,23 +74,15 @@ export function Contact() {
                 rows={4}
                 placeholder="ここにメッセージをご記入ください"
                 required
-                className="text-body-sm leading-body-sm"
+                className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
               />
             </div>
             <ul className="flex gap-5">
               <li>
-                <input
-                  type="submit"
-                  value="送信"
-                  className="block px-16 py-3 bg-white text-body-sm leading-body-sm"
-                />
+                <InputButton type="submit" value="送信" className="!px-10" />
               </li>
               <li>
-                <input
-                  type="reset"
-                  value="リセット"
-                  className="block px-16 py-3 bg-white text-body-sm leading-body-sm"
-                />
+                <InputButton type="reset" value="リセット" className="!px-10" />
               </li>
             </ul>
           </form>
@@ -105,6 +97,7 @@ export function Contact() {
                 href="https://github.com/stranger1989"
                 target="_blank"
                 rel="noreferrer"
+                className="text-body-sm leading-body-sm"
               >
                 @stranger1989
               </a>
@@ -117,6 +110,7 @@ export function Contact() {
                 href="https://twitter.com/BykkLearn"
                 target="_blank"
                 rel="noreferrer"
+                className="text-body-sm leading-body-sm"
               >
                 @WebDeveloper_InTokyo
               </a>
