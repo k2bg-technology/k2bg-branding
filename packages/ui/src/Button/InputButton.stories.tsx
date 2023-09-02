@@ -1,23 +1,23 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Button from './Button';
+import InputButton from './InputButton';
 
 const meta = {
-  component: Button,
+  component: InputButton,
   parameters: {
     backgrounds: {
       default: 'dark',
     },
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof InputButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Button',
-    onClick: () => alert('Clicked!'),
+    type: 'submit',
+    value: '送信',
   },
 };

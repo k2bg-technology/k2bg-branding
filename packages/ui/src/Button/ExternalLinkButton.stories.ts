@@ -1,23 +1,24 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Button from './Button';
+import ExternalLinkButton from './ExternalLinkButton';
 
 const meta = {
-  component: Button,
+  component: ExternalLinkButton,
   parameters: {
     backgrounds: {
       default: 'dark',
     },
   },
   tags: ['autodocs'],
-} satisfies Meta<typeof Button>;
+} satisfies Meta<typeof ExternalLinkButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    children: 'Button',
-    onClick: () => alert('Clicked!'),
+    children: 'ExternalLinkButton',
+    href: 'https://example.com',
+    target: '_blank',
   },
 };

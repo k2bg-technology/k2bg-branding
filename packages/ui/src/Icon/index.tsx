@@ -1,6 +1,10 @@
 'use client';
 
 import { SVGProps } from 'react';
+import {
+  ArrowTopRightOnSquareIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/solid';
 
 import TypescriptLogo from './typescript-logo.svg';
 import PythonLogo from './python-logo.svg';
@@ -32,6 +36,8 @@ const ICONS = {
   circleci: CircleciLogo,
   github: GithubLogo,
   x: XLogo,
+  'arrow-top-right-on-square': ArrowTopRightOnSquareIcon,
+  'x-mark': XMarkIcon,
 };
 
 interface IconProps extends SVGProps<SVGSVGElement> {
