@@ -67,6 +67,21 @@ module.exports = {
         'accent-light': 'rgb(var(--color-accent-light) / <alpha-value>)',
         'accent-dark': 'rgb(var(--color-accent-dark) / <alpha-value>)',
       },
+      animation: {
+        slide: 'slide 0.8s ease-in 1',
+      },
+      keyframes: {
+        slide: {
+          from: {
+            transform: 'translate(-8rem, -50%)',
+            opacity: 0,
+          },
+          to: {
+            transform: 'translate(0, -50%)',
+            opacity: 1,
+          },
+        },
+      },
     },
   },
   plugins: [],
