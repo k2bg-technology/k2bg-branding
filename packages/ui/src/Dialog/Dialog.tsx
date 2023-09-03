@@ -22,7 +22,7 @@ export default function Dialog({
       <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className="fixed bg-black/50 inset-0" />
-        <RadixDialog.Content className="flex flex-col gap-5 fixed top-[50%] left-[50%] h-fit w-[70vw] translate-x-[-50%] translate-y-[-50%] rounded-xl p-12 bg-white focus:outline-none">
+        <RadixDialog.Content className="flex flex-col gap-5 fixed top-[50%] left-[50%] h-fit w-full translate-x-[-50%] translate-y-[-50%] rounded-xl p-5 bg-white focus:outline-none md:w-[70vw] md:p-12">
           {title && (
             <RadixDialog.Title className="text-body-sm leading-body-sm font-bold">
               {title}
@@ -37,7 +37,7 @@ export default function Dialog({
           <RadixDialog.Close asChild>
             <button
               type="button"
-              className="absolute top-5 right-5 w-12 h-12"
+              className="absolute top-5 right-5 rounded-full bg-white/50 w-12 h-12"
               aria-label="Close"
             >
               <SvgIcon name="x-mark" />

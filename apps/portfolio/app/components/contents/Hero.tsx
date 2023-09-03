@@ -3,8 +3,8 @@ import Image from 'next/image';
 export function Hero() {
   return (
     <section>
-      <div className="flex h-[60rem]">
-        <div className="relative w-[35rem]">
+      <div className="grid grid-rows-[max(35rem)_1fr] grid-cols-full h-full md:grid-rows-1 md:grid-cols-[max(35rem)_max(80rem)]">
+        <div className="relative">
           <Image
             src="/hero.jpg"
             fill
@@ -12,15 +12,15 @@ export function Hero() {
             className="object-cover"
           />
         </div>
-        <div className="flex flex-col justify-center gap-10 p-20 w-[80rem]">
-          <hgroup>
-            <h1 className="text-heading-1 leading-heading-1 font-bold">
-              K2.B.G.Technology
+        <div className="flex flex-col gap-10 p-10 md:justify-center md:p-20">
+          <hgroup className="flex flex-col gap-2 md:gap-0">
+            <h1 className="text-heading-1 leading-tight font-bold md:leading-heading-1">
+              K2.B.G. Technology
             </h1>
             <p className="text-body-md leading-body-md">
               KK Bit Growth Technology
             </p>
-            <p className="text-body-lg leading-body-lg">
+            <p className="text-body-lg leading-tight md:leading-body-lg">
               <strong>ITの力でビジネスのスケールアップを実現します</strong>
             </p>
           </hgroup>

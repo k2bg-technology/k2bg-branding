@@ -13,7 +13,7 @@ export const PORTFOLIO_DATA = [
         url: 'https://github.com/stranger1989/trading-dashboard',
       },
       {
-        buttonText: 'Github（API） ※株価予測API追加実装予定',
+        buttonText: 'Github（API）',
         url: 'https://github.com/stranger1989/ml-playground-api',
       },
     ],
@@ -76,7 +76,7 @@ export const PORTFOLIO_DATA = [
         url: 'https://blank-oldstranger.com/',
       },
       {
-        buttonText: 'Github（wordpress local template）',
+        buttonText: 'Github（wordpress template）',
         url: 'https://github.com/stranger1989/wordpress-local-dev-template',
       },
     ],

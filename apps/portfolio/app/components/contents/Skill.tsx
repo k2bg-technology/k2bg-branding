@@ -4,11 +4,11 @@ import { SvgIcon } from 'ui';
 export function Skill() {
   return (
     <section>
-      <div className="relative p-20 w-[110rem] h-[60rem]">
+      <div className="relative p-10 w-full md:p-20 md:w-[110rem] md:h-[60rem]">
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
           <Image src="/skill-pattern.jpg" fill alt="Skill Pattern Image" />
         </div>
-        <div className="flex h-full">
+        <div className="flex flex-col gap-10 h-full md:flex-row md:gap-0">
           <div className="flex flex-col gap-10 w-full">
             <h2 className="text-heading-2 leading-heading-2 font-bold">
               スキル
@@ -47,8 +47,8 @@ export function Skill() {
               </p>
             </div>
           </div>
-          <div className="p-10 w-full h-full">
-            <ul className="grid grid-cols-3 h-full">
+          <div className="p-5 w-full h-full md:p-10">
+            <ul className="grid grid-cols-3 gap-y-10 h-full md:gap-y-0">
               <li className="flex justify-center items-center">
                 <SvgIcon name="typescript" className="w-20 h-20" />
               </li>

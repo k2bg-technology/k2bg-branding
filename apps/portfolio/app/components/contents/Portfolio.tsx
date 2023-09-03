@@ -17,7 +17,7 @@ function Document(props: DocumentProps) {
     props;
 
   return (
-    <div className="flex relative flex-col gap-5 p-20 w-[60rem] h-full">
+    <div className="flex relative flex-col gap-5 p-10 w-full h-full md:p-20 md:w-[60rem]">
       <div className="absolute top-0 left-0 -z-10 w-full h-full">
         <Image
           src={backgroundImage}
@@ -32,7 +32,7 @@ function Document(props: DocumentProps) {
         {techStack}
       </p>
       <h4 className="text-heading-4 leading-heading-4 font-bold">概要</h4>
-      <p className="text-body-sm leading-body-sm  whitespace-pre-line">
+      <p className="text-body-sm leading-body-sm whitespace-pre-line">
         {overview}
       </p>
       <Dialog
@@ -63,8 +63,8 @@ function Document(props: DocumentProps) {
 export function Portfolio() {
   return (
     <section>
-      <div className="flex h-[60rem]">
-        <div className="flex flex-col justify-center gap-5 p-20 w-[45rem]">
+      <div className="flex flex-col md:flex-row md:h-[60rem]">
+        <div className="flex flex-col justify-center gap-5 p-10 w-full md:p-20 md:w-[45rem]">
           <h2 className="text-heading-2 leading-heading-2 font-bold">
             ポートフォリオ
           </h2>
@@ -77,7 +77,7 @@ export function Portfolio() {
             </p>
           </div>
         </div>
-        <div className="grid grid-cols-4 text-white">
+        <div className="grid text-white md:grid-cols-4">
           {PORTFOLIO_DATA.map(({ key, ...rest }) => (
             <article key={key}>
               {/* eslint-disable-next-line react/jsx-props-no-spreading */}

@@ -3,7 +3,7 @@ import Image from 'next/image';
 export function Background() {
   return (
     <section>
-      <div className="flex flex-col gap-10 relative p-20 w-[90rem] h-[60rem] text-white">
+      <div className="flex flex-col gap-10 relative p-10 w-full text-white md:p-20 md:w-[90rem] md:h-[60rem]">
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
           <Image
             src="/background-pattern.jpg"
