@@ -16,7 +16,6 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     'import/prefer-default-export': 'off',
     camelcase: 'off',
-    'max-len': 'off',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
     'react/require-default-props': 'off',
