@@ -1,25 +1,30 @@
 import Image from 'next/image';
+import { TFunction } from 'i18next';
 import { InputButton, SvgIcon } from 'ui';
 
-export function Contact() {
+export function Contact({ t }: { t: TFunction }) {
   return (
     <section>
       <div className="flex flex-col relative md:flex-row md:h-[60rem]">
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
-          <Image src="/contact-pattern.jpg" fill alt="Contact Pattern Image" />
+          <Image
+            src="/images/contact-pattern.jpg"
+            fill
+            alt="Contact Pattern Image"
+          />
         </div>
         <div className="flex flex-col justify-center gap-5 p-10 w-full text-white h-full md:p-20 md:w-[60rem]">
           <h2 className="text-heading-2 leading-heading-2 font-bold">
-            お問い合わせ
+            {t('contact.contact')}
           </h2>
           <p className="text-body-sm leading-body-sm">
-            必要事項をご入力いただき、送信ボタンを押してください。返信には数日かかる場合がございますが、極力早急に返信するように致しますので、お気軽にお問い合わせいただけると幸いです。
+            {t('contact.description1')}
           </p>
           <p className="text-body-sm leading-body-sm">
-            平日は1〜2時間、休日は3時間程度で在宅ワークをお受けすることが可能です。
+            {t('contact.description2')}
           </p>
           <p className="text-body-sm leading-body-sm whitespace-pre-line">
-            {`※ 誠に恐れ入りますが、平日は9:00〜20:00以外でのご対応となります。 \n※ 案件によってはお受けするのが難しい場合もございますので、適宜ご相談いただけると幸いです。`}
+            {t('contact.description3')}
           </p>
         </div>
         <div className="p-10 w-full h-full md:p-20 md:w-[60rem]">
@@ -34,13 +39,13 @@ export function Contact() {
                   className="text-body-sm leading-body-sm text-white font-bold"
                   htmlFor="name"
                 >
-                  お名前
+                  {t('contact.form.nameLabel')}
                 </label>
                 <input
                   type="text"
                   name="name"
                   id="name"
-                  placeholder="Yamada Taro"
+                  placeholder={t('contact.form.namePlaceholder')}
                   required
                   className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
                 />
@@ -50,13 +55,13 @@ export function Contact() {
                   className="text-body-sm leading-body-sm text-white font-bold"
                   htmlFor="email"
                 >
-                  Eメール
+                  {t('contact.form.emailLabel')}
                 </label>
                 <input
                   type="email"
                   name="email"
                   id="email"
-                  placeholder="test@mail.com"
+                  placeholder={t('contact.form.emailPlaceholder')}
                   required
                   className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
                 />
@@ -67,13 +72,13 @@ export function Contact() {
                 className="text-body-sm leading-body-sm text-white font-bold"
                 htmlFor="message"
               >
-                メッセージ
+                {t('contact.form.messageLabel')}
               </label>
               <textarea
                 name="message"
                 id="message"
                 rows={4}
-                placeholder="ここにメッセージをご記入ください"
+                placeholder={t('contact.form.messagePlaceholder')}
                 required
                 className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
               />
@@ -82,14 +87,14 @@ export function Contact() {
               <li>
                 <InputButton
                   type="submit"
-                  value="送信"
+                  value={t('contact.form.submit')}
                   className="w-full md:!px-10"
                 />
               </li>
               <li>
                 <InputButton
                   type="reset"
-                  value="リセット"
+                  value={t('contact.form.reset')}
                   className="w-full md:!px-10"
                 />
               </li>
@@ -108,7 +113,7 @@ export function Contact() {
                 rel="noreferrer"
                 className="text-body-sm leading-body-sm"
               >
-                @stranger1989
+                {t('contact.githubAccountName')}
               </a>
             </li>
             <li className="flex relative items-center gap-5">
@@ -121,7 +126,7 @@ export function Contact() {
                 rel="noreferrer"
                 className="text-body-sm leading-body-sm"
               >
-                @WebDeveloper_InTokyo
+                {t('contact.xAccountName')}
               </a>
             </li>
           </ul>

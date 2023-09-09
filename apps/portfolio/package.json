@@ -10,9 +10,15 @@
     "format": "prettier --write \"app/\""
   },
   "dependencies": {
+    "accept-language": "^3.0.18",
+    "i18next": "^23.4.6",
+    "i18next-browser-languagedetector": "^7.1.0",
+    "i18next-resources-to-backend": "^1.1.4",
     "next": "^13.4.1",
     "react": "^18.2.0",
+    "react-cookie": "^6.1.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^13.2.2",
     "ui": "workspace:*"
   },
   "devDependencies": {

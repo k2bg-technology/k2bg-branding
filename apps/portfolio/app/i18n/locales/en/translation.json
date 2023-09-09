@@ -1,0 +1,83 @@
+{
+  "hero": {
+    "corporateName": "K2.B.G. Technology",
+    "officialName": "KK Bit Growth Technology",
+    "slogan": "Scale up your business with the power of IT",
+    "description": "<0>IT is crucial for modern business, but it's also fast-changing and hard to use effectively.</0><0>From my work across various industries, I've seen the challenges and benefits of shifting to IT-based processes. The transition can be tough but the gains in productivity, flexibility, and risk avoidance are significant.</0><0>We think our best role is to be a strong partner, helping companies improve by supporting them in app development, data analysis, and digital transformation. We believe in growing together for mutual benefit.</0>"
+  },
+  "background": {
+    "background": "Background",
+    "description1": "I have a bachelor's in Information Science and Engineering. Early in my career, I worked in design and layout for a printing company. Then, I switched to a trading company to handle purchasing and sales analysis for kitchenware.",
+    "description2": "I realized the huge impact IT can have on business efficiency while working in non-IT industries. This led me to become a web application engineer. I've since worked in various sectors like healthcare, e-commerce, and online communication.",
+    "description3": "Now, I'm a freelance engineer specializing in UI/UX design and data analysis. I support IT companies in app development and share my expertise through my own platforms.",
+    "certification": "Certifications",
+    "certification1": "Applied Information Processing Engineer",
+    "certification2": "TOEIC 745 points",
+    "certification3": "Color Coordinator Level 2",
+    "certification4": "Nissho Bookkeeping Certification Level 3"
+  },
+  "skill": {
+    "skill": "Skill",
+    "programming": "Programming and Frameworks",
+    "programmingStack": "Nodejs（Javascript、Typescript）、React(ReactNative）、Python、FastAPI、Scrapy、Golang、Wordpress",
+    "uiux": "UI・UX",
+    "uiuxStack": "HTML、CSS（SASS）、Figma、Photoshop、Illustrator、Indesign",
+    "dataAnalysis": "Data Analysis",
+    "dataAnalysisStack": "Google Analytics、Google Tag Manager、Google Colab、Google Looker Studio、Bigquery、Tableau、Datadog",
+    "cloud": "Cloud and DevOps",
+    "cloudStack": "Git・Github、AWS、GCP、Docker、CircleCI、Github Actions"
+  },
+  "portfolio": {
+    "portfolio": "Portfolio",
+    "description1": "We will introduce specific examples of application development.",
+    "description2": "We are not able to publish the applications that we developed for our business due to confidentiality issues, so we will focus on those developed by individuals.",
+    "techStack": "tech stacks",
+    "overview": "overview",
+    "webApp": {
+      "title": "Web Application Development",
+      "techStack": "Node.js、Typescript、React、Next.js、Python、FastAPI、Jupyter Notebook",
+      "overview": "This is an app for analyzing and predicting stock prices using historical data. Right now, it only lets you view past stock prices and create portfolios. In the future, we'll add a feature to forecast stock prices using backend APIs and display the predictions."
+    },
+    "mobileApp": {
+      "title": "Mobile Application Development",
+      "techStack": "Node.js、Typescript、React Native、Golang、Mysql、Docker",
+      "overview": "This is a product management app that lets you quickly enter and check costs and inventory from your phone. We developed it to eliminate the hassle of using a PC and Excel for tracking product info during fieldwork like buying and inspections."
+    },
+    "scrapingApp": {
+      "title": "Web scraping",
+      "techStack": "Python、Scrapy、Selenium、Docker、Bigquery",
+      "overview": "In a time where having lots of data is valuable, we think it's crucial to gather information from the web. We've built a tool using the Scrapy framework that can collect data from both static and dynamic web pages. It can also send this data to places like CSV files or BigQuery through a pipeline."
+    },
+    "blogApp": {
+      "title": "Blog",
+      "techStack": "HTML、CSS（SASS）、Javascript、PHP、Mysql、Wordpress、Google Analytics、Google AdSense",
+      "overview": "I create content articles on topics such as programming, marketing, design, finance, and overseas based on my experience using wordpress."
+    },
+    "github": "Github",
+    "githubApp": "Github App",
+    "githubApi": "Github Api",
+    "siteURL": "site URL",
+    "preview": "preview"
+  },
+  "contact": {
+    "contact": "Contact",
+    "description1": "Please fill in the required information and press the send button. It may take a few days to reply, but we will try to reply as soon as possible.",
+    "description2": "We are available to work from home for 1-2 hours on weekdays and 3 hours on weekends.",
+    "description3": "We are sorry, but we are available outside of the hours of 9:00 to 20:00 on weekdays. We would appreciate it if you could consult with us accordingly.",
+    "form": {
+      "nameLabel": "Name",
+      "namePlaceholder": "John Smith",
+      "emailLabel": "Email",
+      "emailPlaceholder": "test@mail.com",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Please enter your message here",
+      "submit": "SUBMIT",
+      "reset": "RESET"
+    },
+    "githubAccountName": "@stranger1989",
+    "xAccountName": "@WebDeveloper_InTokyo"
+  },
+  "footer": {
+    "copyright": "\u00A9 K2.B.G. Technology Design: <0>HTML5 UP</0>"
+  }
+}

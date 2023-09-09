@@ -1,11 +1,25 @@
-export function Footer() {
+'use client';
+
+import { Trans } from 'react-i18next';
+
+import { useTranslation } from '../../i18n/client';
+import { Language } from '../../i18n/settings';
+
+export function Footer({ lng }: { lng: Language }) {
+  useTranslation(lng);
+
   return (
     <footer>
       <p className="text-body-sm leading-body-sm text-right">
-        &copy; K2.B.G. Technology Design:
-        <a href="https://html5up.net" className="text-body-sm leading-body-sm">
-          HTML5 UP
-        </a>
+        <Trans i18nKey="footer.copyright">
+          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-has-content */}
+          <a
+            href="https://html5up.net"
+            className="text-body-sm leading-body-sm"
+            target="_blank"
+            rel="noreferrer"
+          />
+        </Trans>
       </p>
     </footer>
   );

@@ -1,0 +1,83 @@
+{
+  "hero": {
+    "corporateName": "K2.B.G. Technology",
+    "officialName": "KK Bit Growth Technology",
+    "slogan": "ITの力でビジネスのスケールアップを実現します。",
+    "description": "<0>現代のビジネスは、ITとデジタル技術の活用が不可欠になっています。しかし、ITの進歩は急速で、その効果的な利用は専門知識を必要とし、難易度が高いものとなっています。</0><0>私自身、非IT業界からスタートアップまで、幅広い業界での経験を通じて、伝統的なビジネスプロセスからITを活用した効率的なプロセスへの移行の難しさを感じてきました。しかし、一方で、ITを導入することでビジネスの生産性を向上させ、自由度を高め、リスクを回避できるというメリットを体感してきました。</0><0>その経験を活かし、IT化を推進して業務のプロセスを改善したい企業様の「<0>アプリケーション開発</0>」「<0>データ分析</0>」「<0>DXの推進</0>」を支援し、良きパートナーとして共に成長することこそが、提供できる最大の価値だと考えております。</0>"
+  },
+  "background": {
+    "background": "経歴",
+    "description1": "情報理工学専攻 学部卒。初期のキャリアでは印刷メーカーにおいて、商業印刷物のデザイン・レイアウト・フォトレタッチを担当。その後、貿易商社に転職し、キッチンウェアの商品仕入れ及び販売データ分析に従事。",
+    "description2": "非IT業界での実務経験を通じて、業務効率の向上及び問題解決に対するITの可能性を痛感。この認識をもとに、Webアプリケーションエンジニアへの転身を決意。以降、「ヘルスケア」「ECマーケティング」「オンラインコミュニケーション」等、多様な事業領域でのアプリケーション開発に携わる。",
+    "description3": "現在はフリーランスエンジニアとして、「UI・UXデザイン」と「データ分析」の専門性を強みに、IT企業向けのアプリケーション開発支援や、自身のメディアを通じた知見の発信を主軸に活動を展開している。",
+    "certification": "資格",
+    "certification1": "応用情報処理技術者",
+    "certification2": "TOEIC 745点",
+    "certification3": "カラーコーディネーター2級",
+    "certification4": "日商簿記検定3級"
+  },
+  "skill": {
+    "skill": "スキル",
+    "programming": "プログラミング・フレームワーク",
+    "programmingStack": "Nodejs（Javascript、Typescript）、React(ReactNative）、Python、FastAPI、Scrapy、Golang、Wordpress",
+    "uiux": "UI・UX",
+    "uiuxStack": "HTML、CSS（SASS）、Figma、Photoshop、Illustrator、Indesign",
+    "dataAnalysis": "データ分析",
+    "dataAnalysisStack": "Google Analytics、Google Tag Manager、Google Colab、Google Looker Studio、Bigquery、Tableau、Datadog",
+    "cloud": "クラウド・DevOps",
+    "cloudStack": "Git・Github、AWS、GCP、Docker、CircleCI、Github Actions"
+  },
+  "portfolio": {
+    "portfolio": "ポートフォリオ",
+    "description1": "具体的なアプリケーション開発事例を紹介致します。",
+    "description2": "業務で開発したものは守秘義務の観点から掲載できませんので、個人開発にて開発したものを中心に載せております。",
+    "techStack": "使用技術",
+    "overview": "概要",
+    "webApp": {
+      "title": "Webアプリ開発",
+      "techStack": "Node.js、Typescript、React、Next.js、Python、FastAPI、Jupyter Notebook",
+      "overview": "株価分析・予測アプリケーションです。株価の過去データを元に、株価の予測を行うことができます。現状は「過去の株価データの確認」と「ポートフォリオの作成」のみの機能提供ですが、今後は株価予測API機能をバックエンド側で実装し、アプリケーションで可視化できるようにしていきます。"
+    },
+    "mobileApp": {
+      "title": "モバイルアプリ開発",
+      "techStack": "Node.js、Typescript、React Native、Golang、Mysql、Docker",
+      "overview": "商品仕入れ管理用のアプリケーションです。商品原価・商品在庫などをモバイルから手軽に入力・確認できるようになっています。\n仕入れや検品などのフィールドワーク時に、いちいちPCを開いて商品情報をExcelで確認・入力・管理することの不便さを解決するために開発致しました。"
+    },
+    "scrapingApp": {
+      "title": "Webスクレイピング",
+      "techStack": "Python、Scrapy、Selenium、Docker、Bigquery",
+      "overview": "多くのデータを保有することが資産と呼べる時代に、豊富なデータが存在するWebから情報を得ることは必須だと考えます。\nクローリングフレームワークScrapyを活用して、静的・動的ページ問わず情報収集できる、かつPipelineを通して、CSVやBigqueryなどにデータを流し込めるスニペットを開発致しました。"
+    },
+    "blogApp": {
+      "title": "ブログ運営",
+      "techStack": "HTML、CSS（SASS）、Javascript、PHP、Mysql、Wordpress、Google Analytics、Google AdSense",
+      "overview": "プログラミング・マーケティング・デザイン・ファイナンス・海外などのテーマのコンテンツ記事をwordpressを使用し自分の経験に基づいて作成しております。"
+    },
+    "github": "Github",
+    "githubApp": "Github（アプリ）",
+    "githubApi": "Github（API）",
+    "siteURL": "サイトURL",
+    "preview": "プレビュー"
+  },
+  "contact": {
+    "contact": "お問い合わせ",
+    "description1": "必要事項をご入力いただき、送信ボタンを押してください。返信には数日かかる場合がございますが、極力早急に返信するように致しますので、お気軽にお問い合わせいただけると幸いです。",
+    "description2": "平日は1〜2時間、休日は3時間程度で在宅ワークをお受けすることが可能です。",
+    "description3": "※ 誠に恐れ入りますが、平日は9:00〜20:00以外でのご対応となります。 \n※ 案件によってはお受けするのが難しい場合もございますので、適宜ご相談いただけると幸いです。",
+    "form": {
+      "nameLabel": "お名前",
+      "namePlaceholder": "山田 太郎",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "test@mail.com",
+      "messageLabel": "メッセージ",
+      "messagePlaceholder": "ここにメッセージをご記入ください",
+      "submit": "送信",
+      "reset": "リセット"
+    },
+    "githubAccountName": "@stranger1989",
+    "xAccountName": "@WebDeveloper_InTokyo"
+  },
+  "footer": {
+    "copyright": "\u00A9 K2.B.G. Technology Design: <0>HTML5 UP</0>"
+  }
+}

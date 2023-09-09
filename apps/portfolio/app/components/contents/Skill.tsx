@@ -1,49 +1,53 @@
 import Image from 'next/image';
 import { SvgIcon } from 'ui';
+import { TFunction } from 'i18next';
 
-export function Skill() {
+export function Skill({ t }: { t: TFunction }) {
   return (
     <section>
       <div className="relative p-10 w-full md:p-20 md:w-[110rem] md:h-[60rem]">
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
-          <Image src="/skill-pattern.jpg" fill alt="Skill Pattern Image" />
+          <Image
+            src="/images/skill-pattern.jpg"
+            fill
+            alt="Skill Pattern Image"
+          />
         </div>
         <div className="flex flex-col gap-10 h-full md:flex-row md:gap-0">
           <div className="flex flex-col gap-10 w-full">
             <h2 className="text-heading-2 leading-heading-2 font-bold">
-              スキル
+              {t('skill.skill')}
             </h2>
             <div>
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                プログラミング・フレームワーク
+                {t('skill.programming')}
               </h3>
               <p className="text-body-sm leading-body-sm">
-                Nodejs（Javascript、Typescript）、React(ReactNative）、Python、FastAPI、Scrapy、Golang、Wordpress
+                {t('skill.programmingStack')}
               </p>
             </div>
             <div>
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                UI・UX
+                {t('skill.uiux')}
               </h3>
               <p className="text-body-sm leading-body-sm">
-                HTML、CSS（SASS）、Figma、Photoshop、Illustrator、Indesign
+                {t('skill.uiuxStack')}
               </p>
             </div>
             <div>
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                データ分析
+                {t('skill.dataAnalysis')}
               </h3>
               <p className="text-body-sm leading-body-sm">
-                Google Analytics、Google Tag Manager、Google Colab、Google
-                Looker Studio、Bigquery、Tableau、Datadog
+                {t('skill.dataAnalysisStack')}
               </p>
             </div>
             <div>
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                クラウド・DevOps
+                {t('skill.cloud')}
               </h3>
               <p className="text-body-sm leading-body-sm">
-                Git・Github、AWS、GCP、Docker、CircleCI、Github Actions
+                {t('skill.cloudStack')}
               </p>
             </div>
           </div>

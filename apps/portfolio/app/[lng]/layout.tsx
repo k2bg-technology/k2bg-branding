@@ -1,8 +1,15 @@
 import { ReactNode } from 'react';
 import { Noto_Sans_JP } from 'next/font/google';
 import { Metadata } from 'next';
+import { dir } from 'i18next';
+
+import { languages, Language } from '../i18n/settings';
 
 import './globals.css';
+
+export async function generateStaticParams() {
+  return languages.map((lng) => ({ lng }));
+}
 
 // If loading a variable font, you don't need to specify the font weight
 const notoSansJP = Noto_Sans_JP({
@@ -17,9 +24,15 @@ export const metadata: Metadata = {
   description: 'K2.B.G. Technologyが提供できる価値を紹介いたします。',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+  params: { lng },
+}: {
+  children: ReactNode;
+  params: { lng: Language };
+}) {
   return (
-    <html lang="ja" className={notoSansJP.variable}>
+    <html lang={lng} dir={dir(lng)} className={notoSansJP.variable}>
       <body>{children}</body>
     </html>
   );
