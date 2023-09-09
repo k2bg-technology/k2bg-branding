@@ -55,12 +55,7 @@ function Document(props: DocumentProps) {
         trigger={preview}
         content={
           <div className="flex justify-center items-center w-full h-full">
-            <video
-              controls
-              muted
-              autoPlay
-              className="max-h-full object-contain aspect-video"
-            >
+            <video controls muted autoPlay>
               <source src={previewVideo} type="video/mp4" />
               <p>Your browser support HTML5 video.</p>
             </video>
