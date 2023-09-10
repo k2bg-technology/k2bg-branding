@@ -8,6 +8,7 @@ import { Skill } from '../components/contents/Skill';
 import { Portfolio } from '../components/contents/Portfolio';
 import { Contact } from '../components/contents/Contact';
 import { Footer } from '../components/footer/Footer';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 import Loading from './loading';
 
@@ -34,6 +35,7 @@ export default async function Page({
         </main>
         <Footer lng={lng} />
       </div>
+      <LanguageSelector />
     </Suspense>
   );
 }
