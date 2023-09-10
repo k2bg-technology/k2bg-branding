@@ -29,13 +29,13 @@ function Document(props: DocumentProps) {
   } = props;
 
   return (
-    <div className="flex relative flex-col gap-5 p-10 w-full h-full md:p-20 md:w-[60rem]">
-      <div className="absolute top-0 left-0 -z-10 w-full h-full">
+    <div className="flex relative flex-col gap-5 p-10 w-full h-full md:p-20 md:w-[60rem] group">
+      <div className="absolute top-0 left-0 -z-10 w-full h-full overflow-hidden">
         <Image
           src={backgroundImage}
           fill
           alt="Stock Image"
-          className="object-cover brightness-50"
+          className="object-cover brightness-50 transition-all duration-300 ease-in group-hover:scale-110"
         />
       </div>
       <h3 className="text-heading-3 leading-heading-3 font-bold">{title}</h3>
