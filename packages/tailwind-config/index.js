@@ -69,6 +69,7 @@ module.exports = {
       },
       animation: {
         slide: 'slide 0.8s ease-in 1',
+        scrollHelp: 'scrollHelp 5s ease-in-out infinite both',
       },
       keyframes: {
         slide: {
@@ -79,6 +80,23 @@ module.exports = {
           to: {
             transform: 'translate(0, -50%)',
             opacity: 1,
+          },
+        },
+        scrollHelp: {
+          '0%, 100%': {
+            transform: 'translateX(0)',
+          },
+          '10%, 30%, 50%, 70%': {
+            transform: 'translateX(-10px)',
+          },
+          '20%, 40%, 60%': {
+            transform: 'translateX(10px)',
+          },
+          '80%': {
+            transform: 'translateX(8px)',
+          },
+          '90%': {
+            transform: 'translateX(-8px)',
           },
         },
       },

@@ -9,6 +9,7 @@ import { Portfolio } from '../components/contents/Portfolio';
 import { Contact } from '../components/contents/Contact';
 import { Footer } from '../components/footer/Footer';
 import { LanguageSelector } from '../components/LanguageSelector';
+import { ScrollHelper } from '../components/ScrollHelper';
 
 import Loading from './loading';
 
@@ -36,6 +37,7 @@ export default async function Page({
         <Footer lng={lng} />
       </div>
       <LanguageSelector />
+      <ScrollHelper />
     </Suspense>
   );
 }
