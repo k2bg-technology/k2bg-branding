@@ -93,19 +93,27 @@ export function Portfolio({ t }: { t: TFunction }) {
               techStack={t('portfolio.webApp.techStack')}
               overview={t('portfolio.webApp.overview')}
               backgroundImage="/images/stock.jpg"
-              preview={<Button>{t('portfolio.preview')}</Button>}
+              preview={
+                <Button color="light" variant="outlined">
+                  {t('portfolio.preview')}
+                </Button>
+              }
               previewVideo="/videos/stock-app.mp4"
               siteLink={
                 <>
                   <ExternalLinkButton
                     href="https://github.com/stranger1989/trading-dashboard"
                     target="_blank"
+                    color="light"
+                    variant="outlined"
                   >
                     {t('portfolio.githubApp')}
                   </ExternalLinkButton>
                   <ExternalLinkButton
                     href="https://github.com/stranger1989/ml-playground-api"
                     target="_blank"
+                    color="light"
+                    variant="outlined"
                   >
                     {t('portfolio.githubApi')}
                   </ExternalLinkButton>
@@ -121,19 +129,27 @@ export function Portfolio({ t }: { t: TFunction }) {
               techStack={t('portfolio.mobileApp.techStack')}
               overview={t('portfolio.mobileApp.overview')}
               backgroundImage="/images/mobile.jpg"
-              preview={<Button>{t('portfolio.preview')}</Button>}
+              preview={
+                <Button color="light" variant="outlined">
+                  {t('portfolio.preview')}
+                </Button>
+              }
               previewVideo="/videos/mobile.mp4"
               siteLink={
                 <>
                   <ExternalLinkButton
                     href="https://github.com/stranger1989/merchandise_control_system_native_app"
                     target="_blank"
+                    color="light"
+                    variant="outlined"
                   >
                     {t('portfolio.githubApp')}
                   </ExternalLinkButton>
                   <ExternalLinkButton
                     href="https://github.com/stranger1989/merchandise_control_system"
                     target="_blank"
+                    color="light"
+                    variant="outlined"
                   >
                     {t('portfolio.githubApi')}
                   </ExternalLinkButton>
@@ -149,12 +165,18 @@ export function Portfolio({ t }: { t: TFunction }) {
               techStack={t('portfolio.scrapingApp.techStack')}
               overview={t('portfolio.scrapingApp.overview')}
               backgroundImage="/images/web.jpg"
-              preview={<Button>{t('portfolio.preview')}</Button>}
+              preview={
+                <Button color="light" variant="outlined">
+                  {t('portfolio.preview')}
+                </Button>
+              }
               previewVideo="/videos/scrapy.mp4"
               siteLink={
                 <ExternalLinkButton
                   href="https://github.com/stranger1989/scrapy_snippets"
                   target="_blank"
+                  color="light"
+                  variant="outlined"
                 >
                   {t('portfolio.github')}
                 </ExternalLinkButton>
@@ -169,19 +191,27 @@ export function Portfolio({ t }: { t: TFunction }) {
               techStack={t('portfolio.blogApp.techStack')}
               overview={t('portfolio.blogApp.overview')}
               backgroundImage="/images/blog.jpg"
-              preview={<Button>{t('portfolio.preview')}</Button>}
+              preview={
+                <Button color="light" variant="outlined">
+                  {t('portfolio.preview')}
+                </Button>
+              }
               previewVideo="/videos/blank.mp4"
               siteLink={
                 <>
                   <ExternalLinkButton
                     href="https://blank-oldstranger.com/"
                     target="_blank"
+                    color="light"
+                    variant="outlined"
                   >
                     {t('portfolio.siteURL')}
                   </ExternalLinkButton>
                   <ExternalLinkButton
                     href="https://github.com/stranger1989/wordpress-local-dev-template"
                     target="_blank"
+                    color="light"
+                    variant="outlined"
                   >
                     {t('portfolio.github')}
                   </ExternalLinkButton>

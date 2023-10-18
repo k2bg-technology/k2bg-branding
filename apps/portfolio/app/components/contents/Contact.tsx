@@ -89,6 +89,8 @@ export function Contact({ t }: { t: TFunction }) {
                   type="submit"
                   value={t('contact.form.submit')}
                   className="w-full md:!px-10"
+                  color="light"
+                  variant="outlined"
                 />
               </li>
               <li>
@@ -96,6 +98,8 @@ export function Contact({ t }: { t: TFunction }) {
                   type="reset"
                   value={t('contact.form.reset')}
                   className="w-full md:!px-10"
+                  color="light"
+                  variant="outlined"
                 />
               </li>
             </ul>
