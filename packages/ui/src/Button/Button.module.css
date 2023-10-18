@@ -1,7 +1,228 @@
 .Button {
-  @apply inline-block transition-all border-2 border-white border-opacity-20 rounded-md cursor-pointer p-3 text-white text-body-sm text-center font-bold;
+  @apply inline-block transition-all rounded-md cursor-pointer p-3 text-body-sm text-center font-bold;
 
   &:hover {
-    @apply border-white border-opacity-50 bg-white bg-opacity-10;
+    @apply border-opacity-50 bg-opacity-10;
+  }
+}
+
+/* Main */
+.MainContained {
+  @apply bg-main text-white;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.MainOutlined {
+  @apply border-2 border-opacity-20 border-main text-main;
+
+  &:hover {
+    @apply border-opacity-50 bg-main bg-opacity-10;
+  }
+}
+
+.MainText {
+  @apply text-main;
+
+  &:hover {
+    @apply bg-main bg-opacity-10;
+  }
+}
+
+/* Accent */
+.AccentContained {
+  @apply bg-accent text-white;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.AccentOutlined {
+  @apply border-2 border-opacity-20 border-accent text-accent;
+
+  &:hover {
+    @apply border-opacity-50 bg-accent bg-opacity-10;
+  }
+}
+
+.AccentText {
+  @apply text-accent;
+
+  &:hover {
+    @apply bg-accent bg-opacity-10;
+  }
+}
+
+/* Inherit */
+.InheritContained {
+  @apply bg-transparent text-current;
+}
+
+.InheritOutlined {
+  @apply border-2 border-opacity-20 border-transparent text-current;
+
+  &:hover {
+    @apply border-opacity-50 bg-transparent bg-opacity-10;
+  }
+}
+
+.InheritText {
+  @apply text-current;
+
+  &:hover {
+    @apply bg-transparent bg-opacity-10;
+  }
+}
+
+/* Error */
+.ErrorContained {
+  @apply bg-error text-white;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.ErrorOutlined {
+  @apply border-2 border-opacity-20 border-error text-error;
+
+  &:hover {
+    @apply border-opacity-50 bg-error bg-opacity-10;
+  }
+}
+
+.ErrorText {
+  @apply text-error;
+
+  &:hover {
+    @apply bg-error bg-opacity-10;
+  }
+}
+
+/* Warning */
+.WarningContained {
+  @apply bg-warning text-white;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.WarningOutlined {
+  @apply border-2 border-opacity-20 border-warning text-warning;
+
+  &:hover {
+    @apply border-opacity-50 bg-warning bg-opacity-10;
+  }
+}
+
+.WarningText {
+  @apply text-warning;
+
+  &:hover {
+    @apply bg-warning bg-opacity-10;
+  }
+}
+
+/* Info */
+.InfoContained {
+  @apply bg-info text-white;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.InfoOutlined {
+  @apply border-2 border-opacity-20 border-info text-info;
+
+  &:hover {
+    @apply border-opacity-50 bg-info bg-opacity-10;
+  }
+}
+
+.InfoText {
+  @apply text-info;
+
+  &:hover {
+    @apply bg-info bg-opacity-10;
+  }
+}
+
+/* Success */
+.SuccessContained {
+  @apply bg-success text-white;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.SuccessOutlined {
+  @apply border-2 border-opacity-20 border-success text-success;
+
+  &:hover {
+    @apply border-opacity-50 bg-success bg-opacity-10;
+  }
+}
+
+.SuccessText {
+  @apply text-success;
+
+  &:hover {
+    @apply bg-success bg-opacity-10;
+  }
+}
+
+/* Dark */
+.DarkContained {
+  @apply bg-color-base text-white;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.DarkOutlined {
+  @apply border-2 border-opacity-20 border-color-base text-color-base;
+
+  &:hover {
+    @apply border-opacity-50 bg-color-base bg-opacity-10;
+  }
+}
+
+.DarkText {
+  @apply text-color-base;
+
+  &:hover {
+    @apply bg-color-base bg-opacity-10;
+  }
+}
+
+/* Light */
+.LightContained {
+  @apply bg-white text-color-base;
+
+  &:hover {
+    @apply bg-opacity-90;
+  }
+}
+
+.LightOutlined {
+  @apply border-2 border-opacity-20 border-white text-white;
+
+  &:hover {
+    @apply border-opacity-50 bg-white bg-opacity-10;
+  }
+}
+
+.LightText {
+  @apply text-white;
+
+  &:hover {
+    @apply bg-white bg-opacity-10;
   }
 }

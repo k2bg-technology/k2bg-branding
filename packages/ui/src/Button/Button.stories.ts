@@ -4,11 +4,7 @@ import Button from './Button';
 
 const meta = {
   component: Button,
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-    },
-  },
+  parameters: {},
   tags: ['autodocs'],
 } satisfies Meta<typeof Button>;
 

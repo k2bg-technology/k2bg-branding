@@ -4,11 +4,7 @@ import InputButton from './InputButton';
 
 const meta = {
   component: InputButton,
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-    },
-  },
+  parameters: {},
   tags: ['autodocs'],
 } satisfies Meta<typeof InputButton>;
 

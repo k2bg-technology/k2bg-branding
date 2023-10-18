@@ -4,11 +4,7 @@ import ExternalLinkButton from './ExternalLinkButton';
 
 const meta = {
   component: ExternalLinkButton,
-  parameters: {
-    backgrounds: {
-      default: 'dark',
-    },
-  },
+  parameters: {},
   tags: ['autodocs'],
 } satisfies Meta<typeof ExternalLinkButton>;
 
