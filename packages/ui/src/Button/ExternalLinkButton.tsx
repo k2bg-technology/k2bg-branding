@@ -72,7 +72,7 @@ export default function ExternalLinkButton({
       {...rest}
       className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
     >
-      {children}
+      <span>{children}</span>
       <SvgIcon
         name="arrow-top-right-on-square"
         className="inline-block ml-2 w-5 h-5"
