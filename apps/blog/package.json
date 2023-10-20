@@ -15,10 +15,16 @@
     "ui": "workspace:*"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
     "@types/react-dom": "^18.0.7",
+    "autoprefixer": "^10.4.14",
     "eslint-config-custom": "workspace:*",
+    "postcss": "^8.4.27",
+    "postcss-preset-env": "^9.1.1",
+    "tailwind-config": "workspace:*",
+    "tailwindcss": "^3.3.3",
     "tsconfig": "workspace:*",
     "typescript": "^4.5.3"
   }
