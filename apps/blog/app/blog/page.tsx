@@ -62,5 +62,37 @@ export default async function Page() {
 
   console.log(posts);
 
-  return <div />;
+  return (
+    <>
+      <div className="grid grid-cols-[subgrid] col-span-full border-b-2 py-[30px] border-b-slate-100">
+        <article className="col-start-1 col-end-8 h-[500px] bg-slate-100">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime error
+          tempore quae distinctio sequi sed officia veritatis facilis harum eos
+          tenetur iste doloribus molestias reiciendis, iusto non quisquam unde
+          quaerat.
+        </article>
+        <article className="flex flex-col gap-10 col-start-8 col-end-13 bg-slate-100">
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. A esse eos
+          doloribus nihil nam repellendus impedit placeat voluptate cum mollitia
+          pariatur sit blanditiis, dicta in quis maiores natus, optio ad!
+        </article>
+      </div>
+      <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
+        <div className="col-start-1 col-end-10 h-[500px] bg-slate-100">
+          <article>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Rerum
+            voluptate iusto, maiores, non eveniet magni modi et praesentium
+            molestiae vel qui vero aliquam quia quas ipsa, sequi inventore?
+            Excepturi, corporis!
+          </article>
+        </div>
+        <article className="col-start-10 col-end-13 h-[500px] bg-slate-100">
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
+          doloribus, eligendi rem perferendis provident error enim omnis quis
+          fuga voluptatibus saepe vel dolore dignissimos temporibus quidem, ut
+          quam minima. Autem!
+        </article>
+      </div>
+    </>
+  );
 }
