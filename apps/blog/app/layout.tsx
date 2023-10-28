@@ -21,9 +21,9 @@ export default function RootLayout({
   return (
     <html lang="ja" className={notoSansJP.variable}>
       <body>
-        <div className="grid grid-rows-[50px_1fr_300px] h-screen">
+        <div className="grid grid-rows-[50px_1fr_300px] gap-y-8 h-screen">
           <Header />
-          <main className="grid grid-cols-12 gap-x-[30px] w-[1140px] px-[15px] mx-auto">
+          <main className="grid grid-cols-12 gap-x-12 w-[1140px] px-[15px] mx-auto">
             {children}
           </main>
           <Footer />
