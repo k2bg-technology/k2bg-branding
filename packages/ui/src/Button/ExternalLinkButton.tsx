@@ -68,7 +68,6 @@ export default function ExternalLinkButton({
 }: Props) {
   return (
     <a
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...rest}
       className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
     >

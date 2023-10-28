@@ -67,7 +67,6 @@ export default function Button({
 }: Props) {
   return (
     <button
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...rest}
       className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
       type="button"
