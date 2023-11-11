@@ -2,12 +2,13 @@ import { Avatar, BlogCard } from 'ui';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Database } from '../modules/notion/database';
-import { Articles } from '../modules/blog/articles';
+import Notion from '../modules/notion';
+import Blog from '../modules/blog';
 
 export default async function Page() {
-  const pages = await new Database().getPages();
-  const articles = new Articles(pages);
+  const database = await new Notion.Fetcher().fetchDatabase();
+  const pages = database.results.map((result) => new Notion.Page(result));
+  const articles = new Blog.Articles(pages);
 
   return (
     <>
