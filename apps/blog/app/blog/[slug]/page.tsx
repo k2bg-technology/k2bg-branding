@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import ReactMarkdown from 'react-markdown';
 import { Avatar, BlogCard } from 'ui';
 
 import { N2m } from '../../modules/notion/n2m';
 import Notion from '../../modules/notion';
 import Blog from '../../modules/blog';
+import NotionMarkdown from '../../components/notion-markdown/NotionMarkdown';
 
 export default async function Page({
   searchParams,
@@ -62,48 +62,7 @@ export default async function Page({
         </BlogCard>
       </div>
       <div className="col-start-1 col-end-10">
-        <ReactMarkdown
-          components={{
-            h1: ({ children, ...props }) => (
-              <h1
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...props}
-                className="text-heading-1 leading-heading-1 font-bold"
-              >
-                {children}
-              </h1>
-            ),
-            h2: ({ children, ...props }) => (
-              <h2
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...props}
-                className="pt-20 text-heading-2 leading-heading-2 font-bold"
-              >
-                {children}
-              </h2>
-            ),
-            h3: ({ children, ...props }) => (
-              <h3
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...props}
-                className="pt-12 text-heading-3 leading-heading-3 font-bold"
-              >
-                {children}
-              </h3>
-            ),
-            p: ({ children, ...props }) => (
-              <p
-                // eslint-disable-next-line react/jsx-props-no-spreading
-                {...props}
-                className="pt-4 text-body-md leading-body-md text-color-base/80"
-              >
-                {children}
-              </p>
-            ),
-          }}
-        >
-          {notionMarkdownString}
-        </ReactMarkdown>
+        <NotionMarkdown markdownString={notionMarkdownString} />
       </div>
       <article className="col-start-10 col-end-13 h-[500px] bg-slate-100">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt doloribus,
