@@ -19,6 +19,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'error',
     'react/require-default-props': 'off',
     'react/jsx-wrap-multilines': ['error', { prop: false }],
+    'no-shadow': ['error', { allow: ['props'] }],
     'import/order': [
       'error',
       {
