@@ -21,7 +21,7 @@ export default function Content({
   return (
     <div {...rest} className={`flex flex-col gap-4 ${className}`}>
       {category && (
-        <p className="text-body-sm text-main font-bold">{category}</p>
+        <p className="text-body-sm text-accent font-bold">{category}</p>
       )}
       {heading}
       {excerpt && (
