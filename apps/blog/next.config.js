@@ -15,6 +15,7 @@ module.exports = {
       'prod-files-secure.s3.us-west-2.amazonaws.com',
       's3-us-west-2.amazonaws.com',
       'images.unsplash.com',
+      'scontent-nrt1-2.cdninstagram.com',
     ],
   },
   webpack(config) {

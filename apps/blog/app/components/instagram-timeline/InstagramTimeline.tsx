@@ -1,0 +1,49 @@
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+
+import Instagram from '../../modules/instagram';
+
+const MAX_MEDIA_COUNT = 6;
+
+export default async function InstagramTimeline() {
+  const InstagramFetcher = new Instagram.Fetcher();
+
+  const userMedia = await InstagramFetcher.fetchUserMedia();
+  const mediaData = await Promise.all(
+    userMedia.data.flatMap((data, index) =>
+      index < MAX_MEDIA_COUNT ? InstagramFetcher.fetchMediaData(data.id) : []
+    )
+  );
+
+  return (
+    <div>
+      <p className="mb-6 text-subtitle-sm font-bold border-b-2 border-b-slate-100">
+        Instagram
+      </p>
+      <div className="grid grid-cols-2 gap-2">
+        {mediaData.map((data) => (
+          <div className="relative w-[12.5rem] h-[12.5rem]" key={data.id}>
+            <Link
+              href={data.permalink}
+              passHref
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Image
+                alt="instagram media"
+                src={
+                  data.media_type === 'IMAGE'
+                    ? data.media_url
+                    : data.thumbnail_url
+                }
+                className="aspect-square w-full h-full object-cover"
+                fill
+              />
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
