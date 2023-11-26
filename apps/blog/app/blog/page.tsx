@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import Notion from '../modules/notion';
 import Blog from '../modules/blog';
+import Sidebar from '../components/sidebar/Sidebar';
 
 export default async function Page() {
   const database = await new Notion.Fetcher().fetchDatabase();
@@ -118,7 +119,7 @@ export default async function Page() {
         </div>
       </div>
       <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
-        <div className="grid grid-cols-2 gap-12 col-start-1 col-end-10">
+        <div className="grid grid-cols-2 gap-12 col-start-1 col-end-10 place-content-start">
           {articles.featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-6">
               <BlogCard.Media className="relative w-full h-[265px]">
@@ -171,12 +172,9 @@ export default async function Page() {
             </BlogCard>
           ))}
         </div>
-        <article className="col-start-10 col-end-13 h-[500px] bg-slate-100">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt
-          doloribus, eligendi rem perferendis provident error enim omnis quis
-          fuga voluptatibus saepe vel dolore dignissimos temporibus quidem, ut
-          quam minima. Autem!
-        </article>
+        <div className="col-start-10 col-end-13">
+          <Sidebar />
+        </div>
       </div>
     </>
   );

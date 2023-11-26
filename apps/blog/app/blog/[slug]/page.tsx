@@ -5,6 +5,7 @@ import { N2m } from '../../modules/notion/n2m';
 import Notion from '../../modules/notion';
 import Blog from '../../modules/blog';
 import NotionMarkdown from '../../components/notion-markdown/NotionMarkdown';
+import Sidebar from '../../components/sidebar/Sidebar';
 
 export default async function Page({
   searchParams,
@@ -19,8 +20,8 @@ export default async function Page({
   const article = new Blog.Article(page);
 
   return (
-    <div className="grid grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
-      <div className="col-span-full">
+    <>
+      <div className="grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
         <BlogCard className="flex-col gap-6">
           <BlogCard.Content
             category={
@@ -61,15 +62,14 @@ export default async function Page({
           </BlogCard.Media>
         </BlogCard>
       </div>
-      <div className="col-start-1 col-end-10">
-        <NotionMarkdown markdownString={notionMarkdownString} />
+      <div className="grid grid-cols-[subgrid] col-span-full">
+        <div className="col-start-1 col-end-10">
+          <NotionMarkdown markdownString={notionMarkdownString} />
+        </div>
+        <div className="col-start-10 col-end-13">
+          <Sidebar />
+        </div>
       </div>
-      <article className="col-start-10 col-end-13 h-[500px] bg-slate-100">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt doloribus,
-        eligendi rem perferendis provident error enim omnis quis fuga
-        voluptatibus saepe vel dolore dignissimos temporibus quidem, ut quam
-        minima. Autem!
-      </article>
-    </div>
+    </>
   );
 }
