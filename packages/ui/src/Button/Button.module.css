@@ -179,7 +179,7 @@
 
 /* Dark */
 .DarkContained {
-  @apply bg-color-base text-white;
+  @apply bg-base-black text-white;
 
   &:hover {
     @apply bg-opacity-90;
@@ -187,24 +187,24 @@
 }
 
 .DarkOutlined {
-  @apply border-2 border-opacity-20 border-color-base text-color-base;
+  @apply border-2 border-opacity-20 border-base-black text-base-black;
 
   &:hover {
-    @apply border-opacity-50 bg-color-base bg-opacity-10;
+    @apply border-opacity-50 bg-base-black bg-opacity-10;
   }
 }
 
 .DarkText {
-  @apply text-color-base;
+  @apply text-base-black;
 
   &:hover {
-    @apply bg-color-base bg-opacity-10;
+    @apply bg-base-black bg-opacity-10;
   }
 }
 
 /* Light */
 .LightContained {
-  @apply bg-white text-color-base;
+  @apply bg-white text-base-black;
 
   &:hover {
     @apply bg-opacity-90;

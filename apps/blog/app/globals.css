@@ -1,4 +1,4 @@
-@import "tailwind-config/base.css";
+@import 'tailwind-config/base.css';
 
 @tailwind base;
 @tailwind components;
@@ -9,6 +9,6 @@
     @apply h-full text-[62.5%];
   }
   body {
-    @apply h-full text-color-base font-original text-body-md;
+    @apply h-full text-base-black font-original text-body-md;
   }
 }

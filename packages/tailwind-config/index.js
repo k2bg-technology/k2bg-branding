@@ -12,6 +12,7 @@ module.exports = {
           'Consolas',
           'Liberation Mono',
           'Courier New',
+          'YuGothic',
           'var(--font-noto-sans-jp)',
           'monospace',
         ],
@@ -38,7 +39,7 @@ module.exports = {
         'button-sm': 'var(--button-sm)',
       },
       textColor: {
-        'color-base': 'rgb(var(--color-base-black) / <alpha-value>)',
+        'base-black': 'rgb(var(--color-base-black) / <alpha-value>)',
       },
       lineHeight: {
         advert: 'calc(var(--advert)*var(--leading-rate))',
@@ -61,6 +62,8 @@ module.exports = {
         'button-sm': 'calc(var(--button-sm)*var(--leading-rate))',
       },
       colors: {
+        'base-black': 'rgb(var(--color-base-black) / <alpha-value>)',
+        'base-white': 'rgb(var(--color-base-white) / <alpha-value>)',
         main: 'rgb(var(--color-main) / <alpha-value>)',
         'main-light': 'rgb(var(--color-main-light) / <alpha-value>)',
         'main-dark': 'rgb(var(--color-main-dark) / <alpha-value>)',
@@ -82,7 +85,6 @@ module.exports = {
         success: 'rgb(var(--color-success) / <alpha-value>)',
         'success-light': 'rgb(var(--color-success-light) / <alpha-value>)',
         'success-dark': 'rgb(var(--color-success-dark) / <alpha-value>)',
-        'color-base': 'rgb(var(--color-base-black) / <alpha-value>)',
       },
       animation: {
         slide: 'slide 0.8s ease-in 1',

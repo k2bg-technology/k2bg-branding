@@ -49,7 +49,7 @@ export default function NotionMarkdown(props: Props) {
           <p
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-4 text-body-md leading-body-md text-color-base/80 text-justify"
+            className="first:mt-0 mt-4 text-body-sm leading-body-sm text-base-black/80 text-justify"
           >
             {children}
           </p>
@@ -92,7 +92,7 @@ export default function NotionMarkdown(props: Props) {
 
           if (inline)
             return (
-              <code className="rounded-md bg-slate-100 text-body-sm text-accent-dark inline-block mx-1 px-3 py-2 leading-none">
+              <code className="rounded-md bg-base-white/80 text-body-sm text-accent-dark inline-block mx-1 px-2 py-1 leading-none">
                 {children}
               </code>
             );

@@ -7,13 +7,13 @@ import { CompanyLogo } from '../company-logo/CompanyLogo';
 export default function Footer() {
   return (
     <footer>
-      <div className="relative mt-[65px] bg-color-base h-full">
+      <div className="relative mt-[65px] bg-base-black h-full">
         <div
           style={{
             clipPath:
               "path('M1440 64.5909H1090.08C833.336 64.5909 580.229 -7.62939e-06 360 -7.62939e-06C139.771 -7.62939e-06 0 64.5909 0 64.5909V116H1440V64.5909Z')",
           }}
-          className="absolute top-[-64px] bg-color-base h-[116px] w-full -z-10"
+          className="absolute top-[-64px] bg-base-black h-[116px] w-full -z-10"
         />
         <div className="grid place-self-end mx-auto px-4 py-8 sm:px-6 lg:px-8 w-[1140px] h-full">
           <div className="flex items-center justify-between">

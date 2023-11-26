@@ -7,13 +7,13 @@ import { CompanyLogo } from '../company-logo/CompanyLogo';
 export default function Header() {
   return (
     <header>
-      <div className="flex place-items-center bg-gray-50 h-full">
+      <div className="flex place-items-center bg-base-white/50 h-full">
         <div className="mx-auto w-[1140px] px-4 sm:px-6 lg:px-15">
           <div className="flex items-center justify-between">
             <div>
               <Link href="/">
                 <span className="sr-only">Home</span>
-                <CompanyLogo className="text-color-base hover:opacity-90" />
+                <CompanyLogo className="text-base-black hover:opacity-90" />
               </Link>
             </div>
             <div>

@@ -38,9 +38,9 @@ export default async function Page() {
               }
               heading={
                 <Link href={`blog/${articles.featureLatest.slug}` || '#'}>
-                  <h3 className="text-heading-3 font-bold">
+                  <h2 className="text-heading-2 leading-heading-2 font-bold">
                     {articles.featureLatest.title}
-                  </h3>
+                  </h2>
                 </Link>
               }
               excerpt={articles.featureLatest.excerpt}
@@ -90,9 +90,9 @@ export default async function Page() {
                 }
                 heading={
                   <Link href={`blog/${article.slug}` || '#'}>
-                    <h3 className="text-heading-3 font-bold">
+                    <h2 className="text-heading-2 leading-heading-2 font-bold">
                       {article.title}
-                    </h3>
+                    </h2>
                   </Link>
                 }
                 excerpt={article.excerpt}
@@ -145,9 +145,9 @@ export default async function Page() {
                 }
                 heading={
                   <Link href={`blog/${article.slug}` || '#'}>
-                    <h3 className="text-heading-3 font-bold">
+                    <h2 className="text-heading-2 leading-heading-2 font-bold">
                       {article.title}
-                    </h3>
+                    </h2>
                   </Link>
                 }
                 excerpt={article.excerpt}
