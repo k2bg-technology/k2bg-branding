@@ -20,7 +20,7 @@ export default function Header() {
               <nav aria-label="Global">
                 <ul className="flex items-center gap-x-4">
                   <li>
-                    <Link href="/" passHref>
+                    <Link href={`category/engineering` || '#'} passHref>
                       <Button
                         className="font-normal"
                         color="dark"
@@ -32,7 +32,7 @@ export default function Header() {
                   </li>
 
                   <li>
-                    <Link href="/" passHref>
+                    <Link href={`category/design` || '#'} passHref>
                       <Button
                         className="font-normal"
                         color="dark"
@@ -44,7 +44,7 @@ export default function Header() {
                   </li>
 
                   <li>
-                    <Link href="/" passHref>
+                    <Link href={`category/data-science` || '#'} passHref>
                       <Button
                         className="font-normal"
                         color="dark"
@@ -56,7 +56,7 @@ export default function Header() {
                   </li>
 
                   <li>
-                    <Link href="/" passHref>
+                    <Link href={`category/life-style` || '#'} passHref>
                       <Button
                         className="font-normal"
                         color="dark"

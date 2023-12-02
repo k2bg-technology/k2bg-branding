@@ -7,7 +7,6 @@ export class Articles {
 
   constructor(pages: Page[]) {
     this.articles = pages.map((page) => new Article(page));
-    this.articles = this.filterPublished();
     this.articles = this.sortByDate();
   }
 
@@ -25,10 +24,6 @@ export class Articles {
 
   get featuresPreviously() {
     return this.articles.slice(4, 8);
-  }
-
-  private filterPublished() {
-    return this.articles.filter((page) => page.status === 'published');
   }
 
   private sortByDate() {

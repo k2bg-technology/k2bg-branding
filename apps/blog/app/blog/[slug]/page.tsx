@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Avatar, BlogCard } from 'ui';
 
 import { N2m } from '../../modules/notion/n2m';
@@ -25,9 +26,9 @@ export default async function Page({
         <BlogCard className="flex-col gap-6">
           <BlogCard.Content
             category={
-              <a href="https://example.com" target="_blank" rel="noreferrer">
-                プログラミング
-              </a>
+              <Link href={`category/${article.category}` || '#'}>
+                {article.category}
+              </Link>
             }
             heading={
               <h1 className="text-heading-1 font-bold">{article.title}</h1>

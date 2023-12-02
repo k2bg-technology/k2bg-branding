@@ -7,7 +7,14 @@ import Blog from '../modules/blog';
 import Sidebar from '../components/sidebar/Sidebar';
 
 export default async function Page() {
-  const database = await new Notion.Fetcher().fetchDatabase();
+  const database = await new Notion.Fetcher().fetchDatabase({
+    filter: {
+      property: 'status',
+      status: {
+        equals: 'published',
+      },
+    },
+  });
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Blog.Articles(pages);
 
@@ -33,9 +40,11 @@ export default async function Page() {
             </BlogCard.Media>
             <BlogCard.Content
               category={
-                <a href="https://example.com" target="_blank" rel="noreferrer">
-                  プログラミング
-                </a>
+                <Link
+                  href={`category/${articles.featureLatest.category}` || '#'}
+                >
+                  {articles.featureLatest.category}
+                </Link>
               }
               heading={
                 <Link href={`blog/${articles.featureLatest.slug}` || '#'}>
@@ -81,13 +90,9 @@ export default async function Page() {
               </BlogCard.Media>
               <BlogCard.Content
                 category={
-                  <a
-                    href="https://example.com"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    プログラミング
-                  </a>
+                  <Link href={`category/${article.category}` || '#'}>
+                    {article.category}
+                  </Link>
                 }
                 heading={
                   <Link href={`blog/${article.slug}` || '#'}>
@@ -136,13 +141,9 @@ export default async function Page() {
               </BlogCard.Media>
               <BlogCard.Content
                 category={
-                  <a
-                    href="https://example.com"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    プログラミング
-                  </a>
+                  <Link href={`category/${article.category}` || '#'}>
+                    {article.category}
+                  </Link>
                 }
                 heading={
                   <Link href={`blog/${article.slug}` || '#'}>

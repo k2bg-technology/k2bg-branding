@@ -57,6 +57,13 @@ export class Page {
     return this.pagePropertyMap.get(this.result.properties.author.id, 'people');
   }
 
+  get category() {
+    return this.pagePropertyMap.get(
+      this.result.properties.category.id,
+      'select'
+    );
+  }
+
   static isPageObject(
     result: QueryDatabaseResponse['results'][number]
   ): result is PageObject {

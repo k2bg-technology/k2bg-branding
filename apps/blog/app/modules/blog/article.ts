@@ -65,4 +65,12 @@ export class Article {
           : '',
     };
   }
+
+  get category() {
+    const select = this.page.category?.select ?? {};
+
+    return 'name' in select && typeof select.name === 'string'
+      ? select.name
+      : '';
+  }
 }
