@@ -122,4 +122,5 @@ module.exports = {
     },
   },
   plugins: [],
+  mode: 'jit',
 };
