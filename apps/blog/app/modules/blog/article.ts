@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-import { Page } from '../notion/page';
+import { Page } from '../notion/notionPage';
 
 export class Article {
   // eslint-disable-next-line no-useless-constructor, no-empty-function

@@ -1,5 +1,5 @@
 import { Fetcher } from './fetcher';
-import { Page } from './page';
+import { Page } from './notionPage';
 
 const Notion = {
   Fetcher,
