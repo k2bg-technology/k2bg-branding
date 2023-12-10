@@ -63,7 +63,7 @@ export default async function Page({
           </BlogCard.Media>
         </BlogCard>
       </div>
-      <div className="grid grid-cols-[subgrid] col-span-full">
+      <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
         <div className="col-start-1 col-end-10">
           <NotionMarkdown markdownString={notionMarkdownString} />
         </div>
