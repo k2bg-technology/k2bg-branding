@@ -72,8 +72,7 @@ export default function Header() {
                   Concept
                 </Button>
               </Link>
-
-              <Link href="/" passHref>
+              <Link href={'contact' || '#'} passHref>
                 <Button className="font-normal" color="dark" variant="text">
                   Contact
                 </Button>
