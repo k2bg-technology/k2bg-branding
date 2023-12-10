@@ -18,13 +18,16 @@ export default function Footer() {
         <div className="grid place-self-end mx-auto px-4 py-8 sm:px-6 lg:px-8 w-[1140px] h-full">
           <div className="flex items-center justify-between">
             <div className="flex justify-center sm:justify-start">
-              <CompanyLogo className="text-white" />
+              <Link href="/">
+                <span className="sr-only">Home</span>
+                <CompanyLogo className="text-white" />
+              </Link>
             </div>
 
             <nav aria-label="Global">
               <ul className="flex items-center gap-x-4">
                 <li>
-                  <Link href="/" passHref>
+                  <Link href={`category/engineering` || '#'} passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -36,7 +39,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/" passHref>
+                  <Link href={`category/design` || '#'} passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -48,7 +51,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/" passHref>
+                  <Link href={`category/data-science` || '#'} passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -60,7 +63,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/" passHref>
+                  <Link href={`category/life-style` || '#'} passHref>
                     <Button
                       className="font-normal"
                       color="light"
