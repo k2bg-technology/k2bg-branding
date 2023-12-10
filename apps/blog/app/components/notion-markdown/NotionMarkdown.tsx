@@ -70,6 +70,24 @@ export default function NotionMarkdown(props: Props) {
             </Link>
           );
         },
+        ul: ({ children, ...props }) => (
+          <ul
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            className="mt-4 list-disc list-inside"
+          >
+            {children}
+          </ul>
+        ),
+        li: ({ children, ...props }) => (
+          <li
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            className="text-body-sm leading-body-sm text-base-black/80 text-justify"
+          >
+            {children}
+          </li>
+        ),
         strong: ({ children, ...props }) => (
           <span
             // eslint-disable-next-line react/jsx-props-no-spreading
