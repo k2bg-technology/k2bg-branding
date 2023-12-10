@@ -30,7 +30,6 @@ export default function Header() {
                       </Button>
                     </Link>
                   </li>
-
                   <li>
                     <Link href={`category/design` || '#'} passHref>
                       <Button
@@ -42,7 +41,6 @@ export default function Header() {
                       </Button>
                     </Link>
                   </li>
-
                   <li>
                     <Link href={`category/data-science` || '#'} passHref>
                       <Button
@@ -54,7 +52,6 @@ export default function Header() {
                       </Button>
                     </Link>
                   </li>
-
                   <li>
                     <Link href={`category/life-style` || '#'} passHref>
                       <Button
@@ -69,9 +66,8 @@ export default function Header() {
                 </ul>
               </nav>
             </div>
-
             <div className="flex items-center gap-x-4">
-              <Link href="/" passHref>
+              <Link href={'concept' || '#'} passHref>
                 <Button className="font-normal" color="dark" variant="text">
                   Concept
                 </Button>

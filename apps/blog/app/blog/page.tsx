@@ -9,10 +9,20 @@ import Sidebar from '../components/sidebar/Sidebar';
 export default async function Page() {
   const database = await new Notion.Fetcher().fetchDatabase({
     filter: {
-      property: 'status',
-      status: {
-        equals: 'published',
-      },
+      and: [
+        {
+          property: 'status',
+          status: {
+            equals: 'published',
+          },
+        },
+        {
+          property: 'type',
+          select: {
+            equals: 'article',
+          },
+        },
+      ],
     },
   });
   const pages = database.results.map((result) => new Notion.Page(result));
