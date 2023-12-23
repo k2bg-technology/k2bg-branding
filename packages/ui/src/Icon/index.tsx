@@ -5,7 +5,9 @@ import {
   ArrowTopRightOnSquareIcon,
   XMarkIcon,
   ChevronDoubleRightIcon,
+  Bars3Icon,
 } from '@heroicons/react/24/solid';
+import { InboxStackIcon } from '@heroicons/react/24/outline';
 
 import TypescriptLogo from './typescript-logo.svg';
 import PythonLogo from './python-logo.svg';
@@ -40,10 +42,14 @@ const ICONS = {
   'arrow-top-right-on-square': ArrowTopRightOnSquareIcon,
   'x-mark': XMarkIcon,
   'chevron-double-right': ChevronDoubleRightIcon,
+  'inbox-stack': InboxStackIcon,
+  'bars-3': Bars3Icon,
 };
 
+export type IconName = keyof typeof ICONS;
+
 interface IconProps extends SVGProps<SVGSVGElement> {
-  name: keyof typeof ICONS;
+  name: IconName;
 }
 
 export function SvgIcon({ name, ...rest }: IconProps) {
