@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button } from '../Button';
 
-import Dialog from './Dialog';
+import Drawer from './Drawer';
 
 const meta = {
-  component: Dialog,
+  component: Drawer,
   tags: ['autodocs'],
-} satisfies Meta<typeof Dialog>;
+} satisfies Meta<typeof Drawer>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -17,6 +17,6 @@ export const Default: Story = {
     trigger: <Button>Open</Button>,
     title: 'dialog title',
     description: 'dialog title description',
-    content: <div className="bg-slate-400 h-full">Content</div>,
+    mainContent: <div className="bg-slate-400 w-[30rem] h-full">Content</div>,
   },
 };

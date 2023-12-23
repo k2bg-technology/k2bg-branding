@@ -1,0 +1,29 @@
+.Content {
+  &[data-state='open'] {
+    animation: slidein 0.3s ease-in 1;
+  }
+
+  &[data-state='closed'] {
+    animation: slideout 0.3s ease-in 1;
+  }
+}
+
+@keyframes slidein {
+  from {
+    transform: translate(100%, 0);
+  }
+
+  to {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes slideout {
+  from {
+    transform: translate(0, 0);
+  }
+
+  to {
+    transform: translate(100%, 0);
+  }
+}
