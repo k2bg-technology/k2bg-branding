@@ -67,7 +67,7 @@ export default async function Page({
         <div className="col-start-1 col-end-10">
           <NotionMarkdown markdownString={notionMarkdownString} />
         </div>
-        <div className="col-start-10 col-end-13">
+        <div className="hidden xl:block col-start-10 col-end-13">
           <Sidebar />
         </div>
       </div>

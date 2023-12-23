@@ -1,14 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
-import { Button } from 'ui';
+import { Button, Drawer, DropdownMenu, DropdownMenuItem, SvgIcon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
+import Sidebar from '../sidebar/Sidebar';
 
 export default function Header() {
   return (
     <header>
       <div className="flex place-items-center bg-base-white/50 h-full">
-        <div className="mx-auto w-[1140px] px-4 sm:px-6 lg:px-15">
+        <div className="mx-auto w-full md:w-[72rem] xl:w-[114rem] px-6">
           <div className="flex items-center justify-between">
             <div>
               <Link href="/">
@@ -16,8 +17,8 @@ export default function Header() {
                 <CompanyLogo className="text-base-black hover:opacity-90" />
               </Link>
             </div>
-            <div>
-              <nav aria-label="Global">
+            <div className="hidden xl:block">
+              <nav>
                 <ul className="flex items-center gap-x-4">
                   <li>
                     <Link href={`category/engineering` || '#'} passHref>
@@ -66,7 +67,7 @@ export default function Header() {
                 </ul>
               </nav>
             </div>
-            <div className="flex items-center gap-x-4">
+            <div className="hidden xl:flex items-center gap-x-4">
               <Link href={'concept' || '#'} passHref>
                 <Button className="font-normal" color="dark" variant="text">
                   Concept
@@ -77,6 +78,54 @@ export default function Header() {
                   Contact
                 </Button>
               </Link>
+            </div>
+            <div className="flex xl:hidden items-center gap-x-8">
+              <DropdownMenu
+                trigger={
+                  <Button color="dark" variant="text" className="!p-2">
+                    <SvgIcon name="inbox-stack" className="w-10 h-10" />
+                  </Button>
+                }
+              >
+                <DropdownMenuItem>
+                  <Link href={`category/engineering` || '#'} passHref>
+                    Engineering
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`category/design` || '#'} passHref>
+                    Design
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`category/data-science` || '#'} passHref>
+                    Data Science
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`category/life-style` || '#'} passHref>
+                    Life Style
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`concept` || '#'} passHref>
+                    Concept
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link href={`contact` || '#'} passHref>
+                    Contact
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenu>
+              <Drawer
+                trigger={
+                  <Button color="dark" variant="text" className="!p-2">
+                    <SvgIcon name="bars-3" className="w-10 h-10" />
+                  </Button>
+                }
+                mainContent={<Sidebar />}
+              />
             </div>
           </div>
         </div>

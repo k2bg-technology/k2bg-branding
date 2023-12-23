@@ -8,7 +8,7 @@ const FORMSPREE_FORM_ACTION_URL = process.env.FORMSPREE_FORM_ACTION_URL ?? '';
 export default function Page() {
   return (
     <>
-      <div className="grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
+      <div className="grid-cols-[subgrid] gap-20 col-span-full py-12">
         <h1 className="text-heading-1 font-bold">お問い合わせ</h1>
         <p className="mt-4 text-body-sm leading-body-sm text-base-black/80 text-justify whitespace-pre-wrap">
           必要事項をご入力いただき、送信ボタンを押してください。返信には数日かかる場合がございますが、極力早急に返信するように致しますので、お気軽にお問い合わせいただけると幸いです。平日は1〜2時間、休日は3時間程度で在宅ワークをお受けすることが可能です。
@@ -23,7 +23,7 @@ export default function Page() {
           </li>
         </ul>
       </div>
-      <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
+      <div className="grid grid-cols-[subgrid] col-span-full py-12">
         <div className="col-start-1 col-end-10">
           <form
             method="post"
@@ -102,7 +102,7 @@ export default function Page() {
             </ul>
           </form>
         </div>
-        <div className="col-start-10 col-end-13">
+        <div className="hidden xl:block col-start-10 col-end-13">
           <Sidebar />
         </div>
       </div>

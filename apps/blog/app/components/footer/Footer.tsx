@@ -15,8 +15,8 @@ export default function Footer() {
           }}
           className="absolute top-[-64px] bg-base-black h-[116px] w-full -z-10"
         />
-        <div className="grid place-self-end mx-auto px-4 py-8 sm:px-6 lg:px-8 w-[1140px] h-full">
-          <div className="flex items-center justify-between">
+        <div className="grid place-self-end mx-auto px-6 py-8 w-full md:w-[72rem] xl:w-[114rem] h-full">
+          <div className="flex flex-wrap items-center justify-between">
             <div className="flex justify-center sm:justify-start">
               <Link href="/">
                 <span className="sr-only">Home</span>
@@ -24,8 +24,8 @@ export default function Footer() {
               </Link>
             </div>
 
-            <nav aria-label="Global">
-              <ul className="flex items-center gap-x-4">
+            <nav>
+              <ul className="flex flex-wrap items-center gap-4">
                 <li>
                   <Link href={`category/engineering` || '#'} passHref>
                     <Button
@@ -70,6 +70,30 @@ export default function Footer() {
                       variant="text"
                     >
                       Life Style
+                    </Button>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href={`concept` || '#'} passHref>
+                    <Button
+                      className="font-normal"
+                      color="light"
+                      variant="text"
+                    >
+                      Concept
+                    </Button>
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href={`contact` || '#'} passHref>
+                    <Button
+                      className="font-normal"
+                      color="light"
+                      variant="text"
+                    >
+                      Contact
                     </Button>
                   </Link>
                 </li>

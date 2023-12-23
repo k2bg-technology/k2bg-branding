@@ -33,14 +33,14 @@ export default async function Page({
 
   return (
     <>
-      <h1 className="col-span-full text-heading-1 font-bold capitalize py-[10px]">
+      <h1 className="col-span-full text-heading-1 font-bold capitalize py-4">
         {params.category}
       </h1>
-      <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
-        <div className="grid grid-cols-3 col-span-full gap-12 place-content-start">
+      <div className="grid grid-cols-[subgrid] col-span-full py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-12 place-content-start">
           {articles.all.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-6">
-              <BlogCard.Media className="relative w-full h-[265px]">
+              <BlogCard.Media className="relative w-full h-[26.5rem]">
                 {article.image && (
                   <Link href={`blog/${article.slug}` || '#'} passHref>
                     <Image

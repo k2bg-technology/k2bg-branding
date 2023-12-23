@@ -20,7 +20,7 @@ export default async function Page() {
 
   return (
     <>
-      <div className="grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
+      <div className="grid-cols-[subgrid] gap-20 col-span-full py-12">
         <BlogCard className="flex-col gap-6">
           <BlogCard.Content
             heading={
@@ -40,11 +40,11 @@ export default async function Page() {
           </BlogCard.Media>
         </BlogCard>
       </div>
-      <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
+      <div className="grid grid-cols-[subgrid] col-span-full py-12">
         <div className="col-start-1 col-end-10">
           <NotionMarkdown markdownString={notionMarkdownString} />
         </div>
-        <div className="col-start-10 col-end-13">
+        <div className="hidden xl:block col-start-10 col-end-13">
           <Sidebar />
         </div>
       </div>
