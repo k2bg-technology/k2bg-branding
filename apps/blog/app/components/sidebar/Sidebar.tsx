@@ -15,6 +15,7 @@ export default function Sidebar() {
             src="/adsense_dummy.png"
             className="aspect-square h-full w-full object-cover"
             fill
+            sizes="100%"
           />
         </div>
         <ProfileCard />

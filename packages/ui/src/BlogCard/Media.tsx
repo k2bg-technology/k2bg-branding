@@ -6,7 +6,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 
 export default function Media({ className, children, ...rest }: Props) {
   return (
-    <div {...rest} className={`overflow-hidden rounded-xl w-full ${className}`}>
+    <div {...rest} className={`overflow-hidden rounded-xl ${className}`}>
       {children}
     </div>
   );

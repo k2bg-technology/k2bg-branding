@@ -43,6 +43,7 @@ export default async function Page({
                       src={article.avatar.imageUrl}
                       className="aspect-square h-full w-full object-cover"
                       fill
+                      sizes="100%"
                     />
                   </div>
                 }
@@ -58,6 +59,7 @@ export default async function Page({
                 src={article.image}
                 className="aspect-square h-full w-full object-cover"
                 fill
+                sizes="100%"
               />
             )}
           </BlogCard.Media>

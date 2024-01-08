@@ -17,6 +17,7 @@ export default function ProfileCard() {
                 src="/me.png"
                 className="aspect-square h-full w-full object-cover"
                 fill
+                sizes="100%"
               />
             </div>
           }

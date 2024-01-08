@@ -40,18 +40,19 @@ export default async function Page({
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-12 place-content-start">
           {articles.all.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-6">
-              <BlogCard.Media className="relative w-full h-[26.5rem]">
-                {article.image && (
-                  <Link href={`blog/${article.slug}` || '#'} passHref>
+              {article.image && (
+                <Link href={`blog/${article.slug}` || '#'} passHref>
+                  <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
                       src={article.image}
                       className="aspect-square h-full w-full object-cover"
                       fill
+                      sizes="100%"
                     />
-                  </Link>
-                )}
-              </BlogCard.Media>
+                  </BlogCard.Media>
+                </Link>
+              )}
               <BlogCard.Content
                 category={
                   <Link href={`category/${article.category}` || '#'}>
@@ -75,6 +76,7 @@ export default async function Page({
                           src={article.avatar.imageUrl}
                           className="aspect-square h-full w-full object-cover"
                           fill
+                          sizes="100%"
                         />
                       </div>
                     }

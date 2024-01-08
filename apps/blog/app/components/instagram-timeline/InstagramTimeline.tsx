@@ -23,13 +23,14 @@ export default async function InstagramTimeline() {
       </p>
       <div className="grid grid-cols-2 gap-2">
         {mediaData.map((data) => (
-          <div className="relative w-[12.5rem] h-[12.5rem]" key={data.id}>
-            <Link
-              href={data.permalink}
-              passHref
-              target="_blank"
-              rel="noreferrer"
-            >
+          <Link
+            key={data.id}
+            href={data.permalink}
+            passHref
+            target="_blank"
+            rel="noreferrer"
+          >
+            <div className="relative w-[12.5rem] h-[12.5rem]">
               <Image
                 alt="instagram media"
                 src={
@@ -39,9 +40,11 @@ export default async function InstagramTimeline() {
                 }
                 className="aspect-square w-full h-full object-cover"
                 fill
+                sizes="100%"
+                priority
               />
-            </Link>
-          </div>
+            </div>
+          </Link>
         ))}
       </div>
     </div>

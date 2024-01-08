@@ -33,21 +33,23 @@ export default async function Page() {
       <div className="grid grid-cols-[subgrid] col-span-full border-b-2 py-12 border-b-slate-100">
         <div className="col-start-1 col-end-8">
           <BlogCard className="flex-col gap-6">
-            <BlogCard.Media className="relative w-full h-[30rem]">
-              {articles.featureLatest.image && (
-                <Link
-                  href={`blog/${articles.featureLatest.slug}` || '#'}
-                  passHref
-                >
+            {articles.featureLatest.image && (
+              <Link
+                href={`blog/${articles.featureLatest.slug}` || '#'}
+                passHref
+              >
+                <BlogCard.Media className="relative w-full h-[30rem]">
                   <Image
                     alt="media"
                     src={articles.featureLatest.image}
-                    className="aspect-square h-full w-full object-cover"
+                    className="absolute aspect-square h-full w-full object-cover"
                     fill
+                    sizes="100%"
+                    priority
                   />
-                </Link>
-              )}
-            </BlogCard.Media>
+                </BlogCard.Media>
+              </Link>
+            )}
             <BlogCard.Content
               category={
                 <Link
@@ -73,6 +75,7 @@ export default async function Page() {
                         src={articles.featureLatest.avatar.imageUrl}
                         className="aspect-square h-full w-full object-cover"
                         fill
+                        sizes="100%"
                       />
                     </div>
                   }
@@ -86,18 +89,19 @@ export default async function Page() {
         <div className="hidden xl:grid gap-16 col-start-8 col-end-13">
           {articles.featuresRecently.map((article) => (
             <BlogCard key={article.title} className="flex-row gap-8">
-              <BlogCard.Media className="relative flex-none max-w-[16rem] max-h-[16rem]">
-                {article.image && (
-                  <Link href={`blog/${article.slug}` || '#'} passHref>
+              {article.image && (
+                <Link href={`blog/${article.slug}` || '#'} passHref>
+                  <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
                     <Image
                       alt="media"
                       src={article.image}
                       className="aspect-square h-full w-full object-cover"
                       fill
+                      sizes="100%"
                     />
-                  </Link>
-                )}
-              </BlogCard.Media>
+                  </BlogCard.Media>
+                </Link>
+              )}
               <BlogCard.Content
                 category={
                   <Link href={`category/${article.category}` || '#'}>
@@ -121,6 +125,7 @@ export default async function Page() {
                           src={article.avatar.imageUrl}
                           className="aspect-square h-full w-full object-cover"
                           fill
+                          sizes="100%"
                         />
                       </div>
                     }
@@ -138,18 +143,19 @@ export default async function Page() {
           {articles.featuresRecently.map((article) => (
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-6">
-                <BlogCard.Media className="relative w-full h-[26.5rem]">
-                  {article.image && (
-                    <Link href={`blog/${article.slug}` || '#'} passHref>
+                {article.image && (
+                  <Link href={`blog/${article.slug}` || '#'} passHref>
+                    <BlogCard.Media className="relative w-full h-[26.5rem]">
                       <Image
                         alt="media"
                         src={article.image}
                         className="aspect-square h-full w-full object-cover"
                         fill
+                        sizes="100%"
                       />
-                    </Link>
-                  )}
-                </BlogCard.Media>
+                    </BlogCard.Media>
+                  </Link>
+                )}
                 <BlogCard.Content
                   category={
                     <Link href={`category/${article.category}` || '#'}>
@@ -173,6 +179,7 @@ export default async function Page() {
                             src={article.avatar.imageUrl}
                             className="aspect-square h-full w-full object-cover"
                             fill
+                            sizes="100%"
                           />
                         </div>
                       }
@@ -186,18 +193,19 @@ export default async function Page() {
           ))}
           {articles.featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-6">
-              <BlogCard.Media className="relative w-full h-[26.5rem]">
-                {article.image && (
-                  <Link href={`blog/${article.slug}` || '#'} passHref>
+              {article.image && (
+                <Link href={`blog/${article.slug}` || '#'} passHref>
+                  <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
                       src={article.image}
                       className="aspect-square h-full w-full object-cover"
                       fill
+                      sizes="100%"
                     />
-                  </Link>
-                )}
-              </BlogCard.Media>
+                  </BlogCard.Media>
+                </Link>
+              )}
               <BlogCard.Content
                 category={
                   <Link href={`category/${article.category}` || '#'}>
@@ -221,6 +229,7 @@ export default async function Page() {
                           src={article.avatar.imageUrl}
                           className="aspect-square h-full w-full object-cover"
                           fill
+                          sizes="100%"
                         />
                       </div>
                     }
