@@ -11,12 +11,22 @@ module.exports = {
     ];
   },
   images: {
-    domains: [
-      'prod-files-secure.s3.us-west-2.amazonaws.com',
-      's3-us-west-2.amazonaws.com',
-      'images.unsplash.com',
-      'scontent-nrt1-2.cdninstagram.com',
-      'scontent-ord5-2.cdninstagram.com',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.amazonaws.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.cdninstagram.com',
+        port: '',
+      },
     ],
   },
   webpack(config) {
