@@ -27,7 +27,7 @@ export default function Footer() {
             <nav>
               <ul className="flex flex-wrap items-center gap-4">
                 <li>
-                  <Link href={`category/engineering` || '#'} passHref>
+                  <Link href="/category/engineering" passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -39,7 +39,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href={`category/design` || '#'} passHref>
+                  <Link href="/category/design" passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -51,7 +51,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href={`category/data-science` || '#'} passHref>
+                  <Link href="/category/data-science" passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -63,7 +63,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href={`category/life-style` || '#'} passHref>
+                  <Link href="/category/life-style" passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -75,7 +75,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href={`concept` || '#'} passHref>
+                  <Link href="/concept" passHref>
                     <Button
                       className="font-normal"
                       color="light"
@@ -87,7 +87,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href={`contact` || '#'} passHref>
+                  <Link href="/contact" passHref>
                     <Button
                       className="font-normal"
                       color="light"

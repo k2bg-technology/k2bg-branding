@@ -34,10 +34,7 @@ export default async function Page() {
         <div className="col-start-1 col-end-8">
           <BlogCard className="flex-col gap-6">
             {articles.featureLatest.image && (
-              <Link
-                href={`blog/${articles.featureLatest.slug}` || '#'}
-                passHref
-              >
+              <Link href={`/blog/${articles.featureLatest.slug}`} passHref>
                 <BlogCard.Media className="relative w-full h-[30rem]">
                   <Image
                     alt="media"
@@ -52,14 +49,12 @@ export default async function Page() {
             )}
             <BlogCard.Content
               category={
-                <Link
-                  href={`category/${articles.featureLatest.category}` || '#'}
-                >
+                <Link href={`/category/${articles.featureLatest.category}`}>
                   {articles.featureLatest.category}
                 </Link>
               }
               heading={
-                <Link href={`blog/${articles.featureLatest.slug}` || '#'}>
+                <Link href={`/blog/${articles.featureLatest.slug}`}>
                   <h2 className="text-heading-2 leading-heading-2 font-bold">
                     {articles.featureLatest.title}
                   </h2>
@@ -90,7 +85,7 @@ export default async function Page() {
           {articles.featuresRecently.map((article) => (
             <BlogCard key={article.title} className="flex-row gap-8">
               {article.image && (
-                <Link href={`blog/${article.slug}` || '#'} passHref>
+                <Link href={`/blog/${article.slug}`} passHref>
                   <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
                     <Image
                       alt="media"
@@ -104,12 +99,12 @@ export default async function Page() {
               )}
               <BlogCard.Content
                 category={
-                  <Link href={`category/${article.category}` || '#'}>
+                  <Link href={`/category/${article.category}`}>
                     {article.category}
                   </Link>
                 }
                 heading={
-                  <Link href={`blog/${article.slug}` || '#'}>
+                  <Link href={`/blog/${article.slug}`}>
                     <h2 className="text-heading-2 leading-heading-2 font-bold">
                       {article.title}
                     </h2>
@@ -144,7 +139,7 @@ export default async function Page() {
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-6">
                 {article.image && (
-                  <Link href={`blog/${article.slug}` || '#'} passHref>
+                  <Link href={`/blog/${article.slug}`} passHref>
                     <BlogCard.Media className="relative w-full h-[26.5rem]">
                       <Image
                         alt="media"
@@ -158,12 +153,12 @@ export default async function Page() {
                 )}
                 <BlogCard.Content
                   category={
-                    <Link href={`category/${article.category}` || '#'}>
+                    <Link href={`/category/${article.category}`}>
                       {article.category}
                     </Link>
                   }
                   heading={
-                    <Link href={`blog/${article.slug}` || '#'}>
+                    <Link href={`/blog/${article.slug}`}>
                       <h2 className="text-heading-2 leading-heading-2 font-bold">
                         {article.title}
                       </h2>
@@ -194,7 +189,7 @@ export default async function Page() {
           {articles.featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-6">
               {article.image && (
-                <Link href={`blog/${article.slug}` || '#'} passHref>
+                <Link href={`/blog/${article.slug}`} passHref>
                   <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
@@ -208,12 +203,12 @@ export default async function Page() {
               )}
               <BlogCard.Content
                 category={
-                  <Link href={`category/${article.category}` || '#'}>
+                  <Link href={`/category/${article.category}`}>
                     {article.category}
                   </Link>
                 }
                 heading={
-                  <Link href={`blog/${article.slug}` || '#'}>
+                  <Link href={`/blog/${article.slug}`}>
                     <h2 className="text-heading-2 leading-heading-2 font-bold">
                       {article.title}
                     </h2>

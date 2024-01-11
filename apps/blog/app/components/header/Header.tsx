@@ -21,7 +21,7 @@ export default function Header() {
               <nav>
                 <ul className="flex items-center gap-x-4">
                   <li>
-                    <Link href={`category/engineering` || '#'} passHref>
+                    <Link href="/category/engineering" passHref>
                       <Button
                         className="font-normal"
                         color="dark"
@@ -32,7 +32,7 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href={`category/design` || '#'} passHref>
+                    <Link href="/category/design" passHref>
                       <Button
                         className="font-normal"
                         color="dark"
@@ -43,7 +43,7 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href={`category/data-science` || '#'} passHref>
+                    <Link href="/category/data-science" passHref>
                       <Button
                         className="font-normal"
                         color="dark"
@@ -54,7 +54,7 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href={`category/life-style` || '#'} passHref>
+                    <Link href="/category/life-style" passHref>
                       <Button
                         className="font-normal"
                         color="dark"
@@ -68,12 +68,12 @@ export default function Header() {
               </nav>
             </div>
             <div className="hidden xl:flex items-center gap-x-4">
-              <Link href={'concept' || '#'} passHref>
+              <Link href="/concept" passHref>
                 <Button className="font-normal" color="dark" variant="text">
                   Concept
                 </Button>
               </Link>
-              <Link href={'contact' || '#'} passHref>
+              <Link href="/contact" passHref>
                 <Button className="font-normal" color="dark" variant="text">
                   Contact
                 </Button>
@@ -88,32 +88,32 @@ export default function Header() {
                 }
               >
                 <DropdownMenuItem>
-                  <Link href={`category/engineering` || '#'} passHref>
+                  <Link href="/category/engineering" passHref>
                     Engineering
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`category/design` || '#'} passHref>
+                  <Link href="/category/design" passHref>
                     Design
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`category/data-science` || '#'} passHref>
+                  <Link href="/category/data-science" passHref>
                     Data Science
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`category/life-style` || '#'} passHref>
+                  <Link href="/category/life-style" passHref>
                     Life Style
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`concept` || '#'} passHref>
+                  <Link href="/concept" passHref>
                     Concept
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`contact` || '#'} passHref>
+                  <Link href="/contact" passHref>
                     Contact
                   </Link>
                 </DropdownMenuItem>

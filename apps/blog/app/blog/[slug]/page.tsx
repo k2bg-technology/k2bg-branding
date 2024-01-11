@@ -26,7 +26,7 @@ export default async function Page({
         <BlogCard className="flex-col gap-6">
           <BlogCard.Content
             category={
-              <Link href={`category/${article.category}` || '#'}>
+              <Link href={`/category/${article.category}`}>
                 {article.category}
               </Link>
             }
