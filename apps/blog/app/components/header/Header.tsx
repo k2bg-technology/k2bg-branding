@@ -23,7 +23,7 @@ export default function Header() {
                   <li>
                     <Link href="/category/engineering" passHref>
                       <Button
-                        className="font-normal"
+                        className="!font-normal"
                         color="dark"
                         variant="text"
                       >
@@ -34,7 +34,7 @@ export default function Header() {
                   <li>
                     <Link href="/category/design" passHref>
                       <Button
-                        className="font-normal"
+                        className="!font-normal"
                         color="dark"
                         variant="text"
                       >
@@ -45,7 +45,7 @@ export default function Header() {
                   <li>
                     <Link href="/category/data-science" passHref>
                       <Button
-                        className="font-normal"
+                        className="!font-normal"
                         color="dark"
                         variant="text"
                       >
@@ -56,7 +56,7 @@ export default function Header() {
                   <li>
                     <Link href="/category/life-style" passHref>
                       <Button
-                        className="font-normal"
+                        className="!font-normal"
                         color="dark"
                         variant="text"
                       >
@@ -69,12 +69,12 @@ export default function Header() {
             </div>
             <div className="hidden xl:flex items-center gap-x-4">
               <Link href="/concept" passHref>
-                <Button className="font-normal" color="dark" variant="text">
+                <Button className="!font-normal" color="dark" variant="text">
                   Concept
                 </Button>
               </Link>
               <Link href="/contact" passHref>
-                <Button className="font-normal" color="dark" variant="text">
+                <Button className="!font-normal" color="dark" variant="text">
                   Contact
                 </Button>
               </Link>

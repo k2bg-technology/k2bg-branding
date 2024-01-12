@@ -29,7 +29,7 @@ export default function Footer() {
                 <li>
                   <Link href="/category/engineering" passHref>
                     <Button
-                      className="font-normal"
+                      className="!font-normal"
                       color="light"
                       variant="text"
                     >
@@ -41,7 +41,7 @@ export default function Footer() {
                 <li>
                   <Link href="/category/design" passHref>
                     <Button
-                      className="font-normal"
+                      className="!font-normal"
                       color="light"
                       variant="text"
                     >
@@ -53,7 +53,7 @@ export default function Footer() {
                 <li>
                   <Link href="/category/data-science" passHref>
                     <Button
-                      className="font-normal"
+                      className="!font-normal"
                       color="light"
                       variant="text"
                     >
@@ -65,7 +65,7 @@ export default function Footer() {
                 <li>
                   <Link href="/category/life-style" passHref>
                     <Button
-                      className="font-normal"
+                      className="!font-normal"
                       color="light"
                       variant="text"
                     >
@@ -77,7 +77,7 @@ export default function Footer() {
                 <li>
                   <Link href="/concept" passHref>
                     <Button
-                      className="font-normal"
+                      className="!font-normal"
                       color="light"
                       variant="text"
                     >
@@ -89,7 +89,7 @@ export default function Footer() {
                 <li>
                   <Link href="/contact" passHref>
                     <Button
-                      className="font-normal"
+                      className="!font-normal"
                       color="light"
                       variant="text"
                     >
