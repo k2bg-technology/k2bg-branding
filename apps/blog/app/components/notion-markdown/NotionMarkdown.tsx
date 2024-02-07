@@ -7,6 +7,7 @@ import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import rehypeRaw from 'rehype-raw';
 
 interface Props {
   markdownString: string;
@@ -17,6 +18,8 @@ export default function NotionMarkdown(props: Props) {
 
   return (
     <ReactMarkdown
+      // @ts-expect-error rehypeRaw
+      rehypePlugins={[rehypeRaw]}
       components={{
         h1: ({ children, ...props }) => (
           <h1
@@ -55,7 +58,7 @@ export default function NotionMarkdown(props: Props) {
           </p>
         ),
         a: ({ children, ...props }) => {
-          const { href } = props;
+          const { href, className } = props;
 
           return (
             <Link
@@ -64,30 +67,41 @@ export default function NotionMarkdown(props: Props) {
               href={href || ''}
               rel="noopener noreferrer"
               target="_blank"
-              className="underline hover:opacity-80"
+              className={className || 'underline hover:opacity-80'}
             >
               {children}
             </Link>
           );
         },
-        ul: ({ children, ...props }) => (
-          <ul
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...props}
-            className="mt-4 list-disc list-inside"
-          >
-            {children}
-          </ul>
-        ),
-        li: ({ children, ...props }) => (
-          <li
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...props}
-            className="text-body-sm leading-body-sm text-base-black/80 text-justify"
-          >
-            {children}
-          </li>
-        ),
+        ul: ({ children, ...props }) => {
+          const { className } = props;
+
+          return (
+            <ul
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...props}
+              className={className || 'mt-4 list-disc list-inside'}
+            >
+              {children}
+            </ul>
+          );
+        },
+        li: ({ children, ...props }) => {
+          const { className } = props;
+
+          return (
+            <li
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...props}
+              className={
+                className ||
+                'text-body-sm leading-body-sm text-base-black/80 text-justify'
+              }
+            >
+              {children}
+            </li>
+          );
+        },
         strong: ({ children, ...props }) => (
           <span
             // eslint-disable-next-line react/jsx-props-no-spreading
@@ -142,14 +156,14 @@ export default function NotionMarkdown(props: Props) {
           </blockquote>
         ),
         img: ({ ...props }) => {
-          const { alt, src } = props;
+          const { className } = props;
 
           return (
-            // eslint-disable-next-line @next/next/no-img-element
+            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
             <img
-              alt={alt || ''}
-              src={src || ''}
-              className="first:mt-0 mt-8 mx-auto"
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...props}
+              className={className || 'first:mt-0 mt-8 mx-auto'}
             />
           );
         },
