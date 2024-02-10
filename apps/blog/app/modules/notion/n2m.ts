@@ -1,4 +1,5 @@
 import { NotionToMarkdown } from 'notion-to-md';
+import { BlockType, CustomTransformer } from 'notion-to-md/build/types';
 
 import { Core } from './core';
 
@@ -9,6 +10,10 @@ export class N2m extends Core {
     super();
 
     this.n2m = new NotionToMarkdown({ notionClient: this.notionClient });
+  }
+
+  setCustomTransformer(type: BlockType, transformer: CustomTransformer) {
+    this.n2m.setCustomTransformer(type, transformer);
   }
 
   async fetchNotionPageAndConvertMarkdownString(pageId: string) {
