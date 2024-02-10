@@ -7,70 +7,43 @@ export class Article {
   constructor(private page: Page) {}
 
   get title() {
-    return this.page.title?.title.map((title) => title.plain_text).join(' ');
+    return this.page.getTitle('content');
   }
 
   get excerpt() {
-    return this.page.excerpt?.rich_text
-      .map((text) => text.plain_text)
-      .join(' ');
+    return this.page.getRichText('excerpt');
   }
 
   get image() {
-    return this.page.image?.files
-      .flatMap((file) => ('file' in file ? file.file.url : []))
-      .join(' ');
+    return this.page.getFiles('image')?.[0];
   }
 
   get slug() {
-    const slug = this.page.slug?.rich_text
-      .map((text) => text.plain_text)
-      .join(' ');
+    const slug = this.page.getRichText('slug');
     const params = new URLSearchParams({
       id: this.page.id,
     });
+
     return slug ? `${slug}?${params}` : undefined;
   }
 
   get status() {
-    return this.page.status?.status && 'name' in this.page.status.status
-      ? this.page.status.status.name
-      : undefined;
+    return this.page.getStatus('status');
   }
 
   get date() {
-    const date =
-      this.page.date?.created_time === 'string'
-        ? this.page.date.created_time
-        : undefined;
+    const date = this.page.getCreatedTime('date');
 
-    return date ? format(new Date(date), 'yyyy-MM-dd') : '';
+    return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
   }
 
-  get avatar() {
-    if (!Array.isArray(this.page.author?.people))
-      return {
-        name: '',
-        imageUrl: '',
-      };
+  get author() {
+    const author = this.page.getPerson('author');
 
-    const people = this.page.author?.people[0] ?? {};
-
-    return {
-      name:
-        'name' in people && typeof people.name === 'string' ? people.name : '',
-      imageUrl:
-        'avatar_url' in people && typeof people.avatar_url === 'string'
-          ? people.avatar_url
-          : '',
-    };
+    return author;
   }
 
   get category() {
-    const select = this.page.category?.select ?? {};
-
-    return 'name' in select && typeof select.name === 'string'
-      ? select.name
-      : '';
+    return this.page.getSelect('category');
   }
 }

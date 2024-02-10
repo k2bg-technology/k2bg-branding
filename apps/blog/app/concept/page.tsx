@@ -26,7 +26,6 @@ export default async function Page() {
             heading={
               <h1 className="text-heading-1 font-bold">{article.title}</h1>
             }
-            date={article.date}
           />
           <BlogCard.Media className="relative w-full h-[37.6rem]">
             {article.image && (

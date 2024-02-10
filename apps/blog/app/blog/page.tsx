@@ -62,20 +62,22 @@ export default async function Page() {
               }
               excerpt={articles.featureLatest.excerpt}
               avatar={
-                <Avatar
-                  image={
-                    <div className="relative w-full h-full">
-                      <Image
-                        alt="author"
-                        src={articles.featureLatest.avatar.imageUrl}
-                        className="aspect-square h-full w-full object-cover"
-                        fill
-                        sizes="100%"
-                      />
-                    </div>
-                  }
-                  name={articles.featureLatest.avatar.name}
-                />
+                articles.featureLatest.author && (
+                  <Avatar
+                    image={
+                      <div className="relative w-full h-full">
+                        <Image
+                          alt="author"
+                          src={articles.featureLatest.author.avatar_url ?? ''}
+                          className="aspect-square h-full w-full object-cover"
+                          fill
+                          sizes="100%"
+                        />
+                      </div>
+                    }
+                    name={articles.featureLatest.author.name ?? ''}
+                  />
+                )
               }
               date={articles.featureLatest.date}
             />
@@ -112,20 +114,22 @@ export default async function Page() {
                 }
                 excerpt={article.excerpt}
                 avatar={
-                  <Avatar
-                    image={
-                      <div className="relative w-full h-full">
-                        <Image
-                          alt="author"
-                          src={article.avatar.imageUrl}
-                          className="aspect-square h-full w-full object-cover"
-                          fill
-                          sizes="100%"
-                        />
-                      </div>
-                    }
-                    name={article.avatar.name}
-                  />
+                  article.author && (
+                    <Avatar
+                      image={
+                        <div className="relative w-full h-full">
+                          <Image
+                            alt="author"
+                            src={article.author.avatar_url ?? ''}
+                            className="aspect-square h-full w-full object-cover"
+                            fill
+                            sizes="100%"
+                          />
+                        </div>
+                      }
+                      name={article.author.name ?? ''}
+                    />
+                  )
                 }
                 date={article.date}
               />
@@ -166,20 +170,22 @@ export default async function Page() {
                   }
                   excerpt={article.excerpt}
                   avatar={
-                    <Avatar
-                      image={
-                        <div className="relative w-full h-full">
-                          <Image
-                            alt="author"
-                            src={article.avatar.imageUrl}
-                            className="aspect-square h-full w-full object-cover"
-                            fill
-                            sizes="100%"
-                          />
-                        </div>
-                      }
-                      name={article.avatar.name}
-                    />
+                    article.author && (
+                      <Avatar
+                        image={
+                          <div className="relative w-full h-full">
+                            <Image
+                              alt="author"
+                              src={article.author.avatar_url ?? ''}
+                              className="aspect-square h-full w-full object-cover"
+                              fill
+                              sizes="100%"
+                            />
+                          </div>
+                        }
+                        name={article.author.name ?? ''}
+                      />
+                    )
                   }
                   date={article.date}
                 />
@@ -216,20 +222,22 @@ export default async function Page() {
                 }
                 excerpt={article.excerpt}
                 avatar={
-                  <Avatar
-                    image={
-                      <div className="relative w-full h-full">
-                        <Image
-                          alt="author"
-                          src={article.avatar.imageUrl}
-                          className="aspect-square h-full w-full object-cover"
-                          fill
-                          sizes="100%"
-                        />
-                      </div>
-                    }
-                    name={article.avatar.name}
-                  />
+                  article.author && (
+                    <Avatar
+                      image={
+                        <div className="relative w-full h-full">
+                          <Image
+                            alt="author"
+                            src={article.author.avatar_url ?? ''}
+                            className="aspect-square h-full w-full object-cover"
+                            fill
+                            sizes="100%"
+                          />
+                        </div>
+                      }
+                      name={article.author.name ?? ''}
+                    />
+                  )
                 }
                 date={article.date}
               />

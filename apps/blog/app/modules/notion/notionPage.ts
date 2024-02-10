@@ -44,11 +44,36 @@ export class Page {
     return typeof number === 'number' ? number : undefined;
   }
 
+  public getCreatedTime(propertyName: string) {
+    const created_time = this.getPageProperty(
+      propertyName,
+      'created_time'
+    )?.created_time;
+
+    return typeof created_time === 'string' ? created_time : undefined;
+  }
+
   public getSelect(propertyName: string) {
     const select = this.getPageProperty(propertyName, 'select')?.select;
 
     return select instanceof Object && 'name' in select
       ? select.name
+      : undefined;
+  }
+
+  public getStatus(propertyName: string) {
+    const status = this.getPageProperty(propertyName, 'status')?.status;
+
+    return status instanceof Object && 'name' in status
+      ? status.name
+      : undefined;
+  }
+
+  public getPerson(propertyName: string) {
+    const people = this.getPageProperty(propertyName, 'people')?.people;
+
+    return people instanceof Array && 'person' in people[0]
+      ? people[0]
       : undefined;
   }
 
@@ -69,7 +94,7 @@ export class Page {
     );
   }
 
-  public getPageProperty<
+  private getPageProperty<
     T extends string,
     U extends PageObject['properties'][T]['type']
   >(propertyName: T, type: U) {
