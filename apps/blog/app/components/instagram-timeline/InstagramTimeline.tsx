@@ -10,6 +10,9 @@ export default async function InstagramTimeline() {
   const InstagramFetcher = new Instagram.Fetcher();
 
   const userMedia = await InstagramFetcher.fetchUserMedia();
+
+  if (!userMedia.data) return null;
+
   const mediaData = await Promise.all(
     userMedia.data.flatMap((data, index) =>
       index < MAX_MEDIA_COUNT ? InstagramFetcher.fetchMediaData(data.id) : []

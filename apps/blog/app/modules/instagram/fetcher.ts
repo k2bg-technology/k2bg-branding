@@ -1,7 +1,9 @@
 import { Core } from './core';
 
 export class Fetcher extends Core {
-  public async fetchUserMedia(): Promise<{ data: { id: string }[] }> {
+  public async fetchUserMedia(): Promise<{
+    data: { id: string }[] | undefined;
+  }> {
     return (await this.fetch('me/media')).json();
   }
 
