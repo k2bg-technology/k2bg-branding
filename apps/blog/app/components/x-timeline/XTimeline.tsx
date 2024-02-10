@@ -3,8 +3,8 @@
 import React from 'react';
 import Link from 'next/link';
 
-import useTimeline from '../../modules/x/useTimeline';
-import { X_TIMELINE_URL } from '../../modules/x/const';
+import useTimeline from './useTimeline';
+import { X_TIMELINE_URL } from './const';
 
 export default function XTimeline() {
   useTimeline();
