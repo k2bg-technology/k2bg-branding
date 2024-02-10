@@ -20,47 +20,62 @@ export class Page {
     return this.result.id;
   }
 
-  get title() {
-    return this.pagePropertyMap.get(this.result.properties.content.id, 'title');
+  public getTitle(propertyName: string) {
+    return this.getPageProperty(propertyName, 'title')
+      ?.title.map((title) => title.plain_text)
+      .join(' ');
   }
 
-  get excerpt() {
-    return this.pagePropertyMap.get(
-      this.result.properties.excerpt.id,
-      'rich_text'
+  public getRichText(propertyName: string) {
+    return this.getPageProperty(propertyName, 'rich_text')
+      ?.rich_text.map((text) => text.plain_text)
+      .join(' ');
+  }
+
+  public getUrl(propertyName: string) {
+    const url = this.getPageProperty(propertyName, 'url')?.url;
+
+    return typeof url === 'string' ? url : undefined;
+  }
+
+  public getNumber(propertyName: string) {
+    const number = this.getPageProperty(propertyName, 'number')?.number;
+
+    return typeof number === 'number' ? number : undefined;
+  }
+
+  public getSelect(propertyName: string) {
+    const select = this.getPageProperty(propertyName, 'select')?.select;
+
+    return select instanceof Object && 'name' in select
+      ? select.name
+      : undefined;
+  }
+
+  public getRelations(propertyName: string) {
+    const relations = this.getPageProperty(propertyName, 'relation')?.relation;
+
+    return (
+      (relations instanceof Array &&
+        relations.map((relation) => relation.id)) ||
+      []
     );
   }
 
-  get image() {
-    return this.pagePropertyMap.get(this.result.properties.image.id, 'files');
-  }
-
-  get slug() {
-    return this.pagePropertyMap.get(
-      this.result.properties.slug.id,
-      'rich_text'
+  public getFiles(propertyName: string) {
+    return this.getPageProperty(propertyName, 'files')?.files.reduce(
+      (files, file) => ('file' in file ? [...files, file.file.url] : files),
+      [] as string[]
     );
   }
 
-  get status() {
-    return this.pagePropertyMap.get(this.result.properties.status.id, 'status');
-  }
-
-  get date() {
+  public getPageProperty<
+    T extends string,
+    U extends PageObject['properties'][T]['type']
+  >(propertyName: T, type: U) {
     return this.pagePropertyMap.get(
-      this.result.properties.date.id,
-      'created_time'
-    );
-  }
-
-  get author() {
-    return this.pagePropertyMap.get(this.result.properties.author.id, 'people');
-  }
-
-  get category() {
-    return this.pagePropertyMap.get(
-      this.result.properties.category.id,
-      'select'
+      this.result.properties[propertyName].id,
+      type
     );
   }
 
