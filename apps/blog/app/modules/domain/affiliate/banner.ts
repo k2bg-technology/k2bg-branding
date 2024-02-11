@@ -1,8 +1,9 @@
 import { Core } from './core';
+import { AffiliateBanner } from './interfaces';
 
-export class Banner extends Core {
+export class Banner extends Core implements AffiliateBanner {
   get imageUrl() {
-    const imageUrl = this.page.getUrl('imageUrl');
+    const imageUrl = this.data.getUrl('imageUrl');
 
     if (imageUrl) return imageUrl;
 
@@ -10,7 +11,7 @@ export class Banner extends Core {
   }
 
   get imageWidth() {
-    const imageWidth = this.page.getNumber('imageWidth');
+    const imageWidth = this.data.getNumber('imageWidth');
 
     if (imageWidth) return imageWidth;
 
@@ -18,7 +19,7 @@ export class Banner extends Core {
   }
 
   get imageHeight() {
-    const imageHeight = this.page.getNumber('imageHeight');
+    const imageHeight = this.data.getNumber('imageHeight');
 
     if (imageHeight) return imageHeight;
 

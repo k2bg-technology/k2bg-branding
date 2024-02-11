@@ -1,11 +1,11 @@
-import { Page } from '../../data-access/notion/notionPage';
+import { AffiliateCore, AffiliateData } from './interfaces';
 
-export class Core {
+export class Core implements AffiliateCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
-  constructor(protected page: Page) {}
+  constructor(protected data: AffiliateData) {}
 
   get name() {
-    const name = this.page.getTitle('name');
+    const name = this.data.getTitle('name');
 
     if (name) return name;
 
@@ -13,7 +13,7 @@ export class Core {
   }
 
   get type() {
-    const type = this.page.getSelect('type');
+    const type = this.data.getSelect('type');
 
     if (type) return type;
 
@@ -21,7 +21,7 @@ export class Core {
   }
 
   get linkText() {
-    const linkText = this.page.getRichText('linkText');
+    const linkText = this.data.getRichText('linkText');
 
     if (linkText) return linkText;
 
@@ -29,7 +29,7 @@ export class Core {
   }
 
   get linkUrl() {
-    const linkUrl = this.page.getUrl('linkUrl');
+    const linkUrl = this.data.getUrl('linkUrl');
 
     if (linkUrl) return linkUrl;
 
@@ -37,14 +37,14 @@ export class Core {
   }
 
   get provider() {
-    const provider = this.page.getSelect('provider');
+    const provider = this.data.getSelect('provider');
 
     if (provider) return provider;
 
     throw new Error('Affiliate provider is required');
   }
 
-  static getType(page: Page) {
-    return page.getSelect('type');
+  static getType(data: AffiliateData) {
+    return data.getSelect('type');
   }
 }

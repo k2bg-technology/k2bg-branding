@@ -3,7 +3,7 @@ import { BlogCard } from 'ui';
 
 import { N2m } from '../modules/data-access/notion/n2m';
 import Notion from '../modules/data-access/notion';
-import Blog from '../modules/domain/blog';
+import Article from '../modules/domain/article';
 import NotionMarkdown from '../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../components/sidebar/Sidebar';
 
@@ -16,7 +16,7 @@ export default async function Page() {
   const page = new Notion.Page(
     await new Notion.Fetcher().fetchPage(CONCEPT_PAGE_ID)
   );
-  const article = new Blog.Article(page);
+  const article = new Article.Single(page);
 
   return (
     <>

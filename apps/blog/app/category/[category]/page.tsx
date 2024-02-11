@@ -2,7 +2,7 @@ import { Avatar, BlogCard } from 'ui';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Blog from '../../modules/domain/blog';
+import Article from '../../modules/domain/article';
 import Notion from '../../modules/data-access/notion';
 
 export default async function Page({
@@ -29,7 +29,7 @@ export default async function Page({
     },
   });
   const pages = database.results.map((result) => new Notion.Page(result));
-  const articles = new Blog.Articles(pages);
+  const articles = new Article.List(pages);
 
   return (
     <>

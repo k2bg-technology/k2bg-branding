@@ -10,7 +10,7 @@ import {
 
 import { N2m } from '../../modules/data-access/notion/n2m';
 import Notion from '../../modules/data-access/notion';
-import Blog from '../../modules/domain/blog';
+import Article from '../../modules/domain/article';
 import Affiliate from '../../modules/domain/affiliate';
 import NotionMarkdown from '../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../components/sidebar/Sidebar';
@@ -109,7 +109,7 @@ export default async function Page({
   const notionMarkdownString =
     await n2m.fetchNotionPageAndConvertMarkdownString(searchParams.id);
   const page = new Notion.Page(await notionFetcher.fetchPage(searchParams.id));
-  const article = new Blog.Article(page);
+  const article = new Article.Single(page);
 
   return (
     <>

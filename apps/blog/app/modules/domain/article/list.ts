@@ -1,12 +1,11 @@
-import { Page } from '../../data-access/notion/notionPage';
+import { Single } from './single';
+import { ArticleData, ArticleList } from './interfaces';
 
-import { Article } from './article';
+export class List implements ArticleList {
+  private articles: Single[];
 
-export class Articles {
-  articles: Article[];
-
-  constructor(pages: Page[]) {
-    this.articles = pages.map((page) => new Article(page));
+  constructor(dataList: ArticleData[]) {
+    this.articles = dataList.map((data) => new Single(data));
     this.articles = this.sortByDate();
   }
 

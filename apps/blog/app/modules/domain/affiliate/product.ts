@@ -1,14 +1,15 @@
 import { Core } from './core';
+import { AffiliateProduction } from './interfaces';
 
-export class Product extends Core {
+export class Product extends Core implements AffiliateProduction {
   get subProviders() {
-    const subProviders = this.page.getRelations('subProviders');
+    const subProviders = this.data.getRelations('subProviders');
 
     return subProviders;
   }
 
   get imageProvider() {
-    const imageProvider = this.page.getSelect('imageProvider');
+    const imageProvider = this.data.getSelect('imageProvider');
 
     if (imageProvider) return imageProvider;
 
@@ -16,7 +17,7 @@ export class Product extends Core {
   }
 
   get imageFile() {
-    const imageFile = this.page.getFiles('imageFile')?.[0];
+    const imageFile = this.data.getFiles('imageFile')?.[0];
 
     if (imageFile) return imageFile;
 
@@ -24,7 +25,7 @@ export class Product extends Core {
   }
 
   get imageWidth() {
-    const imageWidth = this.page.getNumber('imageWidth');
+    const imageWidth = this.data.getNumber('imageWidth');
 
     if (imageWidth) return imageWidth;
 
@@ -32,7 +33,7 @@ export class Product extends Core {
   }
 
   get imageHeight() {
-    const imageHeight = this.page.getNumber('imageHeight');
+    const imageHeight = this.data.getNumber('imageHeight');
 
     if (imageHeight) return imageHeight;
 
