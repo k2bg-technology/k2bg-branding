@@ -1,4 +1,4 @@
-import { Page } from '../notion/notionPage';
+import { Page } from '../../data-access/notion/notionPage';
 
 import { Article } from './article';
 

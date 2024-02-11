@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Instagram from '../../modules/instagram';
+import Instagram from '../../modules/data-access/instagram';
 
 const MAX_MEDIA_COUNT = 6;
 

@@ -2,8 +2,8 @@ import { Avatar, BlogCard } from 'ui';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import Blog from '../../modules/blog';
-import Notion from '../../modules/notion';
+import Blog from '../../modules/domain/blog';
+import Notion from '../../modules/data-access/notion';
 
 export default async function Page({
   params,

@@ -8,10 +8,10 @@ import {
   TextPromotion,
 } from 'ui';
 
-import { N2m } from '../../modules/notion/n2m';
-import Notion from '../../modules/notion';
-import Blog from '../../modules/blog';
-import Affiliate from '../../modules/affiliate';
+import { N2m } from '../../modules/data-access/notion/n2m';
+import Notion from '../../modules/data-access/notion';
+import Blog from '../../modules/domain/blog';
+import Affiliate from '../../modules/domain/affiliate';
 import NotionMarkdown from '../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../components/sidebar/Sidebar';
 

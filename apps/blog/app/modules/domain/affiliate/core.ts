@@ -1,4 +1,4 @@
-import { Page } from '../notion/notionPage';
+import { Page } from '../../data-access/notion/notionPage';
 
 export class Core {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
