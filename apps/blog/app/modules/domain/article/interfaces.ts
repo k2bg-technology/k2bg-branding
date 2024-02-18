@@ -1,12 +1,12 @@
 export interface ArticleCore {
-  title: string | undefined;
-  excerpt: string | undefined;
-  image: string | undefined;
-  slug: string | undefined;
-  status: string | undefined;
-  date: string | undefined;
-  author: Author | undefined;
-  category: string | undefined;
+  title?: string;
+  excerpt?: string;
+  image?: string;
+  slug?: string;
+  status?: string;
+  date?: string;
+  author?: Author;
+  category?: string;
 }
 
 export interface ArticleSingle extends ArticleCore {}
