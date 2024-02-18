@@ -87,6 +87,10 @@ export class Page {
     );
   }
 
+  public getDataType() {
+    return this.getSelect('type');
+  }
+
   public getFiles(propertyName: string) {
     return this.getPageProperty(propertyName, 'files')?.files.reduce(
       (files, file) => ('file' in file ? [...files, file.file.url] : files),

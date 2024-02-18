@@ -43,8 +43,4 @@ export class Core implements AffiliateCore {
 
     throw new Error('Affiliate provider is required');
   }
-
-  static getType(data: AffiliateData) {
-    return data.getSelect('type');
-  }
 }

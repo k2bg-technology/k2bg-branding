@@ -6,12 +6,17 @@ import {
   BlogCard,
   ProductPromotion,
   TextPromotion,
+  ImageViewer,
+  VideoFilePlayer,
+  VideoStreamingPlayer,
 } from 'ui';
 
 import { N2m } from '../../modules/data-access/notion/n2m';
 import Notion from '../../modules/data-access/notion';
 import Article from '../../modules/domain/article';
 import Affiliate from '../../modules/domain/affiliate';
+import Media from '../../modules/domain/media';
+import DataType from '../../modules/domain/data-type';
 import NotionMarkdown from '../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../components/sidebar/Sidebar';
 
@@ -30,9 +35,58 @@ export default async function Page({
       // @ts-expect-error link_to_page defined in the block
       await notionFetcher.fetchPage(block.link_to_page.page_id)
     );
-    const affiliateType = Affiliate.getType(page);
+    const dataType = new DataType.Core(page).name;
 
-    if (affiliateType === 'text') {
+    if (dataType === 'mediaImage') {
+      try {
+        const mediaImage = new Media.Image(page);
+
+        return renderToString(
+          <div className="mt-8">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <ImageViewer
+              name={mediaImage.name}
+              url={mediaImage.url}
+              file={mediaImage.file}
+              width={mediaImage.width}
+              height={mediaImage.height}
+            />
+          </div>
+        );
+      } catch (error) {
+        return '';
+      }
+    }
+
+    if (dataType === 'mediaVideo') {
+      try {
+        const mediaVideo = new Media.Video(page);
+
+        if (mediaVideo.url) {
+          return renderToString(
+            <VideoStreamingPlayer
+              url={mediaVideo.url}
+              width={mediaVideo.width}
+              height={mediaVideo.height}
+            />
+          );
+        }
+
+        if (mediaVideo.file) {
+          return renderToString(
+            <VideoFilePlayer
+              file={mediaVideo.file}
+              width={mediaVideo.width}
+              height={mediaVideo.height}
+            />
+          );
+        }
+      } catch (error) {
+        return '';
+      }
+    }
+
+    if (dataType === 'affiliateText') {
       try {
         const textAffiliate = new Affiliate.Text(page);
 
@@ -49,7 +103,7 @@ export default async function Page({
       }
     }
 
-    if (affiliateType === 'banner') {
+    if (dataType === 'affiliateBanner') {
       try {
         const bannerAffiliate = new Affiliate.Banner(page);
 
@@ -69,7 +123,7 @@ export default async function Page({
       }
     }
 
-    if (affiliateType === 'product') {
+    if (dataType === 'affiliateProduct') {
       try {
         const productAffiliate = new Affiliate.Product(page);
 

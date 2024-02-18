@@ -1,4 +1,3 @@
-import { Core } from './core';
 import { Text } from './text';
 import { Banner } from './banner';
 import { Product } from './product';
@@ -9,7 +8,6 @@ const Affiliate = {
   Banner,
   Product,
   SubProvider,
-  getType: Core.getType,
 };
 
 export default Affiliate;
