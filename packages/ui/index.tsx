@@ -7,3 +7,4 @@ export * from './src/Drawer';
 export { default as BlogCard } from './src/BlogCard';
 export * from './src/Avatar';
 export * from './src/Promotion';
+export * from './src/Media';
