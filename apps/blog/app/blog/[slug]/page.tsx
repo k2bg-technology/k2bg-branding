@@ -64,21 +64,25 @@ export default async function Page({
 
         if (mediaVideo.url) {
           return renderToString(
-            <VideoStreamingPlayer
-              url={mediaVideo.url}
-              width={mediaVideo.width}
-              height={mediaVideo.height}
-            />
+            <div className="flex justify-center mt-8">
+              <VideoStreamingPlayer
+                url={mediaVideo.url}
+                width={mediaVideo.width}
+                height={mediaVideo.height}
+              />
+            </div>
           );
         }
 
         if (mediaVideo.file) {
           return renderToString(
-            <VideoFilePlayer
-              file={mediaVideo.file}
-              width={mediaVideo.width}
-              height={mediaVideo.height}
-            />
+            <div className="flex justify-center mt-8">
+              <VideoFilePlayer
+                file={mediaVideo.file}
+                width={mediaVideo.width}
+                height={mediaVideo.height}
+              />
+            </div>
           );
         }
       } catch (error) {
@@ -136,6 +140,7 @@ export default async function Page({
             return {
               linkText: provider.provider,
               linkUrl: provider.linkUrl,
+              color: provider.providerColor,
             };
           })
         );
@@ -148,7 +153,14 @@ export default async function Page({
               imageUrl={productAffiliate.imageFile}
               imageWidth={productAffiliate.imageWidth}
               imageHeight={productAffiliate.imageHeight}
-              providers={providers}
+              providers={[
+                {
+                  linkText: productAffiliate.provider,
+                  linkUrl: productAffiliate.linkUrl,
+                  color: productAffiliate.providerColor,
+                },
+                ...providers,
+              ]}
             />
           </div>
         );
