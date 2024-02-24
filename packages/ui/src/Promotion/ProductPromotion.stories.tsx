@@ -16,21 +16,24 @@ export const Default: Story = {
     <ProductPromotion
       linkText="商品紹介アフィリエイト"
       linkUrl="https://www.amazon.co.jp"
-      imageUrl="https://dummyimage.com/120x150/000/fff"
+      imageUrl="https://dummyimage.com/120x160/000/fff"
       imageWidth={120}
-      imageHeight={150}
+      imageHeight={160}
       providers={[
         {
           linkText: '楽天',
           linkUrl: 'https://www.rakuten.co.jp',
+          color: '#bf0000',
         },
         {
           linkText: 'amazon',
           linkUrl: 'https://www.amazon.co.jp',
+          color: '#ff9900',
         },
         {
           linkText: 'yahoo',
           linkUrl: 'https://www.yahoo.co.jp',
+          color: '#ff0033',
         },
       ]}
     />

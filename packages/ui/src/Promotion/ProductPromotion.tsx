@@ -1,6 +1,7 @@
 interface Provider {
   linkText: string;
   linkUrl: string;
+  color: string;
 }
 
 interface ProductPromotionProps {
@@ -17,7 +18,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
     props;
 
   return (
-    <div className="flex gap-5 p-8 border-solid border-4 border-base-white">
+    <div className="flex gap-6 p-8 border-solid border-4 border-base-white">
       <a href={linkUrl} target="_blank" rel="noopener nofollow">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -26,7 +27,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           onClick={() => linkUrl && window.open(linkUrl, '_blank')}
           width={imageWidth}
           height={imageHeight}
-          className="object-contain cursor-pointer"
+          className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
           aria-hidden="true"
         />
       </a>
@@ -35,7 +36,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           <a
             href={linkUrl}
             target="_blank"
-            className="text-body-md leading-body-md text-base-black/80 text-justify"
+            className="text-body-md leading-body-md text-base-black/80 text-justify underline hover:opacity-80"
           >
             {linkText}
           </a>
@@ -47,7 +48,8 @@ export default function ProductPromotion(props: ProductPromotionProps) {
                 href={provider.linkUrl}
                 target="_blank"
                 rel="noopener nofollow"
-                className="inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-sm text-center font-bold leading-none bg-main text-white hover:bg-opacity-90"
+                className="inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-sm text-center font-bold leading-none text-white hover:opacity-80"
+                style={{ backgroundColor: provider.color }}
               >
                 {provider.linkText}
               </a>

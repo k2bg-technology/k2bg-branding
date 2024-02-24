@@ -2,6 +2,14 @@ import { Core } from './core';
 import { AffiliateProduction } from './interfaces';
 
 export class Product extends Core implements AffiliateProduction {
+  get providerColor() {
+    const providerColor = this.data.getSelect('providerColor');
+
+    if (providerColor) return providerColor;
+
+    throw new Error('Affiliate providerColor is required');
+  }
+
   get subProviders() {
     const subProviders = this.data.getRelations('subProviders');
 

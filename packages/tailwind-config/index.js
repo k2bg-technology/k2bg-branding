@@ -85,6 +85,8 @@ module.exports = {
         success: 'rgb(var(--color-success) / <alpha-value>)',
         'success-light': 'rgb(var(--color-success-light) / <alpha-value>)',
         'success-dark': 'rgb(var(--color-success-dark) / <alpha-value>)',
+        'brand-amazon': 'rgb(255 153 0)',
+        'brand-rakuten': 'rgb(191 0 0)',
       },
       animation: {
         slide: 'slide 0.8s ease-in 1',
