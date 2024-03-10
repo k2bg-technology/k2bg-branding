@@ -85,7 +85,7 @@ export default async function Page({
                     />
                   )
                 }
-                date={article.date}
+                date={article.releaseDate}
               />
             </BlogCard>
           ))}

@@ -79,7 +79,7 @@ export default async function Page() {
                   />
                 )
               }
-              date={articles.featureLatest.date}
+              date={articles.featureLatest.releaseDate}
             />
           </BlogCard>
         </div>
@@ -131,7 +131,7 @@ export default async function Page() {
                     />
                   )
                 }
-                date={article.date}
+                date={article.releaseDate}
               />
             </BlogCard>
           ))}
@@ -187,7 +187,7 @@ export default async function Page() {
                       />
                     )
                   }
-                  date={article.date}
+                  date={article.releaseDate}
                 />
               </BlogCard>
             </div>
@@ -239,7 +239,7 @@ export default async function Page() {
                     />
                   )
                 }
-                date={article.date}
+                date={article.releaseDate}
               />
             </BlogCard>
           ))}

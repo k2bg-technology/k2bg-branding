@@ -27,10 +27,10 @@ export class List implements ArticleList {
 
   private sortByDate() {
     return this.articles.sort((a, b) => {
-      if (!a.date || !b.date) return 0;
+      if (!a.releaseDate || !b.releaseDate) return 0;
 
-      const dateA = new Date(a.date);
-      const dateB = new Date(b.date);
+      const dateA = new Date(a.releaseDate);
+      const dateB = new Date(b.releaseDate);
 
       return dateB.getTime() - dateA.getTime();
     });

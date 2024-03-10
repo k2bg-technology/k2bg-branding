@@ -23,10 +23,11 @@ export interface ArticleData {
   getTitle: (propertyName: string) => string | undefined;
   getRichText: (propertyName: string) => string | undefined;
   getSelect: (propertyName: string) => string | undefined;
+  getDate: (propertyName: string) => string | undefined;
   getFiles: (propertyName: string) => string[] | undefined;
   getStatus: (propertyName: string) => string | undefined;
-  getCreatedTime: (propertyName: string) => string | undefined;
   getPerson: (propertyName: string) => Author | undefined;
+  getCreatedTime: (propertyName: string) => string | undefined;
 }
 
 interface Author {

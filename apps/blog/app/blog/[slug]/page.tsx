@@ -209,7 +209,7 @@ export default async function Page({
                 />
               )
             }
-            date={article.date}
+            date={article.releaseDate}
           />
           <BlogCard.Media className="relative w-full h-[37.6rem]">
             {article.image && (

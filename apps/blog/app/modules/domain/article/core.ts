@@ -31,8 +31,8 @@ export class Core implements ArticleCore {
     return this.data.getStatus('status');
   }
 
-  get date() {
-    const date = this.data.getCreatedTime('date');
+  get releaseDate() {
+    const date = this.data.getDate('releaseDate');
 
     return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
   }
@@ -45,5 +45,11 @@ export class Core implements ArticleCore {
 
   get category() {
     return this.data.getSelect('category');
+  }
+
+  get createdTime() {
+    const date = this.data.getCreatedTime('createdTime');
+
+    return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
   }
 }
