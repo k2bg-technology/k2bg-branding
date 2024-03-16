@@ -5,6 +5,14 @@ import Image from 'next/image';
 import Article from '../../modules/domain/article';
 import Notion from '../../modules/data-access/notion';
 
+export async function generateStaticParams() {
+  return ['engineering', 'design', 'data-science', 'life-style'].map(
+    (category) => ({
+      category,
+    })
+  );
+}
+
 export default async function Page({
   params,
 }: {

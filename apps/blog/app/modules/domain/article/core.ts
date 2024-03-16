@@ -20,11 +20,8 @@ export class Core implements ArticleCore {
 
   get slug() {
     const slug = this.data.getRichText('slug');
-    const params = new URLSearchParams({
-      id: this.data.id,
-    });
 
-    return slug ? `${slug}?${params}` : undefined;
+    return slug ? `${this.data.id}/${slug}` : undefined;
   }
 
   get status() {

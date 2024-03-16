@@ -11,20 +11,29 @@ import {
   VideoStreamingPlayer,
 } from 'ui';
 
-import { N2m } from '../../modules/data-access/notion/n2m';
-import Notion from '../../modules/data-access/notion';
-import Article from '../../modules/domain/article';
-import Affiliate from '../../modules/domain/affiliate';
-import Media from '../../modules/domain/media';
-import DataType from '../../modules/domain/data-type';
-import NotionMarkdown from '../../components/notion-markdown/NotionMarkdown';
-import Sidebar from '../../components/sidebar/Sidebar';
+import { N2m } from '../../../modules/data-access/notion/n2m';
+import Notion from '../../../modules/data-access/notion';
+import Article from '../../../modules/domain/article';
+import Affiliate from '../../../modules/domain/affiliate';
+import Media from '../../../modules/domain/media';
+import DataType from '../../../modules/domain/data-type';
+import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
+import Sidebar from '../../../components/sidebar/Sidebar';
+import { fetchDatabase } from '../../page';
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: { id: string };
-}) {
+export const revalidate = 60 * 60;
+
+export async function generateStaticParams() {
+  const database = await fetchDatabase();
+  const pages = database.results.map((result) => new Notion.Page(result));
+  const articles = new Article.List(pages);
+
+  return articles.all.map((article) => ({
+    slug: article.slug,
+  }));
+}
+
+const getArticle = async (pageId: string) => {
   const { renderToString } = await import('react-dom/server');
 
   const notionFetcher = new Notion.Fetcher();
@@ -173,9 +182,22 @@ export default async function Page({
   });
 
   const notionMarkdownString =
-    await n2m.fetchNotionPageAndConvertMarkdownString(searchParams.id);
-  const page = new Notion.Page(await notionFetcher.fetchPage(searchParams.id));
+    await n2m.fetchNotionPageAndConvertMarkdownString(pageId);
+  const page = new Notion.Page(await notionFetcher.fetchPage(pageId));
   const article = new Article.Single(page);
+
+  return {
+    article,
+    notionMarkdownString,
+  };
+};
+
+export default async function Page({
+  params,
+}: {
+  params: { id: string; slug: string };
+}) {
+  const { article, notionMarkdownString } = await getArticle(params.id);
 
   return (
     <>

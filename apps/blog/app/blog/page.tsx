@@ -6,7 +6,7 @@ import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
 import Sidebar from '../components/sidebar/Sidebar';
 
-export default async function Page() {
+export const fetchDatabase = async () => {
   const database = await new Notion.Fetcher().fetchDatabase({
     filter: {
       and: [
@@ -25,6 +25,12 @@ export default async function Page() {
       ],
     },
   });
+
+  return database;
+};
+
+export default async function Page() {
+  const database = await fetchDatabase();
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Article.List(pages);
 
