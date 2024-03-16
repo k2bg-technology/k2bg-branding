@@ -6,7 +6,7 @@ import React from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
-import { githubGist } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import rehypeRaw from 'rehype-raw';
 
 interface Props {
@@ -136,13 +136,13 @@ export default function NotionMarkdown(props: Props) {
               codeTagProps={{
                 className: 'text-body-sm font-original',
               }}
+              customStyle={{ padding: '1.5rem', borderRadius: '0.5rem' }}
               language={language}
-              style={githubGist}
-              showLineNumbers
+              style={a11yDark}
               wrapLines
               wrapLongLines
             >
-              {children?.[0]}
+              {children?.[0]?.trim()}
             </SyntaxHighlighter>
           ) : null;
         },
