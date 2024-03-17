@@ -93,7 +93,11 @@ export default async function Page() {
           {articles.featuresRecently.map((article) => (
             <BlogCard key={article.title} className="flex-row gap-8">
               {article.image && (
-                <Link href={`/blog/${article.slug}`} passHref>
+                <Link
+                  href={`/blog/${article.slug}`}
+                  passHref
+                  className="h-full"
+                >
                   <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
                     <Image
                       alt="media"
@@ -149,7 +153,11 @@ export default async function Page() {
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-6">
                 {article.image && (
-                  <Link href={`/blog/${article.slug}`} passHref>
+                  <Link
+                    href={`/blog/${article.slug}`}
+                    passHref
+                    className="h-full"
+                  >
                     <BlogCard.Media className="relative w-full h-[26.5rem]">
                       <Image
                         alt="media"

@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 
 interface Props {
   markdownString: string;
@@ -18,8 +19,9 @@ export default function NotionMarkdown(props: Props) {
 
   return (
     <ReactMarkdown
-      // @ts-expect-error rehypeRaw
-      rehypePlugins={[rehypeRaw]}
+      className="markdown"
+      // @ts-expect-error rehypeRaw, remarkGfm
+      rehypePlugins={[rehypeRaw, remarkGfm]}
       components={{
         h1: ({ children, ...props }) => (
           <h1
@@ -106,7 +108,7 @@ export default function NotionMarkdown(props: Props) {
           <span
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="mt-4 font-bold leading-none bg-accent-light/50"
+            className="mt-6 font-bold leading-none bg-accent-light/50"
           >
             {children}
           </span>

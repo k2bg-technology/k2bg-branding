@@ -12,3 +12,15 @@
     @apply h-full text-base-black font-original text-body-md;
   }
 }
+
+.markdown table {
+  @apply mt-4 w-full text-body-sm border-base-white;
+}
+
+.markdown th {
+  @apply text-base-black font-original border py-2 px-3 bg-base-white;
+}
+
+.markdown td {
+  @apply text-base-black font-original border py-2 px-3;
+}

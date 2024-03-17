@@ -51,7 +51,7 @@ const getArticle = async (pageId: string) => {
         const mediaImage = new Media.Image(page);
 
         return renderToString(
-          <div className="mt-8">
+          <div className="mt-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <ImageViewer
               name={mediaImage.name}
