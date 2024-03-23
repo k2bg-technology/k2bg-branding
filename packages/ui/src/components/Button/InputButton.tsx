@@ -1,7 +1,6 @@
-import { AnchorHTMLAttributes } from 'react';
+import { InputHTMLAttributes } from 'react';
 
-import { SvgIcon } from '../Icon';
-import { Color, Variant } from '../types/global';
+import { Color, Variant } from '../../types/global';
 
 import styles from './Button.module.css';
 
@@ -53,29 +52,22 @@ const STYLES = {
   },
 } as const satisfies Record<Color, Record<Variant, string>>;
 
-interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
+interface Props extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
   color?: Color;
   variant?: Variant;
 }
 
-export default function ExternalLinkButton({
-  children,
+export default function InputButton({
   className,
   color = 'main',
   variant = 'contained',
   ...rest
 }: Props) {
   return (
-    <a
+    <input
       {...rest}
       className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
-    >
-      <span>{children}</span>
-      <SvgIcon
-        name="arrow-top-right-on-square"
-        className="inline-block ml-2 w-5 h-5"
-      />
-    </a>
+    />
   );
 }

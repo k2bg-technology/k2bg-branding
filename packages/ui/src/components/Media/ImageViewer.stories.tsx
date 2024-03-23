@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import FocusLight from '../assets/focus-light.jpg';
+import FocusLight from '../../assets/focus-light.jpg';
 
 import ImageViewer from './ImageViewer';
 

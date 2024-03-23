@@ -1,6 +1,6 @@
-import { InputHTMLAttributes } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 
-import { Color, Variant } from '../types/global';
+import { Color, Variant } from '../../types/global';
 
 import styles from './Button.module.css';
 
@@ -52,22 +52,26 @@ const STYLES = {
   },
 } as const satisfies Record<Color, Record<Variant, string>>;
 
-interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
   color?: Color;
   variant?: Variant;
 }
 
-export default function InputButton({
+export default function Button({
+  children,
   className,
   color = 'main',
   variant = 'contained',
   ...rest
 }: Props) {
   return (
-    <input
+    <button
       {...rest}
       className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
-    />
+      type="button"
+    >
+      {children}
+    </button>
   );
 }

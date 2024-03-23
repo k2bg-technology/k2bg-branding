@@ -1,6 +1,7 @@
-import { ButtonHTMLAttributes } from 'react';
+import { AnchorHTMLAttributes } from 'react';
 
-import { Color, Variant } from '../types/global';
+import { SvgIcon } from '../Icon';
+import { Color, Variant } from '../../types/global';
 
 import styles from './Button.module.css';
 
@@ -52,13 +53,13 @@ const STYLES = {
   },
 } as const satisfies Record<Color, Record<Variant, string>>;
 
-interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
   className?: string;
   color?: Color;
   variant?: Variant;
 }
 
-export default function Button({
+export default function ExternalLinkButton({
   children,
   className,
   color = 'main',
@@ -66,12 +67,15 @@ export default function Button({
   ...rest
 }: Props) {
   return (
-    <button
+    <a
       {...rest}
       className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
-      type="button"
     >
-      {children}
-    </button>
+      <span>{children}</span>
+      <SvgIcon
+        name="arrow-top-right-on-square"
+        className="inline-block ml-2 w-5 h-5"
+      />
+    </a>
   );
 }

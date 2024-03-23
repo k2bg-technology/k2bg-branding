@@ -1,10 +1,10 @@
 // component exports
-export * from './src/Button';
-export * from './src/Icon';
-export * from './src/Dialog';
-export * from './src/DropdownMenu';
-export * from './src/Drawer';
-export { default as BlogCard } from './src/BlogCard';
-export * from './src/Avatar';
-export * from './src/Promotion';
-export * from './src/Media';
+export * from './src/components/Button';
+export * from './src/components/Icon';
+export * from './src/components/Dialog';
+export * from './src/components/DropdownMenu';
+export * from './src/components/Drawer';
+export { default as BlogCard } from './src/components/BlogCard';
+export * from './src/components/Avatar';
+export * from './src/components/Promotion';
+export * from './src/components/Media';
