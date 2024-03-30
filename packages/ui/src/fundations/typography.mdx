@@ -1,0 +1,38 @@
+import { Typeset } from '@storybook/blocks';
+
+import typography from 'tailwind-config/design-token/typography.json';
+
+export const SampleJaText = '人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは';
+export const SampleEnText = 'Whereas disregard and contempt for human rights have resulted';
+
+# Typography
+
+{(() => {
+  const groups = Object.groupBy(Object.values(typography), ({ group }) => group);
+
+  return Object.keys(groups).map((key) => {
+    const fontSize = groups[key].find(({ property }) => property === 'fontSize');
+    const fontWeight = groups[key].find(({ property }) => property === 'fontWeight');
+    const fontFamily = groups[key].find(({ property }) => property === 'fontFamily');
+    const sampleText = fontSize.lang === 'ja' ? SampleJaText : SampleEnText;
+
+    return (
+      <div key={key}>
+        <h2>{key}</h2>
+        <ul style={{ listStyle: "none", padding: "unset" }}>
+          <li style={{ fontWeight: "bold" }}>{fontSize.customVariable}</li>
+          <li style={{ fontWeight: "bold" }}>{fontWeight.customVariable}</li>
+          <li style={{ fontWeight: "bold" }}>{fontFamily.customVariable}</li>
+        </ul>
+        <Typeset
+          fontSizes={[
+            Number(fontSize.value),
+          ]}
+          fontWeight={fontWeight.value}
+          sampleText={sampleText}
+          fontFamily={fontFamily.value}
+        />
+      </div>
+    );
+  });
+})()}
