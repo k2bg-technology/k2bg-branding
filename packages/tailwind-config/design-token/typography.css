@@ -1,0 +1,557 @@
+/**
+ * Do not edit directly
+ * Generated on Sat, 30 Mar 2024 10:50:54 GMT
+ */
+
+:root {
+  --typography-en-advert-font-size: 8rem; /* original -> 80px */
+  --typography-en-advert-text-decoration: none;
+  --typography-en-advert-font-family: Menlo;
+  --typography-en-advert-font-weight: 700;
+  --typography-en-advert-font-style: normal;
+  --typography-en-advert-font-stretch: normal;
+  --typography-en-advert-letter-spacing: 0;
+  --typography-en-advert-line-height: 13.6rem; /* original -> 136px */
+  --typography-en-advert-paragraph-indent: 0;
+  --typography-en-advert-paragraph-spacing: 0;
+  --typography-en-advert-text-case: none;
+  --typography-en-slogan-font-size: 6rem; /* original -> 60px */
+  --typography-en-slogan-text-decoration: none;
+  --typography-en-slogan-font-family: Menlo;
+  --typography-en-slogan-font-weight: 700;
+  --typography-en-slogan-font-style: normal;
+  --typography-en-slogan-font-stretch: normal;
+  --typography-en-slogan-letter-spacing: 0;
+  --typography-en-slogan-line-height: 10.2rem; /* original -> 102px */
+  --typography-en-slogan-paragraph-indent: 0;
+  --typography-en-slogan-paragraph-spacing: 0;
+  --typography-en-slogan-text-case: none;
+  --typography-en-big-header-font-size: 4.8rem; /* original -> 48px */
+  --typography-en-big-header-text-decoration: none;
+  --typography-en-big-header-font-family: Menlo;
+  --typography-en-big-header-font-weight: 700;
+  --typography-en-big-header-font-style: normal;
+  --typography-en-big-header-font-stretch: normal;
+  --typography-en-big-header-letter-spacing: 0;
+  --typography-en-big-header-line-height: 8.16rem; /* original -> 81.6px */
+  --typography-en-big-header-paragraph-indent: 0;
+  --typography-en-big-header-paragraph-spacing: 0;
+  --typography-en-big-header-text-case: none;
+  --typography-en-caption-font-size: 1.2rem; /* original -> 12px */
+  --typography-en-caption-text-decoration: none;
+  --typography-en-caption-font-family: Menlo;
+  --typography-en-caption-font-weight: 400;
+  --typography-en-caption-font-style: normal;
+  --typography-en-caption-font-stretch: normal;
+  --typography-en-caption-letter-spacing: 0;
+  --typography-en-caption-line-height: 2.04rem; /* original -> 20.4px */
+  --typography-en-caption-paragraph-indent: 0;
+  --typography-en-caption-paragraph-spacing: 0;
+  --typography-en-caption-text-case: none;
+  --typography-en-header-1-font-size: 3rem; /* original -> 30px */
+  --typography-en-header-1-text-decoration: none;
+  --typography-en-header-1-font-family: Menlo;
+  --typography-en-header-1-font-weight: 700;
+  --typography-en-header-1-font-style: normal;
+  --typography-en-header-1-font-stretch: normal;
+  --typography-en-header-1-letter-spacing: 0;
+  --typography-en-header-1-line-height: 5.1rem; /* original -> 51px */
+  --typography-en-header-1-paragraph-indent: 0;
+  --typography-en-header-1-paragraph-spacing: 0;
+  --typography-en-header-1-text-case: none;
+  --typography-en-header-2-font-size: 2.2rem; /* original -> 22px */
+  --typography-en-header-2-text-decoration: none;
+  --typography-en-header-2-font-family: Menlo;
+  --typography-en-header-2-font-weight: 700;
+  --typography-en-header-2-font-style: normal;
+  --typography-en-header-2-font-stretch: normal;
+  --typography-en-header-2-letter-spacing: 0;
+  --typography-en-header-2-line-height: 3.7399999999999998rem; /* original -> 37.4px */
+  --typography-en-header-2-paragraph-indent: 0;
+  --typography-en-header-2-paragraph-spacing: 0;
+  --typography-en-header-2-text-case: none;
+  --typography-en-header-3-font-size: 2rem; /* original -> 20px */
+  --typography-en-header-3-text-decoration: none;
+  --typography-en-header-3-font-family: Menlo;
+  --typography-en-header-3-font-weight: 700;
+  --typography-en-header-3-font-style: normal;
+  --typography-en-header-3-font-stretch: normal;
+  --typography-en-header-3-letter-spacing: 0;
+  --typography-en-header-3-line-height: 3.4rem; /* original -> 34px */
+  --typography-en-header-3-paragraph-indent: 0;
+  --typography-en-header-3-paragraph-spacing: 0;
+  --typography-en-header-3-text-case: none;
+  --typography-en-header-4-font-size: 1.8rem; /* original -> 18px */
+  --typography-en-header-4-text-decoration: none;
+  --typography-en-header-4-font-family: Menlo;
+  --typography-en-header-4-font-weight: 700;
+  --typography-en-header-4-font-style: normal;
+  --typography-en-header-4-font-stretch: normal;
+  --typography-en-header-4-letter-spacing: 0;
+  --typography-en-header-4-line-height: 3.06rem; /* original -> 30.6px */
+  --typography-en-header-4-paragraph-indent: 0;
+  --typography-en-header-4-paragraph-spacing: 0;
+  --typography-en-header-4-text-case: none;
+  --typography-en-header-5-font-size: 1.6rem; /* original -> 16px */
+  --typography-en-header-5-text-decoration: none;
+  --typography-en-header-5-font-family: Menlo;
+  --typography-en-header-5-font-weight: 700;
+  --typography-en-header-5-font-style: normal;
+  --typography-en-header-5-font-stretch: normal;
+  --typography-en-header-5-letter-spacing: 0;
+  --typography-en-header-5-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-en-header-5-paragraph-indent: 0;
+  --typography-en-header-5-paragraph-spacing: 0;
+  --typography-en-header-5-text-case: none;
+  --typography-en-header-6-font-size: 1.4rem; /* original -> 14px */
+  --typography-en-header-6-text-decoration: none;
+  --typography-en-header-6-font-family: Menlo;
+  --typography-en-header-6-font-weight: 700;
+  --typography-en-header-6-font-style: normal;
+  --typography-en-header-6-font-stretch: normal;
+  --typography-en-header-6-letter-spacing: 0;
+  --typography-en-header-6-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-en-header-6-paragraph-indent: 0;
+  --typography-en-header-6-paragraph-spacing: 0;
+  --typography-en-header-6-text-case: none;
+  --typography-en-subtitle-lg-font-size: 2.4rem; /* original -> 24px */
+  --typography-en-subtitle-lg-text-decoration: none;
+  --typography-en-subtitle-lg-font-family: Menlo;
+  --typography-en-subtitle-lg-font-weight: 700;
+  --typography-en-subtitle-lg-font-style: normal;
+  --typography-en-subtitle-lg-font-stretch: normal;
+  --typography-en-subtitle-lg-letter-spacing: 0;
+  --typography-en-subtitle-lg-line-height: 4.08rem; /* original -> 40.8px */
+  --typography-en-subtitle-lg-paragraph-indent: 0;
+  --typography-en-subtitle-lg-paragraph-spacing: 0;
+  --typography-en-subtitle-lg-text-case: none;
+  --typography-en-subtitle-md-font-size: 2.2rem; /* original -> 22px */
+  --typography-en-subtitle-md-text-decoration: none;
+  --typography-en-subtitle-md-font-family: Menlo;
+  --typography-en-subtitle-md-font-weight: 700;
+  --typography-en-subtitle-md-font-style: normal;
+  --typography-en-subtitle-md-font-stretch: normal;
+  --typography-en-subtitle-md-letter-spacing: 0;
+  --typography-en-subtitle-md-line-height: 3.7399999999999998rem; /* original -> 37.4px */
+  --typography-en-subtitle-md-paragraph-indent: 0;
+  --typography-en-subtitle-md-paragraph-spacing: 0;
+  --typography-en-subtitle-md-text-case: none;
+  --typography-en-subtitle-sm-font-size: 2rem; /* original -> 20px */
+  --typography-en-subtitle-sm-text-decoration: none;
+  --typography-en-subtitle-sm-font-family: Menlo;
+  --typography-en-subtitle-sm-font-weight: 700;
+  --typography-en-subtitle-sm-font-style: normal;
+  --typography-en-subtitle-sm-font-stretch: normal;
+  --typography-en-subtitle-sm-letter-spacing: 0;
+  --typography-en-subtitle-sm-line-height: 3.4rem; /* original -> 34px */
+  --typography-en-subtitle-sm-paragraph-indent: 0;
+  --typography-en-subtitle-sm-paragraph-spacing: 0;
+  --typography-en-subtitle-sm-text-case: none;
+  --typography-en-body-r-lg-font-size: 1.8rem; /* original -> 18px */
+  --typography-en-body-r-lg-text-decoration: none;
+  --typography-en-body-r-lg-font-family: Menlo;
+  --typography-en-body-r-lg-font-weight: 400;
+  --typography-en-body-r-lg-font-style: normal;
+  --typography-en-body-r-lg-font-stretch: normal;
+  --typography-en-body-r-lg-letter-spacing: 0;
+  --typography-en-body-r-lg-line-height: 3.06rem; /* original -> 30.6px */
+  --typography-en-body-r-lg-paragraph-indent: 0;
+  --typography-en-body-r-lg-paragraph-spacing: 0;
+  --typography-en-body-r-lg-text-case: none;
+  --typography-en-body-r-md-font-size: 1.6rem; /* original -> 16px */
+  --typography-en-body-r-md-text-decoration: none;
+  --typography-en-body-r-md-font-family: Menlo;
+  --typography-en-body-r-md-font-weight: 400;
+  --typography-en-body-r-md-font-style: normal;
+  --typography-en-body-r-md-font-stretch: normal;
+  --typography-en-body-r-md-letter-spacing: 0;
+  --typography-en-body-r-md-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-en-body-r-md-paragraph-indent: 0;
+  --typography-en-body-r-md-paragraph-spacing: 0;
+  --typography-en-body-r-md-text-case: none;
+  --typography-en-body-r-sm-font-size: 1.4rem; /* original -> 14px */
+  --typography-en-body-r-sm-text-decoration: none;
+  --typography-en-body-r-sm-font-family: Menlo;
+  --typography-en-body-r-sm-font-weight: 400;
+  --typography-en-body-r-sm-font-style: normal;
+  --typography-en-body-r-sm-font-stretch: normal;
+  --typography-en-body-r-sm-letter-spacing: 0;
+  --typography-en-body-r-sm-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-en-body-r-sm-paragraph-indent: 0;
+  --typography-en-body-r-sm-paragraph-spacing: 0;
+  --typography-en-body-r-sm-text-case: none;
+  --typography-en-body-b-lg-font-size: 1.8rem; /* original -> 18px */
+  --typography-en-body-b-lg-text-decoration: none;
+  --typography-en-body-b-lg-font-family: Menlo;
+  --typography-en-body-b-lg-font-weight: 700;
+  --typography-en-body-b-lg-font-style: normal;
+  --typography-en-body-b-lg-font-stretch: normal;
+  --typography-en-body-b-lg-letter-spacing: 0;
+  --typography-en-body-b-lg-line-height: 3.06rem; /* original -> 30.6px */
+  --typography-en-body-b-lg-paragraph-indent: 0;
+  --typography-en-body-b-lg-paragraph-spacing: 0;
+  --typography-en-body-b-lg-text-case: none;
+  --typography-en-body-b-md-font-size: 1.6rem; /* original -> 16px */
+  --typography-en-body-b-md-text-decoration: none;
+  --typography-en-body-b-md-font-family: Menlo;
+  --typography-en-body-b-md-font-weight: 700;
+  --typography-en-body-b-md-font-style: normal;
+  --typography-en-body-b-md-font-stretch: normal;
+  --typography-en-body-b-md-letter-spacing: 0;
+  --typography-en-body-b-md-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-en-body-b-md-paragraph-indent: 0;
+  --typography-en-body-b-md-paragraph-spacing: 0;
+  --typography-en-body-b-md-text-case: none;
+  --typography-en-body-b-sm-font-size: 1.4rem; /* original -> 14px */
+  --typography-en-body-b-sm-text-decoration: none;
+  --typography-en-body-b-sm-font-family: Menlo;
+  --typography-en-body-b-sm-font-weight: 700;
+  --typography-en-body-b-sm-font-style: normal;
+  --typography-en-body-b-sm-font-stretch: normal;
+  --typography-en-body-b-sm-letter-spacing: 0;
+  --typography-en-body-b-sm-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-en-body-b-sm-paragraph-indent: 0;
+  --typography-en-body-b-sm-paragraph-spacing: 0;
+  --typography-en-body-b-sm-text-case: none;
+  --typography-en-button-b-lg-font-size: 1.6rem; /* original -> 16px */
+  --typography-en-button-b-lg-text-decoration: none;
+  --typography-en-button-b-lg-font-family: Menlo;
+  --typography-en-button-b-lg-font-weight: 700;
+  --typography-en-button-b-lg-font-style: normal;
+  --typography-en-button-b-lg-font-stretch: normal;
+  --typography-en-button-b-lg-letter-spacing: 0;
+  --typography-en-button-b-lg-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-en-button-b-lg-paragraph-indent: 0;
+  --typography-en-button-b-lg-paragraph-spacing: 0;
+  --typography-en-button-b-lg-text-case: none;
+  --typography-en-button-b-md-font-size: 1.4rem; /* original -> 14px */
+  --typography-en-button-b-md-text-decoration: none;
+  --typography-en-button-b-md-font-family: Menlo;
+  --typography-en-button-b-md-font-weight: 700;
+  --typography-en-button-b-md-font-style: normal;
+  --typography-en-button-b-md-font-stretch: normal;
+  --typography-en-button-b-md-letter-spacing: 0;
+  --typography-en-button-b-md-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-en-button-b-md-paragraph-indent: 0;
+  --typography-en-button-b-md-paragraph-spacing: 0;
+  --typography-en-button-b-md-text-case: none;
+  --typography-en-button-b-sm-font-size: 1.2rem; /* original -> 12px */
+  --typography-en-button-b-sm-text-decoration: none;
+  --typography-en-button-b-sm-font-family: Menlo;
+  --typography-en-button-b-sm-font-weight: 700;
+  --typography-en-button-b-sm-font-style: normal;
+  --typography-en-button-b-sm-font-stretch: normal;
+  --typography-en-button-b-sm-letter-spacing: 0;
+  --typography-en-button-b-sm-line-height: 2.04rem; /* original -> 20.4px */
+  --typography-en-button-b-sm-paragraph-indent: 0;
+  --typography-en-button-b-sm-paragraph-spacing: 0;
+  --typography-en-button-b-sm-text-case: none;
+  --typography-en-button-r-lg-font-size: 1.6rem; /* original -> 16px */
+  --typography-en-button-r-lg-text-decoration: none;
+  --typography-en-button-r-lg-font-family: Menlo;
+  --typography-en-button-r-lg-font-weight: 400;
+  --typography-en-button-r-lg-font-style: normal;
+  --typography-en-button-r-lg-font-stretch: normal;
+  --typography-en-button-r-lg-letter-spacing: 0;
+  --typography-en-button-r-lg-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-en-button-r-lg-paragraph-indent: 0;
+  --typography-en-button-r-lg-paragraph-spacing: 0;
+  --typography-en-button-r-lg-text-case: none;
+  --typography-en-button-r-md-font-size: 1.4rem; /* original -> 14px */
+  --typography-en-button-r-md-text-decoration: none;
+  --typography-en-button-r-md-font-family: Menlo;
+  --typography-en-button-r-md-font-weight: 400;
+  --typography-en-button-r-md-font-style: normal;
+  --typography-en-button-r-md-font-stretch: normal;
+  --typography-en-button-r-md-letter-spacing: 0;
+  --typography-en-button-r-md-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-en-button-r-md-paragraph-indent: 0;
+  --typography-en-button-r-md-paragraph-spacing: 0;
+  --typography-en-button-r-md-text-case: none;
+  --typography-en-button-r-sm-font-size: 1.2rem; /* original -> 12px */
+  --typography-en-button-r-sm-text-decoration: none;
+  --typography-en-button-r-sm-font-family: Menlo;
+  --typography-en-button-r-sm-font-weight: 700;
+  --typography-en-button-r-sm-font-style: normal;
+  --typography-en-button-r-sm-font-stretch: normal;
+  --typography-en-button-r-sm-letter-spacing: 0;
+  --typography-en-button-r-sm-line-height: 2.04rem; /* original -> 20.4px */
+  --typography-en-button-r-sm-paragraph-indent: 0;
+  --typography-en-button-r-sm-paragraph-spacing: 0;
+  --typography-en-button-r-sm-text-case: none;
+  --typography-ja-big-header-font-size: 4.8rem; /* original -> 48px */
+  --typography-ja-big-header-text-decoration: none;
+  --typography-ja-big-header-font-family: YuGothic;
+  --typography-ja-big-header-font-weight: 700;
+  --typography-ja-big-header-font-style: normal;
+  --typography-ja-big-header-font-stretch: normal;
+  --typography-ja-big-header-letter-spacing: 0;
+  --typography-ja-big-header-line-height: 8.16rem; /* original -> 81.6px */
+  --typography-ja-big-header-paragraph-indent: 0;
+  --typography-ja-big-header-paragraph-spacing: 0;
+  --typography-ja-big-header-text-case: none;
+  --typography-ja-slogan-font-size: 6rem; /* original -> 60px */
+  --typography-ja-slogan-text-decoration: none;
+  --typography-ja-slogan-font-family: YuGothic;
+  --typography-ja-slogan-font-weight: 700;
+  --typography-ja-slogan-font-style: normal;
+  --typography-ja-slogan-font-stretch: normal;
+  --typography-ja-slogan-letter-spacing: 0;
+  --typography-ja-slogan-line-height: 10.2rem; /* original -> 102px */
+  --typography-ja-slogan-paragraph-indent: 0;
+  --typography-ja-slogan-paragraph-spacing: 0;
+  --typography-ja-slogan-text-case: none;
+  --typography-ja-caption-font-size: 1.2rem; /* original -> 12px */
+  --typography-ja-caption-text-decoration: none;
+  --typography-ja-caption-font-family: YuGothic;
+  --typography-ja-caption-font-weight: 500;
+  --typography-ja-caption-font-style: normal;
+  --typography-ja-caption-font-stretch: normal;
+  --typography-ja-caption-letter-spacing: 0;
+  --typography-ja-caption-line-height: 2.04rem; /* original -> 20.4px */
+  --typography-ja-caption-paragraph-indent: 0;
+  --typography-ja-caption-paragraph-spacing: 0;
+  --typography-ja-caption-text-case: none;
+  --typography-ja-advert-font-size: 8rem; /* original -> 80px */
+  --typography-ja-advert-text-decoration: none;
+  --typography-ja-advert-font-family: YuGothic;
+  --typography-ja-advert-font-weight: 700;
+  --typography-ja-advert-font-style: normal;
+  --typography-ja-advert-font-stretch: normal;
+  --typography-ja-advert-letter-spacing: 0;
+  --typography-ja-advert-line-height: 13.6rem; /* original -> 136px */
+  --typography-ja-advert-paragraph-indent: 0;
+  --typography-ja-advert-paragraph-spacing: 0;
+  --typography-ja-advert-text-case: none;
+  --typography-ja-header-1-font-size: 3rem; /* original -> 30px */
+  --typography-ja-header-1-text-decoration: none;
+  --typography-ja-header-1-font-family: YuGothic;
+  --typography-ja-header-1-font-weight: 700;
+  --typography-ja-header-1-font-style: normal;
+  --typography-ja-header-1-font-stretch: normal;
+  --typography-ja-header-1-letter-spacing: 0;
+  --typography-ja-header-1-line-height: 5.1rem; /* original -> 51px */
+  --typography-ja-header-1-paragraph-indent: 0;
+  --typography-ja-header-1-paragraph-spacing: 0;
+  --typography-ja-header-1-text-case: none;
+  --typography-ja-header-2-font-size: 2.2rem; /* original -> 22px */
+  --typography-ja-header-2-text-decoration: none;
+  --typography-ja-header-2-font-family: YuGothic;
+  --typography-ja-header-2-font-weight: 700;
+  --typography-ja-header-2-font-style: normal;
+  --typography-ja-header-2-font-stretch: normal;
+  --typography-ja-header-2-letter-spacing: 0;
+  --typography-ja-header-2-line-height: 3.7399999999999998rem; /* original -> 37.4px */
+  --typography-ja-header-2-paragraph-indent: 0;
+  --typography-ja-header-2-paragraph-spacing: 0;
+  --typography-ja-header-2-text-case: none;
+  --typography-ja-header-3-font-size: 2rem; /* original -> 20px */
+  --typography-ja-header-3-text-decoration: none;
+  --typography-ja-header-3-font-family: YuGothic;
+  --typography-ja-header-3-font-weight: 700;
+  --typography-ja-header-3-font-style: normal;
+  --typography-ja-header-3-font-stretch: normal;
+  --typography-ja-header-3-letter-spacing: 0;
+  --typography-ja-header-3-line-height: 3.4rem; /* original -> 34px */
+  --typography-ja-header-3-paragraph-indent: 0;
+  --typography-ja-header-3-paragraph-spacing: 0;
+  --typography-ja-header-3-text-case: none;
+  --typography-ja-header-4-font-size: 1.8rem; /* original -> 18px */
+  --typography-ja-header-4-text-decoration: none;
+  --typography-ja-header-4-font-family: YuGothic;
+  --typography-ja-header-4-font-weight: 700;
+  --typography-ja-header-4-font-style: normal;
+  --typography-ja-header-4-font-stretch: normal;
+  --typography-ja-header-4-letter-spacing: 0;
+  --typography-ja-header-4-line-height: 3.06rem; /* original -> 30.6px */
+  --typography-ja-header-4-paragraph-indent: 0;
+  --typography-ja-header-4-paragraph-spacing: 0;
+  --typography-ja-header-4-text-case: none;
+  --typography-ja-header-5-font-size: 1.6rem; /* original -> 16px */
+  --typography-ja-header-5-text-decoration: none;
+  --typography-ja-header-5-font-family: YuGothic;
+  --typography-ja-header-5-font-weight: 700;
+  --typography-ja-header-5-font-style: normal;
+  --typography-ja-header-5-font-stretch: normal;
+  --typography-ja-header-5-letter-spacing: 0;
+  --typography-ja-header-5-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-ja-header-5-paragraph-indent: 0;
+  --typography-ja-header-5-paragraph-spacing: 0;
+  --typography-ja-header-5-text-case: none;
+  --typography-ja-header-6-font-size: 1.4rem; /* original -> 14px */
+  --typography-ja-header-6-text-decoration: none;
+  --typography-ja-header-6-font-family: YuGothic;
+  --typography-ja-header-6-font-weight: 700;
+  --typography-ja-header-6-font-style: normal;
+  --typography-ja-header-6-font-stretch: normal;
+  --typography-ja-header-6-letter-spacing: 0;
+  --typography-ja-header-6-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-ja-header-6-paragraph-indent: 0;
+  --typography-ja-header-6-paragraph-spacing: 0;
+  --typography-ja-header-6-text-case: none;
+  --typography-ja-subtitle-lg-font-size: 2.4rem; /* original -> 24px */
+  --typography-ja-subtitle-lg-text-decoration: none;
+  --typography-ja-subtitle-lg-font-family: YuGothic;
+  --typography-ja-subtitle-lg-font-weight: 700;
+  --typography-ja-subtitle-lg-font-style: normal;
+  --typography-ja-subtitle-lg-font-stretch: normal;
+  --typography-ja-subtitle-lg-letter-spacing: 0;
+  --typography-ja-subtitle-lg-line-height: 4.08rem; /* original -> 40.8px */
+  --typography-ja-subtitle-lg-paragraph-indent: 0;
+  --typography-ja-subtitle-lg-paragraph-spacing: 0;
+  --typography-ja-subtitle-lg-text-case: none;
+  --typography-ja-subtitle-md-font-size: 2.2rem; /* original -> 22px */
+  --typography-ja-subtitle-md-text-decoration: none;
+  --typography-ja-subtitle-md-font-family: YuGothic;
+  --typography-ja-subtitle-md-font-weight: 700;
+  --typography-ja-subtitle-md-font-style: normal;
+  --typography-ja-subtitle-md-font-stretch: normal;
+  --typography-ja-subtitle-md-letter-spacing: 0;
+  --typography-ja-subtitle-md-line-height: 3.7399999999999998rem; /* original -> 37.4px */
+  --typography-ja-subtitle-md-paragraph-indent: 0;
+  --typography-ja-subtitle-md-paragraph-spacing: 0;
+  --typography-ja-subtitle-md-text-case: none;
+  --typography-ja-subtitle-sm-font-size: 2rem; /* original -> 20px */
+  --typography-ja-subtitle-sm-text-decoration: none;
+  --typography-ja-subtitle-sm-font-family: YuGothic;
+  --typography-ja-subtitle-sm-font-weight: 700;
+  --typography-ja-subtitle-sm-font-style: normal;
+  --typography-ja-subtitle-sm-font-stretch: normal;
+  --typography-ja-subtitle-sm-letter-spacing: 0;
+  --typography-ja-subtitle-sm-line-height: 3.4rem; /* original -> 34px */
+  --typography-ja-subtitle-sm-paragraph-indent: 0;
+  --typography-ja-subtitle-sm-paragraph-spacing: 0;
+  --typography-ja-subtitle-sm-text-case: none;
+  --typography-ja-body-r-lg-font-size: 1.8rem; /* original -> 18px */
+  --typography-ja-body-r-lg-text-decoration: none;
+  --typography-ja-body-r-lg-font-family: YuGothic;
+  --typography-ja-body-r-lg-font-weight: 500;
+  --typography-ja-body-r-lg-font-style: normal;
+  --typography-ja-body-r-lg-font-stretch: normal;
+  --typography-ja-body-r-lg-letter-spacing: 0;
+  --typography-ja-body-r-lg-line-height: 3.06rem; /* original -> 30.6px */
+  --typography-ja-body-r-lg-paragraph-indent: 0;
+  --typography-ja-body-r-lg-paragraph-spacing: 0;
+  --typography-ja-body-r-lg-text-case: none;
+  --typography-ja-body-r-md-font-size: 1.6rem; /* original -> 16px */
+  --typography-ja-body-r-md-text-decoration: none;
+  --typography-ja-body-r-md-font-family: YuGothic;
+  --typography-ja-body-r-md-font-weight: 500;
+  --typography-ja-body-r-md-font-style: normal;
+  --typography-ja-body-r-md-font-stretch: normal;
+  --typography-ja-body-r-md-letter-spacing: 0;
+  --typography-ja-body-r-md-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-ja-body-r-md-paragraph-indent: 0;
+  --typography-ja-body-r-md-paragraph-spacing: 0;
+  --typography-ja-body-r-md-text-case: none;
+  --typography-ja-body-r-sm-font-size: 1.4rem; /* original -> 14px */
+  --typography-ja-body-r-sm-text-decoration: none;
+  --typography-ja-body-r-sm-font-family: YuGothic;
+  --typography-ja-body-r-sm-font-weight: 500;
+  --typography-ja-body-r-sm-font-style: normal;
+  --typography-ja-body-r-sm-font-stretch: normal;
+  --typography-ja-body-r-sm-letter-spacing: 0;
+  --typography-ja-body-r-sm-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-ja-body-r-sm-paragraph-indent: 0;
+  --typography-ja-body-r-sm-paragraph-spacing: 0;
+  --typography-ja-body-r-sm-text-case: none;
+  --typography-ja-body-b-lg-font-size: 1.8rem; /* original -> 18px */
+  --typography-ja-body-b-lg-text-decoration: none;
+  --typography-ja-body-b-lg-font-family: YuGothic;
+  --typography-ja-body-b-lg-font-weight: 700;
+  --typography-ja-body-b-lg-font-style: normal;
+  --typography-ja-body-b-lg-font-stretch: normal;
+  --typography-ja-body-b-lg-letter-spacing: 0;
+  --typography-ja-body-b-lg-line-height: 3.06rem; /* original -> 30.6px */
+  --typography-ja-body-b-lg-paragraph-indent: 0;
+  --typography-ja-body-b-lg-paragraph-spacing: 0;
+  --typography-ja-body-b-lg-text-case: none;
+  --typography-ja-body-b-md-font-size: 1.6rem; /* original -> 16px */
+  --typography-ja-body-b-md-text-decoration: none;
+  --typography-ja-body-b-md-font-family: YuGothic;
+  --typography-ja-body-b-md-font-weight: 700;
+  --typography-ja-body-b-md-font-style: normal;
+  --typography-ja-body-b-md-font-stretch: normal;
+  --typography-ja-body-b-md-letter-spacing: 0;
+  --typography-ja-body-b-md-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-ja-body-b-md-paragraph-indent: 0;
+  --typography-ja-body-b-md-paragraph-spacing: 0;
+  --typography-ja-body-b-md-text-case: none;
+  --typography-ja-body-b-sm-font-size: 1.4rem; /* original -> 14px */
+  --typography-ja-body-b-sm-text-decoration: none;
+  --typography-ja-body-b-sm-font-family: YuGothic;
+  --typography-ja-body-b-sm-font-weight: 700;
+  --typography-ja-body-b-sm-font-style: normal;
+  --typography-ja-body-b-sm-font-stretch: normal;
+  --typography-ja-body-b-sm-letter-spacing: 0;
+  --typography-ja-body-b-sm-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-ja-body-b-sm-paragraph-indent: 0;
+  --typography-ja-body-b-sm-paragraph-spacing: 0;
+  --typography-ja-body-b-sm-text-case: none;
+  --typography-ja-button-b-lg-font-size: 1.6rem; /* original -> 16px */
+  --typography-ja-button-b-lg-text-decoration: none;
+  --typography-ja-button-b-lg-font-family: YuGothic;
+  --typography-ja-button-b-lg-font-weight: 700;
+  --typography-ja-button-b-lg-font-style: normal;
+  --typography-ja-button-b-lg-font-stretch: normal;
+  --typography-ja-button-b-lg-letter-spacing: 0;
+  --typography-ja-button-b-lg-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-ja-button-b-lg-paragraph-indent: 0;
+  --typography-ja-button-b-lg-paragraph-spacing: 0;
+  --typography-ja-button-b-lg-text-case: none;
+  --typography-ja-button-b-md-font-size: 1.4rem; /* original -> 14px */
+  --typography-ja-button-b-md-text-decoration: none;
+  --typography-ja-button-b-md-font-family: YuGothic;
+  --typography-ja-button-b-md-font-weight: 700;
+  --typography-ja-button-b-md-font-style: normal;
+  --typography-ja-button-b-md-font-stretch: normal;
+  --typography-ja-button-b-md-letter-spacing: 0;
+  --typography-ja-button-b-md-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-ja-button-b-md-paragraph-indent: 0;
+  --typography-ja-button-b-md-paragraph-spacing: 0;
+  --typography-ja-button-b-md-text-case: none;
+  --typography-ja-button-b-sm-font-size: 1.2rem; /* original -> 12px */
+  --typography-ja-button-b-sm-text-decoration: none;
+  --typography-ja-button-b-sm-font-family: YuGothic;
+  --typography-ja-button-b-sm-font-weight: 700;
+  --typography-ja-button-b-sm-font-style: normal;
+  --typography-ja-button-b-sm-font-stretch: normal;
+  --typography-ja-button-b-sm-letter-spacing: 0;
+  --typography-ja-button-b-sm-line-height: 2.04rem; /* original -> 20.4px */
+  --typography-ja-button-b-sm-paragraph-indent: 0;
+  --typography-ja-button-b-sm-paragraph-spacing: 0;
+  --typography-ja-button-b-sm-text-case: none;
+  --typography-ja-button-r-lg-font-size: 1.6rem; /* original -> 16px */
+  --typography-ja-button-r-lg-text-decoration: none;
+  --typography-ja-button-r-lg-font-family: YuGothic;
+  --typography-ja-button-r-lg-font-weight: 500;
+  --typography-ja-button-r-lg-font-style: normal;
+  --typography-ja-button-r-lg-font-stretch: normal;
+  --typography-ja-button-r-lg-letter-spacing: 0;
+  --typography-ja-button-r-lg-line-height: 2.7199999999999998rem; /* original -> 27.2px */
+  --typography-ja-button-r-lg-paragraph-indent: 0;
+  --typography-ja-button-r-lg-paragraph-spacing: 0;
+  --typography-ja-button-r-lg-text-case: none;
+  --typography-ja-button-r-md-font-size: 1.4rem; /* original -> 14px */
+  --typography-ja-button-r-md-text-decoration: none;
+  --typography-ja-button-r-md-font-family: YuGothic;
+  --typography-ja-button-r-md-font-weight: 500;
+  --typography-ja-button-r-md-font-style: normal;
+  --typography-ja-button-r-md-font-stretch: normal;
+  --typography-ja-button-r-md-letter-spacing: 0;
+  --typography-ja-button-r-md-line-height: 2.38rem; /* original -> 23.8px */
+  --typography-ja-button-r-md-paragraph-indent: 0;
+  --typography-ja-button-r-md-paragraph-spacing: 0;
+  --typography-ja-button-r-md-text-case: none;
+  --typography-ja-button-r-sm-font-size: 1.2rem; /* original -> 12px */
+  --typography-ja-button-r-sm-text-decoration: none;
+  --typography-ja-button-r-sm-font-family: YuGothic;
+  --typography-ja-button-r-sm-font-weight: 500;
+  --typography-ja-button-r-sm-font-style: normal;
+  --typography-ja-button-r-sm-font-stretch: normal;
+  --typography-ja-button-r-sm-letter-spacing: 0;
+  --typography-ja-button-r-sm-line-height: 2.04rem; /* original -> 20.4px */
+  --typography-ja-button-r-sm-paragraph-indent: 0;
+  --typography-ja-button-r-sm-paragraph-spacing: 0;
+  --typography-ja-button-r-sm-text-case: none;
+}

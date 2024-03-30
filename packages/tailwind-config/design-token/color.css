@@ -1,0 +1,18 @@
+/**
+ * Do not edit directly
+ * Generated on Sat, 30 Mar 2024 10:50:54 GMT
+ */
+
+:root {
+  --color-base-white: #f3f3f2; /* 白練 しろねり */
+  --color-base-black: #474a4d; /* 藍墨茶 あいすみちゃ */
+  --color-base-default: #887f7a; /* 煤色 すすいろ */
+  --color-base-light: #eae5e3; /* 素色 そしょく */
+  --color-base-dark: #554738; /* 涅色 くりいろ */
+  --color-main-default: #b8d200; /* 黄緑 きみどり */
+  --color-main-light: #a8c97f; /* 柳色 やなぎいろ */
+  --color-main-dark: #028760; /* 常磐緑 ときわみどり */
+  --color-accent-default: #f8b500; /* 山吹色 やまぶきいろ */
+  --color-accent-light: #fef263; /* 黄檗色 きはだいろ */
+  --color-accent-dark: #946243; /* 渋紙色 しぶかみいろ */
+}

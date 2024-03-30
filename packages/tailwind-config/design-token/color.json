@@ -1,0 +1,57 @@
+{
+  "base-white": {
+    "customVariable": "var(--color-base-white)",
+    "value": "#f3f3f2",
+    "description": "白練 しろねり"
+  },
+  "base-black": {
+    "customVariable": "var(--color-base-black)",
+    "value": "#474a4d",
+    "description": "藍墨茶 あいすみちゃ"
+  },
+  "base-default": {
+    "customVariable": "var(--color-base-default)",
+    "value": "#887f7a",
+    "description": "煤色 すすいろ"
+  },
+  "base-light": {
+    "customVariable": "var(--color-base-light)",
+    "value": "#eae5e3",
+    "description": "素色 そしょく"
+  },
+  "base-dark": {
+    "customVariable": "var(--color-base-dark)",
+    "value": "#554738",
+    "description": "涅色 くりいろ"
+  },
+  "main-default": {
+    "customVariable": "var(--color-main-default)",
+    "value": "#b8d200",
+    "description": "黄緑 きみどり"
+  },
+  "main-light": {
+    "customVariable": "var(--color-main-light)",
+    "value": "#a8c97f",
+    "description": "柳色 やなぎいろ"
+  },
+  "main-dark": {
+    "customVariable": "var(--color-main-dark)",
+    "value": "#028760",
+    "description": "常磐緑 ときわみどり"
+  },
+  "accent-default": {
+    "customVariable": "var(--color-accent-default)",
+    "value": "#f8b500",
+    "description": "山吹色 やまぶきいろ"
+  },
+  "accent-light": {
+    "customVariable": "var(--color-accent-light)",
+    "value": "#fef263",
+    "description": "黄檗色 きはだいろ"
+  },
+  "accent-dark": {
+    "customVariable": "var(--color-accent-dark)",
+    "value": "#946243",
+    "description": "渋紙色 しぶかみいろ"
+  }
+}

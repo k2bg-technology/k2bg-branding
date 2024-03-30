@@ -3,5 +3,11 @@
   "name": "tailwind-config",
   "version": "0.0.0",
   "main": "./index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "generate:style": "node styleDictionaryConfig.js"
+  },
+  "devDependencies": {
+    "style-dictionary": "^3.9.2"
+  }
 }

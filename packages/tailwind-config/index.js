@@ -1,4 +1,34 @@
 /** @type {import('tailwindcss').Config} */
+
+/* eslint-disable @typescript-eslint/no-var-requires, import/no-unresolved */
+const colors = require('tailwindcss/colors');
+
+const typography = require('./design-token/typography.json');
+const color = require('./design-token/color.json');
+/* eslint-enable @typescript-eslint/no-var-requires, import/no-unresolved */
+
+const colorVariables = Object.keys(color).reduce(
+  (prev, cur) => ({
+    ...prev,
+    [cur]: `rgb(from ${color[cur].customVariable} r g b / <alpha-value>)`,
+  }),
+  {}
+);
+
+const typographyVariables = Object.values(typography).reduce(
+  (prev, cur) =>
+    cur.lang === 'ja'
+      ? {
+          ...prev,
+          [cur.property]: {
+            ...prev[cur.property],
+            [cur.group.replace('ja-', '')]: cur.customVariable,
+          },
+        }
+      : prev,
+  {}
+);
+
 module.exports = {
   content: [],
   theme: {
@@ -17,74 +47,25 @@ module.exports = {
           'monospace',
         ],
       },
-      fontSize: {
-        advert: 'var(--advert)',
-        slogan: 'var(--slogan)',
-        'big-header': 'var(--big-header)',
-        'heading-1': 'var(--heading-1)',
-        'heading-2': 'var(--heading-2)',
-        'heading-3': 'var(--heading-3)',
-        'heading-4': 'var(--heading-4)',
-        'heading-5': 'var(--heading-5)',
-        'heading-6': 'var(--heading-6)',
-        'subtitle-lg': 'var(--subtitle-lg)',
-        'subtitle-md': 'var(--subtitle-md)',
-        'subtitle-sm': 'var(--subtitle-sm)',
-        'body-lg': 'var(--body-lg)',
-        'body-md': 'var(--body-md)',
-        'body-sm': 'var(--body-sm)',
-        caption: 'var(--caption)',
-        'button-lg': 'var(--button-lg)',
-        'button-md': 'var(--button-md)',
-        'button-sm': 'var(--button-sm)',
-      },
+      fontSize: typographyVariables.fontSize,
       textColor: {
-        'base-black': 'rgb(var(--color-base-black) / <alpha-value>)',
+        'base-black': `rgb(from var(--color-base-black) r g b / <alpha-value>)`,
       },
-      lineHeight: {
-        advert: 'calc(var(--advert)*var(--leading-rate))',
-        'slogan-lg': 'calc(var(--slogan-lg)*var(--leading-rate))',
-        'slogan-sm': 'calc(var(--slogan-sm)*var(--leading-rate))',
-        'header-lg': 'calc(var(--header-lg)*var(--leading-rate))',
-        'header-sm': 'calc(var(--header-sm)*var(--leading-rate))',
-        'heading-1': 'calc(var(--heading-1)*var(--leading-rate))',
-        'heading-2': 'calc(var(--heading-2)*var(--leading-rate))',
-        'heading-3': 'calc(var(--heading-3)*var(--leading-rate))',
-        'heading-4': 'calc(var(--heading-4)*var(--leading-rate))',
-        'heading-5': 'calc(var(--heading-5)*var(--leading-rate))',
-        'heading-6': 'calc(var(--heading-6)*var(--leading-rate))',
-        'body-lg': 'calc(var(--body-lg)*var(--leading-rate))',
-        'body-md': 'calc(var(--body-md)*var(--leading-rate))',
-        'body-sm': 'calc(var(--body-sm)*var(--leading-rate))',
-        caption: 'calc(var(--caption)*var(--leading-rate))',
-        'button-lg': 'calc(var(--button-lg)*var(--leading-rate))',
-        'button-md': 'calc(var(--button-md)*var(--leading-rate))',
-        'button-sm': 'calc(var(--button-sm)*var(--leading-rate))',
-      },
+      lineHeight: typographyVariables.lineHeight,
       colors: {
-        'base-black': 'rgb(var(--color-base-black) / <alpha-value>)',
-        'base-white': 'rgb(var(--color-base-white) / <alpha-value>)',
-        main: 'rgb(var(--color-main) / <alpha-value>)',
-        'main-light': 'rgb(var(--color-main-light) / <alpha-value>)',
-        'main-dark': 'rgb(var(--color-main-dark) / <alpha-value>)',
-        accent: 'rgb(var(--color-accent) / <alpha-value>)',
-        'accent-light': 'rgb(var(--color-accent-light) / <alpha-value>)',
-        'accent-dark': 'rgb(var(--color-accent-dark) / <alpha-value>)',
-        base: 'rgb(var(--color-base) / <alpha-value>)',
-        'base-light': 'rgb(var(--color-base-light) / <alpha-value>)',
-        'base-dark': 'rgb(var(--color-base-dark) / <alpha-value>)',
-        error: 'rgb(var(--color-error) / <alpha-value>)',
-        'error-light': 'rgb(var(--color-error-light) / <alpha-value>)',
-        'error-dark': 'rgb(var(--color-error-dark) / <alpha-value>)',
-        warning: 'rgb(var(--color-warning) / <alpha-value>)',
-        'warning-light': 'rgb(var(--color-warning-light) / <alpha-value>)',
-        'warning-dark': 'rgb(var(--color-warning-dark) / <alpha-value>)',
-        info: 'rgb(var(--color-info) / <alpha-value>)',
-        'info-light': 'rgb(var(--color-info-light) / <alpha-value>)',
-        'info-dark': 'rgb(var(--color-info-dark) / <alpha-value>)',
-        success: 'rgb(var(--color-success) / <alpha-value>)',
-        'success-light': 'rgb(var(--color-success-light) / <alpha-value>)',
-        'success-dark': 'rgb(var(--color-success-dark) / <alpha-value>)',
+        ...colorVariables,
+        error: colors.red[500],
+        'error-light': colors.red[400],
+        'error-dark': colors.red[600],
+        warning: colors.amber[500],
+        'warning-light': colors.amber[400],
+        'warning-dark': colors.amber[500],
+        info: colors.sky[500],
+        'info-light': colors.sky[400],
+        'info-dark': colors.sky[600],
+        success: colors.green[500],
+        'success-light': colors.green[400],
+        'success-dark': colors.green[600],
         'brand-amazon': 'rgb(255 153 0)',
         'brand-rakuten': 'rgb(191 0 0)',
       },

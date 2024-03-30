@@ -6,7 +6,8 @@
     "start": "turbo run start",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "storybook": "turbo run storybook"
+    "storybook": "turbo run storybook",
+    "generate:style": "turbo run generate:style"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
