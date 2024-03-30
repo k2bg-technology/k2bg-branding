@@ -1,5 +1,5 @@
 .Button {
-  @apply inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-sm text-center font-bold leading-none;
+  @apply inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-r-sm text-center font-bold leading-none;
 
   &:hover {
     @apply border-opacity-50 bg-opacity-10;
@@ -8,7 +8,7 @@
 
 /* Main */
 .MainContained {
-  @apply bg-main text-white;
+  @apply bg-main-default text-white;
 
   &:hover {
     @apply bg-opacity-90;
@@ -16,24 +16,24 @@
 }
 
 .MainOutlined {
-  @apply border-2 border-opacity-20 border-main text-main;
+  @apply border-2 border-opacity-20 border-main-default text-main-default;
 
   &:hover {
-    @apply border-opacity-50 bg-main bg-opacity-10;
+    @apply border-opacity-50 bg-main-default bg-opacity-10;
   }
 }
 
 .MainText {
-  @apply text-main;
+  @apply text-main-default;
 
   &:hover {
-    @apply bg-main bg-opacity-10;
+    @apply bg-main-default bg-opacity-10;
   }
 }
 
 /* Accent */
 .AccentContained {
-  @apply bg-accent text-white;
+  @apply bg-accent-default text-white;
 
   &:hover {
     @apply bg-opacity-90;
@@ -41,18 +41,18 @@
 }
 
 .AccentOutlined {
-  @apply border-2 border-opacity-20 border-accent text-accent;
+  @apply border-2 border-opacity-20 border-accent-default text-accent-default;
 
   &:hover {
-    @apply border-opacity-50 bg-accent bg-opacity-10;
+    @apply border-opacity-50 bg-accent-default bg-opacity-10;
   }
 }
 
 .AccentText {
-  @apply text-accent;
+  @apply text-accent-default;
 
   &:hover {
-    @apply bg-accent bg-opacity-10;
+    @apply bg-accent-default bg-opacity-10;
   }
 }
 

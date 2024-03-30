@@ -24,7 +24,7 @@ export default async function Page() {
         <BlogCard className="flex-col gap-6">
           <BlogCard.Content
             heading={
-              <h1 className="text-heading-1 font-bold">{article.title}</h1>
+              <h1 className="text-header-1 font-bold">{article.title}</h1>
             }
           />
           <BlogCard.Media className="relative w-full h-[37.6rem]">

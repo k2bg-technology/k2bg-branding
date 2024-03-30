@@ -32,12 +32,12 @@ export default function Drawer({
           className={`grid auto-rows-max gap-5 fixed top-[0] right-[0] w-max h-full rounded-xl p-10 bg-white drop-shadow-xl overflow-y-auto ${styles.Content} ${className}`}
         >
           {title && (
-            <RadixDialog.Title className="text-body-sm leading-body-sm font-bold">
+            <RadixDialog.Title className="text-body-r-sm leading-body-r-sm font-bold">
               {title}
             </RadixDialog.Title>
           )}
           {description && (
-            <RadixDialog.Description className="text-body-sm leading-body-sm">
+            <RadixDialog.Description className="text-body-r-sm leading-body-r-sm">
               {description}
             </RadixDialog.Description>
           )}

@@ -210,7 +210,7 @@ export default async function Page({
               </Link>
             }
             heading={
-              <h1 className="text-heading-1 font-bold">{article.title}</h1>
+              <h1 className="text-header-1 font-bold">{article.title}</h1>
             }
             excerpt={article.excerpt}
             avatar={

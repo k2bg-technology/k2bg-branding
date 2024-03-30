@@ -14,16 +14,16 @@ export function Contact({ t }: { t: TFunction }) {
           />
         </div>
         <div className="flex flex-col justify-center gap-5 p-10 w-full text-white h-full md:p-20 md:w-[60rem]">
-          <h2 className="text-heading-2 leading-heading-2 font-bold">
+          <h2 className="text-header-2 leading-header-2 font-bold">
             {t('contact.contact')}
           </h2>
-          <p className="text-body-sm leading-body-sm">
+          <p className="text-body-r-sm leading-body-r-sm">
             {t('contact.description1')}
           </p>
-          <p className="text-body-sm leading-body-sm">
+          <p className="text-body-r-sm leading-body-r-sm">
             {t('contact.description2')}
           </p>
-          <p className="text-body-sm leading-body-sm whitespace-pre-line">
+          <p className="text-body-r-sm leading-body-r-sm whitespace-pre-line">
             {t('contact.description3')}
           </p>
         </div>
@@ -36,7 +36,7 @@ export function Contact({ t }: { t: TFunction }) {
             <div className="flex flex-col gap-10 md:flex-row">
               <div className="flex flex-col gap-2 w-full">
                 <label
-                  className="text-body-sm leading-body-sm text-white font-bold"
+                  className="text-body-r-sm leading-body-r-sm text-white font-bold"
                   htmlFor="name"
                 >
                   {t('contact.form.nameLabel')}
@@ -47,12 +47,12 @@ export function Contact({ t }: { t: TFunction }) {
                   id="name"
                   placeholder={t('contact.form.namePlaceholder')}
                   required
-                  className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
+                  className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-r-sm leading-body-r-sm placeholder-white placeholder-opacity-70"
                 />
               </div>
               <div className="flex flex-col gap-2 w-full">
                 <label
-                  className="text-body-sm leading-body-sm text-white font-bold"
+                  className="text-body-r-sm leading-body-r-sm text-white font-bold"
                   htmlFor="email"
                 >
                   {t('contact.form.emailLabel')}
@@ -63,13 +63,13 @@ export function Contact({ t }: { t: TFunction }) {
                   id="email"
                   placeholder={t('contact.form.emailPlaceholder')}
                   required
-                  className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
+                  className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-r-sm leading-body-r-sm placeholder-white placeholder-opacity-70"
                 />
               </div>
             </div>
             <div className="flex flex-col gap-2 w-full">
               <label
-                className="text-body-sm leading-body-sm text-white font-bold"
+                className="text-body-r-sm leading-body-r-sm text-white font-bold"
                 htmlFor="message"
               >
                 {t('contact.form.messageLabel')}
@@ -80,7 +80,7 @@ export function Contact({ t }: { t: TFunction }) {
                 rows={4}
                 placeholder={t('contact.form.messagePlaceholder')}
                 required
-                className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-sm leading-body-sm placeholder-white placeholder-opacity-70"
+                className="focus:border-opacity-40 border-2 border-white border-opacity-20 rounded-lg p-3 text-white text-body-r-sm leading-body-r-sm placeholder-white placeholder-opacity-70"
               />
             </div>
             <ul className="flex flex-col gap-5 md:flex-row">
@@ -115,7 +115,7 @@ export function Contact({ t }: { t: TFunction }) {
                 href="https://github.com/stranger1989"
                 target="_blank"
                 rel="noreferrer"
-                className="text-body-sm leading-body-sm"
+                className="text-body-r-sm leading-body-r-sm"
               >
                 {t('contact.githubAccountName')}
               </a>
@@ -128,7 +128,7 @@ export function Contact({ t }: { t: TFunction }) {
                 href="https://twitter.com/BykkLearn"
                 target="_blank"
                 rel="noreferrer"
-                className="text-body-sm leading-body-sm"
+                className="text-body-r-sm leading-body-r-sm"
               >
                 {t('contact.xAccountName')}
               </a>

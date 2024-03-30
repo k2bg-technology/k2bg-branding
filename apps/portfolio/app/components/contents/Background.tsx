@@ -13,26 +13,26 @@ export function Background({ t }: { t: TFunction }) {
           />
         </div>
         <div className="flex flex-col gap-5">
-          <h2 className="text-heading-2 leading-heading-2 font-bold">
+          <h2 className="text-header-2 leading-header-2 font-bold">
             {t('background.background')}
           </h2>
           <div className="flex flex-col gap-5">
-            <p className="text-body-sm leading-body-sm">
+            <p className="text-body-r-sm leading-body-r-sm">
               {t('background.description1')}
             </p>
-            <p className="text-body-sm leading-body-sm">
+            <p className="text-body-r-sm leading-body-r-sm">
               {t('background.description2')}
             </p>
-            <p className="text-body-sm leading-body-sm">
+            <p className="text-body-r-sm leading-body-r-sm">
               {t('background.description3')}
             </p>
           </div>
         </div>
         <div className="flex flex-col gap-5">
-          <h2 className="text-heading-2 leading-heading-2 font-bold">
+          <h2 className="text-header-2 leading-header-2 font-bold">
             {t('background.certification')}
           </h2>
-          <ul className="text-body-sm leading-body-sm">
+          <ul className="text-body-r-sm leading-body-r-sm">
             <li>{t('background.certification1')}</li>
             <li>{t('background.certification2')}</li>
             <li>{t('background.certification3')}</li>

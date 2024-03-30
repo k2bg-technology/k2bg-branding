@@ -61,7 +61,7 @@ export default async function Page() {
               }
               heading={
                 <Link href={`/blog/${articles.featureLatest.slug}`}>
-                  <h2 className="text-heading-2 leading-heading-2 font-bold">
+                  <h2 className="text-header-2 leading-header-2 font-bold">
                     {articles.featureLatest.title}
                   </h2>
                 </Link>
@@ -117,7 +117,7 @@ export default async function Page() {
                 }
                 heading={
                   <Link href={`/blog/${article.slug}`}>
-                    <h2 className="text-heading-2 leading-heading-2 font-bold">
+                    <h2 className="text-header-2 leading-header-2 font-bold">
                       {article.title}
                     </h2>
                   </Link>
@@ -177,7 +177,7 @@ export default async function Page() {
                   }
                   heading={
                     <Link href={`/blog/${article.slug}`}>
-                      <h2 className="text-heading-2 leading-heading-2 font-bold">
+                      <h2 className="text-header-2 leading-header-2 font-bold">
                         {article.title}
                       </h2>
                     </Link>
@@ -229,7 +229,7 @@ export default async function Page() {
                 }
                 heading={
                   <Link href={`/blog/${article.slug}`}>
-                    <h2 className="text-heading-2 leading-heading-2 font-bold">
+                    <h2 className="text-header-2 leading-header-2 font-bold">
                       {article.title}
                     </h2>
                   </Link>

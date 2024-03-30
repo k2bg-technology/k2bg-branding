@@ -39,7 +39,7 @@ export function ScrollHelper() {
     <div className="fixed inset-0 bg-black/20" onClick={() => setIsShow(false)}>
       <div className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
         <div className="inline-flex items-center gap-2 rounded px-8 py-3 bg-black/50 text-white animate-scrollHelp">
-          <span className="text-button-sm">Scroll</span>
+          <span className="text-button-r-sm">Scroll</span>
           <SvgIcon name="chevron-double-right" className="w-5 h-5" />
         </div>
       </div>

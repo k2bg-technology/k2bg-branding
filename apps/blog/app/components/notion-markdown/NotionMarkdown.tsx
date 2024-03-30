@@ -27,7 +27,7 @@ export default function NotionMarkdown(props: Props) {
           <h1
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="text-heading-1 leading-heading-1 font-bold"
+            className="text-header-1 leading-header-1 font-bold"
           >
             {children}
           </h1>
@@ -36,7 +36,7 @@ export default function NotionMarkdown(props: Props) {
           <h2
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-20 text-heading-2 leading-heading-2 font-bold"
+            className="first:mt-0 mt-20 text-header-2 leading-header-2 font-bold"
           >
             {children}
           </h2>
@@ -45,7 +45,7 @@ export default function NotionMarkdown(props: Props) {
           <h3
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-12 text-heading-3 leading-heading-3 font-bold"
+            className="first:mt-0 mt-12 text-header-3 leading-header-3 font-bold"
           >
             {children}
           </h3>
@@ -54,7 +54,7 @@ export default function NotionMarkdown(props: Props) {
           <p
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-4 text-body-sm leading-body-sm text-base-black/80 text-justify"
+            className="first:mt-0 mt-4 text-body-r-sm leading-body-r-sm text-base-black/80 text-justify"
           >
             {children}
           </p>
@@ -97,7 +97,7 @@ export default function NotionMarkdown(props: Props) {
               {...props}
               className={
                 className ||
-                'text-body-sm leading-body-sm text-base-black/80 text-justify'
+                'text-body-r-sm leading-body-r-sm text-base-black/80 text-justify'
               }
             >
               {children}
@@ -126,7 +126,7 @@ export default function NotionMarkdown(props: Props) {
 
           if (inline)
             return (
-              <code className="rounded-md bg-base-white/80 text-body-sm text-accent-dark inline-block mx-1 px-2 py-1 leading-none">
+              <code className="rounded-md bg-base-white/80 text-body-r-sm text-accent-dark inline-block mx-1 px-2 py-1 leading-none">
                 {children}
               </code>
             );
@@ -136,7 +136,7 @@ export default function NotionMarkdown(props: Props) {
               // eslint-disable-next-line react/jsx-props-no-spreading
               {...props}
               codeTagProps={{
-                className: 'text-body-sm font-original',
+                className: 'text-body-r-sm font-original',
               }}
               customStyle={{ padding: '1.5rem', borderRadius: '0.5rem' }}
               language={language}

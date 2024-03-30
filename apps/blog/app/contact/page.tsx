@@ -9,11 +9,11 @@ export default function Page() {
   return (
     <>
       <div className="grid-cols-[subgrid] gap-20 col-span-full py-12">
-        <h1 className="text-heading-1 font-bold">お問い合わせ</h1>
-        <p className="mt-4 text-body-sm leading-body-sm text-base-black/80 text-justify whitespace-pre-wrap">
+        <h1 className="text-header-1 font-bold">お問い合わせ</h1>
+        <p className="mt-4 text-body-r-sm leading-body-r-sm text-base-black/80 text-justify whitespace-pre-wrap">
           必要事項をご入力いただき、送信ボタンを押してください。返信には数日かかる場合がございますが、極力早急に返信するように致しますので、お気軽にお問い合わせいただけると幸いです。平日は1〜2時間、休日は3時間程度で在宅ワークをお受けすることが可能です。
         </p>
-        <ul className="mt-2 text-body-sm leading-body-sm text-base-black/80 text-justify">
+        <ul className="mt-2 text-body-r-sm leading-body-r-sm text-base-black/80 text-justify">
           <li>
             ※ 誠に恐れ入りますが、平日は9:00〜20:00以外でのご対応となります。
           </li>
@@ -33,7 +33,7 @@ export default function Page() {
             <div className="flex flex-col gap-10 md:flex-row">
               <div className="flex flex-col gap-2 w-full">
                 <label
-                  className="text-body-sm leading-body-sm text-base-black font-bold"
+                  className="text-body-r-sm leading-body-r-sm text-base-black font-bold"
                   htmlFor="name"
                 >
                   お名前
@@ -44,12 +44,12 @@ export default function Page() {
                   id="name"
                   placeholder="お名前"
                   required
-                  className="focus:border-opacity-40 border-2 text-base-black border-opacity-20 rounded-lg p-3 text-body-sm leading-body-sm placeholder-base-black placeholder-opacity-70"
+                  className="focus:border-opacity-40 border-2 text-base-black border-opacity-20 rounded-lg p-3 text-body-r-sm leading-body-r-sm placeholder-base-black placeholder-opacity-70"
                 />
               </div>
               <div className="flex flex-col gap-2 w-full">
                 <label
-                  className="text-body-sm leading-body-sm text-base-black font-bold"
+                  className="text-body-r-sm leading-body-r-sm text-base-black font-bold"
                   htmlFor="email"
                 >
                   Eメール
@@ -60,13 +60,13 @@ export default function Page() {
                   id="email"
                   placeholder="Eメール"
                   required
-                  className="focus:border-opacity-40 border-2 rounded-lg p-3 text-base-black text-body-sm leading-body-sm placeholder-base-black placeholder-opacity-70"
+                  className="focus:border-opacity-40 border-2 rounded-lg p-3 text-base-black text-body-r-sm leading-body-r-sm placeholder-base-black placeholder-opacity-70"
                 />
               </div>
             </div>
             <div className="flex flex-col gap-2 w-full">
               <label
-                className="text-body-sm leading-body-sm text-base-black font-bold"
+                className="text-body-r-sm leading-body-r-sm text-base-black font-bold"
                 htmlFor="message"
               >
                 メッセージ
@@ -77,7 +77,7 @@ export default function Page() {
                 rows={4}
                 placeholder="メッセージ"
                 required
-                className="focus:border-opacity-40 border-2 rounded-lg p-3 text-base-black text-body-sm leading-body-sm placeholder-base-black placeholder-opacity-70"
+                className="focus:border-opacity-40 border-2 rounded-lg p-3 text-base-black text-body-r-sm leading-body-r-sm placeholder-base-black placeholder-opacity-70"
               />
             </div>
             <ul className="flex flex-col gap-5 md:flex-row">

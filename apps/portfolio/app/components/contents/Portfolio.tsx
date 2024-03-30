@@ -38,17 +38,13 @@ function Document(props: DocumentProps) {
           className="object-cover brightness-50 transition-all duration-300 ease-in group-hover:scale-110"
         />
       </div>
-      <h3 className="text-heading-3 leading-heading-3 font-bold">{title}</h3>
-      <h4 className="text-heading-4 leading-heading-4 font-bold">
-        {subtitle1}
-      </h4>
-      <p className="text-body-sm leading-body-sm whitespace-pre-line">
+      <h3 className="text-header-3 leading-header-3 font-bold">{title}</h3>
+      <h4 className="text-header-4 leading-header-4 font-bold">{subtitle1}</h4>
+      <p className="text-body-r-sm leading-body-r-sm whitespace-pre-line">
         {techStack}
       </p>
-      <h4 className="text-heading-4 leading-heading-4 font-bold">
-        {subtitle2}
-      </h4>
-      <p className="text-body-sm leading-body-sm whitespace-pre-line">
+      <h4 className="text-header-4 leading-header-4 font-bold">{subtitle2}</h4>
+      <p className="text-body-r-sm leading-body-r-sm whitespace-pre-line">
         {overview}
       </p>
       <Dialog
@@ -72,14 +68,14 @@ export function Portfolio({ t }: { t: TFunction }) {
     <section>
       <div className="flex flex-col md:flex-row md:h-[60rem]">
         <div className="flex flex-col justify-center gap-5 p-10 w-full md:p-20 md:w-[45rem]">
-          <h2 className="text-heading-2 leading-heading-2 font-bold">
+          <h2 className="text-header-2 leading-header-2 font-bold">
             {t('portfolio.portfolio')}
           </h2>
           <div className="flex flex-col justify-center gap-5">
-            <p className="text-body-sm leading-body-sm">
+            <p className="text-body-r-sm leading-body-r-sm">
               {t('portfolio.description1')}
             </p>
-            <p className="text-body-sm leading-body-sm">
+            <p className="text-body-r-sm leading-body-r-sm">
               {t('portfolio.description2')}
             </p>
           </div>

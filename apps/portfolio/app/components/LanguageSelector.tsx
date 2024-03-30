@@ -7,7 +7,7 @@ export function LanguageSelector() {
         <Link href="/ja">
           <button
             type="button"
-            className="inline-block m-0 px-4 py-2 text-button-sm leading-button-sm hover:bg-gray-50 focus:relative"
+            className="inline-block m-0 px-4 py-2 text-button-r-sm leading-button-sm hover:bg-gray-50 focus:relative"
           >
             ja
           </button>
@@ -15,7 +15,7 @@ export function LanguageSelector() {
         <Link href="/en">
           <button
             type="button"
-            className="inline-block px-4 py-2 text-button-sm leading-button-sm hover:bg-gray-50 focus:relative"
+            className="inline-block px-4 py-2 text-button-r-sm leading-button-sm hover:bg-gray-50 focus:relative"
           >
             en
           </button>

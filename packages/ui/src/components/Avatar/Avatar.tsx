@@ -15,7 +15,7 @@ export default function Avatar({ className, image, name, ...rest }: Props) {
           {image}
         </div>
       )}
-      {name && <span className="text-body-sm font-bold">{name}</span>}
+      {name && <span className="text-body-r-sm font-bold">{name}</span>}
     </div>
   );
 }

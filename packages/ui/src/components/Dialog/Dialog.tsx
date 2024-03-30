@@ -24,12 +24,12 @@ export default function Dialog({
         <RadixDialog.Overlay className="fixed bg-black/50 inset-0" />
         <RadixDialog.Content className="flex flex-col gap-5 fixed top-[50%] left-[50%] w-full translate-x-[-50%] translate-y-[-50%] rounded-xl p-5 bg-white focus:outline-none md:w-[70vw] md:p-12">
           {title && (
-            <RadixDialog.Title className="text-body-sm leading-body-sm font-bold">
+            <RadixDialog.Title className="text-body-r-sm leading-body-r-sm font-bold">
               {title}
             </RadixDialog.Title>
           )}
           {description && (
-            <RadixDialog.Description className="text-body-sm leading-body-sm">
+            <RadixDialog.Description className="text-body-r-sm leading-body-r-sm">
               {description}
             </RadixDialog.Description>
           )}

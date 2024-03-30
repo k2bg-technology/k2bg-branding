@@ -22,10 +22,10 @@ export function Hero({ lng }: { lng: Language }) {
         </div>
         <div className="flex flex-col gap-10 p-10 md:justify-center md:p-20">
           <hgroup className="flex flex-col gap-2 md:gap-0">
-            <h1 className="text-heading-1 leading-tight font-bold md:leading-heading-1">
+            <h1 className="text-header-1 leading-tight font-bold md:leading-header-1">
               {t('hero.corporateName')}
             </h1>
-            <p className="text-body-md leading-body-md">
+            <p className="text-body-r-md leading-body-r-md">
               {t('hero.officialName')}
             </p>
             <p className="text-body-lg leading-tight md:leading-body-lg">
@@ -34,7 +34,7 @@ export function Hero({ lng }: { lng: Language }) {
           </hgroup>
           <div className="flex flex-col gap-5">
             <Trans i18nKey="hero.description">
-              <p className="text-body-sm leading-body-sm">
+              <p className="text-body-r-sm leading-body-r-sm">
                 <span className="font-bold" />
               </p>
             </Trans>

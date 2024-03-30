@@ -36,7 +36,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           <a
             href={linkUrl}
             target="_blank"
-            className="text-body-md leading-body-md text-base-black/80 text-justify underline hover:opacity-80"
+            className="text-body-r-md leading-body-r-md text-base-black/80 text-justify underline hover:opacity-80"
           >
             {linkText}
           </a>
@@ -48,7 +48,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
                 href={provider.linkUrl}
                 target="_blank"
                 rel="noopener nofollow"
-                className="inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-sm text-center font-bold leading-none text-white hover:opacity-80"
+                className="inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-r-sm text-center font-bold leading-none text-white hover:opacity-80"
                 style={{ backgroundColor: provider.color }}
               >
                 {provider.linkText}
