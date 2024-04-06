@@ -1,60 +1,73 @@
 'use client';
 
-import { SVGProps } from 'react';
-import {
-  ArrowTopRightOnSquareIcon,
-  XMarkIcon,
-  ChevronDoubleRightIcon,
-  Bars3Icon,
-} from '@heroicons/react/24/solid';
-import { InboxStackIcon } from '@heroicons/react/24/outline';
+import { CSSProperties } from 'react';
 
-import TypescriptLogo from './typescript-logo.svg';
-import PythonLogo from './python-logo.svg';
-import GolangLogo from './golang-logo.svg';
-import ReactLogo from './react-logo.svg';
-import FigmaLogo from './figma-logo.svg';
-import WordpressLogo from './wordpress-logo.svg';
-import JupyterLogo from './jupyter-logo.svg';
-import TensorflowLogo from './tensorflow-logo.svg';
-import AwsLogo from './aws-logo.svg';
-import GoogleCloudLogo from './google-cloud-logo.svg';
-import DockerLogo from './docker-logo.svg';
-import CircleciLogo from './circleci-logo.svg';
-import GithubLogo from './github-logo.svg';
-import XLogo from './x.svg';
+import { ICON_NAMES } from './const';
+import styles from './index.module.css';
 
-const ICONS = {
-  typescript: TypescriptLogo,
-  python: PythonLogo,
-  golang: GolangLogo,
-  react: ReactLogo,
-  figma: FigmaLogo,
-  wordpress: WordpressLogo,
-  jupyter: JupyterLogo,
-  tensorflow: TensorflowLogo,
-  aws: AwsLogo,
-  googleCloud: GoogleCloudLogo,
-  docker: DockerLogo,
-  circleci: CircleciLogo,
-  github: GithubLogo,
-  x: XLogo,
-  'arrow-top-right-on-square': ArrowTopRightOnSquareIcon,
-  'x-mark': XMarkIcon,
-  'chevron-double-right': ChevronDoubleRightIcon,
-  'inbox-stack': InboxStackIcon,
-  'bars-3': Bars3Icon,
-};
+const importAll = (r: __WebpackModuleApi.RequireContext) =>
+  r
+    .keys()
+    .map((key) => [key, r(key)])
+    .reduce(
+      (prev, [key, image]) => ({
+        ...prev,
+        [key]: image,
+      }),
+      {} as Record<string, string>
+    );
 
-export type IconName = keyof typeof ICONS;
+const multiColorIcons = importAll(
+  require.context('./multi-color-icons', false, /\.(svg)$/)
+);
 
-interface IconProps extends SVGProps<SVGSVGElement> {
-  name: IconName;
+const heroOutlineIcons = importAll(
+  require.context('./hero-icons/outline', false, /\.(svg)$/)
+);
+
+const heroSolidIcons = importAll(
+  require.context('./hero-icons/solid', false, /\.(svg)$/)
+);
+
+interface IconProps extends React.HTMLAttributes<HTMLElement> {
+  name: (typeof ICON_NAMES)[number];
+  appearance?: 'outline' | 'solid';
+  color?: CSSProperties['backgroundColor'];
+  width?: number;
+  height?: number;
+  originalColor?: boolean;
 }
 
-export function SvgIcon({ name, ...rest }: IconProps) {
-  const Icon = ICONS[name];
+export function Icon(props: IconProps) {
+  const {
+    name,
+    appearance = 'outline',
+    originalColor = false,
+    color = 'var(--color-base-black)',
+    width = 24,
+    height = 24,
+    className,
+    ...rest
+  } = props;
+
+  const iconUrl = {
+    ...multiColorIcons,
+    ...(appearance === 'outline' ? heroOutlineIcons : heroSolidIcons),
+  }[`./${name}.svg`];
 
   // eslint-disable-next-line react/jsx-props-no-spreading
-  return <Icon {...rest} />;
+  return (
+    <i
+      {...rest}
+      className={`${styles.icon} ${
+        originalColor && `${styles.originalColor}`
+      } ${className}`}
+      style={{
+        '--image-url': `url(${iconUrl})`,
+        '--icon-color': color,
+        '--icon-width': width,
+        '--icon-height': height,
+      }}
+    />
+  );
 }

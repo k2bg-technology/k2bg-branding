@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Button, Drawer, DropdownMenu, DropdownMenuItem, SvgIcon } from 'ui';
+import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import Sidebar from '../sidebar/Sidebar';
@@ -83,7 +83,7 @@ export default function Header() {
               <DropdownMenu
                 trigger={
                   <Button color="dark" variant="text" className="!p-2">
-                    <SvgIcon name="inbox-stack" className="w-10 h-10" />
+                    <Icon name="inbox-stack" />
                   </Button>
                 }
               >
@@ -121,7 +121,7 @@ export default function Header() {
               <Drawer
                 trigger={
                   <Button color="dark" variant="text" className="!p-2">
-                    <SvgIcon name="bars-3" className="w-10 h-10" />
+                    <Icon name="bars-3" />
                   </Button>
                 }
                 mainContent={<Sidebar />}

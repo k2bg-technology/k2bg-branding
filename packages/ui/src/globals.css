@@ -15,6 +15,6 @@
   button,
   textarea,
   select {
-    @apply appearance-none bg-transparent outline-none;
+    @apply appearance-none bg-transparent outline-none p-0 border-0;
   }
 }

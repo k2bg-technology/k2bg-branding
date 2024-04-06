@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import { SvgIcon } from 'ui';
 import { TFunction } from 'i18next';
+import { Icon } from 'ui';
 
 export function Skill({ t }: { t: TFunction }) {
   return (
@@ -54,40 +54,45 @@ export function Skill({ t }: { t: TFunction }) {
           <div className="p-5 w-full h-full md:p-10">
             <ul className="grid grid-cols-3 gap-y-10 h-full md:gap-y-0">
               <li className="flex justify-center items-center">
-                <SvgIcon name="typescript" className="w-20 h-20" />
+                <Icon name="typescript" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="python" className="w-20 h-20" />
+                <Icon name="python" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="golang" className="w-20 h-20" />
+                <Icon name="golang" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="react" className="w-20 h-20" />
+                <Icon name="react" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="figma" className="w-20 h-20" />
+                <Icon name="figma" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="wordpress" className="w-20 h-20" />
+                <Icon name="wordpress" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="jupyter" className="w-20 h-20" />
+                <Icon name="jupyter" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="tensorflow" className="w-20 h-20" />
+                <Icon name="tensorflow" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="aws" className="w-20 h-20" />
+                <Icon name="aws" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="googleCloud" className="w-20 h-20" />
+                <Icon
+                  name="google-cloud"
+                  originalColor
+                  width={50}
+                  height={50}
+                />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="docker" className="w-20 h-20" />
+                <Icon name="docker" originalColor width={50} height={50} />
               </li>
               <li className="flex justify-center items-center">
-                <SvgIcon name="circleci" className="w-20 h-20" />
+                <Icon name="circleci" originalColor width={50} height={50} />
               </li>
             </ul>
           </div>

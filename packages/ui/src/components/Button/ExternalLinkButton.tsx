@@ -1,6 +1,6 @@
 import { AnchorHTMLAttributes } from 'react';
 
-import { SvgIcon } from '../Icon';
+import { Icon } from '../Icon';
 import { Color, Variant } from '../../types/global';
 
 import styles from './Button.module.css';
@@ -72,9 +72,12 @@ export default function ExternalLinkButton({
       className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
     >
       <span>{children}</span>
-      <SvgIcon
+      <Icon
         name="arrow-top-right-on-square"
-        className="inline-block ml-2 w-5 h-5"
+        color="currentcolor"
+        width={12.5}
+        height={12.5}
+        className="ml-2"
       />
     </a>
   );

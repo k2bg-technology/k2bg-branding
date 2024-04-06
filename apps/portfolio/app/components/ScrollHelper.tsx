@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useState } from 'react';
-import { SvgIcon } from 'ui';
+import { Icon } from 'ui';
 
 import { useMatchMedia } from '../hooks/useMatchMedia';
 
@@ -40,7 +40,12 @@ export function ScrollHelper() {
       <div className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
         <div className="inline-flex items-center gap-2 rounded px-8 py-3 bg-black/50 text-white animate-scrollHelp">
           <span className="text-button-r-sm">Scroll</span>
-          <SvgIcon name="chevron-double-right" className="w-5 h-5" />
+          <Icon
+            name="chevron-double-right"
+            color="var(--color-base-white)"
+            width={12.5}
+            height={12.5}
+          />
         </div>
       </div>
     </div>

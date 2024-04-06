@@ -3,7 +3,7 @@
 import { HTMLAttributes } from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 
-import { SvgIcon } from '../Icon';
+import { Icon } from '../Icon';
 
 import styles from './Drawer.module.css';
 
@@ -48,7 +48,7 @@ export default function Drawer({
               className="absolute top-5 right-5 rounded-full bg-white/50 w-12 h-12"
               aria-label="Close"
             >
-              <SvgIcon name="x-mark" />
+              <Icon name="x-mark" />
             </button>
           </RadixDialog.Close>
         </RadixDialog.Content>

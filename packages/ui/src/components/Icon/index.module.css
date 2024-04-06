@@ -1,0 +1,17 @@
+.icon {
+  display: inline-block;
+  width: calc(var(--icon-width) / 10 * 1rem);
+  height: calc(var(--icon-height) / 10 * 1rem);
+  background-color: var(--icon-color);
+  mask-image: var(--image-url);
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+.originalColor {
+  background-color: unset;
+  background-image: var(--image-url);
+  background-repeat: no-repeat;
+  mask-image: unset;
+}

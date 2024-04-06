@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { SvgIcon } from '../Icon';
+import { Icon } from '../Icon';
 import { Button } from '../Button';
 
 import DropdownMenu from './DropdownMenu';
@@ -38,7 +38,7 @@ export const Default: Story = {
     trigger: (
       <span>
         <Button color="dark" variant="text">
-          <SvgIcon name="inbox-stack" className="w-10 h-10" />
+          <Icon name="inbox-stack" className="w-10 h-10" />
         </Button>
       </span>
     ),

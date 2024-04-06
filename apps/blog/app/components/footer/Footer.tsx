@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Button, SvgIcon } from 'ui';
+import { Button, Icon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 
@@ -110,12 +110,12 @@ export default function Footer() {
               <ul className="flex justify-center gap-5 h-full">
                 <li className="flex relative items-center gap-5">
                   <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
-                    <SvgIcon name="x" fill="white" className="w-10 h-10" />
+                    <Icon name="x" color="var(--color-base-white)" />
                   </div>
                 </li>
                 <li className="flex relative items-center gap-5">
                   <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
-                    <SvgIcon name="github" fill="white" className="w-10 h-10" />
+                    <Icon name="github" color="var(--color-base-white)" />
                   </div>
                 </li>
               </ul>

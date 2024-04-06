@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { TFunction } from 'i18next';
-import { InputButton, SvgIcon } from 'ui';
+import { InputButton, Icon } from 'ui';
 
 export function Contact({ t }: { t: TFunction }) {
   return (
@@ -109,7 +109,7 @@ export function Contact({ t }: { t: TFunction }) {
           <ul className="flex flex-col justify-center gap-10 border-white border-opacity-50 px-20 h-full md:border-l">
             <li className="flex relative items-center gap-5">
               <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
-                <SvgIcon name="github" className="w-8 h-8" />
+                <Icon name="github" width={20} height={20} />
               </div>
               <a
                 href="https://github.com/stranger1989"
@@ -122,7 +122,7 @@ export function Contact({ t }: { t: TFunction }) {
             </li>
             <li className="flex relative items-center gap-5">
               <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
-                <SvgIcon name="x" className="w-8 h-8" />
+                <Icon name="x" width={20} height={20} />
               </div>
               <a
                 href="https://twitter.com/BykkLearn"

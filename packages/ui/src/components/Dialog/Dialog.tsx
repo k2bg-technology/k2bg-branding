@@ -2,7 +2,7 @@
 
 import * as RadixDialog from '@radix-ui/react-dialog';
 
-import { SvgIcon } from '../Icon';
+import { Icon } from '../Icon';
 
 interface Props {
   trigger: React.ReactNode;
@@ -40,7 +40,7 @@ export default function Dialog({
               className="absolute top-5 right-5 rounded-full bg-white/50 w-12 h-12"
               aria-label="Close"
             >
-              <SvgIcon name="x-mark" />
+              <Icon name="x-mark" />
             </button>
           </RadixDialog.Close>
         </RadixDialog.Content>

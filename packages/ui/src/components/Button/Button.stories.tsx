@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { SvgIcon } from '../Icon';
+import { Icon } from '../Icon';
 
 import Button from './Button';
 
@@ -22,7 +22,7 @@ export const Default: Story = {
 
 export const IconButton: Story = {
   args: {
-    children: <SvgIcon name="bars-3" className="w-10 h-10" />,
+    children: <Icon name="bars-3" />,
     color: 'dark',
     variant: 'text',
     onClick: () => alert('Clicked!'),
