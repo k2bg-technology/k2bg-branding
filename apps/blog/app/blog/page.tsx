@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
+import { convertImageExternalToLocal } from '../modules/utility/convertImageExternalToLocal';
 import Sidebar from '../components/sidebar/Sidebar';
 
 export const fetchDatabase = async () => {
@@ -34,6 +35,14 @@ export default async function Page() {
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Article.List(pages);
 
+  Promise.all(
+    articles.all.map(
+      (article) =>
+        article.image &&
+        convertImageExternalToLocal(article.image, `${article.id}.jpg`)
+    )
+  );
+
   return (
     <>
       <div className="grid grid-cols-[subgrid] col-span-full border-b-2 py-12 border-b-slate-100">
@@ -44,7 +53,7 @@ export default async function Page() {
                 <BlogCard.Media className="relative w-full h-[30rem]">
                   <Image
                     alt="media"
-                    src={articles.featureLatest.image}
+                    src={`/images/${articles.featureLatest.id}.jpg`}
                     className="absolute aspect-square h-full w-full object-cover"
                     fill
                     sizes="100%"
@@ -101,7 +110,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
                     <Image
                       alt="media"
-                      src={article.image}
+                      src={`/images/${article.id}.jpg`}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"
@@ -161,7 +170,7 @@ export default async function Page() {
                     <BlogCard.Media className="relative w-full h-[26.5rem]">
                       <Image
                         alt="media"
-                        src={article.image}
+                        src={`/images/${article.id}.jpg`}
                         className="aspect-square h-full w-full object-cover"
                         fill
                         sizes="100%"
@@ -213,7 +222,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
-                      src={article.image}
+                      src={`/images/${article.id}.jpg`}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"

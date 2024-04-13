@@ -6,6 +6,10 @@ export class Core implements ArticleCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private data: ArticleData) {}
 
+  get id() {
+    return this.data.id;
+  }
+
   get title() {
     return this.data.getTitle('content');
   }
