@@ -43,10 +43,7 @@ export class List implements ArticleList {
       this.all.map(
         (article) =>
           article.image &&
-          convertImageExternalToLocal(
-            article.image,
-            `/images/${article.id}.jpg`
-          )
+          convertImageExternalToLocal(article.image, `${article.id}.jpg`)
       )
     );
   }
