@@ -1,4 +1,9 @@
-module.exports = {
+import withPlaiceholder from '@plaiceholder/next';
+
+/**
+ * @type {import('next').NextConfig}
+ */
+const config = {
   reactStrictMode: true,
   transpilePackages: ['ui', 'tailwind-config'],
   async redirects() {
@@ -38,3 +43,5 @@ module.exports = {
     return config;
   },
 };
+
+export default withPlaiceholder(config);
