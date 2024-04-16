@@ -4,7 +4,6 @@ import Link from 'next/link';
 
 import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
-import { convertImageExternalToLocal } from '../modules/utility/convertImageExternalToLocal';
 import Sidebar from '../components/sidebar/Sidebar';
 
 export const fetchDatabase = async () => {
@@ -35,13 +34,13 @@ export default async function Page() {
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Article.List(pages);
 
-  Promise.all(
-    articles.all.map(
-      (article) =>
-        article.image &&
-        convertImageExternalToLocal(article.image, `${article.id}.jpg`)
-    )
-  );
+  await articles.convertImageExternalToLocal();
+
+  const placeHolders = await Article.List.convertImageToPlaceholder([
+    articles.featureLatest,
+    ...articles.featuresPreviously,
+    ...articles.featuresRecently,
+  ]);
 
   return (
     <>
@@ -58,6 +57,10 @@ export default async function Page() {
                     fill
                     sizes="100%"
                     priority
+                    placeholder="blur"
+                    blurDataURL={
+                      placeHolders[articles.featureLatest.id]?.base64
+                    }
                   />
                 </BlogCard.Media>
               </Link>
@@ -113,7 +116,8 @@ export default async function Page() {
                       src={`/images/${article.id}.jpg`}
                       className="aspect-square h-full w-full object-cover"
                       fill
-                      sizes="100%"
+                      placeholder="blur"
+                      blurDataURL={placeHolders[article.id]?.base64}
                     />
                   </BlogCard.Media>
                 </Link>
@@ -174,6 +178,8 @@ export default async function Page() {
                         className="aspect-square h-full w-full object-cover"
                         fill
                         sizes="100%"
+                        placeholder="blur"
+                        blurDataURL={placeHolders[article.id]?.base64}
                       />
                     </BlogCard.Media>
                   </Link>
@@ -226,6 +232,8 @@ export default async function Page() {
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"
+                      placeholder="blur"
+                      blurDataURL={placeHolders[article.id]?.base64}
                     />
                   </BlogCard.Media>
                 </Link>

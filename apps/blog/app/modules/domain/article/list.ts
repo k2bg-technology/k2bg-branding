@@ -1,5 +1,7 @@
+import { GetPlaiceholderReturn } from 'plaiceholder';
 import { Single } from './single';
 import { ArticleData, ArticleList } from './interfaces';
+import { convertImageExternalToLocal } from '../../utility/convertImageExternalToLocal';
 
 export class List implements ArticleList {
   private articles: Single[];
@@ -34,5 +36,28 @@ export class List implements ArticleList {
 
       return dateB.getTime() - dateA.getTime();
     });
+  }
+
+  async convertImageExternalToLocal() {
+    Promise.all(
+      this.all.map(
+        (article) =>
+          article.image &&
+          convertImageExternalToLocal(
+            article.image,
+            `/images/${article.id}.jpg`
+          )
+      )
+    );
+  }
+
+  static async convertImageToPlaceholder(
+    articles: Single[]
+  ): Promise<Record<Single['id'], GetPlaiceholderReturn>> {
+    return articles.reduce(async (prev, article) => {
+      const placeholder = await article.imagePlaceholder;
+
+      return { ...(await prev), [article.id]: placeholder };
+    }, {});
   }
 }

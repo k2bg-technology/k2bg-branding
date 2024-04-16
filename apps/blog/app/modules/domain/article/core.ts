@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 
 import { ArticleCore, ArticleData } from './interfaces';
+import { getImageWithPlaceholder } from '../../utility/getImageWithPlaceholder';
 
 export class Core implements ArticleCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
@@ -20,6 +21,10 @@ export class Core implements ArticleCore {
 
   get image() {
     return this.data.getFiles('image')?.[0];
+  }
+
+  get imagePlaceholder() {
+    return getImageWithPlaceholder(`/images/${this.id}.jpg`);
   }
 
   get slug() {
