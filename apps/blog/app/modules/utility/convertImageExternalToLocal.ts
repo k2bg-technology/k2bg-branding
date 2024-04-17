@@ -13,18 +13,15 @@ export async function convertImageExternalToLocal(
   }
 
   if (!fs.existsSync(path.join(dirPath, fileName))) {
-    fetch(imageUrl)
+    const buffer = await fetch(imageUrl)
       .then((response) => response.arrayBuffer())
       .then((arrayBuffer) => {
-        const buffer = Buffer.from(arrayBuffer);
-        fs.writeFile(path.join(dirPath, fileName), buffer, (error) => {
-          if (error) {
-            throw new Error(error.message);
-          }
-        });
+        return Buffer.from(arrayBuffer);
       })
       .catch((error) => {
         throw new Error(error?.message);
       });
+
+    await fs.promises.writeFile(path.join(dirPath, fileName), buffer);
   }
 }

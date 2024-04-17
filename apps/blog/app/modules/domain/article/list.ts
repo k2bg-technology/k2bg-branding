@@ -39,7 +39,7 @@ export class List implements ArticleList {
   }
 
   async convertImageExternalToLocal() {
-    Promise.all(
+    await Promise.all(
       this.all.map(
         (article) =>
           article.image &&
