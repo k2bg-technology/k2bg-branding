@@ -6,6 +6,7 @@ import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
 import NotionMarkdown from '../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../components/sidebar/Sidebar';
+import { convertImageExternalToLocal } from '../modules/utility/convertImageExternalToLocal';
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
@@ -17,6 +18,11 @@ export default async function Page() {
     await new Notion.Fetcher().fetchPage(CONCEPT_PAGE_ID)
   );
   const article = new Article.Single(page);
+
+  if (article.image)
+    await convertImageExternalToLocal(article.image, `${article.id}.jpg`);
+
+  const { base64 } = await article.imagePlaceholder;
 
   return (
     <>
@@ -31,9 +37,11 @@ export default async function Page() {
             {article.image && (
               <Image
                 alt="media"
-                src={article.image}
+                src={`/images/${article.id}.jpg`}
                 className="aspect-square h-full w-full object-cover"
                 fill
+                placeholder="blur"
+                blurDataURL={base64}
               />
             )}
           </BlogCard.Media>
