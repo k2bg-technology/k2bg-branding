@@ -20,6 +20,7 @@ import DataType from '../../../modules/domain/data-type';
 import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../../components/sidebar/Sidebar';
 import { fetchDatabase } from '../../page';
+import { convertImageExternalToLocal } from '../../../modules/utility/convertImageExternalToLocal';
 
 export const revalidate = 60 * 60;
 
@@ -50,13 +51,19 @@ const getArticle = async (pageId: string) => {
       try {
         const mediaImage = new Media.Image(page);
 
+        if (mediaImage.file)
+          await convertImageExternalToLocal(
+            mediaImage.file,
+            `${mediaImage.name}.jpg`
+          );
+
         return renderToString(
           <div className="mt-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <ImageViewer
               name={mediaImage.name}
               url={mediaImage.url}
-              file={mediaImage.file}
+              file={`/images/${mediaImage.name}.jpg`}
               width={mediaImage.width}
               height={mediaImage.height}
             />
@@ -199,6 +206,11 @@ export default async function Page({
 }) {
   const { article, notionMarkdownString } = await getArticle(params.id);
 
+  if (article.image)
+    await convertImageExternalToLocal(article.image, `${article.id}.jpg`);
+
+  const { base64 } = await article.imagePlaceholder;
+
   return (
     <>
       <div className="grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
@@ -237,10 +249,12 @@ export default async function Page({
             {article.image && (
               <Image
                 alt="media"
-                src={article.image}
+                src={`/images/${article.id}.jpg`}
                 className="aspect-square h-full w-full object-cover"
                 fill
                 sizes="100%"
+                placeholder="blur"
+                blurDataURL={base64}
               />
             )}
           </BlogCard.Media>
