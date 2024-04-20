@@ -30,6 +30,7 @@ export async function generateStaticParams() {
   const articles = new Article.List(pages);
 
   return articles.all.map((article) => ({
+    id: article.id,
     slug: article.slug,
   }));
 }
