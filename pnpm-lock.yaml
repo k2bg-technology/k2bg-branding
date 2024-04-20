@@ -68,9 +68,6 @@ importers:
       remark-gfm:
         specifier: v3.0.1
         version: 3.0.1
-      sharp:
-        specifier: ^0.33.3
-        version: 0.33.3
       ui:
         specifier: workspace:*
         version: link:../../packages/ui
