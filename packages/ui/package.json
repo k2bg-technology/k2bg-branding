@@ -45,7 +45,6 @@
     "postcss": "^8.4.27",
     "storybook": "^8.0.0",
     "tailwind-config": "workspace:*",
-    "tsconfig": "workspace:*",
-    "typescript": "^4.5.2"
+    "tsconfig": "workspace:*"
   }
 }
