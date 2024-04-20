@@ -24,7 +24,7 @@ export class Core implements ArticleCore {
   }
 
   get imagePlaceholder() {
-    return getImageWithPlaceholder(`${this.id}.jpg`);
+    return getImageWithPlaceholder(this.id);
   }
 
   get slug() {

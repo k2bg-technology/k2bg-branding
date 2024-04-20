@@ -54,7 +54,7 @@ const getArticle = async (pageId: string) => {
         if (mediaImage.file)
           await convertImageExternalToLocal(
             mediaImage.file,
-            `${mediaImage.name}.jpg`
+            `${mediaImage.name}`
           );
 
         return renderToString(
@@ -63,7 +63,7 @@ const getArticle = async (pageId: string) => {
             <ImageViewer
               name={mediaImage.name}
               url={mediaImage.url}
-              file={`/images/${mediaImage.name}.jpg`}
+              file={`/images/${mediaImage.name}`}
               width={mediaImage.width}
               height={mediaImage.height}
             />
@@ -207,7 +207,7 @@ export default async function Page({
   const { article, notionMarkdownString } = await getArticle(params.id);
 
   if (article.image)
-    await convertImageExternalToLocal(article.image, `${article.id}.jpg`);
+    await convertImageExternalToLocal(article.image, article.id);
 
   const { base64 } = await article.imagePlaceholder;
 
@@ -249,7 +249,7 @@ export default async function Page({
             {article.image && (
               <Image
                 alt="media"
-                src={`/images/${article.id}.jpg`}
+                src={`/images/${article.id}`}
                 className="aspect-square h-full w-full object-cover"
                 fill
                 sizes="100%"

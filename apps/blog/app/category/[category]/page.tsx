@@ -59,7 +59,7 @@ export default async function Page({
                   <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
-                      src={`/images/${article.id}.jpg`}
+                      src={`/images/${article.id}`}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"

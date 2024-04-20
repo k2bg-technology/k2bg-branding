@@ -20,7 +20,7 @@ export default async function Page() {
   const article = new Article.Single(page);
 
   if (article.image)
-    await convertImageExternalToLocal(article.image, `${article.id}.jpg`);
+    await convertImageExternalToLocal(article.image, article.id);
 
   const { base64 } = await article.imagePlaceholder;
 
@@ -37,7 +37,7 @@ export default async function Page() {
             {article.image && (
               <Image
                 alt="media"
-                src={`/images/${article.id}.jpg`}
+                src={`/images/${article.id}`}
                 className="aspect-square h-full w-full object-cover"
                 fill
                 placeholder="blur"
