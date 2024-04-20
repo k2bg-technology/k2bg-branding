@@ -52,11 +52,11 @@ const getArticle = async (pageId: string) => {
       try {
         const mediaImage = new Media.Image(page);
 
-        // if (mediaImage.file)
-        //   await convertImageExternalToLocal(
-        //     mediaImage.file,
-        //     `${mediaImage.name}`
-        //   );
+        if (mediaImage.file)
+          await convertImageExternalToLocal(
+            mediaImage.file,
+            `${mediaImage.name}`
+          );
 
         return renderToString(
           <div className="mt-4">
@@ -64,8 +64,7 @@ const getArticle = async (pageId: string) => {
             <ImageViewer
               name={mediaImage.name}
               url={mediaImage.url}
-              // file={`/images/${mediaImage.name}`}
-              file={mediaImage.file}
+              file={`/images/${mediaImage.name}`}
               width={mediaImage.width}
               height={mediaImage.height}
             />
@@ -208,10 +207,10 @@ export default async function Page({
 }) {
   const { article, notionMarkdownString } = await getArticle(params.id);
 
-  // if (article.image)
-  //   await convertImageExternalToLocal(article.image, article.id);
+  if (article.image)
+    await convertImageExternalToLocal(article.image, article.id);
 
-  // const { base64 } = await article.imagePlaceholder;
+  const { base64 } = await article.imagePlaceholder;
 
   return (
     <>
@@ -251,13 +250,12 @@ export default async function Page({
             {article.image && (
               <Image
                 alt="media"
-                // src={`/images/${article.id}`}
-                src={article.image}
+                src={`/images/${article.id}`}
                 className="aspect-square h-full w-full object-cover"
                 fill
                 sizes="100%"
-                // placeholder="blur"
-                // blurDataURL={base64}
+                placeholder="blur"
+                blurDataURL={base64}
               />
             )}
           </BlogCard.Media>
