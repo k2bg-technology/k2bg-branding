@@ -8,7 +8,7 @@ export async function convertImageExternalToLocal(
   const dirPath = path.resolve('./public', 'images');
 
   if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath);
+    fs.mkdirSync(dirPath, { recursive: true });
   }
 
   if (!fs.existsSync(path.join(dirPath, fileName))) {
