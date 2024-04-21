@@ -2,14 +2,14 @@ import fs from 'fs';
 import path from 'path';
 
 // The path of the directory to save the image
-const dirPath = './public/images';
+const dirPath = 'public/images';
 
 export async function convertImageExternalToLocal(
   imageUrl: string,
   fileName: string
 ) {
   if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath, { recursive: true });
+    fs.mkdirSync(dirPath);
   }
 
   if (!fs.existsSync(path.join(dirPath, fileName))) {

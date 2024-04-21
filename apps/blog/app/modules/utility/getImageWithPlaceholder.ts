@@ -3,7 +3,7 @@ import path from 'path';
 import { getPlaiceholder } from 'plaiceholder';
 
 // The path of the directory to save the image
-const dirPath = './public/images';
+const dirPath = 'public/images';
 
 export async function getImageWithPlaceholder(fileName: string) {
   const buffer = await fs.promises.readFile(path.join(dirPath, fileName));
