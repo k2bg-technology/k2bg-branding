@@ -9,7 +9,7 @@ export async function convertImageExternalToLocal(
   fileName: string
 ) {
   if (!fs.existsSync(dirPath)) {
-    fs.mkdirSync(dirPath);
+    fs.mkdirSync(dirPath, { recursive: true });
   }
 
   if (!fs.existsSync(path.join(dirPath, fileName))) {
