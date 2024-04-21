@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 // The path of the directory to save the image
-const dirPath = `${process.cwd()}/public/images`;
+const dirPath = `public/images`;
 
 export async function convertImageExternalToLocal(
   imageUrl: string,
