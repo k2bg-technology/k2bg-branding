@@ -29,6 +29,8 @@ export async function generateStaticParams() {
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Article.List(pages);
 
+  await articles.convertImageExternalToLocal();
+
   return articles.all.map((article) => ({
     id: article.id,
     slug: article.slug,
@@ -206,9 +208,6 @@ export default async function Page({
   params: { id: string; slug: string };
 }) {
   const { article } = await getArticle(params.id);
-
-  // if (article.image)
-  //   await convertImageExternalToLocal(article.image, article.id);
 
   const { base64 } = await article.imagePlaceholder;
 
