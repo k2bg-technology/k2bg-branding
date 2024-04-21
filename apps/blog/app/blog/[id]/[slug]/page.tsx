@@ -207,8 +207,8 @@ export default async function Page({
 }) {
   const { article } = await getArticle(params.id);
 
-  if (article.image)
-    await convertImageExternalToLocal(article.image, article.id);
+  // if (article.image)
+  //   await convertImageExternalToLocal(article.image, article.id);
 
   const { base64 } = await article.imagePlaceholder;
 
