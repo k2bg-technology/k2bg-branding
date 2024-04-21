@@ -39,8 +39,6 @@ export default async function Page({
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Article.List(pages);
 
-  await articles.convertImageExternalToLocal();
-
   const placeHolders = await Article.List.convertImageToPlaceholder(
     articles.all
   );
@@ -59,7 +57,7 @@ export default async function Page({
                   <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
-                      src={`/images/${article.id}`}
+                      src={article.image}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"

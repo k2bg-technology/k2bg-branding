@@ -24,7 +24,7 @@ export class Core implements ArticleCore {
   }
 
   get imagePlaceholder() {
-    return getImageWithPlaceholder(this.id);
+    return getImageWithPlaceholder(this.image || '');
   }
 
   get slug() {

@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 
+const dirPath = 'public/images';
+
 export async function convertImageExternalToLocal(
   imageUrl: string,
   fileName: string
 ) {
-  const dirPath = path.resolve('./public', 'images');
-
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }

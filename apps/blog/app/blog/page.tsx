@@ -34,8 +34,6 @@ export default async function Page() {
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Article.List(pages);
 
-  await articles.convertImageExternalToLocal();
-
   const placeHolders = await Article.List.convertImageToPlaceholder([
     articles.featureLatest,
     ...articles.featuresPreviously,
@@ -52,7 +50,7 @@ export default async function Page() {
                 <BlogCard.Media className="relative w-full h-[30rem]">
                   <Image
                     alt="media"
-                    src={`/images/${articles.featureLatest.id}`}
+                    src={articles.featureLatest.image}
                     className="absolute aspect-square h-full w-full object-cover"
                     fill
                     sizes="100%"
@@ -113,7 +111,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
                     <Image
                       alt="media"
-                      src={`/images/${article.id}`}
+                      src={article.image}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       placeholder="blur"
@@ -174,7 +172,7 @@ export default async function Page() {
                     <BlogCard.Media className="relative w-full h-[26.5rem]">
                       <Image
                         alt="media"
-                        src={`/images/${article.id}`}
+                        src={article.image}
                         className="aspect-square h-full w-full object-cover"
                         fill
                         sizes="100%"
@@ -228,7 +226,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
-                      src={`/images/${article.id}`}
+                      src={article.image}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"
