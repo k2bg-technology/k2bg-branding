@@ -1,9 +1,6 @@
-/* eslint-disable react/no-unstable-nested-components */
-
-'use client';
-
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -158,14 +155,18 @@ export default function NotionMarkdown(props: Props) {
           </blockquote>
         ),
         img: ({ ...props }) => {
-          const { className } = props;
+          const { className, src, alt, width, height } = props;
+
+          if (!(src && alt && width && height)) return null;
 
           return (
-            // eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text
-            <img
+            <Image
               // eslint-disable-next-line react/jsx-props-no-spreading
-              {...props}
               className={className || 'first:mt-0 mt-8 mx-auto'}
+              src={src}
+              alt={alt}
+              width={Number(width)}
+              height={Number(height)}
             />
           );
         },
