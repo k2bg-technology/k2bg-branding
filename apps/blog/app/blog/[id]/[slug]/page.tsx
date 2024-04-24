@@ -20,9 +20,6 @@ import DataType from '../../../modules/domain/data-type';
 import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../../components/sidebar/Sidebar';
 import { fetchDatabase } from '../../page';
-import { convertImageExternalToLocal } from '../../../modules/utility/convertImageExternalToLocal';
-
-export const revalidate = 60 * 60;
 
 export async function generateStaticParams() {
   const database = await fetchDatabase();
