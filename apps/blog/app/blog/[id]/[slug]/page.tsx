@@ -198,7 +198,7 @@ export default async function Page({
 }) {
   const { article, notionMarkdownString } = await getArticle(params.id);
 
-  const { base64 } = await article.imagePlaceholder;
+  // const { base64 } = await article.imagePlaceholder;
 
   return (
     <>
@@ -242,8 +242,8 @@ export default async function Page({
                 className="aspect-square h-full w-full object-cover"
                 fill
                 sizes="100%"
-                placeholder="blur"
-                blurDataURL={base64}
+                // placeholder="blur"
+                // blurDataURL={base64}
               />
             )}
           </BlogCard.Media>
