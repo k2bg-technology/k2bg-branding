@@ -6,7 +6,7 @@ import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
 import Sidebar from '../components/sidebar/Sidebar';
 
-export const fetchDatabase = async () => {
+const fetchDatabase = async () => {
   const database = await new Notion.Fetcher().fetchDatabase({
     filter: {
       and: [

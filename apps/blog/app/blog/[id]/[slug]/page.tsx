@@ -19,18 +19,18 @@ import Media from '../../../modules/domain/media';
 import DataType from '../../../modules/domain/data-type';
 import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../../components/sidebar/Sidebar';
-import { fetchDatabase } from '../../page';
+// import { fetchDatabase } from '../../page';
 
-export async function generateStaticParams() {
-  const database = await fetchDatabase();
-  const pages = database.results.map((result) => new Notion.Page(result));
-  const articles = new Article.List(pages);
+// export async function generateStaticParams() {
+//   const database = await fetchDatabase();
+//   const pages = database.results.map((result) => new Notion.Page(result));
+//   const articles = new Article.List(pages);
 
-  return articles.all.map((article) => ({
-    id: article.id,
-    slug: article.slug,
-  }));
-}
+//   return articles.all.map((article) => ({
+//     id: article.id,
+//     slug: article.slug,
+//   }));
+// }
 
 const getArticle = async (pageId: string) => {
   const { renderToString } = await import('react-dom/server');
