@@ -14,11 +14,13 @@ export default function XTimeline() {
       <p className="mb-6 text-subtitle-sm font-bold border-b-2 border-b-slate-100">
         X
       </p>
-      <Link
-        className="twitter-timeline"
-        href={X_TIMELINE_URL}
-        data-height="500"
-      />
+      <div className="h-[50rem]">
+        <Link
+          className="twitter-timeline"
+          href={X_TIMELINE_URL}
+          data-height="500"
+        />
+      </div>
     </div>
   );
 }
