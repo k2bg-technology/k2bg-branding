@@ -50,7 +50,7 @@ export default async function Page() {
                 <BlogCard.Media className="relative w-full h-[30rem]">
                   <Image
                     alt="media"
-                    src={articles.featureLatest.image}
+                    src={`/api/notion/${articles.featureLatest.id}`}
                     className="absolute aspect-square h-full w-full object-cover"
                     fill
                     sizes="100%"
