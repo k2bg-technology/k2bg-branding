@@ -1,6 +1,6 @@
 import { type NextRequest } from 'next/server';
-import Notion from '../../../modules/data-access/notion';
-import Article from '../../../modules/domain/article';
+import Notion from '../../../../modules/data-access/notion';
+import Affiliate from '../../../../modules/domain/affiliate';
 
 export async function GET(
   request: NextRequest,
@@ -9,10 +9,10 @@ export async function GET(
   const { id } = params;
   const notionFetcher = new Notion.Fetcher();
   const page = new Notion.Page(await notionFetcher.fetchPage(id));
-  const article = new Article.Single(page);
+  const bannerAffiliate = new Affiliate.Banner(page);
   const buffer =
-    article.image &&
-    (await fetch(article.image).then(async (res) =>
+    bannerAffiliate.imageUrl &&
+    (await fetch(bannerAffiliate.imageUrl).then(async (res) =>
       Buffer.from(await res.arrayBuffer())
     ));
 

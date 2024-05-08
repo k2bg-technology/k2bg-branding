@@ -55,7 +55,8 @@ const getArticle = async (pageId: string) => {
             <ImageViewer
               name={mediaImage.name}
               url={mediaImage.url}
-              file={mediaImage.file}
+              // @ts-expect-error link_to_page defined in the block
+              file={`/api/notion/media-image/${block.link_to_page.page_id}`}
               width={mediaImage.width}
               height={mediaImage.height}
             />
@@ -124,7 +125,8 @@ const getArticle = async (pageId: string) => {
             <BannerPromotion
               linkText={bannerAffiliate.linkText}
               linkUrl={bannerAffiliate.linkUrl}
-              imageUrl={bannerAffiliate.imageUrl}
+              // @ts-expect-error link_to_page defined in the block
+              imageUrl={`/api/notion/affiliate-banner-image/${block.link_to_page.page_id}`}
               imageWidth={bannerAffiliate.imageWidth}
               imageHeight={bannerAffiliate.imageHeight}
             />
@@ -158,7 +160,8 @@ const getArticle = async (pageId: string) => {
             <ProductPromotion
               linkText={productAffiliate.linkText}
               linkUrl={productAffiliate.linkUrl}
-              imageUrl={productAffiliate.imageFile}
+              // @ts-expect-error link_to_page defined in the block
+              imageUrl={`/api/notion/affiliate-product-image/${block.link_to_page.page_id}`}
               imageWidth={productAffiliate.imageWidth}
               imageHeight={productAffiliate.imageHeight}
               providers={[
@@ -238,7 +241,7 @@ export default async function Page({
             {article.image && (
               <Image
                 alt="media"
-                src={article.image}
+                src={`/api/notion/article-image/${article.id}`}
                 className="aspect-square h-full w-full object-cover"
                 fill
                 sizes="100%"
