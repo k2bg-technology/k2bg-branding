@@ -50,7 +50,7 @@ export default async function Page() {
                 <BlogCard.Media className="relative w-full h-[30rem]">
                   <Image
                     alt="media"
-                    src={`/api/notion/${articles.featureLatest.id}`}
+                    src={`/api/notion/image/${articles.featureLatest.id}`}
                     className="absolute aspect-square h-full w-full object-cover"
                     fill
                     sizes="100%"
@@ -111,7 +111,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
                     <Image
                       alt="media"
-                      src={`/api/notion/article-image/${article.id}`}
+                      src={`/api/notion/image/${article.id}`}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       placeholder="blur"
@@ -172,7 +172,7 @@ export default async function Page() {
                     <BlogCard.Media className="relative w-full h-[26.5rem]">
                       <Image
                         alt="media"
-                        src={`/api/notion/article-image/${article.id}`}
+                        src={`/api/notion/image/${article.id}`}
                         className="aspect-square h-full w-full object-cover"
                         fill
                         sizes="100%"
@@ -226,7 +226,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
-                      src={`/api/notion/article-image/${article.id}`}
+                      src={`/api/notion/image/${article.id}`}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"

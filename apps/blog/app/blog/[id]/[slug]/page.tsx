@@ -56,7 +56,7 @@ const getArticle = async (pageId: string) => {
               name={mediaImage.name}
               url={mediaImage.url}
               // @ts-expect-error link_to_page defined in the block
-              file={`/api/notion/media-image/${block.link_to_page.page_id}`}
+              file={`/api/notion/image/${block.link_to_page.page_id}`}
               width={mediaImage.width}
               height={mediaImage.height}
             />
@@ -126,7 +126,7 @@ const getArticle = async (pageId: string) => {
               linkText={bannerAffiliate.linkText}
               linkUrl={bannerAffiliate.linkUrl}
               // @ts-expect-error link_to_page defined in the block
-              imageUrl={`/api/notion/affiliate-banner-image/${block.link_to_page.page_id}`}
+              imageUrl={`/api/notion/image/${block.link_to_page.page_id}`}
               imageWidth={bannerAffiliate.imageWidth}
               imageHeight={bannerAffiliate.imageHeight}
             />
@@ -161,7 +161,7 @@ const getArticle = async (pageId: string) => {
               linkText={productAffiliate.linkText}
               linkUrl={productAffiliate.linkUrl}
               // @ts-expect-error link_to_page defined in the block
-              imageUrl={`/api/notion/affiliate-product-image/${block.link_to_page.page_id}`}
+              imageUrl={`/api/notion/image/${block.link_to_page.page_id}`}
               imageWidth={productAffiliate.imageWidth}
               imageHeight={productAffiliate.imageHeight}
               providers={[
@@ -241,7 +241,7 @@ export default async function Page({
             {article.image && (
               <Image
                 alt="media"
-                src={`/api/notion/article-image/${article.id}`}
+                src={`/api/notion/image/${article.id}`}
                 className="aspect-square h-full w-full object-cover"
                 fill
                 sizes="100%"
