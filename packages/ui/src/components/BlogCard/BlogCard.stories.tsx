@@ -106,3 +106,11 @@ export const Hero: Story = {
     </BlogCard>
   ),
 };
+
+export const Skelton: Story = {
+  render: (args) => (
+    <BlogCard className="flex-col gap-6" {...args}>
+      <BlogCard.Skelton />
+    </BlogCard>
+  ),
+};
