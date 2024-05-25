@@ -4,6 +4,7 @@ import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import Sidebar from '../sidebar/Sidebar';
+import Search from '../search/Search';
 
 export default function Header() {
   return (
@@ -78,6 +79,17 @@ export default function Header() {
                   Contact
                 </Button>
               </Link>
+              <DropdownMenu
+                trigger={
+                  <Button color="dark" variant="text" className="!p-2">
+                    <Icon name="magnifying-glass" width={20} height={20} />
+                  </Button>
+                }
+              >
+                <DropdownMenuItem>
+                  <Search placeholder="検索" />
+                </DropdownMenuItem>
+              </DropdownMenu>
             </div>
             <div className="flex xl:hidden items-center gap-x-8">
               <DropdownMenu
