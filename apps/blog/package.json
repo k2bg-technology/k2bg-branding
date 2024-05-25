@@ -22,7 +22,8 @@
     "rehype-raw": "^7.0.0",
     "remark-gfm": "v3.0.1",
     "sharp": "^0.33.3",
-    "ui": "workspace:*"
+    "ui": "workspace:*",
+    "use-debounce": "^10.0.0"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
