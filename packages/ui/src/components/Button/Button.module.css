@@ -1,5 +1,5 @@
-.Button {
-  @apply inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-r-sm text-center font-bold leading-none;
+.button {
+  @apply inline-block transition-all rounded-md cursor-pointer focus:outline-none px-4 py-4 text-body-r-sm text-center font-bold leading-none;
 
   &:hover {
     @apply border-opacity-50 bg-opacity-10;
@@ -7,7 +7,7 @@
 }
 
 /* Main */
-.MainContained {
+.mainContained {
   @apply bg-main-default text-white;
 
   &:hover {
@@ -15,7 +15,7 @@
   }
 }
 
-.MainOutlined {
+.mainOutlined {
   @apply border-2 border-opacity-20 border-main-default text-main-default;
 
   &:hover {
@@ -23,7 +23,7 @@
   }
 }
 
-.MainText {
+.mainText {
   @apply text-main-default;
 
   &:hover {
@@ -32,7 +32,7 @@
 }
 
 /* Accent */
-.AccentContained {
+.accentContained {
   @apply bg-accent-default text-white;
 
   &:hover {
@@ -40,7 +40,7 @@
   }
 }
 
-.AccentOutlined {
+.accentOutlined {
   @apply border-2 border-opacity-20 border-accent-default text-accent-default;
 
   &:hover {
@@ -48,7 +48,7 @@
   }
 }
 
-.AccentText {
+.accentText {
   @apply text-accent-default;
 
   &:hover {
@@ -57,11 +57,11 @@
 }
 
 /* Inherit */
-.InheritContained {
+.inheritContained {
   @apply bg-transparent text-current;
 }
 
-.InheritOutlined {
+.inheritOutlined {
   @apply border-2 border-opacity-20 border-transparent text-current;
 
   &:hover {
@@ -69,7 +69,7 @@
   }
 }
 
-.InheritText {
+.inheritText {
   @apply text-current;
 
   &:hover {
@@ -78,7 +78,7 @@
 }
 
 /* Error */
-.ErrorContained {
+.errorContained {
   @apply bg-error text-white;
 
   &:hover {
@@ -86,7 +86,7 @@
   }
 }
 
-.ErrorOutlined {
+.errorOutlined {
   @apply border-2 border-opacity-20 border-error text-error;
 
   &:hover {
@@ -94,7 +94,7 @@
   }
 }
 
-.ErrorText {
+.errorText {
   @apply text-error;
 
   &:hover {
@@ -103,7 +103,7 @@
 }
 
 /* Warning */
-.WarningContained {
+.warningContained {
   @apply bg-warning text-white;
 
   &:hover {
@@ -111,7 +111,7 @@
   }
 }
 
-.WarningOutlined {
+.warningOutlined {
   @apply border-2 border-opacity-20 border-warning text-warning;
 
   &:hover {
@@ -119,7 +119,7 @@
   }
 }
 
-.WarningText {
+.warningText {
   @apply text-warning;
 
   &:hover {
@@ -128,7 +128,7 @@
 }
 
 /* Info */
-.InfoContained {
+.infoContained {
   @apply bg-info text-white;
 
   &:hover {
@@ -136,7 +136,7 @@
   }
 }
 
-.InfoOutlined {
+.infoOutlined {
   @apply border-2 border-opacity-20 border-info text-info;
 
   &:hover {
@@ -144,7 +144,7 @@
   }
 }
 
-.InfoText {
+.infoText {
   @apply text-info;
 
   &:hover {
@@ -153,7 +153,7 @@
 }
 
 /* Success */
-.SuccessContained {
+.successContained {
   @apply bg-success text-white;
 
   &:hover {
@@ -161,7 +161,7 @@
   }
 }
 
-.SuccessOutlined {
+.successOutlined {
   @apply border-2 border-opacity-20 border-success text-success;
 
   &:hover {
@@ -169,7 +169,7 @@
   }
 }
 
-.SuccessText {
+.successText {
   @apply text-success;
 
   &:hover {
@@ -178,7 +178,7 @@
 }
 
 /* Dark */
-.DarkContained {
+.darkContained {
   @apply bg-base-black text-white;
 
   &:hover {
@@ -186,7 +186,7 @@
   }
 }
 
-.DarkOutlined {
+.darkOutlined {
   @apply border-2 border-opacity-20 border-base-black text-base-black;
 
   &:hover {
@@ -194,7 +194,7 @@
   }
 }
 
-.DarkText {
+.darkText {
   @apply text-base-black;
 
   &:hover {
@@ -203,7 +203,7 @@
 }
 
 /* Light */
-.LightContained {
+.lightContained {
   @apply bg-white text-base-black;
 
   &:hover {
@@ -211,7 +211,7 @@
   }
 }
 
-.LightOutlined {
+.lightOutlined {
   @apply border-2 border-opacity-20 border-white text-white;
 
   &:hover {
@@ -219,7 +219,7 @@
   }
 }
 
-.LightText {
+.lightText {
   @apply text-white;
 
   &:hover {

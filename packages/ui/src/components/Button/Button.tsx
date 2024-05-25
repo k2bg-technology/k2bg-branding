@@ -6,49 +6,49 @@ import styles from './Button.module.css';
 
 const STYLES = {
   inherit: {
-    contained: styles.InheritContained,
-    outlined: styles.InheritOutlined,
-    text: styles.InheritText,
+    contained: styles.inheritContained,
+    outlined: styles.inheritOutlined,
+    text: styles.inheritText,
   },
   main: {
-    contained: styles.MainContained,
-    outlined: styles.MainOutlined,
-    text: styles.MainText,
+    contained: styles.mainContained,
+    outlined: styles.mainOutlined,
+    text: styles.mainText,
   },
   accent: {
-    contained: styles.AccentContained,
-    outlined: styles.AccentOutlined,
-    text: styles.AccentText,
+    contained: styles.accentContained,
+    outlined: styles.accentOutlined,
+    text: styles.accentText,
   },
   success: {
-    contained: styles.SuccessContained,
-    outlined: styles.SuccessOutlined,
-    text: styles.SuccessText,
+    contained: styles.successContained,
+    outlined: styles.successOutlined,
+    text: styles.successText,
   },
   error: {
-    contained: styles.ErrorContained,
-    outlined: styles.ErrorOutlined,
-    text: styles.ErrorText,
+    contained: styles.errorContained,
+    outlined: styles.errorOutlined,
+    text: styles.errorText,
   },
   info: {
-    contained: styles.InfoContained,
-    outlined: styles.InfoOutlined,
-    text: styles.InfoText,
+    contained: styles.infoContained,
+    outlined: styles.infoOutlined,
+    text: styles.infoText,
   },
   warning: {
-    contained: styles.WarningContained,
-    outlined: styles.WarningOutlined,
-    text: styles.WarningText,
+    contained: styles.warningContained,
+    outlined: styles.warningOutlined,
+    text: styles.warningText,
   },
   dark: {
-    contained: styles.DarkContained,
-    outlined: styles.DarkOutlined,
-    text: styles.DarkText,
+    contained: styles.darkContained,
+    outlined: styles.darkOutlined,
+    text: styles.darkText,
   },
   light: {
-    contained: styles.LightContained,
-    outlined: styles.LightOutlined,
-    text: styles.LightText,
+    contained: styles.lightContained,
+    outlined: styles.lightOutlined,
+    text: styles.lightText,
   },
 } as const satisfies Record<Color, Record<Variant, string>>;
 
@@ -68,7 +68,7 @@ export default function Button({
   return (
     <button
       {...rest}
-      className={`${styles.Button} ${STYLES[color][variant]} ${className}`}
+      className={`${styles.button} ${STYLES[color][variant]} ${className}`}
       type="button"
     >
       {children}
