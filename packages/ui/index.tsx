@@ -9,3 +9,4 @@ export * from './src/components/Avatar';
 export * from './src/components/Promotion';
 export * from './src/components/Media';
 export { default as Pagination } from './src/components/Pagination';
+export { default as Form } from './src/components/Form';

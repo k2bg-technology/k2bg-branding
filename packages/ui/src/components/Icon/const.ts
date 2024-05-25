@@ -23,6 +23,7 @@ export const HERO_ICON_NAMES = [
   'bars-3',
   'chevron-left',
   'chevron-right',
+  'magnifying-glass',
 ] as const;
 
 export const ICON_NAMES = [...MULTI_COLOR_ICON_NAMES, ...HERO_ICON_NAMES];
