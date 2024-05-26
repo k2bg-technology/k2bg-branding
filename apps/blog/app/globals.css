@@ -1,17 +1,5 @@
 @import 'tailwind-config/design-token/variables.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html {
-    @apply h-full text-[62.5%];
-  }
-  body {
-    @apply h-full text-base-black font-original text-body-r-md;
-  }
-}
+@import 'ui/src/globals.css';
 
 .markdown table {
   @apply mt-4 w-full text-body-r-sm border-base-white;
