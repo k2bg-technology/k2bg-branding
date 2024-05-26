@@ -22,7 +22,7 @@ export default async function Page() {
   if (article.image)
     await convertImageExternalToLocal(article.image, article.id);
 
-  const { base64 } = await article.imagePlaceholder;
+  const placeholder = await article.imagePlaceholder;
 
   return (
     <>
@@ -41,7 +41,7 @@ export default async function Page() {
                 className="aspect-square h-full w-full object-cover"
                 fill
                 placeholder="blur"
-                blurDataURL={base64}
+                blurDataURL={placeholder}
               />
             )}
           </BlogCard.Media>

@@ -1,14 +1,16 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Avatar, BlogCard } from 'ui';
-import { GetPlaiceholderReturn } from 'plaiceholder';
 
 import Article from '../../modules/domain/article';
 
 interface Props {
   fetchArticles: () => Promise<{
     articles: InstanceType<(typeof Article)['List']>;
-    placeHolders: Record<string, GetPlaiceholderReturn>;
+    placeHolders: Record<
+      InstanceType<(typeof Article)['Single']>['id'],
+      string
+    >;
   }>;
 }
 
@@ -31,7 +33,7 @@ export async function Articles(props: Props) {
                   fill
                   sizes="100%"
                   placeholder="blur"
-                  blurDataURL={placeHolders[article.id]?.base64}
+                  blurDataURL={placeHolders[article.id]}
                 />
               </BlogCard.Media>
             </Link>

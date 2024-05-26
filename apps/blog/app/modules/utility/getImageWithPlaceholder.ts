@@ -7,5 +7,5 @@ export async function getImageWithPlaceholder(fileUrl: string) {
 
   const plaiceholder = await getPlaiceholder(buffer, { size: 10 });
 
-  return plaiceholder;
+  return plaiceholder.base64;
 }

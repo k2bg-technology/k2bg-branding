@@ -10,6 +10,7 @@ export interface AffiliateText extends AffiliateCore {}
 
 export interface AffiliateBanner extends AffiliateCore {
   imageUrl: string;
+  imagePlaceholder: Promise<string>;
   imageWidth: number;
   imageHeight: number;
 }
@@ -18,6 +19,7 @@ export interface AffiliateProduction extends AffiliateCore {
   subProviders: string[];
   imageProvider: string;
   imageFile: string;
+  imagePlaceholder: Promise<string>;
   imageWidth: number;
   imageHeight: number;
 }

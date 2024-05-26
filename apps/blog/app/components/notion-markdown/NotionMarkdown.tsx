@@ -155,18 +155,19 @@ export default function NotionMarkdown(props: Props) {
           </blockquote>
         ),
         img: ({ ...props }) => {
-          const { className, src, alt, width, height } = props;
+          const { className, src, alt, placeholder, width, height } = props;
 
           if (!(src && alt && width && height)) return null;
 
           return (
             <Image
-              // eslint-disable-next-line react/jsx-props-no-spreading
               className={className || 'first:mt-0 mt-8 mx-auto'}
               src={src}
               alt={alt}
               width={Number(width)}
               height={Number(height)}
+              placeholder="blur"
+              blurDataURL={placeholder || 'data:image/png;base64'}
             />
           );
         },

@@ -4,10 +4,18 @@ interface BannerPromotionProps {
   imageUrl: string;
   imageWidth: number;
   imageHeight: number;
+  imagePlaceholder?: string;
 }
 
 export default function BannerPromotion(props: BannerPromotionProps) {
-  const { linkText, linkUrl, imageUrl, imageWidth, imageHeight } = props;
+  const {
+    linkText,
+    linkUrl,
+    imageUrl,
+    imageWidth,
+    imageHeight,
+    imagePlaceholder,
+  } = props;
 
   return (
     <a
@@ -22,6 +30,7 @@ export default function BannerPromotion(props: BannerPromotionProps) {
         src={imageUrl}
         width={imageWidth}
         height={imageHeight}
+        placeholder={imagePlaceholder}
         className="object-contain cursor-pointer"
       />
     </a>

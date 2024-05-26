@@ -2,6 +2,7 @@ export interface ArticleCore {
   title?: string;
   excerpt?: string;
   image?: string;
+  imagePlaceholder?: Promise<string>;
   slug?: string;
   status?: string;
   date?: string;

@@ -11,11 +11,19 @@ interface ProductPromotionProps {
   imageWidth: number;
   imageHeight: number;
   providers?: Provider[];
+  imagePlaceholder?: string;
 }
 
 export default function ProductPromotion(props: ProductPromotionProps) {
-  const { linkText, linkUrl, imageUrl, imageWidth, imageHeight, providers } =
-    props;
+  const {
+    linkText,
+    linkUrl,
+    imageUrl,
+    imageWidth,
+    imageHeight,
+    providers,
+    imagePlaceholder,
+  } = props;
 
   return (
     <div className="flex gap-6 p-8 border-solid border-4 border-base-white">
@@ -27,6 +35,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           onClick={() => linkUrl && window.open(linkUrl, '_blank')}
           width={imageWidth}
           height={imageHeight}
+          placeholder={imagePlaceholder}
           className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
           aria-hidden="true"
         />

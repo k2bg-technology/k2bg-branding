@@ -1,4 +1,3 @@
-import { GetPlaiceholderReturn } from 'plaiceholder';
 import { Single } from './single';
 import { ArticleData, ArticleList } from './interfaces';
 import { convertImageExternalToLocal } from '../../utility/convertImageExternalToLocal';
@@ -50,7 +49,7 @@ export class List implements ArticleList {
 
   static async convertImageToPlaceholder(
     articles: Single[]
-  ): Promise<Record<Single['id'], GetPlaiceholderReturn>> {
+  ): Promise<Record<Single['id'], string>> {
     return articles.reduce(async (prev, article) => {
       const placeholder = await article.imagePlaceholder;
 

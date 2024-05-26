@@ -1,3 +1,4 @@
+import { getImageWithPlaceholder } from '../../utility/getImageWithPlaceholder';
 import { Core } from './core';
 import { AffiliateBanner } from './interfaces';
 
@@ -8,6 +9,10 @@ export class Banner extends Core implements AffiliateBanner {
     if (imageUrl) return imageUrl;
 
     throw new Error('Banner Affiliate image url is required');
+  }
+
+  get imagePlaceholder() {
+    return getImageWithPlaceholder(this.imageUrl || '');
   }
 
   get imageWidth() {

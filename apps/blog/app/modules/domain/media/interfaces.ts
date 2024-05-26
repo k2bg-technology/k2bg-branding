@@ -9,7 +9,9 @@ export interface MediaCore {
   file?: string;
 }
 
-export interface MediaImage extends MediaCore {}
+export interface MediaImage extends MediaCore {
+  placeholder?: Promise<string>;
+}
 
 export interface MediaVideo extends MediaCore {}
 

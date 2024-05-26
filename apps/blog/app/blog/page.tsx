@@ -56,9 +56,7 @@ export default async function Page() {
                     sizes="100%"
                     priority
                     placeholder="blur"
-                    blurDataURL={
-                      placeHolders[articles.featureLatest.id]?.base64
-                    }
+                    blurDataURL={placeHolders[articles.featureLatest.id]}
                   />
                 </BlogCard.Media>
               </Link>
@@ -115,7 +113,7 @@ export default async function Page() {
                       className="aspect-square h-full w-full object-cover"
                       fill
                       placeholder="blur"
-                      blurDataURL={placeHolders[article.id]?.base64}
+                      blurDataURL={placeHolders[article.id]}
                     />
                   </BlogCard.Media>
                 </Link>
@@ -177,7 +175,7 @@ export default async function Page() {
                         fill
                         sizes="100%"
                         placeholder="blur"
-                        blurDataURL={placeHolders[article.id]?.base64}
+                        blurDataURL={placeHolders[article.id]}
                       />
                     </BlogCard.Media>
                   </Link>
@@ -231,7 +229,7 @@ export default async function Page() {
                       fill
                       sizes="100%"
                       placeholder="blur"
-                      blurDataURL={placeHolders[article.id]?.base64}
+                      blurDataURL={placeHolders[article.id]}
                     />
                   </BlogCard.Media>
                 </Link>

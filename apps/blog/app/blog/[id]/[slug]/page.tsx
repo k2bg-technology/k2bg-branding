@@ -59,6 +59,7 @@ const getArticle = async (pageId: string) => {
               file={`/api/notion/image/${block.link_to_page.page_id}`}
               width={mediaImage.width}
               height={mediaImage.height}
+              placeholder={await mediaImage.placeholder}
             />
           </div>
         );
@@ -129,6 +130,7 @@ const getArticle = async (pageId: string) => {
               imageUrl={`/api/notion/image/${block.link_to_page.page_id}`}
               imageWidth={bannerAffiliate.imageWidth}
               imageHeight={bannerAffiliate.imageHeight}
+              imagePlaceholder={await bannerAffiliate.imagePlaceholder}
             />
           </div>
         );
@@ -172,6 +174,7 @@ const getArticle = async (pageId: string) => {
                 },
                 ...providers,
               ]}
+              imagePlaceholder={await productAffiliate.imagePlaceholder}
             />
           </div>
         );
@@ -201,7 +204,7 @@ export default async function Page({
 }) {
   const { article, notionMarkdownString } = await getArticle(params.id);
 
-  const { base64 } = await article.imagePlaceholder;
+  const placeholder = await article.imagePlaceholder;
 
   return (
     <>
@@ -246,7 +249,7 @@ export default async function Page({
                 fill
                 sizes="100%"
                 placeholder="blur"
-                blurDataURL={base64}
+                blurDataURL={placeholder}
               />
             )}
           </BlogCard.Media>
