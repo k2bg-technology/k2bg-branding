@@ -21,7 +21,7 @@ export default function Content({
   return (
     <div {...rest} className={`flex flex-col gap-4 ${className}`}>
       {category && (
-        <p className="text-body-r-sm text-accent-default font-bold capitalize">
+        <p className="text-body-r-sm font-bold capitalize bg-gradient-to-r from-main-default to-main-dark inline-block text-transparent bg-clip-text">
           {category}
         </p>
       )}

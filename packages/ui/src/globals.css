@@ -7,6 +7,8 @@
 @layer base {
   html {
     @apply h-full text-[62.5%];
+
+    text-decoration-skip-ink: none;
   }
   body {
     @apply h-full text-base-black font-original text-body-r-md;

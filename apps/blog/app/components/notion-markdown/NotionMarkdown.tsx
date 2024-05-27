@@ -105,7 +105,7 @@ export default function NotionMarkdown(props: Props) {
           <span
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="mt-6 font-bold leading-none bg-accent-light/50"
+            className="mt-6 font-bold leading-none underline decoration-8 underline-offset-[-0.2em] decoration-main-default/50"
           >
             {children}
           </span>
