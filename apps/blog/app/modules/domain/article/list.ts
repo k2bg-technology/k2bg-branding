@@ -1,6 +1,5 @@
 import { Single } from './single';
 import { ArticleData, ArticleList } from './interfaces';
-import { convertImageExternalToLocal } from '../../utility/convertImageExternalToLocal';
 
 export class List implements ArticleList {
   private articles: Single[];
@@ -35,16 +34,6 @@ export class List implements ArticleList {
 
       return dateB.getTime() - dateA.getTime();
     });
-  }
-
-  async convertImageExternalToLocal() {
-    await Promise.all(
-      this.all.map(
-        (article) =>
-          article.image &&
-          convertImageExternalToLocal(article.image, article.id)
-      )
-    );
   }
 
   static async convertImageToPlaceholder(
