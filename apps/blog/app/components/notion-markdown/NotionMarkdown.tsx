@@ -7,12 +7,192 @@ import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
+import {
+  BannerPromotion,
+  ProductPromotion,
+  TextPromotion,
+  ImageViewer,
+  VideoFilePlayer,
+  VideoStreamingPlayer,
+} from 'ui';
+
+import { N2m } from '../../modules/data-access/notion/n2m';
+import Notion from '../../modules/data-access/notion';
+import Affiliate from '../../modules/domain/affiliate';
+import Media from '../../modules/domain/media';
+import DataType from '../../modules/domain/data-type';
+
+const getArticle = async (pageId: string) => {
+  const { renderToString } = await import('react-dom/server');
+
+  const notionFetcher = new Notion.Fetcher();
+  const n2m = new N2m();
+
+  n2m.setCustomTransformer('link_to_page', async (block) => {
+    const page = new Notion.Page(
+      // @ts-expect-error link_to_page defined in the block
+      await notionFetcher.fetchPage(block.link_to_page.page_id)
+    );
+    const dataType = new DataType.Core(page).name;
+
+    if (dataType === 'mediaImage') {
+      try {
+        const mediaImage = new Media.Image(page);
+
+        return renderToString(
+          <div className="mt-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <ImageViewer
+              name={mediaImage.name}
+              url={mediaImage.url}
+              // @ts-expect-error link_to_page defined in the block
+              file={`/api/notion/image/${block.link_to_page.page_id}`}
+              width={mediaImage.width}
+              height={mediaImage.height}
+              placeholder={await mediaImage.placeholder}
+            />
+          </div>
+        );
+      } catch (error) {
+        return '';
+      }
+    }
+
+    if (dataType === 'mediaVideo') {
+      try {
+        const mediaVideo = new Media.Video(page);
+
+        if (mediaVideo.url) {
+          return renderToString(
+            <div className="flex justify-center mt-8">
+              <VideoStreamingPlayer
+                url={mediaVideo.url}
+                width={mediaVideo.width}
+                height={mediaVideo.height}
+              />
+            </div>
+          );
+        }
+
+        if (mediaVideo.file) {
+          return renderToString(
+            <div className="flex justify-center mt-8">
+              <VideoFilePlayer
+                file={mediaVideo.file}
+                width={mediaVideo.width}
+                height={mediaVideo.height}
+              />
+            </div>
+          );
+        }
+      } catch (error) {
+        return '';
+      }
+    }
+
+    if (dataType === 'affiliateText') {
+      try {
+        const textAffiliate = new Affiliate.Text(page);
+
+        return renderToString(
+          <div className="mt-8">
+            <TextPromotion
+              linkText={textAffiliate.linkText}
+              linkUrl={textAffiliate.linkUrl}
+            />
+          </div>
+        );
+      } catch (error) {
+        return '';
+      }
+    }
+
+    if (dataType === 'affiliateBanner') {
+      try {
+        const bannerAffiliate = new Affiliate.Banner(page);
+
+        return renderToString(
+          <div className="mt-8">
+            <BannerPromotion
+              linkText={bannerAffiliate.linkText}
+              linkUrl={bannerAffiliate.linkUrl}
+              // @ts-expect-error link_to_page defined in the block
+              imageUrl={`/api/notion/image/${block.link_to_page.page_id}`}
+              imageWidth={bannerAffiliate.imageWidth}
+              imageHeight={bannerAffiliate.imageHeight}
+              imagePlaceholder={await bannerAffiliate.imagePlaceholder}
+            />
+          </div>
+        );
+      } catch (error) {
+        return '';
+      }
+    }
+
+    if (dataType === 'affiliateProduct') {
+      try {
+        const productAffiliate = new Affiliate.Product(page);
+
+        const providers = await Promise.all(
+          productAffiliate.subProviders.map(async (subProvider) => {
+            const provider = new Affiliate.SubProvider(
+              new Notion.Page(await notionFetcher.fetchPage(subProvider))
+            );
+
+            return {
+              linkText: provider.provider,
+              linkUrl: provider.linkUrl,
+              color: provider.providerColor,
+            };
+          })
+        );
+
+        return renderToString(
+          <div className="mt-8">
+            <ProductPromotion
+              linkText={productAffiliate.linkText}
+              linkUrl={productAffiliate.linkUrl}
+              // @ts-expect-error link_to_page defined in the block
+              imageUrl={`/api/notion/image/${block.link_to_page.page_id}`}
+              imageWidth={productAffiliate.imageWidth}
+              imageHeight={productAffiliate.imageHeight}
+              providers={[
+                {
+                  linkText: productAffiliate.provider,
+                  linkUrl: productAffiliate.linkUrl,
+                  color: productAffiliate.providerColor,
+                },
+                ...providers,
+              ]}
+              imagePlaceholder={await productAffiliate.imagePlaceholder}
+            />
+          </div>
+        );
+      } catch (error) {
+        return '';
+      }
+    }
+
+    return '';
+  });
+
+  const markdownString = await n2m.fetchNotionPageAndConvertMarkdownString(
+    pageId
+  );
+
+  return {
+    markdownString,
+  };
+};
+
 interface Props {
-  markdownString: string;
+  articleId: string;
 }
 
-export default function NotionMarkdown(props: Props) {
-  const { markdownString } = props;
+export default async function NotionMarkdown(props: Props) {
+  const { articleId } = props;
+
+  const { markdownString } = await getArticle(articleId);
 
   return (
     <ReactMarkdown

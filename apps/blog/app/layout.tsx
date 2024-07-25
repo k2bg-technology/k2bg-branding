@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Noto_Sans_JP } from 'next/font/google';
 
 import Header from './components/header/Header';
@@ -24,7 +25,7 @@ export default function RootLayout({
         <div className="grid grid-rows-[5rem_1fr_30rem] gap-y-8 h-screen">
           <Header />
           <main className="grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-x-12 w-full md:w-[72rem] xl:w-[114rem] px-6 mx-auto">
-            {children}
+            <Suspense fallback={<p>Loading....</p>}>{children}</Suspense>
           </main>
           <Footer />
         </div>
