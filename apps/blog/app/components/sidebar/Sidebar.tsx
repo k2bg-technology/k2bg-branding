@@ -23,7 +23,6 @@ export default function Sidebar() {
         )}
         <ProfileCard />
         <XTimeline />
-        {/* @ts-expect-error: async component */}
         <InstagramTimeline />
       </div>
     </aside>

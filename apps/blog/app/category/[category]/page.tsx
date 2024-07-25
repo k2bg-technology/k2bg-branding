@@ -121,7 +121,6 @@ export default async function Page({
         }
       >
         <div className="grid grid-cols-[subgrid] col-span-full py-12">
-          {/* @ts-expect-error: async component */}
           <Articles fetchArticles={fetchArticles} />
         </div>
         <div className="flex justify-center grid-cols-[subgrid] col-span-full py-12">
