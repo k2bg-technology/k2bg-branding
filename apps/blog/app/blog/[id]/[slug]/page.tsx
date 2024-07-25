@@ -6,7 +6,7 @@ import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../components/article-heading/ArticleHeading';
 
-const fetchDatabase = async () => {
+export async function generateStaticParams() {
   const database = await new Notion.Fetcher().fetchDatabase({
     filter: {
       and: [
@@ -26,11 +26,6 @@ const fetchDatabase = async () => {
     },
   });
 
-  return database;
-};
-
-export async function generateStaticParams() {
-  const database = await fetchDatabase();
   const pages = database.results.map((result) => new Notion.Page(result));
   const articles = new Article.List(pages);
 
