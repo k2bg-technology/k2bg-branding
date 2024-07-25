@@ -334,10 +334,10 @@ export default async function NotionMarkdown(props: Props) {
             {children}
           </blockquote>
         ),
-        img: ({ ...props }) => {
-          const { className, src, alt, placeholder, width, height } = props;
-
+        img: ({ className, src, alt, width, height, node }) => {
           if (!(src && alt && width && height)) return null;
+
+          const placeholder = String(node.properties?.['dataPlaceholder']);
 
           return (
             <Image

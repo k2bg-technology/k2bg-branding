@@ -35,7 +35,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           onClick={() => linkUrl && window.open(linkUrl, '_blank')}
           width={imageWidth}
           height={imageHeight}
-          placeholder={imagePlaceholder}
+          data-placeholder={imagePlaceholder}
           className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
           aria-hidden="true"
         />

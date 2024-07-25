@@ -30,7 +30,7 @@ export default function BannerPromotion(props: BannerPromotionProps) {
         src={imageUrl}
         width={imageWidth}
         height={imageHeight}
-        placeholder={imagePlaceholder}
+        data-placeholder={imagePlaceholder}
         className="object-contain cursor-pointer"
       />
     </a>

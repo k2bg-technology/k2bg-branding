@@ -19,6 +19,7 @@ export async function GET(
 
     switch (dataType) {
       case 'article':
+      case 'page':
         return new Article.Single(page).image;
       case 'affiliateProduct':
         return new Affiliate.Product(page).imageFile;
@@ -26,7 +27,6 @@ export async function GET(
         return new Affiliate.Banner(page).imageUrl;
       case 'mediaImage':
         return new Media.Image(page).file;
-      case 'page':
       case 'affiliateText':
       case 'mediaVideo':
       case 'mediaAudio':

@@ -9,6 +9,7 @@ interface Props
   file?: string;
   width?: number;
   height?: number;
+  placeholder?: string;
 }
 
 export default function ImageViewer({
@@ -18,6 +19,7 @@ export default function ImageViewer({
   file,
   width,
   height,
+  placeholder,
   ...rest
 }: Props) {
   if (linkUrl)
@@ -35,12 +37,20 @@ export default function ImageViewer({
           src={file || url}
           width={width}
           height={height}
+          data-placeholder={placeholder}
         />
       </a>
     );
 
   return (
     // eslint-disable-next-line @next/next/no-img-element
-    <img {...rest} alt={name} src={file || url} width={width} height={height} />
+    <img
+      {...rest}
+      alt={name}
+      src={file || url}
+      width={width}
+      height={height}
+      data-placeholder={placeholder}
+    />
   );
 }
