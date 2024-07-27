@@ -15,6 +15,14 @@
       "inputs": [
         "$TURBO_DEFAULT$",
         ".env"
+      ],
+      "env": [
+        "NOTION_TOKEN",
+        "NOTION_DATABASE_ID",
+        "NOTION_CONCEPT_PAGE_ID",
+        "NEXT_PUBLIC_X_TIMELINE_URL",
+        "INSTAGRAM_LONG_ACCESS_TOKEN",
+        "FORMSPREE_FORM_ACTION_URL"
       ]
     },
     "start": {},
