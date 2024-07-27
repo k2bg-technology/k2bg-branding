@@ -57,6 +57,7 @@ export default async function Page() {
                     priority
                     placeholder="blur"
                     blurDataURL={placeHolders[articles.featureLatest.id]}
+                    quality={30}
                   />
                 </BlogCard.Media>
               </Link>
@@ -114,6 +115,7 @@ export default async function Page() {
                       fill
                       placeholder="blur"
                       blurDataURL={placeHolders[article.id]}
+                      quality={30}
                     />
                   </BlogCard.Media>
                 </Link>
@@ -176,6 +178,7 @@ export default async function Page() {
                         sizes="100%"
                         placeholder="blur"
                         blurDataURL={placeHolders[article.id]}
+                        quality={30}
                       />
                     </BlogCard.Media>
                   </Link>
@@ -230,6 +233,7 @@ export default async function Page() {
                       sizes="100%"
                       placeholder="blur"
                       blurDataURL={placeHolders[article.id]}
+                      quality={30}
                     />
                   </BlogCard.Media>
                 </Link>

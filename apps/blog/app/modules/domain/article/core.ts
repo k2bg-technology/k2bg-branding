@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 
 import { ArticleCore, ArticleData } from './interfaces';
 import { getImageWithPlaceholder } from '../../utility/getImageWithPlaceholder';
+import { getExtensionFromUrl } from '../../utility/getExtensionFromUrl';
 
 export class Core implements ArticleCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
@@ -25,6 +26,10 @@ export class Core implements ArticleCore {
 
   get imagePlaceholder() {
     return getImageWithPlaceholder(this.image || '');
+  }
+
+  get imageExtension() {
+    return getExtensionFromUrl(this.image || '');
   }
 
   get slug() {

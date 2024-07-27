@@ -1,8 +1,8 @@
-import { HTMLAttributes } from 'react';
+import { HTMLAttributes, ImgHTMLAttributes } from 'react';
 
 interface Props
   /** https://developer.mozilla.org/ja/docs/Web/HTML/Element/img */
-  extends HTMLAttributes<HTMLImageElement> {
+  extends ImgHTMLAttributes<HTMLImageElement> {
   name?: string;
   linkUrl?: string;
   url?: string;
@@ -10,6 +10,7 @@ interface Props
   width?: number;
   height?: number;
   placeholder?: string;
+  unoptoinized?: boolean;
 }
 
 export default function ImageViewer({
@@ -20,6 +21,7 @@ export default function ImageViewer({
   width,
   height,
   placeholder,
+  unoptoinized,
   ...rest
 }: Props) {
   if (linkUrl)
@@ -38,6 +40,7 @@ export default function ImageViewer({
           width={width}
           height={height}
           data-placeholder={placeholder}
+          data-unoptoinized={unoptoinized}
         />
       </a>
     );
@@ -51,6 +54,7 @@ export default function ImageViewer({
       width={width}
       height={height}
       data-placeholder={placeholder}
+      data-unoptoinized={unoptoinized}
     />
   );
 }

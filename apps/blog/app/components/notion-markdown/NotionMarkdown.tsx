@@ -50,6 +50,7 @@ const getArticle = async (pageId: string) => {
               width={mediaImage.width}
               height={mediaImage.height}
               placeholder={await mediaImage.placeholder}
+              unoptoinized={mediaImage.extension === '.gif'}
             />
           </div>
         );
@@ -338,6 +339,7 @@ export default async function NotionMarkdown(props: Props) {
           if (!(src && alt && width && height)) return null;
 
           const placeholder = String(node.properties?.['dataPlaceholder']);
+          const unoptimized = Boolean(node.properties?.['dataUnoptoinized']);
 
           return (
             <Image
@@ -348,6 +350,8 @@ export default async function NotionMarkdown(props: Props) {
               height={Number(height)}
               placeholder="blur"
               blurDataURL={placeholder || 'data:image/png;base64'}
+              quality={30}
+              unoptimized={unoptimized}
             />
           );
         },

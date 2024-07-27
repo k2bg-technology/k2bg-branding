@@ -62,6 +62,9 @@ export async function ArticleHeading(props: Props) {
             sizes="100%"
             placeholder="blur"
             blurDataURL={placeholder}
+            priority
+            unoptimized={article.imageExtension === '.gif'}
+            quality={30}
           />
         )}
       </BlogCard.Media>

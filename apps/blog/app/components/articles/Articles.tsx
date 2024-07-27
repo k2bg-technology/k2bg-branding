@@ -34,6 +34,8 @@ export async function Articles(props: Props) {
                   sizes="100%"
                   placeholder="blur"
                   blurDataURL={placeHolders[article.id]}
+                  unoptimized={article.imageExtension === '.gif'}
+                  quality={30}
                 />
               </BlogCard.Media>
             </Link>
