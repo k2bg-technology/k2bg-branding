@@ -32,6 +32,11 @@ const config = {
         hostname: '**.cdninstagram.com',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+      },
     ],
   },
   webpack(config) {

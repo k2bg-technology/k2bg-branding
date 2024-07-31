@@ -22,7 +22,10 @@
         "NOTION_CONCEPT_PAGE_ID",
         "NEXT_PUBLIC_X_TIMELINE_URL",
         "INSTAGRAM_LONG_ACCESS_TOKEN",
-        "FORMSPREE_FORM_ACTION_URL"
+        "FORMSPREE_FORM_ACTION_URL",
+        "CLOUDINARY_CLOUD_NAME",
+        "CLOUDINARY_API_KEY",
+        "CLOUDINARY_API_SECRET"
       ]
     },
     "start": {},
