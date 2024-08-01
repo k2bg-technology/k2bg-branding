@@ -20,11 +20,15 @@ export async function PageHeading(props: Props) {
 
   if (!article.image) throw new Error('No image found');
 
+  const publicId = article.image?.split('/').at(4);
+
+  if (!publicId) throw new Error('publicId Not found');
+
   await new Cloudinary.Uploader().uploadImage(article.image, {
-    public_id: article.id,
+    public_id: publicId,
   });
 
-  const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(article.id, {
+  const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(publicId, {
     fetch_format: 'auto',
     quality: 'auto',
   });

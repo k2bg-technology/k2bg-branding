@@ -21,6 +21,7 @@ import Notion from '../../modules/data-access/notion';
 import Affiliate from '../../modules/domain/affiliate';
 import Media from '../../modules/domain/media';
 import DataType from '../../modules/domain/data-type';
+import Cloudinary from '../../modules/data-access/cloudinary';
 
 const getArticle = async (pageId: string) => {
   const { renderToString } = await import('react-dom/server');
@@ -39,14 +40,30 @@ const getArticle = async (pageId: string) => {
       try {
         const mediaImage = new Media.Image(page);
 
+        if (!mediaImage.file) throw new Error('No image found');
+
+        const publicId = mediaImage.file?.split('/').at(4);
+
+        if (!publicId) throw new Error('publicId Not found');
+
+        await new Cloudinary.Uploader().uploadImage(mediaImage.file, {
+          public_id: publicId,
+        });
+
+        const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
+          publicId,
+          {
+            fetch_format: 'auto',
+            quality: 'auto',
+          }
+        );
+
         return renderToString(
           <div className="mt-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
             <ImageViewer
               name={mediaImage.name}
               url={mediaImage.url}
-              // @ts-expect-error link_to_page defined in the block
-              file={`/api/notion/image/${block.link_to_page.page_id}`}
+              file={optimizedUrl}
               width={mediaImage.width}
               height={mediaImage.height}
               placeholder={await mediaImage.placeholder}
@@ -112,13 +129,30 @@ const getArticle = async (pageId: string) => {
       try {
         const bannerAffiliate = new Affiliate.Banner(page);
 
+        if (!bannerAffiliate.imageUrl) throw new Error('No image found');
+
+        const publicId = bannerAffiliate.imageUrl?.split('/').at(4);
+
+        if (!publicId) throw new Error('publicId Not found');
+
+        await new Cloudinary.Uploader().uploadImage(bannerAffiliate.imageUrl, {
+          public_id: publicId,
+        });
+
+        const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
+          publicId,
+          {
+            fetch_format: 'auto',
+            quality: 'auto',
+          }
+        );
+
         return renderToString(
           <div className="mt-8">
             <BannerPromotion
               linkText={bannerAffiliate.linkText}
               linkUrl={bannerAffiliate.linkUrl}
-              // @ts-expect-error link_to_page defined in the block
-              imageUrl={`/api/notion/image/${block.link_to_page.page_id}`}
+              imageUrl={optimizedUrl}
               imageWidth={bannerAffiliate.imageWidth}
               imageHeight={bannerAffiliate.imageHeight}
               imagePlaceholder={await bannerAffiliate.imagePlaceholder}
@@ -133,6 +167,27 @@ const getArticle = async (pageId: string) => {
     if (dataType === 'affiliateProduct') {
       try {
         const productAffiliate = new Affiliate.Product(page);
+
+        if (!productAffiliate.imageFile) throw new Error('No image found');
+
+        const publicId = productAffiliate.imageFile?.split('/').at(4);
+
+        if (!publicId) throw new Error('publicId Not found');
+
+        await new Cloudinary.Uploader().uploadImage(
+          productAffiliate.imageFile,
+          {
+            public_id: publicId,
+          }
+        );
+
+        const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
+          publicId,
+          {
+            fetch_format: 'auto',
+            quality: 'auto',
+          }
+        );
 
         const providers = await Promise.all(
           productAffiliate.subProviders.map(async (subProvider) => {
@@ -153,8 +208,7 @@ const getArticle = async (pageId: string) => {
             <ProductPromotion
               linkText={productAffiliate.linkText}
               linkUrl={productAffiliate.linkUrl}
-              // @ts-expect-error link_to_page defined in the block
-              imageUrl={`/api/notion/image/${block.link_to_page.page_id}`}
+              imageUrl={optimizedUrl}
               imageWidth={productAffiliate.imageWidth}
               imageHeight={productAffiliate.imageHeight}
               providers={[
