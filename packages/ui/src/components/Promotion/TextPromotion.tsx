@@ -1,13 +1,15 @@
-interface TextPromotionProps {
+import { HTMLAttributes } from 'react';
+
+interface TextPromotionProps extends HTMLAttributes<HTMLAnchorElement> {
   linkText: string;
   linkUrl: string;
 }
 
 export default function TextPromotion(props: TextPromotionProps) {
-  const { linkText, linkUrl } = props;
+  const { linkText, linkUrl, ...rest } = props;
 
   return (
-    <a href={linkUrl} target="blank" rel="noopener nofollow">
+    <a {...rest} href={linkUrl} target="blank" rel="noopener nofollow">
       {linkText}
     </a>
   );

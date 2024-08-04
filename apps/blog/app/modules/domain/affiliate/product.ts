@@ -52,4 +52,10 @@ export class Product extends Core implements AffiliateProduction {
 
     throw new Error('Product Affiliate image height is required');
   }
+
+  getOptimizedUrl(
+    optimizeFunction: (id: string, file: string) => Promise<string> | string
+  ) {
+    return optimizeFunction(this.id, this.imageFile);
+  }
 }

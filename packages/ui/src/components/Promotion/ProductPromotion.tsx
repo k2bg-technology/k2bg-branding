@@ -1,10 +1,12 @@
+import { HTMLAttributes } from 'react';
+
 interface Provider {
   linkText: string;
   linkUrl: string;
   color: string;
 }
 
-interface ProductPromotionProps {
+interface ProductPromotionProps extends HTMLAttributes<HTMLDivElement> {
   linkText: string;
   linkUrl: string;
   imageUrl: string;
@@ -23,10 +25,14 @@ export default function ProductPromotion(props: ProductPromotionProps) {
     imageHeight,
     providers,
     imagePlaceholder,
+    ...rest
   } = props;
 
   return (
-    <div className="flex gap-6 p-8 border-solid border-4 border-base-white">
+    <div
+      {...rest}
+      className="flex gap-6 p-8 border-solid border-4 border-base-white"
+    >
       <a href={linkUrl} target="_blank" rel="noopener nofollow">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

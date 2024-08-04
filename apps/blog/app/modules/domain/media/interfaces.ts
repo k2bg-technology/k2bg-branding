@@ -16,6 +16,7 @@ export interface MediaImage extends MediaCore {
 export interface MediaVideo extends MediaCore {}
 
 export interface MediaData {
+  id: string;
   getTitle: (propertyName: string) => string | undefined;
   getRichText: (propertyName: string) => string | undefined;
   getNumber: (propertyName: string) => number | undefined;

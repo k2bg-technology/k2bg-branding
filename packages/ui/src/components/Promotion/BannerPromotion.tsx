@@ -1,4 +1,6 @@
-interface BannerPromotionProps {
+import { HTMLAttributes } from 'react';
+
+interface BannerPromotionProps extends HTMLAttributes<HTMLAnchorElement> {
   linkText: string;
   linkUrl: string;
   imageUrl: string;
@@ -15,10 +17,12 @@ export default function BannerPromotion(props: BannerPromotionProps) {
     imageWidth,
     imageHeight,
     imagePlaceholder,
+    ...rest
   } = props;
 
   return (
     <a
+      {...rest}
       href={linkUrl}
       target="_blank"
       rel="noopener nofollow"

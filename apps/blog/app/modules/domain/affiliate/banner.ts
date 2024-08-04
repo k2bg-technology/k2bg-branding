@@ -30,4 +30,10 @@ export class Banner extends Core implements AffiliateBanner {
 
     throw new Error('Banner Affiliate image height is required');
   }
+
+  getOptimizedUrl(
+    optimizeFunction: (id: string, url: string) => Promise<string> | string
+  ) {
+    return optimizeFunction(this.id, this.imageUrl);
+  }
 }

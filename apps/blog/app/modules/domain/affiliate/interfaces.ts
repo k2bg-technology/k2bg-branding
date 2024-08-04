@@ -25,6 +25,7 @@ export interface AffiliateProduction extends AffiliateCore {
 }
 
 export interface AffiliateData {
+  id: string;
   getTitle: (propertyName: string) => string | undefined;
   getRichText: (propertyName: string) => string | undefined;
   getNumber: (propertyName: string) => number | undefined;

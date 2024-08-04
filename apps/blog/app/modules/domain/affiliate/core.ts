@@ -4,6 +4,10 @@ export class Core implements AffiliateCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(protected data: AffiliateData) {}
 
+  get id() {
+    return this.data.id;
+  }
+
   get name() {
     const name = this.data.getTitle('name');
 

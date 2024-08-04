@@ -11,4 +11,12 @@ export class Image extends Core implements MediaImage {
   get extension() {
     return getExtensionFromUrl(this.file || this.url || '');
   }
+
+  getOptimizedUrl(
+    optimizeFunction: (id: string, file: string) => Promise<string> | string
+  ) {
+    if (!this.file) return;
+
+    return optimizeFunction(this.id, this.file);
+  }
 }
