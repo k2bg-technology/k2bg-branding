@@ -6,6 +6,8 @@ import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../components/article-heading/ArticleHeading';
 
+export const revalidate = 3600;
+
 export async function generateStaticParams() {
   const database = await new Notion.Fetcher().fetchDatabase({
     filter: {
