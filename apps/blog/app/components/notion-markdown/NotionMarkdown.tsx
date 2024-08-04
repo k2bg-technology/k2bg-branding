@@ -29,211 +29,251 @@ const getArticle = async (pageId: string) => {
   const notionFetcher = new Notion.Fetcher();
   const n2m = new N2m();
 
-  n2m.setCustomTransformer('link_to_page', async (block) => {
-    const page = new Notion.Page(
-      // @ts-expect-error link_to_page defined in the block
-      await notionFetcher.fetchPage(block.link_to_page.page_id)
-    );
-    const dataType = new DataType.Core(page).name;
+  n2m.setCustomTransformer('link_to_page', (block) => {
+    if (!('link_to_page' in block && 'page_id' in block.link_to_page))
+      return false;
 
-    if (dataType === 'mediaImage') {
-      try {
-        const mediaImage = new Media.Image(page);
-
-        if (!mediaImage.file) throw new Error('No image found');
-
-        const publicId = mediaImage.file?.split('/').at(4);
-
-        if (!publicId) throw new Error('publicId Not found');
-
-        await new Cloudinary.Uploader().uploadImage(mediaImage.file, {
-          public_id: publicId,
-        });
-
-        const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
-          publicId,
-          {
-            fetch_format: 'auto',
-            quality: 'auto',
-          }
-        );
-
-        return renderToString(
-          <div className="mt-4">
-            <ImageViewer
-              name={mediaImage.name}
-              url={mediaImage.url}
-              file={optimizedUrl}
-              width={mediaImage.width}
-              height={mediaImage.height}
-              placeholder={await mediaImage.placeholder}
-              unoptoinized={mediaImage.extension === '.gif'}
-            />
-          </div>
-        );
-      } catch (error) {
-        return '';
-      }
-    }
-
-    if (dataType === 'mediaVideo') {
-      try {
-        const mediaVideo = new Media.Video(page);
-
-        if (mediaVideo.url) {
-          return renderToString(
-            <div className="flex justify-center mt-8">
-              <VideoStreamingPlayer
-                url={mediaVideo.url}
-                width={mediaVideo.width}
-                height={mediaVideo.height}
-              />
-            </div>
-          );
-        }
-
-        if (mediaVideo.file) {
-          return renderToString(
-            <div className="flex justify-center mt-8">
-              <VideoFilePlayer
-                file={mediaVideo.file}
-                width={mediaVideo.width}
-                height={mediaVideo.height}
-              />
-            </div>
-          );
-        }
-      } catch (error) {
-        return '';
-      }
-    }
-
-    if (dataType === 'affiliateText') {
-      try {
-        const textAffiliate = new Affiliate.Text(page);
-
-        return renderToString(
-          <div className="mt-8">
-            <TextPromotion
-              linkText={textAffiliate.linkText}
-              linkUrl={textAffiliate.linkUrl}
-            />
-          </div>
-        );
-      } catch (error) {
-        return '';
-      }
-    }
-
-    if (dataType === 'affiliateBanner') {
-      try {
-        const bannerAffiliate = new Affiliate.Banner(page);
-
-        if (!bannerAffiliate.imageUrl) throw new Error('No image found');
-
-        const publicId = bannerAffiliate.imageUrl?.split('/').at(4);
-
-        if (!publicId) throw new Error('publicId Not found');
-
-        await new Cloudinary.Uploader().uploadImage(bannerAffiliate.imageUrl, {
-          public_id: publicId,
-        });
-
-        const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
-          publicId,
-          {
-            fetch_format: 'auto',
-            quality: 'auto',
-          }
-        );
-
-        return renderToString(
-          <div className="mt-8">
-            <BannerPromotion
-              linkText={bannerAffiliate.linkText}
-              linkUrl={bannerAffiliate.linkUrl}
-              imageUrl={optimizedUrl}
-              imageWidth={bannerAffiliate.imageWidth}
-              imageHeight={bannerAffiliate.imageHeight}
-              imagePlaceholder={await bannerAffiliate.imagePlaceholder}
-            />
-          </div>
-        );
-      } catch (error) {
-        return '';
-      }
-    }
-
-    if (dataType === 'affiliateProduct') {
-      try {
-        const productAffiliate = new Affiliate.Product(page);
-
-        if (!productAffiliate.imageFile) throw new Error('No image found');
-
-        const publicId = productAffiliate.imageFile?.split('/').at(4);
-
-        if (!publicId) throw new Error('publicId Not found');
-
-        await new Cloudinary.Uploader().uploadImage(
-          productAffiliate.imageFile,
-          {
-            public_id: publicId,
-          }
-        );
-
-        const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
-          publicId,
-          {
-            fetch_format: 'auto',
-            quality: 'auto',
-          }
-        );
-
-        const providers = await Promise.all(
-          productAffiliate.subProviders.map(async (subProvider) => {
-            const provider = new Affiliate.SubProvider(
-              new Notion.Page(await notionFetcher.fetchPage(subProvider))
-            );
-
-            return {
-              linkText: provider.provider,
-              linkUrl: provider.linkUrl,
-              color: provider.providerColor,
-            };
-          })
-        );
-
-        return renderToString(
-          <div className="mt-8">
-            <ProductPromotion
-              linkText={productAffiliate.linkText}
-              linkUrl={productAffiliate.linkUrl}
-              imageUrl={optimizedUrl}
-              imageWidth={productAffiliate.imageWidth}
-              imageHeight={productAffiliate.imageHeight}
-              providers={[
-                {
-                  linkText: productAffiliate.provider,
-                  linkUrl: productAffiliate.linkUrl,
-                  color: productAffiliate.providerColor,
-                },
-                ...providers,
-              ]}
-              imagePlaceholder={await productAffiliate.imagePlaceholder}
-            />
-          </div>
-        );
-      } catch (error) {
-        return '';
-      }
-    }
-
-    return '';
+    return `<LinkToPage>${block.link_to_page.page_id}</LinkToPage>`;
   });
 
-  const markdownString = await n2m.fetchNotionPageAndConvertMarkdownString(
-    pageId
+  const markdownStringWithoutAssets =
+    await n2m.fetchNotionPageAndConvertMarkdownString(pageId);
+
+  const regex = /<LinkToPage>([^<]+)<\/LinkToPage>/g;
+  const matches = Array.from(
+    markdownStringWithoutAssets.matchAll(regex),
+    (m) => m[1]
   );
+
+  const assets = await Promise.all(
+    matches.flatMap(async (pageId) => {
+      const page = new Notion.Page(await notionFetcher.fetchPage(pageId));
+
+      const dataType = new DataType.Core(page).name;
+
+      if (dataType === 'mediaImage') {
+        try {
+          const mediaImage = new Media.Image(page);
+
+          if (!mediaImage.file) throw new Error('No image found');
+
+          const publicId = mediaImage.file?.split('/').at(4);
+
+          if (!publicId) throw new Error('publicId Not found');
+
+          await new Cloudinary.Uploader().uploadImage(mediaImage.file, {
+            public_id: publicId,
+          });
+
+          const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
+            publicId,
+            {
+              fetch_format: 'auto',
+              quality: 'auto',
+            }
+          );
+
+          return [
+            pageId,
+            renderToString(
+              <div className="mt-4">
+                <ImageViewer
+                  name={mediaImage.name}
+                  url={mediaImage.url}
+                  file={optimizedUrl}
+                  width={mediaImage.width}
+                  height={mediaImage.height}
+                  placeholder={await mediaImage.placeholder}
+                  unoptoinized={mediaImage.extension === '.gif'}
+                />
+              </div>
+            ),
+          ];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      if (dataType === 'mediaVideo') {
+        try {
+          const mediaVideo = new Media.Video(page);
+
+          if (mediaVideo.url) {
+            return [
+              pageId,
+              renderToString(
+                <div className="flex justify-center mt-8">
+                  <VideoStreamingPlayer
+                    url={mediaVideo.url}
+                    width={mediaVideo.width}
+                    height={mediaVideo.height}
+                  />
+                </div>
+              ),
+            ];
+          }
+
+          if (mediaVideo.file) {
+            return [
+              pageId,
+              renderToString(
+                <div className="flex justify-center mt-8">
+                  <VideoFilePlayer
+                    file={mediaVideo.file}
+                    width={mediaVideo.width}
+                    height={mediaVideo.height}
+                  />
+                </div>
+              ),
+            ];
+          }
+        } catch (error) {
+          return [];
+        }
+      }
+
+      if (dataType === 'affiliateText') {
+        try {
+          const textAffiliate = new Affiliate.Text(page);
+
+          return renderToString(
+            <div className="mt-8">
+              <TextPromotion
+                linkText={textAffiliate.linkText}
+                linkUrl={textAffiliate.linkUrl}
+              />
+            </div>
+          );
+        } catch (error) {
+          return [];
+        }
+      }
+
+      if (dataType === 'affiliateBanner') {
+        try {
+          const bannerAffiliate = new Affiliate.Banner(page);
+
+          if (!bannerAffiliate.imageUrl) throw new Error('No image found');
+
+          const publicId = bannerAffiliate.imageUrl?.split('/').at(4);
+
+          if (!publicId) throw new Error('publicId Not found');
+
+          await new Cloudinary.Uploader().uploadImage(
+            bannerAffiliate.imageUrl,
+            {
+              public_id: publicId,
+            }
+          );
+
+          const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
+            publicId,
+            {
+              fetch_format: 'auto',
+              quality: 'auto',
+            }
+          );
+
+          return [
+            pageId,
+            renderToString(
+              <div className="mt-8">
+                <BannerPromotion
+                  linkText={bannerAffiliate.linkText}
+                  linkUrl={bannerAffiliate.linkUrl}
+                  imageUrl={optimizedUrl}
+                  imageWidth={bannerAffiliate.imageWidth}
+                  imageHeight={bannerAffiliate.imageHeight}
+                  imagePlaceholder={await bannerAffiliate.imagePlaceholder}
+                />
+              </div>
+            ),
+          ];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      if (dataType === 'affiliateProduct') {
+        try {
+          const productAffiliate = new Affiliate.Product(page);
+
+          if (!productAffiliate.imageFile) throw new Error('No image found');
+
+          const publicId = productAffiliate.imageFile?.split('/').at(4);
+
+          if (!publicId) throw new Error('publicId Not found');
+
+          await new Cloudinary.Uploader().uploadImage(
+            productAffiliate.imageFile,
+            {
+              public_id: publicId,
+            }
+          );
+
+          const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(
+            publicId,
+            {
+              fetch_format: 'auto',
+              quality: 'auto',
+            }
+          );
+
+          const providers = await Promise.all(
+            productAffiliate.subProviders.map(async (subProvider) => {
+              const provider = new Affiliate.SubProvider(
+                new Notion.Page(await notionFetcher.fetchPage(subProvider))
+              );
+
+              return {
+                linkText: provider.provider,
+                linkUrl: provider.linkUrl,
+                color: provider.providerColor,
+              };
+            })
+          );
+
+          return [
+            pageId,
+            renderToString(
+              <div className="mt-8">
+                <ProductPromotion
+                  linkText={productAffiliate.linkText}
+                  linkUrl={productAffiliate.linkUrl}
+                  imageUrl={optimizedUrl}
+                  imageWidth={productAffiliate.imageWidth}
+                  imageHeight={productAffiliate.imageHeight}
+                  providers={[
+                    {
+                      linkText: productAffiliate.provider,
+                      linkUrl: productAffiliate.linkUrl,
+                      color: productAffiliate.providerColor,
+                    },
+                    ...providers,
+                  ]}
+                  imagePlaceholder={await productAffiliate.imagePlaceholder}
+                />
+              </div>
+            ),
+          ];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      return [];
+    })
+  );
+
+  const markdownString = markdownStringWithoutAssets.replace(regex, (_, p1) => {
+    return (
+      assets.find((asset) => {
+        if (asset[0] !== p1) return false;
+
+        return true;
+      })?.[1] || ''
+    );
+  });
 
   return {
     markdownString,
