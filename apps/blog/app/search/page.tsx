@@ -5,6 +5,7 @@ import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
 import Pagination from '../components/pagination/Pagination';
 import { Articles } from '../components/articles/Articles';
+import Cloudinary from '../modules/data-access/cloudinary';
 
 export default async function Page({
   searchParams,
@@ -74,9 +75,24 @@ export default async function Page({
       articles.all
     );
 
+    const optimizedImages = await Article.List.optimizeImage(
+      articles.all,
+      async (id, file) => {
+        await new Cloudinary.Uploader().uploadImage(file, {
+          public_id: id,
+        });
+
+        return new Cloudinary.Fetcher().getImageUrl(id, {
+          fetch_format: 'auto',
+          quality: 'auto',
+        });
+      }
+    );
+
     return {
       articles,
       placeHolders,
+      optimizedImages,
     };
   }
 

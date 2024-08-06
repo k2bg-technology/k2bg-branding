@@ -63,4 +63,12 @@ export class Core implements ArticleCore {
 
     return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
   }
+
+  async getOptimizedUrl(
+    optimizeFunction: (id: string, file: string) => Promise<string> | string
+  ) {
+    if (!this.image) return;
+
+    return optimizeFunction(this.id, this.image);
+  }
 }

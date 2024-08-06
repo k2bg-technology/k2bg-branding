@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
 import Sidebar from '../components/sidebar/Sidebar';
+import Cloudinary from '../modules/data-access/cloudinary';
 
 const fetchDatabase = async () => {
   const database = await new Notion.Fetcher().fetchDatabase({
@@ -40,6 +41,24 @@ export default async function Page() {
     ...articles.featuresRecently,
   ]);
 
+  const optimizedImages = await Article.List.optimizeImage(
+    [
+      articles.featureLatest,
+      ...articles.featuresPreviously,
+      ...articles.featuresRecently,
+    ],
+    async (id, file) => {
+      await new Cloudinary.Uploader().uploadImage(file, {
+        public_id: id,
+      });
+
+      return new Cloudinary.Fetcher().getImageUrl(id, {
+        fetch_format: 'auto',
+        quality: 'auto',
+      });
+    }
+  );
+
   return (
     <>
       <div className="grid grid-cols-[subgrid] col-span-full border-b-2 py-12 border-b-slate-100">
@@ -50,7 +69,7 @@ export default async function Page() {
                 <BlogCard.Media className="relative w-full h-[30rem]">
                   <Image
                     alt="media"
-                    src={`/api/notion/image/${articles.featureLatest.id}`}
+                    src={optimizedImages[articles.featureLatest.id]}
                     className="absolute aspect-square h-full w-full object-cover"
                     fill
                     sizes="100%"
@@ -110,7 +129,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
                     <Image
                       alt="media"
-                      src={`/api/notion/image/${article.id}`}
+                      src={optimizedImages[article.id]}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       placeholder="blur"
@@ -172,7 +191,7 @@ export default async function Page() {
                     <BlogCard.Media className="relative w-full h-[26.5rem]">
                       <Image
                         alt="media"
-                        src={`/api/notion/image/${article.id}`}
+                        src={optimizedImages[article.id]}
                         className="aspect-square h-full w-full object-cover"
                         fill
                         sizes="100%"
@@ -227,7 +246,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative w-full h-[26.5rem]">
                     <Image
                       alt="media"
-                      src={`/api/notion/image/${article.id}`}
+                      src={optimizedImages[article.id]}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"

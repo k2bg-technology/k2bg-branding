@@ -5,6 +5,7 @@ import Notion from '../../modules/data-access/notion';
 import Pagination from '../../components/pagination/Pagination';
 import { Articles } from '../../components/articles/Articles';
 import Article from '../../modules/domain/article';
+import Cloudinary from '../../modules/data-access/cloudinary';
 
 export async function generateStaticParams() {
   return ['engineering', 'design', 'data-science', 'life-style'].map(
@@ -82,9 +83,24 @@ export default async function Page({
       articles.all
     );
 
+    const optimizedImages = await Article.List.optimizeImage(
+      articles.all,
+      async (id, file) => {
+        await new Cloudinary.Uploader().uploadImage(file, {
+          public_id: id,
+        });
+
+        return new Cloudinary.Fetcher().getImageUrl(id, {
+          fetch_format: 'auto',
+          quality: 'auto',
+        });
+      }
+    );
+
     return {
       articles,
       placeHolders,
+      optimizedImages,
     };
   }
 

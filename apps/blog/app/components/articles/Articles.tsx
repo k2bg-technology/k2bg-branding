@@ -11,13 +11,17 @@ interface Props {
       InstanceType<(typeof Article)['Single']>['id'],
       string
     >;
+    optimizedImages: Record<
+      InstanceType<(typeof Article)['Single']>['id'],
+      string
+    >;
   }>;
 }
 
 export async function Articles(props: Props) {
   const { fetchArticles } = props;
 
-  const { articles, placeHolders } = await fetchArticles();
+  const { articles, placeHolders, optimizedImages } = await fetchArticles();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-12 place-content-start">
@@ -28,7 +32,7 @@ export async function Articles(props: Props) {
               <BlogCard.Media className="relative w-full h-[26.5rem]">
                 <Image
                   alt="media"
-                  src={`/api/notion/image/${article.id}`}
+                  src={optimizedImages[article.id]}
                   className="aspect-square h-full w-full object-cover"
                   fill
                   sizes="100%"

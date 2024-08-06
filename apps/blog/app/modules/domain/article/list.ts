@@ -45,4 +45,15 @@ export class List implements ArticleList {
       return { ...(await prev), [article.id]: placeholder };
     }, {});
   }
+
+  static async optimizeImage(
+    articles: Single[],
+    optimizeFunction: (id: string, file: string) => Promise<string> | string
+  ): Promise<Record<Single['id'], string>> {
+    return articles.reduce(async (prev, article) => {
+      const optimizedImage = await article.getOptimizedUrl(optimizeFunction);
+
+      return { ...(await prev), [article.id]: optimizedImage };
+    }, {});
+  }
 }
