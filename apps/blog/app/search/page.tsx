@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { BlogCard } from 'ui';
 
 import Notion from '../modules/data-access/notion';
 import Article from '../modules/domain/article';
@@ -44,8 +43,6 @@ export default async function Page({
       direction: 'descending',
     } as const,
   ];
-
-  const PAGE_SIZE = 6;
 
   const databasePagination = await new Notion.Fetcher()
     .fetchDatabase({
@@ -99,6 +96,9 @@ export default async function Page({
     };
   }
 
+  const totalPageCount = Object.keys(databasePagination).length;
+  const showArticles = totalPageCount > 0;
+
   return (
     <>
       <h1 className="col-span-full text-header-1 font-bold capitalize py-4">
@@ -106,11 +106,19 @@ export default async function Page({
       </h1>
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>
         <div className="grid grid-cols-[subgrid] col-span-full py-12">
-          <Articles fetchArticles={fetchArticles} />
+          {showArticles ? (
+            <Articles fetchArticles={fetchArticles} />
+          ) : (
+            <div className="grid grid-cols-1 col-span-full">
+              検索キーワードに一致する記事は見つかりませんでした。
+            </div>
+          )}
         </div>
-        <div className="flex justify-center grid-cols-[subgrid] col-span-full py-12">
-          <Pagination count={Object.keys(databasePagination).length} />
-        </div>
+        {showArticles && (
+          <div className="flex justify-center grid-cols-[subgrid] col-span-full py-12">
+            <Pagination count={totalPageCount} />
+          </div>
+        )}
       </Suspense>
     </>
   );
