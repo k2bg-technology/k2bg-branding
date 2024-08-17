@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
-import { BlogCard } from 'ui';
 
 import Notion from '../../modules/data-access/notion';
 import Pagination from '../../components/pagination/Pagination';
 import { Articles } from '../../components/articles/Articles';
+import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 import Article from '../../modules/domain/article';
 import Cloudinary from '../../modules/data-access/cloudinary';
 
@@ -109,33 +109,7 @@ export default async function Page({
       <h1 className="col-span-full text-header-1 font-bold capitalize py-4">
         {params.category}
       </h1>
-      <Suspense
-        key={currentPage}
-        fallback={
-          <div className="grid grid-cols-[subgrid] col-span-full py-12">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-12 place-content-start">
-              <BlogCard className="flex-col gap-6">
-                <BlogCard.Skelton />
-              </BlogCard>
-              <BlogCard className="flex-col gap-6">
-                <BlogCard.Skelton />
-              </BlogCard>
-              <BlogCard className="flex-col gap-6">
-                <BlogCard.Skelton />
-              </BlogCard>
-              <BlogCard className="flex-col gap-6">
-                <BlogCard.Skelton />
-              </BlogCard>
-              <BlogCard className="flex-col gap-6">
-                <BlogCard.Skelton />
-              </BlogCard>
-              <BlogCard className="flex-col gap-6">
-                <BlogCard.Skelton />
-              </BlogCard>
-            </div>
-          </div>
-        }
-      >
+      <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
         <div className="grid grid-cols-[subgrid] col-span-full py-12">
           <Articles fetchArticles={fetchArticles} />
         </div>

@@ -10,3 +10,4 @@ export * from './src/components/Promotion';
 export * from './src/components/Media';
 export { default as Pagination } from './src/components/Pagination';
 export { default as Form } from './src/components/Form';
+export { default as Skelton } from './src/components/Skelton';

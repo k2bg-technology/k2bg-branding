@@ -5,6 +5,8 @@ import Article from '../../../modules/domain/article';
 import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../components/article-heading/ArticleHeading';
+import { ArticleHeadingSkelton } from '../../../components/article-heading/ArticleHeadingSkelton';
+import { NotionMarkdownSkelton } from '../../../components/notion-markdown/NotionMarkdownSkelton';
 
 export const revalidate = 3600;
 
@@ -45,13 +47,13 @@ export default async function Page({
   return (
     <>
       <div className="grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
-        <Suspense fallback={<p>Loading...</p>}>
+        <Suspense fallback={<ArticleHeadingSkelton />}>
           <ArticleHeading articleId={params.id} />
         </Suspense>
       </div>
       <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
         <div className="col-start-1 col-end-10">
-          <Suspense fallback={<p>Loading...</p>}>
+          <Suspense fallback={<NotionMarkdownSkelton />}>
             <NotionMarkdown articleId={params.id} />
           </Suspense>
         </div>
