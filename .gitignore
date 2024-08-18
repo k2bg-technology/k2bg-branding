@@ -38,3 +38,4 @@ yarn-error.log*
 # storybook
 storybook-static
 build-storybook.log
+chromatic.config.json

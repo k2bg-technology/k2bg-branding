@@ -260,6 +260,9 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.22.11
         version: 7.24.7(@babel/core@7.24.9)
+      '@chromatic-com/storybook':
+        specifier: ^1.6.1
+        version: 1.6.1(react@18.3.1)
       '@storybook/addon-essentials':
         specifier: ^8.0.0
         version: 8.2.6(storybook@8.2.6)
@@ -1761,6 +1764,21 @@ packages:
 
   /@base2/pretty-print-object@1.0.1:
     resolution: {integrity: sha512-4iri8i1AqYHJE2DstZYkyEprg6Pq6sKx3xn5FpySk9sNhH7qN2LLlHJCfDTZRILNwQNPD7mATWM0TBui7uC1pA==}
+    dev: true
+
+  /@chromatic-com/storybook@1.6.1(react@18.3.1):
+    resolution: {integrity: sha512-x1x1NB3j4xpfeSWKr96emc+7ZvfsvH+/WVb3XCjkB24PPbT8VZXb3mJSAQMrSzuQ8+eQE9kDogYHH9Fj3tb/Cw==}
+    engines: {node: '>=16.0.0', yarn: '>=1.22.18'}
+    dependencies:
+      chromatic: 11.7.1
+      filesize: 10.1.4
+      jsonfile: 6.1.0
+      react-confetti: 6.1.0(react@18.3.1)
+      strip-ansi: 7.1.0
+    transitivePeerDependencies:
+      - '@chromatic-com/cypress'
+      - '@chromatic-com/playwright'
+      - react
     dev: true
 
   /@cspotcode/source-map-support@0.8.1:
@@ -8451,6 +8469,11 @@ packages:
     dependencies:
       fs-extra: 11.1.1
       ramda: 0.29.0
+    dev: true
+
+  /filesize@10.1.4:
+    resolution: {integrity: sha512-ryBwPIIeErmxgPnm6cbESAzXjuEFubs+yKYLBZvg3CaiNcmkJChoOGcBSrZ6IwkMwPABwPpVXE6IlNdGJJrvEg==}
+    engines: {node: '>= 10.4.0'}
     dev: true
 
   /fill-range@7.1.1:
