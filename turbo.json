@@ -36,6 +36,15 @@
       "persistent": true
     },
     "storybook": {},
+    "build-storybook": {},
+    "chromatic": {
+      "outputs": [
+        "storybook-static"
+      ],
+      "env": [
+        "CHROMATIC_PROJECT_TOKEN"
+      ]
+    },
     "generate:style": {}
   }
 }

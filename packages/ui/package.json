@@ -8,7 +8,8 @@
     "lint": "eslint \"**/*.ts*\"",
     "generate:component": "turbo gen react-component",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "chromatic --only-changed --exit-once-uploaded --storybook-config-dir .storybook --project-token $CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
@@ -39,6 +40,7 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.14",
+    "chromatic": "^11.7.1",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
     "eslint-plugin-storybook": "^0.6.13",
