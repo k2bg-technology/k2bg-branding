@@ -263,6 +263,9 @@ importers:
       '@chromatic-com/storybook':
         specifier: ^1.6.1
         version: 1.6.1(react@18.3.1)
+      '@storybook/addon-a11y':
+        specifier: ^8.2.9
+        version: 8.2.9(storybook@8.2.6)
       '@storybook/addon-essentials':
         specifier: ^8.0.0
         version: 8.2.6(storybook@8.2.6)
@@ -4152,6 +4155,16 @@ packages:
     engines: {node: '>=18'}
     dev: true
 
+  /@storybook/addon-a11y@8.2.9(storybook@8.2.6):
+    resolution: {integrity: sha512-9zm0Ecn2KUUKZbRsQM5l2KcQ8RHK6a9eqdQtOMjGagrdUvUstcf7XjBmV1W6PQE2Urj93ciz1cgx4T1AYQyKtA==}
+    peerDependencies:
+      storybook: ^8.2.9
+    dependencies:
+      '@storybook/addon-highlight': 8.2.9(storybook@8.2.6)
+      axe-core: 4.9.1
+      storybook: 8.2.6(@babel/preset-env@7.24.8)
+    dev: true
+
   /@storybook/addon-actions@8.2.6(storybook@8.2.6):
     resolution: {integrity: sha512-iCsf3V28/jJ95w2zd8aSvR4denoA2UYV3fpNCTGOURqICyKOG3cyVxvqKp8Hhcwn7trNOsK+HlL6q5gpv56ViA==}
     peerDependencies:
@@ -4234,6 +4247,15 @@ packages:
     resolution: {integrity: sha512-03cV9USsfP3bS4wYV06DYcIaGPfoheQe53Q0Jr1B2yJUVyIPKvmO2nGjLBsqzeL3Wl7vSfLQn0/dUdxCcbqLsw==}
     peerDependencies:
       storybook: ^8.2.6
+    dependencies:
+      '@storybook/global': 5.0.0
+      storybook: 8.2.6(@babel/preset-env@7.24.8)
+    dev: true
+
+  /@storybook/addon-highlight@8.2.9(storybook@8.2.6):
+    resolution: {integrity: sha512-qdcazeNQoo9QKIq+LJJZZXvFZoLn+i4uhbt1Uf9WtW6oU/c1qxORGVD7jc3zsxbQN9nROVPbJ76sfthogxeqWA==}
+    peerDependencies:
+      storybook: ^8.2.9
     dependencies:
       '@storybook/global': 5.0.0
       storybook: 8.2.6(@babel/preset-env@7.24.8)
