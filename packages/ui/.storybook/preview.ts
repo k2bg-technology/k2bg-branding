@@ -12,7 +12,7 @@ const preview: Preview = {
     },
     options: {
       storySort: {
-        order: ['guideline', 'foundations', 'components'],
+        order: ['guidelines', 'foundations', 'components'],
       },
     },
   },
