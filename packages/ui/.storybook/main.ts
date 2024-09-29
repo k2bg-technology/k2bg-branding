@@ -29,6 +29,7 @@ const config: StorybookConfig = {
   docs: {
     autodocs: 'tag',
   },
+  staticDirs: ['../public'],
   swc: () => ({
     jsc: {
       transform: {
