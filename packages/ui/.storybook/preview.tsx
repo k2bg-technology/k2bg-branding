@@ -88,6 +88,7 @@ const preview: Preview = {
     },
   },
   decorators: [withI18next],
+  tags: ['autodocs'],
 };
 
 export default preview;

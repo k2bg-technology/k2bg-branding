@@ -5,7 +5,6 @@ import Form from '..';
 
 const meta: Meta<typeof Form.Input> = {
   component: Form.Input,
-  tags: ['autodocs'],
 };
 
 export default meta;

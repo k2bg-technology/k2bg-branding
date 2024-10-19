@@ -7,7 +7,6 @@ const meta: Meta<typeof Form.HelperText> = {
   args: {
     children: '補足テキスト',
   },
-  tags: ['autodocs'],
 };
 
 export default meta;

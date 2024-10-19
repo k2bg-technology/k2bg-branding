@@ -7,7 +7,6 @@ import ImageViewer from './ImageViewer';
 const meta: Meta<typeof ImageViewer> = {
   component: ImageViewer,
   parameters: {},
-  tags: ['autodocs'],
 };
 
 export default meta;

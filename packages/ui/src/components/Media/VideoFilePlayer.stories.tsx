@@ -5,7 +5,6 @@ import VideoFilePlayer from './VideoFilePlayer';
 const meta: Meta<typeof VideoFilePlayer> = {
   component: VideoFilePlayer,
   parameters: {},
-  tags: ['autodocs'],
 };
 
 export default meta;

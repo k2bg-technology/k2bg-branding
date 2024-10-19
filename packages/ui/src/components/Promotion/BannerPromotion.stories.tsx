@@ -5,7 +5,6 @@ import BannerPromotion from './BannerPromotion';
 const meta: Meta<typeof BannerPromotion> = {
   component: BannerPromotion,
   parameters: {},
-  tags: ['autodocs'],
 };
 
 export default meta;

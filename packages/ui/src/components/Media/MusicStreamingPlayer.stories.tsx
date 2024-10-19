@@ -5,7 +5,6 @@ import MusicStreamingPlayer from './MusicStreamingPlayer';
 const meta: Meta<typeof MusicStreamingPlayer> = {
   component: MusicStreamingPlayer,
   parameters: {},
-  tags: ['autodocs'],
 };
 
 export default meta;
