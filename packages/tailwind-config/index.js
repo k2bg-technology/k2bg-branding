@@ -1,11 +1,11 @@
 /** @type {import('tailwindcss').Config} */
 
-/* eslint-disable @typescript-eslint/no-var-requires, import/no-unresolved */
+/* eslint-disable @typescript-eslint/no-var-requires, import/no-unresolved, import/no-extraneous-dependencies */
 const colors = require('tailwindcss/colors');
 
 const typography = require('./design-token/typography.json');
 const color = require('./design-token/color.json');
-/* eslint-enable @typescript-eslint/no-var-requires, import/no-unresolved */
+/* eslint-enable @typescript-eslint/no-var-requires, import/no-unresolved, import/no-extraneous-dependencies */
 
 const colorVariables = Object.keys(color).reduce(
   (prev, cur) => ({
@@ -68,6 +68,11 @@ module.exports = {
         'success-dark': colors.green[600],
         'brand-amazon': 'rgb(255 153 0)',
         'brand-rakuten': 'rgb(191 0 0)',
+      },
+      spacing: {
+        condensed: '0.25rem',
+        normal: '0.5rem',
+        spacious: '1rem',
       },
       animation: {
         slide: 'slide 0.8s ease-in 1',

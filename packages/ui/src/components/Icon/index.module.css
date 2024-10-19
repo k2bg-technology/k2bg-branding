@@ -1,7 +1,7 @@
 .icon {
   display: inline-block;
-  width: calc(var(--icon-width) / 10 * 1rem);
-  height: calc(var(--icon-height) / 10 * 1rem);
+  width: calc(var(--icon-width) / 16 * 1rem);
+  height: calc(var(--icon-height) / 16 * 1rem);
   background-color: var(--icon-color);
   mask-image: var(--image-url);
   mask-repeat: no-repeat;
