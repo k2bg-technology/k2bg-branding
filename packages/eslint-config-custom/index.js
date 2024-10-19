@@ -1,6 +1,5 @@
 module.exports = {
   extends: [
-    'turbo',
     'airbnb',
     'airbnb/hooks',
     'plugin:react/recommended',
