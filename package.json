@@ -9,7 +9,8 @@
     "storybook": "turbo run storybook",
     "build-storybook": "turbo run build-storybook",
     "chromatic": "turbo run chromatic",
-    "generate:style": "turbo run generate:style"
+    "generate:style": "turbo run generate:style",
+    "generate:component": "turbo run generate:component"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",

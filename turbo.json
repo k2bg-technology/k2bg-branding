@@ -45,6 +45,7 @@
         "CHROMATIC_PROJECT_TOKEN"
       ]
     },
-    "generate:style": {}
+    "generate:style": {},
+    "generate:component": {}
   }
 }

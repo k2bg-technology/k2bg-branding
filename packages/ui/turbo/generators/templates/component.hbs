@@ -1,13 +1,13 @@
-import * as React from "react";
+import React from 'react';
 
-interface Props {
-  children?: React.ReactNode;
-}
+export type Props = React.PropsWithChildren;
 
-export const {{ pascalCase name }} = ({ children }: Props) => {
+export default function {{ pascalCase name }} (props: Props) {
+  const { children, ...rest } = props;
+
   return (
-    <div>
-      <h1>{{ name }}</h1>
+    <div {...rest}>
+      <h1>{{ pascalCase name }}</h1>
       {children}
     </div>
   );
