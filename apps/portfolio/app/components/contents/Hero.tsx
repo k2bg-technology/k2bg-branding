@@ -11,7 +11,7 @@ export function Hero({ lng }: { lng: Language }) {
 
   return (
     <section>
-      <div className="grid grid-rows-[max(35rem)_1fr] grid-cols-full h-full md:grid-rows-1 md:grid-cols-[max(35rem)_max(80rem)]">
+      <div className="grid grid-rows-[max(22rem)_1fr] grid-cols-full h-full md:grid-rows-1 md:grid-cols-[max(22rem)_max(50rem)]">
         <div className="relative">
           <Image
             src="/images/hero.jpg"
@@ -20,7 +20,7 @@ export function Hero({ lng }: { lng: Language }) {
             className="object-cover"
           />
         </div>
-        <div className="flex flex-col gap-10 p-10 md:justify-center md:p-20">
+        <div className="flex flex-col gap-6 p-6 md:justify-center md:p-12">
           <hgroup className="flex flex-col gap-2 md:gap-0">
             <h1 className="text-header-1 leading-tight font-bold md:leading-header-1">
               {t('hero.corporateName')}
@@ -32,7 +32,7 @@ export function Hero({ lng }: { lng: Language }) {
               <strong>{t('hero.slogan')}</strong>
             </p>
           </hgroup>
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-spacious">
             <Trans i18nKey="hero.description">
               <p className="text-body-r-sm leading-body-r-sm">
                 <span className="font-bold" />

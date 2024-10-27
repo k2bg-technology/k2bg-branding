@@ -1,4 +1,5 @@
 @import 'tailwind-config/design-token/variables.css';
+@import 'ui/src/globals.css';
 
 @tailwind base;
 @tailwind components;
@@ -6,10 +7,10 @@
 
 @layer base {
   html {
-    @apply h-full text-[62.5%];
+    @apply w-full h-full;
   }
   body {
-    @apply h-full text-base-black font-original text-body-r-md;
+    @apply w-full h-full text-base-black font-original text-body-r-md;
   }
   input,
   button,
