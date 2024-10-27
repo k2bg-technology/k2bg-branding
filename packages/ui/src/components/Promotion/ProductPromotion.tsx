@@ -1,5 +1,7 @@
 import { HTMLAttributes } from 'react';
 
+import { Button } from '../Button';
+
 interface Provider {
   linkText: string;
   linkUrl: string;
@@ -31,7 +33,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
   return (
     <div
       {...rest}
-      className="flex gap-6 p-8 border-solid border-4 border-base-white"
+      className="flex gap-spacious p-spacious border-solid border-4 border-base-white"
     >
       <a href={linkUrl} target="_blank" rel="noopener nofollow">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -46,7 +48,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           aria-hidden="true"
         />
       </a>
-      <div className="flex flex-col gap-5 w-full">
+      <div className="flex flex-col gap-spacious w-full">
         <div>
           <a
             href={linkUrl}
@@ -56,18 +58,18 @@ export default function ProductPromotion(props: ProductPromotionProps) {
             {linkText}
           </a>
         </div>
-        <ul className="flex gap-5 list-none">
+        <ul className="flex gap-normal list-none">
           {providers?.map((provider) => (
             <li key={provider.linkText}>
-              <a
-                href={provider.linkUrl}
-                target="_blank"
-                rel="noopener nofollow"
-                className="inline-block transition-all rounded-md cursor-pointer px-4 py-4 text-body-r-sm text-center font-bold leading-none text-white hover:opacity-80"
-                style={{ backgroundColor: provider.color }}
-              >
-                {provider.linkText}
-              </a>
+              <Button asChild style={{ backgroundColor: provider.color }}>
+                <a
+                  href={provider.linkUrl}
+                  target="_blank"
+                  rel="noopener nofollow"
+                >
+                  {provider.linkText}
+                </a>
+              </Button>
             </li>
           ))}
         </ul>

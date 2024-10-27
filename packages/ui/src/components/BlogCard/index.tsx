@@ -1,4 +1,4 @@
-import Root from './BlogCard';
+import Root from './Root';
 import Content from './Content';
 import Media from './Media';
 import Skelton from './Skelton';

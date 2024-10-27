@@ -5,7 +5,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { twMerge } from '../../utils/extendTailwindMerge';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:border-opacity-50 hover:bg-opacity-10',
+  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:border-opacity-50 hover:bg-opacity-10',
   {
     variants: {
       variant: {
@@ -35,7 +35,7 @@ const buttonVariants = cva(
       {
         variant: 'default',
         color: 'main',
-        class: 'bg-main-default text-white hover:bg-opacity-90',
+        class: 'bg-main-default text-white hover:bg-main-default/90',
       },
       {
         variant: 'outline',
@@ -50,7 +50,7 @@ const buttonVariants = cva(
       {
         variant: 'default',
         color: 'accent',
-        class: 'bg-accent-default text-white hover:bg-opacity-90',
+        class: 'bg-accent-default text-white hover:bg-accent-default/90',
       },
       {
         variant: 'outline',
@@ -81,95 +81,92 @@ const buttonVariants = cva(
       {
         variant: 'default',
         color: 'error',
-        class: 'bg-error text-white hover:bg-opacity-90',
+        class: 'bg-error text-white hover:bg-error/90',
       },
       {
         variant: 'outline',
         color: 'error',
-        class: 'border-error text-error hover:bg-error hover:bg-opacity-10',
+        class: 'border-error text-error hover:bg-error/10',
       },
       {
         variant: 'ghost',
         color: 'error',
-        class: 'text-error hover:bg-error hover:bg-opacity-10',
+        class: 'text-error hover:bg-error/10',
       },
       {
         variant: 'default',
         color: 'warning',
-        class: 'bg-warning text-white hover:bg-opacity-90',
+        class: 'bg-warning text-white hover:bg-warning/90',
       },
       {
         variant: 'outline',
         color: 'warning',
-        class:
-          'border-warning text-warning hover:bg-warning hover:bg-opacity-10',
+        class: 'border-warning text-warning hover:bg-warning/10',
       },
       {
         variant: 'ghost',
         color: 'warning',
-        class: 'text-warning hover:bg-warning hover:bg-opacity-10',
+        class: 'text-warning hover:bg-warning/10',
       },
       {
         variant: 'default',
         color: 'info',
-        class: 'bg-info text-white hover:bg-opacity-90',
+        class: 'bg-info text-white hover:bg-info/90',
       },
       {
         variant: 'outline',
         color: 'info',
-        class: 'border-info text-info hover:bg-info hover:bg-opacity-10',
+        class: 'border-info text-info hover:bg-info/10',
       },
       {
         variant: 'ghost',
         color: 'info',
-        class: 'text-info hover:bg-info hover:bg-opacity-10',
+        class: 'text-info hover:bg-info hover:text-info/10',
       },
       {
         variant: 'default',
         color: 'success',
-        class: 'bg-success text-white hover:bg-opacity-90',
+        class: 'bg-success text-white hover:bg-success/90',
       },
       {
         variant: 'outline',
         color: 'success',
-        class:
-          'border-success text-success hover:bg-success hover:bg-opacity-10',
+        class: 'border-success text-success hover:bg-success/10',
       },
       {
         variant: 'ghost',
         color: 'success',
-        class: 'text-success hover:bg-success hover:bg-opacity-10',
+        class: 'text-success hover:bg-success/10',
       },
       {
         variant: 'default',
         color: 'dark',
-        class: 'bg-base-black text-white hover:bg-opacity-90',
+        class: 'bg-base-black text-white hover:bg-base-black/90',
       },
       {
         variant: 'outline',
         color: 'dark',
-        class:
-          'border-base-black text-base-black hover:bg-base-black hover:bg-opacity-10',
+        class: 'border-base-black text-base-black hover:bg-base-black/10',
       },
       {
         variant: 'ghost',
         color: 'dark',
-        class: 'text-base-black hover:bg-base-black hover:bg-opacity-10',
+        class: 'text-base-black hover:bg-base-black/10',
       },
       {
         variant: 'default',
         color: 'light',
-        class: 'bg-white text-base-black hover:bg-opacity-90',
+        class: 'bg-white text-base-black hover:bg-white/90',
       },
       {
         variant: 'outline',
         color: 'light',
-        class: 'border-white text-white hover:bg-white hover:bg-opacity-10',
+        class: 'border-white text-white hover:bg-white/10',
       },
       {
         variant: 'ghost',
         color: 'light',
-        class: 'text-white hover:bg-white hover:bg-opacity-10',
+        class: 'text-white hover:bg-white/10',
       },
     ],
     defaultVariants: {

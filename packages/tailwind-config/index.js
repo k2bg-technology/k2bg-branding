@@ -36,14 +36,15 @@ module.exports = {
       fontFamily: {
         original: [
           'Menlo',
+          '"Hiragino Kaku Gothic ProN"',
+          '"Hiragino Sans"',
+          'Meiryo',
           'ui-monospace',
           'SFMono-Regular',
           'Monaco',
           'Consolas',
           'Liberation Mono',
           'Courier New',
-          'YuGothic',
-          'var(--font-noto-sans-jp)',
           'monospace',
         ],
       },

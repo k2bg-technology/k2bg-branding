@@ -1,5 +1,5 @@
 import Root from './Pagination';
-import { Item } from './Item/Item';
+import { Item } from './Item';
 
 const Pagination = Object.assign(Root, { Item });
 

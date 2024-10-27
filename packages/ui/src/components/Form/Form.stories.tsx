@@ -6,14 +6,13 @@ const meta: Meta<typeof Form.Control> = {
   component: Form.Control,
   args: {
     children: (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-normal">
         <Form.Label>ラベル</Form.Label>
         <Form.Input />
         <Form.HelperText>補足テキスト</Form.HelperText>
       </div>
     ),
   },
-  tags: ['autodocs'],
 };
 
 export default meta;
@@ -30,5 +29,11 @@ export const Error: Story = {
 export const Disabled: Story = {
   args: {
     disabled: true,
+  },
+};
+
+export const Light: Story = {
+  args: {
+    color: 'light',
   },
 };
