@@ -2,11 +2,11 @@ import { Icon, Skelton } from 'ui';
 
 export async function ArticlesSkelton() {
   return (
-    <div className="grid grid-cols-[subgrid] col-span-full py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-12 place-content-start">
+    <div className="grid grid-cols-[subgrid] col-span-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-6 place-content-start">
         {Array.from({ length: 6 }).map(() => (
           <Skelton className="flex flex-col gap-3">
-            <Skelton.Box className="py-48">
+            <Skelton.Box className="py-28">
               <Icon
                 name="photo"
                 color="var(--color-base-white)"
@@ -25,7 +25,7 @@ export async function ArticlesSkelton() {
                 />
               </Skelton.Round>
               <div className="flex justify-center flex-col gap-2 w-full">
-                <Skelton.Line className="py-3 w-96" />
+                <Skelton.Line className="py-3" />
                 <Skelton.Line />
                 <Skelton.Line />
                 <Skelton.Line />

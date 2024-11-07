@@ -9,7 +9,7 @@ const Root = React.forwardRef<HTMLSpanElement, Props>(
     <AvatarPrimitive.Root
       ref={ref}
       className={twMerge(
-        'relative flex h-8 w-8 shrink-0 overflow-hidden rounded-full',
+        'relative flex h-6 w-6 shrink-0 overflow-hidden rounded-full',
         className
       )}
       {...rest}

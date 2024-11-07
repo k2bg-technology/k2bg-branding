@@ -106,14 +106,14 @@ export default async function Page({
 
   return (
     <>
-      <h1 className="col-span-full text-header-1 font-bold capitalize py-4">
+      <h1 className="col-span-full text-header-1 font-bold capitalize">
         {params.category}
       </h1>
       <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
-        <div className="grid grid-cols-[subgrid] col-span-full py-12">
+        <div className="grid grid-cols-[subgrid] col-span-full">
           <Articles fetchArticles={fetchArticles} />
         </div>
-        <div className="flex justify-center grid-cols-[subgrid] col-span-full py-12">
+        <div className="flex justify-center grid-cols-[subgrid] col-span-full">
           <Pagination count={Object.keys(databasePagination).length} />
         </div>
       </Suspense>

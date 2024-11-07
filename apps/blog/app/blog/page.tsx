@@ -61,12 +61,12 @@ export default async function Page() {
 
   return (
     <>
-      <div className="grid grid-cols-[subgrid] col-span-full border-b-2 py-12 border-b-slate-100">
+      <div className="col-span-full grid grid-cols-[subgrid]">
         <div className="col-start-1 col-end-8">
-          <BlogCard className="flex-col gap-6">
+          <BlogCard className="flex-col gap-spacious">
             {articles.featureLatest.image && (
               <Link href={`/blog/${articles.featureLatest.slug}`} passHref>
-                <BlogCard.Media className="relative w-full h-[30rem]">
+                <BlogCard.Media className="relative w-full h-[18.75rem]">
                   <Image
                     alt="media"
                     src={optimizedImages[articles.featureLatest.id]}
@@ -97,36 +97,28 @@ export default async function Page() {
               excerpt={articles.featureLatest.excerpt}
               avatar={
                 articles.featureLatest.author && (
-                  <Avatar
-                    image={
-                      <div className="relative w-full h-full">
-                        <Image
-                          alt="author"
-                          src={articles.featureLatest.author.avatar_url ?? ''}
-                          className="aspect-square h-full w-full object-cover"
-                          fill
-                          sizes="100%"
-                        />
-                      </div>
-                    }
-                    name={articles.featureLatest.author.name ?? ''}
-                  />
+                  <Avatar>
+                    <Avatar.Image
+                      alt="author"
+                      src={articles.featureLatest.author.avatar_url ?? ''}
+                    />
+                  </Avatar>
                 )
               }
               date={articles.featureLatest.releaseDate}
             />
           </BlogCard>
         </div>
-        <div className="hidden xl:grid gap-16 col-start-8 col-end-13">
+        <div className="col-start-8 col-end-13 hidden xl:grid gap-6">
           {articles.featuresRecently.map((article) => (
-            <BlogCard key={article.title} className="flex-row gap-8">
+            <BlogCard key={article.title} className="flex-row gap-spacious">
               {article.image && (
                 <Link
                   href={`/blog/${article.slug}`}
                   passHref
                   className="h-full"
                 >
-                  <BlogCard.Media className="relative flex-none w-[16rem] h-[16rem]">
+                  <BlogCard.Media className="relative flex-none w-[10rem] h-[10rem]">
                     <Image
                       alt="media"
                       src={optimizedImages[article.id]}
@@ -155,20 +147,12 @@ export default async function Page() {
                 excerpt={article.excerpt}
                 avatar={
                   article.author && (
-                    <Avatar
-                      image={
-                        <div className="relative w-full h-full">
-                          <Image
-                            alt="author"
-                            src={article.author.avatar_url ?? ''}
-                            className="aspect-square h-full w-full object-cover"
-                            fill
-                            sizes="100%"
-                          />
-                        </div>
-                      }
-                      name={article.author.name ?? ''}
-                    />
+                    <Avatar>
+                      <Avatar.Image
+                        alt="author"
+                        src={article.author.avatar_url ?? ''}
+                      />
+                    </Avatar>
                   )
                 }
                 date={article.releaseDate}
@@ -177,18 +161,19 @@ export default async function Page() {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-[subgrid] col-span-full py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 col-start-1 col-end-10 place-content-start">
+      <hr className="col-span-full border-b-1 border-b-slate-100" />
+      <div className="col-span-full grid grid-cols-[subgrid]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-start-1 col-end-10 place-content-start">
           {articles.featuresRecently.map((article) => (
             <div key={article.title} className="block xl:hidden">
-              <BlogCard className="flex-col gap-6">
+              <BlogCard className="flex-col gap-spacious">
                 {article.image && (
                   <Link
                     href={`/blog/${article.slug}`}
                     passHref
                     className="h-full"
                   >
-                    <BlogCard.Media className="relative w-full h-[26.5rem]">
+                    <BlogCard.Media className="relative w-full h-[16rem]">
                       <Image
                         alt="media"
                         src={optimizedImages[article.id]}
@@ -218,20 +203,12 @@ export default async function Page() {
                   excerpt={article.excerpt}
                   avatar={
                     article.author && (
-                      <Avatar
-                        image={
-                          <div className="relative w-full h-full">
-                            <Image
-                              alt="author"
-                              src={article.author.avatar_url ?? ''}
-                              className="aspect-square h-full w-full object-cover"
-                              fill
-                              sizes="100%"
-                            />
-                          </div>
-                        }
-                        name={article.author.name ?? ''}
-                      />
+                      <Avatar>
+                        <Avatar.Image
+                          alt="author"
+                          src={article.author.avatar_url ?? ''}
+                        />
+                      </Avatar>
                     )
                   }
                   date={article.releaseDate}
@@ -240,10 +217,10 @@ export default async function Page() {
             </div>
           ))}
           {articles.featuresPreviously.map((article) => (
-            <BlogCard key={article.title} className="flex-col gap-6">
+            <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.image && (
                 <Link href={`/blog/${article.slug}`} passHref>
-                  <BlogCard.Media className="relative w-full h-[26.5rem]">
+                  <BlogCard.Media className="relative w-full h-[16rem]">
                     <Image
                       alt="media"
                       src={optimizedImages[article.id]}
@@ -273,20 +250,12 @@ export default async function Page() {
                 excerpt={article.excerpt}
                 avatar={
                   article.author && (
-                    <Avatar
-                      image={
-                        <div className="relative w-full h-full">
-                          <Image
-                            alt="author"
-                            src={article.author.avatar_url ?? ''}
-                            className="aspect-square h-full w-full object-cover"
-                            fill
-                            sizes="100%"
-                          />
-                        </div>
-                      }
-                      name={article.author.name ?? ''}
-                    />
+                    <Avatar>
+                      <Avatar.Image
+                        alt="author"
+                        src={article.author.avatar_url ?? ''}
+                      />
+                    </Avatar>
                   )
                 }
                 date={article.releaseDate}

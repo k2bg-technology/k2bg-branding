@@ -6,8 +6,8 @@ import { CompanyLogo } from '../company-logo/CompanyLogo';
 
 export default function Footer() {
   return (
-    <footer>
-      <div className="relative mt-[65px] bg-base-black h-full">
+    <footer className="col-span-full grid grid-cols-[subgrid]">
+      <div className="col-span-full grid grid-cols-[subgrid] relative mt-[65px] bg-base-black h-full">
         <div
           style={{
             clipPath:
@@ -15,7 +15,7 @@ export default function Footer() {
           }}
           className="absolute top-[-64px] bg-base-black h-[116px] w-full -z-10"
         />
-        <div className="grid place-self-end mx-auto px-6 py-8 w-full md:w-[72rem] xl:w-[114rem] h-full">
+        <div className="col-start-2 -col-end-2 grid place-self-end py-8 w-full h-full">
           <div className="flex flex-wrap items-center justify-between">
             <div className="flex justify-center sm:justify-start">
               <Link href="/">
@@ -31,7 +31,7 @@ export default function Footer() {
                     <Button
                       className="!font-normal"
                       color="light"
-                      variant="text"
+                      variant="ghost"
                     >
                       Engineering
                     </Button>
@@ -43,7 +43,7 @@ export default function Footer() {
                     <Button
                       className="!font-normal"
                       color="light"
-                      variant="text"
+                      variant="ghost"
                     >
                       Design
                     </Button>
@@ -55,7 +55,7 @@ export default function Footer() {
                     <Button
                       className="!font-normal"
                       color="light"
-                      variant="text"
+                      variant="ghost"
                     >
                       Data Science
                     </Button>
@@ -67,7 +67,7 @@ export default function Footer() {
                     <Button
                       className="!font-normal"
                       color="light"
-                      variant="text"
+                      variant="ghost"
                     >
                       Life Style
                     </Button>
@@ -79,7 +79,7 @@ export default function Footer() {
                     <Button
                       className="!font-normal"
                       color="light"
-                      variant="text"
+                      variant="ghost"
                     >
                       Concept
                     </Button>
@@ -91,7 +91,7 @@ export default function Footer() {
                     <Button
                       className="!font-normal"
                       color="light"
-                      variant="text"
+                      variant="ghost"
                     >
                       Contact
                     </Button>

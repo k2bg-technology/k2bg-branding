@@ -2,13 +2,13 @@ import { Icon, Skelton } from 'ui';
 
 export async function PageHeadingSkelton() {
   return (
-    <div className="grid grid-cols-[subgrid] col-span-full py-12">
+    <div className="grid grid-cols-[subgrid] col-span-full">
       <div className="grid grid-cols-1 col-span-full place-content-start">
         <Skelton className="flex flex-col gap-8">
           <div className="flex flex-row gap-4">
             <div className="flex justify-center flex-col gap-2 w-full">
-              <Skelton.Line className="py-3 w-96" />
-              <Skelton.Line className="py-6 w-[50rem]" />
+              <Skelton.Line className="py-3 max-w-96" />
+              <Skelton.Line className="py-6 max-w-[50rem]" />
               <Skelton.Line />
               <Skelton.Line />
               <Skelton.Line />
@@ -25,7 +25,7 @@ export async function PageHeadingSkelton() {
               />
             </Skelton.Round>
             <div className="flex justify-center flex-col gap-2 w-full">
-              <Skelton.Line className="py-3 w-96" />
+              <Skelton.Line className="py-3 max-w-96" />
               <Skelton.Line />
               <Skelton.Line />
               <Skelton.Line />
