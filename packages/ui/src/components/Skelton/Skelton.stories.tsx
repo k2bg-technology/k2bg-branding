@@ -23,7 +23,7 @@ export const Default: Story = {
             height={30}
           />
         </Skelton.Box>
-        <div className="flex flex-col gap-spacious">
+        <div className="flex gap-spacious">
           <Skelton.Round>
             <Icon
               name="user"
@@ -33,8 +33,8 @@ export const Default: Story = {
               height={20}
             />
           </Skelton.Round>
-          <div className="flex flex-col gap-normal">
-            <Skelton.Line className="py-normal w-96" />
+          <div className="flex flex-col gap-normal w-full">
+            <Skelton.Line className="py-normal max-w-96" />
             <Skelton.Line />
             <Skelton.Line />
             <Skelton.Line />
