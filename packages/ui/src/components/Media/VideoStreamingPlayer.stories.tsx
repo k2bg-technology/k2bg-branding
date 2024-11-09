@@ -5,7 +5,6 @@ import VideoStreamingPlayer from './VideoStreamingPlayer';
 const meta: Meta<typeof VideoStreamingPlayer> = {
   component: VideoStreamingPlayer,
   parameters: {},
-  tags: ['autodocs'],
 };
 
 export default meta;

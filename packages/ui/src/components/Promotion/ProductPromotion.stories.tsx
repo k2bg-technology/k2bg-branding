@@ -5,7 +5,6 @@ import ProductPromotion from './ProductPromotion';
 const meta: Meta<typeof ProductPromotion> = {
   component: ProductPromotion,
   parameters: {},
-  tags: ['autodocs'],
 };
 
 export default meta;

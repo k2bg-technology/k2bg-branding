@@ -8,14 +8,14 @@ import ProfileCard from '../profile-card/ProfileCard';
 export default function Sidebar() {
   return (
     <aside>
-      <div className="grid gap-10 w-[25.5rem]">
+      <div className="grid gap-spacious w-[18.375rem]">
         {/* eslint-disable-next-line turbo/no-undeclared-env-vars */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="relative h-[25.5rem] w-[25.5rem]">
+          <div className="relative h-[18.375rem]">
             <Image
               alt="google adsense"
               src="/adsense_dummy.png"
-              className="aspect-square h-full w-full object-cover"
+              className="aspect-square object-cover"
               fill
               sizes="100%"
             />

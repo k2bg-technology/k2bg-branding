@@ -7,7 +7,6 @@ const meta: Meta<typeof Form.Label> = {
   args: {
     children: 'ラベル',
   },
-  tags: ['autodocs'],
 };
 
 export default meta;

@@ -24,9 +24,9 @@ export default async function Page({
 
   return (
     <Suspense fallback={<Loading />}>
-      <div className="md:absolute md:top-1/2 md:-translate-y-1/2 md:px-32 md:animate-slide">
+      <div className="flex flex-col gap-condensed md:absolute md:top-1/2 md:-translate-y-1/2 md:px-20 md:animate-slide">
         <main>
-          <div className="grid grid-flow-row auto-cols-fr overflow-hidden md:grid-flow-col md:auto-cols-max md:rounded-3xl md:shadow-2xl md:max-h-[60rem]">
+          <div className="grid grid-flow-row auto-cols-fr overflow-hidden md:grid-flow-col md:auto-cols-max md:rounded-3xl md:shadow-2xl md:max-h-[37.5rem]">
             <Hero lng={lng} />
             <Background t={t} />
             <Skill t={t} />

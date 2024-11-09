@@ -1,7 +1,9 @@
 import Image from 'next/image';
-import { Button, ExternalLinkButton, Dialog } from 'ui';
+import { Button, Dialog } from 'ui';
 import { TFunction } from 'i18next';
 import { ReactNode } from 'react';
+
+import { ExternalLinkButton } from '../ExternalLinkButton';
 
 interface DocumentProps {
   title: string;
@@ -29,7 +31,7 @@ function Document(props: DocumentProps) {
   } = props;
 
   return (
-    <div className="flex relative flex-col gap-5 p-10 w-full h-full md:p-20 md:w-[60rem] group">
+    <div className="flex relative flex-col gap-spacious p-6 w-full h-full md:p-12 md:w-[37.5rem] group">
       <div className="absolute top-0 left-0 -z-10 w-full h-full overflow-hidden">
         <Image
           src={backgroundImage}
@@ -37,6 +39,7 @@ function Document(props: DocumentProps) {
           alt="Stock Image"
           className="object-cover brightness-50 transition-all duration-300 ease-in group-hover:scale-110"
         />
+        <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm" />
       </div>
       <h3 className="text-header-3 leading-header-3 font-bold">{title}</h3>
       <h4 className="text-header-4 leading-header-4 font-bold">{subtitle1}</h4>
@@ -50,8 +53,13 @@ function Document(props: DocumentProps) {
       <Dialog
         trigger={preview}
         content={
-          <div className="flex justify-center items-center w-full h-full">
-            <video controls muted autoPlay>
+          <div>
+            <video
+              controls
+              muted
+              autoPlay
+              className="w-full max-w-screen-lg max-h-[calc(100vh-10rem)] aspect-video"
+            >
               <source src={previewVideo} type="video/mp4" />
               <p>Your browser support HTML5 video.</p>
             </video>
@@ -66,12 +74,12 @@ function Document(props: DocumentProps) {
 export function Portfolio({ t }: { t: TFunction }) {
   return (
     <section>
-      <div className="flex flex-col md:flex-row md:h-[60rem]">
-        <div className="flex flex-col justify-center gap-5 p-10 w-full md:p-20 md:w-[45rem]">
+      <div className="flex flex-col md:flex-row md:h-[37.5rem]">
+        <div className="flex flex-col justify-center gap-spacious p-6 w-full md:p-12 md:w-[28rem]">
           <h2 className="text-header-2 leading-header-2 font-bold">
             {t('portfolio.portfolio')}
           </h2>
-          <div className="flex flex-col justify-center gap-5">
+          <div className="flex flex-col justify-center gap-spacious">
             <p className="text-body-r-sm leading-body-r-sm">
               {t('portfolio.description1')}
             </p>
@@ -90,27 +98,17 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.webApp.overview')}
               backgroundImage="/images/stock.jpg"
               preview={
-                <Button color="light" variant="outlined">
+                <Button color="light" variant="outline">
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/stock-app.mp4"
               siteLink={
                 <>
-                  <ExternalLinkButton
-                    href="https://github.com/stranger1989/trading-dashboard"
-                    target="_blank"
-                    color="light"
-                    variant="outlined"
-                  >
+                  <ExternalLinkButton href="https://github.com/stranger1989/trading-dashboard">
                     {t('portfolio.githubApp')}
                   </ExternalLinkButton>
-                  <ExternalLinkButton
-                    href="https://github.com/stranger1989/ml-playground-api"
-                    target="_blank"
-                    color="light"
-                    variant="outlined"
-                  >
+                  <ExternalLinkButton href="https://github.com/stranger1989/ml-playground-api">
                     {t('portfolio.githubApi')}
                   </ExternalLinkButton>
                 </>
@@ -126,27 +124,17 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.mobileApp.overview')}
               backgroundImage="/images/mobile.jpg"
               preview={
-                <Button color="light" variant="outlined">
+                <Button color="light" variant="outline">
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/mobile.mp4"
               siteLink={
                 <>
-                  <ExternalLinkButton
-                    href="https://github.com/stranger1989/merchandise_control_system_native_app"
-                    target="_blank"
-                    color="light"
-                    variant="outlined"
-                  >
+                  <ExternalLinkButton href="https://github.com/stranger1989/merchandise_control_system_native_app">
                     {t('portfolio.githubApp')}
                   </ExternalLinkButton>
-                  <ExternalLinkButton
-                    href="https://github.com/stranger1989/merchandise_control_system"
-                    target="_blank"
-                    color="light"
-                    variant="outlined"
-                  >
+                  <ExternalLinkButton href="https://github.com/stranger1989/merchandise_control_system">
                     {t('portfolio.githubApi')}
                   </ExternalLinkButton>
                 </>
@@ -162,18 +150,13 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.scrapingApp.overview')}
               backgroundImage="/images/web.jpg"
               preview={
-                <Button color="light" variant="outlined">
+                <Button color="light" variant="outline">
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/scrapy.mp4"
               siteLink={
-                <ExternalLinkButton
-                  href="https://github.com/stranger1989/scrapy_snippets"
-                  target="_blank"
-                  color="light"
-                  variant="outlined"
-                >
+                <ExternalLinkButton href="https://github.com/stranger1989/scrapy_snippets">
                   {t('portfolio.github')}
                 </ExternalLinkButton>
               }
@@ -188,27 +171,17 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.blogApp.overview')}
               backgroundImage="/images/blog.jpg"
               preview={
-                <Button color="light" variant="outlined">
+                <Button color="light" variant="outline">
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/blank.mp4"
               siteLink={
                 <>
-                  <ExternalLinkButton
-                    href="https://blank-oldstranger.com/"
-                    target="_blank"
-                    color="light"
-                    variant="outlined"
-                  >
+                  <ExternalLinkButton href="https://blank-oldstranger.com/">
                     {t('portfolio.siteURL')}
                   </ExternalLinkButton>
-                  <ExternalLinkButton
-                    href="https://github.com/stranger1989/wordpress-local-dev-template"
-                    target="_blank"
-                    color="light"
-                    variant="outlined"
-                  >
+                  <ExternalLinkButton href="https://github.com/stranger1989/wordpress-local-dev-template">
                     {t('portfolio.github')}
                   </ExternalLinkButton>
                 </>

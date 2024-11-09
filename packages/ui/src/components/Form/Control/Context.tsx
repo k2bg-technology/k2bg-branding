@@ -6,12 +6,14 @@ export interface FormProps {
   required?: boolean;
   error?: boolean;
   disabled?: boolean;
+  color?: 'dark' | 'light';
 }
 
 const FormContext = createContext<FormProps>({
   required: false,
   error: false,
   disabled: false,
+  color: 'dark',
 });
 
 export function FormProvider({

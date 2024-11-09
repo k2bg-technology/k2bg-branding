@@ -27,9 +27,9 @@ export default function Search(props: Props) {
 
   return (
     <div className="relative flex">
-      <label htmlFor="search" className="sr-only">
+      <Form.Label htmlFor="search" className="sr-only">
         検索
-      </label>
+      </Form.Label>
       <Form.Input
         id="search"
         type="search"

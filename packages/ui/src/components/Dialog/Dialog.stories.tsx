@@ -6,7 +6,6 @@ import Dialog from './Dialog';
 
 const meta = {
   component: Dialog,
-  tags: ['autodocs'],
 } satisfies Meta<typeof Dialog>;
 
 export default meta;

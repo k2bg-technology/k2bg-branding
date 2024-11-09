@@ -105,7 +105,7 @@ export default async function Page({
         {searchParams?.query}
       </h1>
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>
-        <div className="grid grid-cols-[subgrid] col-span-full py-12">
+        <div className="grid grid-cols-[subgrid] col-span-full">
           {showArticles ? (
             <Articles fetchArticles={fetchArticles} />
           ) : (
@@ -115,7 +115,7 @@ export default async function Page({
           )}
         </div>
         {showArticles && (
-          <div className="flex justify-center grid-cols-[subgrid] col-span-full py-12">
+          <div className="flex justify-center grid-cols-[subgrid] col-span-full">
             <Pagination count={totalPageCount} />
           </div>
         )}

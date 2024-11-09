@@ -24,12 +24,12 @@ export async function Articles(props: Props) {
   const { articles, placeHolders, optimizedImages } = await fetchArticles();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-12 place-content-start">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-6 place-content-start">
       {articles.all.map((article) => (
-        <BlogCard key={article.title} className="flex-col gap-6">
+        <BlogCard key={article.title} className="flex-col gap-spacious">
           {article.image && (
             <Link href={`/blog/${article.slug}`} passHref>
-              <BlogCard.Media className="relative w-full h-[26.5rem]">
+              <BlogCard.Media className="relative w-full h-[16rem]">
                 <Image
                   alt="media"
                   src={optimizedImages[article.id]}
@@ -60,20 +60,12 @@ export async function Articles(props: Props) {
             excerpt={article.excerpt}
             avatar={
               article.author && (
-                <Avatar
-                  image={
-                    <div className="relative w-full h-full">
-                      <Image
-                        alt="author"
-                        src={article.author?.avatar_url ?? ''}
-                        className="aspect-square h-full w-full object-cover"
-                        fill
-                        sizes="100%"
-                      />
-                    </div>
-                  }
-                  name={article.author.name ?? ''}
-                />
+                <Avatar>
+                  <Avatar.Image
+                    alt="author"
+                    src={article.author.avatar_url ?? ''}
+                  />
+                </Avatar>
               )
             }
             date={article.releaseDate}

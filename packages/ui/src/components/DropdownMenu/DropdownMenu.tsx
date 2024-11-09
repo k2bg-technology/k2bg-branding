@@ -17,7 +17,7 @@ export default function DropdownMenu({
 
       <RadixDropdownMenu.Portal>
         <RadixDropdownMenu.Content
-          className="grid gap-2 py-3 min-w-[220px] bg-white border-2 border-slate-100 rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]"
+          className="grid gap-normal py-normal min-w-56 bg-white border-2 border-slate-100 rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]"
           sideOffset={5}
         >
           {children}

@@ -8,7 +8,6 @@ import DropdownMenuItem from './DropdownMenuItem';
 
 const meta = {
   component: DropdownMenu,
-  tags: ['autodocs'],
 } satisfies Meta<typeof DropdownMenu>;
 
 export default meta;
@@ -36,11 +35,9 @@ export const Default: Story = {
       </>
     ),
     trigger: (
-      <span>
-        <Button color="dark" variant="text">
-          <Icon name="inbox-stack" className="w-10 h-10" />
-        </Button>
-      </span>
+      <Button color="dark" variant="ghost" size="icon">
+        <Icon name="inbox-stack" className="w-10 h-10" />
+      </Button>
     ),
   },
 };

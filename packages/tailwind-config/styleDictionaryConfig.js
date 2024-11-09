@@ -20,7 +20,7 @@ StyleDictionary.registerTransform({
   },
   transformer(token) {
     return typeof token.value === 'number'
-      ? `${token.value / 10}rem`
+      ? `${token.value / 16}rem`
       : token.value;
   },
 });
@@ -41,7 +41,7 @@ StyleDictionary.registerTransform({
   },
   transformer(token) {
     return typeof token.value === 'number'
-      ? `${token.value / 10}rem`
+      ? `${token.value / 16}rem`
       : token.value;
   },
 });

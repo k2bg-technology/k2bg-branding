@@ -5,7 +5,7 @@ import { Icon } from 'ui';
 export function Skill({ t }: { t: TFunction }) {
   return (
     <section>
-      <div className="relative p-10 w-full md:p-20 md:w-[110rem] md:h-[60rem]">
+      <div className="relative p-6 w-full md:p-12 md:w-[68rem] md:h-[37.5rem]">
         <div className="absolute top-0 left-0 -z-10 w-full h-full">
           <Image
             src="/images/skill-pattern.jpg"
@@ -13,12 +13,12 @@ export function Skill({ t }: { t: TFunction }) {
             alt="Skill Pattern Image"
           />
         </div>
-        <div className="flex flex-col gap-10 h-full md:flex-row md:gap-0">
-          <div className="flex flex-col gap-10 w-full">
+        <div className="flex flex-col gap-spacious h-full md:flex-row md:gap-0">
+          <div className="flex flex-col gap-spacious w-full">
             <h2 className="text-header-2 leading-header-2 font-bold">
               {t('skill.skill')}
             </h2>
-            <div>
+            <div className="flex flex-col gap-condensed">
               <h3 className="text-header-3 leading-header-3 font-bold">
                 {t('skill.programming')}
               </h3>
@@ -26,7 +26,7 @@ export function Skill({ t }: { t: TFunction }) {
                 {t('skill.programmingStack')}
               </p>
             </div>
-            <div>
+            <div className="flex flex-col gap-condensed">
               <h3 className="text-header-3 leading-header-3 font-bold">
                 {t('skill.uiux')}
               </h3>
@@ -34,7 +34,7 @@ export function Skill({ t }: { t: TFunction }) {
                 {t('skill.uiuxStack')}
               </p>
             </div>
-            <div>
+            <div className="flex flex-col gap-condensed">
               <h3 className="text-header-3 leading-header-3 font-bold">
                 {t('skill.dataAnalysis')}
               </h3>
@@ -42,7 +42,7 @@ export function Skill({ t }: { t: TFunction }) {
                 {t('skill.dataAnalysisStack')}
               </p>
             </div>
-            <div>
+            <div className="flex flex-col gap-condensed">
               <h3 className="text-header-3 leading-header-3 font-bold">
                 {t('skill.cloud')}
               </h3>
@@ -51,8 +51,8 @@ export function Skill({ t }: { t: TFunction }) {
               </p>
             </div>
           </div>
-          <div className="p-5 w-full h-full md:p-10">
-            <ul className="grid grid-cols-3 gap-y-10 h-full md:gap-y-0">
+          <div className="p-normal w-full h-full md:p-spacious">
+            <ul className="grid grid-cols-3 gap-y-spacious h-full md:gap-y-0">
               <li className="flex justify-center items-center">
                 <Icon name="typescript" originalColor width={50} height={50} />
               </li>

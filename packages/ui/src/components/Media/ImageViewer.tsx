@@ -1,4 +1,4 @@
-import { HTMLAttributes, ImgHTMLAttributes } from 'react';
+import { ImgHTMLAttributes } from 'react';
 
 interface Props
   /** https://developer.mozilla.org/ja/docs/Web/HTML/Element/img */

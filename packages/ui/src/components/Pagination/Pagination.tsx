@@ -1,9 +1,10 @@
 import React from 'react';
 
 import { Icon } from '../Icon';
+import { Button } from '../Button';
 
 import { usePagination } from './usePagination';
-import { Item } from './Item/Item';
+import { Item } from './Item';
 
 type PrevNextButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -22,18 +23,19 @@ export default function Pagination(props: PaginationProps) {
   const itemList = usePagination({ count, currentIndex });
 
   return (
-    <nav {...rest} className="flex gap-4">
-      <button
+    <nav {...rest} className="flex gap-normal">
+      <Button
         {...prevProps}
         type="button"
+        color="inherit"
+        size="icon"
         disabled={currentIndex === 1}
-        className="flex p-[0.6rem] disabled:opacity-30"
       >
         <Icon name="chevron-left" width={20} height={20} />
-      </button>
+      </Button>
       <ul className="flex gap-4">
         {itemList.map((item) => (
-          <li key={item}>
+          <li key={item} className=" flex items-center">
             {typeof item === 'number' ? (
               renderItem(item)
             ) : (
@@ -42,14 +44,15 @@ export default function Pagination(props: PaginationProps) {
           </li>
         ))}
       </ul>
-      <button
+      <Button
         {...nextProps}
         type="button"
+        color="inherit"
+        size="icon"
         disabled={currentIndex === count}
-        className="flex p-[0.6rem] disabled:opacity-30"
       >
         <Icon name="chevron-right" width={20} height={20} />
-      </button>
+      </Button>
     </nav>
   );
 }

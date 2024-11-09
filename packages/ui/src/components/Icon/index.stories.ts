@@ -31,7 +31,6 @@ const meta = {
     },
   },
   parameters: {},
-  tags: ['autodocs'],
 } satisfies Meta<typeof Icon>;
 
 export default meta;

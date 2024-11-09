@@ -1,5 +1,4 @@
 import React from 'react';
-import Image from 'next/image';
 import { Avatar } from 'ui';
 
 export default function ProfileCard() {
@@ -8,21 +7,13 @@ export default function ProfileCard() {
       <p className="mb-6 text-subtitle-sm font-bold border-b-2 border-b-slate-100">
         プロフィール
       </p>
-      <div className="grid gap-5 p-5 rounded-lg bg-base-white/50">
-        <Avatar
-          image={
-            <div className="relative w-full h-full">
-              <Image
-                alt="profile image"
-                src="/me.png"
-                className="aspect-square h-full w-full object-cover"
-                fill
-                sizes="100%"
-              />
-            </div>
-          }
-          name="stranger1989"
-        />
+      <div className="grid gap-spacious p-spacious rounded-lg bg-base-white/50">
+        <span className="inline-flex gap-normal">
+          <Avatar>
+            <Avatar.Image alt="author" src="/me.png" />
+          </Avatar>
+          <span>stranger1989</span>
+        </span>
         <div className="grid gap-px">
           <p className="text-body-r-sm leading-body-r-sm text-base-black/80">
             東京都、世田谷区在住。愛知県出身。

@@ -8,9 +8,9 @@ import Search from '../search/Search';
 
 export default function Header() {
   return (
-    <header>
-      <div className="flex place-items-center bg-base-white/50 h-full">
-        <div className="mx-auto w-full md:w-[72rem] xl:w-[114rem] px-6">
+    <header className="col-span-full grid grid-cols-[subgrid] bg-base-white/50">
+      <div className="col-start-2 -col-end-2 flex place-items-center h-full">
+        <div className="mx-auto w-full md:w-[45rem] xl:w-[80rem]">
           <div className="flex items-center justify-between">
             <div>
               <Link href="/">
@@ -26,7 +26,7 @@ export default function Header() {
                       <Button
                         className="!font-normal"
                         color="dark"
-                        variant="text"
+                        variant="ghost"
                       >
                         Engineering
                       </Button>
@@ -37,7 +37,7 @@ export default function Header() {
                       <Button
                         className="!font-normal"
                         color="dark"
-                        variant="text"
+                        variant="ghost"
                       >
                         Design
                       </Button>
@@ -48,7 +48,7 @@ export default function Header() {
                       <Button
                         className="!font-normal"
                         color="dark"
-                        variant="text"
+                        variant="ghost"
                       >
                         Data Science
                       </Button>
@@ -59,7 +59,7 @@ export default function Header() {
                       <Button
                         className="!font-normal"
                         color="dark"
-                        variant="text"
+                        variant="ghost"
                       >
                         Life Style
                       </Button>
@@ -70,18 +70,18 @@ export default function Header() {
             </div>
             <div className="hidden xl:flex items-center gap-x-4">
               <Link href="/concept" passHref>
-                <Button className="!font-normal" color="dark" variant="text">
+                <Button className="!font-normal" color="dark" variant="ghost">
                   Concept
                 </Button>
               </Link>
               <Link href="/contact" passHref>
-                <Button className="!font-normal" color="dark" variant="text">
+                <Button className="!font-normal" color="dark" variant="ghost">
                   Contact
                 </Button>
               </Link>
               <DropdownMenu
                 trigger={
-                  <Button color="dark" variant="text" className="!p-2">
+                  <Button color="dark" variant="ghost">
                     <Icon name="magnifying-glass" width={20} height={20} />
                   </Button>
                 }
@@ -91,10 +91,10 @@ export default function Header() {
                 </DropdownMenuItem>
               </DropdownMenu>
             </div>
-            <div className="flex xl:hidden items-center gap-x-8">
+            <div className="flex xl:hidden items-center gap-x-spacious">
               <DropdownMenu
                 trigger={
-                  <Button color="dark" variant="text" className="!p-2">
+                  <Button color="dark" size="icon" variant="ghost">
                     <Icon name="inbox-stack" />
                   </Button>
                 }
@@ -132,7 +132,7 @@ export default function Header() {
               </DropdownMenu>
               <Drawer
                 trigger={
-                  <Button color="dark" variant="text" className="!p-2">
+                  <Button color="dark" size="icon" variant="ghost">
                     <Icon name="bars-3" />
                   </Button>
                 }

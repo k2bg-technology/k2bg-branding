@@ -115,11 +115,9 @@ const getArticle = async (pageId: string) => {
 
           return renderToString(
             <div className="mt-8">
-              <TextPromotion
-                id={assetId}
-                linkText={textAffiliate.linkText}
-                linkUrl={textAffiliate.linkUrl}
-              />
+              <TextPromotion id={assetId} href={textAffiliate.linkUrl}>
+                {textAffiliate.linkText}
+              </TextPromotion>
             </div>
           );
         case 'affiliateBanner':
@@ -245,7 +243,7 @@ export default async function NotionMarkdown(props: Props) {
           <h2
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-20 text-header-2 leading-header-2 font-bold"
+            className="first:mt-0 mt-7 text-header-2 leading-header-2 font-bold"
           >
             {children}
           </h2>
@@ -254,7 +252,7 @@ export default async function NotionMarkdown(props: Props) {
           <h3
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-12 text-header-3 leading-header-3 font-bold"
+            className="first:mt-0 mt-4 text-header-3 leading-header-3 font-bold"
           >
             {children}
           </h3>
@@ -263,7 +261,7 @@ export default async function NotionMarkdown(props: Props) {
           <p
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-4 text-body-r-sm leading-body-r-sm text-base-black/80 text-justify"
+            className="first:mt-0 mt-2 text-body-r-sm leading-body-r-sm text-base-black/80 text-justify"
           >
             {children}
           </p>
@@ -291,7 +289,7 @@ export default async function NotionMarkdown(props: Props) {
             <ul
               // eslint-disable-next-line react/jsx-props-no-spreading
               {...props}
-              className={className || 'mt-4 list-disc list-inside'}
+              className={className || 'mt-2 list-disc list-inside'}
             >
               {children}
             </ul>
@@ -317,14 +315,14 @@ export default async function NotionMarkdown(props: Props) {
           <span
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="mt-6 font-bold leading-none underline decoration-8 underline-offset-[-0.2em] decoration-main-default/50"
+            className="mt-2 font-bold leading-none underline decoration-8 underline-offset-[-0.2em] decoration-main-default/50"
           >
             {children}
           </span>
         ),
         pre: ({ children, ...props }) => (
           // eslint-disable-next-line react/jsx-props-no-spreading
-          <pre {...props} className="first:mt-0 mt-4 border rounded-lg">
+          <pre {...props} className="first:mt-0 mt-2 border rounded-lg">
             {children}
           </pre>
         ),
@@ -361,7 +359,7 @@ export default async function NotionMarkdown(props: Props) {
           <blockquote
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-4 border-l-4 border-slate-100 pl-4"
+            className="first:mt-0 mt-2 border-l-4 border-slate-100 pl-2"
           >
             {children}
           </blockquote>
@@ -369,12 +367,12 @@ export default async function NotionMarkdown(props: Props) {
         img: ({ className, src, alt, width, height, node }) => {
           if (!(src && alt && width && height)) return null;
 
-          const placeholder = String(node.properties?.['dataPlaceholder']);
-          const unoptimized = Boolean(node.properties?.['dataUnoptoinized']);
+          const placeholder = String(node.properties?.dataPlaceholder);
+          const unoptimized = Boolean(node.properties?.dataUnoptoinized);
 
           return (
             <Image
-              className={className || 'first:mt-0 mt-8 mx-auto'}
+              className={className || 'first:mt-0 mt-5 mx-auto'}
               src={src}
               alt={alt}
               width={Number(width)}

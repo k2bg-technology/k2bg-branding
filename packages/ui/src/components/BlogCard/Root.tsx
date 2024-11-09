@@ -1,13 +1,14 @@
 import { HTMLAttributes } from 'react';
+import { twMerge } from 'tailwind-merge';
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export default function BlogCard({ className, children, ...rest }: Props) {
+export default function Root({ className, children, ...rest }: Props) {
   return (
     <article>
-      <div {...rest} className={`flex bg-white ${className}`}>
+      <div {...rest} className={twMerge('flex bg-white', className)}>
         {children}
       </div>
     </article>

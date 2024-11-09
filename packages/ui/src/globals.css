@@ -6,8 +6,6 @@
 
 @layer base {
   html {
-    @apply h-full text-[62.5%];
-
     text-decoration-skip-ink: none;
   }
   body {

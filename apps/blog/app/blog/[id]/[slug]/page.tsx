@@ -46,12 +46,12 @@ export default async function Page({
 }) {
   return (
     <>
-      <div className="grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
+      <div className="grid-cols-[subgrid] gap-20 col-span-full">
         <Suspense fallback={<ArticleHeadingSkelton />}>
           <ArticleHeading articleId={params.id} />
         </Suspense>
       </div>
-      <div className="grid grid-cols-[subgrid] col-span-full py-[30px]">
+      <div className="grid grid-cols-[subgrid] col-span-full">
         <div className="col-start-1 col-end-10">
           <Suspense fallback={<NotionMarkdownSkelton />}>
             <NotionMarkdown articleId={params.id} />

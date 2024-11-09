@@ -32,7 +32,7 @@ export async function PageHeading(props: Props) {
   });
 
   return (
-    <BlogCard className="flex-col gap-6">
+    <BlogCard className="flex-col gap-spacious">
       <BlogCard.Content
         category={
           <Link href={`/category/${article.category}`}>{article.category}</Link>
@@ -41,25 +41,17 @@ export async function PageHeading(props: Props) {
         excerpt={article.excerpt}
         avatar={
           article.author && (
-            <Avatar
-              image={
-                <div className="relative w-full h-full">
-                  <Image
-                    alt="author"
-                    src={article.author.avatar_url ?? ''}
-                    className="aspect-square h-full w-full object-cover"
-                    fill
-                    sizes="100%"
-                  />
-                </div>
-              }
-              name={article.author.name ?? ''}
-            />
+            <Avatar>
+              <Avatar.Image
+                alt="author"
+                src={article.author.avatar_url ?? ''}
+              />
+            </Avatar>
           )
         }
         date={article.releaseDate}
       />
-      <BlogCard.Media className="relative w-full h-[37.6rem]">
+      <BlogCard.Media className="relative w-full h-[23.5rem]">
         <Image
           alt="media"
           src={optimizedUrl}
