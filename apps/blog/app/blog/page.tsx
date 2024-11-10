@@ -2,10 +2,10 @@ import { Avatar, BlogCard } from 'ui';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Notion from '../modules/data-access/notion';
-import Article from '../modules/domain/article';
-import Sidebar from '../components/sidebar/Sidebar';
-import Cloudinary from '../modules/data-access/cloudinary';
+import Notion from '../../modules/data-access/notion';
+import Article from '../../modules/domain/article';
+import Sidebar from '../../components/sidebar/Sidebar';
+import Cloudinary from '../../modules/data-access/cloudinary';
 
 const fetchDatabase = async () => {
   const database = await new Notion.Fetcher().fetchDatabase({

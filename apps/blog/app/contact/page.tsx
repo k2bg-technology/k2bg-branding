@@ -1,6 +1,6 @@
 import { Button, Form } from 'ui';
 
-import Sidebar from '../components/sidebar/Sidebar';
+import Sidebar from '../../components/sidebar/Sidebar';
 
 // eslint-disable-next-line turbo/no-undeclared-env-vars
 const FORMSPREE_FORM_ACTION_URL = process.env.FORMSPREE_FORM_ACTION_URL ?? '';

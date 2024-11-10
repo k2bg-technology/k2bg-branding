@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import Notion from '../modules/data-access/notion';
-import Article from '../modules/domain/article';
-import Pagination from '../components/pagination/Pagination';
-import { Articles } from '../components/articles/Articles';
-import Cloudinary from '../modules/data-access/cloudinary';
-import { ArticlesSkelton } from '../components/articles/ArticlesSkelton';
+import Notion from '../../modules/data-access/notion';
+import Article from '../../modules/domain/article';
+import Pagination from '../../components/pagination/Pagination';
+import { Articles } from '../../components/articles/Articles';
+import Cloudinary from '../../modules/data-access/cloudinary';
+import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 
 const PAGE_SIZE = 6;
 

@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 
-import Notion from '../../../modules/data-access/notion';
-import Article from '../../../modules/domain/article';
-import NotionMarkdown from '../../../components/notion-markdown/NotionMarkdown';
-import Sidebar from '../../../components/sidebar/Sidebar';
-import { ArticleHeading } from '../../../components/article-heading/ArticleHeading';
-import { ArticleHeadingSkelton } from '../../../components/article-heading/ArticleHeadingSkelton';
-import { NotionMarkdownSkelton } from '../../../components/notion-markdown/NotionMarkdownSkelton';
+import Notion from '../../../../modules/data-access/notion';
+import Article from '../../../../modules/domain/article';
+import NotionMarkdown from '../../../../components/notion-markdown/NotionMarkdown';
+import Sidebar from '../../../../components/sidebar/Sidebar';
+import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
+import { ArticleHeadingSkelton } from '../../../../components/article-heading/ArticleHeadingSkelton';
+import { NotionMarkdownSkelton } from '../../../../components/notion-markdown/NotionMarkdownSkelton';
 
 export const revalidate = 3600;
 

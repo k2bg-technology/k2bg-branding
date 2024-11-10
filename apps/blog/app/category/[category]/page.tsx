@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import Notion from '../../modules/data-access/notion';
-import Pagination from '../../components/pagination/Pagination';
-import { Articles } from '../../components/articles/Articles';
-import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
-import Article from '../../modules/domain/article';
-import Cloudinary from '../../modules/data-access/cloudinary';
+import Notion from '../../../modules/data-access/notion';
+import Pagination from '../../../components/pagination/Pagination';
+import { Articles } from '../../../components/articles/Articles';
+import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
+import Article from '../../../modules/domain/article';
+import Cloudinary from '../../../modules/data-access/cloudinary';
 
 export async function generateStaticParams() {
   return ['engineering', 'design', 'data-science', 'life-style'].map(
