@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { dir } from 'i18next';
 
-import { languages, Language } from '../i18n/settings';
+import { languages, Language } from '../../i18n/settings';
 
 import '../globals.css';
 
