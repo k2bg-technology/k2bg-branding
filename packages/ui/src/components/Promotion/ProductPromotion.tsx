@@ -20,6 +20,7 @@ interface ProductPromotionProps extends HTMLAttributes<HTMLDivElement> {
 
 export default function ProductPromotion(props: ProductPromotionProps) {
   const {
+    id,
     linkText,
     linkUrl,
     imageUrl,
@@ -43,6 +44,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           onClick={() => linkUrl && window.open(linkUrl, '_blank')}
           width={imageWidth}
           height={imageHeight}
+          data-id={id}
           data-placeholder={imagePlaceholder}
           className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
           aria-hidden="true"

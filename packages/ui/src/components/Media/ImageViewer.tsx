@@ -14,6 +14,7 @@ interface Props
 }
 
 export default function ImageViewer({
+  id,
   name,
   linkUrl,
   url,
@@ -39,6 +40,7 @@ export default function ImageViewer({
           src={file || url}
           width={width}
           height={height}
+          data-id={id}
           data-placeholder={placeholder}
           data-unoptoinized={unoptoinized}
         />
@@ -53,6 +55,7 @@ export default function ImageViewer({
       src={file || url}
       width={width}
       height={height}
+      data-id={id}
       data-placeholder={placeholder}
       data-unoptoinized={unoptoinized}
     />

@@ -18,7 +18,7 @@ export class Core {
   }
 
   /** https://cloudinary.com/documentation/transformation_reference#overview */
-  protected getUrl(options: {
+  static getUrl(options: {
     assetType: 'image' | 'video';
     deliveryType: DeliveryType;
     transformations?: string;
@@ -38,7 +38,8 @@ export class Core {
     return `${CLOUDINARY_BASE_URI}/${CLOUDINARY_CLOUD_NAME}/${suffix}`;
   }
 
-  protected upload(file: string, options: UploadApiOptions) {
+  // eslint-disable-next-line class-methods-use-this
+  protected async upload(file: string, options: UploadApiOptions) {
     return cloudinary.uploader.upload(file, options);
   }
 }

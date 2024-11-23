@@ -13,18 +13,6 @@ export class List implements ArticleList {
     return this.articles;
   }
 
-  get featureLatest() {
-    return this.articles?.[0];
-  }
-
-  get featuresRecently() {
-    return this.articles.slice(1, 3);
-  }
-
-  get featuresPreviously() {
-    return this.articles.slice(4, 8);
-  }
-
   private sortByDate() {
     return this.articles.sort((a, b) => {
       if (!a.releaseDate || !b.releaseDate) return 0;
@@ -34,26 +22,5 @@ export class List implements ArticleList {
 
       return dateB.getTime() - dateA.getTime();
     });
-  }
-
-  static async convertImageToPlaceholder(
-    articles: Single[]
-  ): Promise<Record<Single['id'], string>> {
-    return articles.reduce(async (prev, article) => {
-      const placeholder = await article.imagePlaceholder;
-
-      return { ...(await prev), [article.id]: placeholder };
-    }, {});
-  }
-
-  static async optimizeImage(
-    articles: Single[],
-    optimizeFunction: (id: string, file: string) => Promise<string> | string
-  ): Promise<Record<Single['id'], string>> {
-    return articles.reduce(async (prev, article) => {
-      const optimizedImage = await article.getOptimizedUrl(optimizeFunction);
-
-      return { ...(await prev), [article.id]: optimizedImage };
-    }, {});
   }
 }

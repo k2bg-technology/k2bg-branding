@@ -1,8 +1,9 @@
 import { format } from 'date-fns';
 
-import { ArticleCore, ArticleData } from './interfaces';
 import { getImageWithPlaceholder } from '../../utility/getImageWithPlaceholder';
 import { getExtensionFromUrl } from '../../utility/getExtensionFromUrl';
+
+import { ArticleCore, ArticleData } from './interfaces';
 
 export class Core implements ArticleCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
@@ -62,13 +63,5 @@ export class Core implements ArticleCore {
     const date = this.data.getCreatedTime('createdTime');
 
     return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
-  }
-
-  async getOptimizedUrl(
-    optimizeFunction: (id: string, file: string) => Promise<string> | string
-  ) {
-    if (!this.image) return;
-
-    return optimizeFunction(this.id, this.image);
   }
 }

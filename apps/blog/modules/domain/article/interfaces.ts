@@ -14,9 +14,6 @@ export interface ArticleSingle extends ArticleCore {}
 
 export interface ArticleList {
   all: ArticleSingle[];
-  featureLatest: ArticleSingle | undefined;
-  featuresRecently: ArticleSingle[];
-  featuresPreviously: ArticleSingle[];
 }
 
 export interface ArticleData {

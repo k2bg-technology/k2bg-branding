@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Avatar, BlogCard } from 'ui';
 
 import Notion from '../../modules/data-access/notion';
 import Article from '../../modules/domain/article';
-import Cloudinary from '../../modules/data-access/cloudinary';
+import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface Props {
   articleId: string;
@@ -16,20 +15,7 @@ export async function PageHeading(props: Props) {
   const page = new Notion.Page(await new Notion.Fetcher().fetchPage(articleId));
   const article = new Article.Single(page);
 
-  const placeholder = await article.imagePlaceholder;
-
   if (!article.image) throw new Error('No image found');
-
-  const publicId = article.id;
-
-  await new Cloudinary.Uploader().uploadImage(article.image, {
-    public_id: publicId,
-  });
-
-  const optimizedUrl = await new Cloudinary.Fetcher().getImageUrl(publicId, {
-    fetch_format: 'auto',
-    quality: 'auto',
-  });
 
   return (
     <BlogCard className="flex-col gap-spacious">
@@ -52,14 +38,12 @@ export async function PageHeading(props: Props) {
         date={article.releaseDate}
       />
       <BlogCard.Media className="relative w-full h-[23.5rem]">
-        <Image
+        <CloudinaryImage
+          publicId={article.id}
           alt="media"
-          src={optimizedUrl}
           className="aspect-square h-full w-full object-cover"
           fill
           sizes="100%"
-          placeholder="blur"
-          blurDataURL={placeholder}
           priority
           unoptimized={article.imageExtension === '.gif'}
         />

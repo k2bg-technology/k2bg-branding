@@ -4,7 +4,6 @@ import Notion from '../../modules/data-access/notion';
 import Article from '../../modules/domain/article';
 import Pagination from '../../components/pagination/Pagination';
 import { Articles } from '../../components/articles/Articles';
-import Cloudinary from '../../modules/data-access/cloudinary';
 import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 
 const PAGE_SIZE = 6;
@@ -71,28 +70,8 @@ export default async function Page({
     const pages = database.results.map((result) => new Notion.Page(result));
     const articles = new Article.List(pages);
 
-    const placeHolders = await Article.List.convertImageToPlaceholder(
-      articles.all
-    );
-
-    const optimizedImages = await Article.List.optimizeImage(
-      articles.all,
-      async (id, file) => {
-        await new Cloudinary.Uploader().uploadImage(file, {
-          public_id: id,
-        });
-
-        return new Cloudinary.Fetcher().getImageUrl(id, {
-          fetch_format: 'auto',
-          quality: 'auto',
-        });
-      }
-    );
-
     return {
       articles,
-      placeHolders,
-      optimizedImages,
     };
   }
 
@@ -107,7 +86,7 @@ export default async function Page({
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>
         <div className="grid grid-cols-[subgrid] col-span-full">
           {showArticles ? (
-            <Articles fetchArticles={fetchArticles} />
+            <Articles fetchArticles={() => fetchArticles()} />
           ) : (
             <div className="grid grid-cols-1 col-span-full">
               検索キーワードに一致する記事は見つかりませんでした。

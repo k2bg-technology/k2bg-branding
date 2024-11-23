@@ -1,4 +1,5 @@
 import { getImageWithPlaceholder } from '../../utility/getImageWithPlaceholder';
+
 import { Core } from './core';
 import { AffiliateProduction } from './interfaces';
 
@@ -51,11 +52,5 @@ export class Product extends Core implements AffiliateProduction {
     if (imageHeight) return imageHeight;
 
     throw new Error('Product Affiliate image height is required');
-  }
-
-  getOptimizedUrl(
-    optimizeFunction: (id: string, file: string) => Promise<string> | string
-  ) {
-    return optimizeFunction(this.id, this.imageFile);
   }
 }

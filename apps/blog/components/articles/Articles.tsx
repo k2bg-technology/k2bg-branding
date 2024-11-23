@@ -1,27 +1,19 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Avatar, BlogCard } from 'ui';
 
 import Article from '../../modules/domain/article';
+import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface Props {
   fetchArticles: () => Promise<{
     articles: InstanceType<(typeof Article)['List']>;
-    placeHolders: Record<
-      InstanceType<(typeof Article)['Single']>['id'],
-      string
-    >;
-    optimizedImages: Record<
-      InstanceType<(typeof Article)['Single']>['id'],
-      string
-    >;
   }>;
 }
 
 export async function Articles(props: Props) {
   const { fetchArticles } = props;
 
-  const { articles, placeHolders, optimizedImages } = await fetchArticles();
+  const { articles } = await fetchArticles();
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-6 place-content-start">
@@ -30,14 +22,12 @@ export async function Articles(props: Props) {
           {article.image && (
             <Link href={`/blog/${article.slug}`} passHref>
               <BlogCard.Media className="relative w-full h-[16rem]">
-                <Image
+                <CloudinaryImage
+                  publicId={article.id}
                   alt="media"
-                  src={optimizedImages[article.id]}
                   className="aspect-square h-full w-full object-cover"
                   fill
                   sizes="100%"
-                  placeholder="blur"
-                  blurDataURL={placeHolders[article.id]}
                   unoptimized={article.imageExtension === '.gif'}
                   quality={30}
                 />

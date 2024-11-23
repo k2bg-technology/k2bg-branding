@@ -11,6 +11,7 @@ interface BannerPromotionProps extends HTMLAttributes<HTMLAnchorElement> {
 
 export default function BannerPromotion(props: BannerPromotionProps) {
   const {
+    id,
     linkText,
     linkUrl,
     imageUrl,
@@ -34,6 +35,7 @@ export default function BannerPromotion(props: BannerPromotionProps) {
         src={imageUrl}
         width={imageWidth}
         height={imageHeight}
+        data-id={id}
         data-placeholder={imagePlaceholder}
         className="object-contain cursor-pointer"
       />

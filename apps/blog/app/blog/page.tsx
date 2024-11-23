@@ -1,11 +1,10 @@
 import { Avatar, BlogCard } from 'ui';
-import Image from 'next/image';
 import Link from 'next/link';
 
 import Notion from '../../modules/data-access/notion';
 import Article from '../../modules/domain/article';
 import Sidebar from '../../components/sidebar/Sidebar';
-import Cloudinary from '../../modules/data-access/cloudinary';
+import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 
 const fetchDatabase = async () => {
   const database = await new Notion.Fetcher().fetchDatabase({
@@ -33,84 +32,60 @@ const fetchDatabase = async () => {
 export default async function Page() {
   const database = await fetchDatabase();
   const pages = database.results.map((result) => new Notion.Page(result));
-  const articles = new Article.List(pages);
+  const notionArticles = new Article.List(pages).all;
 
-  const placeHolders = await Article.List.convertImageToPlaceholder([
-    articles.featureLatest,
-    ...articles.featuresPreviously,
-    ...articles.featuresRecently,
-  ]);
-
-  const optimizedImages = await Article.List.optimizeImage(
-    [
-      articles.featureLatest,
-      ...articles.featuresPreviously,
-      ...articles.featuresRecently,
-    ],
-    async (id, file) => {
-      await new Cloudinary.Uploader().uploadImage(file, {
-        public_id: id,
-      });
-
-      return new Cloudinary.Fetcher().getImageUrl(id, {
-        fetch_format: 'auto',
-        quality: 'auto',
-      });
-    }
-  );
+  const featureLatest = notionArticles[0];
+  const featuresRecently = notionArticles.slice(1, 3);
+  const featuresPreviously = notionArticles.slice(4, 8);
 
   return (
     <>
       <div className="col-span-full grid grid-cols-[subgrid]">
         <div className="col-start-1 col-end-8">
           <BlogCard className="flex-col gap-spacious">
-            {articles.featureLatest.image && (
-              <Link href={`/blog/${articles.featureLatest.slug}`} passHref>
-                <BlogCard.Media className="relative w-full h-[18.75rem]">
-                  <Image
-                    alt="media"
-                    src={optimizedImages[articles.featureLatest.id]}
-                    className="absolute aspect-square h-full w-full object-cover"
-                    fill
-                    sizes="100%"
-                    priority
-                    placeholder="blur"
-                    blurDataURL={placeHolders[articles.featureLatest.id]}
-                    quality={30}
-                  />
-                </BlogCard.Media>
-              </Link>
-            )}
+            <Link href={`/blog/${featureLatest.slug}`} passHref>
+              <BlogCard.Media className="relative w-full h-[18.75rem]">
+                <CloudinaryImage
+                  publicId={featureLatest.id}
+                  alt="media"
+                  className="absolute aspect-square h-full w-full object-cover"
+                  fill
+                  sizes="100%"
+                  priority
+                  quality={30}
+                />
+              </BlogCard.Media>
+            </Link>
             <BlogCard.Content
               category={
-                <Link href={`/category/${articles.featureLatest.category}`}>
-                  {articles.featureLatest.category}
+                <Link href={`/category/${featureLatest.category}`}>
+                  {featureLatest.category}
                 </Link>
               }
               heading={
-                <Link href={`/blog/${articles.featureLatest.slug}`}>
+                <Link href={`/blog/${featureLatest.slug}`}>
                   <h2 className="text-header-2 leading-header-2 font-bold">
-                    {articles.featureLatest.title}
+                    {featureLatest.title}
                   </h2>
                 </Link>
               }
-              excerpt={articles.featureLatest.excerpt}
+              excerpt={featureLatest.excerpt}
               avatar={
-                articles.featureLatest.author && (
+                featureLatest.author && (
                   <Avatar>
                     <Avatar.Image
                       alt="author"
-                      src={articles.featureLatest.author.avatar_url ?? ''}
+                      src={featureLatest.author.avatar_url ?? ''}
                     />
                   </Avatar>
                 )
               }
-              date={articles.featureLatest.releaseDate}
+              date={featureLatest.releaseDate}
             />
           </BlogCard>
         </div>
         <div className="col-start-8 col-end-13 hidden xl:grid gap-6">
-          {articles.featuresRecently.map((article) => (
+          {featuresRecently.map((article) => (
             <BlogCard key={article.title} className="flex-row gap-spacious">
               {article.image && (
                 <Link
@@ -119,13 +94,13 @@ export default async function Page() {
                   className="h-full"
                 >
                   <BlogCard.Media className="relative flex-none w-[10rem] h-[10rem]">
-                    <Image
+                    <CloudinaryImage
+                      publicId={article.id}
                       alt="media"
-                      src={optimizedImages[article.id]}
-                      className="aspect-square h-full w-full object-cover"
+                      className="absolute aspect-square h-full w-full object-cover"
                       fill
-                      placeholder="blur"
-                      blurDataURL={placeHolders[article.id]}
+                      sizes="100%"
+                      priority
                       quality={30}
                     />
                   </BlogCard.Media>
@@ -164,7 +139,7 @@ export default async function Page() {
       <hr className="col-span-full border-b-1 border-b-slate-100" />
       <div className="col-span-full grid grid-cols-[subgrid]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-start-1 col-end-10 place-content-start">
-          {articles.featuresRecently.map((article) => (
+          {featuresPreviously.map((article) => (
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-spacious">
                 {article.image && (
@@ -174,14 +149,13 @@ export default async function Page() {
                     className="h-full"
                   >
                     <BlogCard.Media className="relative w-full h-[16rem]">
-                      <Image
+                      <CloudinaryImage
+                        publicId={article.id}
                         alt="media"
-                        src={optimizedImages[article.id]}
                         className="aspect-square h-full w-full object-cover"
                         fill
                         sizes="100%"
-                        placeholder="blur"
-                        blurDataURL={placeHolders[article.id]}
+                        priority
                         quality={30}
                       />
                     </BlogCard.Media>
@@ -216,19 +190,18 @@ export default async function Page() {
               </BlogCard>
             </div>
           ))}
-          {articles.featuresPreviously.map((article) => (
+          {featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.image && (
                 <Link href={`/blog/${article.slug}`} passHref>
                   <BlogCard.Media className="relative w-full h-[16rem]">
-                    <Image
+                    <CloudinaryImage
+                      publicId={article.id}
                       alt="media"
-                      src={optimizedImages[article.id]}
                       className="aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"
-                      placeholder="blur"
-                      blurDataURL={placeHolders[article.id]}
+                      priority
                       quality={30}
                     />
                   </BlogCard.Media>

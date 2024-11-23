@@ -1,12 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
-
 import {
   BannerPromotion,
   ProductPromotion,
@@ -21,7 +19,7 @@ import Notion from '../../modules/data-access/notion';
 import Affiliate from '../../modules/domain/affiliate';
 import Media from '../../modules/domain/media';
 import DataType from '../../modules/domain/data-type';
-import Cloudinary from '../../modules/data-access/cloudinary';
+import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 const getArticle = async (pageId: string) => {
   const { renderToString } = await import('react-dom/server');
@@ -52,21 +50,8 @@ const getArticle = async (pageId: string) => {
       const dataType = new DataType.Core(asset).name;
 
       switch (dataType) {
-        case 'mediaImage':
+        case 'mediaImage': {
           const mediaImage = new Media.Image(asset);
-
-          const optimizedImageFileUrl = await mediaImage.getOptimizedUrl(
-            async (id, file) => {
-              await new Cloudinary.Uploader().uploadImage(file, {
-                public_id: id,
-              });
-
-              return new Cloudinary.Fetcher().getImageUrl(id, {
-                fetch_format: 'auto',
-                quality: 'auto',
-              });
-            }
-          );
 
           return renderToString(
             <div className="mt-4">
@@ -74,7 +59,7 @@ const getArticle = async (pageId: string) => {
                 id={assetId}
                 name={mediaImage.name}
                 url={mediaImage.url}
-                file={optimizedImageFileUrl}
+                file={mediaImage.file}
                 width={mediaImage.width}
                 height={mediaImage.height}
                 placeholder={await mediaImage.placeholder}
@@ -82,7 +67,8 @@ const getArticle = async (pageId: string) => {
               />
             </div>
           );
-        case 'mediaVideo':
+        }
+        case 'mediaVideo': {
           const mediaVideo = new Media.Video(asset);
 
           if (mediaVideo.url) {
@@ -110,7 +96,9 @@ const getArticle = async (pageId: string) => {
               </div>
             );
           }
-        case 'affiliateText':
+          return null;
+        }
+        case 'affiliateText': {
           const textAffiliate = new Affiliate.Text(asset);
 
           return renderToString(
@@ -120,21 +108,9 @@ const getArticle = async (pageId: string) => {
               </TextPromotion>
             </div>
           );
-        case 'affiliateBanner':
+        }
+        case 'affiliateBanner': {
           const bannerAffiliate = new Affiliate.Banner(asset);
-
-          const optimizedBannerImageUrl = await bannerAffiliate.getOptimizedUrl(
-            async (id, url) => {
-              await new Cloudinary.Uploader().uploadImage(url, {
-                public_id: id,
-              });
-
-              return new Cloudinary.Fetcher().getImageUrl(id, {
-                fetch_format: 'auto',
-                quality: 'auto',
-              });
-            }
-          );
 
           return renderToString(
             <div className="mt-8">
@@ -142,26 +118,16 @@ const getArticle = async (pageId: string) => {
                 id={assetId}
                 linkText={bannerAffiliate.linkText}
                 linkUrl={bannerAffiliate.linkUrl}
-                imageUrl={optimizedBannerImageUrl}
+                imageUrl={bannerAffiliate.imageUrl}
                 imageWidth={bannerAffiliate.imageWidth}
                 imageHeight={bannerAffiliate.imageHeight}
                 imagePlaceholder={await bannerAffiliate.imagePlaceholder}
               />
             </div>
           );
-        case 'affiliateProduct':
+        }
+        case 'affiliateProduct': {
           const productAffiliate = new Affiliate.Product(asset);
-          const optimizedProductImageUrl =
-            await productAffiliate.getOptimizedUrl(async (id, url) => {
-              await new Cloudinary.Uploader().uploadImage(url, {
-                public_id: id,
-              });
-
-              return new Cloudinary.Fetcher().getImageUrl(id, {
-                fetch_format: 'auto',
-                quality: 'auto',
-              });
-            });
 
           const providers = await Promise.all(
             productAffiliate.subProviders.map(async (subProvider) => {
@@ -183,7 +149,7 @@ const getArticle = async (pageId: string) => {
                 id={assetId}
                 linkText={productAffiliate.linkText}
                 linkUrl={productAffiliate.linkUrl}
-                imageUrl={optimizedProductImageUrl}
+                imageUrl={productAffiliate.imageFile}
                 imageWidth={productAffiliate.imageWidth}
                 imageHeight={productAffiliate.imageHeight}
                 providers={[
@@ -198,6 +164,7 @@ const getArticle = async (pageId: string) => {
               />
             </div>
           );
+        }
         default:
           return null;
       }
@@ -367,18 +334,16 @@ export default async function NotionMarkdown(props: Props) {
         img: ({ className, src, alt, width, height, node }) => {
           if (!(src && alt && width && height)) return null;
 
-          const placeholder = String(node.properties?.dataPlaceholder);
+          const id = String(node.properties?.dataId) || '';
           const unoptimized = Boolean(node.properties?.dataUnoptoinized);
 
           return (
-            <Image
+            <CloudinaryImage
+              publicId={id}
               className={className || 'first:mt-0 mt-5 mx-auto'}
-              src={src}
               alt={alt}
               width={Number(width)}
               height={Number(height)}
-              placeholder="blur"
-              blurDataURL={placeholder || 'data:image/png;base64'}
               quality={30}
               unoptimized={unoptimized}
             />
