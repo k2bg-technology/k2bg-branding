@@ -6,7 +6,6 @@ import { PageHeading } from '../../components/page-heading/PageHeading';
 import { NotionMarkdownSkelton } from '../../components/notion-markdown/NotionMarkdownSkelton';
 import { PageHeadingSkelton } from '../../components/page-heading/PageHeadingSkelton';
 
-// eslint-disable-next-line turbo/no-undeclared-env-vars
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
 
 export default async function Page() {
