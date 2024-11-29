@@ -1,5 +1,6 @@
 export interface ArticleCore {
   title?: string;
+  type?: string;
   excerpt?: string;
   image?: string;
   imagePlaceholder?: Promise<string>;
@@ -29,6 +30,7 @@ export interface ArticleData {
 }
 
 interface Author {
+  id: string;
   name: string | null;
   avatar_url: string | null;
 }

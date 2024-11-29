@@ -17,6 +17,10 @@ export class Core implements ArticleCore {
     return this.data.getTitle('content');
   }
 
+  get type() {
+    return this.data.getSelect('type');
+  }
+
   get excerpt() {
     return this.data.getRichText('excerpt');
   }
