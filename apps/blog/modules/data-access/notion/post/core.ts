@@ -1,13 +1,12 @@
 import { format } from 'date-fns';
 
-import { getImageWithPlaceholder } from '../../utility/getImageWithPlaceholder';
-import { getExtensionFromUrl } from '../../utility/getExtensionFromUrl';
+import { Page } from '../page';
 
-import { ArticleCore, ArticleData } from './interfaces';
+import { PostCore } from './interfaces';
 
-export class Core implements ArticleCore {
+export class Core implements PostCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
-  constructor(private data: ArticleData) {}
+  constructor(private data: Page) {}
 
   get id() {
     return this.data.id;
@@ -29,14 +28,6 @@ export class Core implements ArticleCore {
     return this.data.getFiles('image')?.[0];
   }
 
-  get imagePlaceholder() {
-    return getImageWithPlaceholder(this.image || '');
-  }
-
-  get imageExtension() {
-    return getExtensionFromUrl(this.image || '');
-  }
-
   get slug() {
     const slug = this.data.getRichText('slug');
 
@@ -56,7 +47,13 @@ export class Core implements ArticleCore {
   get author() {
     const author = this.data.getPerson('author');
 
-    return author;
+    if (!author) return undefined;
+
+    return {
+      id: author.id,
+      name: author.name,
+      avatarUrl: author.avatar_url,
+    };
   }
 
   get category() {
