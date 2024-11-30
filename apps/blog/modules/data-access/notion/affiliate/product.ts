@@ -1,5 +1,3 @@
-import { getImageWithPlaceholder } from '../../utility/getImageWithPlaceholder';
-
 import { Core } from './core';
 import { AffiliateProduction } from './interfaces';
 
@@ -32,10 +30,6 @@ export class Product extends Core implements AffiliateProduction {
     if (imageFile) return imageFile;
 
     throw new Error('Product Affiliate image file is required');
-  }
-
-  get imagePlaceholder() {
-    return getImageWithPlaceholder(this.imageFile || '');
   }
 
   get imageWidth() {

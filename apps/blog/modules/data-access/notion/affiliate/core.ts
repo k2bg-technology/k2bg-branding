@@ -1,8 +1,10 @@
-import { AffiliateCore, AffiliateData } from './interfaces';
+import { Page } from '../page';
+
+import { AffiliateCore } from './interfaces';
 
 export class Core implements AffiliateCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
-  constructor(protected data: AffiliateData) {}
+  constructor(protected data: Page) {}
 
   get id() {
     return this.data.id;

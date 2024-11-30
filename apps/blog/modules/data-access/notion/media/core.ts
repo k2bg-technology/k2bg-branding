@@ -1,8 +1,10 @@
-import { MediaCore, MediaData } from './interfaces';
+import { Page } from '../page';
+
+import { MediaCore } from './interfaces';
 
 export class Core implements MediaCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
-  constructor(protected data: MediaData) {}
+  constructor(protected data: Page) {}
 
   get id() {
     return this.data.id;
