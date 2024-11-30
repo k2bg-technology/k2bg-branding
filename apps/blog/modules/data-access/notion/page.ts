@@ -1,6 +1,6 @@
 import { QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
 
-import { MatchType, PageObject } from './type';
+import { MatchType, PageObject } from './types';
 
 export class Page {
   result: PageObject;
