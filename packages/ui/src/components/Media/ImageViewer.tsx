@@ -9,7 +9,6 @@ interface Props
   file?: string;
   width?: number;
   height?: number;
-  placeholder?: string;
   unoptoinized?: boolean;
 }
 
@@ -21,7 +20,6 @@ export default function ImageViewer({
   file,
   width,
   height,
-  placeholder,
   unoptoinized,
   ...rest
 }: Props) {
@@ -41,7 +39,6 @@ export default function ImageViewer({
           width={width}
           height={height}
           data-id={id}
-          data-placeholder={placeholder}
           data-unoptoinized={unoptoinized}
         />
       </a>
@@ -56,7 +53,6 @@ export default function ImageViewer({
       width={width}
       height={height}
       data-id={id}
-      data-placeholder={placeholder}
       data-unoptoinized={unoptoinized}
     />
   );
