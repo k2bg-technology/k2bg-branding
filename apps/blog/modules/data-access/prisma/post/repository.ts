@@ -200,7 +200,7 @@ export class PostRepository extends Core implements DomainPostRepository {
       category: post?.category,
       tags: [],
       releaseDate: post?.releaseDate,
-      revisionDate: '',
+      revisionDate: post?.revisionDate,
       author: authorSchema.parse({
         id: post?.author?.uuid,
         name: post?.author?.name,
