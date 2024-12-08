@@ -20,23 +20,8 @@ export class PostRepository extends Core implements DomainPostRepository {
 
     return posts.map((post) =>
       postSchema.parse({
-        id: post.uuid,
-        title: post.title,
-        content: post.content,
-        type: post.type,
-        excerpt: post.excerpt,
-        imageUrl: post.imageUrl,
-        slug: post.slug,
-        status: post.status,
-        category: post.category,
-        tags: [],
-        releaseDate: post.releaseDate,
-        revisionDate: '',
-        author: authorSchema.parse({
-          id: post.author?.uuid,
-          name: post.author?.name,
-          avatarUrl: post.author?.avatarUrl,
-        }),
+        ...Core.objectIdToUuid(post),
+        author: authorSchema.parse(Core.objectIdToUuid(post.author)),
       })
     );
   }
@@ -100,23 +85,8 @@ export class PostRepository extends Core implements DomainPostRepository {
 
     return posts.map((post) =>
       postSchema.parse({
-        id: post.uuid,
-        title: post.title,
-        content: post.content,
-        type: post.type,
-        excerpt: post.excerpt,
-        imageUrl: post.imageUrl,
-        slug: post.slug,
-        status: post.status,
-        category: post.category,
-        tags: [],
-        releaseDate: post.releaseDate,
-        revisionDate: '',
-        author: authorSchema.parse({
-          id: post.author?.uuid,
-          name: post.author?.name,
-          avatarUrl: post.author?.avatarUrl,
-        }),
+        ...Core.objectIdToUuid(post),
+        author: authorSchema.parse(Core.objectIdToUuid(post.author)),
       })
     );
   }
@@ -157,23 +127,8 @@ export class PostRepository extends Core implements DomainPostRepository {
 
     return posts.map((post) =>
       postSchema.parse({
-        id: post.uuid,
-        title: post.title,
-        content: post.content,
-        type: post.type,
-        excerpt: post.excerpt,
-        imageUrl: post.imageUrl,
-        slug: post.slug,
-        status: post.status,
-        category: post.category,
-        tags: [],
-        releaseDate: post.releaseDate,
-        revisionDate: '',
-        author: authorSchema.parse({
-          id: post.author?.uuid,
-          name: post.author?.name,
-          avatarUrl: post.author?.avatarUrl,
-        }),
+        ...Core.objectIdToUuid(post),
+        author: authorSchema.parse(Core.objectIdToUuid(post.author)),
       })
     );
   }
@@ -188,24 +143,13 @@ export class PostRepository extends Core implements DomainPostRepository {
       },
     });
 
+    if (!post) {
+      throw new Error('Post not found');
+    }
+
     return postSchema.parse({
-      id: post?.uuid,
-      title: post?.title,
-      content: post?.content,
-      type: post?.type,
-      excerpt: post?.excerpt,
-      imageUrl: post?.imageUrl,
-      slug: post?.slug,
-      status: post?.status,
-      category: post?.category,
-      tags: [],
-      releaseDate: post?.releaseDate,
-      revisionDate: post?.revisionDate,
-      author: authorSchema.parse({
-        id: post?.author?.uuid,
-        name: post?.author?.name,
-        avatarUrl: post?.author?.avatarUrl,
-      }),
+      ...Core.objectIdToUuid(post),
+      author: authorSchema.parse(Core.objectIdToUuid(post.author)),
     });
   }
 
