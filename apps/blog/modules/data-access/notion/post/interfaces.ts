@@ -14,6 +14,6 @@ export interface PostSingle extends PostCore {}
 
 interface Author {
   id: string;
-  name: string | null;
-  avatarUrl: string | null;
+  name?: string;
+  avatarUrl?: string;
 }

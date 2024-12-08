@@ -1,12 +1,12 @@
 export const DATA_TYPE_NAMES = [
-  'page',
-  'article',
-  'affiliateProduct',
-  'affiliateBanner',
-  'affiliateText',
-  'mediaImage',
-  'mediaVideo',
-  'mediaAudio',
+  'PAGE',
+  'ARTICLE',
+  'AFFILIATE_PRODUCT',
+  'AFFILIATE_BANNER',
+  'AFFILIATE_TEXT',
+  'MEDIA_IMAGE',
+  'MEDIA_VIDEO',
+  'MEDIA_AUDIO',
 ] as const;
 
 export type DATA_TYPE_NAMES = (typeof DATA_TYPE_NAMES)[number];

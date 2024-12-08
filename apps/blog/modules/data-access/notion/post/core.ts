@@ -24,8 +24,8 @@ export class Core implements PostCore {
     return this.data.getRichText('excerpt');
   }
 
-  get image() {
-    return this.data.getFiles('image')?.[0];
+  get imageUrl() {
+    return this.data.getFiles('imageUrl')?.[0];
   }
 
   get slug() {
@@ -44,6 +44,12 @@ export class Core implements PostCore {
     return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
   }
 
+  get revisionDate() {
+    const date = this.data.getDate('revisionDate');
+
+    return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
+  }
+
   get author() {
     const author = this.data.getPerson('author');
 
@@ -51,8 +57,8 @@ export class Core implements PostCore {
 
     return {
       id: author.id,
-      name: author.name,
-      avatarUrl: author.avatar_url,
+      name: author.name || undefined,
+      avatarUrl: author.avatar_url || undefined,
     };
   }
 

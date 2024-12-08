@@ -1,7 +1,1 @@
-import { Core } from './core';
-
-const DataType = {
-  Core,
-};
-
-export default DataType;
+export * from './core';
