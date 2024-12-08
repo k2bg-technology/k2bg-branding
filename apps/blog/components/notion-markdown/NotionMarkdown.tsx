@@ -7,15 +7,14 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-import * as Prisma from '../../modules/data-access/prisma';
+import { Post } from '../../modules/domain/post/types';
 
 interface Props {
-  articleId: string;
+  article: Post;
 }
 
 export default async function NotionMarkdown(props: Props) {
-  const postRepository = new Prisma.PostRepository();
-  const article = await postRepository.getPost(props.articleId);
+  const { article } = props;
 
   return (
     <ReactMarkdown

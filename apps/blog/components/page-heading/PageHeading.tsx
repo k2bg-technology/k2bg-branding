@@ -1,18 +1,15 @@
 import Link from 'next/link';
 import { Avatar, BlogCard } from 'ui';
 
-import * as Prisma from '../../modules/data-access/prisma';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
+import { Post } from '../../modules/domain/post/types';
 
 interface Props {
-  articleId: string;
+  article: Post;
 }
 
 export async function PageHeading(props: Props) {
-  const postRepository = new Prisma.PostRepository();
-  const article = await postRepository.getPost(props.articleId);
-
-  if (!article) return null;
+  const { article } = props;
 
   return (
     <BlogCard className="flex-col gap-spacious">
