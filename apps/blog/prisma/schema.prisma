@@ -14,22 +14,23 @@ datasource db {
 }
 
 model Post {
-  id          Int      @id @default(autoincrement())
-  uuid        String   @unique
-  title       String?
-  content     String?
-  type        String?
-  excerpt     String?
-  image       String?
-  slug        String?
-  status      String?
-  category    String?
-  tag         String?
-  releaseDate String?
-  author      Author?  @relation(fields: [authorId], references: [uuid])
-  authorId    String?
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz()
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique
+  title        String
+  content      String
+  type         Type     @default(ARTICLE)
+  excerpt      String
+  imageUrl     String
+  slug         String
+  status       Status   @default(DRAFT)
+  category     Category @default(OTHER)
+  tags         String[]
+  releaseDate  String
+  revisionDate String
+  author       Author   @relation(fields: [authorId], references: [uuid])
+  authorId     String
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt    DateTime @updatedAt @map("updated_at") @db.Timestamptz()
 }
 
 model Author {
@@ -40,4 +41,25 @@ model Author {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz()
   Post      Post[]
+}
+
+enum Type {
+  ARTICLE
+  PAGE
+}
+
+enum Status {
+  IDEA
+  DRAFT
+  PREVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum Category {
+  ENGINEERING
+  DESIGN
+  DATA_SCIENCE
+  LIFE_STYLE
+  OTHER
 }
