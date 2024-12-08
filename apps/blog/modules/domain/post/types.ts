@@ -1,25 +1,28 @@
 import { Author } from '../author/types';
 
-export const Type = ['article', 'page'] as const;
-export type Type = (typeof Type)[number];
+export const Type = {
+  ARTICLE: 'ARTICLE',
+  PAGE: 'PAGE',
+} as const;
+export type Type = (typeof Type)[keyof typeof Type];
 
-export const Status = [
-  'idea',
-  'draft',
-  'preview',
-  'published',
-  'archived',
-] as const;
-export type Status = (typeof Status)[number];
+export const Status = {
+  IDEA: 'IDEA',
+  DRAFT: 'DRAFT',
+  PREVIEW: 'PREVIEW',
+  PUBLISHED: 'PUBLISHED',
+  ARCHIVED: 'ARCHIVED',
+} as const;
+export type Status = (typeof Status)[keyof typeof Status];
 
-export const Category = [
-  'engineering',
-  'design',
-  'data-science',
-  'life-style',
-  'other',
-] as const;
-export type Category = (typeof Category)[number];
+export const Category = {
+  ENGINEERING: 'ENGINEERING',
+  DESIGN: 'DESIGN',
+  DATA_SCIENCE: 'DATA_SCIENCE',
+  LIFE_STYLE: 'LIFE_STYLE',
+  OTHER: 'OTHER',
+} as const;
+export type Category = (typeof Category)[keyof typeof Category];
 
 export interface Post {
   id: string;
