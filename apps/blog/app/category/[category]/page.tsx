@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 
-import Pagination from '../../../components/pagination/Pagination';
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
 import { Category } from '../../../modules/domain/post/types';
@@ -42,9 +41,6 @@ export default async function Page({
   })(params.category);
 
   const postRepository = new Prisma.PostRepository();
-  const totalPageCount = Math.ceil(
-    (await postRepository.getArticlesCountByCategory(category)) / PAGE_SIZE
-  );
 
   return (
     <>
@@ -52,20 +48,21 @@ export default async function Page({
         {params.category}
       </h1>
       <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
-        <div className="grid grid-cols-[subgrid] col-span-full">
-          <Articles
-            fetchArticles={() =>
-              postRepository.getPaginatedArticlesByCategory(
-                category,
-                PAGE_SIZE,
-                currentPage
-              )
-            }
-          />
-        </div>
-        <div className="flex justify-center grid-cols-[subgrid] col-span-full">
-          <Pagination count={totalPageCount} />
-        </div>
+        <Articles
+          fetchArticles={() =>
+            postRepository.getPaginatedArticlesByCategory(
+              category,
+              PAGE_SIZE,
+              currentPage
+            )
+          }
+          fetchArticlesCount={async () =>
+            Math.ceil(
+              (await postRepository.getArticlesCountByCategory(category)) /
+                PAGE_SIZE
+            )
+          }
+        />
       </Suspense>
     </>
   );

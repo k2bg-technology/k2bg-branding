@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 
 import * as Prisma from '../../modules/data-access/prisma';
-import Pagination from '../../components/pagination/Pagination';
 import { Articles } from '../../components/articles/Articles';
 import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 
@@ -19,11 +18,6 @@ export default async function Page({
   const currentPage = Number(searchParams?.page) || 1;
 
   const postRepository = new Prisma.PostRepository();
-  const totalPageCount = Math.ceil(
-    (await postRepository.getArticlesCountByQueryString(query)) / PAGE_SIZE
-  );
-
-  const showArticles = totalPageCount > 0;
 
   return (
     <>
@@ -31,28 +25,21 @@ export default async function Page({
         {query}
       </h1>
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>
-        <div className="grid grid-cols-[subgrid] col-span-full">
-          {showArticles ? (
-            <Articles
-              fetchArticles={() =>
-                postRepository.getPaginatedArticlesByQueryString(
-                  query,
-                  PAGE_SIZE,
-                  currentPage
-                )
-              }
-            />
-          ) : (
-            <div className="grid grid-cols-1 col-span-full">
-              検索キーワードに一致する記事は見つかりませんでした。
-            </div>
-          )}
-        </div>
-        {showArticles && (
-          <div className="flex justify-center grid-cols-[subgrid] col-span-full">
-            <Pagination count={totalPageCount} />
-          </div>
-        )}
+        <Articles
+          fetchArticles={async () =>
+            postRepository.getPaginatedArticlesByQueryString(
+              query,
+              PAGE_SIZE,
+              currentPage
+            )
+          }
+          fetchArticlesCount={async () =>
+            Math.ceil(
+              (await postRepository.getArticlesCountByQueryString(query)) /
+                PAGE_SIZE
+            )
+          }
+        />
       </Suspense>
     </>
   );

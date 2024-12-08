@@ -7,7 +7,7 @@ interface Props {
   count: number;
 }
 
-export default function Pagination(props: Props) {
+export function Pagination(props: Props) {
   const { count } = props;
 
   const pathname = usePathname();
