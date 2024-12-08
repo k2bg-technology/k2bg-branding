@@ -8,37 +8,27 @@ import * as Prisma from '../../../modules/data-access/prisma';
 const PAGE_SIZE = 6;
 
 export async function generateStaticParams() {
-  return ['engineering', 'design', 'data-science', 'life-style'].map(
-    (category) => ({
-      category,
-    })
-  );
+  return [
+    Category.ENGINEERING,
+    Category.DESIGN,
+    Category.DATA_SCIENCE,
+    Category.LIFE_STYLE,
+    Category.OTHER,
+  ].map((category) => ({
+    category,
+  }));
 }
 
 export default async function Page({
   params,
   searchParams,
 }: {
-  params: { category: string };
+  params: { category: Category };
   searchParams?: {
     page?: string;
   };
 }) {
   const currentPage = Number(searchParams?.page) || 1;
-  const category = ((pramCategory) => {
-    switch (pramCategory) {
-      case 'engineering':
-        return Category.ENGINEERING;
-      case 'design':
-        return Category.DESIGN;
-      case 'data-science':
-        return Category.DATA_SCIENCE;
-      case 'life-style':
-        return Category.LIFE_STYLE;
-      default:
-        return Category.OTHER;
-    }
-  })(params.category);
 
   const postRepository = new Prisma.PostRepository();
 
@@ -51,15 +41,16 @@ export default async function Page({
         <Articles
           fetchArticles={() =>
             postRepository.getPaginatedArticlesByCategory(
-              category,
+              params.category,
               PAGE_SIZE,
               currentPage
             )
           }
           fetchArticlesCount={async () =>
             Math.ceil(
-              (await postRepository.getArticlesCountByCategory(category)) /
-                PAGE_SIZE
+              (await postRepository.getArticlesCountByCategory(
+                params.category
+              )) / PAGE_SIZE
             )
           }
         />

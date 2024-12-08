@@ -5,6 +5,7 @@ import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import Sidebar from '../sidebar/Sidebar';
 import Search from '../search/Search';
+import { Category } from '../../modules/domain/post/types';
 
 export default function Header() {
   return (
@@ -22,7 +23,7 @@ export default function Header() {
               <nav>
                 <ul className="flex items-center gap-x-4">
                   <li>
-                    <Link href="/category/engineering" passHref>
+                    <Link href={`/category/${Category.ENGINEERING}`} passHref>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -33,7 +34,7 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/category/design" passHref>
+                    <Link href={`/category/${Category.DESIGN}`} passHref>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -44,7 +45,7 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/category/data-science" passHref>
+                    <Link href={`/category/${Category.DATA_SCIENCE}`} passHref>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -55,7 +56,7 @@ export default function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href="/category/life-style" passHref>
+                    <Link href={`/category/${Category.LIFE_STYLE}`} passHref>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -100,22 +101,22 @@ export default function Header() {
                 }
               >
                 <DropdownMenuItem>
-                  <Link href="/category/engineering" passHref>
+                  <Link href={`/category/${Category.ENGINEERING}`} passHref>
                     Engineering
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/category/design" passHref>
+                  <Link href={`/category/${Category.DESIGN}`} passHref>
                     Design
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/category/data-science" passHref>
+                  <Link href={`/category/${Category.DATA_SCIENCE}`} passHref>
                     Data Science
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/category/life-style" passHref>
+                  <Link href={`/category/${Category.LIFE_STYLE}`} passHref>
                     Life Style
                   </Link>
                 </DropdownMenuItem>
