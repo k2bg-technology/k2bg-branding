@@ -188,8 +188,6 @@ export class PostRepository extends Core implements DomainPostRepository {
       },
     });
 
-    console.log(post);
-
     return postSchema.parse({
       id: post?.uuid,
       title: post?.title,
