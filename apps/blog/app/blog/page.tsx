@@ -1,93 +1,72 @@
 import { Avatar, BlogCard } from 'ui';
 import Link from 'next/link';
 
-import Notion from '../../modules/data-access/notion';
-import Article from '../../modules/domain/article';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
-
-const fetchDatabase = async () => {
-  const database = await new Notion.Fetcher().fetchDatabase({
-    filter: {
-      and: [
-        {
-          property: 'status',
-          status: {
-            equals: 'published',
-          },
-        },
-        {
-          property: 'type',
-          select: {
-            equals: 'article',
-          },
-        },
-      ],
-    },
-  });
-
-  return database;
-};
+import * as Prisma from '../../modules/data-access/prisma';
 
 export default async function Page() {
-  const database = await fetchDatabase();
-  const pages = database.results.map((result) => new Notion.Page(result));
-  const notionArticles = new Article.List(pages).all;
+  const postRepository = new Prisma.PostRepository();
+  const articles = await postRepository.getAllArticles();
 
-  const featureLatest = notionArticles[0];
-  const featuresRecently = notionArticles.slice(1, 3);
-  const featuresPreviously = notionArticles.slice(4, 8);
+  const featureLatest = articles.at(0);
+  const featuresRecently = articles.slice(1, 3);
+  const featuresPreviously = articles.slice(4, 8);
 
   return (
     <>
       <div className="col-span-full grid grid-cols-[subgrid]">
-        <div className="col-start-1 col-end-8">
-          <BlogCard className="flex-col gap-spacious">
-            <Link href={`/blog/${featureLatest.slug}`} passHref>
-              <BlogCard.Media className="relative w-full h-[18.75rem]">
-                <CloudinaryImage
-                  publicId={featureLatest.id}
-                  alt="media"
-                  className="absolute aspect-square h-full w-full object-cover"
-                  fill
-                  sizes="100%"
-                  priority
-                  quality={30}
-                />
-              </BlogCard.Media>
-            </Link>
-            <BlogCard.Content
-              category={
-                <Link href={`/category/${featureLatest.category}`}>
-                  {featureLatest.category}
-                </Link>
-              }
-              heading={
-                <Link href={`/blog/${featureLatest.slug}`}>
-                  <h2 className="text-header-2 leading-header-2 font-bold">
-                    {featureLatest.title}
-                  </h2>
-                </Link>
-              }
-              excerpt={featureLatest.excerpt}
-              avatar={
-                featureLatest.author && (
-                  <Avatar>
-                    <Avatar.Image
-                      alt="author"
-                      src={featureLatest.author.avatar_url ?? ''}
+        {featureLatest && (
+          <div className="col-start-1 col-end-8">
+            <BlogCard className="flex-col gap-spacious">
+              {featureLatest.imageUrl && (
+                <Link href={`/blog/${featureLatest.slug}`} passHref>
+                  <BlogCard.Media className="relative w-full h-[18.75rem]">
+                    <CloudinaryImage
+                      publicId={featureLatest.id}
+                      alt="media"
+                      className="absolute aspect-square h-full w-full object-cover"
+                      fill
+                      sizes="100%"
+                      priority
+                      quality={30}
                     />
-                  </Avatar>
-                )
-              }
-              date={featureLatest.releaseDate}
-            />
-          </BlogCard>
-        </div>
+                  </BlogCard.Media>
+                </Link>
+              )}
+              <BlogCard.Content
+                category={
+                  <Link href={`/category/${featureLatest.category}`}>
+                    {featureLatest.category}
+                  </Link>
+                }
+                heading={
+                  <Link href={`/blog/${featureLatest.slug}`}>
+                    <h2 className="text-header-2 leading-header-2 font-bold">
+                      {featureLatest.title}
+                    </h2>
+                  </Link>
+                }
+                excerpt={featureLatest.excerpt}
+                avatar={
+                  featureLatest.author && (
+                    <Avatar>
+                      <Avatar.Image
+                        alt="author"
+                        src={featureLatest.author.avatarUrl}
+                      />
+                    </Avatar>
+                  )
+                }
+                date={featureLatest.releaseDate}
+              />
+            </BlogCard>
+          </div>
+        )}
         <div className="col-start-8 col-end-13 hidden xl:grid gap-6">
           {featuresRecently.map((article) => (
             <BlogCard key={article.title} className="flex-row gap-spacious">
-              {article.image && (
+              {article.imageUrl && (
                 <Link
                   href={`/blog/${article.slug}`}
                   passHref
@@ -125,7 +104,7 @@ export default async function Page() {
                     <Avatar>
                       <Avatar.Image
                         alt="author"
-                        src={article.author.avatar_url ?? ''}
+                        src={article.author?.avatarUrl}
                       />
                     </Avatar>
                   )
@@ -142,7 +121,7 @@ export default async function Page() {
           {featuresPreviously.map((article) => (
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-spacious">
-                {article.image && (
+                {article.imageUrl && (
                   <Link
                     href={`/blog/${article.slug}`}
                     passHref
@@ -180,7 +159,7 @@ export default async function Page() {
                       <Avatar>
                         <Avatar.Image
                           alt="author"
-                          src={article.author.avatar_url ?? ''}
+                          src={article.author.avatarUrl}
                         />
                       </Avatar>
                     )
@@ -192,7 +171,7 @@ export default async function Page() {
           ))}
           {featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
-              {article.image && (
+              {article.imageUrl && (
                 <Link href={`/blog/${article.slug}`} passHref>
                   <BlogCard.Media className="relative w-full h-[16rem]">
                     <CloudinaryImage
@@ -226,7 +205,7 @@ export default async function Page() {
                     <Avatar>
                       <Avatar.Image
                         alt="author"
-                        src={article.author.avatar_url ?? ''}
+                        src={article.author.avatarUrl}
                       />
                     </Avatar>
                   )

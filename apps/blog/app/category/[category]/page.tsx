@@ -1,10 +1,12 @@
 import { Suspense } from 'react';
 
-import Notion from '../../../modules/data-access/notion';
 import Pagination from '../../../components/pagination/Pagination';
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
-import Article from '../../../modules/domain/article';
+import { Category } from '../../../modules/domain/post/types';
+import * as Prisma from '../../../modules/data-access/prisma';
+
+const PAGE_SIZE = 6;
 
 export async function generateStaticParams() {
   return ['engineering', 'design', 'data-science', 'life-style'].map(
@@ -24,64 +26,25 @@ export default async function Page({
   };
 }) {
   const currentPage = Number(searchParams?.page) || 1;
+  const category = ((pramCategory) => {
+    switch (pramCategory) {
+      case 'engineering':
+        return Category.ENGINEERING;
+      case 'design':
+        return Category.DESIGN;
+      case 'data-science':
+        return Category.DATA_SCIENCE;
+      case 'life-style':
+        return Category.LIFE_STYLE;
+      default:
+        return Category.OTHER;
+    }
+  })(params.category);
 
-  const filter = {
-    and: [
-      {
-        property: 'status',
-        status: {
-          equals: 'published',
-        },
-      },
-      {
-        property: 'category',
-        select: {
-          equals: params.category,
-        },
-      },
-    ],
-  };
-
-  const sorts = [
-    {
-      property: 'releaseDate',
-      direction: 'descending',
-    } as const,
-  ];
-
-  const PAGE_SIZE = 6;
-
-  const databasePagination = await new Notion.Fetcher()
-    .fetchDatabase({
-      filter_properties: ['title'],
-      filter,
-      sorts,
-    })
-    .then((res) =>
-      res.results.reduce<Record<string, string>>(
-        (prev, result, index) =>
-          index % PAGE_SIZE === 0
-            ? { ...prev, [index / PAGE_SIZE]: result.id }
-            : prev,
-        {}
-      )
-    );
-
-  async function fetchArticles() {
-    const database = await new Notion.Fetcher().fetchDatabase({
-      filter,
-      sorts,
-      page_size: PAGE_SIZE,
-      start_cursor: databasePagination[currentPage - 1],
-    });
-
-    const pages = database.results.map((result) => new Notion.Page(result));
-    const articles = new Article.List(pages);
-
-    return {
-      articles,
-    };
-  }
+  const postRepository = new Prisma.PostRepository();
+  const totalPageCount = Math.ceil(
+    (await postRepository.getArticlesCountByCategory(category)) / PAGE_SIZE
+  );
 
   return (
     <>
@@ -90,10 +53,18 @@ export default async function Page({
       </h1>
       <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
         <div className="grid grid-cols-[subgrid] col-span-full">
-          <Articles fetchArticles={() => fetchArticles()} />
+          <Articles
+            fetchArticles={() =>
+              postRepository.getPaginatedArticlesByCategory(
+                category,
+                PAGE_SIZE,
+                currentPage
+              )
+            }
+          />
         </div>
         <div className="flex justify-center grid-cols-[subgrid] col-span-full">
-          <Pagination count={Object.keys(databasePagination).length} />
+          <Pagination count={totalPageCount} />
         </div>
       </Suspense>
     </>

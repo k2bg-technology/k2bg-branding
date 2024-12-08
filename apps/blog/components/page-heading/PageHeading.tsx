@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import { Avatar, BlogCard } from 'ui';
 
-import Notion from '../../modules/data-access/notion';
-import Article from '../../modules/domain/article';
+import * as Prisma from '../../modules/data-access/prisma';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface Props {
@@ -10,12 +9,10 @@ interface Props {
 }
 
 export async function PageHeading(props: Props) {
-  const { articleId } = props;
+  const postRepository = new Prisma.PostRepository();
+  const article = await postRepository.getPost(props.articleId);
 
-  const page = new Notion.Page(await new Notion.Fetcher().fetchPage(articleId));
-  const article = new Article.Single(page);
-
-  if (!article.image) throw new Error('No image found');
+  if (!article) return null;
 
   return (
     <BlogCard className="flex-col gap-spacious">
@@ -28,10 +25,7 @@ export async function PageHeading(props: Props) {
         avatar={
           article.author && (
             <Avatar>
-              <Avatar.Image
-                alt="author"
-                src={article.author.avatar_url ?? ''}
-              />
+              <Avatar.Image alt="author" src={article.author.avatarUrl} />
             </Avatar>
           )
         }
@@ -45,7 +39,6 @@ export async function PageHeading(props: Props) {
           fill
           sizes="100%"
           priority
-          unoptimized={article.imageExtension === '.gif'}
         />
       </BlogCard.Media>
     </BlogCard>

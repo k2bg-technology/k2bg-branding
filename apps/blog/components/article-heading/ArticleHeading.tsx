@@ -1,28 +1,18 @@
 import Link from 'next/link';
 import { Avatar, BlogCard } from 'ui';
 
-import Notion from '../../modules/data-access/notion';
-import Article from '../../modules/domain/article';
+import * as Prisma from '../../modules/data-access/prisma';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-
-const getArticle = async (pageId: string) => {
-  const notionFetcher = new Notion.Fetcher();
-  const page = new Notion.Page(await notionFetcher.fetchPage(pageId));
-  const article = new Article.Single(page);
-
-  return article;
-};
 
 interface Props {
   articleId: string;
 }
 
 export async function ArticleHeading(props: Props) {
-  const { articleId } = props;
+  const postRepository = new Prisma.PostRepository();
+  const article = await postRepository.getPost(props.articleId);
 
-  const article = await getArticle(articleId);
-
-  if (!article.image) throw new Error('No image found');
+  if (!article) return null;
 
   return (
     <BlogCard className="flex-col gap-spacious">
@@ -35,26 +25,24 @@ export async function ArticleHeading(props: Props) {
         avatar={
           article.author && (
             <Avatar>
-              <Avatar.Image
-                alt="author"
-                src={article.author.avatar_url ?? ''}
-              />
+              <Avatar.Image alt="author" src={article.author.avatarUrl} />
             </Avatar>
           )
         }
         date={article.releaseDate}
       />
-      <BlogCard.Media className="relative w-full h-[23.5rem]">
-        <CloudinaryImage
-          publicId={article.id}
-          alt="media"
-          className="aspect-square h-full w-full object-cover"
-          fill
-          sizes="100%"
-          priority
-          unoptimized={article.imageExtension === '.gif'}
-        />
-      </BlogCard.Media>
+      {article.imageUrl && (
+        <BlogCard.Media className="relative w-full h-[23.5rem]">
+          <CloudinaryImage
+            publicId={article.id}
+            alt="media"
+            className="aspect-square h-full w-full object-cover"
+            fill
+            sizes="100%"
+            priority
+          />
+        </BlogCard.Media>
+      )}
     </BlogCard>
   );
 }

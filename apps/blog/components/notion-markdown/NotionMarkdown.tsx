@@ -5,191 +5,17 @@ import SyntaxHighlighter from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
-import {
-  BannerPromotion,
-  ProductPromotion,
-  TextPromotion,
-  ImageViewer,
-  VideoFilePlayer,
-  VideoStreamingPlayer,
-} from 'ui';
 
-import { N2m } from '../../modules/data-access/notion/n2m';
-import Notion from '../../modules/data-access/notion';
-import Affiliate from '../../modules/domain/affiliate';
-import Media from '../../modules/domain/media';
-import DataType from '../../modules/domain/data-type';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-
-const getArticle = async (pageId: string) => {
-  const { renderToString } = await import('react-dom/server');
-
-  const notionFetcher = new Notion.Fetcher();
-  const n2m = new N2m();
-
-  n2m.setCustomTransformer('link_to_page', (block) => {
-    if (!('link_to_page' in block && 'page_id' in block.link_to_page))
-      return false;
-
-    return `<LinkToPage>${block.link_to_page.page_id}</LinkToPage>`;
-  });
-
-  const markdownStringWithoutAssets =
-    await n2m.fetchNotionPageAndConvertMarkdownString(pageId);
-
-  const regex = /<LinkToPage>([^<]+)<\/LinkToPage>/g;
-  const matches = Array.from(
-    markdownStringWithoutAssets.matchAll(regex),
-    (m) => m[1]
-  );
-
-  const assets = await Promise.all(
-    matches.map(async (assetId) => {
-      const asset = new Notion.Page(await notionFetcher.fetchPage(assetId));
-
-      const dataType = new DataType.Core(asset).name;
-
-      switch (dataType) {
-        case 'mediaImage': {
-          const mediaImage = new Media.Image(asset);
-
-          return renderToString(
-            <div className="mt-4">
-              <ImageViewer
-                id={assetId}
-                name={mediaImage.name}
-                url={mediaImage.url}
-                file={mediaImage.file}
-                width={mediaImage.width}
-                height={mediaImage.height}
-                placeholder={await mediaImage.placeholder}
-                unoptoinized={mediaImage.extension === '.gif'}
-              />
-            </div>
-          );
-        }
-        case 'mediaVideo': {
-          const mediaVideo = new Media.Video(asset);
-
-          if (mediaVideo.url) {
-            return renderToString(
-              <div className="flex justify-center mt-8">
-                <VideoStreamingPlayer
-                  id={assetId}
-                  url={mediaVideo.url}
-                  width={mediaVideo.width}
-                  height={mediaVideo.height}
-                />
-              </div>
-            );
-          }
-
-          if (mediaVideo.file) {
-            return renderToString(
-              <div className="flex justify-center mt-8">
-                <VideoFilePlayer
-                  id={assetId}
-                  file={mediaVideo.file}
-                  width={mediaVideo.width}
-                  height={mediaVideo.height}
-                />
-              </div>
-            );
-          }
-          return null;
-        }
-        case 'affiliateText': {
-          const textAffiliate = new Affiliate.Text(asset);
-
-          return renderToString(
-            <div className="mt-8">
-              <TextPromotion id={assetId} href={textAffiliate.linkUrl}>
-                {textAffiliate.linkText}
-              </TextPromotion>
-            </div>
-          );
-        }
-        case 'affiliateBanner': {
-          const bannerAffiliate = new Affiliate.Banner(asset);
-
-          return renderToString(
-            <div className="mt-8">
-              <BannerPromotion
-                id={assetId}
-                linkText={bannerAffiliate.linkText}
-                linkUrl={bannerAffiliate.linkUrl}
-                imageUrl={bannerAffiliate.imageUrl}
-                imageWidth={bannerAffiliate.imageWidth}
-                imageHeight={bannerAffiliate.imageHeight}
-                imagePlaceholder={await bannerAffiliate.imagePlaceholder}
-              />
-            </div>
-          );
-        }
-        case 'affiliateProduct': {
-          const productAffiliate = new Affiliate.Product(asset);
-
-          const providers = await Promise.all(
-            productAffiliate.subProviders.map(async (subProvider) => {
-              const provider = new Affiliate.SubProvider(
-                new Notion.Page(await notionFetcher.fetchPage(subProvider))
-              );
-
-              return {
-                linkText: provider.provider,
-                linkUrl: provider.linkUrl,
-                color: provider.providerColor,
-              };
-            })
-          );
-
-          return renderToString(
-            <div className="mt-8">
-              <ProductPromotion
-                id={assetId}
-                linkText={productAffiliate.linkText}
-                linkUrl={productAffiliate.linkUrl}
-                imageUrl={productAffiliate.imageFile}
-                imageWidth={productAffiliate.imageWidth}
-                imageHeight={productAffiliate.imageHeight}
-                providers={[
-                  {
-                    linkText: productAffiliate.provider,
-                    linkUrl: productAffiliate.linkUrl,
-                    color: productAffiliate.providerColor,
-                  },
-                  ...providers,
-                ]}
-                imagePlaceholder={await productAffiliate.imagePlaceholder}
-              />
-            </div>
-          );
-        }
-        default:
-          return null;
-      }
-    })
-  );
-
-  const markdownString = markdownStringWithoutAssets.replace(
-    regex,
-    (_, replaceValue) =>
-      assets.find((asset) => asset && asset.includes(replaceValue)) || ''
-  );
-
-  return {
-    markdownString,
-  };
-};
+import * as Prisma from '../../modules/data-access/prisma';
 
 interface Props {
   articleId: string;
 }
 
 export default async function NotionMarkdown(props: Props) {
-  const { articleId } = props;
-
-  const { markdownString } = await getArticle(articleId);
+  const postRepository = new Prisma.PostRepository();
+  const article = await postRepository.getPost(props.articleId);
 
   return (
     <ReactMarkdown
@@ -351,7 +177,7 @@ export default async function NotionMarkdown(props: Props) {
         },
       }}
     >
-      {markdownString}
+      {article.content}
     </ReactMarkdown>
   );
 }

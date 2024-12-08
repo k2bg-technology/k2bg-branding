@@ -1,41 +1,21 @@
 import { Suspense } from 'react';
 
-import Notion from '../../../../modules/data-access/notion';
-import Article from '../../../../modules/domain/article';
 import NotionMarkdown from '../../../../components/notion-markdown/NotionMarkdown';
 import Sidebar from '../../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { ArticleHeadingSkelton } from '../../../../components/article-heading/ArticleHeadingSkelton';
 import { NotionMarkdownSkelton } from '../../../../components/notion-markdown/NotionMarkdownSkelton';
+import * as Prisma from '../../../../modules/data-access/prisma';
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const database = await new Notion.Fetcher().fetchDatabase({
-    filter: {
-      and: [
-        {
-          property: 'status',
-          status: {
-            equals: 'published',
-          },
-        },
-        {
-          property: 'type',
-          select: {
-            equals: 'article',
-          },
-        },
-      ],
-    },
-  });
+  const postRepository = new Prisma.PostRepository();
+  const posts = await postRepository.getAllArticleSlugs();
 
-  const pages = database.results.map((result) => new Notion.Page(result));
-  const articles = new Article.List(pages);
-
-  return articles.all.map((article) => ({
-    id: article.id,
-    slug: article.slug,
+  return posts.map((post) => ({
+    id: post.id,
+    slug: post.slug,
   }));
 }
 
