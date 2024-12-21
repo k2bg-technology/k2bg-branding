@@ -13,7 +13,7 @@ interface Props {
   article: Post;
 }
 
-export default async function NotionMarkdown(props: Props) {
+export async function Root(props: Props) {
   const { article } = props;
 
   return (

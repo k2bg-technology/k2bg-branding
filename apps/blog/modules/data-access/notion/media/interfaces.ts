@@ -1,12 +1,12 @@
 export interface MediaCore {
-  name: string;
-  type: string;
-  width: number;
-  height: number;
-  linkText?: string;
-  linkUrl?: string;
-  url?: string;
-  file?: string;
+  id: string;
+  name?: string;
+  type?: string;
+  width?: number;
+  height?: number;
+  targetUrl?: string;
+  sourceUrl?: string;
+  sourceFile?: string;
 }
 
 export interface MediaImage extends MediaCore {}

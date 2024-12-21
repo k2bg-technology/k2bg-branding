@@ -5,6 +5,13 @@ import { MediaImage } from './interfaces';
 
 export class Image extends Core implements MediaImage {
   get extension() {
-    return getExtensionFromUrl(this.file || this.url || '');
+    return this.sourceUrl ? getExtensionFromUrl(this.sourceUrl) : '';
+  }
+
+  toObject() {
+    return {
+      ...super.toObject(),
+      extension: this.extension,
+    };
   }
 }

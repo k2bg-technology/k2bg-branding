@@ -11,58 +11,43 @@ export class Core implements MediaCore {
   }
 
   get name() {
-    const name = this.data.getTitle('name');
-
-    if (name) return name;
-
-    throw new Error('name is required');
+    return this.data.getTitle('name');
   }
 
   get type() {
-    const type = this.data.getSelect('type');
-
-    if (type) return type;
-
-    throw new Error('type is required');
+    return this.data.getSelect('type');
   }
 
-  get linkText() {
-    const linkText = this.data.getRichText('linkText');
-
-    return linkText;
+  get targetUrl() {
+    return this.data.getUrl('targetUrl');
   }
 
-  get linkUrl() {
-    const linkUrl = this.data.getUrl('linkUrl');
-
-    return linkUrl;
+  get sourceUrl() {
+    return this.data.getUrl('sourceUrl');
   }
 
-  get url() {
-    const provider = this.data.getUrl('url');
-
-    return provider;
-  }
-
-  get file() {
-    const file = this.data.getFiles('file')?.[0];
-
-    return file;
+  get sourceFile() {
+    return this.data.getFiles('sourceFile')?.[0];
   }
 
   get width() {
-    const width = this.data.getNumber('width');
-
-    if (width) return width;
-
-    throw new Error('width is required');
+    return this.data.getNumber('width');
   }
 
   get height() {
-    const imageHeight = this.data.getNumber('height');
+    return this.data.getNumber('height');
+  }
 
-    if (imageHeight) return imageHeight;
-
-    throw new Error('height is required');
+  protected toObject() {
+    return {
+      id: this.id,
+      name: this.name,
+      type: this.type,
+      targetUrl: this.targetUrl,
+      sourceUrl: this.sourceUrl,
+      sourceFile: this.sourceFile,
+      width: this.width,
+      height: this.height,
+    };
   }
 }

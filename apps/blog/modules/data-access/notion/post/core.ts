@@ -71,4 +71,20 @@ export class Core implements PostCore {
 
     return date ? format(new Date(date), 'yyyy-MM-dd') : undefined;
   }
+
+  toObject() {
+    return {
+      id: this.id,
+      title: this.title,
+      type: this.type,
+      excerpt: this.excerpt,
+      imageUrl: this.imageUrl,
+      slug: this.slug,
+      status: this.status,
+      category: this.category,
+      author: this.author,
+      releaseDate: this.releaseDate,
+      revisionDate: this.revisionDate,
+    };
+  }
 }

@@ -1,16 +1,18 @@
-import {
-  ImageViewer,
-  VideoStreamingPlayer,
-  VideoFilePlayer,
-  TextPromotion,
-  BannerPromotion,
-  ProductPromotion,
-} from 'ui';
-
 import { postSchema } from '../../../modules/interfaces/post/validator';
 import Cloudinary from '../../../modules/data-access/cloudinary';
 import * as Notion from '../../../modules/data-access/notion';
 import * as Prisma from '../../../modules/data-access/prisma';
+import { Markdown } from '../../../components/markdown';
+import {
+  mediaImageSchema,
+  mediaVideoSchema,
+} from '../../../modules/interfaces/media/validator';
+import {
+  affiliateBannerSchema,
+  affiliateProductSchema,
+  affiliateSubProviderSchema,
+  affiliateTextSchema,
+} from '../../../modules/interfaces/affiliate/validator';
 
 const generateMarkdownString = async (pageId: string) => {
   const { renderToString } = await import('react-dom/server');
@@ -42,141 +44,82 @@ const generateMarkdownString = async (pageId: string) => {
 
       switch (dataType) {
         case 'MEDIA_IMAGE': {
-          const mediaImage = new Notion.Media.Image(asset);
+          const mediaImage = mediaImageSchema.parse(
+            new Notion.Media.Image(asset).toObject()
+          );
 
-          const imageUrl = mediaImage.url || mediaImage.file;
-
-          if (imageUrl) {
-            await new Cloudinary.Uploader().uploadImage(imageUrl, {
+          const imageSource = mediaImage.sourceUrl || mediaImage.sourceFile;
+          if (imageSource) {
+            await new Cloudinary.Uploader().uploadImage(imageSource, {
               public_id: mediaImage.id,
             });
           }
 
           return renderToString(
-            <div className="mt-4">
-              <ImageViewer
-                id={assetId}
-                name={mediaImage.name}
-                url={mediaImage.url}
-                file={mediaImage.file}
-                width={mediaImage.width}
-                height={mediaImage.height}
-                unoptoinized={mediaImage.extension === '.gif'}
-              />
-            </div>
+            <Markdown.MediaImage mediaImage={mediaImage} />
           );
         }
         case 'MEDIA_VIDEO': {
-          const mediaVideo = new Notion.Media.Video(asset);
-
-          if (mediaVideo.url) {
-            return renderToString(
-              <div className="flex justify-center mt-8">
-                <VideoStreamingPlayer
-                  id={assetId}
-                  url={mediaVideo.url}
-                  width={mediaVideo.width}
-                  height={mediaVideo.height}
-                />
-              </div>
-            );
-          }
-
-          if (mediaVideo.file) {
-            return renderToString(
-              <div className="flex justify-center mt-8">
-                <VideoFilePlayer
-                  id={assetId}
-                  file={mediaVideo.file}
-                  width={mediaVideo.width}
-                  height={mediaVideo.height}
-                />
-              </div>
-            );
-          }
-          return null;
-        }
-        case 'AFFILIATE_TEXT': {
-          const textAffiliate = new Notion.Affiliate.Text(asset);
+          const mediaVideo = mediaVideoSchema.parse(
+            new Notion.Media.Video(asset).toObject()
+          );
 
           return renderToString(
-            <div className="mt-8">
-              <TextPromotion id={assetId} href={textAffiliate.linkUrl}>
-                {textAffiliate.linkText}
-              </TextPromotion>
-            </div>
+            <Markdown.MediaVideo mediaVideo={mediaVideo} />
+          );
+        }
+        case 'AFFILIATE_TEXT': {
+          const affiliateText = affiliateTextSchema.parse(
+            new Notion.Affiliate.Text(asset).toObject()
+          );
+
+          return renderToString(
+            <Markdown.AffiliateText affiliateText={affiliateText} />
           );
         }
         case 'AFFILIATE_BANNER': {
-          const bannerAffiliate = new Notion.Affiliate.Banner(asset);
+          const affiliateBanner = affiliateBannerSchema.parse(
+            new Notion.Affiliate.Banner(asset).toObject()
+          );
 
-          if (bannerAffiliate.imageUrl) {
-            await new Cloudinary.Uploader().uploadImage(
-              bannerAffiliate.imageUrl,
-              {
-                public_id: bannerAffiliate.id,
-              }
-            );
+          const imageSource = affiliateBanner.imageSourceUrl;
+          if (imageSource) {
+            await new Cloudinary.Uploader().uploadImage(imageSource, {
+              public_id: affiliateBanner.id,
+            });
           }
 
           return renderToString(
-            <div className="mt-8">
-              <BannerPromotion
-                id={assetId}
-                linkText={bannerAffiliate.linkText}
-                linkUrl={bannerAffiliate.linkUrl}
-                imageUrl={bannerAffiliate.imageUrl}
-                imageWidth={bannerAffiliate.imageWidth}
-                imageHeight={bannerAffiliate.imageHeight}
-              />
-            </div>
+            <Markdown.AffiliateBanner affiliateBanner={affiliateBanner} />
           );
         }
         case 'AFFILIATE_PRODUCT': {
-          const productAffiliate = new Notion.Affiliate.Product(asset);
+          const affiliateProduct = affiliateProductSchema.parse(
+            new Notion.Affiliate.Product(asset).toObject()
+          );
 
-          if (productAffiliate.imageFile) {
-            await new Cloudinary.Uploader().uploadImage(
-              productAffiliate.imageFile,
-              {
-                public_id: productAffiliate.id,
-              }
-            );
+          const imageSource = affiliateProduct.imageSourceUrl;
+          if (imageSource) {
+            await new Cloudinary.Uploader().uploadImage(imageSource, {
+              public_id: affiliateProduct.id,
+            });
           }
 
-          const providers = await Promise.all(
-            productAffiliate.subProviders.map(async (subProvider) => {
-              const provider = new Notion.Affiliate.SubProvider(
-                new Notion.Page(await notionFetcher.fetchPage(subProvider))
-              );
-
-              return {
-                linkText: provider.provider,
-                linkUrl: provider.linkUrl,
-                color: provider.providerColor,
-              };
-            })
+          const subProviders = await Promise.all(
+            affiliateProduct.subProviders.map(async (subProvider) =>
+              affiliateSubProviderSchema.parse(
+                new Notion.Affiliate.SubProvider(
+                  new Notion.Page(await notionFetcher.fetchPage(subProvider))
+                ).toObject()
+              )
+            )
           );
 
           return renderToString(
-            <div className="mt-8">
-              <ProductPromotion
-                id={assetId}
-                linkText={productAffiliate.linkText}
-                linkUrl={productAffiliate.linkUrl}
-                imageUrl={productAffiliate.imageFile}
-                imageWidth={productAffiliate.imageWidth}
-                imageHeight={productAffiliate.imageHeight}
-                providers={[
-                  {
-                    linkText: productAffiliate.provider,
-                    linkUrl: productAffiliate.linkUrl,
-                    color: productAffiliate.providerColor,
-                  },
-                  ...providers,
-                ]}
-              />
-            </div>
+            <Markdown.AffiliateProduct
+              affiliateProduct={affiliateProduct}
+              subProviders={subProviders}
+            />
           );
         }
         default:
@@ -195,8 +138,6 @@ const generateMarkdownString = async (pageId: string) => {
 };
 
 export async function PATCH() {
-  const postRepository = new Prisma.PostRepository();
-
   const notionDatabase = await new Notion.Fetcher().fetchDatabase({
     filter: {
       and: [
@@ -223,28 +164,15 @@ export async function PATCH() {
       }
 
       return postSchema.parse({
-        id: notionPost.id,
-        title: notionPost.title,
-        type: notionPost.type,
-        excerpt: notionPost.excerpt,
-        imageUrl: notionPost.imageUrl,
-        slug: notionPost.slug,
-        status: notionPost.status,
-        category: notionPost.category,
+        ...notionPost.toObject(),
         // TODO: Implement tags
         tags: [],
         content: markdownString,
-        author: {
-          id: notionPost.author?.id,
-          name: notionPost.author?.name,
-          avatarUrl: notionPost.author?.avatarUrl,
-        },
-        releaseDate: notionPost.releaseDate,
-        revisionDate: notionPost.revisionDate,
       });
     })
   );
 
+  const postRepository = new Prisma.PostRepository();
   await postRepository.upsertAllPosts(posts);
 
   return Response.json(posts);

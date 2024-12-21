@@ -2,27 +2,27 @@ import { Core } from './core';
 import { AffiliateBanner } from './interfaces';
 
 export class Banner extends Core implements AffiliateBanner {
-  get imageUrl() {
-    const imageUrl = this.data.getUrl('imageUrl');
-
-    if (imageUrl) return imageUrl;
-
-    throw new Error('Banner Affiliate image url is required');
+  get imageSourceUrl() {
+    return (
+      this.data.getFiles('imageSourceFile')?.[0] ||
+      this.data.getUrl('imageSourceUrl')
+    );
   }
 
   get imageWidth() {
-    const imageWidth = this.data.getNumber('imageWidth');
-
-    if (imageWidth) return imageWidth;
-
-    throw new Error('Banner Affiliate image width is required');
+    return this.data.getNumber('imageWidth');
   }
 
   get imageHeight() {
-    const imageHeight = this.data.getNumber('imageHeight');
+    return this.data.getNumber('imageHeight');
+  }
 
-    if (imageHeight) return imageHeight;
-
-    throw new Error('Banner Affiliate image height is required');
+  toObject() {
+    return {
+      ...super.toObject(),
+      imageSourceUrl: this.imageSourceUrl,
+      imageWidth: this.imageWidth,
+      imageHeight: this.imageHeight,
+    };
   }
 }

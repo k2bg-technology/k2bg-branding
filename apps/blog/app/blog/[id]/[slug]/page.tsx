@@ -1,4 +1,4 @@
-import NotionMarkdown from '../../../../components/notion-markdown/NotionMarkdown';
+import { Markdown } from '../../../../components/markdown';
 import Sidebar from '../../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import * as Prisma from '../../../../modules/data-access/prisma';
@@ -30,7 +30,7 @@ export default async function Page({
       </div>
       <div className="grid grid-cols-[subgrid] col-span-full">
         <div className="col-start-1 col-end-10">
-          <NotionMarkdown article={article} />
+          <Markdown article={article} />
         </div>
         <div className="hidden xl:block col-start-10 col-end-13">
           <Sidebar />

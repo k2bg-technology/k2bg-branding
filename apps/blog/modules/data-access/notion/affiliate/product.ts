@@ -3,48 +3,41 @@ import { AffiliateProduction } from './interfaces';
 
 export class Product extends Core implements AffiliateProduction {
   get providerColor() {
-    const providerColor = this.data.getSelect('providerColor');
-
-    if (providerColor) return providerColor;
-
-    throw new Error('Affiliate providerColor is required');
+    return this.data.getSelect('providerColor');
   }
 
   get subProviders() {
-    const subProviders = this.data.getRelations('subProviders');
-
-    return subProviders;
+    return this.data.getRelations('subProviders');
   }
 
   get imageProvider() {
-    const imageProvider = this.data.getSelect('imageProvider');
-
-    if (imageProvider) return imageProvider;
-
-    throw new Error('Product Affiliate image provider is required');
+    return this.data.getSelect('imageProvider');
   }
 
-  get imageFile() {
-    const imageFile = this.data.getFiles('imageFile')?.[0];
-
-    if (imageFile) return imageFile;
-
-    throw new Error('Product Affiliate image file is required');
+  get imageSourceUrl() {
+    return (
+      this.data.getFiles('imageSourceFile')?.[0] ||
+      this.data.getUrl('imageSourceUrl')
+    );
   }
 
   get imageWidth() {
-    const imageWidth = this.data.getNumber('imageWidth');
-
-    if (imageWidth) return imageWidth;
-
-    throw new Error('Product Affiliate image width is required');
+    return this.data.getNumber('imageWidth');
   }
 
   get imageHeight() {
-    const imageHeight = this.data.getNumber('imageHeight');
+    return this.data.getNumber('imageHeight');
+  }
 
-    if (imageHeight) return imageHeight;
-
-    throw new Error('Product Affiliate image height is required');
+  toObject() {
+    return {
+      ...super.toObject(),
+      providerColor: this.providerColor,
+      subProviders: this.subProviders,
+      imageProvider: this.imageProvider,
+      imageSourceUrl: this.imageSourceUrl,
+      imageWidth: this.imageWidth,
+      imageHeight: this.imageHeight,
+    };
   }
 }
