@@ -1,4 +1,4 @@
-export interface PostCore {
+export interface Post {
   title?: string;
   type?: string;
   excerpt?: string;
@@ -9,8 +9,6 @@ export interface PostCore {
   author?: Author;
   category?: string;
 }
-
-export interface PostSingle extends PostCore {}
 
 interface Author {
   id: string;

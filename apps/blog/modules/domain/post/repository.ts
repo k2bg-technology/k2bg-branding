@@ -1,8 +1,18 @@
 import { Category, Order, Post } from './types';
 
-export interface PostRepository {
-  getAllArticles: (orderBy: Order) => Promise<Post[]>;
-  getAllArticleSlugs: (orderBy: Order) => Promise<Pick<Post, 'id' | 'slug'>[]>;
+export interface InputRepository {
+  getAllPosts: (orderBy?: Order) => Promise<Post[]>;
+  getAllHeroImageSources: () => Promise<
+    {
+      id: string;
+      url: string;
+    }[]
+  >;
+}
+
+export interface OutputRepository {
+  getAllArticles: (orderBy?: Order) => Promise<Post[]>;
+  getAllArticleSlugs: (orderBy?: Order) => Promise<Pick<Post, 'id' | 'slug'>[]>;
   getArticlesCountByCategory: (category: Category) => Promise<number>;
   getPaginatedArticlesByCategory: (
     category: Category,

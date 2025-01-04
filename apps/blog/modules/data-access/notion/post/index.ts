@@ -1,1 +1,2 @@
-export * from './single';
+export * from './entity';
+export * from './repository';

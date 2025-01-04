@@ -2,9 +2,9 @@ import { format } from 'date-fns';
 
 import { Page } from '../page';
 
-import { PostCore } from './interfaces';
+import { Post } from './types';
 
-export class Core implements PostCore {
+export class Entity implements Post {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private data: Page) {}
 
