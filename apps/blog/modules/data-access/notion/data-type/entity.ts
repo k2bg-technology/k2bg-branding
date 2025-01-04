@@ -1,6 +1,6 @@
-import { DATA_TYPE_NAMES, DataType, DataTypeCore } from './interfaces';
+import { DATA_TYPE_NAMES, DataType, DataTypeCore } from './types';
 
-export class Core implements DataTypeCore {
+export class Entity implements DataTypeCore {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private data: DataType) {}
 
