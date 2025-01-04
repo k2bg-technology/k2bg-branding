@@ -1,5 +1,3 @@
-export * from './fetcher';
-export * from './n2m';
 export * from './page';
 export * as Post from './post';
 export * as Media from './media';
