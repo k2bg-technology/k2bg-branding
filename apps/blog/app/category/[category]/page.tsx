@@ -30,7 +30,7 @@ export default async function Page({
 }) {
   const currentPage = Number(searchParams?.page) || 1;
 
-  const postRepository = new Prisma.PostRepository();
+  const postRepository = new Prisma.Post.Repository();
 
   return (
     <>

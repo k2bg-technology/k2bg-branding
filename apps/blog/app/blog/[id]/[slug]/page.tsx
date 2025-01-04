@@ -6,7 +6,7 @@ import * as Prisma from '../../../../modules/data-access/prisma';
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const postRepository = new Prisma.PostRepository();
+  const postRepository = new Prisma.Post.Repository();
   const posts = await postRepository.getAllArticleSlugs();
 
   return posts.map((post) => ({
@@ -20,7 +20,7 @@ export default async function Page({
 }: {
   params: { id: string; slug: string };
 }) {
-  const postRepository = new Prisma.PostRepository();
+  const postRepository = new Prisma.Post.Repository();
   const article = await postRepository.getPost(params.id);
 
   return (

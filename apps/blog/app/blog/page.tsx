@@ -6,7 +6,7 @@ import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryIma
 import * as Prisma from '../../modules/data-access/prisma';
 
 export default async function Page() {
-  const postRepository = new Prisma.PostRepository();
+  const postRepository = new Prisma.Post.Repository();
   const articles = await postRepository.getAllArticles();
 
   const featureLatest = articles.at(0);

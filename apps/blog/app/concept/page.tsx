@@ -6,7 +6,7 @@ import * as Prisma from '../../modules/data-access/prisma';
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
 
 export default async function Page() {
-  const postRepository = new Prisma.PostRepository();
+  const postRepository = new Prisma.Post.Repository();
   const article = await postRepository.getPost(CONCEPT_PAGE_ID);
 
   return (
