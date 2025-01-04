@@ -10,18 +10,10 @@ interface CloudinaryImageProps
 export async function CloudinaryImage(props: CloudinaryImageProps) {
   const { publicId, alt, ...rest } = props;
 
-  const optimizedImageUrl = Cloudinary.Fetcher.getImageUrl(publicId, {
-    fetch_format: 'auto',
-    quality: 'auto',
-  });
+  const imageRepository = new Cloudinary.Repository();
 
-  const placeholderImageUrl = Cloudinary.Fetcher.getImageUrl(publicId, {
-    fetch_format: 'auto',
-    quality: 'auto',
-    effect: 'blur:1000',
-    width: '100',
-  });
-
+  const optimizedImageUrl = imageRepository.getOptimizedImageUrl(publicId);
+  const placeholderImageUrl = imageRepository.getPlaceholderImageUrl(publicId);
   const placeholderImageBase64 = await fetch(placeholderImageUrl).then(
     async (res) =>
       `data:image/webp;base64,${Buffer.from(await res.arrayBuffer()).toString(
