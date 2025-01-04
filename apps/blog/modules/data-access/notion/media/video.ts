@@ -1,7 +1,7 @@
-import { Core } from './core';
-import { MediaVideo } from './interfaces';
+import { Entity } from './entity';
+import { MediaVideo } from './types';
 
-export class Video extends Core implements MediaVideo {
+export class Video extends Entity implements MediaVideo {
   toObject() {
     return super.toObject();
   }

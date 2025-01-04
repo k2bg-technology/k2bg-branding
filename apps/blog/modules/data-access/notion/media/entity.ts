@@ -1,8 +1,8 @@
 import { Page } from '../page';
 
-import { MediaCore } from './interfaces';
+import { Media } from './types';
 
-export class Core implements MediaCore {
+export class Entity implements Media {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(protected data: Page) {}
 

@@ -1,4 +1,4 @@
-export interface MediaCore {
+export interface Media {
   id: string;
   name?: string;
   type?: string;
@@ -9,6 +9,6 @@ export interface MediaCore {
   sourceFile?: string;
 }
 
-export interface MediaImage extends MediaCore {}
+export interface MediaImage extends Media {}
 
-export interface MediaVideo extends MediaCore {}
+export interface MediaVideo extends Media {}

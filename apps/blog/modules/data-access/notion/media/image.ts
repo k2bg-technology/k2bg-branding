@@ -1,9 +1,9 @@
 import { getExtensionFromUrl } from '../../../utility/getExtensionFromUrl';
 
-import { Core } from './core';
-import { MediaImage } from './interfaces';
+import { Entity } from './entity';
+import { MediaImage } from './types';
 
-export class Image extends Core implements MediaImage {
+export class Image extends Entity implements MediaImage {
   get extension() {
     return this.sourceUrl ? getExtensionFromUrl(this.sourceUrl) : '';
   }
