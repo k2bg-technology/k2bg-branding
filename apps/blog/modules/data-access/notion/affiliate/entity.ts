@@ -1,8 +1,8 @@
 import { Page } from '../page';
 
-import { AffiliateCore } from './interfaces';
+import { Affiliate } from './types';
 
-export class Core implements AffiliateCore {
+export class Entity implements Affiliate {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(protected data: Page) {}
 

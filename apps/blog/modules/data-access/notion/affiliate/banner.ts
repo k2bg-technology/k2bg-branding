@@ -1,7 +1,7 @@
-import { Core } from './core';
-import { AffiliateBanner } from './interfaces';
+import { Entity } from './entity';
+import { AffiliateBanner } from './types';
 
-export class Banner extends Core implements AffiliateBanner {
+export class Banner extends Entity implements AffiliateBanner {
   get imageSourceUrl() {
     return (
       this.data.getFiles('imageSourceFile')?.[0] ||

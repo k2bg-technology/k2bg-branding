@@ -1,7 +1,7 @@
-import { Core } from './core';
-import { AffiliateProduction } from './interfaces';
+import { Entity } from './entity';
+import { AffiliateProduction } from './types';
 
-export class Product extends Core implements AffiliateProduction {
+export class Product extends Entity implements AffiliateProduction {
   get providerColor() {
     return this.data.getSelect('providerColor');
   }

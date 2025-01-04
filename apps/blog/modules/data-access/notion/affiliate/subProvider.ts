@@ -1,6 +1,6 @@
-import { Core } from './core';
+import { Entity } from './entity';
 
-export class SubProvider extends Core {
+export class SubProvider extends Entity {
   get providerColor() {
     return this.data.getSelect('providerColor');
   }

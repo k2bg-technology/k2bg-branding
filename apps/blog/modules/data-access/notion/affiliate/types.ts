@@ -1,4 +1,4 @@
-export interface AffiliateCore {
+export interface Affiliate {
   id: string;
   name?: string;
   type?: string;
@@ -6,15 +6,15 @@ export interface AffiliateCore {
   provider?: string;
 }
 
-export interface AffiliateText extends AffiliateCore {}
+export interface AffiliateText extends Affiliate {}
 
-export interface AffiliateBanner extends AffiliateCore {
+export interface AffiliateBanner extends Affiliate {
   imageSourceUrl?: string;
   imageWidth?: number;
   imageHeight?: number;
 }
 
-export interface AffiliateProduction extends AffiliateCore {
+export interface AffiliateProduction extends Affiliate {
   subProviders?: string[];
   imageProvider?: string;
   imageSourceUrl?: string;

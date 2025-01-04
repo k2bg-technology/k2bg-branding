@@ -1,7 +1,7 @@
-import { Core } from './core';
-import { AffiliateText } from './interfaces';
+import { Entity } from './entity';
+import { AffiliateText } from './types';
 
-export class Text extends Core implements AffiliateText {
+export class Text extends Entity implements AffiliateText {
   toObject() {
     return super.toObject();
   }
