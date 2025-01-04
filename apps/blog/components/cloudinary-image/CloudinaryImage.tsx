@@ -1,9 +1,9 @@
 import Image, { ImageProps } from 'next/image';
 
-import Cloudinary from '../../modules/data-access/cloudinary';
+import * as Cloudinary from '../../modules/data-access/cloudinary';
 
 interface CloudinaryImageProps
-  extends Omit<ImageProps, 'src' | 'placeholder' | 'blurDataURL'> {
+  extends Omit<ImageProps, 'placeholder' | 'blurDataURL'> {
   publicId: string;
 }
 

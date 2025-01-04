@@ -35,6 +35,7 @@ export async function Articles(props: Props) {
                   <BlogCard.Media className="relative w-full h-[16rem]">
                     <CloudinaryImage
                       publicId={article.id}
+                      src={article.imageUrl}
                       alt="media"
                       className="aspect-square h-full w-full object-cover"
                       fill

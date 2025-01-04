@@ -166,6 +166,7 @@ export async function Root(props: Props) {
             <CloudinaryImage
               publicId={id}
               className={className || 'first:mt-0 mt-5 mx-auto'}
+              src={src}
               alt={alt}
               width={Number(width)}
               height={Number(height)}

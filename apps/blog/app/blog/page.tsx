@@ -24,6 +24,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative w-full h-[18.75rem]">
                     <CloudinaryImage
                       publicId={featureLatest.id}
+                      src={featureLatest.imageUrl}
                       alt="media"
                       className="absolute aspect-square h-full w-full object-cover"
                       fill
@@ -76,6 +77,7 @@ export default async function Page() {
                     <CloudinaryImage
                       publicId={article.id}
                       alt="media"
+                      src={article.imageUrl}
                       className="absolute aspect-square h-full w-full object-cover"
                       fill
                       sizes="100%"
@@ -130,6 +132,7 @@ export default async function Page() {
                     <BlogCard.Media className="relative w-full h-[16rem]">
                       <CloudinaryImage
                         publicId={article.id}
+                        src={article.imageUrl}
                         alt="media"
                         className="aspect-square h-full w-full object-cover"
                         fill
@@ -176,6 +179,7 @@ export default async function Page() {
                   <BlogCard.Media className="relative w-full h-[16rem]">
                     <CloudinaryImage
                       publicId={article.id}
+                      src={article.imageUrl}
                       alt="media"
                       className="aspect-square h-full w-full object-cover"
                       fill

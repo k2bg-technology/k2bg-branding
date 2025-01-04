@@ -31,6 +31,7 @@ export async function PageHeading(props: Props) {
       <BlogCard.Media className="relative w-full h-[23.5rem]">
         <CloudinaryImage
           publicId={article.id}
+          src={article.imageUrl}
           alt="media"
           className="aspect-square h-full w-full object-cover"
           fill
