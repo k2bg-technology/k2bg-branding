@@ -9,7 +9,7 @@ export class Core {
 
   static objectIdToUuid<T extends object & { id: number; uuid: string }>(
     args: T
-  ): Omit<T, 'uuid'> {
+  ): Omit<T, 'id' | 'uuid'> & { id: string } {
     return {
       ...args,
       id: args.uuid,

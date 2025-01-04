@@ -1,11 +1,10 @@
 import { Core } from '../core';
-import { Category, Order, Post } from '../../../domain/post/types';
-import { PostRepository as DomainPostRepository } from '../../../domain/post';
+import * as Domain from '../../../domain';
 import { postSchema } from '../../../interfaces/post/validator';
 import { authorSchema } from '../../../interfaces/author/validator';
 
-export class PostRepository extends Core implements DomainPostRepository {
-  async getAllArticles(orderBy: Order = 'desc') {
+export class Repository extends Core implements Domain.Post.OutputRepository {
+  async getAllArticles(orderBy: Domain.Post.Order = 'desc') {
     const posts = await this.prismaClient.post.findMany({
       orderBy: {
         releaseDate: orderBy,
@@ -26,7 +25,7 @@ export class PostRepository extends Core implements DomainPostRepository {
     );
   }
 
-  async getAllArticleSlugs(orderBy: Order = 'desc') {
+  async getAllArticleSlugs(orderBy: Domain.Post.Order = 'desc') {
     const posts = await this.prismaClient.post.findMany({
       orderBy: {
         releaseDate: orderBy,
@@ -53,7 +52,7 @@ export class PostRepository extends Core implements DomainPostRepository {
     );
   }
 
-  async getArticlesCountByCategory(category: Category) {
+  async getArticlesCountByCategory(category: Domain.Post.Category) {
     return this.prismaClient.post.count({
       where: {
         category,
@@ -63,10 +62,10 @@ export class PostRepository extends Core implements DomainPostRepository {
   }
 
   async getPaginatedArticlesByCategory(
-    category: Category,
+    category: Domain.Post.Category,
     pageSize: number,
     currentPage: number,
-    orderBy: Order = 'desc'
+    orderBy: Domain.Post.Order = 'desc'
   ) {
     const posts = await this.prismaClient.post.findMany({
       take: pageSize,
@@ -106,7 +105,7 @@ export class PostRepository extends Core implements DomainPostRepository {
     queryString: string,
     pageSize: number,
     currentPage: number,
-    orderBy: Order = 'desc'
+    orderBy: Domain.Post.Order = 'desc'
   ) {
     const posts = await this.prismaClient.post.findMany({
       take: pageSize,
@@ -133,7 +132,7 @@ export class PostRepository extends Core implements DomainPostRepository {
     );
   }
 
-  async getPost(id: Post['id']) {
+  async getPost(id: Domain.Post.Post['id']) {
     const post = await this.prismaClient.post.findUnique({
       where: {
         uuid: id,
@@ -153,7 +152,7 @@ export class PostRepository extends Core implements DomainPostRepository {
     });
   }
 
-  async upsertAllPosts(posts: Post[]) {
+  async upsertAllPosts(posts: Domain.Post.Post[]) {
     await this.prismaClient.$transaction(
       posts.map(({ id, ...post }) => {
         const postPayload = {
