@@ -1,4 +1,10 @@
-import { v2 as cloudinary, DeliveryType, UploadApiOptions } from 'cloudinary';
+import {
+  v2 as cloudinary,
+  ConfigAndUrlOptions,
+  DeliveryType,
+  TransformationOptions,
+  UploadApiOptions,
+} from 'cloudinary';
 
 import {
   CLOUDINARY_CLOUD_NAME,
@@ -18,7 +24,8 @@ export class Core {
   }
 
   /** https://cloudinary.com/documentation/transformation_reference#overview */
-  static getUrl(options: {
+  // eslint-disable-next-line class-methods-use-this
+  private getUrl(options: {
     assetType: 'image' | 'video';
     deliveryType: DeliveryType;
     transformations?: string;
@@ -39,7 +46,32 @@ export class Core {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  protected getImageUrl(
+    publicId: string,
+    options: TransformationOptions & ConfigAndUrlOptions
+  ) {
+    const { fetch_format, quality, effect, width } = options;
+
+    const transformations =
+      [
+        fetch_format ? `f_${fetch_format}` : undefined,
+        quality ? `q_${quality}` : undefined,
+        effect ? `e_${effect}` : undefined,
+        width ? `w_${width}` : undefined,
+      ]
+        .flatMap((x) => x ?? [])
+        .join(',') || undefined;
+
+    return this.getUrl({
+      assetType: 'image',
+      deliveryType: 'upload',
+      transformations,
+      publicIdFullPath: publicId,
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   protected async upload(file: string, options: UploadApiOptions) {
-    return cloudinary.uploader.upload(file, options);
+    cloudinary.uploader.upload(file, options);
   }
 }

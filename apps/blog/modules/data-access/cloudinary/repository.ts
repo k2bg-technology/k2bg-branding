@@ -1,0 +1,30 @@
+import * as Domain from '../../domain';
+
+import { Core } from './core';
+
+export class Repository extends Core implements Domain.Image.Repository {
+  // eslint-disable-next-line class-methods-use-this
+  getOptimizedImageUrl(id: string) {
+    return this.getImageUrl(id, {
+      fetch_format: 'auto',
+      quality: 'auto',
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  getPlaceholderImageUrl(id: string) {
+    return this.getImageUrl(id, {
+      fetch_format: 'auto',
+      quality: 'auto',
+      effect: 'blur:1000',
+      width: '100',
+    });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async uploadImage(id: string, fileUrl: string) {
+    return this.upload(fileUrl, {
+      public_id: id,
+    });
+  }
+}
