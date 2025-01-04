@@ -18,7 +18,9 @@
       ],
       "env": [
         "NOTION_TOKEN",
-        "NOTION_DATABASE_ID",
+        "NOTION_POST_DATABASE_ID",
+        "NOTION_MEDIA_DATABASE_ID",
+        "NOTION_AFFILIATE_DATABASE_ID",
         "NOTION_CONCEPT_PAGE_ID",
         "NEXT_PUBLIC_X_TIMELINE_URL",
         "INSTAGRAM_LONG_ACCESS_TOKEN",
