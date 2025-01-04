@@ -1,6 +1,6 @@
-import { Post } from '../../interfaces/post/validator';
+import { Post } from './types';
 
-export class PostEntity {
+export class Entity {
   // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(readonly data: Post) {}
 
