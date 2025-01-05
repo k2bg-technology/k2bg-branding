@@ -27,7 +27,7 @@ export default function Footer() {
             <nav>
               <ul className="flex flex-wrap items-center gap-4">
                 <li>
-                  <Link href="/category/engineering" passHref>
+                  <Link href="/category/ENGINEERING" passHref>
                     <Button
                       className="!font-normal"
                       color="light"
@@ -39,7 +39,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/category/design" passHref>
+                  <Link href="/category/DESIGN" passHref>
                     <Button
                       className="!font-normal"
                       color="light"
@@ -51,7 +51,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/category/data-science" passHref>
+                  <Link href="/category/DATA_SCIENCE" passHref>
                     <Button
                       className="!font-normal"
                       color="light"
@@ -63,7 +63,7 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/category/life-style" passHref>
+                  <Link href="/category/LIFE_STYLE" passHref>
                     <Button
                       className="!font-normal"
                       color="light"
