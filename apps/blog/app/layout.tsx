@@ -2,6 +2,7 @@ import { Noto_Sans_JP } from 'next/font/google';
 
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
+import GoogleAdsense from '../components/google-adsense/GoogleAdsense';
 
 import './globals.css';
 
@@ -29,6 +30,7 @@ export default function RootLayout({
           <Footer />
         </div>
       </body>
+      <GoogleAdsense />
     </html>
   );
 }
