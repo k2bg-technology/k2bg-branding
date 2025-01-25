@@ -4,12 +4,15 @@ import Image from 'next/image';
 import XTimeline from '../x-timeline/XTimeline';
 import InstagramTimeline from '../instagram-timeline/InstagramTimeline';
 import ProfileCard from '../profile-card/ProfileCard';
+import SideBarAd from '../google-adsense/SideBarAd';
 
 export default function Sidebar() {
   return (
     <aside>
       <div className="grid gap-spacious w-[18.375rem]">
-        {process.env.NODE_ENV === 'development' && (
+        {process.env.NODE_ENV === 'production' ? (
+          <SideBarAd />
+        ) : (
           <div className="relative h-[18.375rem]">
             <Image
               alt="google adsense"
