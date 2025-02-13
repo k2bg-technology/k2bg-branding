@@ -1,109 +1,89 @@
-import { Meta, Story } from '@storybook/addon-docs';
-import { useTranslation } from "react-i18next";
+import { Meta, Story, Unstyled } from '@storybook/addon-docs';
+import { useTranslation } from 'react-i18next';
+import '../docs.css';
 
 import i18n from '../i18n.ts';
 
-import Kansei from '../assets/kansei.jpg';
-import BalancedSpace from '../assets/balanced-space.jpg';
-import TimelessBeauty from '../assets/timeless-beauty.jpg';
-import HarmoniousContrast from '../assets/harmonious-contrast.jpg';
+import HeroImage from '../assets/hero-image.png';
 
 {(() => {
-  useTranslation();
+useTranslation();
 })()}
 
+<Unstyled>
+<main className='grid gap-12'>
+  <section className='flex flex-col gap-spacious'>
+    # B.G. Neo Grid Design System
+    <p>{i18n.t('concept_description')}</p>
 
-<div className="sb-container">
-  # Urban Ethereal Design System
-
-  <p>{i18n.t('concept_description')}</p>
-
-  <div className='img-wrapper'>
-    <img
-      src={Kansei}
-      alt="An abstraction representing the composition of data for a component"
-    />
-  </div>
-</div>
-
-<div className="sb-container">
-  ## コアコンセプト
-
-  <div className="sb-section">
-    <div className="sb-section-item">
+    <div>
       <img
-        src={BalancedSpace}
-        alt="An abstraction representing the composition of data for a component"
+        src={HeroImage}
+        alt="ヒーローイメージ"
       />
-
-      <p className="sb-section-item-heading">空間の中の静寂と動きのバランス</p>
-      <p className="sb-section-item-paragraph">静寂と動きの両方を感じさせる空間設計を重視し、ユーザーが都市の中でリフレッシュできるような体験を提供する。視覚的な密度と余白の調和により、インタラクティブな要素が自然に流れるような動きと、静かに佇むような静けさを表現する。</p>
     </div>
 
-    <div className="sb-section-item">
-      <img
-        src={TimelessBeauty}
-        alt="An abstraction representing the composition of data for a component"
-      />
+  </section>
 
-      <p className="sb-section-item-heading">時間を超えた美の探求</p>
-      <p className="sb-section-item-paragraph">伝統と革新の融合を通じて、過去と未来が共鳴するようなデザインを目指す。古典的な要素を現代の視点で再解釈し、時間を超えた美しさを感じさせる表現を大切にする。静けさや空間の間合いを意識し、見る者に深い感覚的な体験を提供する。</p>
-    </div>
+  <section className='grid gap-spacious'>
+    ## コアコンセプト
 
-    <div className="sb-section-item">
-      <img
-        src={HarmoniousContrast}
-        alt="An abstraction representing the composition of data for a component"
-      />
+    {(() => {
+      const items = [
+        {
+          gradient: "linear-gradient(60deg, #96fbc4 0%, #f9f586 100%)",
+          alt: "An abstraction representing the composition of data for a component",
+          heading: "近未来都市に息づく暖かさ",
+          text: "近未来の都会的な洗練された雰囲気と、ウッドやブリキなどの素材を取り入れたほっこりする温もりを掛け合わせる。日常使いされた家具やインテリアの雰囲気をグリッドレイアウトに組み込み、無機質すぎない優しさを演出。",
+        },
+        {
+          gradient: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+          alt: "An abstraction representing the composition of data for a component",
+          heading: "暖かい光が彩るレトロ空間",
+          text: "レトロな家具や雑貨を活かしつつ、明るい光をメインに据えたトーン＆マナーを採用。観葉植物や柔らかなウッドカラー、さりげない金属パーツがレトロ感と洗練さを両立させる。",
+        },
+        {
+          gradient: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
+          alt: "An abstraction representing the composition of data for a component",
+          heading: "ピクセルアートのようなシンプルなグリッド構造",
+          text: "小さなパーツが集まり、グリッドを軸にシステム全体が成長していくような設計。ドットが組み合わさってピクセルアートが描かれるように、無機質なパーツの組み合わせで、意味や価値を生み出す。",
+        },
+        {
+          gradient: "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)",
+          alt: "An abstraction representing the composition of data for a component",
+          heading: "自然とインダストリアルの調和",
+          text: "ブリキの収納やスチール製のシェルフなど、インダストリアル要素を取り入れつつも、自然素材やグリーンがほどよい柔らかさを生み出す。都会的で硬質な部分と、自宅のように落ち着く空気感をバランスよく共存させることで、唯一無二のインテリアテイストを実現。",
+        },
+      ]
 
-      <p className="sb-section-item-heading">調和のあるコントラスト</p>
-      <p className="sb-section-item-paragraph">デザインにおいて、動と静、光と影のコントラストを巧みに使い、視覚的なリズムを生み出す。現代的で洗練された要素と、落ち着きや穏やかさを感じさせる要素が共存することで、バランスの取れた美しさを表現する。</p>
-    </div>
-  </div>
+      return (
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8">
+          {items.map((item, i) => (
+            <div key={i} className="flex flex-col gap-spacious">
+              <div className="w-full h-[200px] rounded-lg relative overflow-hidden">
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background: item.gradient,
+                  }}
+                />
+                <div
+                  className="absolute inset-0 mix-blend-overlay opacity-50"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                  }}
+                />
+              </div>
+              <div className="flex flex-col gap-condensed">
+                <h3>{item.heading}</h3>
+                <p>{item.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+    })()}
 
-</div>
-
-<style>
-  {`
-  .sbdocs-content {
-    display: flex;
-    flex-direction: column;
-    gap: 3.2rem;
-  }
-
-  .sbdocs-content {
-  }
-
-  .sb-section {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-  }
-
-  .sb-section-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .sb-section-item-heading {
-    padding-top: 20px !important;
-    padding-bottom: 5px !important;
-    margin: 0 !important;
-    font-size: 1.6rem;
-  }
-  .sb-section-item-paragraph {
-    margin: 0;
-    padding-bottom: 10px;
-    text-align: justify;
-  }
-
-  img {
-    width: 100%;
-    overflow: hidden;
-    border-radius: 4px;
-    object-fit: cover;
-  }
-  `}
-</style>
+  </section>
+</main>
+</Unstyled>
