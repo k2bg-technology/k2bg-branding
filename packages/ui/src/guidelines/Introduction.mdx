@@ -29,50 +29,23 @@ useTranslation();
     ## コアコンセプト
 
     {(() => {
-      const items = [
-        {
-          gradient: "linear-gradient(60deg, #96fbc4 0%, #f9f586 100%)",
-          alt: "An abstraction representing the composition of data for a component",
-          heading: "近未来都市に息づく暖かさ",
-          text: "近未来の都会的な洗練された雰囲気と、ウッドやブリキなどの素材を取り入れたほっこりする温もりを掛け合わせる。日常使いされた家具やインテリアの雰囲気をグリッドレイアウトに組み込み、無機質すぎない優しさを演出。",
-        },
-        {
-          gradient: "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
-          alt: "An abstraction representing the composition of data for a component",
-          heading: "暖かい光が彩るレトロ空間",
-          text: "レトロな家具や雑貨を活かしつつ、明るい光をメインに据えたトーン＆マナーを採用。観葉植物や柔らかなウッドカラー、さりげない金属パーツがレトロ感と洗練さを両立させる。",
-        },
-        {
-          gradient: "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
-          alt: "An abstraction representing the composition of data for a component",
-          heading: "ピクセルアートのようなシンプルなグリッド構造",
-          text: "小さなパーツが集まり、グリッドを軸にシステム全体が成長していくような設計。ドットが組み合わさってピクセルアートが描かれるように、無機質なパーツの組み合わせで、意味や価値を生み出す。",
-        },
-        {
-          gradient: "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)",
-          alt: "An abstraction representing the composition of data for a component",
-          heading: "自然とインダストリアルの調和",
-          text: "ブリキの収納やスチール製のシェルフなど、インダストリアル要素を取り入れつつも、自然素材やグリーンがほどよい柔らかさを生み出す。都会的で硬質な部分と、自宅のように落ち着く空気感をバランスよく共存させることで、唯一無二のインテリアテイストを実現。",
-        },
-      ]
+      const items = i18n.t('introduction.items', { returnObjects: true });
+      const gradients = [
+        "linear-gradient(60deg, #96fbc4 0%, #f9f586 100%)",
+        "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
+        "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
+        "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)"
+      ];
 
       return (
         <div className="grid grid-cols-2 gap-x-6 gap-y-8">
           {items.map((item, i) => (
             <div key={i} className="flex flex-col gap-spacious">
               <div className="w-full h-[200px] rounded-lg relative overflow-hidden">
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: item.gradient,
-                  }}
-                />
-                <div
-                  className="absolute inset-0 mix-blend-overlay opacity-50"
-                  style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-                  }}
-                />
+                <div className="absolute inset-0" style={{ background: gradients[i % gradients.length] }} />
+                <div className="absolute inset-0 mix-blend-overlay opacity-50" style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+                }} />
               </div>
               <div className="flex flex-col gap-condensed">
                 <h3>{item.heading}</h3>

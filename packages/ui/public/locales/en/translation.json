@@ -1,3 +1,27 @@
 {
-  "concept_description": "A design system that seeks to blend the refined elegance of the modern city with the harmony of traditional Japanese aesthetics. It creates spaces that simultaneously evoke tranquility and urban vitality, offering visual comfort and a sense of calm."
+  "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
+  "introduction": {
+    "title": "B.G. Neo Grid Design System",
+    "coreConceptHeader": "Core Concepts",
+    "heroImageAlt": "Hero Image",
+    "items": [
+      {
+        "heading": "The Warmth of a Futuristic Metropolis",
+        "text": "Combines the sleek feeling of a futuristic urban environment with the cozy warmth of materials such as wood and tin. It incorporates the familiar atmosphere of everyday furniture and interiors into a grid layout, creating a gentle and welcoming ambiance that isn't too sterile."
+      },
+      {
+        "heading": "A Retro Space Illuminated by Warm Light",
+        "text": "Utilizes retro furniture and decor with a tone and manner centered on bright light. Indoor plants, soft wood hues, and subtle metal accents balance retro charm and sophistication."
+      },
+      {
+        "heading": "A Simple Grid Structure Resembling Pixel Art",
+        "text": "Designed such that small components gather to form a grid that drives overall growth, akin to pixels forming pixel art; the combination of discrete parts creates meaning and value."
+      },
+      {
+        "heading": "Harmony Between Nature and Industrial",
+        "text": "Integrates industrial elements like tin storage and steel shelving with natural materials and greenery to achieve a perfect balance of softness. The combination of urban, hard elements with a soothing, home-like atmosphere creates a unique interior aesthetic."
+      }
+    ],
+    "itemAlt": "An abstract image representing the composition of component data."
+  }
 }
