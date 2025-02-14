@@ -4,6 +4,6 @@ const sharedConfig = require('tailwind-config');
 
 module.exports = {
   ...sharedConfig,
-  content: ['./src/**/*.{ts,tsx}'],
+  content: ['./src/**/*.{ts,tsx,mdx}'],
   plugins: [],
 };
