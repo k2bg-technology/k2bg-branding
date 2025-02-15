@@ -1,29 +1,37 @@
-import { Meta, IconGallery, IconItem } from '@storybook/blocks';
+import { Meta, IconGallery, IconItem, Unstyled } from '@storybook/blocks';
 import { Icon } from '../components/Icon';
-import { MULTI_COLOR_ICON_NAMES, HERO_ICON_NAMES } from '../components/Icon/const';
+import {
+  MULTI_COLOR_ICON_NAMES,
+  HERO_ICON_NAMES,
+} from '../components/Icon/const';
+import '../docs.css';
 
+<Unstyled>
+<main className='grid gap-12'>
 # Icon
 
+<section className='flex flex-col gap-spacious'>
 ## Multi Color
 
-<IconGallery style={{ marginTop: "30px"}}>
-  {
-    MULTI_COLOR_ICON_NAMES.map((name) => (
-      <IconItem key={name} name={name}>
-        <Icon name={name} originalColor width={20} height={20} />
-      </IconItem>
-    ))
-  }
+<IconGallery>
+  {MULTI_COLOR_ICON_NAMES.map((name) => (
+    <IconItem key={name} name={name}>
+      <Icon name={name} originalColor width={20} height={20} />
+    </IconItem>
+  ))}
 </IconGallery>
+</section>
 
+<section className='flex flex-col gap-spacious'>
 ## Hero
 
-<IconGallery style={{ marginTop: "30px"}}>
-  {
-    HERO_ICON_NAMES.map((name) => (
-      <IconItem key={name} name={name}>
-        <Icon name={name} width={20} height={20} />
-      </IconItem>
-    ))
-  }
+<IconGallery>
+  {HERO_ICON_NAMES.map((name) => (
+    <IconItem key={name} name={name}>
+      <Icon name={name} width={20} height={20} />
+    </IconItem>
+  ))}
 </IconGallery>
+</section>
+</main>
+</Unstyled>

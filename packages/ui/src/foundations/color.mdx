@@ -1,17 +1,20 @@
-import { Meta, ColorPalette, ColorItem } from '@storybook/blocks';
+import { Meta, ColorPalette, ColorItem, Unstyled } from '@storybook/blocks';
 import color from 'tailwind-config/design-token/color.json';
+import '../docs.css';
 
+<Unstyled>
+<main className='grid gap-12'>
 # Color
 
 <ColorPalette>
-  {
-    Object.keys(color).map((key) => (
-      <ColorItem
-        key={key}
-        title={color[key].customVariable}
-        subtitle={color[key].description}
-        colors={[color[key].value]}
-      />
-    ))
-  }
+  {Object.keys(color).map((key) => (
+    <ColorItem
+      key={key}
+      title={color[key].customVariable}
+      subtitle={color[key].description}
+      colors={[color[key].value]}
+    />
+  ))}
 </ColorPalette>
+</main>
+</Unstyled>

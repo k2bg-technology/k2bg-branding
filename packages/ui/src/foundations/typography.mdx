@@ -1,28 +1,32 @@
-import { Typeset } from '@storybook/blocks';
-
+import { Typeset, Unstyled } from '@storybook/blocks';
 import typography from 'tailwind-config/design-token/typography.json';
+import '../docs.css';
 
-export const SampleJaText = '人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは';
-export const SampleEnText = 'Whereas disregard and contempt for human rights have resulted';
+export const SampleJaText =
+  '人類社会のすべての構成員の固有の尊厳と平等で譲ることのできない権利とを承認することは';
+export const SampleEnText =
+  'Whereas disregard and contempt for human rights have resulted';
 
+<Unstyled>
+<main className='flex flex-col gap-12'>
 # Typography
 
 {(() => {
-  const groups = Object.groupBy(Object.values(typography), ({ group }) => group);
+const groups = Object.groupBy(Object.values(typography), ({ group }) => group);
 
-  return Object.keys(groups).map((key) => {
-    const fontSize = groups[key].find(({ property }) => property === 'fontSize');
-    const fontWeight = groups[key].find(({ property }) => property === 'fontWeight');
-    const fontFamily = groups[key].find(({ property }) => property === 'fontFamily');
-    const sampleText = fontSize.lang === 'ja' ? SampleJaText : SampleEnText;
+return Object.keys(groups).map((key) => {
+const fontSize = groups[key].find(({ property }) => property === 'fontSize');
+const fontWeight = groups[key].find(({ property }) => property === 'fontWeight');
+const fontFamily = groups[key].find(({ property }) => property === 'fontFamily');
+const sampleText = fontSize.lang === 'ja' ? SampleJaText : SampleEnText;
 
     return (
-      <div key={key}>
+      <div key={key} className='flex flex-col gap-normal'>
         <h2>{key}</h2>
         <ul style={{ listStyle: "none", padding: "unset" }}>
-          <li style={{ fontWeight: "bold" }}>{fontSize.customVariable}</li>
-          <li style={{ fontWeight: "bold" }}>{fontWeight.customVariable}</li>
-          <li style={{ fontWeight: "bold" }}>{fontFamily.customVariable}</li>
+          <li>{fontSize.customVariable}</li>
+          <li>{fontWeight.customVariable}</li>
+          <li>{fontFamily.customVariable}</li>
         </ul>
         <Typeset
           fontSizes={[
@@ -31,8 +35,13 @@ export const SampleEnText = 'Whereas disregard and contempt for human rights hav
           fontWeight={fontWeight.value}
           sampleText={sampleText}
           fontFamily={fontFamily.value}
+          style={{ margin: "unset" }}
         />
       </div>
     );
-  });
+
+});
 })()}
+
+</main>
+</Unstyled>
