@@ -1,0 +1,265 @@
+import { Meta, Unstyled } from '@storybook/blocks';
+import color from 'tailwind-config/design-token/color.json';
+import '../docs.css';
+
+<Unstyled>
+<main className='flex flex-col gap-12'>
+# Layout
+
+<section className='grid gap-spacious'>
+## BaseSize
+
+<div className="grid grid-cols-[100px_100px_1fr] gap-1">
+  <p className='font-bold bg-base-white'>name</p>
+  <p className='font-bold bg-base-white'>pixels</p>
+  <p className='font-bold bg-base-white'>size</p>
+
+{(() => {
+const SIZES = [
+{
+"tailwind": "px",
+"px": 1
+},
+{
+"tailwind": "0.5",
+"px": 2
+},
+{
+"tailwind": "1",
+"px": 4
+},
+{
+"tailwind": "1.5",
+"px": 6
+},
+{
+"tailwind": "2",
+"px": 8
+},
+{
+"tailwind": "2.5",
+"px": 10
+},
+{
+"tailwind": "3",
+"px": 12
+},
+{
+"tailwind": "3.5",
+"px": 14
+},
+{
+"tailwind": "4",
+"px": 16
+},
+{
+"tailwind": "5",
+"px": 20
+},
+{
+"tailwind": "6",
+"px": 24
+},
+{
+"tailwind": "7",
+"px": 28
+},
+{
+"tailwind": "8",
+"px": 32
+},
+{
+"tailwind": "9",
+"px": 36
+},
+{
+"tailwind": "10",
+"px": 40
+},
+{
+"tailwind": "11",
+"px": 44
+},
+{
+"tailwind": "12",
+"px": 48
+},
+{
+"tailwind": "14",
+"px": 56
+},
+{
+"tailwind": "16",
+"px": 64
+},
+{
+"tailwind": "20",
+"px": 80
+},
+{
+"tailwind": "24",
+"px": 96
+},
+{
+"tailwind": "28",
+"px": 112
+},
+{
+"tailwind": "32",
+"px": 128
+},
+{
+"tailwind": "36",
+"px": 144
+},
+{
+"tailwind": "40",
+"px": 160
+},
+{
+"tailwind": "44",
+"px": 176
+},
+{
+"tailwind": "48",
+"px": 192
+},
+{
+"tailwind": "52",
+"px": 208
+},
+{
+"tailwind": "56",
+"px": 224
+},
+{
+"tailwind": "60",
+"px": 240
+},
+{
+"tailwind": "64",
+"px": 256
+},
+{
+"tailwind": "72",
+"px": 288
+},
+{
+"tailwind": "80",
+"px": 320
+},
+{
+"tailwind": "96",
+"px": 384
+}
+];
+
+    return SIZES.map(({ tailwind, px }) => (
+      <>
+        <p key={px}>{tailwind}</p>
+        <p key={px}>{`${px}px`}</p>
+        <div key={px} className="w-[var(--width)] h-4 bg-main-default self-center" style={{ "--width": `${px}px` }} />
+      </>
+    ))
+
+})()}
+
+</div>
+</section>
+
+<section className='grid gap-4'>
+## Grid
+
+<div className="grid grid-rows-[3rem_1fr_6rem] grid-cols-[1fr_calc(100%-2rem)_1fr] md:grid-cols-[1fr_46rem_1fr] xl:grid-cols-[1fr_calc(100%-2rem)_1fr] gap-y-12">
+  <div className="col-span-full bg-main-default" />
+
+  <div className="col-start-2 -col-end-2 grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-x-6 gap-y-8">
+
+    <div className="col-span-full grid grid-cols-[subgrid] gap-y-8">
+      <div className="col-span-full xl:col-start-1 xl:col-end-7 bg-main-default h-24" />
+      <div className="col-span-full xl:col-start-7 xl:col-end-13 bg-main-default h-24" />
+      <div className="col-span-full bg-main-default h-24" />
+    </div>
+
+    <div className="col-span-full grid grid-cols-[subgrid] gap-y-8">
+      <div className="col-span-full xl:col-start-1 xl:col-end-5 bg-main-default h-24" />
+      <div className="col-span-full xl:col-start-5 xl:col-end-13 bg-main-default h-24" />
+    </div>
+
+  </div>
+
+  <div className="col-span-full bg-main-default" />
+</div>
+
+</section>
+
+<section className='grid gap-4'>
+## Stack
+
+<div className="grid grid-cols-3 gap-spacious">
+  <p className='text-body-b-sm font-bold'>spacious</p>
+  <p className='text-body-b-sm font-bold'>normal</p>
+  <p className='text-body-b-sm font-bold'>condensed</p>
+  <div className="w-48 h-24 p-spacious bg-main-default">
+    <div className='w-full h-full bg-base-white' />
+  </div>
+  <div className="w-48 h-24 p-normal bg-main-default">
+    <div className='w-full h-full bg-base-white' />
+  </div>
+  <div className="w-48 h-24 p-condensed bg-main-default">
+    <div className='w-full h-full bg-base-white' />
+  </div>
+
+  <div className="w-48 h-24 flex flex-col gap-spacious bg-main-default">
+    <div className='w-full h-full bg-base-white' />
+    <div className='w-full h-full bg-base-white' />
+    <div className='w-full h-full bg-base-white' />
+  </div>
+  <div className="w-48 h-24 flex flex-col gap-normal bg-main-default">
+    <div className='w-full h-full bg-base-white' />
+    <div className='w-full h-full bg-base-white' />
+    <div className='w-full h-full bg-base-white' />
+  </div>
+  <div className="w-48 h-24 flex flex-col gap-condensed bg-main-default">
+    <div className='w-full h-full bg-base-white' />
+    <div className='w-full h-full bg-base-white' />
+    <div className='w-full h-full bg-base-white' />
+  </div>
+</div>
+</section>
+
+<section className='grid gap-4'>
+## Border
+
+<div className="grid grid-cols-3 gap-spacious">
+  <p className='text-body-b-sm font-bold'>4px</p>
+  <p className='text-body-b-sm font-bold'>2px</p>
+  <p className='text-body-b-sm font-bold'>1px</p>
+
+  <div className="w-48 h-24 bg-base-white border border-4 border-main-default" />
+  <div className="w-48 h-24 bg-base-white border border-2 border-main-default" />
+  <div className="w-48 h-24 bg-base-white border border-main-default" />
+</div>
+</section>
+
+<section className='grid gap-4'>
+## Border Radius
+
+<div className="grid grid-cols-3 gap-spacious">
+  <p className='text-body-b-sm font-bold'>xl</p>
+  <p className='text-body-b-sm font-bold'>md</p>
+  <p className='text-body-b-sm font-bold'>sm</p>
+
+  <div className="w-48 h-24 bg-main-default">
+    <div className='w-full h-full bg-base-white rounded-xl' />
+  </div>
+  <div className="w-48 h-24 bg-main-default">
+    <div className='w-full h-full bg-base-white rounded-md' />
+  </div>
+  <div className="w-48 h-24 bg-main-default">
+    <div className='w-full h-full bg-base-white rounded-sm' />
+  </div>
+</div>
+</section>
+</main>
+</Unstyled>
