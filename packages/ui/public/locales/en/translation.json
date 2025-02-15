@@ -139,5 +139,91 @@
       ]
     }
   },
+  "responsive": {
+    "title": "Responsive",
+    "description": {
+      "paragraph1": "We aim to provide a UI that is comfortable across various screen sizes, offering a modern yet approachable design. The goal is to deliver a user-friendly and warm UI experience even on the latest devices, while always keeping accessibility (WCAG 2.1 AA and above) in mind as layouts adapt fluidly based on screen size.",
+      "paragraph2": "Each component is designed to flexibly expand or contract according to screen size, maintaining a basic layout that facilitates easy element arrangement. Even on small screens, careful color usage and appropriate spacing ensure that the main content remains clear and readable."
+    },
+    "heroImageAlt": "An abstract image representing the data structure of a component",
+    "breakpoints": {
+      "heading": "Breakpoints",
+      "description": "This design system sets key breakpoints based on screen size. On smaller screens, fewer elements are displayed per row with a vertical layout; on larger screens, multi-column layouts are utilized for a cohesive design.",
+      "table": {
+        "deviceSize": "Device Size",
+        "breakpoint": "Recommended Breakpoint",
+        "usage": "Primary Use / Description"
+      },
+      "row1": {
+        "device": "Small",
+        "usage": "Designed for smartphones (portrait)"
+      },
+      "row2": {
+        "device": "Medium",
+        "usage": "Optimized for small tablets or large smartphones"
+      },
+      "row3": {
+        "device": "Large",
+        "usage": "For landscape tablets or small PCs"
+      },
+      "row4": {
+        "device": "X-Large",
+        "usage": "Suitable for laptops and typical desktops"
+      },
+      "row5": {
+        "device": "XX-Large",
+        "usage": "For large desktops or TV displays"
+      }
+    },
+    "guidelines": {
+      "heading": "Responsive Guidelines",
+      "items": {
+        "item1": {
+          "heading": "Design Consistency and Accessibility",
+          "paragraphs": [
+            "On small screens, tactile colors and icons evoke a warm design; elements are appropriately omitted or rearranged to maintain overall consistency.",
+            "When view switching or wrapping occurs, careful considerations ensure that text size and tap targets do not become excessively small, and that focus movement or reading order remains intact during media query-triggered layout changes."
+          ]
+        },
+        "item2": {
+          "heading": "Grid System Design",
+          "paragraphs": [
+            "For Small screens, a 4-column grid is used for simplicity; for Medium screens, a 6-column layout is employed; and for Large screens and beyond, a 12-column grid increases layout flexibility.",
+            "On smaller screens, sufficient spacing is maintained to prevent clutter while ensuring a minimum tap target size (approximately 44px square), and on larger screens, generous margins enhance visual clarity.",
+            "The layout is organized in a left-to-right reading order, with major elements such as hero images or cards spanning columns for impactful display."
+          ]
+        },
+        "item3": {
+          "heading": "Navigation Implementation",
+          "paragraphs": [
+            "On Small screens, the global navigation is contained within a hamburger menu, with appropriate aria-labels and aria-expanded attributes ensuring accessibility.",
+            "On Medium screens and above, navigation items are displayed in a header or fixed sidebar, combining icons with text to ensure clear visibility."
+          ]
+        },
+        "item4": {
+          "heading": "Images and Decorative Elements",
+          "paragraphs": [
+            "On small screens, decorative background images are managed so as not to obscure text, and decorative illustrations are provided with empty alt attributes.",
+            "Appropriate images are provided based on screen size, and decorative elements are carefully arranged to avoid interfering with UI components.",
+            "An overlay is used behind images to maintain proper contrast and accessibility."
+          ]
+        },
+        "item5": {
+          "heading": "Typography and Form Elements",
+          "paragraphs": [
+            "Text size adjusts responsively, with automatic modifications to line spacing and letter spacing.",
+            "When using background colors, a contrast ratio of at least 4.5:1 is maintained, with careful consideration for text wrapping on small screens.",
+            "Forms are designed to adapt their layout based on screen size, with clear and accessible error messages."
+          ]
+        },
+        "item6": {
+          "heading": "Component Implementation Points",
+          "paragraphs": [
+            "Components such as carousels, modals, and notifications are designed with responsive display in mind, ensuring accessibility at all times.",
+            "Optimized media queries, refined animations, considerations for both touch and mouse interactions, and proper management of aria attributes all contribute to a UI catered to every user."
+          ]
+        }
+      }
+    }
   }
 }
