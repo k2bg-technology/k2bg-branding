@@ -23,5 +23,121 @@
       }
     ],
     "itemAlt": "An abstract image representing the composition of component data."
+  },
+  "accessibility": {
+    "title": "Accessibility",
+    "intro": "B.G. Neo Grid Design System strives for comfort and functionality. We focus on the following points to deliver a unique world that fuses futuristic flair with a retro material aesthetic to all users.",
+    "imageAlt": "An illustration representing the composition of component data.",
+    "principles": {
+      "heading": "Basic Accessibility Principles",
+      "items": [
+        {
+          "title": "Web Accessibility and WCAG Compliance",
+          "paragraphs": [
+            "Aim to achieve WCAG 2.1 AA or higher while incorporating retro design, ensuring proper contrast, structure, and ease of navigation.",
+            "Implement machine-readable code, appropriate semantics, and focus management as the baseline, integrating accessibility requirements into UI component design."
+          ]
+        },
+        {
+          "title": "Color and Contrast",
+          "paragraphs": [
+            "Adopt an approach where small elements combine to form the whole, assessing and improving accessibility on a component-by-component basis.",
+            "Continuously update to meet accessibility standards even as new features and design elements are introduced."
+          ]
+        },
+        {
+          "title": "Text and Typography",
+          "paragraphs": [
+            "While using near-futuristic and industrial elements, incorporate natural touches like wood textures or greenery to evoke warmth.",
+            "Ensure that warm color palettes and textures do not compromise legibility by strictly maintaining appropriate contrast ratios and color accessibility."
+          ]
+        },
+        {
+          "title": "Interaction and Navigation",
+          "paragraphs": [
+            "Incorporate design nuances reminiscent of retro decor and vintage furniture, complemented by brightness and soft saturation reminiscent of daylight.",
+            "Even with soft hues, ensure that text and icons remain legible through optimal contrast and color schemes."
+          ]
+        }
+      ]
+    },
+    "guidelines": {
+      "heading": "Accessibility Guidelines",
+      "items": [
+        {
+          "heading": "Basic Requirements",
+          "paragraph": "Meet essential standards such as text/background contrast, font sizes, line spacing, etc. Ensure interactive elements are clearly visible with a minimum contrast ratio of 4.5:1."
+        },
+        {
+          "heading": "Screen Reader Support",
+          "paragraph": "Structure HTML appropriately so that assistive technologies can accurately read content. Decorative images should have empty alt attributes, while informative images must have appropriate alt text."
+        },
+        {
+          "heading": "Keyboard Navigation",
+          "paragraph": "Ensure all interactive elements (forms, buttons, links, modals, etc.) can be operated via keyboard. Set logical tab order and provide skip links to main content."
+        },
+        {
+          "heading": "Alternative Text for Images",
+          "paragraph": "Exclude decorative images from screen reader narration and assign appropriate alt text to UI elements with functional images."
+        },
+        {
+          "heading": "Video and Audio",
+          "paragraph": "Provide captions for videos and textual descriptions. Avoid autoplay for audio, and offer easy controls for volume adjustment and pausing."
+        },
+        {
+          "heading": "Forms",
+          "paragraph": "Display clear labels for input fields, and communicate required fields and errors effectively. Implementations should accurately inform screen readers of any error messages."
+        },
+        {
+          "heading": "Layout Structure",
+          "paragraph": "Organize information in a clear and logical hierarchy and ensure that the layout is user-friendly on mobile devices."
+        },
+        {
+          "heading": "Color Usage",
+          "paragraph": "Set appropriate contrast between text and background, and consider diverse color perceptions for effective communication."
+        },
+        {
+          "heading": "Clear Writing",
+          "paragraph": "Use simple language and clearly describe interactive processes. Maintain proper heading hierarchy and organize content effectively."
+        },
+        {
+          "heading": "Animation",
+          "paragraph": "Use animations sparingly and provide options to pause when necessary. Avoid overly aggressive or flashing animations."
+        },
+        {
+          "heading": "Layout",
+          "paragraph": "Structure header, main content, and footer appropriately to ensure mobile responsiveness and usability."
+        },
+        {
+          "heading": "Modal Dialogs",
+          "paragraph": "When displaying modals, dim the background and manage focus appropriately with consideration for screen reader use."
+        },
+        {
+          "heading": "Notifications",
+          "paragraph": "Ensure notifications are clearly visible and accurately communicated to screen readers."
+        },
+        {
+          "heading": "Slideshows",
+          "paragraph": "Provide options to pause autoplay and allow manual control, ensuring that the current slide content is effectively conveyed to screen readers."
+        },
+        {
+          "heading": "Tooltips",
+          "paragraph": "Clearly control the display of additional information to ensure that its visibility and hiding are well-managed for screen readers."
+        },
+        {
+          "heading": "Sorting Functionality",
+          "paragraph": "Allow sorting to be operated via both mouse and keyboard, with clear indication of actionable areas and outcomes."
+        },
+        {
+          "heading": "Menus",
+          "paragraph": "For mobile menus, provide appropriate labels and clearly indicate open or closed states."
+        },
+        {
+          "heading": "Page Transitions",
+          "paragraph": "Always display the current location and clearly indicate the purpose of links and buttons. Notify users appropriately when the page content is updated."
+        }
+      ]
+    }
+  },
   }
 }

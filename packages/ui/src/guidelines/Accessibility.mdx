@@ -15,13 +15,13 @@ useTranslation();
 <main className='grid gap-12'>
 
 <section className='grid gap-4'>
-    # Accessibility
-    <p>B.G. Neo Grid Design System は、心地よさと機能性を追求します。以下のポイントを重視し、未来感とレトロな素材感を融合させた独自の世界観を、すべてのユーザーに届けます。</p>
+    # {i18n.t('accessibility.title')}
+    <p>{i18n.t('accessibility.intro')}</p>
 
     <div>
       <img
         src={Accessibility}
-        alt="An abstraction representing the composition of data for a component"
+        alt={i18n.t('accessibility.heroImageAlt')}
       />
     </div>
 
@@ -29,40 +29,10 @@ useTranslation();
 
 <section className='flex flex-col gap-spacious'>
 
-## アクセシビリティの基本原則
+## {i18n.t('accessibility.principles.heading')}
 
 {(() => {
-const sections = [
-{
-title: 'Web アクセシビリティおよび WCAG 準拠',
-paragraphs: [
-'・WCAG 2.1 AA 以上の達成を目指し、レトロなデザインを取り入れつつ、コントラストや構造、ナビゲーションのしやすさを守ります。',
-'・マシンリーダブルな実装、適切なセマンティクス、フォーカス管理を基本とし、UI コンポーネント設計時にアクセシビリティ要件を組み込みます。'
-]
-},
-{
-title: 'カラーとコントラスト',
-paragraphs: [
-'・小さなパーツの集合が全体を形作るイメージを持ち、各コンポーネント単位でアクセシビリティを評価・改善します。',
-'・新機能や新デザイン要素が追加されても、アクセシビリティ基準を満たすよう随時アップデートし、成長を続けるプラットフォームを実現します。'
-]
-},
-{
-title: 'テキストとタイポグラフィ',
-paragraphs: [
-'・無機質になりがちな近未来要素やインダストリアル素材を使いつつ、ウッド調やグリーンなどの自然要素を加えて「温もり」を演出。',
-'・温かみを出すための配色や質感が、視認性や可読性を損なわないよう、コントラスト比や色覚への配慮を徹底します。'
-]
-},
-{
-title: 'インタラクションとナビゲーション',
-paragraphs: [
-'・レトロな雑貨やヴィンテージ家具を想起させるデザインエッセンスを取り入れつつ、昼間の自然光を思わせる明度や柔らかな彩度を基本に構成。',
-'・ソフトな色味でも文字やアイコンが読みにくくならないように注意し、最適なコントラストと配色を追求します。'
-]
-}
-];
-
+const sections = i18n.t('accessibility.principles.items', { returnObjects: true });
 return sections.map((section, index) => (
 
 <div key={index} className="flex flex-col gap-condensed">
@@ -78,144 +48,55 @@ return sections.map((section, index) => (
 </section>
 
 <section className='flex flex-col gap-spacious'>
-## アクセシビリティのガイドライン
+## {i18n.t('accessibility.guidelines.heading')}
 
 <div className="grid grid-cols-2 gap-6">
   {(() => {
-      const items = [
-        {
-          gradient: "linear-gradient(45deg, #FF9A8B, #FF6A88, #FF99AC)",
-          heading: "基本要件",
-          paragraph:
-            "文字と背景のコントラスト比、文字サイズ、行間隔など、必要な基準を満たします。操作要素は視認性を高め、最低限必要なコントラスト比（4.5:1以上）を確保します。"
-        },
-        {
-          gradient: "linear-gradient(120deg, #84FAB0, #8FD3F4)",
-          heading: "スクリーンリーダー対応",
-          paragraph:
-            "HTMLの構造を適切に設定し、支援技術でコンテンツを正しく読み上げられるようにします。装飾的な画像には空のalt属性を、情報を含む画像には適切な代替テキストを設定します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #6A11CB, #2575FC)",
-          heading: "キーボード操作",
-          paragraph:
-            "すべての操作要素（フォーム、ボタン、リンク、モーダルなど）をキーボードで操作できるようにします。論理的なタブ順序を設定し、メインコンテンツへのスキップリンクを提供します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #FF5E62, #FF9966)",
-          heading: "画像の代替テキスト",
-          paragraph:
-            "装飾的な画像は読み上げから除外し、機能を持つUI要素には適切な代替テキストを設定します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #00C9FF, #92FE9D)",
-          heading: "動画・音声",
-          paragraph:
-            "動画にはキャプションとテキストによる説明を提供します。音声の自動再生は避け、音量調整や停止が簡単にできるようにします。"
-        },
-        {
-          gradient: "linear-gradient(to right, #F2994A, #F2C94C)",
-          heading: "フォーム",
-          paragraph:
-            "入力項目のラベルを明確に表示し、必須項目やエラーを分かりやすく伝えます。スクリーンリーダーでもエラー内容を正確に伝えられるよう実装します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #56CCF2, #2F80ED)",
-          heading: "画面構成",
-          paragraph:
-            "情報を整理し、読みやすい階層構造を作ります。操作性を重視した実装を行います。"
-        },
-        {
-          gradient: "linear-gradient(to right, #EECDA3, #EF629F)",
-          heading: "色使い",
-          paragraph:
-            "文字と背景の色のコントラストを適切に設定し、色覚の多様性に配慮した情報伝達を行います。"
-        },
-        {
-          gradient: "linear-gradient(to right, #43C6AC, #191654)",
-          heading: "文章表現",
-          paragraph:
-            "分かりやすい言葉を使い、操作手順を明確に説明します。見出しの階層構造を適切に設定し、文書を整理します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #FDC830, #F37335)",
-          heading: "アニメーション",
-          paragraph:
-            "動きは控えめにし、必要に応じて停止できるようにします。激しい動きや点滅は避けます。"
-        },
-        {
-          gradient: "linear-gradient(to right, #00B4DB, #0083B0)",
-          heading: "レイアウト",
-          paragraph:
-            "ヘッダー、メイン、フッターを適切に構造化し、スマートフォンでも使いやすい表示を実現します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #FFAFBD, #FFC3A0)",
-          heading: "モーダルダイアログ",
-          paragraph:
-            "モーダル表示時は背景を暗くし、フォーカスを適切に制御します。スクリーンリーダーでの読み上げにも配慮します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #C6FFDD, #FBD786, #f7797d)",
-          heading: "通知",
-          paragraph:
-            "通知は視認性を確保し、スクリーンリーダーでも内容を正確に伝えられるようにします。"
-        },
-        {
-          gradient: "linear-gradient(to right, #B24592, #F15F79)",
-          heading: "スライドショー",
-          paragraph:
-            "自動再生は停止可能にし、手動での操作もできるようにします。現在の表示内容をスクリーンリーダーで正確に伝えます。"
-        },
-        {
-          gradient: "linear-gradient(to right, #36D1DC, #5B86E5)",
-          heading: "ツールチップ",
-          paragraph:
-            "追加情報の表示と非表示を明確に制御でき、スクリーンリーダーでも内容を伝えられるようにします。"
-        },
-        {
-          gradient: "linear-gradient(to right, #CB356B, #BD3F32)",
-          heading: "並び替え機能",
-          paragraph:
-            "マウスでのドラッグに加え、キーボードでも操作できるようにします。操作可能な領域と結果を明確に示します。"
-        },
-        {
-          gradient: "linear-gradient(to right, #3A1C71, #D76D77, #FFAF7B)",
-          heading: "メニュー",
-          paragraph:
-            "スマートフォンでのメニューボタンには適切な説明を付け、開閉状態を明確に伝えます。"
-        },
-        {
-          gradient: "linear-gradient(to right, #1FA2FF, #12D8FA, #A6FFCB)",
-          heading: "画面遷移",
-          paragraph:
-            "現在位置を常に表示し、リンクやボタンの目的を明確にします。画面が更新された際は適切に通知します。"
-        },
+      const items = i18n.t('accessibility.guidelines.items', { returnObjects: true });
+      const gradients = [
+        "linear-gradient(73deg, #96fbc4 0%, #f9f586 100%)",
+        "linear-gradient(45deg, #ff7e5f 0%, #feb47b 100%)",
+        "linear-gradient(82deg, #4facfe 0%, #00f2fe 100%)",
+        "linear-gradient(37deg, #43e97b 0%, #38f9d7 100%)",
+        "linear-gradient(59deg, #fa709a 0%, #fee140 100%)",
+        "linear-gradient(66deg, #7F7FD5 0%, #86A8E7 50%, #91EAE4 100%)",
+        "linear-gradient(27deg, #f78ca0 0%, #f9748f 50%, #fd868c 100%)",
+        "linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%)",
+        "linear-gradient(33deg, #fad0c4 0%, #ffd1ff 100%)",
+        "linear-gradient(120deg, #ffb347 0%, #ffcc33 100%)",
+        "linear-gradient(54deg, #43cea2 0%, #185a9d 100%)",
+        "linear-gradient(63deg, #cfd9df 0%, #e2ebf0 100%)",
+        "linear-gradient(77deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%)",
+        "linear-gradient(44deg, #a1c4fd 0%, #c2e9fb 100%)",
+        "linear-gradient(95deg, #d4fc79 0%, #96e6a1 100%)",
+        "linear-gradient(88deg, #84fab0 0%, #8fd3f4 100%)",
+        "linear-gradient(120deg, #cfd9df 0%, #e2ebf0 100%)",
+        "linear-gradient(67deg, #fccb90 0%, #d57eeb 100%)"
       ];
 
-    return items.map((item, index) => (
-      <div key={index} className="flex flex-col gap-spacious">
-        <div className="w-full h-[200px] rounded-lg relative overflow-hidden">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: item.gradient,
-            }}
-          />
+      return items.map((item, index) => (
+        <div key={index} className="flex flex-col gap-spacious">
+          <div className="w-full h-[200px] rounded-lg relative overflow-hidden">
+            <div
+              className="absolute inset-0"
+              style={{
+                background: gradients[index % gradients.length],
+              }}
+            />
 
-          <div
-            className="absolute inset-0 mix-blend-overlay opacity-50"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            }}
-          />
+            <div
+              className="absolute inset-0 mix-blend-overlay opacity-50"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+              }}
+            />
           </div>
           <div className="flex flex-col gap-1">
             <h3>{item.heading}</h3>
             <p>{item.paragraph}</p>
           </div>
-      </div>
-    ));
+        </div>
+      ));
 
 })()}
 
