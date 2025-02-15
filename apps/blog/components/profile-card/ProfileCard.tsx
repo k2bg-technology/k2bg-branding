@@ -16,7 +16,7 @@ export default function ProfileCard() {
         </span>
         <div className="grid gap-px">
           <p className="text-body-r-sm leading-body-r-sm text-base-black/80">
-            東京都、世田谷区在住。愛知県出身。
+            東京都在住。愛知県出身。
           </p>
           <p className="text-body-r-sm leading-body-r-sm text-base-black/80">
             フリーランスとして、Webアプリケーションの開発支援業務をメインに行っています！得意分野はフロントエンド、UI・UX、データ分析です。
