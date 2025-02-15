@@ -5,6 +5,7 @@ export * from './src/components/DropdownMenu';
 export * from './src/components/Drawer';
 export * from './src/components/Promotion';
 export * from './src/components/Media';
+export * from './src/components/ScrollArea';
 export { default as Avatar } from './src/components/Avatar';
 export { default as BlogCard } from './src/components/BlogCard';
 export { default as Pagination } from './src/components/Pagination';
