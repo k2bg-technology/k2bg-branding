@@ -19,22 +19,22 @@ useTranslation();
     <div>
       <img
         src={HeroImage}
-        alt="ヒーローイメージ"
+        alt={i18n.t('introduction.heroImageAlt')}
       />
     </div>
 
   </section>
 
   <section className='grid gap-spacious'>
-    ## コアコンセプト
+    ## {i18n.t('introduction.coreConceptHeader')}
 
     {(() => {
       const items = i18n.t('introduction.items', { returnObjects: true });
       const gradients = [
-        "linear-gradient(60deg, #96fbc4 0%, #f9f586 100%)",
-        "linear-gradient(120deg, #f6d365 0%, #fda085 100%)",
-        "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
-        "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)"
+        "linear-gradient(73deg, #96fbc4 0%, #f9f586 100%)",
+        "linear-gradient(45deg, #ff7e5f 0%, #feb47b 100%)",
+        "linear-gradient(82deg, #4facfe 0%, #00f2fe 100%)",
+        "linear-gradient(37deg, #43e97b 0%, #38f9d7 100%)",
       ];
 
       return (
