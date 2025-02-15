@@ -9,11 +9,11 @@ import SideBarAd from '../google-adsense/SideBarAd';
 export default function Sidebar() {
   return (
     <aside>
-      <div className="grid gap-spacious w-[18.375rem]">
+      <div className="grid gap-spacious w-[18.125rem]">
         {process.env.NODE_ENV === 'production' ? (
           <SideBarAd />
         ) : (
-          <div className="relative h-[18.375rem]">
+          <div className="relative h-[18.125rem]">
             <Image
               alt="google adsense"
               src="/adsense_dummy.png"
