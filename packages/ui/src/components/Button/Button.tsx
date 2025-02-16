@@ -5,7 +5,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { twMerge } from '../../utils/extendTailwindMerge';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:border-opacity-50 hover:bg-opacity-10',
+  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:border-opacity-50 hover:bg-opacity-10 transition-all duration-300 ease-in-out',
   {
     variants: {
       variant: {
