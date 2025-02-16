@@ -3,8 +3,6 @@ import Sidebar from '../../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import * as Prisma from '../../../../modules/data-access/prisma';
 
-export const revalidate = 3600;
-
 export async function generateStaticParams() {
   const postRepository = new Prisma.Post.Repository();
   const posts = await postRepository.getAllArticleSlugs();
