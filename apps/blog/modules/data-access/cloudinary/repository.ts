@@ -25,6 +25,8 @@ export class Repository extends Core implements Domain.Image.Repository {
   async uploadImage(id: string, fileUrl: string) {
     return this.upload(fileUrl, {
       public_id: id,
+      overwrite: true,
+      invalidate: true,
     });
   }
 }
