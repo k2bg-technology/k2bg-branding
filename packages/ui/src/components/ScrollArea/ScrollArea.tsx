@@ -16,9 +16,9 @@ const ScrollBar = React.forwardRef<
     className={twMerge(
       'flex touch-none select-none transition-colors',
       orientation === 'vertical' &&
-        'h-full w-2.5 border-l border-l-transparent p-px',
+        'h-full w-1.5 md:w-2.5 border-l border-l-transparent p-px',
       orientation === 'horizontal' &&
-        'h-2.5 flex-col border-t border-t-transparent p-px',
+        'h-1.5 md:h-2.5 flex-col border-t border-t-transparent p-px',
       styles.scrollArea,
       className
     )}

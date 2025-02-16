@@ -38,7 +38,7 @@ export default function Drawer({
             className
           )}
         >
-          <ScrollArea className="p-6 pt-14 h-screen">
+          <ScrollArea className="p-6 pt-14 h-screen h-dvh">
             {title && (
               <RadixDialog.Title className="text-body-r-sm leading-body-r-sm font-bold">
                 {title}
