@@ -18,7 +18,6 @@ export async function PageHeading(props: Props) {
           <Link href={`/category/${article.category}`}>{article.category}</Link>
         }
         heading={<h1 className="text-header-1 font-bold">{article.title}</h1>}
-        excerpt={article.excerpt}
         avatar={
           article.author && (
             <Avatar>
