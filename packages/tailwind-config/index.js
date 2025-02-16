@@ -36,6 +36,8 @@ module.exports = {
       fontFamily: {
         original: [
           'Menlo',
+          'YuGothic',
+          'var(--font-noto-sans-jp)',
           '"Hiragino Kaku Gothic ProN"',
           '"Hiragino Sans"',
           'Meiryo',

@@ -28,7 +28,7 @@ export default function Content({
       )}
       {heading}
       {excerpt && (
-        <p className="break-all text-body-r-sm leading-body-r-sm text-base-black/80 text-justify whitespace-pre-wrap line-clamp-5 text-ellipsis">
+        <p className="break-all text-body-r-sm leading-body-r-sm text-base-black text-justify whitespace-pre-wrap line-clamp-5 text-ellipsis">
           {excerpt}
         </p>
       )}

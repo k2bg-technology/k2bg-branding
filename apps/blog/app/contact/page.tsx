@@ -9,10 +9,10 @@ export default function Page() {
     <>
       <div className="grid-cols-[subgrid] gap-12 col-span-full">
         <h1 className="text-header-1 font-bold">お問い合わせ</h1>
-        <p className="mt-4 text-body-r-sm leading-body-r-sm text-base-black/80 text-justify whitespace-pre-wrap">
+        <p className="mt-4 text-body-r-md leading-body-r-md text-base-black text-justify whitespace-pre-wrap">
           必要事項をご入力いただき、送信ボタンを押してください。返信には数日かかる場合がございますが、極力早急に返信するように致しますので、お気軽にお問い合わせいただけると幸いです。平日は1〜2時間、休日は3時間程度で在宅ワークをお受けすることが可能です。
         </p>
-        <ul className="mt-2 text-body-r-sm leading-body-r-sm text-base-black/80 text-justify">
+        <ul className="mt-2 text-body-r-md leading-body-r-md text-base-black text-justify">
           <li>
             ※ 誠に恐れ入りますが、平日は9:00〜20:00以外でのご対応となります。
           </li>
@@ -33,7 +33,7 @@ export default function Page() {
               <div className="flex flex-col gap-2 w-full">
                 <Form.Control>
                   <Form.Label
-                    className="text-body-r-sm leading-body-r-sm text-base-black font-bold"
+                    className="text-body-r-md leading-body-r-md text-base-black font-bold"
                     htmlFor="name"
                   >
                     お名前
@@ -50,7 +50,7 @@ export default function Page() {
               <div className="flex flex-col gap-2 w-full">
                 <Form.Control>
                   <Form.Label
-                    className="text-body-r-sm leading-body-r-sm text-base-black font-bold"
+                    className="text-body-r-md leading-body-r-md text-base-black font-bold"
                     htmlFor="email"
                   >
                     Eメール
@@ -68,7 +68,7 @@ export default function Page() {
             <div className="flex flex-col gap-2 w-full">
               <Form.Control>
                 <Form.Label
-                  className="text-body-r-sm leading-body-r-sm text-base-black font-bold"
+                  className="text-body-r-md leading-body-r-md text-base-black font-bold"
                   htmlFor="message"
                 >
                   メッセージ
