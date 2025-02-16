@@ -64,7 +64,7 @@ export default async function Page() {
             </BlogCard>
           </div>
         )}
-        <div className="col-start-8 col-end-13 hidden xl:grid gap-6">
+        <div className="col-start-8 col-end-13 hidden xl:grid gap-y-8">
           {featuresRecently.map((article) => (
             <BlogCard key={article.title} className="flex-row gap-spacious">
               {article.imageUrl && (
@@ -119,7 +119,7 @@ export default async function Page() {
       </div>
       <hr className="col-span-full border-b-1 border-b-slate-100" />
       <div className="col-span-full grid grid-cols-[subgrid]">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 col-start-1 col-end-10 place-content-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8 col-start-1 col-end-10 place-content-start">
           {featuresRecently.map((article) => (
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-spacious">
