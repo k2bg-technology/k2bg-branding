@@ -1,5 +1,4 @@
 import { Noto_Sans_JP } from 'next/font/google';
-import { ScrollArea } from 'ui';
 
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -23,15 +22,13 @@ export default function RootLayout({
   return (
     <html lang="ja" className={notoSansJP.variable}>
       <body>
-        <ScrollArea className="h-screen h-dvh">
-          <div className="grid grid-rows-[3rem_1fr_18.75rem] grid-cols-[1fr_calc(100%-2rem)_1fr] md:grid-cols-[1fr_46rem_1fr] xl:grid-cols-[1fr_77rem_1fr]">
-            <Header />
-            <main className="col-start-2 -col-end-2 grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-x-6 gap-y-12 auto-rows-max py-12">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </ScrollArea>
+        <div className="grid grid-rows-[3rem_1fr_18.75rem] grid-cols-[1fr_calc(100%-2rem)_1fr] md:grid-cols-[1fr_46rem_1fr] xl:grid-cols-[1fr_77rem_1fr]">
+          <Header />
+          <main className="col-start-2 -col-end-2 grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-x-6 gap-y-12 auto-rows-max py-12">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
       <GoogleAdsense />
     </html>

@@ -6,7 +6,6 @@ import * as RadixDialog from '@radix-ui/react-dialog';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { twMerge } from '../../utils/extendTailwindMerge';
-import { ScrollArea } from '../ScrollArea';
 
 import styles from './Drawer.module.css';
 
@@ -33,24 +32,22 @@ export default function Drawer({
         <RadixDialog.Content
           {...rest}
           className={twMerge(
-            'grid auto-rows-max gap-5 fixed top-0 right-0 w-max h-full rounded-xl bg-white drop-shadow-xl',
+            'grid auto-rows-max gap-5 fixed top-0 right-0 w-max h-full rounded-xl p-6 pt-14 bg-white drop-shadow-xl overflow-y-auto',
             styles.Content,
             className
           )}
         >
-          <ScrollArea className="p-6 pt-14 h-screen h-dvh">
-            {title && (
-              <RadixDialog.Title className="text-body-r-sm leading-body-r-sm font-bold">
-                {title}
-              </RadixDialog.Title>
-            )}
-            {description && (
-              <RadixDialog.Description className="text-body-r-sm leading-body-r-sm">
-                {description}
-              </RadixDialog.Description>
-            )}
-            {mainContent}
-          </ScrollArea>
+          {title && (
+            <RadixDialog.Title className="text-body-r-sm leading-body-r-sm font-bold">
+              {title}
+            </RadixDialog.Title>
+          )}
+          {description && (
+            <RadixDialog.Description className="text-body-r-sm leading-body-r-sm">
+              {description}
+            </RadixDialog.Description>
+          )}
+          <div className="h-full">{mainContent}</div>
           <RadixDialog.Close asChild>
             <Button
               type="button"
