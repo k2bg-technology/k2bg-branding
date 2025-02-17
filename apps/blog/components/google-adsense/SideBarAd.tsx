@@ -21,7 +21,7 @@ export default function SideBarAd() {
   }, [pathName]);
 
   return (
-    <div key={pathName}>
+    <div key={pathName} className="max-w-[18.125rem]">
       <ins
         className="adsbygoogle"
         style={{ display: 'block' }}
