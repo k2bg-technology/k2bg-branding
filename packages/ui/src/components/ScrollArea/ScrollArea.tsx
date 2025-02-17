@@ -35,10 +35,10 @@ const ScrollArea = React.forwardRef<
 >(({ className, children, ...rest }, ref) => (
   <ScrollAreaPrimitive.Root
     ref={ref}
-    className={twMerge('relative overflow-hidden', className)}
+    className={twMerge('flex flex-col relative overflow-hidden', className)}
     {...rest}
   >
-    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">
+    <ScrollAreaPrimitive.Viewport className="flex-grow w-full rounded-[inherit]">
       {children}
     </ScrollAreaPrimitive.Viewport>
     <ScrollBar />
