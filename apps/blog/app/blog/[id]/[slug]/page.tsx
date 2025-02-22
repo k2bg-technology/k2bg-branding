@@ -30,7 +30,7 @@ export default async function Page({
         <div className="col-span-full xl:col-start-2 xl:col-end-9">
           <Markdown article={article} />
         </div>
-        <div className="hidden xl:block col-start-9 col-end-12">
+        <div className="hidden xl:flex col-start-9 col-end-12">
           <Sidebar />
         </div>
       </div>

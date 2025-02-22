@@ -233,7 +233,7 @@ export default async function Page() {
             </BlogCard>
           ))}
         </div>
-        <div className="hidden xl:block col-start-10 col-end-13">
+        <div className="hidden xl:flex col-start-10 col-end-13">
           <Sidebar />
         </div>
       </div>
