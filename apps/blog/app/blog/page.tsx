@@ -20,13 +20,17 @@ export default async function Page() {
           <div className="col-start-1 col-end-8">
             <BlogCard className="flex-col gap-spacious">
               {featureLatest.imageUrl && (
-                <Link href={`/blog/${featureLatest.slug}`} passHref>
+                <Link
+                  href={`/blog/${featureLatest.slug}`}
+                  passHref
+                  className="peer"
+                >
                   <BlogCard.Media className="relative w-full h-[18.75rem]">
                     <CloudinaryImage
                       publicId={featureLatest.id}
                       src={featureLatest.imageUrl}
                       alt="media"
-                      className="absolute aspect-square h-full w-full object-cover"
+                      className="absolute aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                       fill
                       sizes="100%"
                       priority
@@ -42,8 +46,11 @@ export default async function Page() {
                   </Link>
                 }
                 heading={
-                  <Link href={`/blog/${featureLatest.slug}`}>
-                    <h2 className="text-header-2 leading-header-2 font-bold">
+                  <Link
+                    href={`/blog/${featureLatest.slug}`}
+                    className="heading-link"
+                  >
+                    <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
                       {featureLatest.title}
                     </h2>
                   </Link>
@@ -60,6 +67,7 @@ export default async function Page() {
                   )
                 }
                 date={featureLatest.releaseDate}
+                className="peer-hover:[&>.heading-link]:underline peer-hover:[&>.heading-link]:text-base-black/80"
               />
             </BlogCard>
           </div>
@@ -71,14 +79,14 @@ export default async function Page() {
                 <Link
                   href={`/blog/${article.slug}`}
                   passHref
-                  className="h-full"
+                  className="h-full peer"
                 >
                   <BlogCard.Media className="relative flex-none w-[10rem] h-[10rem]">
                     <CloudinaryImage
                       publicId={article.id}
                       alt="media"
                       src={article.imageUrl}
-                      className="absolute aspect-square h-full w-full object-cover"
+                      className="absolute aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                       fill
                       sizes="100%"
                       priority
@@ -94,8 +102,8 @@ export default async function Page() {
                   </Link>
                 }
                 heading={
-                  <Link href={`/blog/${article.slug}`}>
-                    <h2 className="text-header-2 leading-header-2 font-bold">
+                  <Link href={`/blog/${article.slug}`} className="heading-link">
+                    <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
                       {article.title}
                     </h2>
                   </Link>
@@ -112,6 +120,7 @@ export default async function Page() {
                   )
                 }
                 date={article.releaseDate}
+                className="peer-hover:[&>.heading-link]:underline peer-hover:[&>.heading-link]:text-base-black/80"
               />
             </BlogCard>
           ))}
@@ -127,14 +136,14 @@ export default async function Page() {
                   <Link
                     href={`/blog/${article.slug}`}
                     passHref
-                    className="h-full"
+                    className="h-full peer"
                   >
                     <BlogCard.Media className="relative w-full h-[16rem]">
                       <CloudinaryImage
                         publicId={article.id}
                         src={article.imageUrl}
                         alt="media"
-                        className="aspect-square h-full w-full object-cover"
+                        className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                         fill
                         sizes="100%"
                         priority
@@ -150,8 +159,11 @@ export default async function Page() {
                     </Link>
                   }
                   heading={
-                    <Link href={`/blog/${article.slug}`}>
-                      <h2 className="text-header-2 leading-header-2 font-bold">
+                    <Link
+                      href={`/blog/${article.slug}`}
+                      className="heading-link"
+                    >
+                      <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
                         {article.title}
                       </h2>
                     </Link>
@@ -168,6 +180,7 @@ export default async function Page() {
                     )
                   }
                   date={article.releaseDate}
+                  className="peer-hover:[&>.heading-link]:underline peer-hover:[&>.heading-link]:text-base-black/80"
                 />
               </BlogCard>
             </div>
@@ -175,13 +188,13 @@ export default async function Page() {
           {featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.imageUrl && (
-                <Link href={`/blog/${article.slug}`} passHref>
+                <Link href={`/blog/${article.slug}`} passHref className="peer">
                   <BlogCard.Media className="relative w-full h-[16rem]">
                     <CloudinaryImage
                       publicId={article.id}
                       src={article.imageUrl}
                       alt="media"
-                      className="aspect-square h-full w-full object-cover"
+                      className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                       fill
                       sizes="100%"
                       priority
@@ -197,8 +210,8 @@ export default async function Page() {
                   </Link>
                 }
                 heading={
-                  <Link href={`/blog/${article.slug}`}>
-                    <h2 className="text-header-2 leading-header-2 font-bold">
+                  <Link href={`/blog/${article.slug}`} className="heading-link">
+                    <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
                       {article.title}
                     </h2>
                   </Link>
@@ -215,6 +228,7 @@ export default async function Page() {
                   )
                 }
                 date={article.releaseDate}
+                className="peer-hover:[&>.heading-link]:underline peer-hover:[&>.heading-link]:text-base-black/80"
               />
             </BlogCard>
           ))}
