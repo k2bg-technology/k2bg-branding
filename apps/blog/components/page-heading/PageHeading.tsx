@@ -12,7 +12,7 @@ export async function PageHeading(props: Props) {
   const { article } = props;
 
   return (
-    <BlogCard className="flex-col gap-spacious">
+    <BlogCard className="grid grid-cols-[subgrid] col-span-full gap-spacious">
       <BlogCard.Content
         category={
           <Link href={`/category/${article.category}`}>{article.category}</Link>
@@ -26,8 +26,9 @@ export async function PageHeading(props: Props) {
           )
         }
         date={article.releaseDate}
+        className="col-span-full xl:col-start-2 xl:col-end-12"
       />
-      <BlogCard.Media className="relative w-full h-[23.5rem]">
+      <BlogCard.Media className="relative w-full h-[40rem] col-span-full">
         <CloudinaryImage
           publicId={article.id}
           src={article.imageUrl}

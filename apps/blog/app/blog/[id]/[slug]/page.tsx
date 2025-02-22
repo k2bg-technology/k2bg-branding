@@ -23,14 +23,14 @@ export default async function Page({
 
   return (
     <>
-      <div className="grid-cols-[subgrid] gap-20 col-span-full">
+      <div className="grid grid-cols-[subgrid] col-span-full">
         <ArticleHeading article={article} />
       </div>
       <div className="grid grid-cols-[subgrid] col-span-full">
-        <div className="col-start-1 col-end-10">
+        <div className="col-span-full xl:col-start-2 xl:col-end-9">
           <Markdown article={article} />
         </div>
-        <div className="hidden xl:block col-start-10 col-end-13">
+        <div className="hidden xl:block col-start-9 col-end-12">
           <Sidebar />
         </div>
       </div>
