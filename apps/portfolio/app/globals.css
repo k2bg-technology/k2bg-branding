@@ -1,21 +1,2 @@
 @import 'tailwind-config/design-token/variables.css';
 @import 'ui/src/globals.css';
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html {
-    @apply w-full h-full;
-  }
-  body {
-    @apply w-full h-full text-base-black font-original text-body-r-md;
-  }
-  input,
-  button,
-  textarea,
-  select {
-    @apply appearance-none bg-transparent outline-none;
-  }
-}
