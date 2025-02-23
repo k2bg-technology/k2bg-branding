@@ -7,6 +7,11 @@ import * as Prisma from '../../../modules/data-access/prisma';
 
 const PAGE_SIZE = 6;
 
+type Params = Promise<{ category: Category }>;
+type SearchParams = Promise<{
+  page?: string;
+}>;
+
 export async function generateStaticParams() {
   return [
     Category.ENGINEERING,
@@ -23,34 +28,34 @@ export default async function Page({
   params,
   searchParams,
 }: {
-  params: { category: Category };
-  searchParams?: {
-    page?: string;
-  };
+  params: Params;
+  searchParams: SearchParams;
 }) {
-  const currentPage = Number(searchParams?.page) || 1;
+  const { category } = await params;
+
+  const { page = '1' } = await searchParams;
+  const currentPage = Number(page);
 
   const postRepository = new Prisma.Post.Repository();
 
   return (
     <>
       <h1 className="col-span-full text-header-1 font-bold capitalize">
-        {params.category}
+        {category}
       </h1>
       <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
         <Articles
           fetchArticles={() =>
             postRepository.getPaginatedArticlesByCategory(
-              params.category,
+              category,
               PAGE_SIZE,
               currentPage
             )
           }
           fetchArticlesCount={async () =>
             Math.ceil(
-              (await postRepository.getArticlesCountByCategory(
-                params.category
-              )) / PAGE_SIZE
+              (await postRepository.getArticlesCountByCategory(category)) /
+                PAGE_SIZE
             )
           }
         />

@@ -3,6 +3,8 @@ import Sidebar from '../../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import * as Prisma from '../../../../modules/data-access/prisma';
 
+type Params = Promise<{ id: string; slug: string }>;
+
 export async function generateStaticParams() {
   const postRepository = new Prisma.Post.Repository();
   const posts = await postRepository.getAllArticleSlugs();
@@ -13,13 +15,11 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { id: string; slug: string };
-}) {
+export default async function Page({ params }: { params: Params }) {
+  const { id } = await params;
+
   const postRepository = new Prisma.Post.Repository();
-  const article = await postRepository.getPost(params.id);
+  const article = await postRepository.getPost(id);
 
   return (
     <>

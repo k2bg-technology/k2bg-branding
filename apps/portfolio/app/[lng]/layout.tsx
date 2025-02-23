@@ -15,6 +15,8 @@ const notoSansJP = Noto_Sans_JP({
   variable: '--font-noto-sans-jp',
 });
 
+type Params = Promise<{ lng: Language }>;
+
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
@@ -24,13 +26,15 @@ export const metadata: Metadata = {
   description: 'K2.B.G. Technologyが提供できる価値を紹介いたします。',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
-  params: { lng },
+  params,
 }: {
   children: ReactNode;
-  params: { lng: Language };
+  params: Params;
 }) {
+  const { lng } = await params;
+
   return (
     <html lang={lng} dir={dir(lng)} className={notoSansJP.variable}>
       <body>{children}</body>

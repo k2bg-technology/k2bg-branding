@@ -6,16 +6,18 @@ import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 
 const PAGE_SIZE = 6;
 
+type SearchParams = Promise<{
+  page?: string;
+  query?: string;
+}>;
+
 export default async function Page({
   searchParams,
 }: {
-  searchParams?: {
-    page?: string;
-    query?: string;
-  };
+  searchParams: SearchParams;
 }) {
-  const query = searchParams?.query || '';
-  const currentPage = Number(searchParams?.page) || 1;
+  const { query = '', page = '1' } = await searchParams;
+  const currentPage = Number(page);
 
   const postRepository = new Prisma.Post.Repository();
 

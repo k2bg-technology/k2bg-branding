@@ -22,5 +22,8 @@
     "typescript": "^5.4.5"
   },
   "packageManager": "pnpm@8.6.10",
-  "name": "k2bg-branding"
+  "name": "k2bg-branding",
+  "dependencies": {
+    "next": "^15.1.7"
+  }
 }

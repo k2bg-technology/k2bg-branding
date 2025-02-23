@@ -13,11 +13,10 @@ import { ScrollHelper } from '../../components/ScrollHelper';
 
 import Loading from './loading';
 
-export default async function Page({
-  params: { lng },
-}: {
-  params: { lng: Language };
-}) {
+type Params = Promise<{ lng: Language }>;
+
+export default async function Page({ params }: { params: Params }) {
+  const { lng } = await params;
   const { t } = await useTranslation(
     languages.indexOf(lng) < 0 ? fallbackLng : lng
   );
