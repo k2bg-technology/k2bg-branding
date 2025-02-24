@@ -14,7 +14,7 @@ const importAll = (r: __WebpackModuleApi.RequireContext) =>
         ...prev,
         [key]: image,
       }),
-      {} as Record<string, string>
+      {} as Record<string, string | { default: { src: string } }>
     );
 
 const multiColorIcons = importAll(
@@ -63,7 +63,9 @@ export function Icon(props: IconProps) {
         originalColor && `${styles.originalColor}`
       } ${className}`}
       style={{
-        '--image-url': `url(${iconUrl})`,
+        '--image-url': `url(${
+          typeof iconUrl === 'string' ? iconUrl : iconUrl?.default?.src
+        })`,
         '--icon-color': color,
         '--icon-width': width,
         '--icon-height': height,
