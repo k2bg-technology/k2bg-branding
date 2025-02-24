@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      next:
-        specifier: ^15.1.7
-        version: 15.1.7(@babel/core@7.24.9)(react-dom@19.0.0)(react@19.0.0)
     devDependencies:
       '@turbo/gen':
         specifier: ^1.9.7
@@ -136,6 +132,9 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.1.4
         version: 1.2.1
+      next:
+        specifier: ^15.1.7
+        version: 15.1.7(@babel/core@7.24.9)(react-dom@19.0.0)(react@19.0.0)
       react:
         specifier: ^19.0.0
         version: 19.0.0
