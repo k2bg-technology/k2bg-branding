@@ -18,9 +18,8 @@ export async function Root(props: Props) {
 
   return (
     <ReactMarkdown
-      className="markdown"
-      // @ts-expect-error rehypeRaw, remarkGfm
-      rehypePlugins={[rehypeRaw, remarkGfm]}
+      rehypePlugins={[rehypeRaw]}
+      remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ children, ...props }) => (
           <h1
@@ -118,19 +117,23 @@ export async function Root(props: Props) {
             {children}
           </pre>
         ),
-        code: ({ children, ...props }) => {
-          const { inline, className } = props;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        code: ({ children, ref, ...props }) => {
+          const { className } = props;
+
+          const isInline =
+            typeof children === 'string' && children.split('\n').length === 1;
 
           const language = className?.split('-')[1];
 
-          if (inline)
+          if (isInline)
             return (
               <code className="rounded-md bg-base-white/80 text-body-r-sm text-accent-dark inline-block mx-1 px-2 py-1 leading-none">
                 {children}
               </code>
             );
 
-          return typeof children?.[0] === 'string' ? (
+          return typeof children === 'string' ? (
             <SyntaxHighlighter
               // eslint-disable-next-line react/jsx-props-no-spreading
               {...props}
@@ -143,7 +146,7 @@ export async function Root(props: Props) {
               wrapLines
               wrapLongLines
             >
-              {children?.[0]?.trim()}
+              {children.trim()}
             </SyntaxHighlighter>
           ) : null;
         },
@@ -159,8 +162,8 @@ export async function Root(props: Props) {
         img: ({ className, src, alt, width, height, node }) => {
           if (!(src && alt && width && height)) return null;
 
-          const id = String(node.properties?.dataId) || '';
-          const unoptimized = Boolean(node.properties?.dataUnoptoinized);
+          const id = String(node?.properties?.dataId) || '';
+          const unoptimized = Boolean(node?.properties?.dataUnoptoinized);
 
           return (
             <CloudinaryImage
@@ -175,6 +178,33 @@ export async function Root(props: Props) {
             />
           );
         },
+        table: ({ children, ...props }) => (
+          <table
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            className="mt-4 w-full text-body-r-sm border-base-white"
+          >
+            {children}
+          </table>
+        ),
+        th: ({ children, ...props }) => (
+          <th
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            className="text-base-black font-original border py-2 px-3 bg-base-white"
+          >
+            {children}
+          </th>
+        ),
+        td: ({ children, ...props }) => (
+          <td
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...props}
+            className="text-base-black font-original border py-2 px-3"
+          >
+            {children}
+          </td>
+        ),
       }}
     >
       {article.content}
