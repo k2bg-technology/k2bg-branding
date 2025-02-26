@@ -1,12 +1,8 @@
-import { AnchorHTMLAttributes, PropsWithChildren } from 'react';
 import { Button, Icon } from 'ui';
 
-interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {}
+type Props = React.ComponentPropsWithoutRef<'a'>;
 
-export function ExternalLinkButton({
-  children,
-  ...rest
-}: PropsWithChildren<Props>) {
+export function ExternalLinkButton({ children, ...rest }: Props) {
   return (
     <Button color="light" variant="outline" asChild>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}

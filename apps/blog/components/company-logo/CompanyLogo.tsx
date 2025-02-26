@@ -1,6 +1,4 @@
-import { SVGProps } from 'react';
-
-export function CompanyLogo(props: SVGProps<SVGSVGElement>) {
+export function CompanyLogo(props: React.ComponentPropsWithRef<'svg'>) {
   // eslint-disable-next-line react/jsx-props-no-spreading
   return (
     <svg
