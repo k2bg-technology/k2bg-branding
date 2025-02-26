@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext } from 'react';
+import { createContext, use } from 'react';
 
 export interface FormProps {
   required?: boolean;
@@ -19,14 +19,12 @@ const FormContext = createContext<FormProps>({
 export function FormProvider({
   children,
   ...formProps
-}: FormProps & React.PropsWithChildren) {
-  return (
-    <FormContext.Provider value={formProps}>{children}</FormContext.Provider>
-  );
+}: React.PropsWithChildren<FormProps>) {
+  return <FormContext value={formProps}>{children}</FormContext>;
 }
 
 export function useFormContext(formProps?: FormProps) {
-  const formContext = useContext(FormContext);
+  const formContext = use(FormContext);
 
   return {
     ...formContext,
