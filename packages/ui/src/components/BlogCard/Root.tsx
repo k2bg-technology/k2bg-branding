@@ -1,9 +1,6 @@
-import { HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
-  className?: string;
-}
+type Props = React.ComponentPropsWithRef<'div'>;
 
 export default function Root({ className, children, ...rest }: Props) {
   return (
@@ -14,3 +11,5 @@ export default function Root({ className, children, ...rest }: Props) {
     </article>
   );
 }
+
+Root.displayName = 'BlogCard';

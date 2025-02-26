@@ -1,5 +1,3 @@
-import { IframeHTMLAttributes as IframeHTMLAttributesOrigin } from 'react';
-
 declare module 'react' {
   interface IframeHTMLAttributes<T> extends React.HTMLAttributes<T> {
     title?: string;
@@ -8,7 +6,7 @@ declare module 'react' {
 
 interface Props
   /** https://developer.mozilla.org/ja/docs/Web/HTML/Element/iframe */
-  extends IframeHTMLAttributesOrigin<HTMLIFrameElement> {
+  extends React.ComponentPropsWithoutRef<'iframe'> {
   url: string;
   width: number;
   height: number;

@@ -1,8 +1,8 @@
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
-export type LineProps = React.HTMLAttributes<HTMLDivElement>;
+type Props = React.ComponentPropsWithoutRef<'div'>;
 
-export function Line(props: LineProps) {
+export function Line(props: Props) {
   const { className = 'py-0.5' } = props;
 
   return (

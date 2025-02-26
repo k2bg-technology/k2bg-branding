@@ -1,8 +1,6 @@
-import { ImgHTMLAttributes } from 'react';
-
 interface Props
   /** https://developer.mozilla.org/ja/docs/Web/HTML/Element/img */
-  extends ImgHTMLAttributes<HTMLImageElement> {
+  extends React.ComponentPropsWithoutRef<'img'> {
   name?: string;
   linkUrl?: string;
   url?: string;

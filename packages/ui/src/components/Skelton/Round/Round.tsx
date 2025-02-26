@@ -1,9 +1,8 @@
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
-export type LineProps = React.PropsWithChildren &
-  React.HTMLAttributes<HTMLDivElement>;
+type Props = React.PropsWithChildren & React.HTMLAttributes<HTMLDivElement>;
 
-export function Round(props: LineProps) {
+export function Round(props: Props) {
   const { children, className = 'w-8 h-8' } = props;
 
   return (

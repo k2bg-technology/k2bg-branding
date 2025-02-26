@@ -1,5 +1,3 @@
-import { HTMLAttributes } from 'react';
-
 import { Button } from '../Button';
 
 interface Provider {
@@ -8,7 +6,7 @@ interface Provider {
   color: string;
 }
 
-interface ProductPromotionProps extends HTMLAttributes<HTMLDivElement> {
+interface ProductPromotionProps extends React.ComponentPropsWithoutRef<'div'> {
   linkText: string;
   linkUrl: string;
   imageUrl: string;

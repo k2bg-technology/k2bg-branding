@@ -1,6 +1,5 @@
 'use client';
 
-import { LabelHTMLAttributes } from 'react';
 import { cva } from 'class-variance-authority';
 
 import { FormProps, useFormContext } from '../Control/Context';
@@ -27,10 +26,10 @@ const labelVariants = cva('text-body-b-sm font-bold', {
 });
 
 export interface Props
-  extends Omit<LabelHTMLAttributes<HTMLLabelElement>, 'color'>,
+  extends Omit<React.ComponentPropsWithoutRef<'label'>, 'color'>,
     FormProps {}
 
-export function Label(props: React.PropsWithChildren<Props>) {
+export function Label(props: Props) {
   const { children, className, ...rest } = props;
 
   const { color = 'dark', error, disabled } = useFormContext(rest);

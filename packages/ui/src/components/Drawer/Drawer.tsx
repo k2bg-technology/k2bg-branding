@@ -1,6 +1,5 @@
 'use client';
 
-import { HTMLAttributes } from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 
 import { Icon } from '../Icon';
@@ -10,7 +9,7 @@ import { ScrollArea } from '../ScrollArea';
 
 import styles from './Drawer.module.css';
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
   trigger: React.ReactNode;
   mainContent: React.ReactNode;
   title?: string;
@@ -68,3 +67,5 @@ export default function Drawer({
     </RadixDialog.Root>
   );
 }
+
+Drawer.displayName = RadixDialog.Root.displayName;

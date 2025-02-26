@@ -1,21 +1,18 @@
-import React, { HTMLAttributes } from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { twMerge } from 'tailwind-merge';
 
-export interface Props extends HTMLAttributes<HTMLSpanElement> {}
+type Props = React.ComponentPropsWithRef<'span'>;
 
-const Fallback = React.forwardRef<HTMLSpanElement, Props>(
-  ({ className, ...rest }, ref) => (
+export default function Fallback({ className, ...rest }: Props) {
+  return (
     <AvatarPrimitive.Fallback
-      ref={ref}
+      {...rest}
       className={twMerge(
         'flex h-full w-full items-center justify-center rounded-full bg-gray-200',
         className
       )}
-      {...rest}
     />
-  )
-);
-Fallback.displayName = 'Fallback';
+  );
+}
 
-export default Fallback;
+Fallback.displayName = AvatarPrimitive.Fallback.displayName;

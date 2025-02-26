@@ -1,6 +1,4 @@
-import { HTMLAttributes } from 'react';
-
-interface BannerPromotionProps extends HTMLAttributes<HTMLAnchorElement> {
+interface BannerPromotionProps extends React.ComponentPropsWithoutRef<'a'> {
   linkText: string;
   linkUrl: string;
   imageUrl: string;

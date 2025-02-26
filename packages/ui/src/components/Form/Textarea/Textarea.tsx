@@ -1,6 +1,5 @@
 'use client';
 
-import { ForwardedRef, TextareaHTMLAttributes, forwardRef } from 'react';
 import { cva } from 'class-variance-authority';
 
 import { FormProps, useFormContext } from '../Control/Context';
@@ -34,36 +33,28 @@ const inputVariants = cva(
   }
 );
 
-export interface Props
-  extends Omit<
-      TextareaHTMLAttributes<HTMLTextAreaElement>,
-      'children' | 'color'
-    >,
+interface Props
+  extends Omit<React.ComponentPropsWithRef<'textarea'>, 'children' | 'color'>,
     FormProps {}
 
-const Textarea = forwardRef(
-  (props: Props, ref: ForwardedRef<HTMLTextAreaElement>) => {
-    const { className, ...rest } = props;
+export default function Textarea(props: Props) {
+  const { className, ref, ...rest } = props;
 
-    const { color = 'dark', error, disabled } = useFormContext(rest);
+  const { color = 'dark', error, disabled } = useFormContext(rest);
 
-    return (
-      <textarea
-        {...rest}
-        ref={ref}
-        className={twMerge(
-          inputVariants({
-            color,
-            error,
-            disabled,
-          }),
-          className
-        )}
-        disabled={disabled}
-      />
-    );
-  }
-);
-Textarea.displayName = 'Textarea';
-
-export default Textarea;
+  return (
+    <textarea
+      {...rest}
+      ref={ref}
+      className={twMerge(
+        inputVariants({
+          color,
+          error,
+          disabled,
+        }),
+        className
+      )}
+      disabled={disabled}
+    />
+  );
+}

@@ -1,12 +1,10 @@
-import { HTMLAttributes, ReactNode } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
-  className?: string;
-  category?: ReactNode;
-  heading?: ReactNode;
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
+  category?: React.ReactNode;
+  heading?: React.ReactNode;
   excerpt?: string;
-  avatar?: ReactNode;
+  avatar?: React.ReactNode;
   date?: string;
 }
 

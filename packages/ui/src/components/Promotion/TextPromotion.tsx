@@ -1,6 +1,4 @@
-import { AnchorHTMLAttributes } from 'react';
-
-interface TextPromotionProps extends AnchorHTMLAttributes<HTMLAnchorElement> {}
+type TextPromotionProps = React.ComponentPropsWithoutRef<'a'>;
 
 export default function TextPromotion(props: TextPromotionProps) {
   const { children, ...rest } = props;

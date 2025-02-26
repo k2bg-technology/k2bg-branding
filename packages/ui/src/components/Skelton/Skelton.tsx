@@ -1,11 +1,8 @@
-import React from 'react';
-
 import { twMerge } from '../../utils/extendTailwindMerge';
 
-export type SkeltonProps = React.PropsWithChildren &
-  React.HTMLAttributes<HTMLDivElement>;
+type Props = React.ComponentPropsWithoutRef<'div'>;
 
-export default function Skelton(props: SkeltonProps) {
+export default function Skelton(props: Props) {
   const { children, className, ...rest } = props;
 
   return (

@@ -1,14 +1,12 @@
-import React from 'react';
-
 import { Icon } from '../Icon';
 import { Button } from '../Button';
 
 import { usePagination } from './usePagination';
 import { Item } from './Item';
 
-type PrevNextButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+type PrevNextButtonProps = React.ComponentPropsWithoutRef<typeof Button>;
 
-export interface PaginationProps extends React.HTMLAttributes<HTMLElement> {
+export interface PaginationProps extends React.ComponentPropsWithoutRef<'nav'> {
   count: number;
   currentIndex: number;
   prevProps: PrevNextButtonProps;

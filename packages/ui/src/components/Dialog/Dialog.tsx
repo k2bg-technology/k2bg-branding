@@ -5,7 +5,8 @@ import * as RadixDialog from '@radix-ui/react-dialog';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
 
-interface Props {
+interface Props
+  extends React.ComponentPropsWithoutRef<typeof RadixDialog.Root> {
   trigger: React.ReactNode;
   content: React.ReactNode;
   title?: string;
@@ -17,9 +18,10 @@ export default function Dialog({
   title,
   description,
   content,
+  ...rest
 }: Props) {
   return (
-    <RadixDialog.Root>
+    <RadixDialog.Root {...rest}>
       <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className="fixed bg-black/50 inset-0" />

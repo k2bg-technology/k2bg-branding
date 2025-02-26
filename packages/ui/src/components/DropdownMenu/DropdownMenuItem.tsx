@@ -2,10 +2,9 @@
 
 import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 
-export default function DropdownMenuItem({
-  children,
-  ...rest
-}: RadixDropdownMenu.DropdownMenuItemProps) {
+type Props = RadixDropdownMenu.DropdownMenuItemProps;
+
+export default function DropdownMenuItem({ children, ...rest }: Props) {
   return (
     <RadixDropdownMenu.Item
       {...rest}
@@ -16,3 +15,5 @@ export default function DropdownMenuItem({
     </RadixDropdownMenu.Item>
   );
 }
+
+DropdownMenuItem.displayName = RadixDropdownMenu.Item.displayName;

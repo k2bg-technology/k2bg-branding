@@ -1,6 +1,6 @@
 'use client';
 
-import { ForwardedRef, InputHTMLAttributes, forwardRef } from 'react';
+import React from 'react';
 import { cva } from 'class-variance-authority';
 
 import { FormProps, useFormContext } from '../Control/Context';
@@ -43,56 +43,49 @@ const inputVariants = cva(
 );
 
 export interface Props
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, 'children' | 'color'>,
+  extends Omit<React.ComponentPropsWithRef<'input'>, 'children' | 'color'>,
     FormProps {
   startAdornment?: React.ReactNode;
   endAdornment?: React.ReactNode;
 }
 
-const Input = forwardRef(
-  (props: Props, ref: ForwardedRef<HTMLInputElement>) => {
-    const {
-      type = 'text',
-      className,
-      startAdornment,
-      endAdornment,
-      ...rest
-    } = props;
+export default function Input(props: Props) {
+  const {
+    type = 'text',
+    className,
+    startAdornment,
+    endAdornment,
+    ...rest
+  } = props;
+  const { color, error, disabled } = useFormContext(rest);
 
-    const { color, error, disabled } = useFormContext(rest);
-
-    return (
-      <div className={twMerge('relative', disabled && '[&_i]:bg-neutral-300')}>
-        {startAdornment && (
-          <div className="absolute top-1/2 left-3 -translate-y-1/2 flex align-middle">
-            {startAdornment}
-          </div>
+  return (
+    <div className={twMerge('relative', disabled && '[&_i]:bg-neutral-300')}>
+      {startAdornment && (
+        <div className="absolute top-1/2 left-3 -translate-y-1/2 flex align-middle">
+          {startAdornment}
+        </div>
+      )}
+      <input
+        {...rest}
+        className={twMerge(
+          inputVariants({
+            color,
+            error,
+            disabled,
+            hasStartAdornment: !!startAdornment,
+            hasEndAdornment: !!endAdornment,
+          }),
+          className
         )}
-        <input
-          {...rest}
-          ref={ref}
-          className={twMerge(
-            inputVariants({
-              color,
-              error,
-              disabled,
-              hasStartAdornment: !!startAdornment,
-              hasEndAdornment: !!endAdornment,
-            }),
-            className
-          )}
-          type={type}
-          disabled={disabled}
-        />
-        {endAdornment && (
-          <div className="absolute top-1/2 right-3 -translate-y-1/2 flex align-middle">
-            {endAdornment}
-          </div>
-        )}
-      </div>
-    );
-  }
-);
-Input.displayName = 'Input';
-
-export default Input;
+        type={type}
+        disabled={disabled}
+      />
+      {endAdornment && (
+        <div className="absolute top-1/2 right-3 -translate-y-1/2 flex align-middle">
+          {endAdornment}
+        </div>
+      )}
+    </div>
+  );
+}

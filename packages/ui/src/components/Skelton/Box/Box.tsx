@@ -1,7 +1,6 @@
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
-export type LineProps = React.PropsWithChildren &
-  React.HTMLAttributes<HTMLDivElement>;
+type LineProps = React.ComponentPropsWithoutRef<'div'>;
 
 export function Box(props: LineProps) {
   const { children, className = 'py-24' } = props;

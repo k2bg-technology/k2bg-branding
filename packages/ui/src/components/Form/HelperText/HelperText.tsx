@@ -1,4 +1,3 @@
-import { HTMLAttributes } from 'react';
 import { cva } from 'class-variance-authority';
 
 import { FormProps, useFormContext } from '../Control/Context';
@@ -24,9 +23,8 @@ const helperTextVariants = cva('text-caption leading-none', {
   },
 });
 
-export interface Props
-  extends Omit<HTMLAttributes<HTMLParagraphElement>, 'color'>,
-    FormProps {}
+export type Props = Omit<React.ComponentPropsWithoutRef<'span'>, 'color'> &
+  FormProps;
 
 export function HelperText(props: React.PropsWithChildren<Props>) {
   const { children, className, ...rest } = props;
@@ -34,7 +32,7 @@ export function HelperText(props: React.PropsWithChildren<Props>) {
   const { color = 'dark', error, disabled } = useFormContext(rest);
 
   return (
-    <p
+    <span
       {...rest}
       className={twMerge(
         helperTextVariants({ color, error, disabled }),
@@ -42,6 +40,6 @@ export function HelperText(props: React.PropsWithChildren<Props>) {
       )}
     >
       {children}
-    </p>
+    </span>
   );
 }

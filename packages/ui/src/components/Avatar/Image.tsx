@@ -1,18 +1,10 @@
-import React, { ImgHTMLAttributes } from 'react';
 import * as AvatarPrimitive from '@radix-ui/react-avatar';
 import { twMerge } from 'tailwind-merge';
 
-export interface Props extends ImgHTMLAttributes<HTMLImageElement> {}
+type Props = React.ComponentPropsWithRef<'img'>;
 
-const Image = React.forwardRef<HTMLImageElement, Props>(
-  ({ className, ...rest }, ref) => (
-    <AvatarPrimitive.Image
-      ref={ref}
-      className={twMerge('aspect-square h-full w-full', className)}
-      {...rest}
-    />
-  )
-);
-Image.displayName = 'Image';
+export default function Image({ className, ...rest }: Props) {
+  return <AvatarPrimitive.Image {...rest} className={twMerge(className)} />;
+}
 
-export default Image;
+Image.displayName = AvatarPrimitive.Image.displayName;

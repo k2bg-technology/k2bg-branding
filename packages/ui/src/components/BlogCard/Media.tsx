@@ -1,9 +1,6 @@
-import { HTMLAttributes } from 'react';
 import { twMerge } from 'tailwind-merge';
 
-interface Props extends HTMLAttributes<HTMLDivElement> {
-  className?: string;
-}
+type Props = React.ComponentPropsWithoutRef<'div'>;
 
 export default function Media({ className, children, ...rest }: Props) {
   return (

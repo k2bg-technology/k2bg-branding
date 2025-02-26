@@ -1,7 +1,7 @@
 import { Button } from '../Button';
 
 export interface PaginationItemProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  extends React.ComponentPropsWithoutRef<typeof Button> {
   selected?: boolean;
 }
 

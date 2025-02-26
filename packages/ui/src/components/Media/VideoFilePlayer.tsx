@@ -1,8 +1,6 @@
-import { VideoHTMLAttributes } from 'react';
-
 interface Props
   /** https://developer.mozilla.org/ja/docs/Web/HTML/Element/video */
-  extends VideoHTMLAttributes<HTMLVideoElement> {
+  extends React.ComponentPropsWithoutRef<'video'> {
   file: string;
   width: number;
   height: number;
