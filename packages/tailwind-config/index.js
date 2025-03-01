@@ -84,11 +84,11 @@ module.exports = {
       keyframes: {
         slide: {
           from: {
-            transform: 'translate(-8rem, -50%)',
+            transform: 'translate(-8rem)',
             opacity: 0,
           },
           to: {
-            transform: 'translate(0, -50%)',
+            transform: 'translate(0)',
             opacity: 1,
           },
         },
