@@ -39,7 +39,7 @@ function Document(props: DocumentProps) {
           alt="Stock Image"
           className="object-cover brightness-50 transition-all duration-300 ease-in group-hover:scale-110"
         />
-        <div className="absolute top-0 left-0 w-full h-full backdrop-blur-sm" />
+        <div className="absolute top-0 left-0 w-full h-full backdrop-blur-xs" />
       </div>
       <h3 className="text-header-3 leading-header-3 font-bold">{title}</h3>
       <h4 className="text-header-4 leading-header-4 font-bold">{subtitle1}</h4>

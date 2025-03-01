@@ -3,7 +3,7 @@ import { Button } from 'ui';
 
 export function LanguageSelector() {
   return (
-    <div className="fixed left-4 bottom-4 overflow-hidden rounded-md border w-max bg-white/80 shadow-sm">
+    <div className="fixed left-4 bottom-4 overflow-hidden rounded-md border w-max bg-white/80 shadow-xs">
       <Button
         type="button"
         color="dark"

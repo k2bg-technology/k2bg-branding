@@ -92,7 +92,7 @@ export function Contact({ t }: { t: TFunction }) {
           </form>
         </div>
         <div className="flex justify-center py-6 text-white md:items-center md:py-12">
-          <ul className="flex flex-col justify-center gap-spacious border-white border-opacity-50 px-12 h-full md:border-l">
+          <ul className="flex flex-col justify-center gap-spacious border-white/50 px-12 h-full md:border-l">
             <li className="flex relative items-center gap-normal">
               <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-10 after:h-10 flex justify-center items-center w-10 h-10">
                 <Icon name="github" width={20} height={20} />

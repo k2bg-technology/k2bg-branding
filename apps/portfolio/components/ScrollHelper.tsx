@@ -38,7 +38,7 @@ export function ScrollHelper() {
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div className="fixed inset-0 bg-black/20" onClick={() => setIsShow(false)}>
       <div className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
-        <div className="inline-flex items-center gap-condensed rounded px-5 py-normal bg-black/50 text-white animate-scrollHelp">
+        <div className="inline-flex items-center gap-condensed rounded-sm px-5 py-normal bg-black/50 text-white animate-scrollHelp">
           <span className="text-button-r-sm">Scroll</span>
           <Icon
             name="chevron-double-right"
