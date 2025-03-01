@@ -7,7 +7,7 @@ export async function ArticlesSkelton() {
         {Array.from({ length: 6 }).map((_, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <Skelton key={index} className="flex flex-col gap-3">
-            <Skelton.Box className="py-28">
+            <Skelton.Box className="py-28 rounded-xl">
               <Icon
                 name="photo"
                 color="var(--color-base-white)"

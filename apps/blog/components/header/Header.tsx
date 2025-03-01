@@ -9,7 +9,7 @@ import { Category } from '../../modules/domain/post/types';
 
 export default function Header() {
   return (
-    <header className="order-first sticky top-0 backdrop-blur-sm col-span-full grid grid-cols-[subgrid] bg-base-white/50">
+    <header className="order-first sticky top-0 backdrop-blur-xs col-span-full grid grid-cols-[subgrid] bg-base-white/50">
       <div className="col-start-2 -col-end-2 flex place-items-center h-full">
         <div className="mx-auto w-full md:w-[45rem] xl:w-[80rem]">
           <div className="flex items-center justify-between">
