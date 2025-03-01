@@ -6,7 +6,7 @@ import { FormProps, useFormContext } from '../Control/Context';
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
 const inputVariants = cva(
-  'appearance-none focus:outline-none focus:shadow-sm border rounded-md px-2 py-3 w-full text-body-r-sm leading-none',
+  'appearance-none focus:outline-hidden focus:shadow-xs border rounded-md px-2 py-3 w-full text-body-r-sm leading-none',
   {
     variants: {
       color: {
@@ -16,7 +16,7 @@ const inputVariants = cva(
       },
       error: {
         true: [
-          'border-error focus:border-error focus:shadow-error/30 focus:shadow-sm',
+          'border-error focus:border-error focus:shadow-error/30 focus:shadow-xs',
         ],
       },
       disabled: {

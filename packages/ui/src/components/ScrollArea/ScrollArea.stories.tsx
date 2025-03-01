@@ -13,7 +13,8 @@ const meta: Meta<typeof ScrollArea> = {
       that the jokes left by Jokester were so funny that they couldn't help but
       laugh. And once they started laughing, they couldn't stop.
     `,
-    className: 'h-[200px] w-[350px] rounded-md border p-4',
+    className:
+      'h-[200px] w-[350px] rounded-md border border-base-default/10 p-4',
   },
 };
 export default meta;

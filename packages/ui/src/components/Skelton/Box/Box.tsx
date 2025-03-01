@@ -9,7 +9,7 @@ export function Box(props: LineProps) {
     <div
       {...props}
       className={twMerge(
-        'relative flex justify-center align-middle bg-gray-300 rounded',
+        'relative flex justify-center align-middle bg-gray-300 rounded-sm',
         className
       )}
     >

@@ -4,12 +4,12 @@ import { Slot } from '@radix-ui/react-slot';
 import { twMerge } from '../../utils/extendTailwindMerge';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 hover:border-opacity-50 hover:bg-opacity-10 transition duration-300 ease-in-out',
+  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 hover:border-opacity-50 hover:bg-opacity-10 transition duration-300 ease-in-out',
   {
     variants: {
       variant: {
         default: '',
-        outline: 'border-2 border-opacity-20',
+        outline: 'border-2',
         ghost: '',
       },
       color: {
@@ -39,7 +39,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'main',
-        class: 'border-main-default text-main-default hover:bg-main-default',
+        class: 'border-main-default/20 text-main-default hover:bg-main-default',
       },
       {
         variant: 'ghost',
@@ -55,7 +55,7 @@ const buttonVariants = cva(
         variant: 'outline',
         color: 'accent',
         class:
-          'border-accent-default text-accent-default hover:bg-accent-default',
+          'border-accent-default/20 text-accent-default hover:bg-accent-default',
       },
       {
         variant: 'ghost',
@@ -70,7 +70,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'inherit',
-        class: 'border-transparent text-current hover:bg-transparent',
+        class: 'border-transparent/20 text-current hover:bg-transparent',
       },
       {
         variant: 'ghost',
@@ -85,7 +85,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'error',
-        class: 'border-error text-error hover:bg-error/10',
+        class: 'border-error/20 text-error hover:bg-error/10',
       },
       {
         variant: 'ghost',
@@ -100,7 +100,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'warning',
-        class: 'border-warning text-warning hover:bg-warning/10',
+        class: 'border-warning/20 text-warning hover:bg-warning/10',
       },
       {
         variant: 'ghost',
@@ -115,7 +115,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'info',
-        class: 'border-info text-info hover:bg-info/10',
+        class: 'border-info/20 text-info hover:bg-info/10',
       },
       {
         variant: 'ghost',
@@ -130,7 +130,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'success',
-        class: 'border-success text-success hover:bg-success/10',
+        class: 'border-success/20 text-success hover:bg-success/10',
       },
       {
         variant: 'ghost',
@@ -145,7 +145,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'dark',
-        class: 'border-base-black text-base-black hover:bg-base-black/10',
+        class: 'border-base-black/20 text-base-black hover:bg-base-black/10',
       },
       {
         variant: 'ghost',
@@ -160,7 +160,7 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'light',
-        class: 'border-white text-white hover:bg-white/10',
+        class: 'border-white/20 text-white hover:bg-white/10',
       },
       {
         variant: 'ghost',

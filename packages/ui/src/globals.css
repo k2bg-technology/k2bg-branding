@@ -1,8 +1,8 @@
+@config "../tailwind.config.js";
 @import 'tailwind-config/design-token/variables.css';
+@import "tailwindcss";
+@import "tailwindcss/preflight.css" layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer base {
   html {
@@ -15,7 +15,20 @@
   button,
   textarea,
   select {
-    @apply appearance-none bg-transparent outline-none p-0 border-0;
+    @apply appearance-none bg-transparent outline-hidden p-0 border-0;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
   }
 }
 
