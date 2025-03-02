@@ -25,7 +25,7 @@ export async function Root(props: Props) {
           <h1
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="text-header-1 leading-header-1 font-bold"
+            className="text-heading-1 leading-heading-1 font-bold"
           >
             {children}
           </h1>
@@ -34,7 +34,7 @@ export async function Root(props: Props) {
           <h2
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-8 text-header-2 leading-header-2 font-bold"
+            className="first:mt-0 mt-8 text-heading-2 leading-heading-2 font-bold"
           >
             {children}
           </h2>
@@ -43,7 +43,7 @@ export async function Root(props: Props) {
           <h3
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-6 text-header-3 leading-header-3 font-bold"
+            className="first:mt-0 mt-6 text-heading-3 leading-heading-3 font-bold"
           >
             {children}
           </h3>

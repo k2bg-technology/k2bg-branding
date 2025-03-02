@@ -50,7 +50,7 @@ export default async function Page() {
                     href={`/blog/${featureLatest.slug}`}
                     className="heading-link"
                   >
-                    <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
+                    <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                       {featureLatest.title}
                     </h2>
                   </Link>
@@ -103,7 +103,7 @@ export default async function Page() {
                 }
                 heading={
                   <Link href={`/blog/${article.slug}`} className="heading-link">
-                    <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
+                    <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                       {article.title}
                     </h2>
                   </Link>
@@ -163,7 +163,7 @@ export default async function Page() {
                       href={`/blog/${article.slug}`}
                       className="heading-link"
                     >
-                      <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
+                      <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                         {article.title}
                       </h2>
                     </Link>
@@ -211,7 +211,7 @@ export default async function Page() {
                 }
                 heading={
                   <Link href={`/blog/${article.slug}`} className="heading-link">
-                    <h2 className="text-header-2 leading-header-2 font-bold hover:text-base-black/80 hover:underline">
+                    <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                       {article.title}
                     </h2>
                   </Link>

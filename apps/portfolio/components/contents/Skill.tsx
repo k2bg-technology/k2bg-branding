@@ -15,11 +15,11 @@ export function Skill({ t }: { t: TFunction }) {
         </div>
         <div className="flex flex-col gap-spacious h-full md:flex-row md:gap-0">
           <div className="flex flex-col gap-spacious w-full">
-            <h2 className="text-header-2 leading-header-2 font-bold">
+            <h2 className="text-heading-2 leading-heading-2 font-bold">
               {t('skill.skill')}
             </h2>
             <div className="flex flex-col gap-condensed">
-              <h3 className="text-header-3 leading-header-3 font-bold">
+              <h3 className="text-heading-3 leading-heading-3 font-bold">
                 {t('skill.programming')}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">
@@ -27,7 +27,7 @@ export function Skill({ t }: { t: TFunction }) {
               </p>
             </div>
             <div className="flex flex-col gap-condensed">
-              <h3 className="text-header-3 leading-header-3 font-bold">
+              <h3 className="text-heading-3 leading-heading-3 font-bold">
                 {t('skill.uiux')}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">
@@ -35,7 +35,7 @@ export function Skill({ t }: { t: TFunction }) {
               </p>
             </div>
             <div className="flex flex-col gap-condensed">
-              <h3 className="text-header-3 leading-header-3 font-bold">
+              <h3 className="text-heading-3 leading-heading-3 font-bold">
                 {t('skill.dataAnalysis')}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">
@@ -43,7 +43,7 @@ export function Skill({ t }: { t: TFunction }) {
               </p>
             </div>
             <div className="flex flex-col gap-condensed">
-              <h3 className="text-header-3 leading-header-3 font-bold">
+              <h3 className="text-heading-3 leading-heading-3 font-bold">
                 {t('skill.cloud')}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">

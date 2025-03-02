@@ -13,7 +13,7 @@ export function Background({ t }: { t: TFunction }) {
           />
         </div>
         <div className="flex flex-col gap-normal">
-          <h2 className="text-header-2 leading-header-2 font-bold">
+          <h2 className="text-heading-2 leading-heading-2 font-bold">
             {t('background.background')}
           </h2>
           <div className="flex flex-col gap-normal">
@@ -29,7 +29,7 @@ export function Background({ t }: { t: TFunction }) {
           </div>
         </div>
         <div className="flex flex-col gap-normal">
-          <h2 className="text-header-2 leading-header-2 font-bold">
+          <h2 className="text-heading-2 leading-heading-2 font-bold">
             {t('background.certification')}
           </h2>
           <ul className="text-body-r-sm leading-body-r-sm">

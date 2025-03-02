@@ -23,7 +23,7 @@ export default async function Page({
 
   return (
     <>
-      <h1 className="col-span-full text-header-1 font-bold capitalize py-4">
+      <h1 className="col-span-full text-heading-1 font-bold capitalize py-4">
         {query}
       </h1>
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>

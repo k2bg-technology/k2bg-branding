@@ -14,7 +14,7 @@ export function Contact({ t }: { t: TFunction }) {
           />
         </div>
         <div className="flex flex-col justify-center gap-spacious p-6 w-full text-white h-full md:p-12 md:w-[37.5rem]">
-          <h2 className="text-header-2 leading-header-2 font-bold">
+          <h2 className="text-heading-2 leading-heading-2 font-bold">
             {t('contact.contact')}
           </h2>
           <p className="text-body-r-sm leading-body-r-sm">

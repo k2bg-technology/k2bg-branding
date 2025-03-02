@@ -24,7 +24,7 @@ const meta: Meta<
     ),
     heading: (
       <a href="https://example.com" target="_blank" rel="noreferrer">
-        <h3 className="text-header-3 font-bold">記事のタイトル</h3>
+        <h3 className="text-heading-3 font-bold">記事のタイトル</h3>
       </a>
     ),
     excerpt:
@@ -85,7 +85,7 @@ export const Hero: Story = {
         {...args}
         heading={
           <a href="https://example.com" target="_blank" rel="noreferrer">
-            <h1 className="text-header-1 font-bold">記事のタイトル</h1>
+            <h1 className="text-heading-1 font-bold">記事のタイトル</h1>
           </a>
         }
       />

@@ -22,7 +22,7 @@ export function Hero({ lng }: { lng: Language }) {
         </div>
         <div className="flex flex-col gap-6 p-6 md:justify-center md:p-12">
           <hgroup className="flex flex-col gap-2 md:gap-0">
-            <h1 className="text-header-1 leading-tight font-bold md:leading-header-1">
+            <h1 className="text-heading-1 leading-tight font-bold md:leading-heading-1">
               {t('hero.corporateName')}
             </h1>
             <p className="text-body-r-md leading-body-r-md">

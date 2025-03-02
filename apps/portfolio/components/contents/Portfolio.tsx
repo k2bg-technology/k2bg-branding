@@ -41,12 +41,16 @@ function Document(props: DocumentProps) {
         />
         <div className="absolute top-0 left-0 w-full h-full backdrop-blur-xs" />
       </div>
-      <h3 className="text-header-3 leading-header-3 font-bold">{title}</h3>
-      <h4 className="text-header-4 leading-header-4 font-bold">{subtitle1}</h4>
+      <h3 className="text-heading-3 leading-heading-3 font-bold">{title}</h3>
+      <h4 className="text-heading-4 leading-heading-4 font-bold">
+        {subtitle1}
+      </h4>
       <p className="text-body-r-sm leading-body-r-sm whitespace-pre-line">
         {techStack}
       </p>
-      <h4 className="text-header-4 leading-header-4 font-bold">{subtitle2}</h4>
+      <h4 className="text-heading-4 leading-heading-4 font-bold">
+        {subtitle2}
+      </h4>
       <p className="text-body-r-sm leading-body-r-sm whitespace-pre-line">
         {overview}
       </p>
@@ -76,7 +80,7 @@ export function Portfolio({ t }: { t: TFunction }) {
     <section>
       <div className="flex flex-col md:flex-row md:h-[37.5rem]">
         <div className="flex flex-col justify-center gap-spacious p-6 w-full md:p-12 md:w-[28rem]">
-          <h2 className="text-header-2 leading-header-2 font-bold">
+          <h2 className="text-heading-2 leading-heading-2 font-bold">
             {t('portfolio.portfolio')}
           </h2>
           <div className="flex flex-col justify-center gap-spacious">

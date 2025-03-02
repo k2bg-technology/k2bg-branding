@@ -8,7 +8,7 @@ export default function Page() {
   return (
     <>
       <div className="grid-cols-[subgrid] gap-12 col-span-full">
-        <h1 className="text-header-1 font-bold">お問い合わせ</h1>
+        <h1 className="text-heading-1 font-bold">お問い合わせ</h1>
         <p className="mt-4 text-body-r-md leading-body-r-md text-base-black text-justify whitespace-pre-wrap">
           必要事項をご入力いただき、送信ボタンを押してください。返信には数日かかる場合がございますが、極力早急に返信するように致しますので、お気軽にお問い合わせいただけると幸いです。平日は1〜2時間、休日は3時間程度で在宅ワークをお受けすることが可能です。
         </p>
