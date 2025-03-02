@@ -1,7 +1,7 @@
 {
   "typography-en-advert-font-size": {
     "customVariable": "var(--typography-en-advert-font-size)",
-    "value": "80",
+    "value": "72",
     "lang": "en",
     "group": "en-advert",
     "property": "fontSize"
@@ -50,7 +50,7 @@
   },
   "typography-en-advert-line-height": {
     "customVariable": "var(--typography-en-advert-line-height)",
-    "value": "136",
+    "value": "116",
     "lang": "en",
     "group": "en-advert",
     "property": "lineHeight"
@@ -127,7 +127,7 @@
   },
   "typography-en-slogan-line-height": {
     "customVariable": "var(--typography-en-slogan-line-height)",
-    "value": "102",
+    "value": "97",
     "lang": "en",
     "group": "en-slogan",
     "property": "lineHeight"
@@ -204,7 +204,7 @@
   },
   "typography-en-big-header-line-height": {
     "customVariable": "var(--typography-en-big-header-line-height)",
-    "value": "81.6",
+    "value": "77",
     "lang": "en",
     "group": "en-big-header",
     "property": "lineHeight"
@@ -281,7 +281,7 @@
   },
   "typography-en-caption-line-height": {
     "customVariable": "var(--typography-en-caption-line-height)",
-    "value": "20.4",
+    "value": "19",
     "lang": "en",
     "group": "en-caption",
     "property": "lineHeight"
@@ -307,466 +307,466 @@
     "group": "en-caption",
     "property": "textCase"
   },
-  "typography-en-header-1-font-size": {
-    "customVariable": "var(--typography-en-header-1-font-size)",
+  "typography-en-heading-1-font-size": {
+    "customVariable": "var(--typography-en-heading-1-font-size)",
     "value": "30",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "fontSize"
   },
-  "typography-en-header-1-text-decoration": {
-    "customVariable": "var(--typography-en-header-1-text-decoration)",
+  "typography-en-heading-1-text-decoration": {
+    "customVariable": "var(--typography-en-heading-1-text-decoration)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "textDecoration"
   },
-  "typography-en-header-1-font-family": {
-    "customVariable": "var(--typography-en-header-1-font-family)",
+  "typography-en-heading-1-font-family": {
+    "customVariable": "var(--typography-en-heading-1-font-family)",
     "value": "Menlo",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "fontFamily"
   },
-  "typography-en-header-1-font-weight": {
-    "customVariable": "var(--typography-en-header-1-font-weight)",
+  "typography-en-heading-1-font-weight": {
+    "customVariable": "var(--typography-en-heading-1-font-weight)",
     "value": "700",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "fontWeight"
   },
-  "typography-en-header-1-font-style": {
-    "customVariable": "var(--typography-en-header-1-font-style)",
+  "typography-en-heading-1-font-style": {
+    "customVariable": "var(--typography-en-heading-1-font-style)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "fontStyle"
   },
-  "typography-en-header-1-font-stretch": {
-    "customVariable": "var(--typography-en-header-1-font-stretch)",
+  "typography-en-heading-1-font-stretch": {
+    "customVariable": "var(--typography-en-heading-1-font-stretch)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "fontStretch"
   },
-  "typography-en-header-1-letter-spacing": {
-    "customVariable": "var(--typography-en-header-1-letter-spacing)",
+  "typography-en-heading-1-letter-spacing": {
+    "customVariable": "var(--typography-en-heading-1-letter-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "letterSpacing"
   },
-  "typography-en-header-1-line-height": {
-    "customVariable": "var(--typography-en-header-1-line-height)",
-    "value": "51",
+  "typography-en-heading-1-line-height": {
+    "customVariable": "var(--typography-en-heading-1-line-height)",
+    "value": "48",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "lineHeight"
   },
-  "typography-en-header-1-paragraph-indent": {
-    "customVariable": "var(--typography-en-header-1-paragraph-indent)",
+  "typography-en-heading-1-paragraph-indent": {
+    "customVariable": "var(--typography-en-heading-1-paragraph-indent)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "paragraphIndent"
   },
-  "typography-en-header-1-paragraph-spacing": {
-    "customVariable": "var(--typography-en-header-1-paragraph-spacing)",
+  "typography-en-heading-1-paragraph-spacing": {
+    "customVariable": "var(--typography-en-heading-1-paragraph-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "paragraphSpacing"
   },
-  "typography-en-header-1-text-case": {
-    "customVariable": "var(--typography-en-header-1-text-case)",
+  "typography-en-heading-1-text-case": {
+    "customVariable": "var(--typography-en-heading-1-text-case)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-1",
+    "group": "en-heading-1",
     "property": "textCase"
   },
-  "typography-en-header-2-font-size": {
-    "customVariable": "var(--typography-en-header-2-font-size)",
-    "value": "22",
+  "typography-en-heading-2-font-size": {
+    "customVariable": "var(--typography-en-heading-2-font-size)",
+    "value": "24",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "fontSize"
   },
-  "typography-en-header-2-text-decoration": {
-    "customVariable": "var(--typography-en-header-2-text-decoration)",
+  "typography-en-heading-2-text-decoration": {
+    "customVariable": "var(--typography-en-heading-2-text-decoration)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "textDecoration"
   },
-  "typography-en-header-2-font-family": {
-    "customVariable": "var(--typography-en-header-2-font-family)",
+  "typography-en-heading-2-font-family": {
+    "customVariable": "var(--typography-en-heading-2-font-family)",
     "value": "Menlo",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "fontFamily"
   },
-  "typography-en-header-2-font-weight": {
-    "customVariable": "var(--typography-en-header-2-font-weight)",
+  "typography-en-heading-2-font-weight": {
+    "customVariable": "var(--typography-en-heading-2-font-weight)",
     "value": "700",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "fontWeight"
   },
-  "typography-en-header-2-font-style": {
-    "customVariable": "var(--typography-en-header-2-font-style)",
+  "typography-en-heading-2-font-style": {
+    "customVariable": "var(--typography-en-heading-2-font-style)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "fontStyle"
   },
-  "typography-en-header-2-font-stretch": {
-    "customVariable": "var(--typography-en-header-2-font-stretch)",
+  "typography-en-heading-2-font-stretch": {
+    "customVariable": "var(--typography-en-heading-2-font-stretch)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "fontStretch"
   },
-  "typography-en-header-2-letter-spacing": {
-    "customVariable": "var(--typography-en-header-2-letter-spacing)",
+  "typography-en-heading-2-letter-spacing": {
+    "customVariable": "var(--typography-en-heading-2-letter-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "letterSpacing"
   },
-  "typography-en-header-2-line-height": {
-    "customVariable": "var(--typography-en-header-2-line-height)",
-    "value": "37.4",
+  "typography-en-heading-2-line-height": {
+    "customVariable": "var(--typography-en-heading-2-line-height)",
+    "value": "39",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "lineHeight"
   },
-  "typography-en-header-2-paragraph-indent": {
-    "customVariable": "var(--typography-en-header-2-paragraph-indent)",
+  "typography-en-heading-2-paragraph-indent": {
+    "customVariable": "var(--typography-en-heading-2-paragraph-indent)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "paragraphIndent"
   },
-  "typography-en-header-2-paragraph-spacing": {
-    "customVariable": "var(--typography-en-header-2-paragraph-spacing)",
+  "typography-en-heading-2-paragraph-spacing": {
+    "customVariable": "var(--typography-en-heading-2-paragraph-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "paragraphSpacing"
   },
-  "typography-en-header-2-text-case": {
-    "customVariable": "var(--typography-en-header-2-text-case)",
+  "typography-en-heading-2-text-case": {
+    "customVariable": "var(--typography-en-heading-2-text-case)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-2",
+    "group": "en-heading-2",
     "property": "textCase"
   },
-  "typography-en-header-3-font-size": {
-    "customVariable": "var(--typography-en-header-3-font-size)",
+  "typography-en-heading-3-font-size": {
+    "customVariable": "var(--typography-en-heading-3-font-size)",
     "value": "20",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "fontSize"
   },
-  "typography-en-header-3-text-decoration": {
-    "customVariable": "var(--typography-en-header-3-text-decoration)",
+  "typography-en-heading-3-text-decoration": {
+    "customVariable": "var(--typography-en-heading-3-text-decoration)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "textDecoration"
   },
-  "typography-en-header-3-font-family": {
-    "customVariable": "var(--typography-en-header-3-font-family)",
+  "typography-en-heading-3-font-family": {
+    "customVariable": "var(--typography-en-heading-3-font-family)",
     "value": "Menlo",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "fontFamily"
   },
-  "typography-en-header-3-font-weight": {
-    "customVariable": "var(--typography-en-header-3-font-weight)",
+  "typography-en-heading-3-font-weight": {
+    "customVariable": "var(--typography-en-heading-3-font-weight)",
     "value": "700",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "fontWeight"
   },
-  "typography-en-header-3-font-style": {
-    "customVariable": "var(--typography-en-header-3-font-style)",
+  "typography-en-heading-3-font-style": {
+    "customVariable": "var(--typography-en-heading-3-font-style)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "fontStyle"
   },
-  "typography-en-header-3-font-stretch": {
-    "customVariable": "var(--typography-en-header-3-font-stretch)",
+  "typography-en-heading-3-font-stretch": {
+    "customVariable": "var(--typography-en-heading-3-font-stretch)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "fontStretch"
   },
-  "typography-en-header-3-letter-spacing": {
-    "customVariable": "var(--typography-en-header-3-letter-spacing)",
+  "typography-en-heading-3-letter-spacing": {
+    "customVariable": "var(--typography-en-heading-3-letter-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "letterSpacing"
   },
-  "typography-en-header-3-line-height": {
-    "customVariable": "var(--typography-en-header-3-line-height)",
-    "value": "34",
+  "typography-en-heading-3-line-height": {
+    "customVariable": "var(--typography-en-heading-3-line-height)",
+    "value": "32",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "lineHeight"
   },
-  "typography-en-header-3-paragraph-indent": {
-    "customVariable": "var(--typography-en-header-3-paragraph-indent)",
+  "typography-en-heading-3-paragraph-indent": {
+    "customVariable": "var(--typography-en-heading-3-paragraph-indent)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "paragraphIndent"
   },
-  "typography-en-header-3-paragraph-spacing": {
-    "customVariable": "var(--typography-en-header-3-paragraph-spacing)",
+  "typography-en-heading-3-paragraph-spacing": {
+    "customVariable": "var(--typography-en-heading-3-paragraph-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "paragraphSpacing"
   },
-  "typography-en-header-3-text-case": {
-    "customVariable": "var(--typography-en-header-3-text-case)",
+  "typography-en-heading-3-text-case": {
+    "customVariable": "var(--typography-en-heading-3-text-case)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-3",
+    "group": "en-heading-3",
     "property": "textCase"
   },
-  "typography-en-header-4-font-size": {
-    "customVariable": "var(--typography-en-header-4-font-size)",
+  "typography-en-heading-4-font-size": {
+    "customVariable": "var(--typography-en-heading-4-font-size)",
     "value": "18",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "fontSize"
   },
-  "typography-en-header-4-text-decoration": {
-    "customVariable": "var(--typography-en-header-4-text-decoration)",
+  "typography-en-heading-4-text-decoration": {
+    "customVariable": "var(--typography-en-heading-4-text-decoration)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "textDecoration"
   },
-  "typography-en-header-4-font-family": {
-    "customVariable": "var(--typography-en-header-4-font-family)",
+  "typography-en-heading-4-font-family": {
+    "customVariable": "var(--typography-en-heading-4-font-family)",
     "value": "Menlo",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "fontFamily"
   },
-  "typography-en-header-4-font-weight": {
-    "customVariable": "var(--typography-en-header-4-font-weight)",
+  "typography-en-heading-4-font-weight": {
+    "customVariable": "var(--typography-en-heading-4-font-weight)",
     "value": "700",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "fontWeight"
   },
-  "typography-en-header-4-font-style": {
-    "customVariable": "var(--typography-en-header-4-font-style)",
+  "typography-en-heading-4-font-style": {
+    "customVariable": "var(--typography-en-heading-4-font-style)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "fontStyle"
   },
-  "typography-en-header-4-font-stretch": {
-    "customVariable": "var(--typography-en-header-4-font-stretch)",
+  "typography-en-heading-4-font-stretch": {
+    "customVariable": "var(--typography-en-heading-4-font-stretch)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "fontStretch"
   },
-  "typography-en-header-4-letter-spacing": {
-    "customVariable": "var(--typography-en-header-4-letter-spacing)",
+  "typography-en-heading-4-letter-spacing": {
+    "customVariable": "var(--typography-en-heading-4-letter-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "letterSpacing"
   },
-  "typography-en-header-4-line-height": {
-    "customVariable": "var(--typography-en-header-4-line-height)",
-    "value": "30.6",
+  "typography-en-heading-4-line-height": {
+    "customVariable": "var(--typography-en-heading-4-line-height)",
+    "value": "29",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "lineHeight"
   },
-  "typography-en-header-4-paragraph-indent": {
-    "customVariable": "var(--typography-en-header-4-paragraph-indent)",
+  "typography-en-heading-4-paragraph-indent": {
+    "customVariable": "var(--typography-en-heading-4-paragraph-indent)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "paragraphIndent"
   },
-  "typography-en-header-4-paragraph-spacing": {
-    "customVariable": "var(--typography-en-header-4-paragraph-spacing)",
+  "typography-en-heading-4-paragraph-spacing": {
+    "customVariable": "var(--typography-en-heading-4-paragraph-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "paragraphSpacing"
   },
-  "typography-en-header-4-text-case": {
-    "customVariable": "var(--typography-en-header-4-text-case)",
+  "typography-en-heading-4-text-case": {
+    "customVariable": "var(--typography-en-heading-4-text-case)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-4",
+    "group": "en-heading-4",
     "property": "textCase"
   },
-  "typography-en-header-5-font-size": {
-    "customVariable": "var(--typography-en-header-5-font-size)",
+  "typography-en-heading-5-font-size": {
+    "customVariable": "var(--typography-en-heading-5-font-size)",
     "value": "16",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "fontSize"
   },
-  "typography-en-header-5-text-decoration": {
-    "customVariable": "var(--typography-en-header-5-text-decoration)",
+  "typography-en-heading-5-text-decoration": {
+    "customVariable": "var(--typography-en-heading-5-text-decoration)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "textDecoration"
   },
-  "typography-en-header-5-font-family": {
-    "customVariable": "var(--typography-en-header-5-font-family)",
+  "typography-en-heading-5-font-family": {
+    "customVariable": "var(--typography-en-heading-5-font-family)",
     "value": "Menlo",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "fontFamily"
   },
-  "typography-en-header-5-font-weight": {
-    "customVariable": "var(--typography-en-header-5-font-weight)",
+  "typography-en-heading-5-font-weight": {
+    "customVariable": "var(--typography-en-heading-5-font-weight)",
     "value": "700",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "fontWeight"
   },
-  "typography-en-header-5-font-style": {
-    "customVariable": "var(--typography-en-header-5-font-style)",
+  "typography-en-heading-5-font-style": {
+    "customVariable": "var(--typography-en-heading-5-font-style)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "fontStyle"
   },
-  "typography-en-header-5-font-stretch": {
-    "customVariable": "var(--typography-en-header-5-font-stretch)",
+  "typography-en-heading-5-font-stretch": {
+    "customVariable": "var(--typography-en-heading-5-font-stretch)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "fontStretch"
   },
-  "typography-en-header-5-letter-spacing": {
-    "customVariable": "var(--typography-en-header-5-letter-spacing)",
+  "typography-en-heading-5-letter-spacing": {
+    "customVariable": "var(--typography-en-heading-5-letter-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "letterSpacing"
   },
-  "typography-en-header-5-line-height": {
-    "customVariable": "var(--typography-en-header-5-line-height)",
-    "value": "27.2",
+  "typography-en-heading-5-line-height": {
+    "customVariable": "var(--typography-en-heading-5-line-height)",
+    "value": "26",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "lineHeight"
   },
-  "typography-en-header-5-paragraph-indent": {
-    "customVariable": "var(--typography-en-header-5-paragraph-indent)",
+  "typography-en-heading-5-paragraph-indent": {
+    "customVariable": "var(--typography-en-heading-5-paragraph-indent)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "paragraphIndent"
   },
-  "typography-en-header-5-paragraph-spacing": {
-    "customVariable": "var(--typography-en-header-5-paragraph-spacing)",
+  "typography-en-heading-5-paragraph-spacing": {
+    "customVariable": "var(--typography-en-heading-5-paragraph-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "paragraphSpacing"
   },
-  "typography-en-header-5-text-case": {
-    "customVariable": "var(--typography-en-header-5-text-case)",
+  "typography-en-heading-5-text-case": {
+    "customVariable": "var(--typography-en-heading-5-text-case)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-5",
+    "group": "en-heading-5",
     "property": "textCase"
   },
-  "typography-en-header-6-font-size": {
-    "customVariable": "var(--typography-en-header-6-font-size)",
+  "typography-en-heading-6-font-size": {
+    "customVariable": "var(--typography-en-heading-6-font-size)",
     "value": "14",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "fontSize"
   },
-  "typography-en-header-6-text-decoration": {
-    "customVariable": "var(--typography-en-header-6-text-decoration)",
+  "typography-en-heading-6-text-decoration": {
+    "customVariable": "var(--typography-en-heading-6-text-decoration)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "textDecoration"
   },
-  "typography-en-header-6-font-family": {
-    "customVariable": "var(--typography-en-header-6-font-family)",
+  "typography-en-heading-6-font-family": {
+    "customVariable": "var(--typography-en-heading-6-font-family)",
     "value": "Menlo",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "fontFamily"
   },
-  "typography-en-header-6-font-weight": {
-    "customVariable": "var(--typography-en-header-6-font-weight)",
+  "typography-en-heading-6-font-weight": {
+    "customVariable": "var(--typography-en-heading-6-font-weight)",
     "value": "700",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "fontWeight"
   },
-  "typography-en-header-6-font-style": {
-    "customVariable": "var(--typography-en-header-6-font-style)",
+  "typography-en-heading-6-font-style": {
+    "customVariable": "var(--typography-en-heading-6-font-style)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "fontStyle"
   },
-  "typography-en-header-6-font-stretch": {
-    "customVariable": "var(--typography-en-header-6-font-stretch)",
+  "typography-en-heading-6-font-stretch": {
+    "customVariable": "var(--typography-en-heading-6-font-stretch)",
     "value": "normal",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "fontStretch"
   },
-  "typography-en-header-6-letter-spacing": {
-    "customVariable": "var(--typography-en-header-6-letter-spacing)",
+  "typography-en-heading-6-letter-spacing": {
+    "customVariable": "var(--typography-en-heading-6-letter-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "letterSpacing"
   },
-  "typography-en-header-6-line-height": {
-    "customVariable": "var(--typography-en-header-6-line-height)",
-    "value": "23.8",
+  "typography-en-heading-6-line-height": {
+    "customVariable": "var(--typography-en-heading-6-line-height)",
+    "value": "23",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "lineHeight"
   },
-  "typography-en-header-6-paragraph-indent": {
-    "customVariable": "var(--typography-en-header-6-paragraph-indent)",
+  "typography-en-heading-6-paragraph-indent": {
+    "customVariable": "var(--typography-en-heading-6-paragraph-indent)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "paragraphIndent"
   },
-  "typography-en-header-6-paragraph-spacing": {
-    "customVariable": "var(--typography-en-header-6-paragraph-spacing)",
+  "typography-en-heading-6-paragraph-spacing": {
+    "customVariable": "var(--typography-en-heading-6-paragraph-spacing)",
     "value": "0",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "paragraphSpacing"
   },
-  "typography-en-header-6-text-case": {
-    "customVariable": "var(--typography-en-header-6-text-case)",
+  "typography-en-heading-6-text-case": {
+    "customVariable": "var(--typography-en-heading-6-text-case)",
     "value": "none",
     "lang": "en",
-    "group": "en-header-6",
+    "group": "en-heading-6",
     "property": "textCase"
   },
   "typography-en-subtitle-lg-font-size": {
@@ -820,7 +820,7 @@
   },
   "typography-en-subtitle-lg-line-height": {
     "customVariable": "var(--typography-en-subtitle-lg-line-height)",
-    "value": "40.8",
+    "value": "39",
     "lang": "en",
     "group": "en-subtitle-lg",
     "property": "lineHeight"
@@ -848,7 +848,7 @@
   },
   "typography-en-subtitle-md-font-size": {
     "customVariable": "var(--typography-en-subtitle-md-font-size)",
-    "value": "22",
+    "value": "20",
     "lang": "en",
     "group": "en-subtitle-md",
     "property": "fontSize"
@@ -897,7 +897,7 @@
   },
   "typography-en-subtitle-md-line-height": {
     "customVariable": "var(--typography-en-subtitle-md-line-height)",
-    "value": "37.4",
+    "value": "32",
     "lang": "en",
     "group": "en-subtitle-md",
     "property": "lineHeight"
@@ -925,7 +925,7 @@
   },
   "typography-en-subtitle-sm-font-size": {
     "customVariable": "var(--typography-en-subtitle-sm-font-size)",
-    "value": "20",
+    "value": "18",
     "lang": "en",
     "group": "en-subtitle-sm",
     "property": "fontSize"
@@ -974,7 +974,7 @@
   },
   "typography-en-subtitle-sm-line-height": {
     "customVariable": "var(--typography-en-subtitle-sm-line-height)",
-    "value": "34",
+    "value": "29",
     "lang": "en",
     "group": "en-subtitle-sm",
     "property": "lineHeight"
@@ -1051,7 +1051,7 @@
   },
   "typography-en-body-r-lg-line-height": {
     "customVariable": "var(--typography-en-body-r-lg-line-height)",
-    "value": "30.6",
+    "value": "29",
     "lang": "en",
     "group": "en-body-r-lg",
     "property": "lineHeight"
@@ -1128,7 +1128,7 @@
   },
   "typography-en-body-r-md-line-height": {
     "customVariable": "var(--typography-en-body-r-md-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "en",
     "group": "en-body-r-md",
     "property": "lineHeight"
@@ -1205,7 +1205,7 @@
   },
   "typography-en-body-r-sm-line-height": {
     "customVariable": "var(--typography-en-body-r-sm-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "en",
     "group": "en-body-r-sm",
     "property": "lineHeight"
@@ -1282,7 +1282,7 @@
   },
   "typography-en-body-b-lg-line-height": {
     "customVariable": "var(--typography-en-body-b-lg-line-height)",
-    "value": "30.6",
+    "value": "29",
     "lang": "en",
     "group": "en-body-b-lg",
     "property": "lineHeight"
@@ -1359,7 +1359,7 @@
   },
   "typography-en-body-b-md-line-height": {
     "customVariable": "var(--typography-en-body-b-md-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "en",
     "group": "en-body-b-md",
     "property": "lineHeight"
@@ -1436,7 +1436,7 @@
   },
   "typography-en-body-b-sm-line-height": {
     "customVariable": "var(--typography-en-body-b-sm-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "en",
     "group": "en-body-b-sm",
     "property": "lineHeight"
@@ -1513,7 +1513,7 @@
   },
   "typography-en-button-b-lg-line-height": {
     "customVariable": "var(--typography-en-button-b-lg-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "en",
     "group": "en-button-b-lg",
     "property": "lineHeight"
@@ -1590,7 +1590,7 @@
   },
   "typography-en-button-b-md-line-height": {
     "customVariable": "var(--typography-en-button-b-md-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "en",
     "group": "en-button-b-md",
     "property": "lineHeight"
@@ -1667,7 +1667,7 @@
   },
   "typography-en-button-b-sm-line-height": {
     "customVariable": "var(--typography-en-button-b-sm-line-height)",
-    "value": "20.4",
+    "value": "19",
     "lang": "en",
     "group": "en-button-b-sm",
     "property": "lineHeight"
@@ -1744,7 +1744,7 @@
   },
   "typography-en-button-r-lg-line-height": {
     "customVariable": "var(--typography-en-button-r-lg-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "en",
     "group": "en-button-r-lg",
     "property": "lineHeight"
@@ -1821,7 +1821,7 @@
   },
   "typography-en-button-r-md-line-height": {
     "customVariable": "var(--typography-en-button-r-md-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "en",
     "group": "en-button-r-md",
     "property": "lineHeight"
@@ -1870,7 +1870,7 @@
   },
   "typography-en-button-r-sm-font-weight": {
     "customVariable": "var(--typography-en-button-r-sm-font-weight)",
-    "value": "700",
+    "value": "400",
     "lang": "en",
     "group": "en-button-r-sm",
     "property": "fontWeight"
@@ -1898,7 +1898,7 @@
   },
   "typography-en-button-r-sm-line-height": {
     "customVariable": "var(--typography-en-button-r-sm-line-height)",
-    "value": "20.4",
+    "value": "19",
     "lang": "en",
     "group": "en-button-r-sm",
     "property": "lineHeight"
@@ -1924,81 +1924,81 @@
     "group": "en-button-r-sm",
     "property": "textCase"
   },
-  "typography-ja-big-header-font-size": {
-    "customVariable": "var(--typography-ja-big-header-font-size)",
-    "value": "48",
+  "typography-ja-advert-font-size": {
+    "customVariable": "var(--typography-ja-advert-font-size)",
+    "value": "72",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "fontSize"
   },
-  "typography-ja-big-header-text-decoration": {
-    "customVariable": "var(--typography-ja-big-header-text-decoration)",
+  "typography-ja-advert-text-decoration": {
+    "customVariable": "var(--typography-ja-advert-text-decoration)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "textDecoration"
   },
-  "typography-ja-big-header-font-family": {
-    "customVariable": "var(--typography-ja-big-header-font-family)",
+  "typography-ja-advert-font-family": {
+    "customVariable": "var(--typography-ja-advert-font-family)",
     "value": "YuGothic",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "fontFamily"
   },
-  "typography-ja-big-header-font-weight": {
-    "customVariable": "var(--typography-ja-big-header-font-weight)",
+  "typography-ja-advert-font-weight": {
+    "customVariable": "var(--typography-ja-advert-font-weight)",
     "value": "700",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "fontWeight"
   },
-  "typography-ja-big-header-font-style": {
-    "customVariable": "var(--typography-ja-big-header-font-style)",
+  "typography-ja-advert-font-style": {
+    "customVariable": "var(--typography-ja-advert-font-style)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "fontStyle"
   },
-  "typography-ja-big-header-font-stretch": {
-    "customVariable": "var(--typography-ja-big-header-font-stretch)",
+  "typography-ja-advert-font-stretch": {
+    "customVariable": "var(--typography-ja-advert-font-stretch)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "fontStretch"
   },
-  "typography-ja-big-header-letter-spacing": {
-    "customVariable": "var(--typography-ja-big-header-letter-spacing)",
+  "typography-ja-advert-letter-spacing": {
+    "customVariable": "var(--typography-ja-advert-letter-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "letterSpacing"
   },
-  "typography-ja-big-header-line-height": {
-    "customVariable": "var(--typography-ja-big-header-line-height)",
-    "value": "81.6",
+  "typography-ja-advert-line-height": {
+    "customVariable": "var(--typography-ja-advert-line-height)",
+    "value": "116",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "lineHeight"
   },
-  "typography-ja-big-header-paragraph-indent": {
-    "customVariable": "var(--typography-ja-big-header-paragraph-indent)",
+  "typography-ja-advert-paragraph-indent": {
+    "customVariable": "var(--typography-ja-advert-paragraph-indent)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "paragraphIndent"
   },
-  "typography-ja-big-header-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-big-header-paragraph-spacing)",
+  "typography-ja-advert-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-advert-paragraph-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "paragraphSpacing"
   },
-  "typography-ja-big-header-text-case": {
-    "customVariable": "var(--typography-ja-big-header-text-case)",
+  "typography-ja-advert-text-case": {
+    "customVariable": "var(--typography-ja-advert-text-case)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-big-header",
+    "group": "ja-advert",
     "property": "textCase"
   },
   "typography-ja-slogan-font-size": {
@@ -2052,7 +2052,7 @@
   },
   "typography-ja-slogan-line-height": {
     "customVariable": "var(--typography-ja-slogan-line-height)",
-    "value": "102",
+    "value": "97",
     "lang": "ja",
     "group": "ja-slogan",
     "property": "lineHeight"
@@ -2076,6 +2076,83 @@
     "value": "none",
     "lang": "ja",
     "group": "ja-slogan",
+    "property": "textCase"
+  },
+  "typography-ja-big-header-font-size": {
+    "customVariable": "var(--typography-ja-big-header-font-size)",
+    "value": "48",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "fontSize"
+  },
+  "typography-ja-big-header-text-decoration": {
+    "customVariable": "var(--typography-ja-big-header-text-decoration)",
+    "value": "none",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "textDecoration"
+  },
+  "typography-ja-big-header-font-family": {
+    "customVariable": "var(--typography-ja-big-header-font-family)",
+    "value": "YuGothic",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "fontFamily"
+  },
+  "typography-ja-big-header-font-weight": {
+    "customVariable": "var(--typography-ja-big-header-font-weight)",
+    "value": "700",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "fontWeight"
+  },
+  "typography-ja-big-header-font-style": {
+    "customVariable": "var(--typography-ja-big-header-font-style)",
+    "value": "normal",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "fontStyle"
+  },
+  "typography-ja-big-header-font-stretch": {
+    "customVariable": "var(--typography-ja-big-header-font-stretch)",
+    "value": "normal",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "fontStretch"
+  },
+  "typography-ja-big-header-letter-spacing": {
+    "customVariable": "var(--typography-ja-big-header-letter-spacing)",
+    "value": "0",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "letterSpacing"
+  },
+  "typography-ja-big-header-line-height": {
+    "customVariable": "var(--typography-ja-big-header-line-height)",
+    "value": "77",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "lineHeight"
+  },
+  "typography-ja-big-header-paragraph-indent": {
+    "customVariable": "var(--typography-ja-big-header-paragraph-indent)",
+    "value": "0",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "paragraphIndent"
+  },
+  "typography-ja-big-header-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-big-header-paragraph-spacing)",
+    "value": "0",
+    "lang": "ja",
+    "group": "ja-big-header",
+    "property": "paragraphSpacing"
+  },
+  "typography-ja-big-header-text-case": {
+    "customVariable": "var(--typography-ja-big-header-text-case)",
+    "value": "none",
+    "lang": "ja",
+    "group": "ja-big-header",
     "property": "textCase"
   },
   "typography-ja-caption-font-size": {
@@ -2129,7 +2206,7 @@
   },
   "typography-ja-caption-line-height": {
     "customVariable": "var(--typography-ja-caption-line-height)",
-    "value": "20.4",
+    "value": "19",
     "lang": "ja",
     "group": "ja-caption",
     "property": "lineHeight"
@@ -2155,543 +2232,466 @@
     "group": "ja-caption",
     "property": "textCase"
   },
-  "typography-ja-advert-font-size": {
-    "customVariable": "var(--typography-ja-advert-font-size)",
-    "value": "80",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "fontSize"
-  },
-  "typography-ja-advert-text-decoration": {
-    "customVariable": "var(--typography-ja-advert-text-decoration)",
-    "value": "none",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "textDecoration"
-  },
-  "typography-ja-advert-font-family": {
-    "customVariable": "var(--typography-ja-advert-font-family)",
-    "value": "YuGothic",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "fontFamily"
-  },
-  "typography-ja-advert-font-weight": {
-    "customVariable": "var(--typography-ja-advert-font-weight)",
-    "value": "700",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "fontWeight"
-  },
-  "typography-ja-advert-font-style": {
-    "customVariable": "var(--typography-ja-advert-font-style)",
-    "value": "normal",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "fontStyle"
-  },
-  "typography-ja-advert-font-stretch": {
-    "customVariable": "var(--typography-ja-advert-font-stretch)",
-    "value": "normal",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "fontStretch"
-  },
-  "typography-ja-advert-letter-spacing": {
-    "customVariable": "var(--typography-ja-advert-letter-spacing)",
-    "value": "0",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "letterSpacing"
-  },
-  "typography-ja-advert-line-height": {
-    "customVariable": "var(--typography-ja-advert-line-height)",
-    "value": "136",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "lineHeight"
-  },
-  "typography-ja-advert-paragraph-indent": {
-    "customVariable": "var(--typography-ja-advert-paragraph-indent)",
-    "value": "0",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "paragraphIndent"
-  },
-  "typography-ja-advert-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-advert-paragraph-spacing)",
-    "value": "0",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "paragraphSpacing"
-  },
-  "typography-ja-advert-text-case": {
-    "customVariable": "var(--typography-ja-advert-text-case)",
-    "value": "none",
-    "lang": "ja",
-    "group": "ja-advert",
-    "property": "textCase"
-  },
-  "typography-ja-header-1-font-size": {
-    "customVariable": "var(--typography-ja-header-1-font-size)",
+  "typography-ja-heading-1-font-size": {
+    "customVariable": "var(--typography-ja-heading-1-font-size)",
     "value": "30",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "fontSize"
   },
-  "typography-ja-header-1-text-decoration": {
-    "customVariable": "var(--typography-ja-header-1-text-decoration)",
+  "typography-ja-heading-1-text-decoration": {
+    "customVariable": "var(--typography-ja-heading-1-text-decoration)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "textDecoration"
   },
-  "typography-ja-header-1-font-family": {
-    "customVariable": "var(--typography-ja-header-1-font-family)",
+  "typography-ja-heading-1-font-family": {
+    "customVariable": "var(--typography-ja-heading-1-font-family)",
     "value": "YuGothic",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "fontFamily"
   },
-  "typography-ja-header-1-font-weight": {
-    "customVariable": "var(--typography-ja-header-1-font-weight)",
+  "typography-ja-heading-1-font-weight": {
+    "customVariable": "var(--typography-ja-heading-1-font-weight)",
     "value": "700",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "fontWeight"
   },
-  "typography-ja-header-1-font-style": {
-    "customVariable": "var(--typography-ja-header-1-font-style)",
+  "typography-ja-heading-1-font-style": {
+    "customVariable": "var(--typography-ja-heading-1-font-style)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "fontStyle"
   },
-  "typography-ja-header-1-font-stretch": {
-    "customVariable": "var(--typography-ja-header-1-font-stretch)",
+  "typography-ja-heading-1-font-stretch": {
+    "customVariable": "var(--typography-ja-heading-1-font-stretch)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "fontStretch"
   },
-  "typography-ja-header-1-letter-spacing": {
-    "customVariable": "var(--typography-ja-header-1-letter-spacing)",
+  "typography-ja-heading-1-letter-spacing": {
+    "customVariable": "var(--typography-ja-heading-1-letter-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "letterSpacing"
   },
-  "typography-ja-header-1-line-height": {
-    "customVariable": "var(--typography-ja-header-1-line-height)",
-    "value": "51",
+  "typography-ja-heading-1-line-height": {
+    "customVariable": "var(--typography-ja-heading-1-line-height)",
+    "value": "48",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "lineHeight"
   },
-  "typography-ja-header-1-paragraph-indent": {
-    "customVariable": "var(--typography-ja-header-1-paragraph-indent)",
+  "typography-ja-heading-1-paragraph-indent": {
+    "customVariable": "var(--typography-ja-heading-1-paragraph-indent)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "paragraphIndent"
   },
-  "typography-ja-header-1-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-header-1-paragraph-spacing)",
+  "typography-ja-heading-1-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-heading-1-paragraph-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "paragraphSpacing"
   },
-  "typography-ja-header-1-text-case": {
-    "customVariable": "var(--typography-ja-header-1-text-case)",
+  "typography-ja-heading-1-text-case": {
+    "customVariable": "var(--typography-ja-heading-1-text-case)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-1",
+    "group": "ja-heading-1",
     "property": "textCase"
   },
-  "typography-ja-header-2-font-size": {
-    "customVariable": "var(--typography-ja-header-2-font-size)",
-    "value": "22",
+  "typography-ja-heading-2-font-size": {
+    "customVariable": "var(--typography-ja-heading-2-font-size)",
+    "value": "24",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "fontSize"
   },
-  "typography-ja-header-2-text-decoration": {
-    "customVariable": "var(--typography-ja-header-2-text-decoration)",
+  "typography-ja-heading-2-text-decoration": {
+    "customVariable": "var(--typography-ja-heading-2-text-decoration)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "textDecoration"
   },
-  "typography-ja-header-2-font-family": {
-    "customVariable": "var(--typography-ja-header-2-font-family)",
+  "typography-ja-heading-2-font-family": {
+    "customVariable": "var(--typography-ja-heading-2-font-family)",
     "value": "YuGothic",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "fontFamily"
   },
-  "typography-ja-header-2-font-weight": {
-    "customVariable": "var(--typography-ja-header-2-font-weight)",
+  "typography-ja-heading-2-font-weight": {
+    "customVariable": "var(--typography-ja-heading-2-font-weight)",
     "value": "700",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "fontWeight"
   },
-  "typography-ja-header-2-font-style": {
-    "customVariable": "var(--typography-ja-header-2-font-style)",
+  "typography-ja-heading-2-font-style": {
+    "customVariable": "var(--typography-ja-heading-2-font-style)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "fontStyle"
   },
-  "typography-ja-header-2-font-stretch": {
-    "customVariable": "var(--typography-ja-header-2-font-stretch)",
+  "typography-ja-heading-2-font-stretch": {
+    "customVariable": "var(--typography-ja-heading-2-font-stretch)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "fontStretch"
   },
-  "typography-ja-header-2-letter-spacing": {
-    "customVariable": "var(--typography-ja-header-2-letter-spacing)",
+  "typography-ja-heading-2-letter-spacing": {
+    "customVariable": "var(--typography-ja-heading-2-letter-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "letterSpacing"
   },
-  "typography-ja-header-2-line-height": {
-    "customVariable": "var(--typography-ja-header-2-line-height)",
-    "value": "37.4",
+  "typography-ja-heading-2-line-height": {
+    "customVariable": "var(--typography-ja-heading-2-line-height)",
+    "value": "39",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "lineHeight"
   },
-  "typography-ja-header-2-paragraph-indent": {
-    "customVariable": "var(--typography-ja-header-2-paragraph-indent)",
+  "typography-ja-heading-2-paragraph-indent": {
+    "customVariable": "var(--typography-ja-heading-2-paragraph-indent)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "paragraphIndent"
   },
-  "typography-ja-header-2-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-header-2-paragraph-spacing)",
+  "typography-ja-heading-2-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-heading-2-paragraph-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "paragraphSpacing"
   },
-  "typography-ja-header-2-text-case": {
-    "customVariable": "var(--typography-ja-header-2-text-case)",
+  "typography-ja-heading-2-text-case": {
+    "customVariable": "var(--typography-ja-heading-2-text-case)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-2",
+    "group": "ja-heading-2",
     "property": "textCase"
   },
-  "typography-ja-header-3-font-size": {
-    "customVariable": "var(--typography-ja-header-3-font-size)",
+  "typography-ja-heading-3-font-size": {
+    "customVariable": "var(--typography-ja-heading-3-font-size)",
     "value": "20",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "fontSize"
   },
-  "typography-ja-header-3-text-decoration": {
-    "customVariable": "var(--typography-ja-header-3-text-decoration)",
+  "typography-ja-heading-3-text-decoration": {
+    "customVariable": "var(--typography-ja-heading-3-text-decoration)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "textDecoration"
   },
-  "typography-ja-header-3-font-family": {
-    "customVariable": "var(--typography-ja-header-3-font-family)",
+  "typography-ja-heading-3-font-family": {
+    "customVariable": "var(--typography-ja-heading-3-font-family)",
     "value": "YuGothic",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "fontFamily"
   },
-  "typography-ja-header-3-font-weight": {
-    "customVariable": "var(--typography-ja-header-3-font-weight)",
+  "typography-ja-heading-3-font-weight": {
+    "customVariable": "var(--typography-ja-heading-3-font-weight)",
     "value": "700",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "fontWeight"
   },
-  "typography-ja-header-3-font-style": {
-    "customVariable": "var(--typography-ja-header-3-font-style)",
+  "typography-ja-heading-3-font-style": {
+    "customVariable": "var(--typography-ja-heading-3-font-style)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "fontStyle"
   },
-  "typography-ja-header-3-font-stretch": {
-    "customVariable": "var(--typography-ja-header-3-font-stretch)",
+  "typography-ja-heading-3-font-stretch": {
+    "customVariable": "var(--typography-ja-heading-3-font-stretch)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "fontStretch"
   },
-  "typography-ja-header-3-letter-spacing": {
-    "customVariable": "var(--typography-ja-header-3-letter-spacing)",
+  "typography-ja-heading-3-letter-spacing": {
+    "customVariable": "var(--typography-ja-heading-3-letter-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "letterSpacing"
   },
-  "typography-ja-header-3-line-height": {
-    "customVariable": "var(--typography-ja-header-3-line-height)",
-    "value": "34",
+  "typography-ja-heading-3-line-height": {
+    "customVariable": "var(--typography-ja-heading-3-line-height)",
+    "value": "32",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "lineHeight"
   },
-  "typography-ja-header-3-paragraph-indent": {
-    "customVariable": "var(--typography-ja-header-3-paragraph-indent)",
+  "typography-ja-heading-3-paragraph-indent": {
+    "customVariable": "var(--typography-ja-heading-3-paragraph-indent)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "paragraphIndent"
   },
-  "typography-ja-header-3-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-header-3-paragraph-spacing)",
+  "typography-ja-heading-3-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-heading-3-paragraph-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "paragraphSpacing"
   },
-  "typography-ja-header-3-text-case": {
-    "customVariable": "var(--typography-ja-header-3-text-case)",
+  "typography-ja-heading-3-text-case": {
+    "customVariable": "var(--typography-ja-heading-3-text-case)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-3",
+    "group": "ja-heading-3",
     "property": "textCase"
   },
-  "typography-ja-header-4-font-size": {
-    "customVariable": "var(--typography-ja-header-4-font-size)",
+  "typography-ja-heading-4-font-size": {
+    "customVariable": "var(--typography-ja-heading-4-font-size)",
     "value": "18",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "fontSize"
   },
-  "typography-ja-header-4-text-decoration": {
-    "customVariable": "var(--typography-ja-header-4-text-decoration)",
+  "typography-ja-heading-4-text-decoration": {
+    "customVariable": "var(--typography-ja-heading-4-text-decoration)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "textDecoration"
   },
-  "typography-ja-header-4-font-family": {
-    "customVariable": "var(--typography-ja-header-4-font-family)",
+  "typography-ja-heading-4-font-family": {
+    "customVariable": "var(--typography-ja-heading-4-font-family)",
     "value": "YuGothic",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "fontFamily"
   },
-  "typography-ja-header-4-font-weight": {
-    "customVariable": "var(--typography-ja-header-4-font-weight)",
+  "typography-ja-heading-4-font-weight": {
+    "customVariable": "var(--typography-ja-heading-4-font-weight)",
     "value": "700",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "fontWeight"
   },
-  "typography-ja-header-4-font-style": {
-    "customVariable": "var(--typography-ja-header-4-font-style)",
+  "typography-ja-heading-4-font-style": {
+    "customVariable": "var(--typography-ja-heading-4-font-style)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "fontStyle"
   },
-  "typography-ja-header-4-font-stretch": {
-    "customVariable": "var(--typography-ja-header-4-font-stretch)",
+  "typography-ja-heading-4-font-stretch": {
+    "customVariable": "var(--typography-ja-heading-4-font-stretch)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "fontStretch"
   },
-  "typography-ja-header-4-letter-spacing": {
-    "customVariable": "var(--typography-ja-header-4-letter-spacing)",
+  "typography-ja-heading-4-letter-spacing": {
+    "customVariable": "var(--typography-ja-heading-4-letter-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "letterSpacing"
   },
-  "typography-ja-header-4-line-height": {
-    "customVariable": "var(--typography-ja-header-4-line-height)",
-    "value": "30.6",
+  "typography-ja-heading-4-line-height": {
+    "customVariable": "var(--typography-ja-heading-4-line-height)",
+    "value": "29",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "lineHeight"
   },
-  "typography-ja-header-4-paragraph-indent": {
-    "customVariable": "var(--typography-ja-header-4-paragraph-indent)",
+  "typography-ja-heading-4-paragraph-indent": {
+    "customVariable": "var(--typography-ja-heading-4-paragraph-indent)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "paragraphIndent"
   },
-  "typography-ja-header-4-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-header-4-paragraph-spacing)",
+  "typography-ja-heading-4-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-heading-4-paragraph-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "paragraphSpacing"
   },
-  "typography-ja-header-4-text-case": {
-    "customVariable": "var(--typography-ja-header-4-text-case)",
+  "typography-ja-heading-4-text-case": {
+    "customVariable": "var(--typography-ja-heading-4-text-case)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-4",
+    "group": "ja-heading-4",
     "property": "textCase"
   },
-  "typography-ja-header-5-font-size": {
-    "customVariable": "var(--typography-ja-header-5-font-size)",
+  "typography-ja-heading-5-font-size": {
+    "customVariable": "var(--typography-ja-heading-5-font-size)",
     "value": "16",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "fontSize"
   },
-  "typography-ja-header-5-text-decoration": {
-    "customVariable": "var(--typography-ja-header-5-text-decoration)",
+  "typography-ja-heading-5-text-decoration": {
+    "customVariable": "var(--typography-ja-heading-5-text-decoration)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "textDecoration"
   },
-  "typography-ja-header-5-font-family": {
-    "customVariable": "var(--typography-ja-header-5-font-family)",
+  "typography-ja-heading-5-font-family": {
+    "customVariable": "var(--typography-ja-heading-5-font-family)",
     "value": "YuGothic",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "fontFamily"
   },
-  "typography-ja-header-5-font-weight": {
-    "customVariable": "var(--typography-ja-header-5-font-weight)",
+  "typography-ja-heading-5-font-weight": {
+    "customVariable": "var(--typography-ja-heading-5-font-weight)",
     "value": "700",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "fontWeight"
   },
-  "typography-ja-header-5-font-style": {
-    "customVariable": "var(--typography-ja-header-5-font-style)",
+  "typography-ja-heading-5-font-style": {
+    "customVariable": "var(--typography-ja-heading-5-font-style)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "fontStyle"
   },
-  "typography-ja-header-5-font-stretch": {
-    "customVariable": "var(--typography-ja-header-5-font-stretch)",
+  "typography-ja-heading-5-font-stretch": {
+    "customVariable": "var(--typography-ja-heading-5-font-stretch)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "fontStretch"
   },
-  "typography-ja-header-5-letter-spacing": {
-    "customVariable": "var(--typography-ja-header-5-letter-spacing)",
+  "typography-ja-heading-5-letter-spacing": {
+    "customVariable": "var(--typography-ja-heading-5-letter-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "letterSpacing"
   },
-  "typography-ja-header-5-line-height": {
-    "customVariable": "var(--typography-ja-header-5-line-height)",
-    "value": "27.2",
+  "typography-ja-heading-5-line-height": {
+    "customVariable": "var(--typography-ja-heading-5-line-height)",
+    "value": "26",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "lineHeight"
   },
-  "typography-ja-header-5-paragraph-indent": {
-    "customVariable": "var(--typography-ja-header-5-paragraph-indent)",
+  "typography-ja-heading-5-paragraph-indent": {
+    "customVariable": "var(--typography-ja-heading-5-paragraph-indent)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "paragraphIndent"
   },
-  "typography-ja-header-5-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-header-5-paragraph-spacing)",
+  "typography-ja-heading-5-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-heading-5-paragraph-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "paragraphSpacing"
   },
-  "typography-ja-header-5-text-case": {
-    "customVariable": "var(--typography-ja-header-5-text-case)",
+  "typography-ja-heading-5-text-case": {
+    "customVariable": "var(--typography-ja-heading-5-text-case)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-5",
+    "group": "ja-heading-5",
     "property": "textCase"
   },
-  "typography-ja-header-6-font-size": {
-    "customVariable": "var(--typography-ja-header-6-font-size)",
+  "typography-ja-heading-6-font-size": {
+    "customVariable": "var(--typography-ja-heading-6-font-size)",
     "value": "14",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "fontSize"
   },
-  "typography-ja-header-6-text-decoration": {
-    "customVariable": "var(--typography-ja-header-6-text-decoration)",
+  "typography-ja-heading-6-text-decoration": {
+    "customVariable": "var(--typography-ja-heading-6-text-decoration)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "textDecoration"
   },
-  "typography-ja-header-6-font-family": {
-    "customVariable": "var(--typography-ja-header-6-font-family)",
+  "typography-ja-heading-6-font-family": {
+    "customVariable": "var(--typography-ja-heading-6-font-family)",
     "value": "YuGothic",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "fontFamily"
   },
-  "typography-ja-header-6-font-weight": {
-    "customVariable": "var(--typography-ja-header-6-font-weight)",
+  "typography-ja-heading-6-font-weight": {
+    "customVariable": "var(--typography-ja-heading-6-font-weight)",
     "value": "700",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "fontWeight"
   },
-  "typography-ja-header-6-font-style": {
-    "customVariable": "var(--typography-ja-header-6-font-style)",
+  "typography-ja-heading-6-font-style": {
+    "customVariable": "var(--typography-ja-heading-6-font-style)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "fontStyle"
   },
-  "typography-ja-header-6-font-stretch": {
-    "customVariable": "var(--typography-ja-header-6-font-stretch)",
+  "typography-ja-heading-6-font-stretch": {
+    "customVariable": "var(--typography-ja-heading-6-font-stretch)",
     "value": "normal",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "fontStretch"
   },
-  "typography-ja-header-6-letter-spacing": {
-    "customVariable": "var(--typography-ja-header-6-letter-spacing)",
+  "typography-ja-heading-6-letter-spacing": {
+    "customVariable": "var(--typography-ja-heading-6-letter-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "letterSpacing"
   },
-  "typography-ja-header-6-line-height": {
-    "customVariable": "var(--typography-ja-header-6-line-height)",
-    "value": "23.8",
+  "typography-ja-heading-6-line-height": {
+    "customVariable": "var(--typography-ja-heading-6-line-height)",
+    "value": "23",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "lineHeight"
   },
-  "typography-ja-header-6-paragraph-indent": {
-    "customVariable": "var(--typography-ja-header-6-paragraph-indent)",
+  "typography-ja-heading-6-paragraph-indent": {
+    "customVariable": "var(--typography-ja-heading-6-paragraph-indent)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "paragraphIndent"
   },
-  "typography-ja-header-6-paragraph-spacing": {
-    "customVariable": "var(--typography-ja-header-6-paragraph-spacing)",
+  "typography-ja-heading-6-paragraph-spacing": {
+    "customVariable": "var(--typography-ja-heading-6-paragraph-spacing)",
     "value": "0",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "paragraphSpacing"
   },
-  "typography-ja-header-6-text-case": {
-    "customVariable": "var(--typography-ja-header-6-text-case)",
+  "typography-ja-heading-6-text-case": {
+    "customVariable": "var(--typography-ja-heading-6-text-case)",
     "value": "none",
     "lang": "ja",
-    "group": "ja-header-6",
+    "group": "ja-heading-6",
     "property": "textCase"
   },
   "typography-ja-subtitle-lg-font-size": {
@@ -2745,7 +2745,7 @@
   },
   "typography-ja-subtitle-lg-line-height": {
     "customVariable": "var(--typography-ja-subtitle-lg-line-height)",
-    "value": "40.8",
+    "value": "39",
     "lang": "ja",
     "group": "ja-subtitle-lg",
     "property": "lineHeight"
@@ -2822,7 +2822,7 @@
   },
   "typography-ja-subtitle-md-line-height": {
     "customVariable": "var(--typography-ja-subtitle-md-line-height)",
-    "value": "37.4",
+    "value": "32",
     "lang": "ja",
     "group": "ja-subtitle-md",
     "property": "lineHeight"
@@ -2899,7 +2899,7 @@
   },
   "typography-ja-subtitle-sm-line-height": {
     "customVariable": "var(--typography-ja-subtitle-sm-line-height)",
-    "value": "34",
+    "value": "29",
     "lang": "ja",
     "group": "ja-subtitle-sm",
     "property": "lineHeight"
@@ -2976,7 +2976,7 @@
   },
   "typography-ja-body-r-lg-line-height": {
     "customVariable": "var(--typography-ja-body-r-lg-line-height)",
-    "value": "30.6",
+    "value": "29",
     "lang": "ja",
     "group": "ja-body-r-lg",
     "property": "lineHeight"
@@ -3053,7 +3053,7 @@
   },
   "typography-ja-body-r-md-line-height": {
     "customVariable": "var(--typography-ja-body-r-md-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "ja",
     "group": "ja-body-r-md",
     "property": "lineHeight"
@@ -3130,7 +3130,7 @@
   },
   "typography-ja-body-r-sm-line-height": {
     "customVariable": "var(--typography-ja-body-r-sm-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "ja",
     "group": "ja-body-r-sm",
     "property": "lineHeight"
@@ -3207,7 +3207,7 @@
   },
   "typography-ja-body-b-lg-line-height": {
     "customVariable": "var(--typography-ja-body-b-lg-line-height)",
-    "value": "30.6",
+    "value": "29",
     "lang": "ja",
     "group": "ja-body-b-lg",
     "property": "lineHeight"
@@ -3284,7 +3284,7 @@
   },
   "typography-ja-body-b-md-line-height": {
     "customVariable": "var(--typography-ja-body-b-md-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "ja",
     "group": "ja-body-b-md",
     "property": "lineHeight"
@@ -3361,7 +3361,7 @@
   },
   "typography-ja-body-b-sm-line-height": {
     "customVariable": "var(--typography-ja-body-b-sm-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "ja",
     "group": "ja-body-b-sm",
     "property": "lineHeight"
@@ -3438,7 +3438,7 @@
   },
   "typography-ja-button-b-lg-line-height": {
     "customVariable": "var(--typography-ja-button-b-lg-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "ja",
     "group": "ja-button-b-lg",
     "property": "lineHeight"
@@ -3515,7 +3515,7 @@
   },
   "typography-ja-button-b-md-line-height": {
     "customVariable": "var(--typography-ja-button-b-md-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "ja",
     "group": "ja-button-b-md",
     "property": "lineHeight"
@@ -3592,7 +3592,7 @@
   },
   "typography-ja-button-b-sm-line-height": {
     "customVariable": "var(--typography-ja-button-b-sm-line-height)",
-    "value": "20.4",
+    "value": "19",
     "lang": "ja",
     "group": "ja-button-b-sm",
     "property": "lineHeight"
@@ -3669,7 +3669,7 @@
   },
   "typography-ja-button-r-lg-line-height": {
     "customVariable": "var(--typography-ja-button-r-lg-line-height)",
-    "value": "27.2",
+    "value": "26",
     "lang": "ja",
     "group": "ja-button-r-lg",
     "property": "lineHeight"
@@ -3746,7 +3746,7 @@
   },
   "typography-ja-button-r-md-line-height": {
     "customVariable": "var(--typography-ja-button-r-md-line-height)",
-    "value": "23.8",
+    "value": "23",
     "lang": "ja",
     "group": "ja-button-r-md",
     "property": "lineHeight"
@@ -3823,7 +3823,7 @@
   },
   "typography-ja-button-r-sm-line-height": {
     "customVariable": "var(--typography-ja-button-r-sm-line-height)",
-    "value": "20.4",
+    "value": "19",
     "lang": "ja",
     "group": "ja-button-r-sm",
     "property": "lineHeight"

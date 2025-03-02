@@ -1,9 +1,11 @@
 /**
  * Do not edit directly
- * Generated on Sat, 05 Oct 2024 08:29:34 GMT
+ * Generated on Sat, 01 Mar 2025 11:35:56 GMT
  */
 
 
 @import './color.css';
 @import './typography.css';
 @import './spacing.css';
+@import './tailwind-theme-color.css';
+@import './tailwind-theme-typography.css';

@@ -1,8 +1,5 @@
 import { extendTailwindMerge } from 'tailwind-merge';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires, import/no-extraneous-dependencies
-const sharedConfig = require('tailwind-config');
-
 export const twMerge = extendTailwindMerge({
   /**
    * WARNING: wrong merge of classes with text-prefix
@@ -11,9 +8,33 @@ export const twMerge = extendTailwindMerge({
    */
   override: {
     classGroups: {
-      'font-size': Object.keys(sharedConfig?.theme?.extend?.fontSize).map(
-        (size) => `text-${size}`
-      ),
+      'font-size': [
+        'text-advert',
+        'text-slogan',
+        'text-big-header',
+        'text-caption',
+        'text-heading-1',
+        'text-heading-2',
+        'text-heading-3',
+        'text-heading-4',
+        'text-heading-5',
+        'text-heading-6',
+        'text-subtitle-lg',
+        'text-subtitle-md',
+        'text-subtitle-sm',
+        'text-body-r-lg',
+        'text-body-r-md',
+        'text-body-r-sm',
+        'text-body-b-lg',
+        'text-body-b-md',
+        'text-body-b-sm',
+        'text-button-b-lg',
+        'text-button-b-md',
+        'text-button-b-sm',
+        'text-button-r-lg',
+        'text-button-r-md',
+        'text-button-r-sm',
+      ],
     },
   },
 });

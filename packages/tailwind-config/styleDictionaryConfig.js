@@ -61,7 +61,7 @@ StyleDictionary.registerFormat({
   formatter(_, file) {
     return `${StyleDictionary.formatHelpers.fileHeader({
       file,
-    })}\n@import './color.css';\n@import './typography.css';\n@import './spacing.css';\n`;
+    })}\n@import './color.css';\n@import './typography.css';\n@import './spacing.css';\n@import './tailwind-theme-color.css';\n@import './tailwind-theme-typography.css';\n`;
   },
 });
 
@@ -71,6 +71,23 @@ StyleDictionary.registerFormat({
     return `${StyleDictionary.formatHelpers.fileHeader({
       file,
     })}:root {\n${dictionary.allProperties
+      .map((token) => {
+        const description = token.description
+          ? ` /* ${token.description} */`
+          : '';
+
+        return `  --${token.name}: ${token.value};${description}`;
+      })
+      .join('\n')}\n}`;
+  },
+});
+
+StyleDictionary.registerFormat({
+  name: 'format/css/description/tailwind-theme-color',
+  formatter(dictionary, file) {
+    return `${StyleDictionary.formatHelpers.fileHeader({
+      file,
+    })}@theme {\n${dictionary.allProperties
       .map((token) => {
         const description = token.description
           ? ` /* ${token.description} */`
@@ -95,6 +112,46 @@ StyleDictionary.registerFormat({
 
         return `  --${token.name}: ${token.value};${description}`;
       })
+      .join('\n')}\n}`;
+  },
+});
+
+StyleDictionary.registerFormat({
+  name: 'format/css/description/tailwind-theme-typography',
+  formatter(dictionary, file) {
+    return `${StyleDictionary.formatHelpers.fileHeader({
+      file,
+    })}@theme {\n${dictionary.allProperties
+      .reduce((prev, token) => {
+        const description = token.value.includes?.('rem')
+          ? ` /* original -> ${token.original.value}px */`
+          : '';
+
+        const semanticToken = token.path.slice(2, -1).join('-');
+
+        switch (token.path.slice(-1)[0]) {
+          case 'fontSize':
+            return [
+              ...prev,
+              `  --text-${semanticToken}: ${token.value};${description}`,
+            ];
+
+          case 'lineHeight':
+            return [
+              ...prev,
+              `  --leading-${semanticToken}: ${token.value};${description}`,
+            ];
+
+          case 'fontWeight':
+            return [
+              ...prev,
+              `  --font-weight-${semanticToken}: ${token.value};${description}`,
+            ];
+
+          default:
+            return prev;
+        }
+      }, [])
       .join('\n')}\n}`;
   },
 });
@@ -160,6 +217,17 @@ StyleDictionary.extend({
         },
       ],
     },
+    tailwindThemeColorCssVariables: {
+      transformGroup: 'css',
+      buildPath: 'design-token/',
+      files: [
+        {
+          destination: 'tailwind-theme-color.css',
+          format: 'format/css/description/tailwind-theme-color',
+          filter: (token) => token.attributes?.category === 'color',
+        },
+      ],
+    },
     typographyCssVariables: {
       transformGroup: 'transformGroup/css/typography',
       buildPath: 'design-token/',
@@ -171,17 +239,30 @@ StyleDictionary.extend({
         },
       ],
     },
-    spacingCssVariables: {
-      transformGroup: 'transformGroup/css/spacing',
+    tailwindThemeTypographyCssVariables: {
+      transformGroup: 'transformGroup/css/typography',
       buildPath: 'design-token/',
       files: [
         {
-          destination: 'spacing.css',
-          format: 'format/css/description/rem',
-          filter: (token) => token.attributes?.category === 'spacing',
+          destination: 'tailwind-theme-typography.css',
+          format: 'format/css/description/tailwind-theme-typography',
+          filter: (token) =>
+            token?.attributes?.type === 'ja' &&
+            token.attributes?.category === 'typography',
         },
       ],
     },
+    // spacingCssVariables: {
+    //   transformGroup: 'transformGroup/css/spacing',
+    //   buildPath: 'design-token/',
+    //   files: [
+    //     {
+    //       destination: 'spacing.css',
+    //       format: 'format/css/description/rem',
+    //       filter: (token) => token.attributes?.category === 'spacing',
+    //     },
+    //   ],
+    // },
     colorJson: {
       transformGroup: 'css',
       buildPath: 'design-token/',
