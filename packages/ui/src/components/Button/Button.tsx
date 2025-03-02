@@ -4,7 +4,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { twMerge } from '../../utils/extendTailwindMerge';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 hover:border-opacity-50 hover:bg-opacity-10 transition duration-300 ease-in-out',
+  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 transition duration-300 ease-in-out',
   {
     variants: {
       variant: {
@@ -39,12 +39,13 @@ const buttonVariants = cva(
       {
         variant: 'outline',
         color: 'main',
-        class: 'border-main-default/20 text-main-default hover:bg-main-default',
+        class:
+          'border-main-default/20 text-main-default hover:bg-main-default/10',
       },
       {
         variant: 'ghost',
         color: 'main',
-        class: 'text-main-default hover:bg-main-default',
+        class: 'text-main-default hover:bg-main-default/10',
       },
       {
         variant: 'default',
@@ -55,12 +56,12 @@ const buttonVariants = cva(
         variant: 'outline',
         color: 'accent',
         class:
-          'border-accent-default/20 text-accent-default hover:bg-accent-default',
+          'border-accent-default/20 text-accent-default hover:bg-accent-default/10',
       },
       {
         variant: 'ghost',
         color: 'accent',
-        class: 'text-accent-default hover:bg-accent-default',
+        class: 'text-accent-default hover:bg-accent-default/10',
       },
       {
         variant: 'default',
