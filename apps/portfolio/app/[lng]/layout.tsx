@@ -2,6 +2,7 @@ import { Noto_Sans_JP } from 'next/font/google';
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { dir } from 'i18next';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 import { languages, Language } from '../../i18n/settings';
 
@@ -38,6 +39,7 @@ export default async function RootLayout({
   return (
     <html lang={lng} dir={dir(lng)} className={notoSansJP.variable}>
       <body>{children}</body>
+      <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
     </html>
   );
 }
