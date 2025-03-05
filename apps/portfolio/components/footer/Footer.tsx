@@ -18,6 +18,7 @@ export function Footer({ lng }: { lng: Language }) {
             className="text-body-r-sm leading-body-r-sm"
             target="_blank"
             rel="noreferrer"
+            data-gtm="footer_click_html5up"
           />
         </Trans>
       </p>

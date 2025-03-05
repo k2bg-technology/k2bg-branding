@@ -102,17 +102,27 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.webApp.overview')}
               backgroundImage="/images/stock.jpg"
               preview={
-                <Button color="light" variant="outline">
+                <Button
+                  color="light"
+                  variant="outline"
+                  data-gtm="portfolio_click_web_app_preview"
+                >
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/stock-app.mp4"
               siteLink={
                 <>
-                  <ExternalLinkButton href="https://github.com/stranger1989/trading-dashboard">
+                  <ExternalLinkButton
+                    href="https://github.com/stranger1989/trading-dashboard"
+                    data-gtm="portfolio_click_web_app_github"
+                  >
                     {t('portfolio.githubApp')}
                   </ExternalLinkButton>
-                  <ExternalLinkButton href="https://github.com/stranger1989/ml-playground-api">
+                  <ExternalLinkButton
+                    href="https://github.com/stranger1989/ml-playground-api"
+                    data-gtm="portfolio_click_web_app_api_github"
+                  >
                     {t('portfolio.githubApi')}
                   </ExternalLinkButton>
                 </>
@@ -128,17 +138,27 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.mobileApp.overview')}
               backgroundImage="/images/mobile.jpg"
               preview={
-                <Button color="light" variant="outline">
+                <Button
+                  color="light"
+                  variant="outline"
+                  data-gtm="portfolio_click_mobile_app_preview"
+                >
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/mobile.mp4"
               siteLink={
                 <>
-                  <ExternalLinkButton href="https://github.com/stranger1989/merchandise_control_system_native_app">
+                  <ExternalLinkButton
+                    href="https://github.com/stranger1989/merchandise_control_system_native_app"
+                    data-gtm="portfolio_click_mobile_app_github"
+                  >
                     {t('portfolio.githubApp')}
                   </ExternalLinkButton>
-                  <ExternalLinkButton href="https://github.com/stranger1989/merchandise_control_system">
+                  <ExternalLinkButton
+                    href="https://github.com/stranger1989/merchandise_control_system"
+                    data-gtm="portfolio_click_mobile_app_api"
+                  >
                     {t('portfolio.githubApi')}
                   </ExternalLinkButton>
                 </>
@@ -154,13 +174,20 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.scrapingApp.overview')}
               backgroundImage="/images/web.jpg"
               preview={
-                <Button color="light" variant="outline">
+                <Button
+                  color="light"
+                  variant="outline"
+                  data-gtm="portfolio_click_scraping_app_preview"
+                >
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/scrapy.mp4"
               siteLink={
-                <ExternalLinkButton href="https://github.com/stranger1989/scrapy_snippets">
+                <ExternalLinkButton
+                  href="https://github.com/stranger1989/scrapy_snippets"
+                  data-gtm="portfolio_click_scraping_app_github"
+                >
                   {t('portfolio.github')}
                 </ExternalLinkButton>
               }
@@ -175,17 +202,27 @@ export function Portfolio({ t }: { t: TFunction }) {
               overview={t('portfolio.blogApp.overview')}
               backgroundImage="/images/blog.jpg"
               preview={
-                <Button color="light" variant="outline">
+                <Button
+                  color="light"
+                  variant="outline"
+                  data-gtm="portfolio_click_blog_app_preview"
+                >
                   {t('portfolio.preview')}
                 </Button>
               }
               previewVideo="/videos/blank.mp4"
               siteLink={
                 <>
-                  <ExternalLinkButton href="https://blank-oldstranger.com/">
+                  <ExternalLinkButton
+                    href="https://blank-oldstranger.com/"
+                    data-gtm="portfolio_click_blog_app_url"
+                  >
                     {t('portfolio.siteURL')}
                   </ExternalLinkButton>
-                  <ExternalLinkButton href="https://github.com/stranger1989/wordpress-local-dev-template">
+                  <ExternalLinkButton
+                    href="https://github.com/stranger1989/wordpress-local-dev-template"
+                    data-gtm="portfolio_click_blog_app_github"
+                  >
                     {t('portfolio.github')}
                   </ExternalLinkButton>
                 </>

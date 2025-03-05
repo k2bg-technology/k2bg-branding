@@ -10,6 +10,7 @@ export function LanguageSelector() {
         variant="ghost"
         asChild
         className="rounded-none"
+        data-gtm="i18n_click_ja_button"
       >
         <Link href="/ja">ja</Link>
       </Button>
@@ -19,6 +20,7 @@ export function LanguageSelector() {
         variant="ghost"
         asChild
         className="rounded-none"
+        data-gtm="i18n_click_en_button"
       >
         <Link href="/en">en</Link>
       </Button>

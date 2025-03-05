@@ -36,7 +36,10 @@ export function Contact({ t }: { t: TFunction }) {
             <div className="flex flex-col gap-spacious md:flex-row">
               <Form.Control color="light">
                 <div className="flex flex-col gap-normal w-full">
-                  <Form.Label htmlFor="name">
+                  <Form.Label
+                    htmlFor="name"
+                    data-gtm="contact_click_name_label"
+                  >
                     {t('contact.form.nameLabel')}
                   </Form.Label>
                   <Form.Input
@@ -45,12 +48,16 @@ export function Contact({ t }: { t: TFunction }) {
                     id="name"
                     placeholder={t('contact.form.namePlaceholder')}
                     required
+                    data-gtm="contact_focus_name_field"
                   />
                 </div>
               </Form.Control>
               <Form.Control color="light">
                 <div className="flex flex-col gap-normal w-full">
-                  <Form.Label htmlFor="email">
+                  <Form.Label
+                    htmlFor="email"
+                    data-gtm="contact_click_email_label"
+                  >
                     {t('contact.form.emailLabel')}
                   </Form.Label>
                   <Form.Input
@@ -59,13 +66,17 @@ export function Contact({ t }: { t: TFunction }) {
                     id="email"
                     placeholder={t('contact.form.emailPlaceholder')}
                     required
+                    data-gtm="contact_focus_email_field"
                   />
                 </div>
               </Form.Control>
             </div>
             <Form.Control color="light">
               <div className="flex flex-col gap-normal w-full">
-                <Form.Label htmlFor="message">
+                <Form.Label
+                  htmlFor="message"
+                  data-gtm="contact_click_message_label"
+                >
                   {t('contact.form.messageLabel')}
                 </Form.Label>
                 <Form.Textarea
@@ -74,17 +85,28 @@ export function Contact({ t }: { t: TFunction }) {
                   rows={4}
                   placeholder={t('contact.form.messagePlaceholder')}
                   required
+                  data-gtm="contact_focus_message_field"
                 />
               </div>
             </Form.Control>
             <ul className="flex gap-spacious">
               <li>
-                <Button type="submit" color="light" variant="outline">
+                <Button
+                  type="submit"
+                  color="light"
+                  variant="outline"
+                  data-gtm="contact_submit_form"
+                >
                   {t('contact.form.submit')}
                 </Button>
               </li>
               <li>
-                <Button type="reset" color="light" variant="outline">
+                <Button
+                  type="reset"
+                  color="light"
+                  variant="outline"
+                  data-gtm="contact_reset_form"
+                >
                   {t('contact.form.reset')}
                 </Button>
               </li>
@@ -102,6 +124,7 @@ export function Contact({ t }: { t: TFunction }) {
                 target="_blank"
                 rel="noreferrer"
                 className="text-body-r-sm leading-body-r-sm hover:opacity-80"
+                data-gtm="contact_click_github"
               >
                 {t('contact.githubAccountName')}
               </a>
@@ -115,6 +138,7 @@ export function Contact({ t }: { t: TFunction }) {
                 target="_blank"
                 rel="noreferrer"
                 className="text-body-r-sm leading-body-r-sm hover:opacity-80"
+                data-gtm="contact_click_x"
               >
                 {t('contact.xAccountName')}
               </a>
