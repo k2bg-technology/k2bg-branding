@@ -1,5 +1,6 @@
 import { Noto_Sans_JP } from 'next/font/google';
 import { ScrollArea } from 'ui';
+import { GoogleTagManager } from '@next/third-parties/google';
 
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -33,6 +34,7 @@ export default function RootLayout({
           </div>
         </ScrollArea>
       </body>
+      <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
       <GoogleAdsense />
     </html>
   );

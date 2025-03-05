@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/third-parties": "^15.2.0",
     "@notionhq/client": "^2.2.13",
     "@prisma/client": "5.22.0",
     "cloudinary": "^2.3.1",
