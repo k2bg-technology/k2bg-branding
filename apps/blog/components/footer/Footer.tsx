@@ -18,7 +18,7 @@ export default function Footer() {
         <div className="col-start-2 -col-end-2 grid place-self-end py-8 w-full h-full">
           <div className="flex flex-wrap items-center justify-between">
             <div className="flex justify-center sm:justify-start">
-              <Link href="/">
+              <Link href="/" data-gtm="footer_click_home">
                 <span className="sr-only">Home</span>
                 <CompanyLogo className="text-white" />
               </Link>
@@ -27,7 +27,11 @@ export default function Footer() {
             <nav>
               <ul className="flex flex-wrap items-center gap-4">
                 <li>
-                  <Link href="/category/ENGINEERING" passHref>
+                  <Link
+                    href="/category/ENGINEERING"
+                    passHref
+                    data-gtm="footer_click_engineering"
+                  >
                     <Button
                       className="!font-normal"
                       color="light"
@@ -39,7 +43,11 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/category/DESIGN" passHref>
+                  <Link
+                    href="/category/DESIGN"
+                    passHref
+                    data-gtm="footer_click_design"
+                  >
                     <Button
                       className="!font-normal"
                       color="light"
@@ -51,7 +59,11 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/category/DATA_SCIENCE" passHref>
+                  <Link
+                    href="/category/DATA_SCIENCE"
+                    passHref
+                    data-gtm="footer_click_data_science"
+                  >
                     <Button
                       className="!font-normal"
                       color="light"
@@ -63,7 +75,11 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/category/LIFE_STYLE" passHref>
+                  <Link
+                    href="/category/LIFE_STYLE"
+                    passHref
+                    data-gtm="footer_click_life_style"
+                  >
                     <Button
                       className="!font-normal"
                       color="light"
@@ -75,7 +91,11 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/concept" passHref>
+                  <Link
+                    href="/concept"
+                    passHref
+                    data-gtm="footer_click_concept"
+                  >
                     <Button
                       className="!font-normal"
                       color="light"
@@ -87,7 +107,11 @@ export default function Footer() {
                 </li>
 
                 <li>
-                  <Link href="/contact" passHref>
+                  <Link
+                    href="/contact"
+                    passHref
+                    data-gtm="footer_click_contact"
+                  >
                     <Button
                       className="!font-normal"
                       color="light"
@@ -108,12 +132,18 @@ export default function Footer() {
 
             <div className="flex justify-center sm:justify-start">
               <ul className="flex justify-center gap-5 h-full">
-                <li className="flex relative items-center gap-5">
+                <li
+                  className="flex relative items-center gap-5"
+                  data-gtm="footer_click_x"
+                >
                   <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
                     <Icon name="x" color="var(--color-base-white)" />
                   </div>
                 </li>
-                <li className="flex relative items-center gap-5">
+                <li
+                  className="flex relative items-center gap-5"
+                  data-gtm="footer_click_github"
+                >
                   <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
                     <Icon name="github" color="var(--color-base-white)" />
                   </div>

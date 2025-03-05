@@ -15,7 +15,12 @@ export async function ArticleHeading(props: Props) {
     <BlogCard className="grid grid-cols-[subgrid] col-span-full gap-spacious">
       <BlogCard.Content
         category={
-          <Link href={`/category/${article.category}`}>{article.category}</Link>
+          <Link
+            href={`/category/${article.category}`}
+            data-gtm="article_click_category"
+          >
+            {article.category}
+          </Link>
         }
         heading={<h1 className="text-heading-1 font-bold">{article.title}</h1>}
         excerpt={article.excerpt}

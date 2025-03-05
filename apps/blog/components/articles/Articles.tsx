@@ -31,7 +31,12 @@ export async function Articles(props: Props) {
           {articles.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.imageUrl && (
-                <Link href={`/blog/${article.slug}`} passHref className="peer">
+                <Link
+                  href={`/blog/${article.slug}`}
+                  passHref
+                  className="peer"
+                  data-gtm="article_click_back_number_image"
+                >
                   <BlogCard.Media className="relative w-full h-[16rem]">
                     <CloudinaryImage
                       publicId={article.id}
@@ -47,12 +52,19 @@ export async function Articles(props: Props) {
               )}
               <BlogCard.Content
                 category={
-                  <Link href={`/category/${article.category}`}>
+                  <Link
+                    href={`/category/${article.category}`}
+                    data-gtm="article_click_back_number_category"
+                  >
                     {article.category}
                   </Link>
                 }
                 heading={
-                  <Link href={`/blog/${article.slug}`} className="heading-link">
+                  <Link
+                    href={`/blog/${article.slug}`}
+                    className="heading-link"
+                    data-gtm="article_click_back_number_heading"
+                  >
                     <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                       {article.title}
                     </h2>

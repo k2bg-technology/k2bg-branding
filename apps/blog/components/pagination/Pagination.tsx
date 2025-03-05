@@ -35,6 +35,7 @@ export function Pagination(props: Props) {
         <UIPagination.Item
           selected={index === currentPage}
           onClick={() => router.push(createPageURL(index))}
+          data-gtm={`article_click_pagination_${index}`}
         >
           {index}
         </UIPagination.Item>

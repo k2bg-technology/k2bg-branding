@@ -24,6 +24,7 @@ export default async function Page() {
                   href={`/blog/${featureLatest.slug}`}
                   passHref
                   className="peer"
+                  data-gtm="article_click_feature_latest_image"
                 >
                   <BlogCard.Media className="relative w-full h-[18.75rem]">
                     <CloudinaryImage
@@ -41,7 +42,10 @@ export default async function Page() {
               )}
               <BlogCard.Content
                 category={
-                  <Link href={`/category/${featureLatest.category}`}>
+                  <Link
+                    href={`/category/${featureLatest.category}`}
+                    data-gtm="article_click_feature_latest_category"
+                  >
                     {featureLatest.category}
                   </Link>
                 }
@@ -49,6 +53,7 @@ export default async function Page() {
                   <Link
                     href={`/blog/${featureLatest.slug}`}
                     className="heading-link"
+                    data-gtm="article_click_feature_latest_heading"
                   >
                     <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                       {featureLatest.title}
@@ -80,6 +85,7 @@ export default async function Page() {
                   href={`/blog/${article.slug}`}
                   passHref
                   className="h-full peer"
+                  data-gtm="article_click_feature_recently_image"
                 >
                   <BlogCard.Media className="relative flex-none w-[10rem] h-[10rem]">
                     <CloudinaryImage
@@ -97,12 +103,19 @@ export default async function Page() {
               )}
               <BlogCard.Content
                 category={
-                  <Link href={`/category/${article.category}`}>
+                  <Link
+                    href={`/category/${article.category}`}
+                    data-gtm="article_click_feature_recently_category"
+                  >
                     {article.category}
                   </Link>
                 }
                 heading={
-                  <Link href={`/blog/${article.slug}`} className="heading-link">
+                  <Link
+                    href={`/blog/${article.slug}`}
+                    className="heading-link"
+                    data-gtm="article_click_feature_recently_heading"
+                  >
                     <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                       {article.title}
                     </h2>
@@ -137,6 +150,7 @@ export default async function Page() {
                     href={`/blog/${article.slug}`}
                     passHref
                     className="h-full peer"
+                    data-gtm="article_click_feature_recently_image"
                   >
                     <BlogCard.Media className="relative w-full h-[16rem]">
                       <CloudinaryImage
@@ -154,7 +168,10 @@ export default async function Page() {
                 )}
                 <BlogCard.Content
                   category={
-                    <Link href={`/category/${article.category}`}>
+                    <Link
+                      href={`/category/${article.category}`}
+                      data-gtm="article_click_feature_recently_category"
+                    >
                       {article.category}
                     </Link>
                   }
@@ -162,6 +179,7 @@ export default async function Page() {
                     <Link
                       href={`/blog/${article.slug}`}
                       className="heading-link"
+                      data-gtm="article_click_feature_recently_heading"
                     >
                       <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                         {article.title}
@@ -188,7 +206,12 @@ export default async function Page() {
           {featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.imageUrl && (
-                <Link href={`/blog/${article.slug}`} passHref className="peer">
+                <Link
+                  href={`/blog/${article.slug}`}
+                  passHref
+                  className="peer"
+                  data-gtm="article_click_feature_previously_image"
+                >
                   <BlogCard.Media className="relative w-full h-[16rem]">
                     <CloudinaryImage
                       publicId={article.id}
@@ -205,12 +228,19 @@ export default async function Page() {
               )}
               <BlogCard.Content
                 category={
-                  <Link href={`/category/${article.category}`}>
+                  <Link
+                    href={`/category/${article.category}`}
+                    data-gtm="article_click_feature_previously_category"
+                  >
                     {article.category}
                   </Link>
                 }
                 heading={
-                  <Link href={`/blog/${article.slug}`} className="heading-link">
+                  <Link
+                    href={`/blog/${article.slug}`}
+                    className="heading-link"
+                    data-gtm="article_click_feature_previously_heading"
+                  >
                     <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                       {article.title}
                     </h2>

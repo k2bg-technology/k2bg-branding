@@ -14,7 +14,7 @@ export default function Header() {
         <div className="mx-auto w-full md:w-[45rem] xl:w-[80rem]">
           <div className="flex items-center justify-between">
             <div>
-              <Link href="/">
+              <Link href="/" data-gtm="header_click_home">
                 <span className="sr-only">Home</span>
                 <CompanyLogo className="text-base-black hover:opacity-90" />
               </Link>
@@ -28,6 +28,7 @@ export default function Header() {
                         className="!font-normal"
                         color="dark"
                         variant="ghost"
+                        data-gtm="header_click_engineering"
                       >
                         Engineering
                       </Button>
@@ -39,6 +40,7 @@ export default function Header() {
                         className="!font-normal"
                         color="dark"
                         variant="ghost"
+                        data-gtm="header_click_design"
                       >
                         Design
                       </Button>
@@ -50,6 +52,7 @@ export default function Header() {
                         className="!font-normal"
                         color="dark"
                         variant="ghost"
+                        data-gtm="header_click_data_science"
                       >
                         Data Science
                       </Button>
@@ -61,6 +64,7 @@ export default function Header() {
                         className="!font-normal"
                         color="dark"
                         variant="ghost"
+                        data-gtm="header_click_life_style"
                       >
                         Life Style
                       </Button>
@@ -71,18 +75,33 @@ export default function Header() {
             </div>
             <div className="hidden xl:flex items-center gap-x-4">
               <Link href="/concept" passHref>
-                <Button className="!font-normal" color="dark" variant="ghost">
+                <Button
+                  className="!font-normal"
+                  color="dark"
+                  variant="ghost"
+                  data-gtm="header_click_concept"
+                >
                   Concept
                 </Button>
               </Link>
               <Link href="/contact" passHref>
-                <Button className="!font-normal" color="dark" variant="ghost">
+                <Button
+                  className="!font-normal"
+                  color="dark"
+                  variant="ghost"
+                  data-gtm="header_click_contact"
+                >
                   Contact
                 </Button>
               </Link>
               <DropdownMenu
                 trigger={
-                  <Button color="dark" variant="ghost">
+                  <Button
+                    color="dark"
+                    variant="ghost"
+                    className="pointer-events-auto"
+                    data-gtm="header_click_search"
+                  >
                     <Icon name="magnifying-glass" width={20} height={20} />
                   </Button>
                 }
@@ -95,45 +114,80 @@ export default function Header() {
             <div className="flex xl:hidden items-center gap-x-spacious">
               <DropdownMenu
                 trigger={
-                  <Button color="dark" size="icon" variant="ghost">
+                  <Button
+                    color="dark"
+                    size="icon"
+                    variant="ghost"
+                    className="pointer-events-auto"
+                    data-gtm="header_click_menu"
+                  >
                     <Icon name="inbox-stack" />
                   </Button>
                 }
               >
                 <DropdownMenuItem>
-                  <Link href={`/category/${Category.ENGINEERING}`} passHref>
+                  <Link
+                    href={`/category/${Category.ENGINEERING}`}
+                    passHref
+                    data-gtm="header_click_engineering"
+                  >
                     Engineering
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`/category/${Category.DESIGN}`} passHref>
+                  <Link
+                    href={`/category/${Category.DESIGN}`}
+                    passHref
+                    data-gtm="header_click_design"
+                  >
                     Design
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`/category/${Category.DATA_SCIENCE}`} passHref>
+                  <Link
+                    href={`/category/${Category.DATA_SCIENCE}`}
+                    passHref
+                    data-gtm="header_click_data_science"
+                  >
                     Data Science
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href={`/category/${Category.LIFE_STYLE}`} passHref>
+                  <Link
+                    href={`/category/${Category.LIFE_STYLE}`}
+                    passHref
+                    data-gtm="header_click_life_style"
+                  >
                     Life Style
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/concept" passHref>
+                  <Link
+                    href="/concept"
+                    passHref
+                    data-gtm="header_click_concept"
+                  >
                     Concept
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link href="/contact" passHref>
+                  <Link
+                    href="/contact"
+                    passHref
+                    data-gtm="header_click_contact"
+                  >
                     Contact
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenu>
               <Drawer
                 trigger={
-                  <Button color="dark" size="icon" variant="ghost">
+                  <Button
+                    color="dark"
+                    size="icon"
+                    variant="ghost"
+                    data-gtm="header_click_sidebar"
+                  >
                     <Icon name="bars-3" />
                   </Button>
                 }
