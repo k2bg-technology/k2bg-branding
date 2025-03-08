@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Avatar from '../Avatar';
+import AvatarImage from '../../assets/avatar.png';
+import BlogCardMainImage from '../../assets/blog-card-main.png';
 
 import BlogCard from '.';
 
@@ -30,11 +32,8 @@ const meta: Meta<
     excerpt:
       '記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋',
     avatar: (
-      <Avatar className="h-6 w-6">
-        <Avatar.Image
-          alt="Office"
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=2080&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        />
+      <Avatar className="h-8 w-8">
+        <Avatar.Image alt="Office" src={AvatarImage} />
       </Avatar>
     ),
     date: 'September 30, 2023',
@@ -50,10 +49,7 @@ export const Default: Story = {
       <BlogCard.Media>
         <a href="https://example.com" target="_blank" rel="noreferrer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt="Office"
-            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-          />
+          <img alt="Office" src={BlogCardMainImage} />
         </a>
       </BlogCard.Media>
       <BlogCard.Content {...args} />
@@ -67,10 +63,7 @@ export const Horizontal: Story = {
       <BlogCard.Media className="flex-none max-w-[16rem]">
         <a href="https://example.com" target="_blank" rel="noreferrer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt="Office"
-            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-          />
+          <img alt="Office" src={BlogCardMainImage} />
         </a>
       </BlogCard.Media>
       <BlogCard.Content {...args} />
@@ -92,10 +85,7 @@ export const Hero: Story = {
       <BlogCard.Media>
         <a href="https://example.com" target="_blank" rel="noreferrer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            alt="Office"
-            src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
-          />
+          <img alt="Office" src={BlogCardMainImage} />
         </a>
       </BlogCard.Media>
     </BlogCard>
