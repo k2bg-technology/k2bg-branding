@@ -25,7 +25,8 @@
     "remark-gfm": "^4.0.1",
     "ui": "workspace:*",
     "use-debounce": "^10.0.0",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
