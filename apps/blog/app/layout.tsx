@@ -34,8 +34,10 @@ export default function RootLayout({
           </div>
         </ScrollArea>
       </body>
+      {process.env.NODE_ENV === 'production' && (
       <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
-      <GoogleAdsense />
+      )}
+      {process.env.NODE_ENV === 'production' && <GoogleAdsense />}
     </html>
   );
 }
