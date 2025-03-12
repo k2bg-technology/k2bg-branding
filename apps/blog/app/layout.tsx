@@ -1,10 +1,10 @@
 import { Noto_Sans_JP } from 'next/font/google';
-import { ScrollArea } from 'ui';
 import { GoogleTagManager } from '@next/third-parties/google';
 
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 import GoogleAdsense from '../components/google-adsense/GoogleAdsense';
+import { PageScrollArea } from '../components/page-scroll-area/PageScrollArea';
 
 import './globals.css';
 
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="ja" className={notoSansJP.variable}>
       <body>
-        <ScrollArea className="max-h-dvh">
+        <PageScrollArea>
           <div className="grid grid-rows-[3rem_1fr_18.75rem] grid-cols-[1fr_calc(100%-2rem)_1fr] md:grid-cols-[1fr_46rem_1fr] xl:grid-cols-[1fr_77rem_1fr]">
             <main className="col-start-2 -col-end-2 grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-x-6 gap-y-12 py-12">
               {children}
@@ -32,10 +32,10 @@ export default function RootLayout({
             <Footer />
             <Header />
           </div>
-        </ScrollArea>
+        </PageScrollArea>
       </body>
       {process.env.NODE_ENV === 'production' && (
-      <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
+        <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
       )}
       {process.env.NODE_ENV === 'production' && <GoogleAdsense />}
     </html>

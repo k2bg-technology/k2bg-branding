@@ -39,13 +39,21 @@ type ScrollAreaProps = React.ComponentPropsWithRef<
   typeof ScrollAreaPrimitive.Root
 >;
 
-export function ScrollArea({ className, children, ...rest }: ScrollAreaProps) {
+export function ScrollArea({
+  className,
+  children,
+  ref,
+  ...rest
+}: ScrollAreaProps) {
   return (
     <ScrollAreaPrimitive.Root
       {...rest}
       className={twMerge('flex flex-col relative overflow-hidden', className)}
     >
-      <ScrollAreaPrimitive.Viewport className="flex-grow w-full rounded-[inherit]">
+      <ScrollAreaPrimitive.Viewport
+        ref={ref}
+        className="flex-grow w-full rounded-[inherit]"
+      >
         {children}
       </ScrollAreaPrimitive.Viewport>
       <ScrollBar />
