@@ -1,15 +1,44 @@
-import React from 'react';
+'use client';
+
 import Link from 'next/link';
 import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
+import { useEffect, useState } from 'react';
+import { motion, useScroll } from 'motion/react';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import Sidebar from '../sidebar/Sidebar';
 import Search from '../search/Search';
 import { Category } from '../../modules/domain/post/types';
+import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 
 export default function Header() {
+  const ref = usePageScrollAreaStore((state) => state.ref);
+
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const { scrollY } = useScroll({ container: ref ?? undefined });
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = scrollY.get();
+      setIsVisible(currentScrollY < lastScrollY || currentScrollY < 50);
+      setLastScrollY(currentScrollY);
+    };
+
+    const unsubscribe = scrollY.on('change', handleScroll);
+
+    return () => {
+      unsubscribe();
+    };
+  }, [ref, scrollY, lastScrollY]);
+
   return (
-    <header className="order-first sticky top-0 backdrop-blur-xs col-span-full grid grid-cols-[subgrid] bg-base-white/50">
+    <motion.header
+      className="order-first sticky top-0 backdrop-blur-xs col-span-full grid grid-cols-[subgrid] bg-base-white/50 drop-shadow-xs"
+      initial={{ y: 0 }}
+      animate={{ y: isVisible ? 0 : '-100%' }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="col-start-2 -col-end-2 flex place-items-center h-full">
         <div className="mx-auto w-full md:w-[45rem] xl:w-[80rem]">
           <div className="flex items-center justify-between">
@@ -197,6 +226,6 @@ export default function Header() {
           </div>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
