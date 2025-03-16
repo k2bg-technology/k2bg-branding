@@ -38,11 +38,14 @@ export default function Drawer({
           )}
         >
           <ScrollArea className="p-6 pt-14 max-h-dvh">
-            {title && (
-              <RadixDialog.Title className="text-body-r-sm leading-body-r-sm font-bold">
-                {title}
-              </RadixDialog.Title>
-            )}
+            <RadixDialog.Title
+              className={twMerge(
+                '"text-body-r-sm leading-body-r-sm font-bold"',
+                !title && 'hidden'
+              )}
+            >
+              {title}
+            </RadixDialog.Title>
             {description && (
               <RadixDialog.Description className="text-body-r-sm leading-body-r-sm">
                 {description}
