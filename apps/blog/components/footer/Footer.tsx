@@ -20,7 +20,7 @@ export default function Footer() {
             <div className="flex justify-center sm:justify-start">
               <Link href="/" data-gtm="footer_click_home">
                 <span className="sr-only">Home</span>
-                <CompanyLogo className="text-white" />
+                <CompanyLogo className="text-white hover:opacity-90" />
               </Link>
             </div>
 
