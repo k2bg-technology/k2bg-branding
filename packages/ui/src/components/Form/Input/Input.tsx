@@ -11,7 +11,7 @@ const inputVariants = cva(
   {
     variants: {
       color: {
-        dark: 'focus:border-base-black border-base-default/50 text-base-default focus:shadow-base-black/30 placeholder-base-default/50',
+        dark: 'focus:border-base-black/50 border-base-default/50 text-base-default focus:shadow-base-black/10 placeholder-base-default/50',
         light:
           'focus:border-white border-white/50 text-white focus:shadow-white/30 placeholder-white/50',
       },

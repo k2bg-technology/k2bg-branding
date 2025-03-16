@@ -6,11 +6,11 @@ import { FormProps, useFormContext } from '../Control/Context';
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
 const inputVariants = cva(
-  'appearance-none focus:outline-hidden focus:shadow-xs border rounded-md px-2 py-3 w-full text-body-r-sm leading-none',
+  'appearance-none focus:outline-hidden focus:shadow-xs border rounded-md px-2 py-3 w-full text-body-r-sm leading-body-r-sm',
   {
     variants: {
       color: {
-        dark: 'focus:border-base-black border-base-default/50 text-base-default focus:shadow-base-black/30 placeholder-base-default/50',
+        dark: 'focus:border-base-black/50 border-base-default/50 text-base-default focus:shadow-base-black/30 placeholder-base-default/50',
         light:
           'focus:border-white border-white/50 text-white focus:shadow-white/30 placeholder-white/50',
       },
