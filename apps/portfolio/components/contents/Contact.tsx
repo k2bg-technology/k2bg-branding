@@ -131,16 +131,16 @@ export function Contact({ t }: { t: TFunction }) {
             </li>
             <li className="flex relative items-center gap-normal">
               <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-10 after:h-10 flex justify-center items-center w-10 h-10">
-                <Icon name="x" width={20} height={20} />
+                <Icon name="instagram" width={20} height={20} />
               </div>
               <a
-                href="https://twitter.com/BykkLearn"
+                href="https://www.instagram.com/k2bg_graphics"
                 target="_blank"
                 rel="noreferrer"
                 className="text-body-r-sm leading-body-r-sm hover:opacity-80"
-                data-gtm="contact_click_x"
+                data-gtm="contact_click_instagram"
               >
-                {t('contact.xAccountName')}
+                {t('contact.instagramAccountName')}
               </a>
             </li>
           </ul>

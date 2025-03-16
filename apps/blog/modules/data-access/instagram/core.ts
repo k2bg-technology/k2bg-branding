@@ -1,4 +1,7 @@
-import { GRAPH_API_BASE_URI, INSTAGRAM_LONG_ACCESS_TOKEN } from './const';
+import {
+  INSTAGRAM_GRAPH_API_BASE_URL,
+  INSTAGRAM_LONG_ACCESS_TOKEN,
+} from './const';
 
 export class Core {
   private params: URLSearchParams;
@@ -19,7 +22,9 @@ export class Core {
       });
     }
 
-    const url = new URL(`${GRAPH_API_BASE_URI}/${resource}?${this.params}`);
+    const url = new URL(
+      `${INSTAGRAM_GRAPH_API_BASE_URL}/${resource}?${this.params}`
+    );
 
     return fetch(url, init);
   }

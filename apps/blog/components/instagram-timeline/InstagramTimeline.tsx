@@ -33,7 +33,7 @@ export default async function InstagramTimeline() {
             target="_blank"
             rel="noreferrer"
           >
-            <div className="relative w-[12.5rem] h-[12.5rem]">
+            <div className="relative w-[8.8125rem] h-[8.8125rem]">
               <Image
                 alt="instagram media"
                 src={

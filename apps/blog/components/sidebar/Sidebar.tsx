@@ -1,7 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
 
-import XTimeline from '../x-timeline/XTimeline';
 import InstagramTimeline from '../instagram-timeline/InstagramTimeline';
 import ProfileCard from '../profile-card/ProfileCard';
 import SideBarAd from '../google-adsense/SideBarAd';
@@ -11,7 +10,6 @@ export default function Sidebar() {
     <aside className="contents">
       <div className="grid auto-rows-max gap-spacious max-w-[18.125rem] h-full">
         <ProfileCard />
-        <XTimeline />
         <InstagramTimeline />
         <div className="self-start sticky top-[5rem]">
           {process.env.NODE_ENV === 'production' ? (

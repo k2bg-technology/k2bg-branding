@@ -1,10 +1,11 @@
 import { Core } from './core';
+import { INSTAGRAM_USER_ID } from './const';
 
 export class Fetcher extends Core {
   public async fetchUserMedia(): Promise<{
     data: { id: string }[] | undefined;
   }> {
-    return (await this.fetch('me/media')).json();
+    return (await this.fetch(`${INSTAGRAM_USER_ID}/media`)).json();
   }
 
   public async fetchMediaData(id: string): Promise<{

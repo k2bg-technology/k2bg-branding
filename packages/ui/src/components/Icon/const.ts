@@ -13,6 +13,7 @@ export const MULTI_COLOR_ICON_NAMES = [
   'circleci',
   'github',
   'x',
+  'instagram',
 ] as const;
 
 export const HERO_ICON_NAMES = [
