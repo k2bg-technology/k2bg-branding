@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { format } from 'date-fns';
 import { Button, Icon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
@@ -127,26 +128,55 @@ export default function Footer() {
 
           <div className="flex items-center justify-between">
             <p className="mt-4 text-center text-body-r-sm text-white lg:mt-0 lg:text-right">
-              Copyright &copy; 2022. All rights reserved.
+              {`Copyright © ${format(
+                new Date(),
+                'yyyy'
+              )} K2.B.G.Technology All rights reserved.`}
             </p>
 
             <div className="flex justify-center sm:justify-start">
               <ul className="flex justify-center gap-5 h-full">
                 <li
                   className="flex relative items-center gap-5"
-                  data-gtm="footer_click_x"
+                  data-gtm="footer_click_instagram"
                 >
-                  <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
-                    <Icon name="x" color="var(--color-base-white)" />
-                  </div>
+                  <Button
+                    variant="ghost"
+                    color="light"
+                    size="icon"
+                    type="button"
+                    asChild
+                  >
+                    <a
+                      href="https://www.instagram.com/k2bg_graphics"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="instagram"
+                    >
+                      <Icon name="instagram" color="var(--color-base-white)" />
+                    </a>
+                  </Button>
                 </li>
                 <li
                   className="flex relative items-center gap-5"
                   data-gtm="footer_click_github"
                 >
-                  <div className="after:content-[''] after:block after:absolute after:top-0 after:left-0 after:-z-10 after:rounded-full after:bg-white after:w-16 after:h-16 flex justify-center items-center w-16 h-16">
-                    <Icon name="github" color="var(--color-base-white)" />
-                  </div>
+                  <Button
+                    variant="ghost"
+                    color="light"
+                    size="icon"
+                    type="button"
+                    asChild
+                  >
+                    <a
+                      href="https://github.com/stranger1989"
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label="github"
+                    >
+                      <Icon name="github" color="var(--color-base-white)" />
+                    </a>
+                  </Button>
                 </li>
               </ul>
             </div>
