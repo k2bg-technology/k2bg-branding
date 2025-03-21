@@ -1,9 +1,14 @@
 import { Avatar, BlogCard } from 'ui';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 import Sidebar from '../../components/sidebar/Sidebar';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import * as Prisma from '../../modules/data-access/prisma';
+
+export const metadata: Metadata = {
+  title: 'K2.B.G Technology Blog',
+};
 
 export default async function Page() {
   const postRepository = new Prisma.Post.Repository();

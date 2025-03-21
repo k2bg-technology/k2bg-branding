@@ -1,9 +1,15 @@
+import { Metadata } from 'next';
+
 import { Markdown } from '../../../../components/markdown';
 import Sidebar from '../../../../components/sidebar/Sidebar';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import * as Prisma from '../../../../modules/data-access/prisma';
 
 type Params = Promise<{ id: string; slug: string }>;
+
+interface Props {
+  params: Params;
+}
 
 export async function generateStaticParams() {
   const postRepository = new Prisma.Post.Repository();
@@ -15,7 +21,18 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({ params }: { params: Params }) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+
+  const postRepository = new Prisma.Post.Repository();
+  const article = await postRepository.getPost(id);
+
+  return {
+    title: article.title,
+  };
+}
+
+export default async function Page({ params }: Props) {
   const { id } = await params;
 
   const postRepository = new Prisma.Post.Repository();

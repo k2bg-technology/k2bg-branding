@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { Metadata } from 'next';
 
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
@@ -12,6 +13,11 @@ type SearchParams = Promise<{
   page?: string;
 }>;
 
+interface Props {
+  params: Params;
+  searchParams: SearchParams;
+}
+
 export async function generateStaticParams() {
   return [
     Category.ENGINEERING,
@@ -24,13 +30,15 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({
-  params,
-  searchParams,
-}: {
-  params: Params;
-  searchParams: SearchParams;
-}) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { category } = await params;
+
+  return {
+    title: category,
+  };
+}
+
+export default async function Page({ params, searchParams }: Props) {
   const { category } = await params;
 
   const { page = '1' } = await searchParams;

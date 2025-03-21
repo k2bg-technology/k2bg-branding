@@ -1,8 +1,13 @@
 import { Button, Form } from 'ui';
+import { Metadata } from 'next';
 
 import Sidebar from '../../components/sidebar/Sidebar';
 
 const FORMSPREE_FORM_ACTION_URL = process.env.FORMSPREE_FORM_ACTION_URL ?? '';
+
+export const metadata: Metadata = {
+  title: 'お問い合わせページ',
+};
 
 export default function Page() {
   return (

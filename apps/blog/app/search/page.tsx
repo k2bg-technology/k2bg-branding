@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { Metadata } from 'next';
 
 import * as Prisma from '../../modules/data-access/prisma';
 import { Articles } from '../../components/articles/Articles';
@@ -10,6 +11,10 @@ type SearchParams = Promise<{
   page?: string;
   query?: string;
 }>;
+
+export const metadata: Metadata = {
+  title: '検索ページ',
+};
 
 export default async function Page({
   searchParams,
