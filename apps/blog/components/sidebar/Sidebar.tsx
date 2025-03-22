@@ -17,7 +17,9 @@ export default function Sidebar() {
     <aside className="contents">
       <div className="grid auto-rows-max gap-spacious max-w-[18.125rem] h-full">
         <ProfileCard />
-        <InstagramTimeline />
+        <SidebarItem title="Instagram">
+          <InstagramTimeline />
+        </SidebarItem>
         <div className="self-start sticky top-[3rem] flex flex-col gap-6">
           <SidebarItem title="SNSシェア">
             <div className="flex flex-row gap-normal">
