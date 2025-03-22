@@ -16,7 +16,9 @@ export default function Sidebar() {
   return (
     <aside className="contents">
       <div className="grid auto-rows-max gap-spacious max-w-[18.125rem] h-full">
-        <ProfileCard />
+        <SidebarItem title="プロフィール">
+          <ProfileCard />
+        </SidebarItem>
         <SidebarItem title="Instagram">
           <InstagramTimeline />
         </SidebarItem>
