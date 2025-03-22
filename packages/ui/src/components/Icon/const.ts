@@ -14,6 +14,10 @@ export const MULTI_COLOR_ICON_NAMES = [
   'github',
   'x',
   'instagram',
+  'line',
+  'facebook',
+  'hatena',
+  'pinterest',
 ] as const;
 
 export const HERO_ICON_NAMES = [
