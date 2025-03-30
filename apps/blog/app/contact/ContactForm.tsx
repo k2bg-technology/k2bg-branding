@@ -1,0 +1,148 @@
+'use client';
+
+import { Button, Form } from 'ui';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+
+import {
+  Contact,
+  contactSchema,
+} from '../../modules/interfaces/contact/validator';
+
+export default function ContactForm() {
+  const defaultValues = {
+    name: '',
+    email: '',
+    message: '',
+  };
+
+  const mutation = useMutation({
+    mutationKey: ['contact'],
+    mutationFn: async (data: Contact) => {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(null);
+        }, 2000);
+      });
+
+      // eslint-disable-next-line no-alert
+      alert(
+        `お名前: ${data.name}\nEメール: ${data.email}\nメッセージ: ${data.message}`
+      );
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(contactSchema),
+    defaultValues,
+    mode: 'onBlur',
+  });
+
+  return (
+    <form
+      noValidate
+      className="flex flex-col gap-spacious h-full md:gap-spacious"
+      onSubmit={handleSubmit((data) => mutation.mutate(data))}
+    >
+      <div className="flex flex-col gap-6 md:flex-row">
+        <div className="flex flex-col gap-2 w-full">
+          <Form.Control>
+            <Form.Label
+              className="text-body-r-md leading-body-r-md text-base-black font-bold"
+              htmlFor="name"
+            >
+              お名前
+            </Form.Label>
+            <Form.Input
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...register('name')}
+              type="text"
+              name="name"
+              id="name"
+              placeholder="お名前"
+              required
+              error={!!errors.name}
+            />
+            {errors.name?.message && (
+              <Form.HelperText error>{errors.name?.message}</Form.HelperText>
+            )}
+          </Form.Control>
+        </div>
+        <div className="flex flex-col gap-2 w-full">
+          <Form.Control>
+            <Form.Label
+              className="text-body-r-md leading-body-r-md text-base-black font-bold"
+              htmlFor="email"
+            >
+              Eメール
+            </Form.Label>
+            <Form.Input
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              {...register('email')}
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Eメール"
+              required
+              error={!!errors.email}
+            />
+            {errors.email?.message && (
+              <Form.HelperText error>{errors.email?.message}</Form.HelperText>
+            )}
+          </Form.Control>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 w-full">
+        <Form.Control>
+          <Form.Label
+            className="text-body-r-md leading-body-r-md text-base-black font-bold"
+            htmlFor="message"
+          >
+            メッセージ
+          </Form.Label>
+          <Form.Textarea
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            {...register('message')}
+            name="message"
+            id="message"
+            rows={4}
+            placeholder="メッセージ"
+            required
+            error={!!errors.message}
+          />
+          {errors.message?.message && (
+            <Form.HelperText error>{errors.message?.message}</Form.HelperText>
+          )}
+        </Form.Control>
+      </div>
+      <ul className="flex flex-col gap-spacious md:flex-row">
+        <li>
+          <Button
+            type="submit"
+            color="dark"
+            variant="outline"
+            disabled={mutation.isPending}
+          >
+            送信
+          </Button>
+        </li>
+        <li>
+          <Button
+            type="reset"
+            color="dark"
+            variant="outline"
+            onClick={() => reset()}
+          >
+            リセット
+          </Button>
+        </li>
+      </ul>
+    </form>
+  );
+}
