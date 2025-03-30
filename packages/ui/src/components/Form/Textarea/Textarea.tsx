@@ -38,9 +38,14 @@ interface Props
     FormProps {}
 
 export default function Textarea(props: Props) {
-  const { className, ref, ...rest } = props;
+  const { className, ref, ...formProps } = props;
 
-  const { color = 'dark', error, disabled } = useFormContext(rest);
+  const {
+    color = 'dark',
+    error,
+    disabled,
+    ...rest
+  } = useFormContext(formProps);
 
   return (
     <textarea

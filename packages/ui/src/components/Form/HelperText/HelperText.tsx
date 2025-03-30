@@ -27,9 +27,14 @@ export type Props = Omit<React.ComponentPropsWithoutRef<'span'>, 'color'> &
   FormProps;
 
 export function HelperText(props: React.PropsWithChildren<Props>) {
-  const { children, className, ...rest } = props;
+  const { children, className, ...formProps } = props;
 
-  const { color = 'dark', error, disabled } = useFormContext(rest);
+  const {
+    color = 'dark',
+    error,
+    disabled,
+    ...rest
+  } = useFormContext(formProps);
 
   return (
     <span

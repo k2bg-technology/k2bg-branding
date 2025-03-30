@@ -30,9 +30,14 @@ export interface Props
     FormProps {}
 
 export function Label(props: Props) {
-  const { children, className, ...rest } = props;
+  const { children, className, ...formProps } = props;
 
-  const { color = 'dark', error, disabled } = useFormContext(rest);
+  const {
+    color = 'dark',
+    error,
+    disabled,
+    ...rest
+  } = useFormContext(formProps);
 
   return (
     <label

@@ -55,9 +55,9 @@ export default function Input(props: Props) {
     className,
     startAdornment,
     endAdornment,
-    ...rest
+    ...formProps
   } = props;
-  const { color, error, disabled } = useFormContext(rest);
+  const { color, error, disabled, ...rest } = useFormContext(formProps);
 
   return (
     <div className={twMerge('relative', disabled && '[&_i]:bg-neutral-300')}>
