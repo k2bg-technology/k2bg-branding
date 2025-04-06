@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お問合せいただきありがとうございます、{{ name }} 様！</title>
+  <style type="text/css">
+    /* Reset styles */
+    body, p, table, td, div {
+      margin: 0;
+      padding: 0;
+      font-family: 'Menlo', 'YuGothic', "Hiragino Kaku Gothic ProN", "Hiragino Sans", 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
+      line-height: 1.6;
+    }
+    body {
+      width: 100% !important;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    img {
+      border: 0;
+      height: auto;
+      line-height: 100%;
+      outline: none;
+      text-decoration: none;
+      -ms-interpolation-mode: bicubic;
+    }
+    table {
+      border-collapse: collapse !important;
+    }
+    /* Client-specific styles */
+    .ReadMsgBody {
+      width: 100%;
+    }
+    .ExternalClass {
+      width: 100%;
+    }
+    .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+      line-height: 100%;
+    }
+    /* iOS blue links */
+    a[x-apple-data-detectors] {
+      color: inherit !important;
+      text-decoration: none !important;
+      font-size: inherit !important;
+      font-family: inherit !important;
+      font-weight: inherit !important;
+      line-height: inherit !important;
+    }
+    /* Mobile styles */
+    @media only screen and (max-width: 600px) {
+      .email-content {
+        width: 100% !important;
+      }
+      .mobile-padding {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+      }
+      .mobile-stack {
+        display: block !important;
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body style="margin: 0; padding: 0; background-color: #f4f4f4;">
+  <!-- Preheader text (hidden) -->
+  <div style="display: none; max-height: 0px; overflow: hidden;">
+    お問合せいただきありがとうございます、{{ name }} 様！
+  </div>
+
+  <!-- Email container -->
+  <table border="0" cellpadding="0" cellspacing="0" width="100%" style="min-width: 100%;">
+    <tr>
+      <td align="center" valign="top" style="padding: 20px 0;">
+        <!-- Email content -->
+        <table border="0" cellpadding="0" cellspacing="0" width="600" class="email-content" style="background-color: #ffffff; border-radius: 5px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
+          <!-- Header -->
+          <tr>
+            <td align="center" valign="top" style="padding: 10px 0; background-color: #474a4d; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+              <img src="https://res.cloudinary.com/dcrdmhsa6/image/upload/v1743899267/CampanyLogo_ttbb0s.png" width="177" height="24" alt="k2bg technology" />
+            </td>
+          </tr>
+
+          <!-- Main content -->
+          <tr>
+            <td align="left" valign="top" class="mobile-padding" style="padding: 30px 40px;">
+              <h1 style="color: #333333; font-size: 24px; margin: 0 0 20px 0;">お問合せいただきありがとうございます、{{ name }} 様！</h1>
+              <p style="color: #666666; font-size: 16px; margin: 0 0 20px 0;">
+                お問合せ内容
+              </p>
+              <p style="color: #666666; font-size: 16px; margin: 0 0 20px 0;">
+                {{ message }}
+              </p>
+
+              <ul style="color: #666666; font-size: 12px; margin: 20px 0 20px 0;">
+              <li>
+                返信には数日かかる場合がございますが、極力早急に返信するように致します。
+              </li>
+              <li>
+                誠に恐れ入りますが、平日は9:00〜20:00以外でのご対応となります。
+              </li>
+              <li>
+                案件によってはお受けするのが難しい場合もございます。
+              </li>
+              </ul>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td align="center" valign="top" style="padding: 20px 40px; background-color: #f8f8f8; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; border-top: 1px solid #eeeeee;">
+              <p style="color: #888888; font-size: 14px; margin: 0 0 10px 0;">
+                © {{ year }} K2.B.G.Technology All rights reserved.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
