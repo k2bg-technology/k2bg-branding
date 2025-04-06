@@ -5,10 +5,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 
-import {
-  Contact,
-  contactSchema,
-} from '../../modules/interfaces/contact/validator';
+import { contactSchema } from '../../modules/interfaces/contact/validator';
+
+import { contactFormAction } from './contactFormAction';
 
 export default function ContactForm() {
   const defaultValues = {
@@ -19,17 +18,10 @@ export default function ContactForm() {
 
   const mutation = useMutation({
     mutationKey: ['contact'],
-    mutationFn: async (data: Contact) => {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(null);
-        }, 2000);
-      });
-
+    mutationFn: contactFormAction,
+    onError: () => {
       // eslint-disable-next-line no-alert
-      alert(
-        `お名前: ${data.name}\nEメール: ${data.email}\nメッセージ: ${data.message}`
-      );
+      alert('送信に失敗しました。もう一度お試しください。');
     },
   });
 
