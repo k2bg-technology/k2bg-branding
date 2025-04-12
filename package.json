@@ -10,16 +10,22 @@
     "build-storybook": "turbo run build-storybook",
     "chromatic": "turbo run chromatic",
     "generate:style": "turbo run generate:style",
-    "generate:component": "turbo run generate:component"
+    "generate:component": "turbo run generate:component",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
     "@types/webpack-env": "^1.18.4",
+    "@vitejs/plugin-react-swc": "^3.8.1",
     "eslint": "^7.32.0",
     "eslint-config-custom": "workspace:*",
+    "jsdom": "^26.0.0",
     "prettier": "^2.5.1",
     "turbo": "latest",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vite": "^6.2.5",
+    "vitest": "^3.1.1"
   },
   "packageManager": "pnpm@8.6.10",
   "name": "k2bg-branding"

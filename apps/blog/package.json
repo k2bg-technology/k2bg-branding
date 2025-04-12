@@ -6,7 +6,9 @@
     "dev": "next dev --turbo",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.12.0",
