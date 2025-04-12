@@ -41,6 +41,10 @@ module.exports = {
         assert: 'either',
       },
     ],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { packageDir: ['.', './apps/blog', './apps/portfolio'] },
+    ],
   },
   ignorePatterns: ['.eslintrc.js'],
 };
