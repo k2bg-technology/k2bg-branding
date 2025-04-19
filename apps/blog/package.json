@@ -52,6 +52,7 @@
     "postcss-preset-env": "^9.1.1",
     "tailwind-config": "workspace:*",
     "tailwindcss": "^4.0.9",
-    "tsconfig": "workspace:*"
+    "tsconfig": "workspace:*",
+    "test-utils": "workspace:*"
   }
 }

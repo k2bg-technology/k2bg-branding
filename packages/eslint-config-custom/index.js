@@ -43,7 +43,14 @@ module.exports = {
     ],
     'import/no-extraneous-dependencies': [
       'error',
-      { packageDir: ['.', './apps/blog', './apps/portfolio'] },
+      {
+        packageDir: [
+          '.',
+          './apps/blog',
+          './apps/portfolio',
+          './packages/test-utils',
+        ],
+      },
     ],
   },
   ignorePatterns: ['.eslintrc.js'],

@@ -39,3 +39,6 @@ yarn-error.log*
 storybook-static
 build-storybook.log
 chromatic.config.json
+
+# vi test
+dist

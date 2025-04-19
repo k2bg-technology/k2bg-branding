@@ -1,15 +1,19 @@
-/// <reference types="vitest/config" />
-/// <reference types="vite/client" />
-
+import { defineConfig } from 'vitest/config';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
 import react from '@vitejs/plugin-react-swc';
-import { defineConfig } from 'vite';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
+const setupFilePath = join(__dirname, 'setupTests');
 
 export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
     environment: 'jsdom',
-    css: true,
+    setupFiles: [setupFilePath],
+    css: false,
     include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     coverage: {
       reporter: ['text', 'json', 'html'],
