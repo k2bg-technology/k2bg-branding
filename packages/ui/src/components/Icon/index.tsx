@@ -1,33 +1,9 @@
 'use client';
 
-import { CSSProperties } from 'react';
+import { CSSProperties, memo } from 'react';
 
 import { ICON_NAMES } from './const';
 import styles from './index.module.css';
-
-const importAll = (r: __WebpackModuleApi.RequireContext) =>
-  r
-    .keys()
-    .map((key) => [key, r(key)])
-    .reduce(
-      (prev, [key, image]) => ({
-        ...prev,
-        [key]: image,
-      }),
-      {} as Record<string, string | { default: { src: string } }>
-    );
-
-const multiColorIcons = importAll(
-  require.context('./multi-color-icons', false, /\.(svg)$/)
-);
-
-const heroOutlineIcons = importAll(
-  require.context('./hero-icons/outline', false, /\.(svg)$/)
-);
-
-const heroSolidIcons = importAll(
-  require.context('./hero-icons/solid', false, /\.(svg)$/)
-);
 
 interface IconProps extends React.HTMLAttributes<HTMLElement> {
   name: (typeof ICON_NAMES)[number];
@@ -38,7 +14,7 @@ interface IconProps extends React.HTMLAttributes<HTMLElement> {
   originalColor?: boolean;
 }
 
-export function Icon(props: IconProps) {
+function IconInner(props: IconProps) {
   const {
     name,
     appearance = 'outline',
@@ -49,6 +25,30 @@ export function Icon(props: IconProps) {
     className,
     ...rest
   } = props;
+
+  const importAll = (r: __WebpackModuleApi.RequireContext) =>
+    r
+      .keys()
+      .map((key) => [key, r(key)])
+      .reduce(
+        (prev, [key, image]) => ({
+          ...prev,
+          [key]: image,
+        }),
+        {} as Record<string, string | { default: { src: string } }>
+      );
+
+  const multiColorIcons = importAll(
+    require.context('./multi-color-icons', false, /\.(svg)$/)
+  );
+
+  const heroOutlineIcons = importAll(
+    require.context('./hero-icons/outline', false, /\.(svg)$/)
+  );
+
+  const heroSolidIcons = importAll(
+    require.context('./hero-icons/solid', false, /\.(svg)$/)
+  );
 
   const iconUrl = {
     ...multiColorIcons,
@@ -73,3 +73,5 @@ export function Icon(props: IconProps) {
     />
   );
 }
+
+export const Icon = memo(IconInner);
