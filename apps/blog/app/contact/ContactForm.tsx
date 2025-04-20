@@ -151,7 +151,7 @@ export default function ContactForm() {
             type="submit"
             color="dark"
             variant="outline"
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || !token}
           >
             送信
           </Button>
