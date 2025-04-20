@@ -49,6 +49,7 @@ module.exports = {
           './apps/blog',
           './apps/portfolio',
           './packages/test-utils',
+          './packages/ui',
         ],
       },
     ],
