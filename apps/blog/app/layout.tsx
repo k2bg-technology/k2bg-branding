@@ -6,6 +6,7 @@ import Footer from '../components/footer/Footer';
 import GoogleAdsense from '../components/google-adsense/GoogleAdsense';
 import { PageScrollArea } from '../components/page-scroll-area/PageScrollArea';
 import ReactQueryClientProvider from '../components/react-query-client-provider/ReactQueryClientProvider';
+import { Toaster } from '../components/toaster/Toaster';
 
 import './globals.css';
 
@@ -34,6 +35,7 @@ export default function RootLayout({
               <Footer />
               <Header />
             </div>
+            <Toaster />
           </PageScrollArea>
         </ReactQueryClientProvider>
       </body>
