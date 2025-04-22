@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Form } from 'ui';
+import { Button, Form, useToast } from 'ui';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -14,6 +14,7 @@ import { contactFormAction } from './contactFormAction';
 export default function ContactForm() {
   const captchaRef = useRef<HCaptcha>(null);
   const [token, setToken] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const defaultValues = {
     name: '',
@@ -24,9 +25,15 @@ export default function ContactForm() {
   const mutation = useMutation({
     mutationKey: ['contact'],
     mutationFn: contactFormAction,
+    onSuccess: () => {
+      toast.success('メールを送信しました', {
+        closeButton: true,
+      });
+    },
     onError: () => {
-      // eslint-disable-next-line no-alert
-      alert('送信に失敗しました。もう一度お試しください。');
+      toast.error('送信に失敗しました。もう一度お試しください', {
+        closeButton: true,
+      });
     },
   });
 
