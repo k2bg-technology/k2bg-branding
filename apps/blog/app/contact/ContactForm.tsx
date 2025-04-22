@@ -22,6 +22,17 @@ export default function ContactForm() {
     message: '',
   };
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(contactSchema),
+    defaultValues,
+    mode: 'onBlur',
+  });
+
   const mutation = useMutation({
     mutationKey: ['contact'],
     mutationFn: contactFormAction,
@@ -35,17 +46,14 @@ export default function ContactForm() {
         closeButton: true,
       });
     },
-  });
+    onSettled: () => {
+      if (captchaRef.current) {
+        setToken(null);
+        captchaRef.current.resetCaptcha();
+      }
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(contactSchema),
-    defaultValues,
-    mode: 'onBlur',
+      reset();
+    },
   });
 
   function onExpire() {
