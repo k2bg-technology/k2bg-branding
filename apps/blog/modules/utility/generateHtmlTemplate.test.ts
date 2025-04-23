@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
@@ -11,19 +10,11 @@ vi.mock('fs', () => ({
   },
 }));
 
-vi.mock('path', () => ({
-  default: {
-    join: vi.fn((cwd, filePath) => `${cwd}/${filePath}`),
-  },
-}));
-
 describe('generateHtmlTemplate', () => {
   const mockFilePath = '/path/to/template.html';
-  const mockCwd = '/mock/cwd';
 
   beforeEach(() => {
     vi.resetAllMocks();
-    vi.spyOn(process, 'cwd').mockReturnValue(mockCwd);
   });
 
   afterEach(() => {
@@ -41,12 +32,7 @@ describe('generateHtmlTemplate', () => {
 
     const result = generateHtmlTemplate(mockFilePath, context);
 
-    expect(process.cwd).toHaveBeenCalled();
-    expect(path.join).toHaveBeenCalledWith(mockCwd, mockFilePath);
-    expect(fs.readFileSync).toHaveBeenCalledWith(
-      `${mockCwd}/${mockFilePath}`,
-      'utf-8'
-    );
+    expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, 'utf-8');
     expect(result).toBe('<h1>Hello World!</h1><p>Welcome to our website</p>');
   });
 
@@ -56,10 +42,7 @@ describe('generateHtmlTemplate', () => {
 
     const result = generateHtmlTemplate(mockFilePath, {});
 
-    expect(fs.readFileSync).toHaveBeenCalledWith(
-      `${mockCwd}/${mockFilePath}`,
-      'utf-8'
-    );
+    expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, 'utf-8');
     expect(result).toBe('<div>Static content</div>');
   });
 
@@ -76,10 +59,6 @@ describe('generateHtmlTemplate', () => {
 
     const result = generateHtmlTemplate(mockFilePath, context);
 
-    expect(fs.readFileSync).toHaveBeenCalledWith(
-      `${mockCwd}/${mockFilePath}`,
-      'utf-8'
-    );
     expect(result).toBe('<div>John Doe - Admin</div>');
   });
 

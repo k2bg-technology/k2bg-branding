@@ -1,3 +1,5 @@
+import path from 'path';
+
 import { format } from 'date-fns';
 
 import * as Domain from '../../domain';
@@ -11,7 +13,7 @@ export class SendEmail {
 
   async execute(visitor: Domain.Contact.Visitor) {
     const emailBody = generateHtmlTemplate(
-      'assets/mail-templates/contact.hbs',
+      path.join(process.cwd(), 'app', '_mail-templates', 'contact.hbs'),
       {
         name: visitor.name,
         message: visitor.message,
