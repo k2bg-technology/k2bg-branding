@@ -4,21 +4,28 @@ import { Core } from './core';
 
 export class Repository extends Core implements Domain.Image.Repository {
   // eslint-disable-next-line class-methods-use-this
-  getOptimizedImageUrl(id: string) {
+  getOptimizedImageUrl(id: string, version?: string) {
     return this.getImageUrl(id, {
       fetch_format: 'auto',
       quality: 'auto',
+      version,
     });
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getPlaceholderImageUrl(id: string) {
+  getPlaceholderImageUrl(id: string, version?: string) {
     return this.getImageUrl(id, {
       fetch_format: 'auto',
       quality: 'auto',
       effect: 'blur:1000',
       width: '100',
+      version,
     });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  async fetchImageVersion(publicId: string) {
+    return this.fetchVersion(publicId);
   }
 
   // eslint-disable-next-line class-methods-use-this
