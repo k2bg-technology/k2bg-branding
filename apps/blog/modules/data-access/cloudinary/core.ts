@@ -72,10 +72,10 @@ export class Core {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  protected async fetchVersion(publicId: string): Promise<string> {
+  protected async fetchVersion(publicId: string) {
     const { version } = await cloudinary.api.resource(publicId);
 
-    return version;
+    return String(version);
   }
 
   // eslint-disable-next-line class-methods-use-this
