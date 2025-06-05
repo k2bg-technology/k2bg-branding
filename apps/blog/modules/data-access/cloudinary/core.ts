@@ -50,7 +50,7 @@ export class Core {
     publicId: string,
     options: TransformationOptions & ConfigAndUrlOptions
   ) {
-    const { fetch_format, quality, effect, width } = options;
+    const { fetch_format, quality, effect, width, version } = options;
 
     const transformations =
       [
@@ -67,7 +67,15 @@ export class Core {
       deliveryType: 'upload',
       transformations,
       publicIdFullPath: publicId,
+      ...(version && { version: `v${version}` }),
     });
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  protected async fetchVersion(publicId: string) {
+    const { version } = await cloudinary.api.resource(publicId);
+
+    return String(version);
   }
 
   // eslint-disable-next-line class-methods-use-this
