@@ -1,17 +1,40 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import React from 'react';
 import Search from './Search';
+
+// Mock component prop types
+interface MockLabelProps {
+  children: React.ReactNode;
+  htmlFor?: string;
+  className?: string;
+}
+
+interface MockInputProps {
+  id?: string;
+  type?: string;
+  placeholder?: string;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  defaultValue?: string;
+  startAdornment?: React.ReactNode;
+}
+
+interface MockIconProps {
+  name: string;
+  width?: number;
+  height?: number;
+}
 
 // Mock the Icon component to avoid require.context issues
 vi.mock('ui', () => ({
   Form: {
-    Label: ({ children, htmlFor, className }: any) => (
+    Label: ({ children, htmlFor, className }: MockLabelProps) => (
       <label htmlFor={htmlFor} className={className}>
         {children}
       </label>
     ),
-    Input: ({ id, type, placeholder, onChange, defaultValue, startAdornment }: any) => (
+    Input: ({ id, type, placeholder, onChange, defaultValue, startAdornment }: MockInputProps) => (
       <div>
         {startAdornment}
         <input
@@ -24,7 +47,7 @@ vi.mock('ui', () => ({
       </div>
     ),
   },
-  Icon: ({ name, width, height }: any) => (
+  Icon: ({ name, width, height }: MockIconProps) => (
     <span data-testid={`icon-${name}`} data-width={width} data-height={height} />
   ),
 }));
