@@ -20,6 +20,7 @@ pnpm test         # Run tests across all packages
 pnpm test:watch   # Run tests in watch mode
 pnpm lint         # Lint all apps and packages
 pnpm format       # Format code with Prettier
+pnpm start        # Start production builds
 ```
 
 ### App-specific Development
@@ -36,9 +37,11 @@ pnpm dev --filter=portfolio
 ### Component Development
 
 ```bash
-pnpm storybook         # Start Storybook for UI package
-pnpm build-storybook   # Build Storybook
-pnpm chromatic         # Visual regression testing
+pnpm storybook             # Start Storybook for UI package
+pnpm build-storybook       # Build Storybook
+pnpm chromatic             # Visual regression testing
+pnpm generate:component    # Generate new component scaffolding
+pnpm generate:style        # Generate style files
 ```
 
 ## Architecture
@@ -80,13 +83,16 @@ npx prisma studio      # Open database browser
 Critical environment variables (see `turbo.json` for complete list):
 
 - `NOTION_TOKEN` - Notion API access
-- `CLOUDINARY_*` - Image management
-- `SEND_GRID_API_KEY` - Email service
+- `NOTION_*_DATABASE_ID` - Database IDs for different content types
+- `CLOUDINARY_*` - Image management (cloud name, API key/secret)
+- `SEND_GRID_API_KEY` - Email service for contact forms
+- `NEXT_PUBLIC_H_CAPTCHA_SITE_KEY` / `H_CAPTCHA_SECRET` - CAPTCHA verification
+- `INSTAGRAM_LONG_ACCESS_TOKEN` - Instagram integration
 - Database connection strings for Prisma
 
 ## Testing
 
-The project uses **Vitest** for testing. Test files should be co-located with components using `.test.tsx` extension.
+The project uses **Vitest** for testing. Test files should be co-located with components using `.test.tsx` or `.test.ts` extension.
 
 ```bash
 cd apps/blog
@@ -112,6 +118,8 @@ pnpm test:watch  # Watch mode
 ## Development Notes
 
 - Blog app redirects root (`/`) to `/blog` via Next.js config
+- Blog app uses `--turbo` flag for faster development builds
+- Blog build process includes automatic Prisma client generation
 - Portfolio app supports automatic language detection
 - All packages are 100% TypeScript
 - Use pnpm for package management (configured as package manager)
