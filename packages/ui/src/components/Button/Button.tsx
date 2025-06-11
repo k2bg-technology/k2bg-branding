@@ -121,7 +121,7 @@ const buttonVariants = cva(
       {
         variant: 'ghost',
         color: 'info',
-        class: 'text-info hover:bg-info hover:text-info/10',
+        class: 'text-info hover:bg-info/10',
       },
       {
         variant: 'default',
