@@ -1,0 +1,177 @@
+name: ❓ Question
+description: Ask a question about the project
+title: '[Question]: '
+labels: ['question', 'needs-triage']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your question! We're here to help. Please provide as much context as possible so we can give you the best answer.
+
+  - type: checkboxes
+    id: preliminary
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm you have completed these steps
+      options:
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: I have checked the documentation (README, CLAUDE.md)
+          required: true
+        - label: I have tried to find the answer myself
+          required: true
+
+  - type: dropdown
+    id: question-category
+    attributes:
+      label: Question Category
+      description: What category does your question fall into?
+      options:
+        - Setup/Installation
+        - Development workflow
+        - Architecture/Design patterns
+        - Configuration
+        - Deployment
+        - Troubleshooting
+        - Best practices
+        - Feature usage
+        - API integration
+        - Performance optimization
+        - Testing
+        - Contributing
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: related-app
+    attributes:
+      label: Related Application
+      description: Which application or package is your question about?
+      options:
+        - Blog app (apps/blog/)
+        - Portfolio app (apps/portfolio/)
+        - UI package (packages/ui/)
+        - Shared packages
+        - Build/Configuration (Turborepo, etc.)
+        - General project structure
+        - All/Multiple applications
+        - Not application-specific
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your Question
+      description: What would you like to know?
+      placeholder: Ask your question clearly and concisely
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide context about your situation
+      placeholder: |
+        What are you trying to accomplish?
+        - Your goal or use case
+        - What you've already tried
+        - Any constraints or requirements
+        - Your level of experience with the technologies
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-approach
+    attributes:
+      label: Current Approach
+      description: What have you tried so far?
+      placeholder: |
+        Describe your current approach or attempts:
+        - Code you've written
+        - Solutions you've tried
+        - Resources you've consulted
+        - Errors you've encountered
+
+  - type: textarea
+    id: code-example
+    attributes:
+      label: Code Example
+      description: Include relevant code if applicable
+      placeholder: |
+        ```typescript
+        // Your code here
+        ```
+      render: typescript
+
+  - type: textarea
+    id: expected-outcome
+    attributes:
+      label: Expected Outcome
+      description: What outcome are you hoping to achieve?
+      placeholder: Describe what you want to happen or what result you're looking for
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: Urgency
+      description: How urgent is this question?
+      options:
+        - Low (when you have time)
+        - Medium (would help with current work)
+        - High (blocking current progress)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: technical-details
+    attributes:
+      label: Technical Context
+      description: What technical aspects are relevant to your question?
+      options:
+        - label: TypeScript/JavaScript
+        - label: Next.js framework
+        - label: React components
+        - label: Notion API integration
+        - label: Prisma/Database
+        - label: Cloudinary integration
+        - label: Email/SendGrid
+        - label: Internationalization (i18n)
+        - label: Build/Deployment
+        - label: Testing
+        - label: Performance
+        - label: Accessibility
+        - label: SEO
+
+  - type: input
+    id: environment-version
+    attributes:
+      label: Environment Details
+      description: Relevant version information
+      placeholder: e.g., Node.js v20.10.0, Next.js 14.0.4, TypeScript 5.3.0
+
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other relevant details
+      placeholder: |
+        Any other information that might be helpful:
+        - Links to relevant documentation
+        - Screenshots or examples
+        - Error messages
+        - Environment details
+
+  - type: checkboxes
+    id: follow-up
+    attributes:
+      label: Follow-up
+      description: How can we help beyond answering your question?
+      options:
+        - label: I'd like help implementing the solution
+        - label: I can contribute documentation if this is a common question
+        - label: I can help test any suggested solutions
+        - label: I'd like to understand the reasoning behind the answer

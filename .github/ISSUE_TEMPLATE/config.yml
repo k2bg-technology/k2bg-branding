@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/stranger1989/k2bg-branding/discussions
+    about: Ask questions, share ideas, and discuss the project with the community
+  - name: 🐛 Security Issues
+    url: https://github.com/stranger1989/k2bg-branding/security/advisories/new
+    about: Report security vulnerabilities privately
+  - name: 📖 Documentation
+    url: https://github.com/stranger1989/k2bg-branding/blob/main/CLAUDE.md
+    about: Read the project documentation and development guidelines

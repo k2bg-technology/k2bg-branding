@@ -1,0 +1,223 @@
+name: ✨ Feature Request
+description: Suggest a new feature or enhancement
+title: '[Feature]: '
+labels: ['enhancement', 'needs-triage']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature! Please provide as much detail as possible to help us understand and evaluate your request.
+
+  - type: checkboxes
+    id: preliminary
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm you have completed these steps
+      options:
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: This feature doesn't already exist
+          required: true
+        - label: This aligns with the project's goals
+          required: true
+
+  - type: dropdown
+    id: target-app
+    attributes:
+      label: Target Application
+      description: Which application would this feature be for?
+      options:
+        - Blog app (apps/blog/)
+        - Portfolio app (apps/portfolio/)
+        - UI package (packages/ui/)
+        - Shared packages
+        - Build/Configuration
+        - Multiple applications
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: feature-type
+    attributes:
+      label: Feature Type
+      description: What type of feature is this?
+      options:
+        - New component/UI element
+        - New page/route
+        - API enhancement
+        - Performance improvement
+        - Developer experience
+        - Accessibility improvement
+        - SEO enhancement
+        - Integration (third-party service)
+        - Configuration/tooling
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature?
+      options:
+        - High (critical for project success)
+        - Medium (would significantly improve the project)
+        - Low (nice to have)
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Feature Summary
+      description: A clear and concise description of the feature you'd like to see
+      placeholder: Briefly describe what you want to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this feature solve?
+      placeholder: Describe the problem or pain point this feature would address
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe your proposed solution in detail
+      placeholder: How should this feature work? What should the user experience be?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered any alternative solutions or workarounds?
+      placeholder: Describe any alternative solutions you've considered
+
+  - type: textarea
+    id: user-stories
+    attributes:
+      label: User Stories
+      description: Describe how users would interact with this feature
+      placeholder: |
+        As a [user type], I want [goal] so that [reason]
+
+        Example:
+        - As a blog reader, I want to filter posts by category so that I can find relevant content quickly
+        - As a content creator, I want to schedule posts so that I can maintain consistent publishing
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What conditions must be met for this feature to be considered complete?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: Mockups/Screenshots
+      description: If applicable, provide mockups, wireframes, or reference screenshots
+      placeholder: Drag and drop images or paste URLs here
+
+  - type: checkboxes
+    id: technical-requirements
+    attributes:
+      label: Technical Requirements
+      description: What technical aspects should be considered?
+      options:
+        - label: Requires database changes
+        - label: Requires new API endpoints
+        - label: Requires new dependencies
+        - label: Requires environment configuration changes
+        - label: Affects existing functionality
+        - label: Requires responsive design
+        - label: Requires accessibility considerations
+        - label: Requires internationalization (i18n)
+        - label: Requires SEO optimization
+
+  - type: textarea
+    id: technical-details
+    attributes:
+      label: Technical Implementation Details
+      description: Any specific technical requirements or suggestions?
+      placeholder: Describe technical considerations, architecture decisions, or implementation suggestions
+
+  - type: dropdown
+    id: breaking-changes
+    attributes:
+      label: Breaking Changes
+      description: Would this feature introduce breaking changes?
+      options:
+        - 'No'
+        - 'Yes - minor breaking changes'
+        - 'Yes - major breaking changes'
+        - 'Unsure'
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact Assessment
+      description: How would this feature impact users, developers, and the project?
+      placeholder: |
+        User Impact:
+        -
+
+        Developer Impact:
+        -
+
+        Project Impact:
+        -
+
+  - type: checkboxes
+    id: compatibility
+    attributes:
+      label: Compatibility Considerations
+      description: What compatibility aspects should be considered?
+      options:
+        - label: Browser compatibility
+        - label: Mobile responsiveness
+        - label: Performance impact
+        - label: SEO impact
+        - label: Accessibility compliance
+        - label: TypeScript compatibility
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context, references, or examples?
+      placeholder: |
+        Links to similar implementations:
+        -
+
+        References:
+        -
+
+        Additional notes:
+        -
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you willing to contribute to implementing this feature?
+      options:
+        - label: I'm willing to submit a PR for this feature
+        - label: I can help with design/planning
+        - label: I can help with testing
+        - label: I can provide feedback during development

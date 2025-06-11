@@ -1,0 +1,208 @@
+name: 📝 Documentation
+description: Report missing, unclear, or incorrect documentation
+title: '[Docs]: '
+labels: ['documentation', 'needs-triage']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve our documentation! Clear documentation is essential for project success.
+
+  - type: checkboxes
+    id: preliminary
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm you have completed these steps
+      options:
+        - label: I have searched existing issues for similar documentation requests
+          required: true
+        - label: I have checked the current documentation thoroughly
+          required: true
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation needs attention?
+      options:
+        - README files
+        - CLAUDE.md (project guidance)
+        - Code comments
+        - API documentation
+        - Setup/installation guide
+        - Usage examples
+        - Architecture documentation
+        - Contributing guidelines
+        - Deployment documentation
+        - Storybook documentation
+        - TypeScript type definitions
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: doc-location
+    attributes:
+      label: Documentation Location
+      description: Where is this documentation located or should be located?
+      options:
+        - Root directory (README.md, CLAUDE.md)
+        - Blog app (apps/blog/)
+        - Portfolio app (apps/portfolio/)
+        - UI package (packages/ui/)
+        - Shared packages
+        - Component documentation
+        - In-code comments
+        - Storybook stories
+        - Other (specify below)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      description: What's the issue with the documentation?
+      options:
+        - Missing documentation
+        - Outdated/incorrect information
+        - Unclear/confusing explanation
+        - Missing examples
+        - Broken links
+        - Poor organization/structure
+        - Incomplete information
+        - Inconsistent formatting
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the documentation issue in detail
+      placeholder: What specific documentation problem did you encounter?
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: What documentation currently exists (if any)?
+      placeholder: |
+        - Link to current documentation
+        - What information is currently available
+        - What's missing or incorrect
+
+  - type: textarea
+    id: expected-content
+    attributes:
+      label: Expected Content
+      description: What should the documentation contain or explain?
+      placeholder: |
+        What information should be documented?
+        - Key concepts to explain
+        - Examples to include
+        - Step-by-step instructions needed
+        - Technical details required
+    validations:
+      required: true
+
+  - type: textarea
+    id: target-audience
+    attributes:
+      label: Target Audience
+      description: Who would benefit from this documentation?
+      placeholder: |
+        Who is the intended audience?
+        - New developers joining the project
+        - External contributors
+        - End users
+        - Specific developer roles
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case/Context
+      description: In what situation would someone need this documentation?
+      placeholder: |
+        When would someone reference this documentation?
+        - During initial setup
+        - When implementing features
+        - When troubleshooting issues
+        - When contributing to the project
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples Needed
+      description: What examples should be included?
+      placeholder: |
+        Code examples, screenshots, or step-by-step guides that would be helpful:
+        -
+        -
+        -
+
+  - type: textarea
+    id: related-docs
+    attributes:
+      label: Related Documentation
+      description: Links to related documentation or references
+      placeholder: |
+        Related documentation that should be linked or referenced:
+        -
+        -
+
+  - type: checkboxes
+    id: doc-format
+    attributes:
+      label: Suggested Format
+      description: What format would work best for this documentation?
+      options:
+        - label: Markdown file
+        - label: Code comments
+        - label: Storybook documentation
+        - label: README section
+        - label: Separate documentation file
+        - label: Inline TypeScript documentation
+        - label: Architecture diagrams
+        - label: Video tutorial
+        - label: Interactive examples
+
+  - type: textarea
+    id: priority-reason
+    attributes:
+      label: Priority Justification
+      description: Why is this documentation important?
+      placeholder: |
+        How does this documentation help the project?
+        - Reduces onboarding time
+        - Prevents common mistakes
+        - Improves developer experience
+        - Enables better contributions
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information
+      placeholder: |
+        Additional context:
+        - Similar projects' documentation examples
+        - Specific pain points experienced
+        - Feedback from other developers
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you willing to contribute to this documentation?
+      options:
+        - label: I can write the documentation
+        - label: I can provide examples/content
+        - label: I can review the documentation
+        - label: I can help with organization/structure

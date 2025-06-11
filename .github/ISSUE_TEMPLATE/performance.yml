@@ -1,0 +1,284 @@
+name: ⚡ Performance Issue
+description: Report performance problems or optimization opportunities
+title: '[Performance]: '
+labels: ['performance', 'needs-triage']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a performance issue! Performance is crucial for user experience. Please provide detailed information to help us identify and resolve the issue.
+
+  - type: checkboxes
+    id: preliminary
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm you have completed these steps
+      options:
+        - label: I have tested this on the latest version
+          required: true
+        - label: I have verified this isn't a local environment issue
+          required: true
+        - label: I have profiled the performance issue
+          required: true
+
+  - type: dropdown
+    id: affected-app
+    attributes:
+      label: Affected Application
+      description: Which application has the performance issue?
+      options:
+        - Blog app (apps/blog/)
+        - Portfolio app (apps/portfolio/)
+        - UI package (packages/ui/)
+        - Shared packages
+        - Build process
+        - Development tools
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: performance-type
+    attributes:
+      label: Performance Issue Type
+      description: What type of performance issue is this?
+      options:
+        - Slow page load time
+        - Slow runtime performance
+        - High memory usage
+        - Large bundle size
+        - Slow build time
+        - Inefficient database queries
+        - API response time
+        - Image loading performance
+        - JavaScript execution time
+        - CSS/styling performance
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      description: How severe is this performance issue?
+      options:
+        - Critical (unusable/very slow)
+        - High (significantly impacts user experience)
+        - Medium (noticeable but usable)
+        - Low (minor optimization opportunity)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Performance Issue Description
+      description: Describe the performance problem in detail
+      placeholder: What specific performance issue are you experiencing?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the performance issue
+      placeholder: |
+        1. Navigate to '...'
+        2. Perform action '...'
+        3. Observe performance issue
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: metrics
+    attributes:
+      label: Performance Metrics
+      description: Provide specific performance measurements
+      placeholder: |
+        Current Performance:
+        - Page load time: X seconds
+        - First Contentful Paint: X ms
+        - Largest Contentful Paint: X ms
+        - Time to Interactive: X ms
+        - Bundle size: X MB
+        - Memory usage: X MB
+        - Build time: X minutes
+
+        Expected Performance:
+        - Target load time: X seconds
+        - Target bundle size: X MB
+        - etc.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: measurement-tool
+    attributes:
+      label: Measurement Tool
+      description: What tool did you use to measure performance?
+      options:
+        - Chrome DevTools
+        - Lighthouse
+        - WebPageTest
+        - Browser's built-in tools
+        - Custom profiling
+        - Next.js analyzer
+        - Webpack Bundle Analyzer
+        - Other (specify in additional context)
+    validations:
+      required: true
+
+  - type: textarea
+    id: profiling-data
+    attributes:
+      label: Profiling Data
+      description: Include performance profiling data, screenshots, or reports
+      placeholder: |
+        Attach or paste:
+        - Lighthouse reports
+        - Chrome DevTools performance profiles
+        - Bundle analyzer outputs
+        - Profiling screenshots
+        - Network waterfall screenshots
+
+  - type: dropdown
+    id: device-type
+    attributes:
+      label: Device Type
+      description: What device type shows this performance issue?
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+        - All devices
+        - Server/Build environment
+    validations:
+      required: true
+
+  - type: input
+    id: device-specs
+    attributes:
+      label: Device Specifications
+      description: Provide device/system specifications
+      placeholder: e.g., MacBook Pro M1, 16GB RAM, Chrome 120 / iPhone 14, iOS 17, Safari
+
+  - type: dropdown
+    id: network
+    attributes:
+      label: Network Conditions
+      description: What network conditions were you testing under?
+      options:
+        - Fast 3G
+        - Slow 3G
+        - Fast WiFi
+        - Slow WiFi
+        - Localhost/Development
+        - Production environment
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: affected-areas
+    attributes:
+      label: Affected Areas
+      description: Which areas are affected by this performance issue?
+      options:
+        - label: Initial page load
+        - label: Navigation between pages
+        - label: Component rendering
+        - label: Data fetching
+        - label: Image loading
+        - label: JavaScript execution
+        - label: CSS parsing/rendering
+        - label: Bundle download
+        - label: Server-side rendering
+        - label: Build process
+        - label: Development server
+
+  - type: textarea
+    id: suspected-cause
+    attributes:
+      label: Suspected Cause
+      description: Do you have any ideas about what might be causing the performance issue?
+      placeholder: |
+        Based on your analysis, what might be causing this issue?
+        - Large bundle size
+        - Inefficient component re-renders
+        - Unoptimized images
+        - Blocking resources
+        - Heavy computations
+        - Memory leaks
+        - etc.
+
+  - type: textarea
+    id: suggested-solution
+    attributes:
+      label: Suggested Solution
+      description: Do you have suggestions for improving performance?
+      placeholder: |
+        Potential optimizations:
+        - Code splitting
+        - Image optimization
+        - Lazy loading
+        - Caching improvements
+        - Algorithm optimization
+        - Bundle optimization
+        - etc.
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: In which environment did you observe this issue?
+      options:
+        - Development
+        - Production
+        - Staging
+        - Local build
+        - Both development and production
+    validations:
+      required: true
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      description: What version of Node.js are you using?
+      placeholder: e.g., v20.10.0
+
+  - type: input
+    id: next-version
+    attributes:
+      label: Next.js Version
+      description: What version of Next.js are you using?
+      placeholder: e.g., 14.0.4
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information about the performance issue
+      placeholder: |
+        Additional information:
+        - When did this performance issue start?
+        - Does it happen consistently?
+        - Any recent changes that might have caused it?
+        - Comparison with similar applications?
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you willing to contribute to fixing this performance issue?
+      options:
+        - label: I can help implement the performance improvements
+        - label: I can help with testing and benchmarking
+        - label: I can provide additional profiling data
+        - label: I can help with code review

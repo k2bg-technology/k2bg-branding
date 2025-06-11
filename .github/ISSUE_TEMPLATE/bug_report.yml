@@ -1,0 +1,199 @@
+name: 🐛 Bug Report
+description: Report a bug or unexpected behavior
+title: '[Bug]: '
+labels: ['bug', 'needs-triage']
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the information below to help us reproduce and fix the issue.
+
+  - type: checkboxes
+    id: preliminary
+    attributes:
+      label: Preliminary Checks
+      description: Please confirm you have completed these steps
+      options:
+        - label: I have searched existing issues to avoid duplicates
+          required: true
+        - label: I have tested this on the latest version
+          required: true
+        - label: I have provided all required information below
+          required: true
+
+  - type: dropdown
+    id: affected-app
+    attributes:
+      label: Affected Application
+      description: Which application is affected by this bug?
+      options:
+        - Blog app (apps/blog/)
+        - Portfolio app (apps/portfolio/)
+        - UI package (packages/ui/)
+        - Shared packages
+        - Build/Configuration
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Bug Severity
+      description: How severe is this bug?
+      options:
+        - Critical (blocks core functionality)
+        - High (significant impact)
+        - Medium (moderate impact)
+        - Low (minor inconvenience)
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is
+      placeholder: Describe what happened and what you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Detailed steps to reproduce the behavior
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen instead?
+      placeholder: Describe the expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: Describe the actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots/Videos
+      description: If applicable, add screenshots or videos to help explain the problem
+      placeholder: Drag and drop images or paste URLs here
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      description: Which browser are you using? (if applicable)
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other (specify in additional context)
+        - N/A (not browser-related)
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser Version
+      description: What version of the browser? (if applicable)
+      placeholder: e.g., Chrome 120.0.6099.109
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: Device Type
+      description: What type of device are you using?
+      options:
+        - Desktop
+        - Mobile
+        - Tablet
+        - N/A
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      placeholder: e.g., macOS 14.1, Windows 11, Ubuntu 22.04
+
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js Version
+      description: What version of Node.js? (if applicable)
+      placeholder: e.g., v20.10.0
+
+  - type: input
+    id: package-manager
+    attributes:
+      label: Package Manager
+      description: Which package manager and version?
+      placeholder: e.g., pnpm 8.10.5
+
+  - type: textarea
+    id: error-logs
+    attributes:
+      label: Error Messages/Logs
+      description: Include any error messages, console logs, or stack traces
+      placeholder: Paste error messages or logs here
+      render: shell
+
+  - type: textarea
+    id: console-errors
+    attributes:
+      label: Browser Console Errors
+      description: Any errors shown in the browser console? (if applicable)
+      placeholder: Paste console errors here
+      render: javascript
+
+  - type: checkboxes
+    id: environment
+    attributes:
+      label: Environment
+      description: Where does this bug occur?
+      options:
+        - label: Development environment
+        - label: Production environment
+        - label: Staging environment
+        - label: Local build
+        - label: Storybook
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other context about the problem
+      placeholder: Add any other context about the problem here
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Are you willing to contribute to fixing this bug?
+      options:
+        - label: I'm willing to submit a PR to fix this bug
+        - label: I can help with testing the fix
+        - label: I can provide additional information if needed
