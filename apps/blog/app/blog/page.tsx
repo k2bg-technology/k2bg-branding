@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import * as Prisma from '../../modules/data-access/prisma';
+import { Post } from '../../modules/domain/post/types';
 
 export const metadata: Metadata = {
   title: 'K2.B.G Technology Blog',
@@ -208,7 +209,7 @@ export default async function Page() {
               </BlogCard>
             </div>
           ))}
-          {featuresPreviously.map((article) => (
+          {featuresPreviously.map((article: Post) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.imageUrl && (
                 <Link

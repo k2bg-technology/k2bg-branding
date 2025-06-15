@@ -15,7 +15,7 @@ export async function generateStaticParams() {
   const postRepository = new Prisma.Post.Repository();
   const posts = await postRepository.getAllArticleSlugs();
 
-  return posts.map((post) => ({
+  return posts.map((post: { id: string; slug: string }) => ({
     id: post.id,
     slug: post.slug,
   }));
