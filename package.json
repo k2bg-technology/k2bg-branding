@@ -5,6 +5,7 @@
     "dev": "turbo run dev",
     "start": "turbo run start",
     "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "storybook": "turbo run storybook",
     "build-storybook": "turbo run build-storybook",

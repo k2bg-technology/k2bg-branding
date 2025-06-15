@@ -37,6 +37,7 @@
     },
     "start": {},
     "lint": {},
+    "typecheck": {},
     "format": {},
     "dev": {
       "cache": false,
