@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import * as Prisma from '../../modules/data-access/prisma';
+import { Post } from '../../modules/domain/post/types';
 
 export const metadata: Metadata = {
   title: 'K2.B.G Technology Blog',
@@ -83,7 +84,7 @@ export default async function Page() {
           </div>
         )}
         <div className="col-start-8 col-end-13 hidden xl:grid gap-y-8">
-          {featuresRecently.map((article) => (
+          {featuresRecently.map((article: Post) => (
             <BlogCard key={article.title} className="flex-row gap-spacious">
               {article.imageUrl && (
                 <Link
@@ -147,7 +148,7 @@ export default async function Page() {
       <hr className="col-span-full border-slate-200" />
       <div className="col-span-full grid grid-cols-[subgrid]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8 col-start-1 col-end-10 place-content-start">
-          {featuresRecently.map((article) => (
+          {featuresRecently.map((article: Post) => (
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-spacious">
                 {article.imageUrl && (
@@ -208,7 +209,7 @@ export default async function Page() {
               </BlogCard>
             </div>
           ))}
-          {featuresPreviously.map((article) => (
+          {featuresPreviously.map((article: Post) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.imageUrl && (
                 <Link

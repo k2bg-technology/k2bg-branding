@@ -1,3 +1,5 @@
+import type { Post, Author } from '@prisma/client';
+
 import { Core } from '../core';
 import * as Domain from '../../../domain';
 import { postSchema } from '../../../interfaces/post/validator';
@@ -17,7 +19,7 @@ export class Repository extends Core implements Domain.Post.OutputRepository {
       },
     });
 
-    return posts.map((post) =>
+    return posts.map((post: Post & { author: Author }) =>
       postSchema.parse({
         ...Core.objectIdToUuid(post),
         author: authorSchema.parse(Core.objectIdToUuid(post.author)),
@@ -39,7 +41,7 @@ export class Repository extends Core implements Domain.Post.OutputRepository {
       },
     });
 
-    return posts.map((post) =>
+    return posts.map((post: Pick<Post, 'uuid' | 'slug'>) =>
       postSchema
         .pick({
           id: true,
@@ -82,7 +84,7 @@ export class Repository extends Core implements Domain.Post.OutputRepository {
       },
     });
 
-    return posts.map((post) =>
+    return posts.map((post: Post & { author: Author }) =>
       postSchema.parse({
         ...Core.objectIdToUuid(post),
         author: authorSchema.parse(Core.objectIdToUuid(post.author)),
