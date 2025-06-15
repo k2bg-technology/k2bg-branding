@@ -8,7 +8,7 @@
     "lint": "eslint \"**/*.ts*\"",
     "generate:component": "turbo gen react-component",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
+    "build-storybook": "rm -rf storybook-static && storybook build --output-dir storybook-static",
     "chromatic": "chromatic --only-changed --exit-once-uploaded --storybook-config-dir .storybook --project-token $CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {

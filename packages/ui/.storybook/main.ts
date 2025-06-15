@@ -30,6 +30,11 @@ const config: StorybookConfig = {
     autodocs: 'tag',
   },
   staticDirs: ['../public'],
+  // Explicitly set output directory for Vercel
+  managerHead: (head) => `
+    ${head}
+    <base href="./">
+  `,
   swc: () => ({
     jsc: {
       transform: {
