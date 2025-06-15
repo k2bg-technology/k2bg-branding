@@ -44,7 +44,11 @@
       "persistent": true
     },
     "storybook": {},
-    "build-storybook": {},
+    "build-storybook": {
+      "outputs": [
+        "storybook-static/**/*"
+      ]
+    },
     "test": {
       "dependsOn": ["^test"]
     },
