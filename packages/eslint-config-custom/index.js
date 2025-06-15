@@ -1,23 +1,16 @@
 module.exports = {
   extends: [
-    'airbnb',
-    'airbnb/hooks',
-    'plugin:react/recommended',
+    'airbnb-base',
     'plugin:@typescript-eslint/recommended',
     'prettier',
   ],
-  plugins: ['react', '@typescript-eslint', 'import'],
+  plugins: ['@typescript-eslint', 'import'],
   parser: '@typescript-eslint/parser',
   rules: {
-    '@next/next/no-html-link-for-pages': 'off',
-    'react/jsx-filename-extension': 'off',
-    'react/react-in-jsx-scope': 'off',
     'import/prefer-default-export': 'off',
     camelcase: 'off',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
-    'react/require-default-props': 'off',
-    'react/jsx-wrap-multilines': ['error', { prop: false }],
     'no-shadow': ['error', { allow: ['props'] }],
     'import/order': [
       'error',
@@ -35,21 +28,16 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    'jsx-a11y/label-has-associated-control': [
-      'error',
-      {
-        assert: 'either',
-      },
-    ],
     'import/no-extraneous-dependencies': [
       'error',
       {
         packageDir: [
-          '.',
-          './apps/blog',
-          './apps/portfolio',
-          './packages/test-utils',
-          './packages/ui',
+          __dirname,
+          `${__dirname}/../../`,
+          `${__dirname}/../../apps/blog`,
+          `${__dirname}/../../apps/portfolio`,
+          `${__dirname}/../../packages/test-utils`,
+          `${__dirname}/../../packages/ui`,
         ],
       },
     ],
