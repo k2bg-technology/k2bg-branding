@@ -1,81 +1,233 @@
-# Turborepo starter
+# 🎨 K2BG Branding
 
-This is an official starter Turborepo.
+A Turborepo monorepo for K2BG Branding containing modern web applications and shared component libraries.
 
-## Using this example
+## 📋 What's inside?
 
-Run the following command:
+This Turborepo includes the following applications and packages:
 
-```sh
-npx create-turbo@latest
-```
+### 🚀 Applications
 
-## What's inside?
+- **`blog`**: Next.js blog application with Notion CMS integration (port 3000)
+- **`portfolio`**: Multilingual portfolio site with i18next (port 3001)
 
-This Turborepo includes the following packages/apps:
+### 📦 Packages
 
-### Apps and Packages
-
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `ui`: a stub React component library shared by both `web` and `docs` applications
-- `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
+- **`ui`**: React component library with Storybook and design system
+- **`tailwind-config`**: Shared Tailwind CSS configuration with design tokens
+- **`tsconfig`**: TypeScript configurations used throughout the monorepo
+- **`test-utils`**: Testing utilities and configurations for Vitest
+- **`eslint-config-custom`**: ESLint configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
-### Utilities
+## 🛠️ Technology Stack
 
-This Turborepo has some additional tools already setup for you:
+### Core Technologies
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- **[Next.js](https://nextjs.org/)** - React framework for production
+- **[TypeScript](https://www.typescriptlang.org/)** - Static type checking
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Turborepo](https://turbo.build/repo)** - High-performance build system for JavaScript/TypeScript codebases
 
-### Build
+### Blog App Technologies
 
-To build all apps and packages, run the following command:
+- **[Notion API](https://developers.notion.com/)** - Content management system
+- **[Prisma](https://www.prisma.io/)** - Database ORM with PostgreSQL
+- **[Cloudinary](https://cloudinary.com/)** - Image and media management
+- **[SendGrid](https://sendgrid.com/)** - Email service for contact forms
+- **[React Query](https://tanstack.com/query/latest)** - Data fetching and caching
+- **[React Hook Form](https://react-hook-form.com/)** - Form state management
+- **[Zod](https://zod.dev/)** - Schema validation
 
+### Portfolio App Technologies
+
+- **[i18next](https://www.i18next.com/)** - Internationalization framework
+- **[react-i18next](https://react.i18next.com/)** - React integration for i18n
+
+### Development & Testing
+
+- **[Vitest](https://vitest.dev/)** - Unit testing framework
+- **[Storybook](https://storybook.js.org/)** - Tool for building UI components in isolation
+- **[ESLint](https://eslint.org/)** - Code linting
+- **[Prettier](https://prettier.io)** - Code formatting
+- **[Chromatic](https://www.chromatic.com/)** - Visual regression testing
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** (version 17 or higher)
+- **pnpm** (version 8.6.10 or higher)
+- **PostgreSQL** database (for blog app)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd k2bg-branding
+
+# Install dependencies
+pnpm install
 ```
-cd my-turborepo
-pnpm build
+
+### Development Commands
+
+#### Start All Applications
+
+```bash
+pnpm dev          # Start all apps in development mode
+pnpm build        # Build all apps and packages
+pnpm start        # Start production builds
+pnpm lint         # Lint all apps and packages
+pnpm format       # Format code with Prettier
+pnpm test         # Run tests across all packages
+pnpm test:watch   # Run tests in watch mode
 ```
 
-### Develop
+#### App-specific Development
 
-To develop all apps and packages, run the following command:
+```bash
+# Blog app only (runs on port 3000)
+pnpm dev --filter=blog
 
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
+# Portfolio app only (runs on port 3001)
+pnpm dev --filter=portfolio
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+#### Component Development
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
+```bash
+pnpm storybook             # Start Storybook for UI package
+pnpm build-storybook       # Build Storybook static files
+pnpm chromatic             # Run visual regression testing
+pnpm generate:component    # Generate new component scaffolding
+pnpm generate:style        # Generate style files
 ```
-npx turbo link
+
+## 🏗️ Architecture
+
+### Blog App - Clean Architecture Pattern
+
+The blog application follows clean architecture principles:
+
+- **`modules/domain/`** - Business entities and core logic
+- **`modules/data-access/`** - External integrations (Notion, Prisma, etc.)
+- **`modules/use-cases/`** - Application business rules
+- **`modules/interfaces/`** - Input validation and adapters
+
+This structure ensures separation of concerns and maintainable code.
+
+### Shared Packages Structure
+
+- **UI Package**: Component library with Storybook documentation
+- **Tailwind Config**: Design tokens and shared styling configuration
+- **TypeScript Config**: Shared TypeScript configurations across the monorepo
+- **Test Utils**: Common testing utilities and Vitest configuration
+
+## 🗄️ Database Setup
+
+The blog app uses **Prisma** with PostgreSQL. Here are the key commands:
+
+```bash
+# Navigate to blog app
+cd apps/blog
+
+# Generate Prisma client
+npx prisma generate
+
+# Run database migrations
+npx prisma migrate dev
+
+# Open Prisma Studio (database browser)
+npx prisma studio
+
+# Reset database (development only)
+npx prisma migrate reset
 ```
 
-## Useful Links
+## 🔧 Environment Setup
 
-Learn more about the power of Turborepo:
+Create environment files with the required variables:
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+### Blog App (`.env.local` in `apps/blog/`)
+
+```bash
+# Notion API
+NOTION_TOKEN=your_notion_token
+NOTION_POST_DATABASE_ID=your_post_database_id
+NOTION_MEDIA_DATABASE_ID=your_media_database_id
+NOTION_AFFILIATE_DATABASE_ID=your_affiliate_database_id
+NOTION_CONCEPT_PAGE_ID=your_concept_page_id
+
+# Database
+DATABASE_URL=postgresql://username:password@localhost:5432/dbname
+
+# Media & Email
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+SEND_GRID_API_KEY=your_sendgrid_key
+SEND_GRID_SINGLE_SENDER_DOMAIN=your_domain
+
+# Security
+NEXT_PUBLIC_H_CAPTCHA_SITE_KEY=your_hcaptcha_site_key
+H_CAPTCHA_SECRET=your_hcaptcha_secret
+
+# Social
+INSTAGRAM_LONG_ACCESS_TOKEN=your_instagram_token
+NEXT_PUBLIC_X_TIMELINE_URL=your_x_timeline_url
+
+# Analytics
+GOOGLE_TAG_MANAGER_ID=your_gtm_id
+```
+
+### Portfolio App (`.env.local` in `apps/portfolio/`)
+
+```bash
+# Add portfolio-specific environment variables here
+```
+
+## 📝 Additional Notes
+
+### Development Tips
+
+- Blog app redirects root (`/`) to `/blog` via Next.js configuration
+- Blog app uses `--turbo` flag for faster development builds
+- Portfolio app supports automatic language detection
+- All packages use pnpm for package management
+- Turborepo handles build caching and task orchestration
+
+### Internationalization (Portfolio App)
+
+The portfolio app supports multiple languages using i18next:
+
+```typescript
+import { useTranslation } from 'react-i18next';
+
+const { t } = useTranslation('common');
+```
+
+### Testing
+
+Tests should be co-located with components using `.test.tsx` or `.test.ts` extension:
+
+```bash
+cd apps/blog
+pnpm test        # Run tests once
+pnpm test:watch  # Watch mode
+```
+
+## 📚 Useful Links
+
+Learn more about the technologies used in this project:
+
+- [Turborepo Documentation](https://turbo.build/repo/docs)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Notion API Documentation](https://developers.notion.com/)
+- [Prisma Documentation](https://www.prisma.io/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Storybook Documentation](https://storybook.js.org/docs)
+- [i18next Documentation](https://www.i18next.com/)
+- [Vitest Documentation](https://vitest.dev/)
