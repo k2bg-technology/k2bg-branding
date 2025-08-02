@@ -9,6 +9,7 @@ import LineShareButton from '../sns-share-button/LineShareButton';
 import FacebookShareButton from '../sns-share-button/FacebookShareButton';
 import PinterestShareButton from '../sns-share-button/PinterestShareButton';
 import HatenaShareButton from '../sns-share-button/HatenaShareButton';
+import CopyUrlButton from '../sns-share-button/CopyUrlButton';
 
 import SidebarItem from './SidebarItem';
 
@@ -25,6 +26,7 @@ export default function Sidebar() {
         <div className="self-start sticky top-[3rem] flex flex-col gap-6">
           <SidebarItem title="SNSシェア">
             <div className="flex flex-row gap-normal">
+              <CopyUrlButton />
               <XShareButton />
               <LineShareButton />
               <FacebookShareButton />
