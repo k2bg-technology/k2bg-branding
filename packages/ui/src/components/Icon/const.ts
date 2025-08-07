@@ -36,6 +36,7 @@ export const HERO_ICON_NAMES = [
   'check-circle',
   'exclamation-triangle',
   'x-circle',
+  'clipboard',
 ] as const;
 
 export const ICON_NAMES = [...MULTI_COLOR_ICON_NAMES, ...HERO_ICON_NAMES];

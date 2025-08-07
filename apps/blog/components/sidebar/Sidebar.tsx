@@ -4,6 +4,7 @@ import Image from 'next/image';
 import InstagramTimeline from '../instagram-timeline/InstagramTimeline';
 import ProfileCard from '../profile-card/ProfileCard';
 import SideBarAd from '../google-adsense/SideBarAd';
+import CopyUrlButton from '../sns-share-button/CopyUrlButton';
 import XShareButton from '../sns-share-button/XShareButton';
 import LineShareButton from '../sns-share-button/LineShareButton';
 import FacebookShareButton from '../sns-share-button/FacebookShareButton';
@@ -25,6 +26,7 @@ export default function Sidebar() {
         <div className="self-start sticky top-[3rem] flex flex-col gap-6">
           <SidebarItem title="SNSシェア">
             <div className="flex flex-row gap-normal">
+              <CopyUrlButton />
               <XShareButton />
               <LineShareButton />
               <FacebookShareButton />
