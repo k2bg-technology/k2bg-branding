@@ -132,17 +132,16 @@ flowchart TB
         end
     end
 
-    Blog -.->|workspace:*| UI
-    Blog -.->|workspace:*| TailwindConfig
-    Blog -.->|workspace:*| ESLintConfig
-    Blog -.->|workspace:*| TSConfig
-    Blog -.->|workspace:*| TestUtils
+    Blog -.-> UI
+    Blog -.-> TailwindConfig
+    Blog -.-> ESLintConfig
+    Blog -.-> TSConfig
+    Blog -.-> TestUtils
 
-    Portfolio -.->|workspace:*| UI
-    Portfolio -.->|workspace:*| TailwindConfig
-    Portfolio -.->|workspace:*| ESLintConfig
-    Portfolio -.->|workspace:*| TSConfig
-    Portfolio -.->|workspace:*| TestUtils
+    Portfolio -.-> UI
+    Portfolio -.-> TailwindConfig
+    Portfolio -.-> ESLintConfig
+    Portfolio -.-> TSConfig
 
     classDef appStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef packageStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
