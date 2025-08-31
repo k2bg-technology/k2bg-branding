@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Sat, 01 Mar 2025 11:35:56 GMT
+ * Generated on Sun, 31 Aug 2025 11:28:48 GMT
  */
 
 :root {
@@ -44,7 +44,7 @@
   --typography-en-caption-font-style: normal;
   --typography-en-caption-font-stretch: normal;
   --typography-en-caption-letter-spacing: 0;
-  --typography-en-caption-line-height: 1.1875rem; /* original -> 19px */
+  --typography-en-caption-line-height: 1.25rem; /* original -> 20px */
   --typography-en-caption-paragraph-indent: 0;
   --typography-en-caption-paragraph-spacing: 0;
   --typography-en-caption-text-case: none;
@@ -154,7 +154,7 @@
   --typography-en-body-r-lg-font-style: normal;
   --typography-en-body-r-lg-font-stretch: normal;
   --typography-en-body-r-lg-letter-spacing: 0;
-  --typography-en-body-r-lg-line-height: 1.8125rem; /* original -> 29px */
+  --typography-en-body-r-lg-line-height: 1.875rem; /* original -> 30px */
   --typography-en-body-r-lg-paragraph-indent: 0;
   --typography-en-body-r-lg-paragraph-spacing: 0;
   --typography-en-body-r-lg-text-case: none;
@@ -165,7 +165,7 @@
   --typography-en-body-r-md-font-style: normal;
   --typography-en-body-r-md-font-stretch: normal;
   --typography-en-body-r-md-letter-spacing: 0;
-  --typography-en-body-r-md-line-height: 1.625rem; /* original -> 26px */
+  --typography-en-body-r-md-line-height: 1.75rem; /* original -> 28px */
   --typography-en-body-r-md-paragraph-indent: 0;
   --typography-en-body-r-md-paragraph-spacing: 0;
   --typography-en-body-r-md-text-case: none;
@@ -176,7 +176,7 @@
   --typography-en-body-r-sm-font-style: normal;
   --typography-en-body-r-sm-font-stretch: normal;
   --typography-en-body-r-sm-letter-spacing: 0;
-  --typography-en-body-r-sm-line-height: 1.4375rem; /* original -> 23px */
+  --typography-en-body-r-sm-line-height: 1.5rem; /* original -> 24px */
   --typography-en-body-r-sm-paragraph-indent: 0;
   --typography-en-body-r-sm-paragraph-spacing: 0;
   --typography-en-body-r-sm-text-case: none;
@@ -187,7 +187,7 @@
   --typography-en-body-b-lg-font-style: normal;
   --typography-en-body-b-lg-font-stretch: normal;
   --typography-en-body-b-lg-letter-spacing: 0;
-  --typography-en-body-b-lg-line-height: 1.8125rem; /* original -> 29px */
+  --typography-en-body-b-lg-line-height: 1.875rem; /* original -> 30px */
   --typography-en-body-b-lg-paragraph-indent: 0;
   --typography-en-body-b-lg-paragraph-spacing: 0;
   --typography-en-body-b-lg-text-case: none;
@@ -198,7 +198,7 @@
   --typography-en-body-b-md-font-style: normal;
   --typography-en-body-b-md-font-stretch: normal;
   --typography-en-body-b-md-letter-spacing: 0;
-  --typography-en-body-b-md-line-height: 1.625rem; /* original -> 26px */
+  --typography-en-body-b-md-line-height: 1.75rem; /* original -> 28px */
   --typography-en-body-b-md-paragraph-indent: 0;
   --typography-en-body-b-md-paragraph-spacing: 0;
   --typography-en-body-b-md-text-case: none;
@@ -209,7 +209,7 @@
   --typography-en-body-b-sm-font-style: normal;
   --typography-en-body-b-sm-font-stretch: normal;
   --typography-en-body-b-sm-letter-spacing: 0;
-  --typography-en-body-b-sm-line-height: 1.4375rem; /* original -> 23px */
+  --typography-en-body-b-sm-line-height: 1.5rem; /* original -> 24px */
   --typography-en-body-b-sm-paragraph-indent: 0;
   --typography-en-body-b-sm-paragraph-spacing: 0;
   --typography-en-body-b-sm-text-case: none;
@@ -319,7 +319,7 @@
   --typography-ja-caption-font-style: normal;
   --typography-ja-caption-font-stretch: normal;
   --typography-ja-caption-letter-spacing: 0;
-  --typography-ja-caption-line-height: 1.1875rem; /* original -> 19px */
+  --typography-ja-caption-line-height: 1.5rem; /* original -> 24px */
   --typography-ja-caption-paragraph-indent: 0;
   --typography-ja-caption-paragraph-spacing: 0;
   --typography-ja-caption-text-case: none;
@@ -429,7 +429,7 @@
   --typography-ja-body-r-lg-font-style: normal;
   --typography-ja-body-r-lg-font-stretch: normal;
   --typography-ja-body-r-lg-letter-spacing: 0;
-  --typography-ja-body-r-lg-line-height: 1.8125rem; /* original -> 29px */
+  --typography-ja-body-r-lg-line-height: 2.25rem; /* original -> 36px */
   --typography-ja-body-r-lg-paragraph-indent: 0;
   --typography-ja-body-r-lg-paragraph-spacing: 0;
   --typography-ja-body-r-lg-text-case: none;
@@ -440,7 +440,7 @@
   --typography-ja-body-r-md-font-style: normal;
   --typography-ja-body-r-md-font-stretch: normal;
   --typography-ja-body-r-md-letter-spacing: 0;
-  --typography-ja-body-r-md-line-height: 1.625rem; /* original -> 26px */
+  --typography-ja-body-r-md-line-height: 2rem; /* original -> 32px */
   --typography-ja-body-r-md-paragraph-indent: 0;
   --typography-ja-body-r-md-paragraph-spacing: 0;
   --typography-ja-body-r-md-text-case: none;
@@ -451,7 +451,7 @@
   --typography-ja-body-r-sm-font-style: normal;
   --typography-ja-body-r-sm-font-stretch: normal;
   --typography-ja-body-r-sm-letter-spacing: 0;
-  --typography-ja-body-r-sm-line-height: 1.4375rem; /* original -> 23px */
+  --typography-ja-body-r-sm-line-height: 1.75rem; /* original -> 28px */
   --typography-ja-body-r-sm-paragraph-indent: 0;
   --typography-ja-body-r-sm-paragraph-spacing: 0;
   --typography-ja-body-r-sm-text-case: none;
@@ -462,7 +462,7 @@
   --typography-ja-body-b-lg-font-style: normal;
   --typography-ja-body-b-lg-font-stretch: normal;
   --typography-ja-body-b-lg-letter-spacing: 0;
-  --typography-ja-body-b-lg-line-height: 1.8125rem; /* original -> 29px */
+  --typography-ja-body-b-lg-line-height: 2.25rem; /* original -> 36px */
   --typography-ja-body-b-lg-paragraph-indent: 0;
   --typography-ja-body-b-lg-paragraph-spacing: 0;
   --typography-ja-body-b-lg-text-case: none;
@@ -473,7 +473,7 @@
   --typography-ja-body-b-md-font-style: normal;
   --typography-ja-body-b-md-font-stretch: normal;
   --typography-ja-body-b-md-letter-spacing: 0;
-  --typography-ja-body-b-md-line-height: 1.625rem; /* original -> 26px */
+  --typography-ja-body-b-md-line-height: 2rem; /* original -> 32px */
   --typography-ja-body-b-md-paragraph-indent: 0;
   --typography-ja-body-b-md-paragraph-spacing: 0;
   --typography-ja-body-b-md-text-case: none;
@@ -484,7 +484,7 @@
   --typography-ja-body-b-sm-font-style: normal;
   --typography-ja-body-b-sm-font-stretch: normal;
   --typography-ja-body-b-sm-letter-spacing: 0;
-  --typography-ja-body-b-sm-line-height: 1.4375rem; /* original -> 23px */
+  --typography-ja-body-b-sm-line-height: 1.75rem; /* original -> 28px */
   --typography-ja-body-b-sm-paragraph-indent: 0;
   --typography-ja-body-b-sm-paragraph-spacing: 0;
   --typography-ja-body-b-sm-text-case: none;

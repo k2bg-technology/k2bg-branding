@@ -1,6 +1,6 @@
 /**
  * Do not edit directly
- * Generated on Sat, 01 Mar 2025 11:35:56 GMT
+ * Generated on Sun, 31 Aug 2025 11:28:48 GMT
  */
 
 @theme {
@@ -15,7 +15,7 @@
   --leading-big-header: 4.8125rem; /* original -> 77px */
   --text-caption: 0.75rem; /* original -> 12px */
   --font-weight-caption: 500;
-  --leading-caption: 1.1875rem; /* original -> 19px */
+  --leading-caption: 1.5rem; /* original -> 24px */
   --text-heading-1: 1.875rem; /* original -> 30px */
   --font-weight-heading-1: 700;
   --leading-heading-1: 3rem; /* original -> 48px */
@@ -45,22 +45,22 @@
   --leading-subtitle-sm: 1.8125rem; /* original -> 29px */
   --text-body-r-lg: 1.125rem; /* original -> 18px */
   --font-weight-body-r-lg: 500;
-  --leading-body-r-lg: 1.8125rem; /* original -> 29px */
+  --leading-body-r-lg: 2.25rem; /* original -> 36px */
   --text-body-r-md: 1rem; /* original -> 16px */
   --font-weight-body-r-md: 500;
-  --leading-body-r-md: 1.625rem; /* original -> 26px */
+  --leading-body-r-md: 2rem; /* original -> 32px */
   --text-body-r-sm: 0.875rem; /* original -> 14px */
   --font-weight-body-r-sm: 500;
-  --leading-body-r-sm: 1.4375rem; /* original -> 23px */
+  --leading-body-r-sm: 1.75rem; /* original -> 28px */
   --text-body-b-lg: 1.125rem; /* original -> 18px */
   --font-weight-body-b-lg: 700;
-  --leading-body-b-lg: 1.8125rem; /* original -> 29px */
+  --leading-body-b-lg: 2.25rem; /* original -> 36px */
   --text-body-b-md: 1rem; /* original -> 16px */
   --font-weight-body-b-md: 700;
-  --leading-body-b-md: 1.625rem; /* original -> 26px */
+  --leading-body-b-md: 2rem; /* original -> 32px */
   --text-body-b-sm: 0.875rem; /* original -> 14px */
   --font-weight-body-b-sm: 700;
-  --leading-body-b-sm: 1.4375rem; /* original -> 23px */
+  --leading-body-b-sm: 1.75rem; /* original -> 28px */
   --text-button-b-lg: 1rem; /* original -> 16px */
   --font-weight-button-b-lg: 700;
   --leading-button-b-lg: 1.625rem; /* original -> 26px */
