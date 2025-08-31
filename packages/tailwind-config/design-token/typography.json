@@ -281,7 +281,7 @@
   },
   "typography-en-caption-line-height": {
     "customVariable": "var(--typography-en-caption-line-height)",
-    "value": "19",
+    "value": "20",
     "lang": "en",
     "group": "en-caption",
     "property": "lineHeight"
@@ -1051,7 +1051,7 @@
   },
   "typography-en-body-r-lg-line-height": {
     "customVariable": "var(--typography-en-body-r-lg-line-height)",
-    "value": "29",
+    "value": "30",
     "lang": "en",
     "group": "en-body-r-lg",
     "property": "lineHeight"
@@ -1128,7 +1128,7 @@
   },
   "typography-en-body-r-md-line-height": {
     "customVariable": "var(--typography-en-body-r-md-line-height)",
-    "value": "26",
+    "value": "28",
     "lang": "en",
     "group": "en-body-r-md",
     "property": "lineHeight"
@@ -1205,7 +1205,7 @@
   },
   "typography-en-body-r-sm-line-height": {
     "customVariable": "var(--typography-en-body-r-sm-line-height)",
-    "value": "23",
+    "value": "24",
     "lang": "en",
     "group": "en-body-r-sm",
     "property": "lineHeight"
@@ -1282,7 +1282,7 @@
   },
   "typography-en-body-b-lg-line-height": {
     "customVariable": "var(--typography-en-body-b-lg-line-height)",
-    "value": "29",
+    "value": "30",
     "lang": "en",
     "group": "en-body-b-lg",
     "property": "lineHeight"
@@ -1359,7 +1359,7 @@
   },
   "typography-en-body-b-md-line-height": {
     "customVariable": "var(--typography-en-body-b-md-line-height)",
-    "value": "26",
+    "value": "28",
     "lang": "en",
     "group": "en-body-b-md",
     "property": "lineHeight"
@@ -1436,7 +1436,7 @@
   },
   "typography-en-body-b-sm-line-height": {
     "customVariable": "var(--typography-en-body-b-sm-line-height)",
-    "value": "23",
+    "value": "24",
     "lang": "en",
     "group": "en-body-b-sm",
     "property": "lineHeight"
@@ -2206,7 +2206,7 @@
   },
   "typography-ja-caption-line-height": {
     "customVariable": "var(--typography-ja-caption-line-height)",
-    "value": "19",
+    "value": "24",
     "lang": "ja",
     "group": "ja-caption",
     "property": "lineHeight"
@@ -2976,7 +2976,7 @@
   },
   "typography-ja-body-r-lg-line-height": {
     "customVariable": "var(--typography-ja-body-r-lg-line-height)",
-    "value": "29",
+    "value": "36",
     "lang": "ja",
     "group": "ja-body-r-lg",
     "property": "lineHeight"
@@ -3053,7 +3053,7 @@
   },
   "typography-ja-body-r-md-line-height": {
     "customVariable": "var(--typography-ja-body-r-md-line-height)",
-    "value": "26",
+    "value": "32",
     "lang": "ja",
     "group": "ja-body-r-md",
     "property": "lineHeight"
@@ -3130,7 +3130,7 @@
   },
   "typography-ja-body-r-sm-line-height": {
     "customVariable": "var(--typography-ja-body-r-sm-line-height)",
-    "value": "23",
+    "value": "28",
     "lang": "ja",
     "group": "ja-body-r-sm",
     "property": "lineHeight"
@@ -3207,7 +3207,7 @@
   },
   "typography-ja-body-b-lg-line-height": {
     "customVariable": "var(--typography-ja-body-b-lg-line-height)",
-    "value": "29",
+    "value": "36",
     "lang": "ja",
     "group": "ja-body-b-lg",
     "property": "lineHeight"
@@ -3284,7 +3284,7 @@
   },
   "typography-ja-body-b-md-line-height": {
     "customVariable": "var(--typography-ja-body-b-md-line-height)",
-    "value": "26",
+    "value": "32",
     "lang": "ja",
     "group": "ja-body-b-md",
     "property": "lineHeight"
@@ -3361,7 +3361,7 @@
   },
   "typography-ja-body-b-sm-line-height": {
     "customVariable": "var(--typography-ja-body-b-sm-line-height)",
-    "value": "23",
+    "value": "28",
     "lang": "ja",
     "group": "ja-body-b-sm",
     "property": "lineHeight"
