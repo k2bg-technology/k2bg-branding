@@ -27,7 +27,7 @@ export async function Articles(props: Props) {
   return (
     <>
       <div className="grid grid-cols-[subgrid] col-span-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-x-6 gap-y-8 place-content-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-x-8 gap-y-8 place-content-start">
           {articles.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.imageUrl && (

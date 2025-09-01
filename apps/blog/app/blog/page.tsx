@@ -147,7 +147,7 @@ export default async function Page() {
       </div>
       <hr className="col-span-full border-slate-200" />
       <div className="col-span-full grid grid-cols-[subgrid]">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-8 col-start-1 col-end-10 place-content-start">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 col-start-1 col-end-10 place-content-start">
           {featuresRecently.map((article) => (
             <div key={article.title} className="block xl:hidden">
               <BlogCard className="flex-col gap-spacious">
