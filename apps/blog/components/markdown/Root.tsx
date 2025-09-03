@@ -34,7 +34,7 @@ export async function Root(props: Props) {
           <h2
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-8 text-heading-2 leading-heading-2 font-bold"
+            className="first:mt-0 mt-12 text-heading-2 leading-heading-2 font-bold"
           >
             {children}
           </h2>
@@ -43,7 +43,7 @@ export async function Root(props: Props) {
           <h3
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-6 text-heading-3 leading-heading-3 font-bold"
+            className="first:mt-0 mt-8 text-heading-3 leading-heading-3 font-bold"
           >
             {children}
           </h3>
@@ -52,7 +52,7 @@ export async function Root(props: Props) {
           <p
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="first:mt-0 mt-3 text-body-r-md leading-body-r-md text-base-black text-justify"
+            className="first:mt-0 mt-4 text-body-r-md leading-body-r-md text-base-black text-justify"
           >
             {children}
           </p>
@@ -106,14 +106,14 @@ export async function Root(props: Props) {
           <span
             // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
-            className="mt-2 font-bold leading-none underline decoration-8 underline-offset-[-0.2em] decoration-main-default/50"
+            className="mt-2 font-bold leading-none"
           >
             {children}
           </span>
         ),
         pre: ({ children, ...props }) => (
           // eslint-disable-next-line react/jsx-props-no-spreading
-          <pre {...props} className="first:mt-0 mt-2 border rounded-lg">
+          <pre {...props} className="first:mt-0 mt-2">
             {children}
           </pre>
         ),
