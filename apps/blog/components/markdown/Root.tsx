@@ -1,13 +1,15 @@
 import React from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { codeToHtml } from 'shiki';
+import { addCopyButton } from 'shiki-transformer-copy-button';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { Post } from '../../modules/domain/post/types';
+
+import styles from './Root.module.css';
 
 interface Props {
   article: Post;
@@ -118,7 +120,7 @@ export async function Root(props: Props) {
           </pre>
         ),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        code: ({ children, ref, ...props }) => {
+        code: async ({ children, ref, ...props }) => {
           const { className } = props;
 
           const isInline =
@@ -133,22 +135,34 @@ export async function Root(props: Props) {
               </code>
             );
 
-          return typeof children === 'string' ? (
-            <SyntaxHighlighter
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              {...props}
-              codeTagProps={{
-                className: 'text-body-r-sm font-original',
-              }}
-              customStyle={{ padding: '1.5rem', borderRadius: '0.5rem' }}
-              language={language}
-              style={a11yDark}
-              wrapLines
-              wrapLongLines
-            >
-              {children.trim()}
-            </SyntaxHighlighter>
-          ) : null;
+          const html =
+            typeof children === 'string'
+              ? await codeToHtml(children, {
+                  lang: language || '',
+                  theme: 'kanagawa-wave',
+                  /** @see {@link https://shiki.matsu.io/guide/transformers} */
+                  transformers: [
+                    {
+                      pre(node) {
+                        this.addClassToHast(
+                          node,
+                          `${styles.codeSnippet} p-6 whitespace-pre-wrap rounded-lg relative before:content-[attr(data-language)] overflow-hidden before:absolute before:bottom-0 before:right-0 before:px-3 before:py-1 before:text-caption before:bg-white/20 before:text-white text-body-r-sm font-original`
+                        );
+
+                        // eslint-disable-next-line no-param-reassign
+                        node.properties['data-language'] = language;
+                      },
+                    },
+                    addCopyButton({
+                      toggle: 2000,
+                    }),
+                  ],
+                })
+              : null;
+
+          if (html) return <div dangerouslySetInnerHTML={{ __html: html }} />;
+
+          return null;
         },
         blockquote: ({ children, ...props }) => (
           <blockquote
