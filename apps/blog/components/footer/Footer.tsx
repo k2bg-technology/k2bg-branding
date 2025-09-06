@@ -127,7 +127,7 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center justify-between">
-            <p className="mt-4 text-center text-body-r-sm text-white lg:mt-0 lg:text-right">
+            <p className="mt-4 text-left text-body-r-sm text-white lg:mt-0">
               {`Copyright © ${format(
                 new Date(),
                 'yyyy'
