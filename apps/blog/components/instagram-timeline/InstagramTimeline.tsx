@@ -11,7 +11,15 @@ export default async function InstagramTimeline() {
 
   const userMedia = await InstagramFetcher.fetchUserMedia();
 
-  if (!userMedia.data) return null;
+  if (!userMedia.data) {
+    return (
+      <div className="p-spacious rounded-lg bg-base-white/50">
+        <p className="text-body-r-sm leading-body-r-sm text-base-black">
+          新規投稿はありません
+        </p>
+      </div>
+    );
+  }
 
   const mediaData = await Promise.all(
     userMedia.data.flatMap((data, index) =>
