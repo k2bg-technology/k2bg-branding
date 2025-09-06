@@ -28,7 +28,7 @@ export async function PageHeading(props: Props) {
         date={article.releaseDate}
         className="col-span-full xl:col-start-2 xl:col-end-12"
       />
-      <BlogCard.Media className="relative w-full h-[40rem] col-span-full">
+      <BlogCard.Media className="relative w-full h-[18.75rem] md:h-[40rem] col-span-full">
         <CloudinaryImage
           publicId={article.id}
           src={article.imageUrl}
