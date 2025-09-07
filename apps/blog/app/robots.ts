@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ['/api/', '/_mail-templates/'],
     },
     sitemap: `${
-      process.env.SITE_DOMAIN || 'http://localhost:3000'
+      process.env.SITE_BASE_URL || 'http://localhost:3000'
     }/sitemap.xml`,
   };
 }
