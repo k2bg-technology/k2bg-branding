@@ -42,3 +42,9 @@ chromatic.config.json
 
 # vi test
 dist
+
+# pnpm store
+.pnpm-store
+
+# mcp
+.serena
