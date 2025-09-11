@@ -83,8 +83,7 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
   -x
 
 # Install uv (Python package manager) for the node user
-USER node
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/0.4.18/install.sh | sh
 # Add uv to PATH for the node user
 ENV PATH="/home/node/.local/bin:$PATH"
 USER root
