@@ -32,8 +32,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Ensure default node user has access to /usr/local/share
-RUN mkdir -p /usr/local/share/npm-global && \
-  chown -R node:node /usr/local/share
+RUN mkdir -p /workspace /home/node/.claude /home/node/.pnpm-store /home/node/.pnpm \
+    /workspace/node_modules /workspace/apps/blog/node_modules /workspace/apps/portfolio/node_modules && \
+    chown -R node:node /workspace /home/node
 
 ARG USERNAME=node
 
@@ -46,10 +47,6 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 # Set `DEVCONTAINER` environment variable to help with orientation
 ENV DEVCONTAINER=true
 
-# Create workspace and config directories and set permissions
-RUN mkdir -p /workspace /home/node/.claude && \
-  chown -R node:node /workspace /home/node/.claude
-
 WORKDIR /workspace
 
 ARG GIT_DELTA_VERSION=0.18.2
@@ -58,12 +55,17 @@ RUN ARCH=$(dpkg --print-architecture) && \
   sudo dpkg -i "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb" && \
   rm "git-delta_${GIT_DELTA_VERSION}_${ARCH}.deb"
 
+# Install Claude and pnpm
+RUN npm install -g pnpm @anthropic-ai/claude-code@${CLAUDE_CODE_VERSION} && \
+  pnpm config set store-dir /home/node/.pnpm-store
+
 # Set up non-root user
 USER node
 
-# Install global packages
-ENV NPM_CONFIG_PREFIX=/usr/local/share/npm-global
-ENV PATH=$PATH:/usr/local/share/npm-global/bin
+# Set the pnpm paths
+ENV PNPM_HOME="/home/node/.pnpm"
+ENV PNPM_STORE_DIR="/home/node/.pnpm-store"
+ENV PATH="${PNPM_HOME}:${PATH}"
 
 # Set the default shell to zsh rather than sh
 ENV SHELL=/bin/zsh
@@ -84,14 +86,40 @@ RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/
 
 # Install uv (Python package manager) for the node user
 RUN curl -LsSf https://astral.sh/uv/0.4.18/install.sh | sh
+
 # Add uv to PATH for the node user
 ENV PATH="/home/node/.local/bin:$PATH"
+
+# Switch to root for permission configuration
 USER root
 
 # Copy and set up firewall script
 COPY init-firewall.sh /usr/local/bin/
-USER root
-RUN chmod +x /usr/local/bin/init-firewall.sh && \
-  echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-firewall && \
-  chmod 0440 /etc/sudoers.d/node-firewall
+RUN chmod +x /usr/local/bin/init-firewall.sh
+
+# Create permissions fix script
+RUN cat << 'EOF' > /usr/local/bin/fix-node-modules-permissions.sh
+#!/bin/bash
+
+ALLOWED_DIRS=(
+"/workspace/node_modules"
+"/workspace/apps/blog/node_modules"
+"/workspace/apps/portfolio/node_modules"
+"/home/node/.pnpm-store"
+)
+
+for dir in "${ALLOWED_DIRS[@]}"; do
+if [ -d "$dir" ]; then
+/bin/chown -R node:node "$dir"
+fi
+done
+EOF
+
+# Set up all sudo permissions
+RUN chmod 755 /usr/local/bin/fix-node-modules-permissions.sh && \
+    echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-permissions && \
+    echo "node ALL=(root) NOPASSWD: /bin/chown -R node\\:node /workspace/node_modules, /bin/chown -R node\\:node /workspace/apps/blog/node_modules, /bin/chown -R node\\:node /workspace/apps/portfolio/node_modules, /bin/chown -R node\\:node /home/node/.pnpm-store" >> /etc/sudoers.d/node-permissions && \
+    echo "node ALL=(root) NOPASSWD: /usr/local/bin/fix-node-modules-permissions.sh" >> /etc/sudoers.d/node-permissions && \
+    chmod 0440 /etc/sudoers.d/node-permissions
+
 USER node
