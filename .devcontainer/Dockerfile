@@ -118,7 +118,7 @@ EOF
 # Set up all sudo permissions
 RUN chmod 755 /usr/local/bin/fix-node-modules-permissions.sh && \
     echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-permissions && \
-    echo "node ALL=(root) NOPASSWD: /bin/chown -R node\\:node /workspace*, /bin/chown -R node\\:node /home/node/.pnpm-store" >> /etc/sudoers.d/node-permissions && \
+    echo "node ALL=(root) NOPASSWD: /bin/chown -R node\\:node /workspace/node_modules, /bin/chown -R node\\:node /workspace/apps/blog/node_modules, /bin/chown -R node\\:node /workspace/apps/portfolio/node_modules, /bin/chown -R node\\:node /home/node/.pnpm-store" >> /etc/sudoers.d/node-permissions && \
     echo "node ALL=(root) NOPASSWD: /usr/local/bin/fix-node-modules-permissions.sh" >> /etc/sudoers.d/node-permissions && \
     chmod 0440 /etc/sudoers.d/node-permissions
 
