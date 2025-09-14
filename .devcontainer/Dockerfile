@@ -33,8 +33,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Ensure default node user has access to /usr/local/share
 RUN mkdir -p /workspace /home/node/.claude /home/node/.pnpm-store /home/node/.pnpm \
-    /workspace/node_modules /workspace/apps/blog/node_modules /workspace/apps/portfolio/node_modules && \
-    chown -R node:node /workspace /home/node
+  /workspace/node_modules /workspace/apps/blog/node_modules /workspace/apps/portfolio/node_modules \
+  /workspace/packages/ui/node_modules /workspace/packages/tailwind-config/node_modules \
+  /workspace/packages/tsconfig/node_modules /workspace/packages/test-utils/node_modules && \
+  chown -R node:node /workspace /home/node
 
 ARG USERNAME=node
 
@@ -105,6 +107,10 @@ ALLOWED_DIRS=(
 "/workspace/node_modules"
 "/workspace/apps/blog/node_modules"
 "/workspace/apps/portfolio/node_modules"
+"/workspace/packages/ui/node_modules"
+"/workspace/packages/tailwind-config/node_modules"
+"/workspace/packages/tsconfig/node_modules"
+"/workspace/packages/test-utils/node_modules"
 "/home/node/.pnpm-store"
 )
 
@@ -117,9 +123,9 @@ EOF
 
 # Set up all sudo permissions
 RUN chmod 755 /usr/local/bin/fix-node-modules-permissions.sh && \
-    echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-permissions && \
-    echo "node ALL=(root) NOPASSWD: /bin/chown -R node\\:node /workspace/node_modules, /bin/chown -R node\\:node /workspace/apps/blog/node_modules, /bin/chown -R node\\:node /workspace/apps/portfolio/node_modules, /bin/chown -R node\\:node /home/node/.pnpm-store" >> /etc/sudoers.d/node-permissions && \
-    echo "node ALL=(root) NOPASSWD: /usr/local/bin/fix-node-modules-permissions.sh" >> /etc/sudoers.d/node-permissions && \
-    chmod 0440 /etc/sudoers.d/node-permissions
+  echo "node ALL=(root) NOPASSWD: /usr/local/bin/init-firewall.sh" > /etc/sudoers.d/node-permissions && \
+  echo "node ALL=(root) NOPASSWD: /bin/chown -R node\\:node /workspace/node_modules, /bin/chown -R node\\:node /workspace/apps/blog/node_modules, /bin/chown -R node\\:node /workspace/apps/portfolio/node_modules, /bin/chown -R node\\:node /workspace/packages/ui/node_modules, /bin/chown -R node\\:node /workspace/packages/tailwind-config/node_modules, /bin/chown -R node\\:node /workspace/packages/tsconfig/node_modules, /bin/chown -R node\\:node /workspace/packages/test-utils/node_modules, /bin/chown -R node\\:node /home/node/.pnpm-store" >> /etc/sudoers.d/node-permissions && \
+  echo "node ALL=(root) NOPASSWD: /usr/local/bin/fix-node-modules-permissions.sh" >> /etc/sudoers.d/node-permissions && \
+  chmod 0440 /etc/sudoers.d/node-permissions
 
 USER node
