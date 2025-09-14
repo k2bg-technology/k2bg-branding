@@ -69,7 +69,24 @@ for domain in \
     "api.anthropic.com" \
     "sentry.io" \
     "statsig.anthropic.com" \
-    "statsig.com"; do
+    "statsig.com" \
+    "binaries.prisma.sh" \
+    "prisma-engines.s3-eu-west-1.amazonaws.com" \
+    "api.notion.com" \
+    "api.cloudinary.com" \
+    "api.sendgrid.com" \
+    "api.hcaptcha.com" \
+    "hcaptcha.com" \
+    "graph.instagram.com" \
+    "formspree.io" \
+    "aws-0-ap-northeast-1.pooler.supabase.com" \
+    "googleapis.com" \
+    "google.com" \
+    "googletagmanager.com" \
+    "api.unsplash.com" \
+    "images.unsplash.com" \
+    "amazonaws.com" \
+    "cdninstagram.com"; do
     echo "Resolving $domain..."
     ips=$(dig +noall +answer A "$domain" | awk '$4 == "A" {print $5}')
     if [ -z "$ips" ]; then
