@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { within, userEvent } from '@storybook/test';
 
 import { Icon } from '../../../..';
 import Form from '..';
@@ -21,6 +22,14 @@ export const Disabled: Story = {
 export const Error: Story = {
   args: {
     error: true,
+  },
+};
+
+export const Focused: Story = {
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox');
+
+    await userEvent.click(input);
   },
 };
 

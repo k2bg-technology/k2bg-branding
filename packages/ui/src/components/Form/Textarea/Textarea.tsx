@@ -6,23 +6,19 @@ import { FormProps, useFormContext } from '../Control/Context';
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
 const inputVariants = cva(
-  'appearance-none focus:outline-hidden focus:shadow-xs border rounded-md px-2 py-3 w-full text-body-r-sm leading-body-r-sm',
+  'appearance-none focus-visible:border-ring focus-visible:ring-[3px] border rounded-md px-2 py-3 w-full text-body-r-sm field-sizing-content',
   {
     variants: {
       color: {
-        dark: 'focus:border-base-black/50 border-base-default/50 text-base-default focus:shadow-base-black/30 placeholder-base-default/50',
+        dark: 'focus-visible:ring-base-default/30 border-base-default/50 text-base-default placeholder-base-default/50',
         light:
-          'focus:border-white border-white/50 text-white focus:shadow-white/30 placeholder-white/50',
+          'focus-visible:ring-white/30 border-white/50 text-white placeholder-white/50',
       },
       error: {
-        true: [
-          'border-error focus:border-error focus:shadow-error/30 focus:shadow-xs',
-        ],
+        true: ['border-error focus-visible:ring-error/30'],
       },
       disabled: {
-        true: [
-          'border-neutral-300 focus:border-neutral-300 placeholder-neutral-300 cursor-not-allowed',
-        ],
+        true: ['border-neutral-300 placeholder-neutral-300 cursor-not-allowed'],
       },
     },
     defaultVariants: {
