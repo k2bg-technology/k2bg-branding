@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Suspense } from 'react';
 import type { Preview, StoryContext, StoryFn } from '@storybook/react';
 import { I18nextProvider } from 'react-i18next';
-import { DocsContainer } from '@storybook/addon-docs';
+import { DocsContainer } from '@storybook/addon-docs/blocks';
 import i18n from '../src/i18n';
 
 import '../src/globals.css';
@@ -53,7 +53,7 @@ const preview: Preview = {
     },
     docs: {
       container: ({ context, children }) => {
-        const { locale } = context.store.globals.globals;
+        const { locale } = context.store.userGlobals.globals;
 
         // When the locale global changes
         // Set the new locale in i18n
