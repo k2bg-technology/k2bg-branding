@@ -1,9 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { PropsWithChildren, useMemo } from 'react';
 import { Suspense } from 'react';
-import type { Preview, StoryContext, StoryFn } from '@storybook/react';
+import type { Preview, StoryContext } from '@storybook/react';
 import { I18nextProvider } from 'react-i18next';
-import { DocsContainer } from '@storybook/addon-docs/blocks';
+import {
+  DocsContainer,
+  DocsContainerProps,
+} from '@storybook/addon-docs/blocks';
 import i18n from '../src/i18n';
+
+import type { StoryStore } from 'storybook/preview-api';
+import { PartialStoryFn } from 'storybook/internal/types';
 
 import '../src/globals.css';
 
@@ -12,24 +18,34 @@ i18n.on('languageChanged', (locale) => {
   document.dir = direction;
 });
 
-// Wrap your stories in the I18nextProvider component
-function withI18next(Story: StoryFn, context: StoryContext) {
-  const { locale } = context.globals;
-
+function I18nChangeLocaleProvider(
+  props: PropsWithChildren<{
+    locale: string;
+  }>
+) {
   // When the locale global changes
   // Set the new locale in i18n
-  useEffect(() => {
-    i18n.changeLanguage(locale);
-  }, [locale]);
+  useMemo(() => {
+    i18n.changeLanguage(props.locale);
+  }, [props.locale]);
 
   return (
     // This catches the suspense from components not yet ready (still loading translations)
     // Alternative: set useSuspense to false on i18next.options.react when initializing i18next
     <Suspense fallback={<div>loading translations...</div>}>
-      <I18nextProvider i18n={i18n}>
-        <Story />
-      </I18nextProvider>
+      <I18nextProvider i18n={i18n}>{props.children}</I18nextProvider>
     </Suspense>
+  );
+}
+
+// Wrap your stories in the I18nextProvider component
+function withI18next(Story: PartialStoryFn, context: StoryContext) {
+  const { locale } = context.globals;
+
+  return (
+    <I18nChangeLocaleProvider locale={locale}>
+      <Story />
+    </I18nChangeLocaleProvider>
   );
 }
 
@@ -52,21 +68,21 @@ const preview: Preview = {
       },
     },
     docs: {
-      container: ({ context, children }) => {
+      container: ({
+        context,
+        children,
+      }: {
+        context: DocsContainerProps['context'] & {
+          store: StoryStore<any>;
+        };
+        children: React.ReactNode;
+      }) => {
         const { locale } = context.store.userGlobals.globals;
 
-        // When the locale global changes
-        // Set the new locale in i18n
-        useEffect(() => {
-          i18n.changeLanguage(locale);
-        }, [locale]);
-
         return (
-          <Suspense fallback={<div>loading translations...</div>}>
-            <I18nextProvider i18n={i18n}>
-              <DocsContainer context={context}>{children}</DocsContainer>
-            </I18nextProvider>
-          </Suspense>
+          <I18nChangeLocaleProvider locale={locale}>
+            <DocsContainer context={context}>{children}</DocsContainer>
+          </I18nChangeLocaleProvider>
         );
       },
     },
