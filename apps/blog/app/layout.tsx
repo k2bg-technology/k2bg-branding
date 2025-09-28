@@ -1,4 +1,3 @@
-import { Noto_Sans_JP } from 'next/font/google';
 import { GoogleTagManager } from '@next/third-parties/google';
 
 import Header from '../components/header/Header';
@@ -10,21 +9,13 @@ import { Toaster } from '../components/toaster/Toaster';
 
 import './globals.css';
 
-// If loading a variable font, you don't need to specify the font weight
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-noto-sans-jp',
-});
-
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ja" className={notoSansJP.variable}>
+    <html lang="ja">
       <body>
         <ReactQueryClientProvider>
           <PageScrollArea>

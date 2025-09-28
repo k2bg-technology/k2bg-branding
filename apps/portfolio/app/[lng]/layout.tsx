@@ -1,4 +1,3 @@
-import { Noto_Sans_JP } from 'next/font/google';
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { dir } from 'i18next';
@@ -7,14 +6,6 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import { languages, Language } from '../../i18n/settings';
 
 import '../globals.css';
-
-// If loading a variable font, you don't need to specify the font weight
-const notoSansJP = Noto_Sans_JP({
-  subsets: ['latin'],
-  display: 'swap',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  variable: '--font-noto-sans-jp',
-});
 
 type Params = Promise<{ lng: Language }>;
 
@@ -37,7 +28,7 @@ export default async function RootLayout({
   const { lng } = await params;
 
   return (
-    <html lang={lng} dir={dir(lng)} className={notoSansJP.variable}>
+    <html lang={lng} dir={dir(lng)}>
       <body>{children}</body>
       <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
     </html>

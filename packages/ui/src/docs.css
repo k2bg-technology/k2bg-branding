@@ -1,7 +1,7 @@
 @import "./globals.css";
 
-body {
-  font-family: 'Menlo', "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, ui-monospace, SFMono-Regular, Monaco, Consolas, Liberation Mono, Courier New, monospace;
+main {
+  font-family: 'Menlo', 'YuGothic', "Hiragino Kaku Gothic ProN", "Hiragino Sans", 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
   color: #474a4d;
 }
 

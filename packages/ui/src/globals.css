@@ -4,7 +4,7 @@
 @import "tailwindcss/preflight.css" layer(base);
 
 @theme {
-  --font-original: 'Menlo', 'YuGothic', 'var(--font-noto-sans-jp)', "Hiragino Kaku Gothic ProN", "Hiragino Sans", 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
+  --font-original: 'Menlo', 'YuGothic', "Hiragino Kaku Gothic ProN", "Hiragino Sans", 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
   --spacing-condensed: 0.25rem;
   --spacing-normal: 0.5rem;
   --spacing-spacious: 1rem;
