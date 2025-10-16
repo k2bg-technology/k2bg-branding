@@ -1,0 +1,54 @@
+import {
+  Meta,
+  Title,
+  Subtitle,
+  Markdown,
+  Primary,
+  Controls,
+  Unstyled,
+  Source,
+  useOf,
+} from '@storybook/addon-docs/blocks';
+
+import Overview from './Overview';
+import Usage from './Usage';
+import DoDont from './DoDont';
+import Anatomy from './Anatomy';
+import Accessibility from './Accessibility';
+import Description from './Description';
+import Stories from './Stories';
+import API from './API';
+
+import '../src/docs.css';
+
+<Meta isTemplate />
+
+<Unstyled>
+
+<Title />
+
+<Subtitle />
+
+<Description />
+
+<Primary />
+
+<div className='flex flex-col gap-8'>
+
+<API />
+
+<Overview />
+
+<Usage />
+
+<Anatomy />
+
+<Accessibility />
+
+<DoDont />
+
+<Stories />
+
+</div>
+
+</Unstyled>

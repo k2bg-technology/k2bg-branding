@@ -7,6 +7,7 @@ import {
   DocsContainerProps,
 } from '@storybook/addon-docs/blocks';
 import i18n from '../src/i18n';
+import DocumentationTemplate from './DocumentationTemplate.mdx';
 
 import type { StoryStore } from 'storybook/preview-api';
 import { PartialStoryFn } from 'storybook/internal/types';
@@ -85,6 +86,8 @@ const preview: Preview = {
           </I18nChangeLocaleProvider>
         );
       },
+      page: DocumentationTemplate,
+      codePanel: true,
     },
   },
   // Create a global variable called locale in storybook
