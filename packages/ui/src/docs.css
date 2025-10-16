@@ -6,6 +6,7 @@ main {
 }
 
 h1 {
+  font-family: unset !important;
   font-size: 1.875rem;
   font-weight: bold;
   line-height: 3.1875rem;
@@ -54,4 +55,47 @@ table thead th {
 table tbody td {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #eee;
+}
+
+.do-dont-container {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.do-section,
+.dont-section {
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid;
+}
+
+.do-section {
+  background-color: #f0fdf4;
+  border-left-color: #22c55e;
+}
+
+.do-section h3 {
+  color: #16a34a;
+  margin-bottom: 0.5rem;
+  border-bottom: none;
+}
+
+.dont-section {
+  background-color: #fef2f2;
+  border-left-color: #ef4444;
+}
+
+.dont-section h3 {
+  color: #dc2626;
+  margin-bottom: 0.5rem;
+  border-bottom: none;
+}
+
+.docblock-source {
+  margin: unset !important;
+}
+
+.docblock-argstable {
+  margin: unset !important;
 }
