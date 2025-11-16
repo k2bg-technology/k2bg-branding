@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
 import { languages, fallbackLng, Language } from '../../i18n/settings';
-import { useTranslation } from '../../i18n';
+import { getTranslation } from '../../i18n';
 import { Hero } from '../../components/contents/Hero';
 import { Background } from '../../components/contents/Background';
 import { Skill } from '../../components/contents/Skill';
@@ -17,7 +17,7 @@ type Params = Promise<{ lng: Language }>;
 
 export default async function Page({ params }: { params: Params }) {
   const { lng } = await params;
-  const { t } = await useTranslation(
+  const { t } = await getTranslation(
     languages.indexOf(lng) < 0 ? fallbackLng : lng
   );
 
