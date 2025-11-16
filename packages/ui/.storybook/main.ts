@@ -26,9 +26,9 @@ const config: StorybookConfig = {
           {
             test: /\.module\.css$/,
             use: [
-              require.resolve('style-loader'),
+              'style-loader',
               {
-                loader: require.resolve('css-loader'),
+                loader: 'css-loader',
                 options: {
                   importLoaders: 1,
                   modules: {
@@ -38,9 +38,9 @@ const config: StorybookConfig = {
                 },
               },
               {
-                loader: require.resolve('postcss-loader'),
+                loader: 'postcss-loader',
                 options: {
-                  implementation: require.resolve('postcss'),
+                  implementation: 'postcss',
                 },
               },
             ],
@@ -49,17 +49,17 @@ const config: StorybookConfig = {
             test: /\.css$/,
             exclude: /\.module\.css$/,
             use: [
-              require.resolve('style-loader'),
+              'style-loader',
               {
-                loader: require.resolve('css-loader'),
+                loader: 'css-loader',
                 options: {
                   importLoaders: 1,
                 },
               },
               {
-                loader: require.resolve('postcss-loader'),
+                loader: 'postcss-loader',
                 options: {
-                  implementation: require.resolve('postcss'),
+                  implementation: 'postcss',
                 },
               },
             ],
@@ -67,6 +67,7 @@ const config: StorybookConfig = {
         ],
       },
     },
+    '@storybook/addon-mcp',
   ],
   framework: {
     name: '@storybook/react-webpack5',
