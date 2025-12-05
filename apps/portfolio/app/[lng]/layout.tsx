@@ -3,11 +3,9 @@ import { Metadata } from 'next';
 import { dir } from 'i18next';
 import { GoogleTagManager } from '@next/third-parties/google';
 
-import { languages, Language } from '../../i18n/settings';
+import { languages } from '../../i18n/settings';
 
 import '../globals.css';
-
-type Params = Promise<{ lng: Language }>;
 
 export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
@@ -23,7 +21,7 @@ export default async function RootLayout({
   params,
 }: {
   children: ReactNode;
-  params: Params;
+  params: Promise<{ lng: string }>;
 }) {
   const { lng } = await params;
 

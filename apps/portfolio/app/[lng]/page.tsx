@@ -13,27 +13,24 @@ import { ScrollHelper } from '../../components/ScrollHelper';
 
 import Loading from './loading';
 
-type Params = Promise<{ lng: Language }>;
-
-export default async function Page({ params }: { params: Params }) {
+export default async function Page({ params }: { params: Promise<{ lng: string }> }) {
   const { lng } = await params;
-  const { t } = await getTranslation(
-    languages.indexOf(lng) < 0 ? fallbackLng : lng
-  );
+  const language = (languages as readonly string[]).includes(lng) ? (lng as Language) : fallbackLng;
+  const { t } = await getTranslation(language);
 
   return (
     <Suspense fallback={<Loading />}>
       <div className="flex flex-col gap-condensed md:absolute md:top-1/2 md:-translate-y-1/2 md:px-20 md:animate-slide">
         <main>
           <div className="grid grid-flow-row auto-cols-fr overflow-hidden md:grid-flow-col md:auto-cols-max md:rounded-3xl md:shadow-2xl md:max-h-[37.5rem]">
-            <Hero lng={lng} />
+            <Hero lng={language} />
             <Background t={t} />
             <Skill t={t} />
             <Portfolio t={t} />
             <Contact t={t} />
           </div>
         </main>
-        <Footer lng={lng} />
+        <Footer lng={language} />
       </div>
       <LanguageSelector />
       <ScrollHelper />
