@@ -8,7 +8,6 @@ const meta = {
   component: Badge,
   args: {
     children: 'Badge',
-    variant: 'default',
   },
   argTypes: {
     variant: {
@@ -31,6 +30,21 @@ const meta = {
     },
     asChild: {
       control: 'boolean',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: 'components.badge.description',
+      },
+      overview: 'components.badge.overview',
+      usage: 'components.badge.usage',
+      accessibility: 'components.badge.accessibility',
+      doList: 'components.badge.doList',
+      dontList: 'components.badge.dontList',
+      relatedComponents: 'components.badge.relatedComponents',
+      dependencies: 'components.badge.dependencies',
+      references: 'components.badge.references',
     },
   },
 } satisfies Meta<typeof Badge>;

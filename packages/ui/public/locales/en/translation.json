@@ -225,5 +225,80 @@
         }
       }
     }
+  },
+  "components": {
+    "badge": {
+      "description": "A compact UI element that displays status, labels, or metadata in a visually distinct format.",
+      "overview": "The Badge component provides a flexible way to display small pieces of information such as status indicators, labels, tags, or counts. Built with class-variance-authority for type-safe variant management and tailwind-merge for optimal className composition, it supports two variants (default with filled background, outline with border only) and nine color options (main, accent, success, error, info, warning, dark, light, inherit). The component uses Radix UI Slot for polymorphic rendering via the asChild prop, allowing it to function as any HTML element while maintaining consistent styling. Badges can be enhanced with icons, maintaining proper spacing and alignment through predefined styles.",
+      "usage": "Use Badge to highlight important information or status within the interface. For basic usage, simply provide text content as children, and the component will render with default styling (main color, filled variant). When indicating status or categories, choose appropriate color props (success for positive states, error for warnings, info for neutral information). For visual variety or to match design requirements, use the outline variant to create a more subtle appearance with transparent background and colored border. When combining with icons, place Icon components as children alongside text, and the Badge will automatically handle spacing and sizing through CSS. For advanced composition needs, use the asChild prop to render the Badge styling on custom elements like links or buttons while preserving semantic HTML structure.",
+      "accessibility": "This component meets the following accessibility requirements. For screen reader support, use semantic HTML span elements by default and ensure that badge content is descriptive and meaningful, avoiding vague labels like 'New' without context. Regarding contrast ratio, maintains minimum contrast ratio of 4.5:1 between text and background for all color variants (WCAG 2.1 AA compliance). Uses semantic HTML with appropriate span elements and supports polymorphic rendering through Radix UI Slot while maintaining semantic integrity. For focus management, when used with interactive elements via asChild, provides visible focus indicators with ring styles that meet 3:1 contrast ratio requirements. Additional considerations include support for aria-invalid attribute with enhanced visual feedback (destructive ring styling), proper icon sizing and alignment for consistent visual hierarchy, and whitespace-nowrap to prevent text wrapping that could harm readability.",
+      "doList": [
+        "Use descriptive and meaningful text that clearly communicates the badge purpose",
+        "Choose appropriate color variants that match the semantic meaning (success for positive, error for critical)",
+        "Ensure sufficient contrast ratio of 4.5:1 between text and background colors",
+        "Combine with icons when visual reinforcement enhances understanding",
+        "Use asChild for interactive badges to maintain proper semantic HTML structure",
+        "Keep badge content concise, typically one to three words maximum"
+      ],
+      "dontList": [
+        "Don't use vague or ambiguous text like 'New' or 'Important' without proper context",
+        "Don't mix color semantics (avoid using error color for success states)",
+        "Don't create badges with insufficient contrast that fail WCAG AA standards",
+        "Don't use badges as primary interactive elements without proper focus management",
+        "Don't override core styling that would break the established design system",
+        "Don't use excessively long text that causes layout issues or poor readability"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Button for primary interactive elements, while Badge displays non-interactive status"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Combine Icon with Badge to provide visual reinforcement for status indicators"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-slot",
+          "version": "^1.1.0",
+          "reason": "Provides polymorphic rendering capability through the asChild prop"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "Type-safe variant and compound variant management for styling"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for intelligent Tailwind className merging and conflict resolution"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Guidelines on Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Official WCAG documentation on accessible color usage and contrast requirements"
+        },
+        {
+          "linkText": "Radix UI Slot Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/utilities/slot",
+          "description": "Official documentation for the Slot utility enabling polymorphic component patterns"
+        },
+        {
+          "linkText": "Class Variance Authority",
+          "url": "https://cva.style/docs",
+          "description": "Documentation for type-safe variant management in component styling"
+        }
+      ]
+    }
   }
 }
