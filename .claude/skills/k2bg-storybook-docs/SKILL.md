@@ -162,7 +162,7 @@ export const Default: Story = {
   "components": {
     "[componentName]": {
       "description": "A brief 1-2 sentence description of the component's purpose and primary use case.",
-      "overview": "Detailed explanation of the component including main purpose and use cases, component structure (Root, sub-components), key features and functionality. Built on [external library] if applicable. Supports responsive sizing via className props.",
+      "overview": "Detailed explanation of the component including main purpose and use cases, component structure (Root, sub-components), key features and functionality. Supports responsive sizing via className props.",
       "usage": "Guidance on how to use the component. For basic usage, explain the simplest implementation. When using variants, show how to use different variants. Follow best practices by recommending when and how to use the component. Common patterns include typical use cases. For integration, explain how it works with other components.",
       "accessibility": "This component meets the following accessibility requirements. For screen reader support, [specific ARIA labels and semantic HTML usage]. Regarding contrast ratio, maintains minimum contrast ratio of 4.5:1 (WCAG 2.1 AA). Uses semantic HTML with appropriate HTML elements and proper ARIA attributes. For focus management, [keyboard navigation and focus indicators]. Additional considerations include [component-specific a11y features].",
       "doList": [
@@ -229,7 +229,7 @@ export const Default: Story = {
   "components": {
     "[componentName]": {
       "description": "コンポーネントの目的と主な使用目的を1〜2文で説明します。",
-      "overview": "コンポーネントの詳細な説明です。主な目的と使用例、コンポーネント構造（Root、サブコンポーネント）、主要な機能と特徴を含みます。該当する場合は[外部ライブラリ]をベースに構築されています。classNameプロップによるレスポンシブサイズ対応をサポートします。",
+      "overview": "コンポーネントの詳細な説明です。主な目的と使用例、コンポーネント構造（Root、サブコンポーネント）、主要な機能と特徴を含みます。classNameプロップによるレスポンシブサイズ対応をサポートします。",
       "usage": "コンポーネントの使用方法についてです。基本的な使用法では、最もシンプルな実装方法を説明します。バリアント使用時は、異なるバリアントの使用方法を示します。ベストプラクティスとして、いつ、どのように使用するかを推奨します。一般的なパターンには、典型的な使用例が含まれます。統合については、他のコンポーネントとの連携方法を説明します。",
       "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。スクリーンリーダー対応として、[具体的なARIAラベルとセマンティックHTML使用]を行います。コントラスト比については、最低コントラスト比4.5:1を維持します（WCAG 2.1 AA準拠）。セマンティックHTMLとして、適切なHTML要素と正しいARIA属性を使用します。フォーカス管理では、[キーボードナビゲーションとフォーカスインジケーター]に対応します。追加の考慮事項として、[コンポーネント固有のアクセシビリティ機能]があります。",
       "doList": [
@@ -477,6 +477,24 @@ Before finalizing translation files, verify each value:
 - Use universally understood technical terms
 - Define specialized terms on first use
 
+**Library-Agnostic Component Descriptions**
+
+- **CRITICAL**: Do NOT mention specific library names (Radix UI, Tailwind CSS, etc.) in `description` or `overview` sections
+- Focus on what the component does, not what it's built with
+- Describe functionality, behavior, and purpose in universal terms
+- Examples of FORBIDDEN mentions in description/overview:
+  - ❌ "Built on Radix UI primitives"
+  - ❌ "Uses Tailwind CSS for styling"
+  - ❌ "Powered by @radix-ui/react-avatar"
+  - ❌ "Styled with Tailwind utility classes"
+- Examples of CORRECT descriptions:
+  - ✅ "Displays user profile images with fallback support"
+  - ✅ "Provides accessible button variations for different contexts"
+  - ✅ "Supports responsive sizing and theming"
+- Library-specific details MUST only appear in:
+  - `dependencies` section (with clear technical reasoning)
+  - `references` section (linking to official documentation)
+
 ### Tone and Voice
 
 **Neutral and Flat**
@@ -500,8 +518,8 @@ Before finalizing translation files, verify each value:
 **Consistent Style**
 
 - **English**: Use present tense, active voice
-- **Japanese**: Use 敬体（polite form: 〜します/〜ます）
-- Use 敬体 consistently throughout all documentation
+- **Japanese**: Use敬体（polite form: 〜します/〜ます）
+- Use敬体consistently throughout all documentation
 
 ### Sentence Structure
 
@@ -638,7 +656,7 @@ Before finalizing translation files, verify each value:
 
 Before finalizing any documentation, verify:
 
-- ✅ **Style**: All text uses consistent style（敬体 for Japanese, present tense for English）
+- ✅ **Style**: All text uses consistent style（敬体for Japanese, present tense for English）
 - ✅ **Length**: Sentences are ~60 characters or less
 - ✅ **Consistency**: Same concept uses same term throughout
 - ✅ **Labels**: Button/menu text is consistent and action-oriented
@@ -664,7 +682,7 @@ Before finalizing any documentation, verify:
 - ✅ **CRITICAL - No Markdown/Newlines**: Verify every translation value contains ZERO markdown symbols (-, \*, #, \*\*, `, ```), ZERO newline characters (\n), and ZERO HTML tags. This is non-negotiable.
 - ✅ **Plain Text Only**: All content must be continuous prose without any formatting whatsoever
 - ✅ **English**: Clear, concise, present tense, active voice
-- ✅ **Japanese**: Natural 敬体、consistent technical terms
+- ✅ **Japanese**: Natural敬体、consistent technical terms
 - ✅ Follow all Writing Guidelines principles
 - ✅ Sentences are ~60 characters or less
 - ✅ Technical term consistency (e.g., "スクリーンリーダー" not "読み上げソフト")
