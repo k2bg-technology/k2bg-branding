@@ -1,5 +1,76 @@
 {
   "components": {
+    "badge": {
+      "description": "ステータス、カテゴリ、メタデータ情報をコンパクトな視覚フォーマットで強調表示する小さなラベルです。",
+      "overview": "Badgeはステータス、カウント、カテゴリ情報を伝えるためのコンパクトな視覚インジケーターです。variantとcolorプロップによりカスタマイズ可能な外観を持つインライン要素としてレンダリングされます。ソリッド背景のdefaultとボーダースタイルのoutlineの2つのバリアントをサポートします。main、accent、success、error、info、warning、dark、light、inheritを含む9つのカラーオプションが利用可能です。Badgeはテキスト、アイコン、またはその両方を含むことができ、カスタム要素レンダリングのためのasChildパターンをサポートします。",
+      "usage": "ステータスインジケーター、通知カウント、カテゴリラベルなどの重要な情報を強調するためにBadgeを使用します。基本的な使い方では、Badgeコンポーネント内にテキストコンテンツをラップします。variantプロップを適用してソリッドスタイルとアウトラインスタイルを切り替えます。colorプロップを使用して、成功状態にはsuccess、アラートにはerror、注意にはwarningなどのセマンティックな意味を伝えます。テキストと一緒にIconコンポーネントを子要素として含めることでアイコンと組み合わせることができます。カスタム要素のレンダリングには、asChildをtrueに設定し、単一の子要素をラップします。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。セマンティック構造として、Badgeはデフォルトでspan要素としてレンダリングされ、インラインコンテンツに適しています。ステータス情報を伝える際は、周囲のコンテキストがスクリーンリーダーに意味を明確に伝えるようにします。フォーカス状態について、コンポーネントはWCAG要件を満たすリングスタイルの可視フォーカスインジケーターを含みます。色だけで意味を伝えるべきではないため、色とテキストラベルまたはアイコンを組み合わせます。アイコンと一緒に使用する場合は、アイコンが装飾的であるか、適切なaria-labelを持つようにします。",
+      "doList": [
+        "バッジの意味を明確に伝える説明的なテキストを使用します",
+        "アクセシビリティのために色インジケーターとテキストラベルを組み合わせます",
+        "インターフェース全体で類似のセマンティックな意味に一貫した色を適用します",
+        "目立たない情報や二次的な情報にはoutlineバリアントを使用します",
+        "視覚的にメッセージを強化するために適切なアイコンを含めます"
+      ],
+      "dontList": [
+        "意味を伝えるために色だけに依存しません",
+        "長いテキストコンテンツにバッジを使用しません",
+        "単一の説明的なラベルで十分な場合に複数のバッジを適用しません",
+        "重要でない情報にwarningやerrorの色を使用しません",
+        "バッジが重要なステータスを伝える場合にテキストラベルを省略しません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "ユーザープロフィールのステータスインジケーターとしてBadgeとAvatarを組み合わせます"
+        },
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "通知カウント用にButtonと一緒にBadgeを使用します"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "視覚的な意味を強化するためにBadge内にIconを含めます"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        },
+        {
+          "package": "@radix-ui/react-slot",
+          "version": "^1.1.0",
+          "reason": "カスタム要素合成のためのasChildパターンを有効化"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "スタイリングのための型安全なバリアント管理を提供"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Tailwind CSSクラスを競合なくマージするユーティリティ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG 色の使用ガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "色のアクセシビリティ要件に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "Radix UI Slotドキュメント",
+          "url": "https://www.radix-ui.com/primitives/docs/utilities/slot",
+          "description": "asChildパターンを有効にするSlotユーティリティの公式ドキュメント"
+        }
+      ]
+    },
     "avatar": {
       "description": "ユーザーやエンティティの画像を表示し、読み込み中や画像がない場合のフォールバックをサポートします。",
       "overview": "Avatarはユーザー、組織、エンティティをコンパクトな視覚フォーマットで表現します。レイアウト用のRootコンテナ、プロフィール画像を表示するImage、画像が利用できない場合にイニシャルやプレースホルダーコンテンツを表示するFallbackの3つの部分で構成されます。classNameプロップによるレスポンシブサイズ調整をサポートし、デフォルトで円形を維持します。",
