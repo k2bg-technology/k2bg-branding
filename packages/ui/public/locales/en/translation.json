@@ -1,4 +1,72 @@
 {
+  "components": {
+    "avatar": {
+      "description": "Displays a user or entity image with fallback support for missing or loading states.",
+      "overview": "Avatar represents users, organizations, or entities in a compact visual format. It consists of three parts: Root container for layout, Image for displaying the profile picture, and Fallback for showing initials or placeholder content when the image is unavailable. The component supports responsive sizing through className props and maintains a circular shape by default.",
+      "usage": "Use Avatar to represent users in navigation headers, comments, user lists, or profile sections. For basic usage, wrap Avatar.Image with the Avatar root component and provide src and alt props. When images may fail to load, include Avatar.Fallback as a sibling to display initials or an icon. Control size by passing Tailwind width and height classes to the className prop. Combine multiple Avatars in a group to show team members or collaborators.",
+      "accessibility": "This component meets the following accessibility requirements. For screen reader support, Avatar.Image accepts an alt prop that describes the user or entity. Regarding semantic structure, the component uses span elements appropriately and maintains proper DOM hierarchy. For image states, the fallback mechanism ensures meaningful content is always displayed. Decorative avatars should use an empty alt attribute while informative avatars require descriptive alt text.",
+      "doList": [
+        "Provide descriptive alt text for user identification",
+        "Use Avatar.Fallback as a sibling with Avatar.Image",
+        "Apply consistent sizing across similar contexts",
+        "Use initials or icons as meaningful fallback content",
+        "Ensure fallback text has sufficient contrast"
+      ],
+      "dontList": [
+        "Omit alt text for informative avatars",
+        "Use decorative images without empty alt attributes",
+        "Apply sizes that make content illegible",
+        "Use low-contrast colors for fallback backgrounds",
+        "Nest Avatar components within each other"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use with Avatar for user action buttons"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "Combine Avatar with dropdown for user menus"
+        },
+        {
+          "name": "Badge",
+          "path": "/?path=/docs/components-badge--docs",
+          "description": "Overlay Badge on Avatar for status indicators"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-avatar",
+          "version": "^1.1.1",
+          "reason": "Provides accessible avatar primitives with image loading states"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Non-text Content Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "Official WCAG documentation on alternative text requirements"
+        },
+        {
+          "linkText": "Radix UI Avatar Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/components/avatar",
+          "description": "Official documentation for the underlying primitive component"
+        }
+      ]
+    }
+  },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
   "introduction": {
     "title": "B.G. Neo Grid Design System",
