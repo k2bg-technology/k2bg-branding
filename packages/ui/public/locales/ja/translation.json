@@ -1,4 +1,72 @@
 {
+  "components": {
+    "avatar": {
+      "description": "ユーザーやエンティティの画像を表示し、読み込み中や画像がない場合のフォールバックをサポートします。",
+      "overview": "Avatarはユーザー、組織、エンティティをコンパクトな視覚フォーマットで表現します。レイアウト用のRootコンテナ、プロフィール画像を表示するImage、画像が利用できない場合にイニシャルやプレースホルダーコンテンツを表示するFallbackの3つの部分で構成されます。classNameプロップによるレスポンシブサイズ調整をサポートし、デフォルトで円形を維持します。",
+      "usage": "ナビゲーションヘッダー、コメント、ユーザーリスト、プロフィールセクションでユーザーを表現する際にAvatarを使用します。基本的な使い方では、Avatar.ImageをAvatarルートコンポーネントでラップし、srcとaltプロップを指定します。画像の読み込みに失敗する可能性がある場合は、Avatar.Fallbackを兄弟要素として含めてイニシャルやアイコンを表示します。サイズはclassNameプロップにTailwindの幅と高さクラスを渡して制御します。複数のAvatarをグループ化してチームメンバーやコラボレーターを表示できます。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。スクリーンリーダー対応として、Avatar.Imageはユーザーやエンティティを説明するaltプロップを受け入れます。セマンティック構造について、コンポーネントはspan要素を適切に使用し、正しいDOM階層を維持します。画像の状態に関して、フォールバック機構により意味のあるコンテンツが常に表示されます。装飾的なアバターには空のalt属性を使用し、情報を伝えるアバターには説明的なaltテキストが必要です。",
+      "doList": [
+        "ユーザー識別のために説明的なaltテキストを提供します",
+        "Avatar.FallbackをAvatar.Imageの兄弟要素として使用します",
+        "類似するコンテキストで一貫したサイズを適用します",
+        "イニシャルやアイコンを意味のあるフォールバックコンテンツとして使用します",
+        "フォールバックテキストに十分なコントラストを確保します"
+      ],
+      "dontList": [
+        "情報を伝えるアバターでaltテキストを省略しません",
+        "空のalt属性なしで装飾的な画像を使用しません",
+        "コンテンツが読めなくなるサイズを適用しません",
+        "フォールバック背景に低コントラストの色を使用しません",
+        "Avatarコンポーネントを入れ子にしません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "ユーザーアクションボタンにAvatarと組み合わせて使用します"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "ユーザーメニュー用にAvatarとドロップダウンを組み合わせます"
+        },
+        {
+          "name": "Badge",
+          "path": "/?path=/docs/components-badge--docs",
+          "description": "ステータスインジケーター用にAvatarにBadgeを重ねます"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        },
+        {
+          "package": "@radix-ui/react-avatar",
+          "version": "^1.1.1",
+          "reason": "画像読み込み状態を持つアクセシブルなアバタープリミティブを提供"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Tailwind CSSクラスを競合なくマージするユーティリティ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG 非テキストコンテンツガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "代替テキスト要件に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "Radix UI Avatarドキュメント",
+          "url": "https://www.radix-ui.com/primitives/docs/components/avatar",
+          "description": "基礎となるプリミティブコンポーネントの公式ドキュメント"
+        }
+      ]
+    }
+  },
   "concept_description": "B.G. Neo Grid Design System は、光が差し込む穏やかな部屋のような温もりを保ちながら、着実に未来へと歩みを進めるデザイン基盤です。心地よいレトロ空間の中に、次の時代を見据えた機能性と拡張性を兼ね備えた、まさに“今とこれから”を繋ぐプラットフォームとなるでしょう。近未来都市が持つ洗練された構造に、80～90年代の“生活感あるレトロビンテージ”を組み合わせた、新しいデザインフレームワーク。レトロなマンションの一室を想起させる、やや素朴で使い込まれたブリキ雑貨や観葉植物の緑をちりばめながら、未来へ向かうモダンな輪郭を感じさせます。",
   "introduction": {
     "title": "B.G. Neo Grid デザイン システム",
