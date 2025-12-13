@@ -1,5 +1,81 @@
 {
   "components": {
+    "button": {
+      "description": "Triggers actions or events when clicked, supporting multiple visual styles and semantic colors.",
+      "overview": "Button provides interactive elements for triggering actions in forms, dialogs, navigation, and other contexts. It supports three visual variants: default with solid background, outline with bordered style, and ghost with transparent background. Nine semantic colors are available including main, accent, success, error, warning, info, dark, light, and inherit. Four size options (default, sm, lg, icon) accommodate different layout needs. The asChild prop enables polymorphic rendering to wrap links or other elements while maintaining button styling.",
+      "usage": "Use Button for primary actions, form submissions, and navigation triggers. For basic usage, render with children text and optional variant or color props. Apply outline variant for secondary actions and ghost variant for tertiary or subtle interactions. Use semantic colors to convey meaning: success for confirmations, error for destructive actions, warning for cautionary operations. The icon size creates circular buttons suitable for icon-only content. Combine with asChild prop to render as anchor tags for navigation while preserving button appearance.",
+      "accessibility": "This component meets the following accessibility requirements. For keyboard support, buttons are focusable via Tab and activated with Enter or Space keys. Regarding semantic HTML, the component renders as a native button element by default with proper type attributes. For focus indicators, visible focus outlines appear on keyboard navigation. Disabled state uses pointer-events-none and reduced opacity to indicate non-interactive status. When using asChild with links, ensure proper aria-labels describe the action clearly.",
+      "doList": [
+        "Use descriptive text that explains the action",
+        "Apply semantic colors to convey button purpose",
+        "Maintain consistent sizing within related button groups",
+        "Include visible focus states for keyboard users",
+        "Use asChild with proper aria attributes for link buttons"
+      ],
+      "dontList": [
+        "Use vague labels like 'Click here' without context",
+        "Mix multiple variant styles in the same button group",
+        "Apply icon size without providing accessible labels",
+        "Disable buttons without explaining why to users",
+        "Use color alone to convey meaning without text"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Combine with Button for icon-enhanced actions"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "Use Button to trigger and control dialog actions"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "Use Button as dropdown menu triggers"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-slot",
+          "version": "^1.1.0",
+          "reason": "Enables polymorphic rendering via asChild prop"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "Manages variant-based styling with type safety"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Keyboard Accessible Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/keyboard-accessible.html",
+          "description": "Official WCAG documentation on keyboard accessibility requirements"
+        },
+        {
+          "linkText": "Radix UI Slot Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/utilities/slot",
+          "description": "Official documentation for the polymorphic slot utility"
+        },
+        {
+          "linkText": "MDN Button Element Reference",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button",
+          "description": "MDN documentation on native HTML button element"
+        }
+      ]
+    },
     "avatar": {
       "description": "Displays a user or entity image with fallback support for missing or loading states.",
       "overview": "Avatar represents users, organizations, or entities in a compact visual format. It consists of three parts: Root container for layout, Image for displaying the profile picture, and Fallback for showing initials or placeholder content when the image is unavailable. The component supports responsive sizing through className props and maintains a circular shape by default.",
