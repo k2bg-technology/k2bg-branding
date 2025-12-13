@@ -1,5 +1,81 @@
 {
   "components": {
+    "button": {
+      "description": "クリック時にアクションやイベントをトリガーし、複数のビジュアルスタイルとセマンティックカラーをサポートします。",
+      "overview": "Buttonはフォーム、ダイアログ、ナビゲーションなどのコンテキストでアクションをトリガーするインタラクティブ要素を提供します。3つのビジュアルバリアントをサポートします。defaultはソリッド背景、outlineはボーダースタイル、ghostは透明背景です。main、accent、success、error、warning、info、dark、light、inheritを含む9つのセマンティックカラーが利用可能です。4つのサイズオプション（default、sm、lg、icon）が異なるレイアウトニーズに対応します。asChildプロップによりリンクや他の要素をラップしながらボタンスタイルを維持するポリモーフィックレンダリングが可能です。",
+      "usage": "主要アクション、フォーム送信、ナビゲーショントリガーにButtonを使用します。基本的な使い方では、childrenテキストとオプションのvariantまたはcolorプロップでレンダリングします。セカンダリアクションにはoutlineバリアント、ターシャリまたは控えめなインタラクションにはghostバリアントを適用します。意味を伝えるためにセマンティックカラーを使用します。確認にはsuccess、破壊的アクションにはerror、注意が必要な操作にはwarningを使用します。iconサイズはアイコンのみのコンテンツに適した円形ボタンを作成します。asChildプロップと組み合わせてボタンの外観を保持しながらアンカータグとしてレンダリングします。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。キーボードサポートとして、ボタンはTabでフォーカス可能でEnterまたはSpaceキーで有効化されます。セマンティックHTMLについて、コンポーネントはデフォルトで適切なtype属性を持つネイティブbutton要素としてレンダリングされます。フォーカスインジケーターとして、キーボードナビゲーション時に可視のフォーカスアウトラインが表示されます。無効状態ではpointer-events-noneと透明度低下により非インタラクティブ状態を示します。asChildをリンクと使用する場合は、適切なaria-labelsでアクションを明確に説明します。",
+      "doList": [
+        "アクションを説明する説明的なテキストを使用します",
+        "ボタンの目的を伝えるためにセマンティックカラーを適用します",
+        "関連するボタングループ内で一貫したサイズを維持します",
+        "キーボードユーザーのために可視のフォーカス状態を含めます",
+        "リンクボタンには適切なaria属性を持つasChildを使用します"
+      ],
+      "dontList": [
+        "コンテキストなしに「ここをクリック」のような曖昧なラベルを使用しません",
+        "同じボタングループで複数のバリアントスタイルを混在させません",
+        "アクセシブルなラベルを提供せずにiconサイズを適用しません",
+        "ユーザーに理由を説明せずにボタンを無効化しません",
+        "テキストなしに色だけで意味を伝えません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "アイコン強化アクション用にButtonと組み合わせて使用します"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "ダイアログアクションのトリガーと制御にButtonを使用します"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "ドロップダウンメニューのトリガーとしてButtonを使用します"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        },
+        {
+          "package": "@radix-ui/react-slot",
+          "version": "^1.1.0",
+          "reason": "asChildプロップによるポリモーフィックレンダリングを可能にします"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "型安全性を備えたバリアントベースのスタイリングを管理します"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Tailwind CSSクラスを競合なくマージするユーティリティ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG キーボードアクセシビリティガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/keyboard-accessible.html",
+          "description": "キーボードアクセシビリティ要件に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "Radix UI Slotドキュメント",
+          "url": "https://www.radix-ui.com/primitives/docs/utilities/slot",
+          "description": "ポリモーフィックスロットユーティリティの公式ドキュメント"
+        },
+        {
+          "linkText": "MDN Button要素リファレンス",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button",
+          "description": "ネイティブHTML button要素に関するMDNドキュメント"
+        }
+      ]
+    },
     "avatar": {
       "description": "ユーザーやエンティティの画像を表示し、読み込み中や画像がない場合のフォールバックをサポートします。",
       "overview": "Avatarはユーザー、組織、エンティティをコンパクトな視覚フォーマットで表現します。レイアウト用のRootコンテナ、プロフィール画像を表示するImage、画像が利用できない場合にイニシャルやプレースホルダーコンテンツを表示するFallbackの3つの部分で構成されます。classNameプロップによるレスポンシブサイズ調整をサポートし、デフォルトで円形を維持します。",

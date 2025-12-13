@@ -33,6 +33,21 @@ const meta = {
       control: 'boolean',
     },
   },
+  parameters: {
+    docs: {
+      description: {
+        component: 'components.button.description',
+      },
+      overview: 'components.button.overview',
+      usage: 'components.button.usage',
+      accessibility: 'components.button.accessibility',
+      doList: 'components.button.doList',
+      dontList: 'components.button.dontList',
+      relatedComponents: 'components.button.relatedComponents',
+      dependencies: 'components.button.dependencies',
+      references: 'components.button.references',
+    },
+  },
 } satisfies Meta<typeof Button>;
 
 export default meta;
