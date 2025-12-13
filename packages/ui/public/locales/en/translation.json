@@ -141,6 +141,67 @@
           "description": "Official documentation for the underlying primitive component"
         }
       ]
+    },
+    "dialog": {
+      "description": "Displays modal content that overlays the page, requiring user interaction before returning to the main content.",
+      "overview": "Dialog presents focused content in an overlay that requires user attention. It consists of a trigger element that opens the dialog, an overlay that dims the background, and a content area with optional title and description. The component supports controlled and uncontrolled states through the open prop. A close button is automatically included with proper accessibility labeling. The dialog centers itself on screen and prevents interaction with background content until dismissed.",
+      "usage": "Use Dialog for confirmations, forms, alerts, or any content requiring focused user attention. For basic usage, provide a trigger element and content prop. Add title and description props for better context and accessibility. Use controlled mode with the open prop for programmatic control over dialog state. Combine with Button component for consistent trigger styling. Include action buttons within content for user responses like confirm or cancel. For form dialogs, place the form element inside the content prop with appropriate submit handling.",
+      "accessibility": "This component meets the following accessibility requirements. For focus management, focus moves to the dialog content when opened and returns to the trigger element when closed. Regarding keyboard navigation, pressing Escape closes the dialog and Tab cycles through focusable elements within the dialog. The component uses semantic HTML with Dialog.Title and Dialog.Description for screen reader announcements. An aria-label on the close button clearly indicates its purpose. The overlay prevents interaction with background content ensuring modal behavior. Screen readers announce the dialog title and description when opened.",
+      "doList": [
+        "Provide a descriptive title for context",
+        "Include clear action buttons for user responses",
+        "Use description prop to explain the dialog purpose",
+        "Ensure trigger element has descriptive text",
+        "Keep dialog content focused and concise"
+      ],
+      "dontList": [
+        "Open dialogs without user-initiated action",
+        "Stack multiple dialogs simultaneously",
+        "Place complex navigation within dialogs",
+        "Use dialogs for non-critical information",
+        "Omit close functionality from the dialog"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use as trigger elements and action buttons within dialogs"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Provides the close button icon within the dialog"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-dialog",
+          "version": "^1.0.4",
+          "reason": "Provides accessible dialog primitives with focus management and keyboard handling"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Modal Dialog Guidelines",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+          "description": "Official ARIA Authoring Practices Guide for modal dialog patterns"
+        },
+        {
+          "linkText": "Radix UI Dialog Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
+          "description": "Official documentation for the underlying dialog primitive component"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
