@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { Button } from '../Button';
-import { Icon } from '../Icon';
 
 import Drawer from './Drawer';
 
