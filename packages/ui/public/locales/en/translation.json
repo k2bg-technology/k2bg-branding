@@ -212,6 +212,67 @@
           "description": "Official WCAG documentation on focus order and management"
         }
       ]
+    },
+    "icon": {
+      "description": "Renders SVG icons with customizable size, color, and appearance variants for consistent visual communication.",
+      "overview": "Icon provides a unified interface for displaying vector icons throughout the application. It supports two icon categories: hero icons for UI actions and navigation, and multi-color brand icons for technology and social media logos. Hero icons offer outline and solid appearance variants while multi-color icons preserve their original brand colors. The component accepts custom dimensions and colors, renders as an inline element, and uses CSS masking for monochrome icon coloring.",
+      "usage": "Use Icon for visual indicators, action buttons, navigation elements, and brand representation. For basic usage, provide the name prop matching an available icon. Apply appearance prop to switch between outline and solid variants for hero icons. Set originalColor to true for multi-color brand icons to display their authentic colors. Customize dimensions using width and height props. Override the default color using the color prop with any valid CSS color value. Combine with Button for icon-only actions or alongside text for enhanced visual context.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the component renders as an i element which is treated as decorative by default. When icons convey meaning, wrap them with visually hidden text or add aria-label to the parent element. For color contrast, monochrome icons inherit text color and should maintain 3:1 contrast ratio against backgrounds. Screen readers skip decorative icons, so ensure meaningful icons have text alternatives nearby. Focus management is handled by the parent interactive element when used within buttons or links.",
+      "doList": [
+        "Provide text alternatives for meaningful icons",
+        "Use semantic icon names that describe the action or concept",
+        "Maintain consistent sizing within related icon groups",
+        "Apply originalColor for brand icons to preserve recognition",
+        "Pair icons with visible labels for critical actions"
+      ],
+      "dontList": [
+        "Use icons as the sole means of conveying information",
+        "Mix outline and solid variants inconsistently",
+        "Apply custom colors to multi-color brand icons",
+        "Use extremely small sizes that reduce recognizability",
+        "Rely on color alone to differentiate icon meanings"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Combine Icon with Button for icon-enhanced actions"
+        },
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "Use Icon as fallback content within Avatar"
+        },
+        {
+          "name": "Drawer",
+          "path": "/?path=/docs/components-drawer--docs",
+          "description": "Use Icon in Drawer close button and navigation items"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality and memoization"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Non-text Content Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "Official WCAG documentation on providing text alternatives for images and icons"
+        },
+        {
+          "linkText": "Heroicons Documentation",
+          "url": "https://heroicons.com/",
+          "description": "Official documentation for the hero icon set used in this component"
+        },
+        {
+          "linkText": "MDN Using CSS Masks",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/mask",
+          "description": "MDN documentation on CSS masking techniques used for icon coloring"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
