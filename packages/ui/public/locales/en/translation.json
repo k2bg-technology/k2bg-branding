@@ -141,6 +141,77 @@
           "description": "Official documentation for the underlying primitive component"
         }
       ]
+    },
+    "drawer": {
+      "description": "Displays supplementary content in a slide-out panel triggered by user interaction.",
+      "overview": "Drawer provides a side panel interface for displaying additional content, settings, navigation menus, or detailed information without navigating away from the current page. The component slides in from the right side of the viewport with a semi-transparent overlay that dims the background content. It includes an integrated close button, optional title and description sections, and a scrollable content area for lengthy information. The trigger element can be any interactive component such as a button or link.",
+      "usage": "Use Drawer for navigation menus, settings panels, filters, shopping carts, or detailed item information. For basic usage, provide a trigger element and mainContent prop containing the panel content. Include title and description props to provide context for the drawer purpose. The content area automatically becomes scrollable when content exceeds the viewport height. Combine with form elements for settings panels or with lists for navigation menus. The overlay automatically closes the drawer when clicked outside.",
+      "accessibility": "This component meets the following accessibility requirements. For keyboard support, the drawer can be closed with the Escape key and focus is trapped within the drawer when open. Regarding semantic HTML, the component uses proper dialog semantics with ARIA attributes for screen reader support. For focus management, focus moves to the drawer content when opened and returns to the trigger element when closed. The close button includes an aria-label for screen reader users. Background content becomes inert and dimmed to indicate the drawer is the active context.",
+      "doList": [
+        "Provide clear title that describes drawer purpose",
+        "Include close button with accessible label",
+        "Ensure trigger element has descriptive text",
+        "Use appropriate content structure within drawer",
+        "Manage focus correctly when opening and closing"
+      ],
+      "dontList": [
+        "Nest drawers within other drawers",
+        "Omit title for complex drawer content",
+        "Use drawer for critical blocking interactions",
+        "Disable overlay click to close without reason",
+        "Place excessive content without scrolling consideration"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Button as drawer trigger element"
+        },
+        {
+          "name": "ScrollArea",
+          "path": "/?path=/docs/components-scrollarea--docs",
+          "description": "Provides scrollable content area within drawer"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Use Icon in drawer close button and content"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-dialog",
+          "version": "^1.0.4",
+          "reason": "Provides accessible dialog primitives with focus management and overlay behavior"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Dialog Modal Guidelines",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+          "description": "Official ARIA Authoring Practices Guide for modal dialogs and drawers"
+        },
+        {
+          "linkText": "Radix UI Dialog Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
+          "description": "Official documentation for the underlying dialog primitive component"
+        },
+        {
+          "linkText": "WCAG Focus Management",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/focus-order.html",
+          "description": "Official WCAG documentation on focus order and management"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
