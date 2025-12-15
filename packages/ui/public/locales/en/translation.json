@@ -1,5 +1,76 @@
 {
   "components": {
+    "badge": {
+      "description": "Displays a small label to highlight status, category, or metadata information in a compact visual format.",
+      "overview": "Badge is a compact visual indicator used to convey status, count, or categorical information. It renders as an inline element with customizable appearance through variant and color props. The component supports two variants: default with a solid background and outline with a bordered style. Nine color options are available including main, accent, success, error, info, warning, dark, light, and inherit. Badge can contain text, icons, or both, and supports the asChild pattern for custom element rendering.",
+      "usage": "Use Badge to highlight important information such as status indicators, notification counts, or category labels. For basic usage, wrap text content inside the Badge component. Apply the variant prop to switch between solid and outline styles. Use the color prop to communicate semantic meaning such as success for positive states, error for alerts, or warning for caution. Combine with icons by including an Icon component as a child alongside text. For custom element rendering, set asChild to true and wrap a single child element.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic structure, Badge renders as a span element by default, appropriate for inline content. When conveying status information, ensure surrounding context makes the meaning clear to screen readers. For focus states, the component includes visible focus indicators with a ring style meeting WCAG requirements. Color alone should not convey meaning, so pair colors with text labels or icons. When used with icons, ensure icons are either decorative or have appropriate aria-labels.",
+      "doList": [
+        "Use descriptive text that clearly communicates the badge meaning",
+        "Pair color indicators with text labels for accessibility",
+        "Apply consistent colors for similar semantic meanings across the interface",
+        "Use outline variant for less prominent or secondary information",
+        "Include appropriate icons to reinforce the message visually"
+      ],
+      "dontList": [
+        "Rely solely on color to convey meaning",
+        "Use badges for long text content",
+        "Apply multiple badges when a single descriptive label suffices",
+        "Use warning or error colors for non-critical information",
+        "Omit text labels when the badge conveys important status"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "Combine Badge with Avatar for status indicators on user profiles"
+        },
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Badge alongside Button for notification counts"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Include Icon within Badge to reinforce visual meaning"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-slot",
+          "version": "^1.1.0",
+          "reason": "Enables asChild pattern for custom element composition"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "Provides type-safe variant management for styling"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Use of Color Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Official WCAG documentation on color accessibility requirements"
+        },
+        {
+          "linkText": "Radix UI Slot Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/utilities/slot",
+          "description": "Official documentation for the Slot utility enabling asChild pattern"
+        }
+      ]
+    },
     "button": {
       "description": "Triggers actions or events when clicked, supporting multiple visual styles and semantic colors.",
       "overview": "Button provides interactive elements for triggering actions in forms, dialogs, navigation, and other contexts. It supports three visual variants: default with solid background, outline with bordered style, and ghost with transparent background. Nine semantic colors are available including main, accent, success, error, warning, info, dark, light, and inherit. Four size options (default, sm, lg, icon) accommodate different layout needs. The asChild prop enables polymorphic rendering to wrap links or other elements while maintaining button styling.",
