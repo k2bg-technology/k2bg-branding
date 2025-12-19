@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { HERO_ICON_NAMES, ICON_NAMES, MULTI_COLOR_ICON_NAMES } from './const';
 
-import { Icon } from '.';
+import { Icon, IconProps } from '.';
 
 const meta = {
   component: Icon,
@@ -46,7 +46,7 @@ const meta = {
       references: 'components.icon.references',
     },
   },
-} satisfies Meta<typeof Icon>;
+} satisfies Meta<IconProps>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -143,10 +143,10 @@ export const HeroIconsSolid: Story = {
 export const ColorVariations: Story = {
   render: () => (
     <div className="flex gap-4">
-      <Icon name="check-circle" color="var(--color-base-success)" />
-      <Icon name="information-circle" color="var(--color-base-info)" />
-      <Icon name="exclamation-triangle" color="var(--color-base-warning)" />
-      <Icon name="x-circle" color="var(--color-base-error)" />
+      <Icon name="check-circle" color="var(--color-success)" />
+      <Icon name="information-circle" color="var(--color-info)" />
+      <Icon name="exclamation-triangle" color="var(--color-warning)" />
+      <Icon name="x-circle" color="var(--color-error)" />
     </div>
   ),
 };
