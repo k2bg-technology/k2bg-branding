@@ -120,7 +120,7 @@ export function Contact({ t }: { t: TFunction }) {
                 <Icon name="github" width={20} height={20} />
               </div>
               <a
-                href="https://github.com/stranger1989"
+                href="https://github.com/k2bg-technology"
                 target="_blank"
                 rel="noreferrer"
                 className="text-body-r-sm leading-body-r-sm hover:opacity-80"

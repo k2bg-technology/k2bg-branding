@@ -3,22 +3,19 @@ import { Avatar } from 'ui';
 
 export default function ProfileCard() {
   return (
-    <div className="grid gap-spacious p-spacious rounded-lg bg-base-white/50">
+    <div className="flex flex-col gap-spacious p-spacious rounded-lg bg-base-white/50">
       <span className="inline-flex gap-normal">
         <Avatar>
           <Avatar.Image alt="author" src="/me.png" />
         </Avatar>
-        <span>stranger1989</span>
+        <span>krd-knt</span>
       </span>
-      <div className="grid gap-px">
+      <div className="flex flex-col gap-condensed">
         <p className="text-body-r-sm leading-body-r-sm text-base-black">
-          東京都在住。愛知県出身。
+          フリーランスエンジニアとして、Webアプリケーションの開発支援を行っています。フロントエンドを中心に、UI/UXの改善やデータ分析まで幅広く携わっています。
         </p>
         <p className="text-body-r-sm leading-body-r-sm text-base-black">
-          フリーランスとして、Webアプリケーションの開発支援業務をメインに行っています！得意分野はフロントエンド、UI・UX、データ分析です。
-        </p>
-        <p className="text-body-r-sm leading-body-r-sm text-base-black">
-          当ブログは、「ITエンジニア目線で便利に思うITサービス・アプリの紹介」や、「エンジニアでなくても動かせる簡単なプログラミングを活用したライフハック」など、より多くの人の生活が少しでも快適で便利になる情報発信を目指しています！
+          このブログでは、私が実際に役立ったIT知識/サービスの紹介や、誰でも試せるシンプルな自動化・ライフハックを発信しています。「これならできそう」と思えるヒントを、わかりやすく届けます。
         </p>
       </div>
     </div>
