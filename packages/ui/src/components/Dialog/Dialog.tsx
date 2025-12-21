@@ -30,7 +30,7 @@ export default function Dialog({
           <RadixDialog.Title
             className={twMerge(
               'text-body-r-sm leading-body-r-sm font-bold',
-              !title && 'hidden'
+              !title && 'sr-only'
             )}
           >
             {title}

@@ -70,16 +70,12 @@ export const Default: Story = {};
 
 export const WithoutTitle: Story = {
   args: {
-    trigger: <Button variant="outline">Open Simple Dialog</Button>,
+    trigger: <Button variant="outline">Open No Title Dialog</Button>,
+    title: '',
+    description: '',
     content: (
-      <div className="flex flex-col gap-6">
-        <p>
-          A dialog without a visible title. The title is hidden but still
-          accessible to screen readers.
-        </p>
-        <div className="flex justify-end gap-normal">
-          <Button>Close</Button>
-        </div>
+      <div className="flex flex-col gap-normal py-6">
+        <p>This dialog has no title and description.</p>
       </div>
     ),
   },
