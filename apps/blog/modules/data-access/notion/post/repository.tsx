@@ -192,8 +192,8 @@ export class Repository extends Core implements Domain.Post.InputRepository {
       )
       // Insert zero-width joiner before/after ** to help markdown parser recognize bold text correctly
       // @see {@link https://github.com/Textualize/rich/issues/400}
-      .replace(/\*\*(\S)/g, '**\u200B$1')
-      .replace(/(\S)\*\*/g, '$1\u200B**');
+      .replace(/(?<!\u200B)\*\*(\S)/g, '**\u200B$1')
+      .replace(/(\S)\*\*(?!\u200B)/g, '$1\u200B**');
 
     return markdownString;
   }
