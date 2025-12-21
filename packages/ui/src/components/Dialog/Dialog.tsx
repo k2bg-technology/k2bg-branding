@@ -6,7 +6,7 @@ import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { twMerge } from '../../utils/extendTailwindMerge';
 
-interface Props
+export interface Props
   extends React.ComponentPropsWithoutRef<typeof RadixDialog.Root> {
   trigger: React.ReactNode;
   content: React.ReactNode;
@@ -26,7 +26,7 @@ export default function Dialog({
       <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>
       <RadixDialog.Portal>
         <RadixDialog.Overlay className="fixed bg-black/50 inset-0" />
-        <RadixDialog.Content className="flex flex-col gap-normal fixed top-[50%] left-[50%] w-max max-w-[calc(100%-2rem)] h-max max-h-[calc(100%-4rem)] translate-x-[-50%] translate-y-[-50%] rounded-xl py-14 p-normal bg-white focus:outline-hidden md:p-10">
+        <RadixDialog.Content className="flex flex-col gap-6 fixed top-[50%] left-[50%] w-max max-w-[calc(100%-2rem)] h-max max-h-[calc(100%-4rem)] translate-x-[-50%] translate-y-[-50%] rounded-xl py-6 p-normal bg-white focus:outline-hidden md:p-6">
           <RadixDialog.Title
             className={twMerge(
               '"text-body-r-sm leading-body-r-sm font-bold"',
