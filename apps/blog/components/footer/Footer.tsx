@@ -169,7 +169,7 @@ export default function Footer() {
                     asChild
                   >
                     <a
-                      href="https://github.com/stranger1989"
+                      href="https://github.com/k2bg-technology"
                       target="_blank"
                       rel="noreferrer"
                       aria-label="github"

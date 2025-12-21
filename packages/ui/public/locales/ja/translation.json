@@ -1,5 +1,76 @@
 {
   "components": {
+    "badge": {
+      "description": "ステータス、カテゴリ、メタデータ情報をコンパクトな視覚フォーマットで強調表示する小さなラベルです。",
+      "overview": "Badgeはステータス、カウント、カテゴリ情報を伝えるためのコンパクトな視覚インジケーターです。variantとcolorプロップによりカスタマイズ可能な外観を持つインライン要素としてレンダリングされます。ソリッド背景のdefaultとボーダースタイルのoutlineの2つのバリアントをサポートします。main、accent、success、error、info、warning、dark、light、inheritを含む9つのカラーオプションが利用可能です。Badgeはテキスト、アイコン、またはその両方を含むことができ、カスタム要素レンダリングのためのasChildパターンをサポートします。",
+      "usage": "ステータスインジケーター、通知カウント、カテゴリラベルなどの重要な情報を強調するためにBadgeを使用します。基本的な使い方では、Badgeコンポーネント内にテキストコンテンツをラップします。variantプロップを適用してソリッドスタイルとアウトラインスタイルを切り替えます。colorプロップを使用して、成功状態にはsuccess、アラートにはerror、注意にはwarningなどのセマンティックな意味を伝えます。テキストと一緒にIconコンポーネントを子要素として含めることでアイコンと組み合わせることができます。カスタム要素のレンダリングには、asChildをtrueに設定し、単一の子要素をラップします。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。セマンティック構造として、Badgeはデフォルトでspan要素としてレンダリングされ、インラインコンテンツに適しています。ステータス情報を伝える際は、周囲のコンテキストがスクリーンリーダーに意味を明確に伝えるようにします。フォーカス状態について、コンポーネントはWCAG要件を満たすリングスタイルの可視フォーカスインジケーターを含みます。色だけで意味を伝えるべきではないため、色とテキストラベルまたはアイコンを組み合わせます。アイコンと一緒に使用する場合は、アイコンが装飾的であるか、適切なaria-labelを持つようにします。",
+      "doList": [
+        "バッジの意味を明確に伝える説明的なテキストを使用します",
+        "アクセシビリティのために色インジケーターとテキストラベルを組み合わせます",
+        "インターフェース全体で類似のセマンティックな意味に一貫した色を適用します",
+        "目立たない情報や二次的な情報にはoutlineバリアントを使用します",
+        "視覚的にメッセージを強化するために適切なアイコンを含めます"
+      ],
+      "dontList": [
+        "意味を伝えるために色だけに依存しません",
+        "長いテキストコンテンツにバッジを使用しません",
+        "単一の説明的なラベルで十分な場合に複数のバッジを適用しません",
+        "重要でない情報にwarningやerrorの色を使用しません",
+        "バッジが重要なステータスを伝える場合にテキストラベルを省略しません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "ユーザープロフィールのステータスインジケーターとしてBadgeとAvatarを組み合わせます"
+        },
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "通知カウント用にButtonと一緒にBadgeを使用します"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "視覚的な意味を強化するためにBadge内にIconを含めます"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        },
+        {
+          "package": "@radix-ui/react-slot",
+          "version": "^1.1.0",
+          "reason": "カスタム要素合成のためのasChildパターンを有効化"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "スタイリングのための型安全なバリアント管理を提供"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Tailwind CSSクラスを競合なくマージするユーティリティ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG 色の使用ガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "色のアクセシビリティ要件に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "Radix UI Slotドキュメント",
+          "url": "https://www.radix-ui.com/primitives/docs/utilities/slot",
+          "description": "asChildパターンを有効にするSlotユーティリティの公式ドキュメント"
+        }
+      ]
+    },
     "button": {
       "description": "クリック時にアクションやイベントをトリガーし、複数のビジュアルスタイルとセマンティックカラーをサポートします。",
       "overview": "Buttonはフォーム、ダイアログ、ナビゲーションなどのコンテキストでアクションをトリガーするインタラクティブ要素を提供します。3つのビジュアルバリアントをサポートします。defaultはソリッド背景、outlineはボーダースタイル、ghostは透明背景です。main、accent、success、error、warning、info、dark、light、inheritを含む9つのセマンティックカラーが利用可能です。4つのサイズオプション（default、sm、lg、icon）が異なるレイアウトニーズに対応します。asChildプロップによりリンクや他の要素をラップしながらボタンスタイルを維持するポリモーフィックレンダリングが可能です。",
@@ -139,6 +210,138 @@
           "linkText": "Radix UI Avatarドキュメント",
           "url": "https://www.radix-ui.com/primitives/docs/components/avatar",
           "description": "基礎となるプリミティブコンポーネントの公式ドキュメント"
+        }
+      ]
+    },
+    "drawer": {
+      "description": "ユーザーインタラクションによってトリガーされるスライドアウトパネルに補足コンテンツを表示します。",
+      "overview": "Drawerは、現在のページから離れることなく追加コンテンツ、設定、ナビゲーションメニュー、詳細情報を表示するためのサイドパネルインターフェースを提供します。コンポーネントはビューポートの右側からスライドインし、背景コンテンツを暗くする半透明のオーバーレイを伴います。統合されたクローズボタン、オプションのタイトルと説明セクション、長い情報のためのスクロール可能なコンテンツエリアを含みます。トリガー要素はボタンやリンクなど任意のインタラクティブコンポーネントにできます。",
+      "usage": "ナビゲーションメニュー、設定パネル、フィルター、ショッピングカート、アイテムの詳細情報にDrawerを使用します。基本的な使い方では、トリガー要素とパネルコンテンツを含むmainContentプロップを提供します。Drawerの目的にコンテキストを提供するためにtitleとdescriptionプロップを含めます。コンテンツがビューポートの高さを超えると、コンテンツエリアは自動的にスクロール可能になります。設定パネルにはフォーム要素と組み合わせ、ナビゲーションメニューにはリストと組み合わせます。オーバーレイをクリックすると自動的にDrawerが閉じます。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。キーボードサポートとして、Drawerはエスケープキーで閉じることができ、開いているときはDrawer内にフォーカスがトラップされます。セマンティックHTMLについて、コンポーネントはスクリーンリーダー対応のためにARIA属性を持つ適切なダイアログセマンティクスを使用します。フォーカス管理について、開いたときにDrawerコンテンツにフォーカスが移動し、閉じたときにトリガー要素に戻ります。クローズボタンにはスクリーンリーダーユーザー向けのaria-labelが含まれます。背景コンテンツは不活性になり暗くなることでDrawerがアクティブなコンテキストであることを示します。",
+      "doList": [
+        "Drawerの目的を説明する明確なタイトルを提供します",
+        "アクセシブルなラベルを持つクローズボタンを含めます",
+        "トリガー要素に説明的なテキストを確保します",
+        "Drawer内で適切なコンテンツ構造を使用します",
+        "開閉時にフォーカスを正しく管理します"
+      ],
+      "dontList": [
+        "Drawerを別のDrawer内に入れ子にしません",
+        "複雑なDrawerコンテンツでタイトルを省略しません",
+        "重要なブロッキングインタラクションにDrawerを使用しません",
+        "理由なくオーバーレイクリックでの閉じる機能を無効化しません",
+        "スクロールを考慮せずに過度なコンテンツを配置しません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Drawerトリガー要素としてButtonを使用します"
+        },
+        {
+          "name": "ScrollArea",
+          "path": "/?path=/docs/components-scrollarea--docs",
+          "description": "Drawer内のスクロール可能なコンテンツエリアを提供します"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Drawerのクローズボタンとコンテンツ内でIconを使用します"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        },
+        {
+          "package": "@radix-ui/react-dialog",
+          "version": "^1.0.4",
+          "reason": "フォーカス管理とオーバーレイ動作を持つアクセシブルなダイアログプリミティブを提供"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Tailwind CSSクラスを競合なくマージするユーティリティ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG ダイアログモーダルガイドライン",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+          "description": "モーダルダイアログとDrawerに関する公式ARIAオーサリングプラクティスガイド"
+        },
+        {
+          "linkText": "Radix UI Dialogドキュメント",
+          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
+          "description": "基礎となるダイアログプリミティブコンポーネントの公式ドキュメント"
+        },
+        {
+          "linkText": "WCAG フォーカス管理",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/focus-order.html",
+          "description": "フォーカス順序と管理に関する公式WCAGドキュメント"
+        }
+      ]
+    },
+    "icon": {
+      "description": "カスタマイズ可能なサイズ、カラー、外観バリアントでSVGアイコンをレンダリングし、一貫したビジュアルコミュニケーションを提供します。",
+      "overview": "Iconはアプリケーション全体でベクターアイコンを表示するための統一されたインターフェースを提供します。UIアクションとナビゲーション用のheroアイコンと、テクノロジーおよびソーシャルメディアロゴ用のマルチカラーブランドアイコンの2つのカテゴリをサポートします。heroアイコンはoutlineとsolidの外観バリアントを提供し、マルチカラーアイコンは元のブランドカラーを保持します。カスタムサイズとカラーを受け入れ、インライン要素としてレンダリングし、モノクロアイコンの色付けにCSSマスキングを使用します。",
+      "usage": "視覚的なインジケーター、アクションボタン、ナビゲーション要素、ブランド表現にIconを使用します。基本的な使い方では、利用可能なアイコンに一致するnameプロップを提供します。heroアイコンのoutlineとsolidバリアントを切り替えるにはappearanceプロップを適用します。マルチカラーブランドアイコンの本来の色を表示するにはoriginalColorをtrueに設定します。widthとheightプロップを使用してサイズをカスタマイズします。colorプロップで任意の有効なCSS色値を使用してデフォルトの色を上書きします。アイコンのみのアクションにはButtonと組み合わせ、視覚的なコンテキストを強化するためにテキストと併用します。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。セマンティックHTMLとして、コンポーネントはi要素としてレンダリングされ、デフォルトで装飾的として扱われます。アイコンが意味を伝える場合は、視覚的に非表示のテキストでラップするか、親要素にaria-labelを追加します。カラーコントラストについて、モノクロアイコンはテキストカラーを継承し、背景に対して3:1のコントラスト比を維持する必要があります。スクリーンリーダーは装飾的なアイコンをスキップするため、意味のあるアイコンには近くにテキストの代替手段を用意します。フォーカス管理はボタンやリンク内で使用される場合、親のインタラクティブ要素によって処理されます。",
+      "doList": [
+        "意味のあるアイコンにはテキストの代替手段を提供します",
+        "アクションやコンセプトを説明するセマンティックなアイコン名を使用します",
+        "関連するアイコングループ内で一貫したサイズを維持します",
+        "ブランドアイコンの認識性を保つためにoriginalColorを適用します",
+        "重要なアクションにはアイコンと可視ラベルを組み合わせます"
+      ],
+      "dontList": [
+        "情報を伝える唯一の手段としてアイコンを使用しません",
+        "outlineとsolidバリアントを一貫性なく混在させません",
+        "マルチカラーブランドアイコンにカスタムカラーを適用しません",
+        "認識性が低下する極端に小さいサイズを使用しません",
+        "アイコンの意味を区別するために色のみに依存しません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "アイコン強化アクション用にIconとButtonを組み合わせて使用します"
+        },
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "Avatar内のフォールバックコンテンツとしてIconを使用します"
+        },
+        {
+          "name": "Drawer",
+          "path": "/?path=/docs/components-drawer--docs",
+          "description": "DrawerのクローズボタンとナビゲーションアイテムでIconを使用します"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能とメモ化のためのコアReactライブラリ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG 非テキストコンテンツガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "画像とアイコンのテキスト代替提供に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "Heroiconsドキュメント",
+          "url": "https://heroicons.com/",
+          "description": "このコンポーネントで使用されるheroアイコンセットの公式ドキュメント"
+        },
+        {
+          "linkText": "MDN CSSマスクの使用",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/mask",
+          "description": "アイコンの色付けに使用されるCSSマスキング技術に関するMDNドキュメント"
         }
       ]
     },
