@@ -190,10 +190,13 @@ export class Repository extends Core implements Domain.Post.InputRepository {
         (_, replaceValue) =>
           assets.find((asset) => asset && asset.includes(replaceValue)) || ''
       )
-      // Insert zero-width joiner before/after ** to help markdown parser recognize bold text correctly
+      // Insert zero-width joiner inside **...** to help markdown parser recognize bold text correctly
       // @see {@link https://github.com/Textualize/rich/issues/400}
-      .replace(/(?<!\u200B)\*\*(\S)/g, '**\u200B$1')
-      .replace(/(\S)\*\*(?!\u200B)/g, '$1\u200B**');
+      .replace(
+        /\*\*(\u200B)?([\s\S]*?)(\u200B)?\*\*/g,
+        (_match, leading, content, trailing) =>
+          `**${leading ?? '\u200B'}${content}${trailing ?? '\u200B'}**`
+      );
 
     return markdownString;
   }
