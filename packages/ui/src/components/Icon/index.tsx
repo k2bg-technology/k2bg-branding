@@ -5,7 +5,7 @@ import { CSSProperties, memo } from 'react';
 import { ICON_NAMES } from './const';
 import styles from './index.module.css';
 
-interface IconProps extends React.HTMLAttributes<HTMLElement> {
+export interface IconProps extends React.HTMLAttributes<HTMLElement> {
   name: (typeof ICON_NAMES)[number];
   appearance?: 'outline' | 'solid';
   color?: CSSProperties['backgroundColor'];

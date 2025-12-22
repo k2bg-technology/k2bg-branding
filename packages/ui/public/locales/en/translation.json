@@ -1,5 +1,76 @@
 {
   "components": {
+    "badge": {
+      "description": "Displays a small label to highlight status, category, or metadata information in a compact visual format.",
+      "overview": "Badge is a compact visual indicator used to convey status, count, or categorical information. It renders as an inline element with customizable appearance through variant and color props. The component supports two variants: default with a solid background and outline with a bordered style. Nine color options are available including main, accent, success, error, info, warning, dark, light, and inherit. Badge can contain text, icons, or both, and supports the asChild pattern for custom element rendering.",
+      "usage": "Use Badge to highlight important information such as status indicators, notification counts, or category labels. For basic usage, wrap text content inside the Badge component. Apply the variant prop to switch between solid and outline styles. Use the color prop to communicate semantic meaning such as success for positive states, error for alerts, or warning for caution. Combine with icons by including an Icon component as a child alongside text. For custom element rendering, set asChild to true and wrap a single child element.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic structure, Badge renders as a span element by default, appropriate for inline content. When conveying status information, ensure surrounding context makes the meaning clear to screen readers. For focus states, the component includes visible focus indicators with a ring style meeting WCAG requirements. Color alone should not convey meaning, so pair colors with text labels or icons. When used with icons, ensure icons are either decorative or have appropriate aria-labels.",
+      "doList": [
+        "Use descriptive text that clearly communicates the badge meaning",
+        "Pair color indicators with text labels for accessibility",
+        "Apply consistent colors for similar semantic meanings across the interface",
+        "Use outline variant for less prominent or secondary information",
+        "Include appropriate icons to reinforce the message visually"
+      ],
+      "dontList": [
+        "Rely solely on color to convey meaning",
+        "Use badges for long text content",
+        "Apply multiple badges when a single descriptive label suffices",
+        "Use warning or error colors for non-critical information",
+        "Omit text labels when the badge conveys important status"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "Combine Badge with Avatar for status indicators on user profiles"
+        },
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Badge alongside Button for notification counts"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Include Icon within Badge to reinforce visual meaning"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-slot",
+          "version": "^1.1.0",
+          "reason": "Enables asChild pattern for custom element composition"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "Provides type-safe variant management for styling"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Use of Color Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Official WCAG documentation on color accessibility requirements"
+        },
+        {
+          "linkText": "Radix UI Slot Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/utilities/slot",
+          "description": "Official documentation for the Slot utility enabling asChild pattern"
+        }
+      ]
+    },
     "button": {
       "description": "Triggers actions or events when clicked, supporting multiple visual styles and semantic colors.",
       "overview": "Button provides interactive elements for triggering actions in forms, dialogs, navigation, and other contexts. It supports three visual variants: default with solid background, outline with bordered style, and ghost with transparent background. Nine semantic colors are available including main, accent, success, error, warning, info, dark, light, and inherit. Four size options (default, sm, lg, icon) accommodate different layout needs. The asChild prop enables polymorphic rendering to wrap links or other elements while maintaining button styling.",
@@ -208,6 +279,67 @@
         }
       ]
     },
+    "dialog": {
+      "description": "Displays modal content that overlays the page, requiring user interaction before returning to the main content.",
+      "overview": "Dialog presents focused content in an overlay that requires user attention. It consists of a trigger element that opens the dialog, an overlay that dims the background, and a content area with optional title and description. The component supports controlled and uncontrolled states through the open prop. A close button is automatically included with proper accessibility labeling. The dialog centers itself on screen and prevents interaction with background content until dismissed.",
+      "usage": "Use Dialog for confirmations, forms, alerts, or any content requiring focused user attention. For basic usage, provide a trigger element and content prop. Add title and description props for better context and accessibility. Use controlled mode with the open prop for programmatic control over dialog state. Combine with Button component for consistent trigger styling. Include action buttons within content for user responses like confirm or cancel. For form dialogs, place the form element inside the content prop with appropriate submit handling.",
+      "accessibility": "This component meets the following accessibility requirements. For focus management, focus moves to the dialog content when opened and returns to the trigger element when closed. Regarding keyboard navigation, pressing Escape closes the dialog and Tab cycles through focusable elements within the dialog. The component uses semantic HTML with Dialog.Title and Dialog.Description for screen reader announcements. An aria-label on the close button clearly indicates its purpose. The overlay prevents interaction with background content ensuring modal behavior. Screen readers announce the dialog title and description when opened.",
+      "doList": [
+        "Provide a descriptive title for context",
+        "Include clear action buttons for user responses",
+        "Use description prop to explain the dialog purpose",
+        "Ensure trigger element has descriptive text",
+        "Keep dialog content focused and concise"
+      ],
+      "dontList": [
+        "Open dialogs without user-initiated action",
+        "Stack multiple dialogs simultaneously",
+        "Place complex navigation within dialogs",
+        "Use dialogs for non-critical information",
+        "Omit close functionality from the dialog"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use as trigger elements and action buttons within dialogs"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Provides the close button icon within the dialog"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-dialog",
+          "version": "^1.0.4",
+          "reason": "Provides accessible dialog primitives with focus management and keyboard handling"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Modal Dialog Guidelines",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+          "description": "Official ARIA Authoring Practices Guide for modal dialog patterns"
+        },
+        {
+          "linkText": "Radix UI Dialog Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
+          "description": "Official documentation for the underlying dialog primitive component"
+        }
+      ]
+    },
     "drawer": {
       "description": "Displays supplementary content in a slide-out panel triggered by user interaction.",
       "overview": "Drawer provides a side panel interface for displaying additional content, settings, navigation menus, or detailed information without navigating away from the current page. The component slides in from the right side of the viewport with a semi-transparent overlay that dims the background content. It includes an integrated close button, optional title and description sections, and a scrollable content area for lengthy information. The trigger element can be any interactive component such as a button or link.",
@@ -276,6 +408,67 @@
           "linkText": "WCAG Focus Management",
           "url": "https://www.w3.org/WAI/WCAG21/Understanding/focus-order.html",
           "description": "Official WCAG documentation on focus order and management"
+        }
+      ]
+    },
+    "icon": {
+      "description": "Renders SVG icons with customizable size, color, and appearance variants for consistent visual communication.",
+      "overview": "Icon provides a unified interface for displaying vector icons throughout the application. It supports two icon categories: hero icons for UI actions and navigation, and multi-color brand icons for technology and social media logos. Hero icons offer outline and solid appearance variants while multi-color icons preserve their original brand colors. The component accepts custom dimensions and colors, renders as an inline element, and uses CSS masking for monochrome icon coloring.",
+      "usage": "Use Icon for visual indicators, action buttons, navigation elements, and brand representation. For basic usage, provide the name prop matching an available icon. Apply appearance prop to switch between outline and solid variants for hero icons. Set originalColor to true for multi-color brand icons to display their authentic colors. Customize dimensions using width and height props. Override the default color using the color prop with any valid CSS color value. Combine with Button for icon-only actions or alongside text for enhanced visual context.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the component renders as an i element which is treated as decorative by default. When icons convey meaning, wrap them with visually hidden text or add aria-label to the parent element. For color contrast, monochrome icons inherit text color and should maintain 3:1 contrast ratio against backgrounds. Screen readers skip decorative icons, so ensure meaningful icons have text alternatives nearby. Focus management is handled by the parent interactive element when used within buttons or links.",
+      "doList": [
+        "Provide text alternatives for meaningful icons",
+        "Use semantic icon names that describe the action or concept",
+        "Maintain consistent sizing within related icon groups",
+        "Apply originalColor for brand icons to preserve recognition",
+        "Pair icons with visible labels for critical actions"
+      ],
+      "dontList": [
+        "Use icons as the sole means of conveying information",
+        "Mix outline and solid variants inconsistently",
+        "Apply custom colors to multi-color brand icons",
+        "Use extremely small sizes that reduce recognizability",
+        "Rely on color alone to differentiate icon meanings"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Combine Icon with Button for icon-enhanced actions"
+        },
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "Use Icon as fallback content within Avatar"
+        },
+        {
+          "name": "Drawer",
+          "path": "/?path=/docs/components-drawer--docs",
+          "description": "Use Icon in Drawer close button and navigation items"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality and memoization"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Non-text Content Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "Official WCAG documentation on providing text alternatives for images and icons"
+        },
+        {
+          "linkText": "Heroicons Documentation",
+          "url": "https://heroicons.com/",
+          "description": "Official documentation for the hero icon set used in this component"
+        },
+        {
+          "linkText": "MDN Using CSS Masks",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/mask",
+          "description": "MDN documentation on CSS masking techniques used for icon coloring"
         }
       ]
     }
