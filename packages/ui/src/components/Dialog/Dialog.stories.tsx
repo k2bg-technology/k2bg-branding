@@ -71,6 +71,7 @@ export const Default: Story = {};
 export const WithHiddenTitle: Story = {
   args: {
     trigger: <Button>Open Dialog</Button>,
+    title: 'Video Preview',
     description: undefined,
     isTitleHidden: true,
     content: (
