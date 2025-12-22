@@ -69,6 +69,8 @@ function Document(props: DocumentProps) {
             </video>
           </div>
         }
+        title={title}
+        isTitleHidden
       />
       {siteLink}
     </div>

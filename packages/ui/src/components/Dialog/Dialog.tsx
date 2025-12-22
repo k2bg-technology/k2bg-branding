@@ -10,13 +10,15 @@ export interface Props
   extends React.ComponentPropsWithoutRef<typeof RadixDialog.Root> {
   trigger: React.ReactNode;
   content: React.ReactNode;
-  title?: string;
+  title: string;
+  isTitleHidden?: boolean;
   description?: string;
 }
 
 export default function Dialog({
   trigger,
   title,
+  isTitleHidden = false,
   description,
   content,
   ...rest
@@ -30,7 +32,7 @@ export default function Dialog({
           <RadixDialog.Title
             className={twMerge(
               'text-body-r-sm leading-body-r-sm font-bold',
-              !title && 'sr-only'
+              isTitleHidden && 'sr-only'
             )}
           >
             {title}

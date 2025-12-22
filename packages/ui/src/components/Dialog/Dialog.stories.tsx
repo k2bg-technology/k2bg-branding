@@ -68,14 +68,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
-export const WithoutTitle: Story = {
+export const WithHiddenTitle: Story = {
   args: {
-    trigger: <Button variant="outline">Open No Title Dialog</Button>,
-    title: '',
-    description: '',
+    trigger: <Button>Open Dialog</Button>,
+    description: undefined,
+    isTitleHidden: true,
     content: (
-      <div className="flex flex-col gap-normal py-6">
-        <p>This dialog has no title and description.</p>
+      <div className="pt-6 flex flex-col gap-normal">
+        <div className="w-96 aspect-video bg-gray-500" />
+        <div className="flex justify-end gap-normal">
+          <Button variant="outline" color="dark">
+            Cancel
+          </Button>
+          <Button>OK</Button>
+        </div>
       </div>
     ),
   },
