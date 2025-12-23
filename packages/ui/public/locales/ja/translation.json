@@ -411,6 +411,77 @@
         }
       ]
     },
+    "form": {
+      "description": "ラベル、入力、ヘルパーテキスト、バリデーション状態の共有状態管理を持つフォーム入力のための構造化されたコンテナを提供します。",
+      "overview": "FormはReact Contextを通じてフォームフィールドの状態を管理するコンパウンドコンポーネントシステムです。5つのサブコンポーネントで構成されます。状態管理用のControl、フィールドラベル用のLabel、テキスト入力フィールド用のInput、複数行テキスト入力用のTextarea、補足情報やエラーメッセージ用のHelperTextです。Controlコンポーネントはerror、disabled、required、カラーテーマを含む共有状態を提供し、すべての子コンポーネントに自動的に伝播します。このアーキテクチャにより、手動でのプロップ受け渡しなしにフォーム要素全体で一貫したスタイリングと動作を保証します。",
+      "usage": "一貫したスタイリングと状態管理を持つアクセシブルなフォームフィールドを作成するためにFormを使用します。Form.Controlでフォーム要素をラップし、Label、Input、Textarea、HelperTextコンポーネント間で状態を共有します。基本的な使い方では、Form.Control内にForm.Label、Form.Input、Form.HelperTextをネストします。Form.Controlにerrorプロップを適用してすべての子要素に同時にエラースタイリングを表示します。disabledプロップを使用してフォームフィールドグループ全体を無効にします。colorプロップは異なる背景コンテキストに対応するためにダークテーマとライトテーマを切り替えます。複数行入力にはForm.InputをForm.Textareaに置き換えます。InputはstartAdornmentとendAdornmentプロップでアイコンや装飾要素をサポートします。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。セマンティックHTMLとして、Form.LabelはhtmlForとid属性を使用して入力に関連付けるべきネイティブlabel要素としてレンダリングされます。Form.InputとForm.Textareaは適切なdisabled状態を持つネイティブinputおよびtextarea要素としてレンダリングされます。エラー状態では、視覚的なスタイリングの変更はWCAG 4.5:1要件を満たすカラーコントラストを伴います。スクリーンリーダーはネイティブdisabled属性を通じて無効なフィールドを識別できます。フォーカスインジケーターはWCAG要件を満たすリングスタイルで表示されます。ヘルパーテキストはスクリーンリーダーサポートのためにaria-describedbyを使用して入力にリンクすべき追加コンテキストを提供します。",
+      "doList": [
+        "htmlForとid属性を使用してラベルを入力に関連付けます",
+        "複雑な入力要件にはヘルパーテキストを提供します",
+        "HelperTextに説明的なエラーメッセージを含むエラー状態を使用します",
+        "関連するフォームフィールド全体で一貫したカラーテーマを適用します",
+        "キーボードナビゲーション用に可視のフォーカスインジケーターを含めます"
+      ],
+      "dontList": [
+        "フォーム入力のラベルを省略しません",
+        "プレースホルダーテキストを唯一のラベルとして使用しません",
+        "説明テキストなしにエラースタイリングを表示しません",
+        "同じフォームセクション内でダークテーマとライトテーマを混在させません",
+        "ユーザーに理由を説明せずにフィールドを無効にしません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "フォーム送信とアクショントリガーにButtonを使用します"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "視覚的なインジケーター用にInputのadornmentプロップとIconを使用します"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "モーダルフォーム体験のためにFormとDialogを組み合わせます"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能とContext APIのためのコアReactライブラリ"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "スタイリング状態のための型安全なバリアント管理を提供"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Tailwind CSSクラスを競合なくマージするユーティリティ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG ラベルまたは説明ガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/labels-or-instructions.html",
+          "description": "フォーム入力へのラベルと説明の提供に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "WCAG エラー識別ガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/error-identification.html",
+          "description": "入力エラーの識別と説明に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "MDN フォーム要素リファレンス",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form",
+          "description": "ネイティブHTMLフォーム要素とアクセシビリティに関するMDNドキュメント"
+        }
+      ]
+    },
     "dialog": {
       "description": "ページ上にオーバーレイ表示されるモーダルコンテンツを表示し、メインコンテンツに戻る前にユーザーの操作を必要とします。",
       "overview": "Dialogはユーザーの注意を必要とするコンテンツをオーバーレイで表示します。ダイアログを開くトリガー要素、背景を暗くするオーバーレイ、オプションのタイトルと説明を持つコンテンツエリアで構成されます。openプロップにより制御モードと非制御モードの両方をサポートします。適切なアクセシビリティラベルを持つ閉じるボタンが自動的に含まれます。ダイアログは画面中央に配置され、閉じるまで背景コンテンツとのインタラクションを防ぎます。",
