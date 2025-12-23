@@ -7,8 +7,8 @@ const meta = {
   args: {
     children: (
       <div className="flex flex-col gap-normal">
-        <Form.Label>ラベル</Form.Label>
-        <Form.Input />
+        <Form.Label htmlFor="default-input">ラベル</Form.Label>
+        <Form.Input id="default-input" />
         <Form.HelperText>補足テキスト</Form.HelperText>
       </div>
     ),
@@ -53,18 +53,39 @@ export const Default: Story = {};
 export const Error: Story = {
   args: {
     error: true,
+    children: (
+      <div className="flex flex-col gap-normal">
+        <Form.Label htmlFor="error-input">ラベル</Form.Label>
+        <Form.Input id="error-input" />
+        <Form.HelperText>補足テキスト</Form.HelperText>
+      </div>
+    ),
   },
 };
 
 export const Disabled: Story = {
   args: {
     disabled: true,
+    children: (
+      <div className="flex flex-col gap-normal">
+        <Form.Label htmlFor="disabled-input">ラベル</Form.Label>
+        <Form.Input id="disabled-input" />
+        <Form.HelperText>補足テキスト</Form.HelperText>
+      </div>
+    ),
   },
 };
 
 export const Light: Story = {
   args: {
     color: 'light',
+    children: (
+      <div className="flex flex-col gap-normal">
+        <Form.Label htmlFor="light-input">ラベル</Form.Label>
+        <Form.Input id="light-input" />
+        <Form.HelperText>補足テキスト</Form.HelperText>
+      </div>
+    ),
   },
   decorators: [
     (Story) => (
@@ -79,8 +100,8 @@ export const WithTextarea: Story = {
   args: {
     children: (
       <div className="flex flex-col gap-normal">
-        <Form.Label>メッセージ</Form.Label>
-        <Form.Textarea placeholder="メッセージを入力" />
+        <Form.Label htmlFor="message-textarea">メッセージ</Form.Label>
+        <Form.Textarea id="message-textarea" placeholder="メッセージを入力" />
         <Form.HelperText>最大500文字まで入力できます</Form.HelperText>
       </div>
     ),
@@ -92,10 +113,13 @@ export const Required: Story = {
     required: true,
     children: (
       <div className="flex flex-col gap-normal">
-        <Form.Label className="inline-flex items-baseline gap-condensed">
+        <Form.Label
+          htmlFor="required-input"
+          className="inline-flex items-baseline gap-condensed"
+        >
           必須項目 <span className="text-error">*</span>
         </Form.Label>
-        <Form.Input placeholder="必須入力" />
+        <Form.Input id="required-input" placeholder="必須入力" />
         <Form.HelperText>この項目は必須です</Form.HelperText>
       </div>
     ),
