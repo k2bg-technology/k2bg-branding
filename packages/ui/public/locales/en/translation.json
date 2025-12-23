@@ -213,6 +213,72 @@
         }
       ]
     },
+    "dropdownMenu": {
+      "description": "Displays a list of actions or options in a floating panel triggered by a button or interactive element.",
+      "overview": "DropdownMenu provides a compact way to present a set of actions, links, or options that appear when users interact with a trigger element. The component consists of two main parts: the trigger element that opens the menu and the menu content containing selectable items. Menu items support various content types including text, icons, and links. The floating panel automatically positions itself relative to the trigger and dismisses when users click outside or select an item.",
+      "usage": "Use DropdownMenu for contextual actions, navigation shortcuts, user account menus, or settings access. For basic usage, provide a trigger prop with any interactive element like a Button and children containing DropdownMenuItem components. Each DropdownMenuItem should wrap a link or button element for proper semantics. Combine icons with text labels for improved scannability. For mobile navigation, pair with a hamburger icon trigger. The menu supports both controlled and uncontrolled open states via the open and defaultOpen props.",
+      "accessibility": "This component meets the following accessibility requirements. For keyboard support, the menu opens with Enter or Space on the trigger, navigates items with Arrow keys, selects with Enter, and closes with Escape. Regarding focus management, focus moves to the first menu item when opened and returns to the trigger when closed. Uses appropriate ARIA attributes including aria-expanded on the trigger and role menu on the content. Screen readers announce the menu state and item count. The modal prop controls whether background content remains interactive.",
+      "doList": [
+        "Provide descriptive trigger labels or aria-label for icon-only triggers",
+        "Use consistent item height and spacing within menus",
+        "Include icons alongside text for better visual scanning",
+        "Keep menu items concise and action-oriented",
+        "Position menus to avoid viewport overflow"
+      ],
+      "dontList": [
+        "Use dropdown menus for primary navigation on desktop layouts",
+        "Nest dropdown menus within other dropdown menus",
+        "Include too many items without grouping or scrolling",
+        "Omit accessible labels for icon-only triggers",
+        "Use dropdown for single-action scenarios"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Button as the dropdown trigger element"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Combine Icon with menu items for visual clarity"
+        },
+        {
+          "name": "Drawer",
+          "path": "/?path=/docs/components-drawer--docs",
+          "description": "Use Drawer for mobile navigation instead of dropdown"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-dropdown-menu",
+          "version": "^2.0.6",
+          "reason": "Provides accessible dropdown primitives with keyboard navigation and focus management"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Menu Pattern Guidelines",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/menu/",
+          "description": "Official ARIA Authoring Practices Guide for menu components"
+        },
+        {
+          "linkText": "Radix UI Dropdown Menu Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/components/dropdown-menu",
+          "description": "Official documentation for the underlying dropdown menu primitive"
+        },
+        {
+          "linkText": "WCAG Keyboard Accessible Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/keyboard-accessible.html",
+          "description": "Official WCAG documentation on keyboard accessibility requirements"
+        }
+      ]
+    },
     "dialog": {
       "description": "Displays modal content that overlays the page, requiring user interaction before returning to the main content.",
       "overview": "Dialog presents focused content in an overlay that requires user attention. It consists of a trigger element that opens the dialog, an overlay that dims the background, and a content area with optional title and description. The component supports controlled and uncontrolled states through the open prop. A close button is automatically included with proper accessibility labeling. The dialog centers itself on screen and prevents interaction with background content until dismissed.",

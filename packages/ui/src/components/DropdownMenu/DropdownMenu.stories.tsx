@@ -8,6 +8,48 @@ import DropdownMenuItem from './DropdownMenuItem';
 
 const meta = {
   component: DropdownMenu,
+  argTypes: {
+    trigger: {
+      control: false,
+      description: 'The element that triggers the dropdown menu',
+    },
+    children: {
+      control: false,
+      description: 'The menu items to display in the dropdown',
+    },
+    open: {
+      control: 'boolean',
+      description: 'Controlled open state of the dropdown menu',
+    },
+    defaultOpen: {
+      control: 'boolean',
+      description: 'Default open state for uncontrolled usage',
+    },
+    modal: {
+      control: 'boolean',
+      description: 'Whether the dropdown should behave as a modal',
+    },
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: 'components.dropdownMenu.description',
+      },
+      overview: 'components.dropdownMenu.overview',
+      usage: 'components.dropdownMenu.usage',
+      accessibility: 'components.dropdownMenu.accessibility',
+      doList: 'components.dropdownMenu.doList',
+      dontList: 'components.dropdownMenu.dontList',
+      relatedComponents: 'components.dropdownMenu.relatedComponents',
+      dependencies: 'components.dropdownMenu.dependencies',
+      references: 'components.dropdownMenu.references',
+    },
+  },
+  play: async ({ canvas, userEvent }) => {
+    const button = canvas.getByRole('button');
+
+    await userEvent.click(button);
+  },
 } satisfies Meta<typeof DropdownMenu>;
 
 export default meta;
@@ -18,18 +60,30 @@ export const Default: Story = {
     children: (
       <>
         <DropdownMenuItem>
-          <a href="https://example.com" target="blank">
-            メニュー1
+          <a
+            href="https://example.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Menu item 1
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <a href="https://example.com" target="blank">
-            メニュー2
+          <a
+            href="https://example.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Menu item 2
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <a href="https://example.com" target="blank">
-            メニュー3
+          <a
+            href="https://example.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Menu item 3
           </a>
         </DropdownMenuItem>
       </>
