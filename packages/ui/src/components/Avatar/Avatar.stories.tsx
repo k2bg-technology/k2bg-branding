@@ -57,6 +57,14 @@ export const Small: Story = {
     className: 'h-6 w-6',
     children: <Avatar.Image alt="User profile" src={AvatarImage} />,
   },
+  decorators: [
+    (Story) => (
+      <div className="flex items-center gap-2">
+        <Story />
+        <span className="text-sm text-gray-500">Small Size</span>
+      </div>
+    ),
+  ],
 };
 
 export const Large: Story = {
