@@ -471,6 +471,77 @@
           "description": "MDN documentation on CSS masking techniques used for icon coloring"
         }
       ]
+    },
+    "form": {
+      "description": "Provides a structured container for form inputs with shared state management for labels, inputs, helper text, and validation states.",
+      "overview": "Form is a compound component system that manages form field state through React Context. It consists of five sub-components: Control for state management, Label for field labels, Input for text input fields, Textarea for multi-line text input, and HelperText for supplementary information or error messages. The Control component provides shared state including error, disabled, required, and color theme that automatically propagates to all child components. This architecture ensures consistent styling and behavior across form elements without manual prop drilling.",
+      "usage": "Use Form to create accessible form fields with consistent styling and state management. Wrap form elements with Form.Control to share state across Label, Input, Textarea, and HelperText components. For basic usage, nest Form.Label, Form.Input, and Form.HelperText within Form.Control. Apply the error prop to Form.Control to display error styling on all child elements simultaneously. Use the disabled prop to disable the entire form field group. The color prop switches between dark and light themes for different background contexts. For multi-line input, replace Form.Input with Form.Textarea. Input supports startAdornment and endAdornment props for icons or decorative elements.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, Form.Label renders as a native label element that should be associated with inputs using htmlFor and id attributes. Form.Input and Form.Textarea render as native input and textarea elements with proper disabled states. For error states, visual styling changes are accompanied by color contrast that meets WCAG 4.5:1 requirements. Screen readers can identify disabled fields through the native disabled attribute. Focus indicators are visible with ring styles that meet WCAG requirements. Helper text provides additional context that should be linked to inputs using aria-describedby for screen reader support.",
+      "doList": [
+        "Associate labels with inputs using htmlFor and id attributes",
+        "Provide helper text for complex input requirements",
+        "Use error state with descriptive error messages in HelperText",
+        "Apply consistent color theme across related form fields",
+        "Include visible focus indicators for keyboard navigation"
+      ],
+      "dontList": [
+        "Omit labels for form inputs",
+        "Use placeholder text as the only label",
+        "Display error styling without explanatory text",
+        "Mix dark and light themes within the same form section",
+        "Disable fields without explaining why to users"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Button for form submission and action triggers"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Use Icon with Input adornment props for visual indicators"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "Combine Form with Dialog for modal form experiences"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality and Context API"
+        },
+        {
+          "package": "class-variance-authority",
+          "version": "^0.7.0",
+          "reason": "Provides type-safe variant management for styling states"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Labels or Instructions Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/labels-or-instructions.html",
+          "description": "Official WCAG documentation on providing labels and instructions for form inputs"
+        },
+        {
+          "linkText": "WCAG Error Identification Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/error-identification.html",
+          "description": "Official WCAG documentation on identifying and describing input errors"
+        },
+        {
+          "linkText": "MDN Form Element Reference",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form",
+          "description": "MDN documentation on native HTML form elements and accessibility"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
