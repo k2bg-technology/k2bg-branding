@@ -1,9 +1,5 @@
 module.exports = {
-  extends: [
-    'airbnb-base',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['airbnb-base', 'plugin:@typescript-eslint/recommended', 'prettier'],
   plugins: ['@typescript-eslint'],
   parser: '@typescript-eslint/parser',
   rules: {
@@ -11,7 +7,14 @@ module.exports = {
     camelcase: 'off',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
-    'no-shadow': ['error', { allow: ['props'] }],
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': [
+      'error',
+      {
+        allow: ['props'],
+        ignoreFunctionTypeParameterNameValueShadows: true,
+      },
+    ],
     'import/order': [
       'error',
       {
