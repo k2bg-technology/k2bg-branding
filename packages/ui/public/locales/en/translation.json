@@ -599,6 +599,72 @@
         }
       ]
     },
+    "skelton": {
+      "description": "Displays animated placeholder content while the actual content is loading, providing visual feedback to users.",
+      "overview": "Skelton is a loading state component that shows placeholder shapes mimicking the layout of content being loaded. It consists of three sub-components: Line for text placeholders, Box for rectangular content areas like images, and Round for circular elements like avatars. The root component wraps all skeleton elements and applies a pulsing animation to indicate loading state. Each sub-component accepts className props for customizing dimensions and spacing.",
+      "usage": "Use Skelton to indicate content is loading and prevent layout shifts when data arrives. For basic usage, wrap Skelton.Line, Skelton.Box, or Skelton.Round components within the Skelton root. Use Skelton.Line for text content placeholders with customizable height via className. Use Skelton.Box for image or card placeholders with optional centered icon. Use Skelton.Round for avatar or circular element placeholders. Combine multiple sub-components to create layouts that match the expected content structure. Apply width constraints via className to match actual content dimensions.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the root Skelton component includes role status to indicate the loading state to screen readers. The pulsing animation is subtle and does not cause distraction or trigger vestibular disorders. For screen reader users, the loading state is communicated through the status role. Ensure skeleton layouts match actual content structure to prevent confusion when content loads. Consider adding aria-busy on parent containers when skeleton content is displayed.",
+      "doList": [
+        "Match skeleton layout to the expected content structure",
+        "Use appropriate sub-components for different content types",
+        "Apply consistent sizing that reflects actual content dimensions",
+        "Combine with proper loading state management in applications",
+        "Keep skeleton visible until content is fully loaded"
+      ],
+      "dontList": [
+        "Use skeleton for content that loads instantly",
+        "Display skeleton indefinitely without timeout handling",
+        "Create skeleton layouts that differ significantly from actual content",
+        "Use overly complex skeleton structures for simple content",
+        "Omit skeleton when loading causes noticeable layout shifts"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "Use Skelton.Round as placeholder while Avatar images load"
+        },
+        {
+          "name": "BlogCard",
+          "path": "/?path=/docs/components-blogcard--docs",
+          "description": "Use Skelton to create loading states for blog card layouts"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Use Icon within Skelton.Box or Skelton.Round as visual indicators"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Status Messages Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/status-messages.html",
+          "description": "Official WCAG documentation on status messages and loading states"
+        },
+        {
+          "linkText": "MDN ARIA Live Regions",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Live_Regions",
+          "description": "MDN documentation on ARIA live regions for dynamic content updates"
+        },
+        {
+          "linkText": "Nielsen Norman Group Skeleton Screens",
+          "url": "https://www.nngroup.com/articles/skeleton-screens/",
+          "description": "UX research and best practices for skeleton screen implementations"
+        }
+      ]
+    },
     "toaster": {
       "description": "Displays brief notification messages that appear temporarily and dismiss automatically or on user action.",
       "overview": "Toaster provides a non-intrusive way to display feedback messages to users. It renders notifications at the top center of the viewport with a translucent backdrop effect. The component supports four semantic variants: success for positive confirmations, info for neutral information, warning for cautionary messages, and error for failure states. Each variant displays a distinctive icon to reinforce the message type. Notifications can include a close button for manual dismissal and automatically disappear after a configurable duration.",
