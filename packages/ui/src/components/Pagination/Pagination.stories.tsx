@@ -27,15 +27,15 @@ const meta = {
       description: 'Current active page index',
     },
     prevProps: {
-      control: 'object',
+      control: false,
       description: 'Props for the previous button',
     },
     nextProps: {
-      control: 'object',
+      control: false,
       description: 'Props for the next button',
     },
     renderItem: {
-      control: 'object',
+      control: false,
       description: 'Function to render each pagination item',
     },
   },
