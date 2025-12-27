@@ -583,14 +583,19 @@
       ],
       "references": [
         {
-          "linkText": "WCAG ページネーションパターンガイドライン",
+          "linkText": "ARIA パターンガイドライン",
           "url": "https://www.w3.org/WAI/ARIA/apg/patterns/",
-          "description": "ページネーションナビゲーションに関する公式ARIAオーサリングプラクティスガイド"
+          "description": "ARIAオーサリングプラクティスの公式パターン集。ページネーションナビゲーション実装時に参考となるナビゲーションやリンクパターンを含みます"
         },
         {
           "linkText": "WCAG キーボードアクセシビリティガイドライン",
           "url": "https://www.w3.org/WAI/WCAG21/Understanding/keyboard-accessible.html",
           "description": "キーボードアクセシビリティ要件に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "Material-UI usePaginationフック",
+          "url": "https://github.com/mui/material-ui/blob/master/packages/mui-material/src/usePagination/usePagination.js",
+          "description": "usePaginationの参考となったMaterial-UIのソースコード"
         }
       ]
     }

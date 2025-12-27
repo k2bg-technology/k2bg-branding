@@ -380,14 +380,19 @@
       ],
       "references": [
         {
-          "linkText": "WCAG Pagination Pattern Guidelines",
+          "linkText": "WAI-ARIA Authoring Practices Guide Patterns Index",
           "url": "https://www.w3.org/WAI/ARIA/apg/patterns/",
-          "description": "Official ARIA Authoring Practices Guide for pagination navigation"
+          "description": "Overview of ARIA patterns in the Authoring Practices Guide that inform pagination navigation"
         },
         {
           "linkText": "WCAG Keyboard Accessible Guidelines",
           "url": "https://www.w3.org/WAI/WCAG21/Understanding/keyboard-accessible.html",
           "description": "Official WCAG documentation on keyboard accessibility requirements"
+        },
+        {
+          "linkText": "Material-UI usePagination Hook",
+          "url": "https://github.com/mui/material-ui/blob/master/packages/mui-material/src/usePagination/usePagination.js",
+          "description": "Source code of Material-UI's usePagination hook that inspired this implementation"
         }
       ]
     },
