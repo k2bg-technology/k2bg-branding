@@ -5,7 +5,6 @@ type Props = React.ComponentPropsWithoutRef<'a'>;
 export function ExternalLinkButton({ children, ...rest }: Props) {
   return (
     <Button color="light" variant="outline" asChild>
-      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
       <a {...rest} target="_blank" rel="noreferrer">
         <span className="flex justify-center gap-condensed">
           <Icon

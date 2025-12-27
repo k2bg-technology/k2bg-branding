@@ -24,7 +24,6 @@ export class Core {
   }
 
   /** https://cloudinary.com/documentation/transformation_reference#overview */
-  // eslint-disable-next-line class-methods-use-this
   private getUrl(options: {
     assetType: 'image' | 'video';
     deliveryType: DeliveryType;
@@ -45,7 +44,6 @@ export class Core {
     return `${CLOUDINARY_BASE_URI}/${CLOUDINARY_CLOUD_NAME}/${suffix}`;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   protected getImageUrl(
     publicId: string,
     options: TransformationOptions & ConfigAndUrlOptions
@@ -71,14 +69,12 @@ export class Core {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   protected async fetchVersion(publicId: string) {
     const { version } = await cloudinary.api.resource(publicId);
 
     return String(version);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   protected async upload(file: string, options: UploadApiOptions) {
     cloudinary.uploader.upload(file, options);
   }

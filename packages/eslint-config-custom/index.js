@@ -7,6 +7,14 @@ module.exports = {
     camelcase: 'off',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'error',
+    'class-methods-use-this': 'off',
+    'no-useless-constructor': 'off',
+    '@typescript-eslint/no-useless-constructor': 'error',
+    'no-empty-function': ['error', { allow: ['constructors'] }],
+    '@typescript-eslint/no-empty-function': [
+      'error',
+      { allow: ['constructors'] },
+    ],
     'no-shadow': ['error', { allow: ['props', 'Story'] }],
     'import/order': [
       'error',

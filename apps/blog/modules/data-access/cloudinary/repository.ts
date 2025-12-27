@@ -3,7 +3,6 @@ import * as Domain from '../../domain';
 import { Core } from './core';
 
 export class Repository extends Core implements Domain.Image.Repository {
-  // eslint-disable-next-line class-methods-use-this
   getOptimizedImageUrl(id: string, version?: string) {
     return this.getImageUrl(id, {
       fetch_format: 'auto',
@@ -12,7 +11,6 @@ export class Repository extends Core implements Domain.Image.Repository {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   getPlaceholderImageUrl(id: string, version?: string) {
     return this.getImageUrl(id, {
       fetch_format: 'auto',
@@ -23,12 +21,10 @@ export class Repository extends Core implements Domain.Image.Repository {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async fetchImageVersion(publicId: string) {
     return this.fetchVersion(publicId);
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async uploadImage(id: string, fileUrl: string) {
     return this.upload(fileUrl, {
       public_id: id,
