@@ -340,6 +340,62 @@
         }
       ]
     },
+    "pagination": {
+      "description": "Provides pagination controls for navigating multi-page content with previous/next buttons and page numbers.",
+      "overview": "Pagination provides an interface for navigating through large amounts of content split across multiple pages. It consists of a previous button, a list of page numbers, and a next button. When there are many pages, the usePagination hook automatically optimizes the displayed page numbers using ellipsis (...). Each page number is rendered as a Pagination.Item component, with the current page visually highlighted. The renderItem prop enables flexible customization of each page item.",
+      "usage": "Use Pagination for navigating content divided into multiple pages such as blog post lists, search results, or data tables. For basic usage, specify the count prop for total pages and currentIndex prop for the current page number. Set click handlers via prevProps and nextProps, and define how each page number renders with the renderItem prop. The Pagination.Item component highlights the current page with the selected prop. When pages change, smoothly scroll content to the top of the page.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the component renders as a nav element indicating it is pagination navigation. Regarding keyboard navigation, all page numbers and previous/next buttons are focusable via Tab and activated with Enter or Space keys. For disabled states, the previous button is automatically disabled on the first page and the next button on the last page. The current page is communicated to screen readers via appropriate ARIA attributes in addition to visual highlighting. Focus indicators are displayed with ring styles meeting WCAG requirements.",
+      "doList": [
+        "Clearly distinguish the current page visually",
+        "Properly disable buttons at first and last pages",
+        "Scroll to top of content when pages change",
+        "Ensure sufficient tap target size for page numbers",
+        "Provide page information for screen reader users"
+      ],
+      "dontList": [
+        "Use pagination for small item counts (less than 10 items)",
+        "Use only previous/next buttons without page numbers",
+        "Omit visual indicators for the current page",
+        "Make users wait long periods without loading state on page changes",
+        "Use pagination when infinite scroll is more appropriate"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Used as the foundation for previous/next buttons and page number buttons"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Used as chevron icons within previous/next buttons"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality and hooks (usePagination)"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI-ARIA Authoring Practices Guide Patterns Index",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/",
+          "description": "Overview of ARIA patterns in the Authoring Practices Guide that inform pagination navigation"
+        },
+        {
+          "linkText": "WCAG Keyboard Accessible Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/keyboard-accessible.html",
+          "description": "Official WCAG documentation on keyboard accessibility requirements"
+        },
+        {
+          "linkText": "Material-UI usePagination Hook",
+          "url": "https://github.com/mui/material-ui/blob/master/packages/mui-material/src/usePagination/usePagination.js",
+          "description": "Source code of Material-UI's usePagination hook that inspired this implementation"
+        }
+      ]
+    },
     "drawer": {
       "description": "Displays supplementary content in a slide-out panel triggered by user interaction.",
       "overview": "Drawer provides a side panel interface for displaying additional content, settings, navigation menus, or detailed information without navigating away from the current page. The component slides in from the right side of the viewport with a semi-transparent overlay that dims the background content. It includes an integrated close button, optional title and description sections, and a scrollable content area for lengthy information. The trigger element can be any interactive component such as a button or link.",
