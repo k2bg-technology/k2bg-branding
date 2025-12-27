@@ -1,12 +1,11 @@
 import * as Domain from '../../domain';
 
 export class UpsertImages {
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     private InputPostRepository: Domain.Post.InputRepository,
     private InputMediaRepository: Domain.Media.InputRepository,
     private InputAffiliateRepository: Domain.Affiliate.InputRepository,
-    private ImageRepository: Domain.Image.Repository // eslint-disable-next-line no-empty-function
+    private ImageRepository: Domain.Image.Repository
   ) {}
 
   async execute() {

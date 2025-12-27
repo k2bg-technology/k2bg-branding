@@ -1,10 +1,9 @@
 import * as Domain from '../../domain';
 
 export class UpsertPosts {
-  // eslint-disable-next-line no-useless-constructor
   constructor(
     private InputPostRepository: Domain.Post.InputRepository,
-    private OutputPostRepository: Domain.Post.OutputRepository // eslint-disable-next-line no-empty-function
+    private OutputPostRepository: Domain.Post.OutputRepository
   ) {}
 
   async execute() {

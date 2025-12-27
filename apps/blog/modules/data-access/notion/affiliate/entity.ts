@@ -3,7 +3,6 @@ import { Page } from '../page';
 import { Affiliate } from './types';
 
 export class Entity implements Affiliate {
-  // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(protected data: Page) {}
 
   get id() {

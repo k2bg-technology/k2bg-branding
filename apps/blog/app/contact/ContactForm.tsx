@@ -92,7 +92,6 @@ export default function ContactForm() {
               お名前
             </Form.Label>
             <Form.Input
-              // eslint-disable-next-line react/jsx-props-no-spreading
               {...register('name')}
               type="text"
               name="name"
@@ -115,7 +114,6 @@ export default function ContactForm() {
               Eメール
             </Form.Label>
             <Form.Input
-              // eslint-disable-next-line react/jsx-props-no-spreading
               {...register('email')}
               type="email"
               name="email"
@@ -139,7 +137,6 @@ export default function ContactForm() {
             メッセージ
           </Form.Label>
           <Form.Textarea
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...register('message')}
             name="message"
             id="message"

@@ -6,9 +6,8 @@ import * as Domain from '../../domain';
 import { generateHtmlTemplate } from '../../utility/generateHtmlTemplate';
 
 export class SendEmail {
-  // eslint-disable-next-line no-useless-constructor
   constructor(
-    private ContactAdapter: Domain.Contact.Adapter // eslint-disable-next-line no-empty-function
+    private ContactAdapter: Domain.Contact.Adapter
   ) {}
 
   async execute(visitor: Domain.Contact.Visitor) {

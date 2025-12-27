@@ -24,17 +24,12 @@ export async function Root(props: Props) {
       remarkPlugins={[remarkGfm]}
       components={{
         h1: ({ children, ...props }) => (
-          <h1
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...props}
-            className="text-heading-1 leading-heading-1 font-bold"
-          >
+          <h1 {...props} className="text-heading-1 leading-heading-1 font-bold">
             {children}
           </h1>
         ),
         h2: ({ children, ...props }) => (
           <h2
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             className="first:mt-0 mt-12 text-heading-2 leading-heading-2 font-bold"
           >
@@ -43,7 +38,6 @@ export async function Root(props: Props) {
         ),
         h3: ({ children, ...props }) => (
           <h3
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             className="first:mt-0 mt-8 text-heading-3 leading-heading-3 font-bold"
           >
@@ -52,7 +46,6 @@ export async function Root(props: Props) {
         ),
         p: ({ children, ...props }) => (
           <p
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             className="first:mt-0 mt-4 text-body-r-md leading-body-r-md text-base-black text-justify"
           >
@@ -64,7 +57,6 @@ export async function Root(props: Props) {
 
           return (
             <Link
-              // eslint-disable-next-line react/jsx-props-no-spreading
               {...props}
               href={href || ''}
               rel="noopener noreferrer"
@@ -80,7 +72,6 @@ export async function Root(props: Props) {
 
           return (
             <ul
-              // eslint-disable-next-line react/jsx-props-no-spreading
               {...props}
               className={className || 'mt-2 list-disc list-inside'}
             >
@@ -93,7 +84,6 @@ export async function Root(props: Props) {
 
           return (
             <li
-              // eslint-disable-next-line react/jsx-props-no-spreading
               {...props}
               className={
                 className ||
@@ -105,24 +95,16 @@ export async function Root(props: Props) {
           );
         },
         strong: ({ children, ...props }) => (
-          <span
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            {...props}
-            className="mt-2 font-bold leading-none"
-          >
+          <span {...props} className="mt-2 font-bold leading-none">
             {children}
           </span>
         ),
         pre: ({ children, ...props }) => (
-          // eslint-disable-next-line react/jsx-props-no-spreading
           <pre {...props} className="first:mt-0 mt-2">
             {children}
           </pre>
         ),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        code: async ({ children, ref, ...props }) => {
-          const { className } = props;
-
+        code: async ({ children, className }) => {
           const isInline =
             typeof children === 'string' && children.split('\n').length === 1;
 
@@ -166,7 +148,6 @@ export async function Root(props: Props) {
         },
         blockquote: ({ children, ...props }) => (
           <blockquote
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             className="first:mt-0 mt-2 border-l-4 border-slate-100 pl-2"
           >
@@ -194,7 +175,6 @@ export async function Root(props: Props) {
         },
         table: ({ children, ...props }) => (
           <table
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             className="mt-4 w-full text-body-r-sm border-base-white"
           >
@@ -203,7 +183,6 @@ export async function Root(props: Props) {
         ),
         th: ({ children, ...props }) => (
           <th
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             className="text-base-black font-original border py-2 px-3 bg-base-white"
           >
@@ -212,7 +191,6 @@ export async function Root(props: Props) {
         ),
         td: ({ children, ...props }) => (
           <td
-            // eslint-disable-next-line react/jsx-props-no-spreading
             {...props}
             className="text-base-black font-original border py-2 px-3"
           >

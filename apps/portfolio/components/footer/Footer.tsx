@@ -12,7 +12,6 @@ export function Footer({ lng }: { lng: Language }) {
     <footer>
       <p className="text-body-r-sm leading-body-r-sm text-right">
         <Trans i18nKey="footer.copyright">
-          {/* eslint-disable-next-line jsx-a11y/control-has-associated-label, jsx-a11y/anchor-has-content */}
           <a
             href="https://html5up.net"
             className="text-body-r-sm leading-body-r-sm"

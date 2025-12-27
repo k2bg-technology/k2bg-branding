@@ -24,6 +24,5 @@ export function PageScrollArea(props: Props) {
     setRef(ref);
   }, [ref, setRef]);
 
-  // eslint-disable-next-line react/jsx-props-no-spreading
   return <ScrollArea {...props} ref={ref} className="max-h-dvh" />;
 }

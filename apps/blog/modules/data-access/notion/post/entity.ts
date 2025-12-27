@@ -5,7 +5,6 @@ import { Page } from '../page';
 import { Post } from './types';
 
 export class Entity implements Post {
-  // eslint-disable-next-line no-useless-constructor, no-empty-function
   constructor(private data: Page) {}
 
   get id() {

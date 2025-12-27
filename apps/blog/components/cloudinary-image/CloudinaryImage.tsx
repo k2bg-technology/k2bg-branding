@@ -32,7 +32,6 @@ export async function CloudinaryImage(props: CloudinaryImageProps) {
 
     return (
       <Image
-        // eslint-disable-next-line react/jsx-props-no-spreading
         {...rest}
         src={optimizedImageUrl}
         alt={alt}

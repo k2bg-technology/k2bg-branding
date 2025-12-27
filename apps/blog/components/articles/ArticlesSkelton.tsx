@@ -5,7 +5,6 @@ export async function ArticlesSkelton() {
     <div className="grid grid-cols-[subgrid] col-span-full">
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-8 place-content-start">
         {Array.from({ length: 6 }).map((_, index) => (
-          // eslint-disable-next-line react/no-array-index-key
           <Skelton key={index} className="flex flex-col gap-3">
             <Skelton.Box className="py-28 rounded-xl">
               <Icon

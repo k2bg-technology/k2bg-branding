@@ -55,7 +55,6 @@ function IconInner(props: IconProps) {
     ...(appearance === 'outline' ? heroOutlineIcons : heroSolidIcons),
   }[`./${name}.svg`];
 
-  // eslint-disable-next-line react/jsx-props-no-spreading
   return (
     <i
       {...rest}

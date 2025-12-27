@@ -1,8 +1,6 @@
 export function CompanyLogo(props: React.ComponentPropsWithRef<'svg'>) {
-  // eslint-disable-next-line react/jsx-props-no-spreading
   return (
     <svg
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...props}
       width="178"
       height="24"
