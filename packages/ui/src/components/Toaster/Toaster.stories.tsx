@@ -49,6 +49,11 @@ export const Default: Story = {
       Show default toast
     </Button>
   ),
+  play: async ({ canvas, userEvent }) => {
+    const button = canvas.getByRole('button');
+
+    await userEvent.click(button);
+  },
 };
 
 export const Success: Story = {
@@ -65,6 +70,7 @@ export const Success: Story = {
       Show success toast
     </Button>
   ),
+  play: Default.play,
 };
 
 export const Info: Story = {
@@ -81,6 +87,7 @@ export const Info: Story = {
       Show info toast
     </Button>
   ),
+  play: Default.play,
 };
 
 export const Warning: Story = {
@@ -97,6 +104,7 @@ export const Warning: Story = {
       Show warning toast
     </Button>
   ),
+  play: Default.play,
 };
 
 export const Error: Story = {
@@ -113,6 +121,7 @@ export const Error: Story = {
       Show error toast
     </Button>
   ),
+  play: Default.play,
 };
 
 export const AllVariants: Story = {
