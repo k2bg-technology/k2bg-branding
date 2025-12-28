@@ -735,6 +735,72 @@
           "description": "UX research and best practices for skeleton screen implementations"
         }
       ]
+    },
+    "toaster": {
+      "description": "Displays brief notification messages that appear temporarily and dismiss automatically or on user action.",
+      "overview": "Toaster provides a non-intrusive way to display feedback messages to users. It renders notifications at the top center of the viewport with a translucent backdrop effect. The component supports four semantic variants: success for positive confirmations, info for neutral information, warning for cautionary messages, and error for failure states. Each variant displays a distinctive icon to reinforce the message type. Notifications can include a close button for manual dismissal and automatically disappear after a configurable duration.",
+      "usage": "Use Toaster for transient feedback that does not require user acknowledgment. Add the Toaster component once at the root of your application layout. Trigger notifications using the toast function with appropriate methods such as toast.success, toast.info, toast.warning, or toast.error. For basic messages, call toast with a string message. Enable the closeButton option to allow manual dismissal. Combine with async operations to provide feedback on action completion or failure. Avoid using toasts for critical information that requires user action.",
+      "accessibility": "This component meets the following accessibility requirements. For screen reader support, notifications are announced using ARIA live regions to inform users of new messages without interrupting their workflow. Regarding timing, the default display duration provides sufficient time for users to read the content. For keyboard support, when close buttons are enabled they are focusable and activated with Enter or Space keys. Color alone does not convey meaning as each variant includes a distinctive icon. Semantic icons use appropriate visual weight and color contrast to reinforce the message type.",
+      "doList": [
+        "Use appropriate toast types to match the message context",
+        "Keep toast messages brief and actionable",
+        "Include close buttons for important notifications",
+        "Position the Toaster component at the application root",
+        "Use success toasts to confirm completed actions"
+      ],
+      "dontList": [
+        "Use toasts for critical information requiring user action",
+        "Display multiple toasts simultaneously without stacking",
+        "Use toast messages for form validation errors",
+        "Rely on toasts as the only feedback mechanism",
+        "Set excessively short display durations"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Button to trigger actions that display toast notifications"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "Use Dialog for important messages requiring user acknowledgment"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Provides semantic icons for different toast variants"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "sonner",
+          "version": "^2.0.3",
+          "reason": "Provides toast notification primitives with accessibility support"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Status Messages Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/status-messages.html",
+          "description": "Official WCAG documentation on accessible status message implementation"
+        },
+        {
+          "linkText": "Sonner Documentation",
+          "url": "https://sonner.emilkowal.ski/",
+          "description": "Official documentation for the Sonner toast library"
+        },
+        {
+          "linkText": "WAI-ARIA Live Regions",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/alert/",
+          "description": "ARIA Authoring Practices Guide for alert and status patterns"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
