@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
-import { ScrollArea } from './ScrollArea';
+import ScrollArea from '.';
 
 const meta = {
   component: ScrollArea,
@@ -33,7 +33,8 @@ export const Default: Story = {};
 
 export const VerticalScroll: Story = {
   args: {
-    className: 'h-[150px] w-[300px] rounded-md border border-base-default/10 p-4',
+    className:
+      'h-[150px] w-[300px] rounded-md border border-base-default/10 p-4',
     children: (
       <div className="space-y-4">
         {Array.from({ length: 10 }).map((_, i) => (
@@ -61,12 +62,14 @@ export const HorizontalScroll: Story = {
         ))}
       </div>
     ),
+    scrollbar: <ScrollArea.ScrollBar orientation="horizontal" />,
   },
 };
 
 export const LongContent: Story = {
   args: {
-    className: 'h-[300px] w-[400px] rounded-md border border-base-default/10 p-4',
+    className:
+      'h-[300px] w-[400px] rounded-md border border-base-default/10 p-4',
     children: (
       <div className="space-y-4">
         <h3 className="font-semibold text-lg">Article Title</h3>
@@ -105,7 +108,8 @@ export const LongContent: Story = {
 
 export const CompactSize: Story = {
   args: {
-    className: 'h-[100px] w-[200px] rounded-md border border-base-default/10 p-2 text-sm',
+    className:
+      'h-[100px] w-[200px] rounded-md border border-base-default/10 p-2 text-sm',
     children: `A compact scroll area for smaller content sections. This is useful for sidebars, tooltips, or any constrained space that needs scrollable content.`,
   },
 };

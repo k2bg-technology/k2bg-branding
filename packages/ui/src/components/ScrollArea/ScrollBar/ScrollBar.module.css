@@ -1,4 +1,4 @@
-.scrollArea {
+.root {
   &[data-state='visible'] {
     animation: fadein 0.2s ease-in 1;
   }
