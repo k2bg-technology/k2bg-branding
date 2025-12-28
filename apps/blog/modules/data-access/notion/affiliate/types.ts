@@ -6,7 +6,7 @@ export interface Affiliate {
   provider?: string;
 }
 
-export interface AffiliateText extends Affiliate {}
+export type AffiliateText = Affiliate;
 
 export interface AffiliateBanner extends Affiliate {
   imageSourceUrl?: string;

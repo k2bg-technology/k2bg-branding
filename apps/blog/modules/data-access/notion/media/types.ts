@@ -9,6 +9,6 @@ export interface Media {
   sourceFile?: string;
 }
 
-export interface MediaImage extends Media {}
+export type MediaImage = Media;
 
-export interface MediaVideo extends Media {}
+export type MediaVideo = Media;
