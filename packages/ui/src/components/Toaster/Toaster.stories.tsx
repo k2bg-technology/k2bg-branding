@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { toast } from 'sonner';
+import { toast, ToasterProps } from 'sonner';
 
 import { Button } from '../Button';
 
@@ -30,7 +30,8 @@ const meta = {
       references: 'components.toaster.references',
     },
   },
-} satisfies Meta<typeof Toaster>;
+  // NOTE: Omit toastOptions/icons to avoid leaking Sonner's internal types into Storybook meta.
+} satisfies Meta<Omit<ToasterProps, 'toastOptions' | 'icons'>>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
