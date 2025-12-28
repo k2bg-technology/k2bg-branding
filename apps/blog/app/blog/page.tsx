@@ -9,6 +9,58 @@ import { Post } from '../../modules/domain/post/types';
 
 export const metadata: Metadata = {
   title: 'K2.B.G Technology Blog',
+  description:
+    'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。',
+  keywords: [
+    'K2.B.G Technology',
+    'K2.B.G',
+    'K2BG',
+    'Technology Blog',
+    '技術ブログ',
+    'Web開発',
+    'デザイン',
+    'フロントエンド',
+    'バックエンド',
+    'UI/UX',
+    'Next.js',
+    'React',
+    'TypeScript',
+    'デザインシステム',
+    'テクノロジー',
+    'プログラミング',
+    'AI活用',
+    '自動化',
+    '仕組み化',
+    'ライフハック',
+    '初心者向け',
+    'わかりやすい',
+    'フリーランス',
+  ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-snippet': -1,
+      'max-image-preview': 'large',
+      'max-video-preview': -1,
+    },
+  },
+  openGraph: {
+    title: 'K2.B.G Technology Blog',
+    description:
+      'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。',
+    type: 'website',
+    locale: 'ja_JP',
+    siteName: 'K2.B.G Technology Blog',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'K2.B.G Technology Blog',
+    description:
+      'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。',
+  },
 };
 
 export default async function Page() {
