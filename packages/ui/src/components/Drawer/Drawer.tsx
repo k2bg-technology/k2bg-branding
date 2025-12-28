@@ -5,7 +5,7 @@ import * as RadixDialog from '@radix-ui/react-dialog';
 import { Icon } from '../Icon';
 import { Button } from '../Button';
 import { twMerge } from '../../utils/extendTailwindMerge';
-import { ScrollArea } from '../ScrollArea';
+import ScrollArea from '../ScrollArea';
 
 import styles from './Drawer.module.css';
 

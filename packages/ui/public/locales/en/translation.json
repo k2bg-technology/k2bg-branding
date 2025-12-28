@@ -599,6 +599,77 @@
         }
       ]
     },
+    "scrollArea": {
+      "description": "Provides a scrollable container with styled scrollbars for overflow content management.",
+      "overview": "ScrollArea creates a scrollable viewport for content that exceeds its container dimensions. The component consists of a root container that manages overflow behavior, a viewport that contains the scrollable content, and a scrollbar that appears when content overflows. By default, a vertical scrollbar is displayed, but you can configure horizontal scrollbars or custom scrollbars through the scrollbar prop. The scrollbar uses a semi-transparent thumb indicator that transitions smoothly on interaction. The viewport automatically inherits border-radius from its parent for consistent visual appearance.",
+      "usage": "Use ScrollArea to contain content that may exceed available space such as lists, articles, code blocks, or any overflow content. For basic usage, wrap content inside the ScrollArea component and set height constraints via className prop. When the scrollbar prop is not specified, the component automatically displays a vertical scrollbar when content overflows the container boundaries. Customize the container appearance by passing Tailwind classes for padding, borders, and background styles. Combine with responsive height classes to adapt scroll areas to different viewport sizes. To enable horizontal scrolling, pass <ScrollArea.ScrollBar orientation=\"horizontal\" /> to the scrollbar prop and ensure child content has a width greater than the container. To hide the scrollbar, set scrollbar={null}, though normally omitting the scrollbar prop will display the default vertical scrollbar.",
+      "accessibility": "This component meets the following accessibility requirements. For keyboard support, the scroll area supports native keyboard scrolling with arrow keys, Page Up, Page Down, Home, and End keys when focused. Regarding focus management, the viewport element accepts a ref for programmatic focus control. Touch interaction is disabled on the scrollbar to prevent accidental scrolling on mobile devices, while the content area remains fully touch-scrollable. The component uses semantic overflow behavior that screen readers understand natively. Visible scrollbars provide clear indication of scrollable content without requiring hover interaction.",
+      "doList": [
+        "Set explicit height constraints on the ScrollArea container",
+        "Use consistent padding inside the scroll container for content spacing",
+        "Apply border-radius to the container for visual consistency with scrollbar corners",
+        "Provide visual indication that content is scrollable when not immediately obvious",
+        "Test scroll behavior across different content lengths and viewport sizes"
+      ],
+      "dontList": [
+        "Nest multiple ScrollArea components within each other",
+        "Use ScrollArea for small amounts of content that fit without scrolling",
+        "Apply overflow styles directly to children that conflict with scroll behavior",
+        "Hide scrollbars when scrollable content indication is important for usability",
+        "Forget to set height constraints which prevents scroll functionality"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Drawer",
+          "path": "/?path=/docs/components-drawer--docs",
+          "description": "Drawer uses ScrollArea internally for scrollable panel content"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "Combine ScrollArea with Dialog for scrollable modal content"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "Use ScrollArea within dropdown menus for long option lists"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-scroll-area",
+          "version": "^1.2.3",
+          "reason": "Provides accessible scroll area primitives with customizable scrollbar styling"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Reflow Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/reflow.html",
+          "description": "Official WCAG documentation on content reflow and scrolling behavior"
+        },
+        {
+          "linkText": "Radix UI Scroll Area Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/components/scroll-area",
+          "description": "Official documentation for the underlying scroll area primitive component"
+        },
+        {
+          "linkText": "MDN CSS Overflow Reference",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/overflow",
+          "description": "MDN documentation on CSS overflow property and scrolling behavior"
+        }
+      ]
+    },
     "skelton": {
       "description": "Displays animated placeholder content while the actual content is loading, providing visual feedback to users.",
       "overview": "Skelton is a loading state component that shows placeholder shapes mimicking the layout of content being loaded. It consists of three sub-components: Line for text placeholders, Box for rectangular content areas like images, and Round for circular elements like avatars. The root component wraps all skeleton elements and applies a pulsing animation to indicate loading state. Each sub-component accepts className props for customizing dimensions and spacing.",
