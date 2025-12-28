@@ -24,12 +24,5 @@ export function PageScrollArea(props: Props) {
     setRef(ref);
   }, [ref, setRef]);
 
-  return (
-    <ScrollArea
-      {...props}
-      ref={ref}
-      scrollbar={<ScrollArea.ScrollBar />}
-      className="max-h-dvh"
-    />
-  );
+  return <ScrollArea {...props} ref={ref} className="max-h-dvh" />;
 }
