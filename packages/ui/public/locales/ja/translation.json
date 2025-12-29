@@ -801,6 +801,123 @@
           "description": "アラートとステータスパターンに関するARIAオーサリングプラクティスガイド"
         }
       ]
+    },
+    "videoFilePlayer": {
+      "description": "ネイティブHTML5ビデオ機能を使用して、カスタマイズ可能なサイズと再生コントロールでビデオファイルをブラウザで直接再生します。",
+      "overview": "VideoFilePlayerはMP4などのビデオファイルをウェブページ内に埋め込んで再生するための直感的なインターフェースを提供します。ネイティブのHTMLビデオ要素をラップし、ファイルURL、幅、高さを必須プロップとして受け取ります。再生管理用のcontrols、読み込み時の自動再生用のautoPlay、連続再生用のloop、無音再生用のmutedなど、標準のHTML5ビデオ属性すべてをサポートします。nameプロップが提供されると、キャプション対応のためのtrack要素が含まれます。",
+      "usage": "サーバーにホストされているビデオコンテンツまたは直接URLでアクセス可能なビデオコンテンツを表示するためにVideoFilePlayerを使用します。基本的な使い方では、fileプロップにビデオURLを指定し、widthとheightをピクセル単位で設定します。再生、一時停止、音量、フルスクリーンのコントロールを表示するにはcontrolsプロップを有効にします。自動再生機能を使用するには、ブラウザの自動再生ポリシーに準拠するためにautoPlayとmutedプロップを組み合わせます。背景アニメーションやチュートリアルループなど、連続的に繰り返すビデオにはloopプロップを適用します。アクセシビリティのためにキャプショントラックを有効にするには、説明的なnameプロップを提供します。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。キーボードサポートとして、controlsが有効な場合ユーザーはTabでナビゲート、SpaceまたはEnterで有効化、矢印キーで音量を調整できます。セマンティックHTMLについて、コンポーネントは適切なsource要素とtrack要素を持つネイティブのvideo要素を使用します。キャプションとして、nameプロップが提供されると、kind captionsのtrack要素が聴覚障害者や難聴者向けのアクセシビリティを提供します。スクリーンリーダーはvideo要素と利用可能なコントロールをアナウンスします。スクリーンリーダーユーザーの邪魔をしないように、音声付きでビデオを自動再生しないようにします。可能な場合はビデオコンテンツのテキスト代替またはトランスクリプトを提供します。",
+      "doList": [
+        "キャプショントラックのアクセシビリティのために説明的なnameプロップを提供します",
+        "ユーザーによる再生管理のためにcontrolsを有効にします",
+        "autoPlayを有効にする場合はmutedプロップを使用します",
+        "レイアウトシフトを防ぐために明示的なwidthとheightを指定します",
+        "重要なビデオ情報には代替コンテンツまたはトランスクリプトを提供します"
+      ],
+      "dontList": [
+        "ユーザーの同意なしに音声付きでビデオを自動再生しません",
+        "長時間のビデオコンテンツでcontrolsを省略しません",
+        "レスポンシブレイアウトを壊すような過度に大きなサイズを使用しません",
+        "音声コンテンツを含むビデオのキャプションを提供することを忘れません",
+        "テキスト代替なしに重要な情報をビデオだけに頼りません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "VideoStreamingPlayer",
+          "path": "/?path=/docs/components-media-videostreamingplayer--docs",
+          "description": "YouTube、Vimeo、その他のストリーミングプラットフォームからのビデオを埋め込むにはVideoStreamingPlayerを使用します"
+        },
+        {
+          "name": "ImageViewer",
+          "path": "/?path=/docs/components-media-imageviewer--docs",
+          "description": "ビデオコンテンツと一緒に静止画像を表示するにはImageViewerを使用します"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "MDN HTML ビデオ要素リファレンス",
+          "url": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/video",
+          "description": "HTMLビデオ要素とその属性に関する公式MDNドキュメント"
+        },
+        {
+          "linkText": "WCAG ビデオアクセシビリティガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/audio-only-and-video-only-prerecorded.html",
+          "description": "アクセシブルなビデオ実装に関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "ウェブビデオテキストトラック形式",
+          "url": "https://www.w3.org/TR/webvtt1/",
+          "description": "WebVTTキャプションと字幕形式のW3C仕様"
+        }
+      ]
+    },
+    "videoStreamingPlayer": {
+      "description": "YouTubeやVimeoなどのストリーミングプラットフォームからのビデオをiframeを使用してカスタマイズ可能なサイズとパーミッションで埋め込みます。",
+      "overview": "VideoStreamingPlayerは外部ストリーミングサービスからのビデオコンテンツを埋め込むための便利なラッパーを提供します。コンポーネントはiframe要素を使用して、YouTube、Vimeo、その他の埋め込みURLを提供するサービスからのビデオを表示します。url、width、heightを必須プロップとして受け取り、オプションとしてiframeのtitle属性用のnameと機能ポリシーを設定するためのallowを受け取ります。allowプロップは埋め込みiframe内でフルスクリーン、自動再生、ピクチャーインピクチャー、メディア再生などの機能へのパーミッションを制御します。",
+      "usage": "直接ファイルホスティングが実用的でない場合に外部プラットフォームにホストされているビデオを埋め込むためにVideoStreamingPlayerを使用します。基本的な使い方では、YouTube、Vimeo、またはその他のストリーミングサービスからの埋め込みURLをurlプロップに、widthとheightをピクセル単位で指定します。アクセシビリティのためにiframeのtitle属性を設定する説明的なnameプロップを含めます。allowプロップを設定して、埋め込みコンテンツがアクセスできるブラウザ機能を指定します。fullscreen、accelerometer、autoplay、clipboard-write、encrypted-media、gyroscope、picture-in-picture、web-shareなどです。YouTube埋め込みURLは通常youtube.com/embed/VIDEO_IDの形式を使用し、Vimeoはplayer.vimeo.com/video/VIDEO_IDを使用します。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。セマンティックHTMLとして、iframe要素はスクリーンリーダーのために埋め込みコンテンツを説明するnameプロップ経由のtitle属性を含みます。キーボードサポートについて、YouTubeやVimeoなどのプラットフォームからの埋め込みビデオにはストリーミングサービスが提供するネイティブのキーボードコントロールが含まれます。フォーカス管理として、iframeはキーボードでフォーカス可能で、ユーザーはTabナビゲーション経由で埋め込みコントロールとインタラクトできます。スクリーンリーダーはユーザーが埋め込みプレイヤーに遭遇したときにiframeタイトルをアナウンスします。nameプロップがYouTubeからのビデオタイトルやVimeoからのチュートリアル名など、ビデオコンテンツの明確な説明を提供するようにします。埋め込みコンテンツはキャプションや再生コントロールを含むストリーミングプラットフォームからのアクセシビリティ機能を継承します。",
+      "doList": [
+        "iframeのtitle属性のために説明的なnameプロップを提供します",
+        "ストリーミングプラットフォームからの公式埋め込みURLを使用します",
+        "適切なパーミッションでallowプロップを設定します",
+        "レイアウトシフトを防ぐために明示的なwidthとheightを指定します",
+        "埋め込みビデオがソースプラットフォームでキャプションを含むことを確認します"
+      ],
+      "dontList": [
+        "iframeアクセシビリティのためにnameプロップを省略しません",
+        "iframeで機能しない可能性のある非埋め込みURLを使用しません",
+        "必要以上の過剰なパーミッションをallowプロップに付与しません",
+        "キャプションの可用性を確認せずにビデオを埋め込みません",
+        "テキスト代替なしに重要な情報を埋め込みビデオに頼りません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "VideoFilePlayer",
+          "path": "/?path=/docs/components-media-videofileplayer--docs",
+          "description": "ストリーミングプラットフォームコンテンツの代わりに直接ホストされたビデオファイルを再生するにはVideoFilePlayerを使用します"
+        },
+        {
+          "name": "MusicStreamingPlayer",
+          "path": "/?path=/docs/components-media-musicstreamingplayer--docs",
+          "description": "ストリーミングプラットフォームからのオーディオコンテンツを埋め込むにはMusicStreamingPlayerを使用します"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "MDN HTML iframe要素リファレンス",
+          "url": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/iframe",
+          "description": "HTMLのiframe要素とその属性に関する公式MDNドキュメント"
+        },
+        {
+          "linkText": "YouTube埋め込みドキュメント",
+          "url": "https://developers.google.com/youtube/player_parameters",
+          "description": "埋め込みプレイヤーのパラメータとURLに関する公式YouTubeドキュメント"
+        },
+        {
+          "linkText": "Vimeo埋め込みドキュメント",
+          "url": "https://developer.vimeo.com/player/sdk/embed",
+          "description": "埋め込みプレイヤー設定に関する公式Vimeoドキュメント"
+        },
+        {
+          "linkText": "WCAG iframeガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Techniques/html/H64",
+          "description": "iframe要素にtitle属性を提供するための公式WCAGテクニック"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System は、光が差し込む穏やかな部屋のような温もりを保ちながら、着実に未来へと歩みを進めるデザイン基盤です。心地よいレトロ空間の中に、次の時代を見据えた機能性と拡張性を兼ね備えた、まさに“今とこれから”を繋ぐプラットフォームとなるでしょう。近未来都市が持つ洗練された構造に、80～90年代の“生活感あるレトロビンテージ”を組み合わせた、新しいデザインフレームワーク。レトロなマンションの一室を想起させる、やや素朴で使い込まれたブリキ雑貨や観葉植物の緑をちりばめながら、未来へ向かうモダンな輪郭を感じさせます。",
