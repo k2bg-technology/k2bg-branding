@@ -801,6 +801,118 @@
           "description": "ARIA Authoring Practices Guide for alert and status patterns"
         }
       ]
+    },
+    "videoStreamingPlayer": {
+      "description": "Embeds streaming video content from platforms like YouTube or Vimeo within an iframe container.",
+      "overview": "VideoStreamingPlayer provides a wrapper for embedding third-party streaming video content. It renders an iframe element that loads video players from external platforms such as YouTube or Vimeo. The component accepts a URL, dimensions, and an optional name for accessibility. Additional iframe attributes like allow for permissions policy can be passed through to control features such as fullscreen mode, autoplay, and picture-in-picture functionality.",
+      "usage": "Use VideoStreamingPlayer to embed videos from streaming platforms into web pages. For basic usage, provide the embed URL from the streaming service along with width and height dimensions. Include the name prop for accessibility to provide a descriptive title for the iframe. Pass the allow prop to specify permissions for features like fullscreen, autoplay, and picture-in-picture. For YouTube videos, use the embed URL format with /embed/ in the path. For Vimeo, use the player.vimeo.com domain. Adjust dimensions to match your layout requirements while maintaining proper aspect ratios.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the iframe element includes a title attribute via the name prop for screen reader identification. When embedding videos, ensure the streaming platform provides accessible video controls. For keyboard navigation, focus can move to the iframe which then delegates to the embedded player controls. Provide descriptive name props that identify the video content for users relying on assistive technology. Consider that embedded content accessibility depends on the streaming platform implementation.",
+      "doList": [
+        "Provide descriptive name props for screen reader users",
+        "Use official embed URLs from streaming platforms",
+        "Maintain proper aspect ratios for video dimensions",
+        "Include fullscreen permission in allow attribute for user preference",
+        "Test embedded player keyboard accessibility"
+      ],
+      "dontList": [
+        "Omit the name prop which serves as the iframe title",
+        "Use non-embed URLs that may not render correctly",
+        "Set dimensions that distort the video aspect ratio",
+        "Enable autoplay without user consent consideration",
+        "Assume embedded content is automatically accessible"
+      ],
+      "relatedComponents": [
+        {
+          "name": "VideoFilePlayer",
+          "path": "/?path=/docs/components-media-videofileplayer--docs",
+          "description": "Use for self-hosted video files instead of streaming content"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "Combine with Dialog for modal video playback experiences"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "MDN iframe Element Documentation",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe",
+          "description": "Official MDN documentation on the HTML iframe element and its attributes"
+        },
+        {
+          "linkText": "YouTube Embed Parameters",
+          "url": "https://developers.google.com/youtube/player_parameters",
+          "description": "Official Google documentation on YouTube embedded player parameters"
+        },
+        {
+          "linkText": "WCAG Non-text Content Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "Official WCAG documentation on providing alternatives for non-text content"
+        }
+      ]
+    },
+    "videoFilePlayer": {
+      "description": "Plays self-hosted video files with native HTML5 video controls and caption track support.",
+      "overview": "VideoFilePlayer renders a native HTML5 video element for playing self-hosted video files. It supports standard video controls, autoplay, looping, and muting through native video element attributes. The component includes a source element for MP4 format and a track element for captions accessibility. Width and height dimensions control the player size, and all standard video element props are supported through the rest props pattern.",
+      "usage": "Use VideoFilePlayer for self-hosted video files when streaming platform embedding is not required. For basic usage, provide the file URL to the video source along with width and height dimensions. Enable the controls prop to display playback controls including play, pause, volume, and fullscreen buttons. Use autoPlay with muted for autoplaying videos to comply with browser policies. Apply the loop prop for continuously repeating videos such as background animations. Include the name prop to label the caption track for accessibility. Combine with other native video props like poster for custom thumbnails or preload for loading strategy.",
+      "accessibility": "This component meets the following accessibility requirements. For caption support, the track element accepts a label via the name prop for identifying caption tracks. Native video controls provide keyboard-accessible play, pause, seek, and volume adjustments. For screen reader support, ensure video content has captions or transcripts available. Autoplay should only be used with muted to prevent unexpected audio for users. Playback controls are fully keyboard navigable with Tab, Space, and arrow keys. Consider providing alternative text descriptions for video-only content.",
+      "doList": [
+        "Enable controls prop to provide accessible playback interface",
+        "Include captions or transcripts for video content",
+        "Use muted with autoPlay to respect user preferences",
+        "Provide meaningful name prop for caption track labeling",
+        "Maintain proper aspect ratios for video dimensions"
+      ],
+      "dontList": [
+        "Use autoPlay without muted which browsers may block",
+        "Omit controls leaving users unable to pause content",
+        "Forget caption tracks for spoken content in videos",
+        "Set dimensions that distort the video aspect ratio",
+        "Rely solely on video without text alternatives"
+      ],
+      "relatedComponents": [
+        {
+          "name": "VideoStreamingPlayer",
+          "path": "/?path=/docs/components-media-videostreamingplayer--docs",
+          "description": "Use for embedding third-party streaming platform videos"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "Combine with Dialog for modal video playback experiences"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "MDN Video Element Documentation",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video",
+          "description": "Official MDN documentation on the HTML video element and its attributes"
+        },
+        {
+          "linkText": "MDN Track Element Documentation",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/track",
+          "description": "Official MDN documentation on the track element for captions and subtitles"
+        },
+        {
+          "linkText": "WCAG Media Alternatives Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/audio-only-and-video-only-prerecorded.html",
+          "description": "Official WCAG documentation on providing alternatives for audio and video content"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
