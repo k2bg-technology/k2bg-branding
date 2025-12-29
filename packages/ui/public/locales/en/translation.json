@@ -801,6 +801,67 @@
           "description": "ARIA Authoring Practices Guide for alert and status patterns"
         }
       ]
+    },
+    "imageViewer": {
+      "description": "Renders images with optional link wrapping, supporting both local file paths and external URLs.",
+      "overview": "ImageViewer displays images from local files or external URLs with flexible dimension control. The component accepts either a file path for bundled assets or a URL for remote images. When a linkUrl is provided, the image becomes clickable and opens in a new tab with proper security attributes. Width and height props allow precise control over image dimensions. The component extends native img element attributes for maximum flexibility.",
+      "usage": "Use ImageViewer for displaying images in content areas, galleries, or anywhere visual media is needed. For local assets, pass the imported file to the file prop. For external images, use the url prop with the image URL. To make the image clickable, add the linkUrl prop with the destination URL. Specify width and height props to control image dimensions and prevent layout shifts. The name prop provides alt text for accessibility. Combine with container elements to control image positioning and responsive behavior.",
+      "accessibility": "This component meets the following accessibility requirements. For alt text, the name prop is applied to the img element alt attribute to describe the image content for screen readers. When used with links, the anchor element includes rel noopener nofollow for security and target blank for new tab behavior. For image dimensions, explicit width and height attributes help prevent cumulative layout shift. Ensure the name prop provides meaningful descriptions for informative images or is left empty for purely decorative images.",
+      "doList": [
+        "Provide descriptive name prop for informative images",
+        "Specify width and height to prevent layout shifts",
+        "Use file prop for local bundled assets",
+        "Use url prop for external image sources",
+        "Include linkUrl only when the image should be clickable"
+      ],
+      "dontList": [
+        "Omit alt text for images that convey information",
+        "Use both file and url props simultaneously",
+        "Leave width and height undefined for layout-critical images",
+        "Use linkUrl without meaningful destination",
+        "Forget to optimize external image URLs for performance"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "Use Avatar for user profile images with fallback support"
+        },
+        {
+          "name": "BlogCard",
+          "path": "/?path=/docs/components-blogcard--docs",
+          "description": "BlogCard uses ImageViewer for article thumbnail images"
+        },
+        {
+          "name": "Skelton",
+          "path": "/?path=/docs/components-skelton--docs",
+          "description": "Use Skelton as placeholder while images are loading"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Non-text Content Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "Official WCAG documentation on providing text alternatives for images"
+        },
+        {
+          "linkText": "MDN img Element Reference",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img",
+          "description": "MDN documentation on native HTML img element and attributes"
+        },
+        {
+          "linkText": "Web.dev Image Optimization",
+          "url": "https://web.dev/learn/images/",
+          "description": "Best practices for image optimization and performance"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",

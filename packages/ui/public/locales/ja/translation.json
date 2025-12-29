@@ -801,6 +801,67 @@
           "description": "アラートとステータスパターンに関するARIAオーサリングプラクティスガイド"
         }
       ]
+    },
+    "imageViewer": {
+      "description": "ローカルファイルパスと外部URLの両方をサポートし、オプションのリンクラッピング付きで画像をレンダリングします。",
+      "overview": "ImageViewerはローカルファイルまたは外部URLから画像を柔軟な寸法制御で表示します。コンポーネントはバンドルされたアセット用のファイルパスまたはリモート画像用のURLを受け入れます。linkUrlが提供されると、画像はクリック可能になり、適切なセキュリティ属性を持つ新しいタブで開きます。widthとheightプロップにより画像の寸法を正確に制御できます。コンポーネントは最大限の柔軟性のためにネイティブimg要素の属性を拡張します。",
+      "usage": "コンテンツエリア、ギャラリー、またはビジュアルメディアが必要な場所での画像表示にImageViewerを使用します。ローカルアセットには、インポートしたファイルをfileプロップに渡します。外部画像には、画像URLをurlプロップに使用します。画像をクリック可能にするには、リンク先URLとともにlinkUrlプロップを追加します。画像の寸法を制御し、レイアウトシフトを防ぐためにwidthとheightプロップを指定します。nameプロップはアクセシビリティのためのaltテキストを提供します。コンテナ要素と組み合わせて画像の配置とレスポンシブ動作を制御します。",
+      "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。altテキストとして、nameプロップはスクリーンリーダー向けに画像コンテンツを説明するためにimg要素のalt属性に適用されます。リンクと併用する場合、アンカー要素にはセキュリティのためのrel noopener nofollowと新しいタブ動作のためのtarget blankが含まれます。画像の寸法について、明示的なwidthとheight属性は累積レイアウトシフトを防ぐのに役立ちます。情報を伝える画像には意味のある説明をnameプロップに提供し、純粋に装飾的な画像の場合は空にします。",
+      "doList": [
+        "情報を伝える画像には説明的なnameプロップを提供します",
+        "レイアウトシフトを防ぐためにwidthとheightを指定します",
+        "ローカルのバンドルされたアセットにはfileプロップを使用します",
+        "外部画像ソースにはurlプロップを使用します",
+        "画像がクリック可能であるべき場合にのみlinkUrlを含めます"
+      ],
+      "dontList": [
+        "情報を伝える画像のaltテキストを省略しません",
+        "fileとurlプロップを同時に使用しません",
+        "レイアウトに重要な画像のwidthとheightを未定義のままにしません",
+        "意味のないリンク先でlinkUrlを使用しません",
+        "パフォーマンスのための外部画像URLの最適化を忘れません"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Avatar",
+          "path": "/?path=/docs/components-avatar--docs",
+          "description": "フォールバックサポート付きのユーザープロフィール画像にはAvatarを使用します"
+        },
+        {
+          "name": "BlogCard",
+          "path": "/?path=/docs/components-blogcard--docs",
+          "description": "BlogCardは記事のサムネイル画像にImageViewerを使用します"
+        },
+        {
+          "name": "Skelton",
+          "path": "/?path=/docs/components-skelton--docs",
+          "description": "画像の読み込み中にプレースホルダーとしてSkeltonを使用します"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG 非テキストコンテンツガイドライン",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-content.html",
+          "description": "画像のテキスト代替を提供することに関する公式WCAGドキュメント"
+        },
+        {
+          "linkText": "MDN img要素リファレンス",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img",
+          "description": "ネイティブHTML img要素と属性に関するMDNドキュメント"
+        },
+        {
+          "linkText": "Web.dev 画像最適化",
+          "url": "https://web.dev/learn/images/",
+          "description": "画像の最適化とパフォーマンスに関するベストプラクティス"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System は、光が差し込む穏やかな部屋のような温もりを保ちながら、着実に未来へと歩みを進めるデザイン基盤です。心地よいレトロ空間の中に、次の時代を見据えた機能性と拡張性を兼ね備えた、まさに“今とこれから”を繋ぐプラットフォームとなるでしょう。近未来都市が持つ洗練された構造に、80～90年代の“生活感あるレトロビンテージ”を組み合わせた、新しいデザインフレームワーク。レトロなマンションの一室を想起させる、やや素朴で使い込まれたブリキ雑貨や観葉植物の緑をちりばめながら、未来へ向かうモダンな輪郭を感じさせます。",
