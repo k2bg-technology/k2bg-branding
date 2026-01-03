@@ -6,6 +6,9 @@ import ContactForm from './ContactForm';
 
 export const metadata: Metadata = {
   title: 'お問い合わせページ',
+  alternates: {
+    canonical: '/contact',
+  },
 };
 
 export default function Page() {

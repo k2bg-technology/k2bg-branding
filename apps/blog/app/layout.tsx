@@ -1,4 +1,5 @@
 import { GoogleTagManager } from '@next/third-parties/google';
+import { Metadata } from 'next';
 
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
@@ -8,6 +9,18 @@ import ReactQueryClientProvider from '../components/react-query-client-provider/
 import { Toaster } from '../components/toaster/Toaster';
 
 import './globals.css';
+
+const siteBaseUrl = process.env.SITE_BASE_URL;
+
+if (!siteBaseUrl && process.env.NODE_ENV === 'production') {
+  throw new Error(
+    'SITE_BASE_URL environment variable is required in production'
+  );
+}
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteBaseUrl || 'http://localhost:3000'),
+};
 
 export default function RootLayout({
   children,

@@ -61,6 +61,9 @@ export const metadata: Metadata = {
     description:
       'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。',
   },
+  alternates: {
+    canonical: '/blog',
+  },
 };
 
 export default async function Page() {
