@@ -14,8 +14,8 @@ type SearchParams = Promise<{
 
 export const metadata: Metadata = {
   title: '検索ページ',
-  alternates: {
-    canonical: '/search',
+  robots: {
+    index: false,
   },
 };
 
