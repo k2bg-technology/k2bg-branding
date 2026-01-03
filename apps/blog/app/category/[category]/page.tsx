@@ -35,6 +35,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: category,
+    alternates: {
+      canonical: `/category/${category}`,
+    },
   };
 }
 

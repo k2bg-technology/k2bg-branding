@@ -14,6 +14,9 @@ type SearchParams = Promise<{
 
 export const metadata: Metadata = {
   title: '検索ページ',
+  alternates: {
+    canonical: '/search',
+  },
 };
 
 export default async function Page({
