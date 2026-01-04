@@ -9,7 +9,9 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest watch"
+    "test:watch": "vitest watch",
+    "storybook": "storybook dev -p 6007",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@hcaptcha/react-hcaptcha": "^1.12.0",
@@ -55,6 +57,9 @@
     "tailwind-config": "workspace:*",
     "tailwindcss": "^4.0.9",
     "test-utils": "workspace:*",
-    "tsconfig": "workspace:*"
+    "tsconfig": "workspace:*",
+    "storybook": "^10.1.11",
+    "@storybook/nextjs": "^10.1.11",
+    "eslint-plugin-storybook": "^10.1.11"
   }
 }
