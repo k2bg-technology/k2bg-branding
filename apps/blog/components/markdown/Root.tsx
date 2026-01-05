@@ -7,16 +7,15 @@ import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
 
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-import { Post } from '../../modules/domain/post/types';
 
 import styles from './Root.module.css';
 
 interface Props {
-  article: Post;
+  content: string;
 }
 
 export async function Root(props: Props) {
-  const { article } = props;
+  const { content } = props;
 
   return (
     <ReactMarkdown
@@ -199,7 +198,7 @@ export async function Root(props: Props) {
         ),
       }}
     >
-      {article.content}
+      {content}
     </ReactMarkdown>
   );
 }

@@ -49,7 +49,7 @@ export default async function Page({ params }: Props) {
       </div>
       <div className="grid grid-cols-[subgrid] col-span-full">
         <div className="col-span-full xl:col-start-2 xl:col-end-9">
-          <Markdown article={article} />
+          <Markdown content={article.content} />
         </div>
         <div className="hidden xl:flex col-start-9 col-end-12">
           <Sidebar />
