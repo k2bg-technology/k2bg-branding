@@ -22,10 +22,24 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
-      - name: Run Chromatic
+      - name: Run Design System Chromatic
         uses: chromaui/action@latest
         with:
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          projectToken: ${{ secrets.DESIGN_SYSTEM_CHROMATIC_PROJECT_TOKEN }}
           workingDir: packages/ui
+          onlyChanged: true
+          exitZeroOnChanges: true
+      - name: Run Portfolio Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.PORTFOLIO_CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/portfolio
+          onlyChanged: true
+          exitZeroOnChanges: true
+      - name: Run Blog Chromatic
+        uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.BLOG_CHROMATIC_PROJECT_TOKEN }}
+          workingDir: apps/blog
           onlyChanged: true
           exitZeroOnChanges: true
