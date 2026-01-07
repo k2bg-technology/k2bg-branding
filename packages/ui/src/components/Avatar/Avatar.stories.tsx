@@ -61,7 +61,6 @@ export const Small: Story = {
     (Story) => (
       <div className="flex items-center gap-2">
         <Story />
-        <span className="text-sm text-gray-500">Small Size</span>
       </div>
     ),
   ],
