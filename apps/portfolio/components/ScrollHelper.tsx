@@ -2,8 +2,11 @@
 
 import { useLayoutEffect, useState } from 'react';
 import { Icon } from 'ui';
+import { twMerge } from 'ui/src/utils/extendTailwindMerge';
 
 import { useMatchMedia } from '../hooks/useMatchMedia';
+
+import styles from './ScrollHelper.module.css';
 
 export function ScrollHelper() {
   const [isShow, setIsShow] = useState(false);
@@ -37,7 +40,12 @@ export function ScrollHelper() {
   return (
     <div className="fixed inset-0 bg-black/20" onClick={() => setIsShow(false)}>
       <div className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
-        <div className="inline-flex items-center gap-condensed rounded-sm px-5 py-normal bg-black/50 text-white animate-scrollHelp">
+        <div
+          className={twMerge(
+            `inline-flex items-center gap-condensed rounded-sm px-5 py-normal bg-black/50 text-white`,
+            styles.ScrollHelp
+          )}
+        >
           <span className="text-button-r-sm">Scroll</span>
           <Icon
             name="chevron-double-right"

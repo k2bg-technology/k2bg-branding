@@ -1,10 +1,12 @@
 @source "./**/*.{ts,tsx,mdx}";
 @import 'tailwind-config/design-token/variables.css';
-@import "tailwindcss";
-@import "tailwindcss/preflight.css" layer(base);
+@import 'tailwindcss';
+@import 'tailwindcss/preflight.css' layer(base);
 
 @theme {
-  --font-original: 'Menlo', 'YuGothic', "Hiragino Kaku Gothic ProN", "Hiragino Sans", 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
+  --font-original: 'Menlo', 'YuGothic', 'Hiragino Kaku Gothic ProN',
+    'Hiragino Sans', 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco',
+    'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
   --spacing-condensed: 0.25rem;
   --spacing-normal: 0.5rem;
   --spacing-spacious: 1rem;
@@ -13,56 +15,18 @@
   --color-error-dark: var(--color-red-600);
   --color-warning: var(--color-amber-500);
   --color-warning-light: var(--color-amber-400);
-  --color-warning-dark: var(--color-amber-500);
+  --color-warning-dark: var(--color-amber-600);
   --color-info: var(--color-sky-500);
   --color-info-light: var(--color-sky-400);
   --color-info-dark: var(--color-sky-600);
   --color-success: var(--color-green-500);
   --color-success-light: var(--color-green-400);
   --color-success-dark: var(--color-green-600);
-  --color-brand-amazon: rgb(255 153 0);
-  --color-brand-rakuten: rgb(191 0 0);
-  --animate-slide: slide 0.8s ease-in 1;
-  --animate-scrollHelp: scrollHelp 5s ease-in-out infinite both;
-
-  @keyframes slide {
-    from {
-      opacity: 0;
-      transform: translate(-8rem);
-    }
-
-    to {
-      opacity: 1;
-      transform: translate(0);
-    }
-  }
-
-  @keyframes scrollHelp {
-    0%, 100% {
-      transform: translateX(0);
-    }
-
-    10%, 30%, 50%, 70% {
-      transform: translateX(-10px);
-    }
-
-    20%, 40%, 60% {
-      transform: translateX(10px);
-    }
-
-    80% {
-      transform: translateX(8px);
-    }
-
-    90% {
-      transform: translateX(-8px);
-    }
-  }
 }
 
 @layer base {
   html {
-    text-decoration-skip-ink: none;
+    @apply h-full;
   }
   body {
     @apply h-full text-base-black font-original text-body-r-md;
@@ -75,12 +39,8 @@
   }
 
   button:not(:disabled),
-  [role="button"]:not(:disabled) {
+  [role='button']:not(:disabled) {
     cursor: pointer;
-  }
-
-  li, ol, ul {
-    list-style: none;
   }
 
   *,
@@ -92,7 +52,9 @@
   }
 }
 
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration { display: none; }
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
+  display: none;
+}

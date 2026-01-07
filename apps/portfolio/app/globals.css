@@ -1,7 +1,2 @@
 @import 'tailwind-config/design-token/variables.css';
 @import 'ui/src/globals.css';
-
-html, body {
-  height: 100%;
-}
-
