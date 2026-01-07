@@ -97,6 +97,8 @@ export class Repository extends Core implements Domain.Post.InputRepository {
   async generateMarkdownString(pageId: string) {
     const { renderToString } = await import('react-dom/server');
 
+    this.n2m.setCustomTransformer('callout', () => false);
+
     this.n2m.setCustomTransformer('link_to_page', (block) => {
       if (!('link_to_page' in block && 'page_id' in block.link_to_page))
         return false;
