@@ -1,4 +1,4 @@
-import { Button } from '../Button';
+import { Button } from 'ui';
 
 interface Provider {
   linkText: string;

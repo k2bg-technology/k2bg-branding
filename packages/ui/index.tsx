@@ -3,7 +3,6 @@ export * from './src/components/Icon';
 export * from './src/components/Dialog';
 export * from './src/components/DropdownMenu';
 export * from './src/components/Drawer';
-export * from './src/components/Promotion';
 export * from './src/components/Media';
 export * from './src/components/Toaster';
 export { default as Avatar } from './src/components/Avatar';

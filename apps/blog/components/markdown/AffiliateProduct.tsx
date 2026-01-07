@@ -1,5 +1,4 @@
-import { ProductPromotion } from 'ui';
-
+import { ProductPromotion } from '../promotion';
 import {
   AffiliateSubProvider,
   type AffiliateProduct,

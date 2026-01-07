@@ -1,5 +1,4 @@
-import { TextPromotion } from 'ui';
-
+import { TextPromotion } from '../promotion';
 import { type AffiliateText } from '../../modules/interfaces/affiliate/validator';
 
 interface AffiliateTextProps {

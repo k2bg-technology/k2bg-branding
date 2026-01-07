@@ -1,5 +1,4 @@
-import { BannerPromotion } from 'ui';
-
+import { BannerPromotion } from '../promotion';
 import { type AffiliateBanner } from '../../modules/interfaces/affiliate/validator';
 
 interface AffiliateBannerProps {
