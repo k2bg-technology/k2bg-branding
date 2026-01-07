@@ -1,7 +1,8 @@
-import { Avatar, BlogCard } from 'ui';
+import { Avatar } from 'ui';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
+import BlogCard from '../../components/blog-card';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import * as Prisma from '../../modules/data-access/prisma';

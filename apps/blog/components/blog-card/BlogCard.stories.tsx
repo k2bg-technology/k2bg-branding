@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
+import { Avatar } from 'ui';
 
-import Avatar from '../Avatar';
-import AvatarImage from '../../assets/avatar.png';
-import BlogCardMainImage from '../../assets/blog-card-main.png';
+import AvatarImage from '../../.storybook/images/avatar.png';
+import BlogCardMainImage from '../../.storybook/images/blog-card-main.png';
 
 import BlogCard from '.';
 
 const meta: Meta<
   typeof BlogCard & typeof BlogCard.Media & typeof BlogCard.Content
 > = {
+  title: 'BlogCard',
   component: BlogCard,
   parameters: {},
   decorators: [
@@ -33,7 +34,7 @@ const meta: Meta<
       '記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋記事の抜粋',
     avatar: (
       <Avatar className="h-8 w-8">
-        <Avatar.Image alt="Office" src={AvatarImage} />
+        <Avatar.Image alt="Office" src={AvatarImage.src} />
       </Avatar>
     ),
     date: 'September 30, 2023',
@@ -49,7 +50,7 @@ export const Default: Story = {
       <BlogCard.Media>
         <a href="https://example.com" target="_blank" rel="noreferrer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Office" src={BlogCardMainImage} />
+          <img alt="Office" src={BlogCardMainImage.src} />
         </a>
       </BlogCard.Media>
       <BlogCard.Content {...args} />
@@ -63,7 +64,7 @@ export const Horizontal: Story = {
       <BlogCard.Media className="flex-none max-w-[16rem]">
         <a href="https://example.com" target="_blank" rel="noreferrer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Office" src={BlogCardMainImage} />
+          <img alt="Office" src={BlogCardMainImage.src} />
         </a>
       </BlogCard.Media>
       <BlogCard.Content {...args} />
@@ -85,7 +86,7 @@ export const Hero: Story = {
       <BlogCard.Media>
         <a href="https://example.com" target="_blank" rel="noreferrer">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt="Office" src={BlogCardMainImage} />
+          <img alt="Office" src={BlogCardMainImage.src} />
         </a>
       </BlogCard.Media>
     </BlogCard>

@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Avatar, BlogCard } from 'ui';
+import { Avatar } from 'ui';
 
+import BlogCard from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { Post } from '../../modules/domain/post/types';
 

@@ -1,4 +1,4 @@
-import { Icon } from '../Icon';
+import { Icon } from 'ui';
 
 export default function Skelton() {
   return (
