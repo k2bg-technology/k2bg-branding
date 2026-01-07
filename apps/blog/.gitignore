@@ -41,3 +41,6 @@ storybook-static
 
 # msw
 /public/mockServiceWorker.js
+
+# typeScript
+./tsconfig.tsbuildinfo
