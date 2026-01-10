@@ -1,6 +1,6 @@
-import { QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
+import type { QueryDatabaseResponse } from '@notionhq/client/build/src/api-endpoints';
 
-import { MatchType, PageObject } from './types';
+import type { MatchType, PageObject } from './types';
 
 export class Page {
   result: PageObject;
@@ -69,7 +69,7 @@ export class Page {
   public getPerson(propertyName: string) {
     const people = this.getPageProperty(propertyName, 'people')?.people;
 
-    return people instanceof Array && 'person' in people[0]
+    return Array.isArray(people) && 'person' in people[0]
       ? people[0]
       : undefined;
   }
@@ -78,8 +78,7 @@ export class Page {
     const relations = this.getPageProperty(propertyName, 'relation')?.relation;
 
     return (
-      (relations instanceof Array &&
-        relations.map((relation) => relation.id)) ||
+      (Array.isArray(relations) && relations.map((relation) => relation.id)) ||
       []
     );
   }
@@ -106,7 +105,7 @@ export class Page {
 
   private getPageProperty<
     T extends string,
-    U extends PageObject['properties'][T]['type']
+    U extends PageObject['properties'][T]['type'],
   >(propertyName: T, type: U) {
     return this.pagePropertyMap.get(
       this.result.properties[propertyName].id,
@@ -122,7 +121,7 @@ export class Page {
 
   static matchPropertyType<
     PropType extends string,
-    Prop extends { type: string }
+    Prop extends { type: string },
   >(
     property: Prop,
     type: PropType

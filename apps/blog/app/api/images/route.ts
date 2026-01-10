@@ -1,8 +1,7 @@
-import { NextRequest } from 'next/server';
-
-import * as UseCases from '../../../modules/use-cases';
-import * as Notion from '../../../modules/data-access/notion';
+import type { NextRequest } from 'next/server';
 import * as Cloudinary from '../../../modules/data-access/cloudinary';
+import * as Notion from '../../../modules/data-access/notion';
+import * as UseCases from '../../../modules/use-cases';
 
 export async function PATCH(request: NextRequest) {
   const apiKey = request.headers.get('x-api-key');

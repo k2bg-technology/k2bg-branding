@@ -1,4 +1,4 @@
-import { FormProps, FormProvider } from './Context';
+import { type FormProps, FormProvider } from './Context';
 
 type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'color'> & FormProps;
 

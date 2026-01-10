@@ -1,4 +1,4 @@
-import { Contact } from './types';
+import type { Contact } from './types';
 
 export class Entity {
   constructor(readonly data: Contact) {}

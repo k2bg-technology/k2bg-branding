@@ -6,11 +6,7 @@ export default function Skelton(props: Props) {
   const { children, className, ...rest } = props;
 
   return (
-    <div
-      {...rest}
-      role="status"
-      className={twMerge('animate-pulse', className)}
-    >
+    <div {...rest} className={twMerge('animate-pulse', className)}>
       {children}
     </div>
   );

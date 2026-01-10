@@ -3,7 +3,7 @@
 import { Trans } from 'react-i18next';
 
 import { useTranslation } from '../../i18n/client';
-import { Language } from '../../i18n/settings';
+import type { Language } from '../../i18n/settings';
 
 export function Footer({ lng }: { lng: Language }) {
   useTranslation(lng);
@@ -12,6 +12,7 @@ export function Footer({ lng }: { lng: Language }) {
     <footer>
       <p className="text-body-r-sm leading-body-r-sm text-right">
         <Trans i18nKey="footer.copyright">
+          {/** biome-ignore lint/a11y/useAnchorContent: accessible content in Trans component */}
           <a
             href="https://html5up.net"
             className="text-body-r-sm leading-body-r-sm"

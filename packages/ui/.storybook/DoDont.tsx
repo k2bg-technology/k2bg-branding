@@ -1,7 +1,7 @@
 import { useOf } from '@storybook/addon-docs/blocks';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '../src/components/Badge';
 import { Icon } from '../src/components/Icon';
-import { useTranslation } from 'react-i18next';
 
 export default function DoDont() {
   const { story } = useOf('story', ['story']);

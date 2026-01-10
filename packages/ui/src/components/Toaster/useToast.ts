@@ -1,4 +1,4 @@
-import { useSonner, toast as sonnerToast, type ToastT } from 'sonner';
+import { toast as sonnerToast, type ToastT, useSonner } from 'sonner';
 
 export default function useToast(): {
   toasts: ToastT[];

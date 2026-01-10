@@ -1,6 +1,6 @@
+import type { TFunction } from 'i18next';
 import Image from 'next/image';
-import { TFunction } from 'i18next';
-import { Icon, Button, Form } from 'ui';
+import { Button, Form, Icon } from 'ui';
 
 export function Contact({ t }: { t: TFunction }) {
   return (

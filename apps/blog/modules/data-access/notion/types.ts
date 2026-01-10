@@ -1,4 +1,4 @@
-import { Client } from '@notionhq/client';
+import type { Client } from '@notionhq/client';
 
 export type ElementType<T> = T extends (infer U)[] ? U : never;
 export type MatchType<T, U, V = never> = T extends U ? T : V;

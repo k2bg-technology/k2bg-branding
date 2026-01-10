@@ -1,9 +1,8 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Metadata } from 'next';
-
-import * as Prisma from '../../modules/data-access/prisma';
 import { Articles } from '../../components/articles/Articles';
 import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
+import * as Prisma from '../../modules/data-access/prisma';
 
 const PAGE_SIZE = 6;
 

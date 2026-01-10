@@ -1,8 +1,7 @@
-import { Icon } from '../Icon';
 import { Button } from '../Button';
-
-import { usePagination } from './usePagination';
+import { Icon } from '../Icon';
 import { Item } from './Item';
+import { usePagination } from './usePagination';
 
 type PrevNextButtonProps = React.ComponentPropsWithoutRef<typeof Button>;
 

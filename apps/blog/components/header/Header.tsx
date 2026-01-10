@@ -1,10 +1,9 @@
 import Link from 'next/link';
 import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
-
-import { CompanyLogo } from '../company-logo/CompanyLogo';
-import Sidebar from '../sidebar/Sidebar';
-import Search from '../search/Search';
 import { Category } from '../../modules/domain/post/types';
+import { CompanyLogo } from '../company-logo/CompanyLogo';
+import Search from '../search/Search';
+import Sidebar from '../sidebar/Sidebar';
 
 import MotionHeader from './MotionHeader';
 

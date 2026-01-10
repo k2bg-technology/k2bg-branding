@@ -1,9 +1,8 @@
 import { GoogleTagManager } from '@next/third-parties/google';
-import { Metadata } from 'next';
-
-import Header from '../components/header/Header';
+import type { Metadata } from 'next';
 import Footer from '../components/footer/Footer';
 import GoogleAdsense from '../components/google-adsense/GoogleAdsense';
+import Header from '../components/header/Header';
 import { PageScrollArea } from '../components/page-scroll-area/PageScrollArea';
 import ReactQueryClientProvider from '../components/react-query-client-provider/ReactQueryClientProvider';
 import { Toaster } from '../components/toaster/Toaster';

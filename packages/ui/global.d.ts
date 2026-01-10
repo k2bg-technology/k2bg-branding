@@ -4,14 +4,14 @@ declare module '*.svg' {
    * `@svgr/webpack` plugin or
    * `babel-plugin-inline-react-svg` plugin.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: --- IGNORE ---
   const content: any;
 
   export default content;
 }
 
 declare module '*.jpg' {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: --- IGNORE ---
   const content: any;
 
   export default content;

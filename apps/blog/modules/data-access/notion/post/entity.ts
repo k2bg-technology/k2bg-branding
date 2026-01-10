@@ -1,8 +1,8 @@
 import { format } from 'date-fns';
 
-import { Page } from '../page';
+import type { Page } from '../page';
 
-import { Post } from './types';
+import type { Post } from './types';
 
 export class Entity implements Post {
   constructor(private data: Page) {}

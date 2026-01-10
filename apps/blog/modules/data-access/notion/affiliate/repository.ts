@@ -1,7 +1,7 @@
-import * as Domain from '../../../domain';
+import type * as Domain from '../../../domain';
 import { Core } from '../core';
-import { Page } from '../page';
 import * as DataType from '../data-type';
+import { Page } from '../page';
 
 import { Banner } from './banner';
 import { Product } from './product';

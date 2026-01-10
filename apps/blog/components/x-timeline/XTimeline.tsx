@@ -1,10 +1,8 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
-
-import useTimeline from './useTimeline';
 import { X_TIMELINE_URL } from './const';
+import useTimeline from './useTimeline';
 
 export default function XTimeline() {
   useTimeline();

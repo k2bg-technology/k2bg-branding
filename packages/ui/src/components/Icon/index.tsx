@@ -1,8 +1,8 @@
 'use client';
 
-import { CSSProperties, memo } from 'react';
+import { type CSSProperties, memo } from 'react';
 
-import { ICON_NAMES } from './const';
+import type { ICON_NAMES } from './const';
 import styles from './index.module.css';
 
 export interface IconProps extends React.HTMLAttributes<HTMLElement> {

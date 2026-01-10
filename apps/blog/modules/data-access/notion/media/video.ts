@@ -1,5 +1,5 @@
 import { Entity } from './entity';
-import { MediaVideo } from './types';
+import type { MediaVideo } from './types';
 
 export class Video extends Entity implements MediaVideo {
   toObject() {

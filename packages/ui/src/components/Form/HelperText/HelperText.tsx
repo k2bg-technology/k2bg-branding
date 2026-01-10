@@ -1,7 +1,6 @@
 import { cva } from 'class-variance-authority';
-
-import { FormProps, useFormContext } from '../Control/Context';
 import { twMerge } from '../../../utils/extendTailwindMerge';
+import { type FormProps, useFormContext } from '../Control/Context';
 
 const helperTextVariants = cva('text-caption leading-none', {
   variants: {

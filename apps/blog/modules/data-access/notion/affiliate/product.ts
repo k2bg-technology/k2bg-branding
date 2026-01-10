@@ -1,5 +1,5 @@
 import { Entity } from './entity';
-import { AffiliateProduction } from './types';
+import type { AffiliateProduction } from './types';
 
 export class Product extends Entity implements AffiliateProduction {
   get providerColor() {

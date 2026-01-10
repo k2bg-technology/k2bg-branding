@@ -1,14 +1,12 @@
-import React from 'react';
 import Image from 'next/image';
-
+import SideBarAd from '../google-adsense/SideBarAd';
 import InstagramTimeline from '../instagram-timeline/InstagramTimeline';
 import ProfileCard from '../profile-card/ProfileCard';
-import SideBarAd from '../google-adsense/SideBarAd';
-import XShareButton from '../sns-share-button/XShareButton';
-import LineShareButton from '../sns-share-button/LineShareButton';
 import FacebookShareButton from '../sns-share-button/FacebookShareButton';
-import PinterestShareButton from '../sns-share-button/PinterestShareButton';
 import HatenaShareButton from '../sns-share-button/HatenaShareButton';
+import LineShareButton from '../sns-share-button/LineShareButton';
+import PinterestShareButton from '../sns-share-button/PinterestShareButton';
+import XShareButton from '../sns-share-button/XShareButton';
 
 import SidebarItem from './SidebarItem';
 

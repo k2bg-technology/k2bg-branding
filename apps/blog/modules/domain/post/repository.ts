@@ -1,4 +1,4 @@
-import { Category, Order, Post } from './types';
+import type { Category, Order, Post } from './types';
 
 export interface InputRepository {
   getAllPosts: (orderBy?: Order) => Promise<Post[]>;

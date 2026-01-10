@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 
 declare global {
   interface Window {
@@ -12,6 +12,7 @@ declare global {
 export default function SideBarAd() {
   const pathName = usePathname();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: should set ads when page changes
   useEffect(() => {
     try {
       (window.adsbygoogle = window.adsbygoogle || []).push({});

@@ -1,4 +1,4 @@
-import fs, { PathOrFileDescriptor } from 'fs';
+import fs, { type PathOrFileDescriptor } from 'fs';
 
 import handlebars from 'handlebars';
 

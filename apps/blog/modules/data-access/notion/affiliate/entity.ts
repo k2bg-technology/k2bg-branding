@@ -1,6 +1,6 @@
-import { Page } from '../page';
+import type { Page } from '../page';
 
-import { Affiliate } from './types';
+import type { Affiliate } from './types';
 
 export class Entity implements Affiliate {
   constructor(protected data: Page) {}

@@ -1,6 +1,6 @@
 import { ImageViewer } from 'ui';
 
-import { type MediaImage } from '../../modules/interfaces/media/validator';
+import type { MediaImage } from '../../modules/interfaces/media/validator';
 
 interface MediaImageProps {
   mediaImage: MediaImage;

@@ -1,11 +1,11 @@
 'use client';
 
-import { Button, Form, useToast } from 'ui';
-import { useForm } from 'react-hook-form';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import HCaptcha from '@hcaptcha/react-hcaptcha';
+import { useForm } from 'react-hook-form';
+import { Button, Form, useToast } from 'ui';
 
 import { contactSchema } from '../../modules/interfaces/contact/validator';
 
@@ -70,7 +70,6 @@ export default function ContactForm() {
       className="flex flex-col gap-spacious h-full md:gap-spacious"
       onSubmit={handleSubmit((visitor) => {
         if (!token) {
-          // eslint-disable-next-line no-alert
           alert('認証を完了してください。');
 
           return;

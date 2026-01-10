@@ -1,6 +1,6 @@
 import { VideoFilePlayer, VideoStreamingPlayer } from 'ui';
 
-import { type MediaVideo } from '../../modules/interfaces/media/validator';
+import type { MediaVideo } from '../../modules/interfaces/media/validator';
 
 interface MediaVideoProps {
   mediaVideo: MediaVideo;

@@ -2,10 +2,7 @@ import { Icon } from 'ui';
 
 export default function Skelton() {
   return (
-    <div
-      role="status"
-      className="p-normal border border-gray-200 rounded-sm shadow-sm animate-pulse md:p-spacious"
-    >
+    <div className="p-normal border border-gray-200 rounded-sm shadow-sm animate-pulse md:p-spacious">
       <div className="flex items-center justify-center py-32 mb-spacious bg-gray-300 rounded-sm">
         <Icon
           name="photo"

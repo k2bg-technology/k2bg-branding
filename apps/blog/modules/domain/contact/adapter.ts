@@ -1,4 +1,4 @@
-import { Visitor } from './types';
+import type { Visitor } from './types';
 
 export interface Adapter {
   sendEmail: (

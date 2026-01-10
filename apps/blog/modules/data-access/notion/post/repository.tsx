@@ -1,22 +1,22 @@
-import { Order } from '../../../domain/post/types';
-import * as Domain from '../../../domain';
-import { Core } from '../core';
-import { Page } from '../page';
 import { Markdown } from '../../../../components/markdown';
-import { postSchema } from '../../../interfaces/post/validator';
+import type * as Domain from '../../../domain';
+import type { Order } from '../../../domain/post/types';
 import {
-  affiliateTextSchema,
   affiliateBannerSchema,
   affiliateProductSchema,
   affiliateSubProviderSchema,
+  affiliateTextSchema,
 } from '../../../interfaces/affiliate/validator';
 import {
   mediaImageSchema,
   mediaVideoSchema,
 } from '../../../interfaces/media/validator';
+import { postSchema } from '../../../interfaces/post/validator';
+import * as Affiliate from '../affiliate';
+import { Core } from '../core';
 import * as DataType from '../data-type';
 import * as Media from '../media';
-import * as Affiliate from '../affiliate';
+import { Page } from '../page';
 
 import { Entity } from './entity';
 
@@ -190,7 +190,7 @@ export class Repository extends Core implements Domain.Post.InputRepository {
       .replace(
         regex,
         (_, replaceValue) =>
-          assets.find((asset) => asset && asset.includes(replaceValue)) || ''
+          assets.find((asset) => asset?.includes(replaceValue)) || ''
       )
       // Insert zero-width joiner inside **...** to help markdown parser recognize bold text correctly
       // @see {@link https://github.com/Textualize/rich/issues/400}

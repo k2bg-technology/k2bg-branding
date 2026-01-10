@@ -1,9 +1,8 @@
-import type { Post, Author } from '@prisma/client';
-
-import { Core } from '../core';
-import * as Domain from '../../../domain';
-import { postSchema } from '../../../interfaces/post/validator';
+import type { Author, Post } from '@prisma/client';
+import type * as Domain from '../../../domain';
 import { authorSchema } from '../../../interfaces/author/validator';
+import { postSchema } from '../../../interfaces/post/validator';
+import { Core } from '../core';
 
 export class Repository extends Core implements Domain.Post.OutputRepository {
   async getAllArticles(orderBy: Domain.Post.Order = 'desc') {

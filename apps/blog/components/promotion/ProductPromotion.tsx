@@ -34,8 +34,8 @@ export default function ProductPromotion(props: ProductPromotionProps) {
       {...rest}
       className="flex gap-spacious p-spacious border-solid border-4 border-base-white"
     >
+      {/** biome-ignore lint/a11y/useAnchorContent: image link */}
       <a href={linkUrl} target="_blank" rel="noopener nofollow">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt={linkText}
           src={imageUrl}

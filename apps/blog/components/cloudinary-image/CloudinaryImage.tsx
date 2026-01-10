@@ -1,4 +1,4 @@
-import Image, { ImageProps } from 'next/image';
+import Image, { type ImageProps } from 'next/image';
 import { Icon, Skelton } from 'ui';
 
 import * as Cloudinary from '../../modules/data-access/cloudinary';

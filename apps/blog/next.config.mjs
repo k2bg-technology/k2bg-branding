@@ -4,6 +4,9 @@
 const config = {
   reactStrictMode: true,
   transpilePackages: ['ui', 'tailwind-config'],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async redirects() {
     return [
       {
