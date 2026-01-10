@@ -15,7 +15,7 @@ This monorepo includes the following applications and packages:
 
 - **`ui`** - React component library with Storybook documentation
 - **`tailwind-config`** - Shared Tailwind CSS configuration and design tokens
-- **`eslint-config-custom`** - Shared ESLint configurations
+- **`biome-config`** - Shared Biome configurations
 - **`tsconfig`** - TypeScript configurations used throughout the monorepo
 - **`test-utils`** - Shared testing utilities with Vitest
 
@@ -45,8 +45,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Development Tools
 
-- **[ESLint](https://eslint.org/)** - Code linting
-- **[Prettier](https://prettier.io)** - Code formatting
+- **[Biome](https://biomejs.dev/)** - Code linting and formatting
 - **[Vitest](https://vitest.dev/)** - Unit testing framework
 - **[Storybook](https://storybook.js.org/)** - Component development and documentation
 
@@ -106,9 +105,9 @@ pnpm start         # Start production builds
 ```bash
 pnpm test         # Run tests across all packages
 pnpm test:watch   # Run tests in watch mode
-pnpm lint         # Lint all apps and packages
+pnpm lint         # Lint and format all apps and packages with Biome
 pnpm typecheck    # TypeScript type checking
-pnpm format       # Format code with Prettier
+pnpm format       # Format code with Biome
 ```
 
 ## 🏛️ Architecture
@@ -126,7 +125,7 @@ flowchart TB
         subgraph "Shared Packages"
             UI["📦 ui<br/>Component Library"]
             TailwindConfig["📦 tailwind-config<br/>Design System"]
-            ESLintConfig["📦 eslint-config-custom<br/>Code Quality"]
+            BiomeConfig["📦 biome-config<br/>Code Quality"]
             TSConfig["📦 tsconfig<br/>TypeScript Config"]
             TestUtils["📦 test-utils<br/>Testing Utilities"]
         end
@@ -134,20 +133,20 @@ flowchart TB
 
     Blog -.-> UI
     Blog -.-> TailwindConfig
-    Blog -.-> ESLintConfig
+    Blog -.-> BiomeConfig
     Blog -.-> TSConfig
     Blog -.-> TestUtils
 
     Portfolio -.-> UI
     Portfolio -.-> TailwindConfig
-    Portfolio -.-> ESLintConfig
+    Portfolio -.-> BiomeConfig
     Portfolio -.-> TSConfig
 
     classDef appStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef packageStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
 
     class Blog,Portfolio appStyle
-    class UI,TailwindConfig,ESLintConfig,TSConfig,TestUtils packageStyle
+    class UI,TailwindConfig,BiomeConfig,TSConfig,TestUtils packageStyle
 ```
 
 ### Blog App Clean Architecture
@@ -378,8 +377,7 @@ flowchart TB
         end
 
         subgraph "Development Tools"
-            ESLintTool["🔍 ESLint<br/>- Code Linting<br/>- Style Consistency"]
-            PrettierTool["✨ Prettier<br/>- Code Formatting<br/>- Auto-fix"]
+            BiomeTool["🔍 Biome<br/>- Code Linting<br/>- Code Formatting<br/>- Auto-fix"]
             TypeScriptTool["🔷 TypeScript<br/>- Type Checking<br/>- Compile-time Safety"]
         end
 
@@ -415,8 +413,7 @@ flowchart TB
     Turborepo --> TailwindBuild
     Turborepo --> TypeGeneration
 
-    PNPMWorkspaces --> ESLintTool
-    PNPMWorkspaces --> PrettierTool
+    PNPMWorkspaces --> BiomeTool
     PNPMWorkspaces --> TypeScriptTool
     PNPMWorkspaces --> VitestTool
     PNPMWorkspaces --> StorybookTool
@@ -430,7 +427,7 @@ flowchart TB
     classDef workflowStyle fill:#EC4899,stroke:#DB2777,stroke-width:2px,color:#fff
 
     class Turborepo,PNPMWorkspaces monorepoStyle
-    class ESLintTool,PrettierTool,TypeScriptTool devToolStyle
+    class BiomeTool,TypeScriptTool devToolStyle
     class VitestTool,StorybookTool,ChromaticTool testStyle
     class NextJSBuild,TailwindBuild,TypeGeneration buildStyle
     class DevStart,BuildProcess,TestSuite,LintCheck,TypeCheck workflowStyle

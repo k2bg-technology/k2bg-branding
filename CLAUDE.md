@@ -18,8 +18,8 @@ pnpm dev          # Start all apps in development mode
 pnpm build        # Build all apps and packages
 pnpm test         # Run tests across all packages
 pnpm test:watch   # Run tests in watch mode
-pnpm lint         # Lint all apps and packages
-pnpm format       # Format code with Prettier
+pnpm lint         # Lint and format all apps and packages with Biome
+pnpm format       # Format code with Biome
 pnpm start        # Start production builds
 ```
 

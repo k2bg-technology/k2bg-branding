@@ -1,0 +1,23 @@
+{
+  "root": false,
+  "extends": ["biome-config/biome.jsonc"],
+
+  "files": {
+    "includes": [
+      "app/**/*.{ts,tsx}",
+      "lib/**/*.{ts,tsx}",
+      "components/**/*.{ts,tsx}",
+      "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
+      ".storybook/**/*.{ts,tsx,js}"
+    ]
+  },
+
+  "linter": {
+    "rules": {
+      "style": {
+        // Next.js/Storybook requires default exports.
+        "noDefaultExport": "off"
+      }
+    }
+  }
+}

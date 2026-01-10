@@ -1,0 +1,66 @@
+{
+  "root": false,
+  "extends": ["biome-config/biome.jsonc"],
+
+  "files": {
+    "includes": [
+      "app/**/*.{ts,tsx}",
+      "modules/**/*.{ts,tsx}",
+      "lib/**/*.{ts,tsx}",
+      "components/**/*.{ts,tsx}",
+      "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
+      ".storybook/**/*.{ts,tsx,js}"
+    ]
+  },
+
+  "linter": {
+    "rules": {
+      "style": {
+        // Next.js/Storybook requires default exports.
+        "noDefaultExport": "off"
+      },
+
+      "suspicious": {
+        // Skeleton components use array index as key.
+        // Recommended: use a stable unique ID instead.
+        "noArrayIndexKey": "off",
+
+        // Type and function names can overlap (e.g. AffiliateBanner).
+        // Recommended: add a Type suffix (AffiliateBannerType).
+        "noRedeclare": "off",
+
+        // Required for Google AdSense window.adsbygoogle assignment.
+        "noAssignInExpressions": "off"
+      },
+
+      "security": {
+        // Required for markdown rendering.
+        // Content from Notion API is assumed sanitized.
+        "noDangerouslySetInnerHtml": "off"
+      },
+
+      "performance": {
+        // Spread in reduce can be O(n^2); warn only.
+        // Recommended: use push() instead.
+        "noAccumulatingSpread": "warn",
+
+        // Prefer Next.js Image; allow <img> for affiliate images.
+        "noImgElement": "warn"
+      }
+    }
+  },
+
+  "overrides": [
+    {
+      "includes": ["**/*.stories.tsx"],
+      "linter": {
+        "rules": {
+          "performance": {
+            // Allow <img> for Storybook mock images.
+            "noImgElement": "off"
+          }
+        }
+      }
+    }
+  ]
+}

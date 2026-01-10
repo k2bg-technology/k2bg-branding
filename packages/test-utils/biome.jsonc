@@ -1,0 +1,8 @@
+{
+  "root": false,
+  "extends": ["biome-config/biome.jsonc"],
+
+  "files": {
+    "includes": ["src/**/*.{ts,tsx}", "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"]
+  }
+}

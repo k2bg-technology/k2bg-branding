@@ -69,7 +69,7 @@ components/
 
 ## Import/Export Patterns
 
-### Import Order (ESLint enforced)
+### Import Order (Biome enforced)
 
 ```typescript
 // 1. External libraries
@@ -203,20 +203,18 @@ describe('ComponentName', () => {
 
 ## Code Style
 
-### ESLint Configuration
+### Biome Configuration
 
-- Based on **Airbnb config**
-- **TypeScript integration** with `@typescript-eslint`
+- **Linting and formatting** unified in one tool
 - **Import ordering** with newlines between groups
 - **React hooks** rules enabled
-- **Accessibility** rules via jsx-a11y
+- **Accessibility** rules enabled
 
 ### Formatting Preferences
 
-- **No semicolons**
-- **Single quotes** for strings
-- **Trailing commas** where appropriate
-- **2-space indentation**
+- Configured via `biome.jsonc`
+- **Consistent formatting** across all files
+- **Auto-fix on save** recommended
 
 ## Validation and Error Handling
 
@@ -278,7 +276,7 @@ const { t } = useTranslation('common');
 ### Development Tools
 
 - **Turbo** for monorepo orchestration
-- **Prettier** for code formatting
+- **Biome** for linting and formatting
 - **Chromatic** for visual regression testing
 - **Storybook** for component documentation
 
@@ -339,8 +337,8 @@ Button.displayName = 'Button';
 pnpm dev          # Start all apps
 pnpm build        # Build all apps
 pnpm test         # Run tests
-pnpm lint         # Lint code
-pnpm format       # Format code
+pnpm lint         # Lint and format code with Biome
+pnpm format       # Format code with Biome
 ```
 
 ### App-specific Development
@@ -366,7 +364,7 @@ pnpm dev --filter=portfolio # Portfolio app only
 - Always check existing patterns before suggesting new approaches
 - Prefer editing existing files over creating new ones
 - Follow the established directory structure and naming conventions
-- Use the project's configured tools (ESLint, Prettier, TypeScript)
+- Use the project's configured tools (Biome, TypeScript)
 - Test changes with the existing test setup
 - Consider the monorepo structure when making changes
 - Respect the clean architecture boundaries in the blog app

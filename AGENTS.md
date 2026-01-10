@@ -4,7 +4,7 @@
 
 - Monorepo managed by pnpm workspaces and Turborepo.
 - Apps: `apps/blog` (Next.js + Prisma) and `apps/portfolio` (Next.js).
-- Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils` (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/eslint-config-custom`, `packages/tsconfig`.
+- Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils` (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`, `packages/tsconfig`.
 - CI, templates, and bots live under `.github/`. See `PULL_REQUEST_TEMPLATE.md`.
 
 ## Build, Test, and Development Commands
@@ -13,14 +13,13 @@
 - Develop all: `pnpm dev` (runs `turbo run dev`).
 - Filter to one app: `pnpm -F blog dev` or `pnpm -F portfolio dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
-- Lint/Types/Format: `pnpm lint`, `pnpm typecheck`, `pnpm format`.
+- Lint/Types/Format: `pnpm lint` (Biome), `pnpm typecheck`, `pnpm format` (Biome).
 - Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog and Test Utils).
 - Storybook (UI): `pnpm -F ui storybook`; Chromatic via CI.
 
 ## Coding Style & Naming Conventions
 
-- Prettier enforced: single quotes, semicolons, bracket spacing (see `.prettierrc`).
-- ESLint extends `eslint-config-custom` with Next.js settings.
+- Biome enforced: configured in `biome.jsonc` files.
 - TypeScript across repo; shared configs in `packages/tsconfig`.
 - Components: PascalCase (e.g., `Button.tsx` in `packages/ui`). Routes/pages follow Next.js conventions.
 
@@ -37,7 +36,7 @@
 
 - Commits: use Conventional Commits or the existing emoji-prefixed style (e.g., `feat: ...`, `🐛 fix: ...`). Keep messages imperative and scoped when useful.
 - PRs: use the template in `.github/PULL_REQUEST_TEMPLATE.md`. Include description, linked issues, screenshots for UI, and notes on env/config changes.
-- CI: PRs run lint, typecheck, tests, Storybook/Chromatic. Ensure local checks pass first.
+- CI: PRs run Biome checks, typecheck, tests, Storybook/Chromatic. Ensure local checks pass first.
 
 ## Security & Configuration Tips
 

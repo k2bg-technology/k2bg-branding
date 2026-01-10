@@ -48,3 +48,6 @@ dist
 
 # mcp
 .serena
+
+# Biome
+.biome-cache/
