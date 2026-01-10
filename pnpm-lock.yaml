@@ -14,21 +14,9 @@ importers:
       '@types/webpack-env':
         specifier: ^1.18.4
         version: 1.18.5
-      eslint:
-        specifier: ^8.57.1
-        version: 8.57.1
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:packages/eslint-config-custom
-      eslint-plugin-import:
-        specifier: ^2.31.0
-        version: 2.32.0(@typescript-eslint/parser@8.46.4(eslint@8.57.1)(typescript@5.5.4))(eslint-import-resolver-typescript@3.6.1)(eslint@8.57.1)
       has:
         specifier: ^1.0.4
         version: 1.0.4
-      prettier:
-        specifier: ^2.5.1
-        version: 2.8.8
       tsup:
         specifier: ^8.4.0
         version: 8.4.0(@swc/core@1.13.5)(jiti@2.6.0)(postcss@8.5.3)(typescript@5.5.4)
@@ -147,12 +135,6 @@ importers:
       biome-config:
         specifier: workspace:*
         version: link:../../packages/biome-config
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
-      eslint-plugin-storybook:
-        specifier: ^10.1.11
-        version: 10.1.11(eslint@8.57.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(typescript@5.5.4)
       msw:
         specifier: ^2.12.7
         version: 2.12.7(@types/node@17.0.45)(typescript@5.5.4)
@@ -256,12 +238,6 @@ importers:
       biome-config:
         specifier: workspace:*
         version: link:../../packages/biome-config
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../../packages/eslint-config-custom
-      eslint-plugin-storybook:
-        specifier: ^10.1.11
-        version: 10.1.11(eslint@8.57.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(typescript@5.5.4)
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
@@ -350,12 +326,6 @@ importers:
       biome-config:
         specifier: workspace:*
         version: link:../biome-config
-      eslint:
-        specifier: ^8.57.1
-        version: 8.57.1
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../eslint-config-custom
       tsconfig:
         specifier: workspace:*
         version: link:../tsconfig
@@ -473,15 +443,6 @@ importers:
       css-loader:
         specifier: ^7.1.2
         version: 7.1.2(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
-      eslint:
-        specifier: ^8.57.1
-        version: 8.57.1
-      eslint-config-custom:
-        specifier: workspace:*
-        version: link:../eslint-config-custom
-      eslint-plugin-storybook:
-        specifier: ^10.0.7
-        version: 10.0.7(eslint@8.57.1)(storybook@10.0.7(@testing-library/dom@10.4.0)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3)))(typescript@5.5.4)
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
@@ -4877,18 +4838,6 @@ packages:
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
-
-  eslint-plugin-storybook@10.0.7:
-    resolution: {integrity: sha512-qOQq9KdT1jsBgT3qsxUH2n67aj1WR8D1XCoER8Q6yuVlS5TimNwk1mZeWkXVf/o4RQQT6flT2y5cG2gPLZPvJA==}
-    peerDependencies:
-      eslint: '>=8'
-      storybook: ^10.0.7
-
-  eslint-plugin-storybook@10.1.11:
-    resolution: {integrity: sha512-mbq2r2kK5+AcLl0XDJ3to91JOgzCbHOqj+J3n+FRw6drk+M1boRqMShSoMMm0HdzXPLmlr7iur+qJ5ZuhH6ayQ==}
-    peerDependencies:
-      eslint: '>=8'
-      storybook: ^10.1.11
 
   eslint-plugin-turbo@2.6.1:
     resolution: {integrity: sha512-nxwJD6ReZTxEmq/ZNJXI/Mfa3aXctTpQpJrQZESDC1bxjXXcz4i040P7wG6RsRRsQ+9eYB9D+KdCqERpwNZGzw==}
@@ -11217,7 +11166,7 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-      debug: 4.4.0
+      debug: 4.4.3
       espree: 9.6.1
       globals: 13.24.0
       ignore: 5.3.1
@@ -11268,7 +11217,7 @@ snapshots:
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
-      debug: 4.4.0
+      debug: 4.4.3
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -14782,24 +14731,6 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-storybook@10.0.7(eslint@8.57.1)(storybook@10.0.7(@testing-library/dom@10.4.0)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3)))(typescript@5.5.4):
-    dependencies:
-      '@typescript-eslint/utils': 8.46.4(eslint@8.57.1)(typescript@5.5.4)
-      eslint: 8.57.1
-      storybook: 10.0.7(@testing-library/dom@10.4.0)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-
-  eslint-plugin-storybook@10.1.11(eslint@8.57.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(typescript@5.5.4):
-    dependencies:
-      '@typescript-eslint/utils': 8.46.4(eslint@8.57.1)(typescript@5.5.4)
-      eslint: 8.57.1
-      storybook: 10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-
   eslint-plugin-turbo@2.6.1(eslint@8.57.1)(turbo@2.7.3):
     dependencies:
       dotenv: 16.0.3
@@ -14833,7 +14764,7 @@ snapshots:
       ajv: 6.12.6
       chalk: 4.1.2
       cross-spawn: 7.0.3
-      debug: 4.4.0
+      debug: 4.4.3
       doctrine: 3.0.0
       escape-string-regexp: 4.0.0
       eslint-scope: 7.2.2
@@ -17211,7 +17142,8 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@2.8.8: {}
+  prettier@2.8.8:
+    optional: true
 
   pretty-error@4.0.0:
     dependencies:

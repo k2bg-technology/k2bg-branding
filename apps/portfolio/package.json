@@ -33,7 +33,6 @@
     "@types/react-dom": "^19.0.4",
     "autoprefixer": "^10.4.14",
     "biome-config": "workspace:*",
-    "eslint-config-custom": "workspace:*",
     "postcss": "^8.5.3",
     "postcss-preset-env": "^9.1.1",
     "tailwind-config": "workspace:*",
@@ -43,7 +42,6 @@
     "@storybook/nextjs": "^10.1.11",
     "@storybook/addon-a11y": "^10.1.11",
     "@storybook/addon-docs": "^10.1.11",
-    "@storybook/addon-onboarding": "^10.1.11",
-    "eslint-plugin-storybook": "^10.1.11"
+    "@storybook/addon-onboarding": "^10.1.11"
   }
 }

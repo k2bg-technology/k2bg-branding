@@ -12,8 +12,6 @@
   },
   "devDependencies": {
     "biome-config": "workspace:*",
-    "eslint": "^8.57.1",
-    "eslint-config-custom": "workspace:*",
     "tsconfig": "workspace:*"
   },
   "peerDependencies": {
