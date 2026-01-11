@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { Avatar } from 'ui';
-
+import type { Post } from '../../modules/domain/post/types';
 import BlogCard from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-import { Post } from '../../modules/domain/post/types';
 import { Pagination } from '../pagination/Pagination';
 
 interface Props {

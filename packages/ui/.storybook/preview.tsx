@@ -1,16 +1,15 @@
-import React, { PropsWithChildren, useMemo } from 'react';
-import { Suspense } from 'react';
-import type { Preview, StoryContext } from '@storybook/react';
-import { I18nextProvider } from 'react-i18next';
 import {
   DocsContainer,
-  DocsContainerProps,
+  type DocsContainerProps,
 } from '@storybook/addon-docs/blocks';
+import type { Preview, StoryContext } from '@storybook/react';
+import type React from 'react';
+import { type PropsWithChildren, Suspense, useMemo } from 'react';
+import { I18nextProvider } from 'react-i18next';
+import type { PartialStoryFn } from 'storybook/internal/types';
+import type { StoryStore } from 'storybook/preview-api';
 import i18n from '../src/i18n';
 import DocumentationTemplate from './DocumentationTemplate.mdx';
-
-import type { StoryStore } from 'storybook/preview-api';
-import { PartialStoryFn } from 'storybook/internal/types';
 
 import '../src/globals.css';
 
@@ -74,6 +73,7 @@ const preview: Preview = {
         children,
       }: {
         context: DocsContainerProps['context'] & {
+          // biome-ignore lint/suspicious/noExplicitAny: --- IGNORE ---
           store: StoryStore<any>;
         };
         children: React.ReactNode;

@@ -1,8 +1,7 @@
-import { type NextRequest } from 'next/server';
-
-import * as UseCases from '../../../modules/use-cases';
+import type { NextRequest } from 'next/server';
 import * as Notion from '../../../modules/data-access/notion';
 import * as Prisma from '../../../modules/data-access/prisma';
+import * as UseCases from '../../../modules/use-cases';
 
 export async function PATCH(request: NextRequest) {
   const apiKey = request.headers.get('x-api-key');

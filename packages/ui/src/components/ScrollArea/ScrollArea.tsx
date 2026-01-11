@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
+import type * as React from 'react';
 import { twMerge } from 'tailwind-merge';
 
 import { ScrollBar } from './ScrollBar/ScrollBar';

@@ -29,7 +29,6 @@ export default function ImageViewer({
         rel="noopener nofollow"
         className="inline-block"
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           {...rest}
           alt={name}
@@ -43,7 +42,6 @@ export default function ImageViewer({
     );
 
   return (
-    // eslint-disable-next-line @next/next/no-img-element
     <img
       {...rest}
       alt={name}

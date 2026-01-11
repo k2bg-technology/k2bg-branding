@@ -8,7 +8,7 @@ export default function Skelton(props: Props) {
   return (
     <div
       {...rest}
-      role="status"
+      aria-hidden="true"
       className={twMerge('animate-pulse', className)}
     >
       {children}

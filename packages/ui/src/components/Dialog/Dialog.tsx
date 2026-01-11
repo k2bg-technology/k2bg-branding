@@ -1,10 +1,9 @@
 'use client';
 
 import * as RadixDialog from '@radix-ui/react-dialog';
-
-import { Icon } from '../Icon';
-import { Button } from '../Button';
 import { twMerge } from '../../utils/extendTailwindMerge';
+import { Button } from '../Button';
+import { Icon } from '../Icon';
 
 export interface Props
   extends React.ComponentPropsWithoutRef<typeof RadixDialog.Root> {

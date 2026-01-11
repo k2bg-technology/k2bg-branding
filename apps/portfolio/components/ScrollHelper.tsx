@@ -38,7 +38,11 @@ export function ScrollHelper() {
   if (!isDesktopLayout || !isShow) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/20" onClick={() => setIsShow(false)}>
+    <button
+      type="button"
+      className="fixed inset-0 bg-black/20"
+      onClick={() => setIsShow(false)}
+    >
       <div className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
         <div
           className={twMerge(
@@ -55,6 +59,6 @@ export function ScrollHelper() {
           />
         </div>
       </div>
-    </div>
+    </button>
   );
 }

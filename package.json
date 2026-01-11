@@ -6,7 +6,9 @@
     "start": "turbo run start",
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "format": "turbo run format",
+    "check": "biome check .",
+    "check:write": "biome check --write .",
     "storybook": "turbo run storybook",
     "build-storybook": "turbo run build-storybook",
     "chromatic": "turbo run chromatic",
@@ -18,11 +20,7 @@
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
     "@types/webpack-env": "^1.18.4",
-    "eslint": "^8.57.1",
-    "eslint-config-custom": "workspace:*",
-    "eslint-plugin-import": "^2.31.0",
     "has": "^1.0.4",
-    "prettier": "^2.5.1",
     "tsup": "^8.4.0",
     "turbo": "latest",
     "typescript": "^5.4.5"

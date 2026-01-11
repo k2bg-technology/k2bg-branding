@@ -1,5 +1,5 @@
+import type { AffiliateText } from '../../modules/interfaces/affiliate/validator';
 import { TextPromotion } from '../promotion';
-import { type AffiliateText } from '../../modules/interfaces/affiliate/validator';
 
 interface AffiliateTextProps {
   affiliateText: AffiliateText;

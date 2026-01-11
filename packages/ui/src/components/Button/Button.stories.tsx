@@ -71,7 +71,7 @@ export const IconButton: Story = {
 export const ExternalLinkButton: Story = {
   args: {
     children: (
-      <a href="https://example.com" target="_blank">
+      <a href="https://example.com" target="_blank" rel="noopener noreferrer">
         <span className="flex gap-condensed">
           <Icon
             name="arrow-top-right-on-square"

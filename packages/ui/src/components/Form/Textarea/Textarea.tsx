@@ -1,9 +1,8 @@
 'use client';
 
 import { cva } from 'class-variance-authority';
-
-import { FormProps, useFormContext } from '../Control/Context';
 import { twMerge } from '../../../utils/extendTailwindMerge';
+import { type FormProps, useFormContext } from '../Control/Context';
 
 const inputVariants = cva(
   'appearance-none focus-visible:border-ring focus-visible:ring-[3px] border rounded-md px-2 py-3 w-full text-body-r-sm field-sizing-content',

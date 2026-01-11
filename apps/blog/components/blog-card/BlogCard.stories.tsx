@@ -49,7 +49,6 @@ export const Default: Story = {
     <BlogCard className="flex-col gap-spacious" {...args}>
       <BlogCard.Media>
         <a href="https://example.com" target="_blank" rel="noreferrer">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Office" src={BlogCardMainImage.src} />
         </a>
       </BlogCard.Media>
@@ -63,7 +62,6 @@ export const Horizontal: Story = {
     <BlogCard className="flex-row gap-5" {...args}>
       <BlogCard.Media className="flex-none max-w-[16rem]">
         <a href="https://example.com" target="_blank" rel="noreferrer">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Office" src={BlogCardMainImage.src} />
         </a>
       </BlogCard.Media>
@@ -85,7 +83,6 @@ export const Hero: Story = {
       />
       <BlogCard.Media>
         <a href="https://example.com" target="_blank" rel="noreferrer">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img alt="Office" src={BlogCardMainImage.src} />
         </a>
       </BlogCard.Media>

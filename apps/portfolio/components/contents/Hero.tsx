@@ -2,9 +2,8 @@
 
 import Image from 'next/image';
 import { Trans } from 'react-i18next';
-
-import { Language } from '../../i18n/settings';
 import { useTranslation } from '../../i18n/client';
+import type { Language } from '../../i18n/settings';
 
 export function Hero({ lng }: { lng: Language }) {
   const { t } = useTranslation(lng);

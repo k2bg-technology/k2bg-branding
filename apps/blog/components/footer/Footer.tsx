@@ -1,6 +1,5 @@
-import React from 'react';
-import Link from 'next/link';
 import { format } from 'date-fns';
+import Link from 'next/link';
 import { Button, Icon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';

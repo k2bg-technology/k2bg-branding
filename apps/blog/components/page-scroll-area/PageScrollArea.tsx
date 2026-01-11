@@ -1,8 +1,8 @@
 'use client';
 
-import { create } from 'zustand';
-import { ScrollArea } from 'ui';
 import { useEffect, useRef } from 'react';
+import { ScrollArea } from 'ui';
+import { create } from 'zustand';
 
 type PageScrollAreaStore = {
   ref: React.RefObject<HTMLDivElement | null> | null;
@@ -22,7 +22,7 @@ export function PageScrollArea(props: Props) {
 
   useEffect(() => {
     setRef(ref);
-  }, [ref, setRef]);
+  }, [setRef]);
 
   return <ScrollArea {...props} ref={ref} className="max-h-dvh" />;
 }

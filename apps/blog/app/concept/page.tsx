@@ -1,8 +1,8 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 import { Markdown } from '../../components/markdown';
-import Sidebar from '../../components/sidebar/Sidebar';
 import { PageHeading } from '../../components/page-heading/PageHeading';
+import Sidebar from '../../components/sidebar/Sidebar';
 import * as Prisma from '../../modules/data-access/prisma';
 
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';

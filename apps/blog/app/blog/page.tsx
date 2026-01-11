@@ -1,12 +1,12 @@
-import { Avatar } from 'ui';
+import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Metadata } from 'next';
+import { Avatar } from 'ui';
 
 import BlogCard from '../../components/blog-card';
-import Sidebar from '../../components/sidebar/Sidebar';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
+import Sidebar from '../../components/sidebar/Sidebar';
 import * as Prisma from '../../modules/data-access/prisma';
-import { Post } from '../../modules/domain/post/types';
+import type { Post } from '../../modules/domain/post/types';
 
 export const metadata: Metadata = {
   title: 'K2.B.G Technology Blog',

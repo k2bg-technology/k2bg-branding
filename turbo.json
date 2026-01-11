@@ -1,21 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "**/.env.*local"
-  ],
+  "globalDependencies": ["**/.env.*local"],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env"
-      ],
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
       "env": [
         "NOTION_TOKEN",
         "NOTION_POST_DATABASE_ID",
@@ -36,18 +26,30 @@
       ]
     },
     "start": {},
-    "lint": {},
+    "lint": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "biome.jsonc",
+        "../../biome.jsonc",
+        "../../packages/biome-config/biome.jsonc"
+      ]
+    },
     "typecheck": {},
-    "format": {},
+    "format": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "biome.jsonc",
+        "../../biome.jsonc",
+        "../../packages/biome-config/biome.jsonc"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "storybook": {},
     "build-storybook": {
-      "outputs": [
-        "storybook-static/**/*"
-      ]
+      "outputs": ["storybook-static/**/*"]
     },
     "test": {
       "dependsOn": ["^test"]
@@ -57,12 +59,8 @@
       "persistent": true
     },
     "chromatic": {
-      "outputs": [
-        "storybook-static"
-      ],
-      "env": [
-        "CHROMATIC_PROJECT_TOKEN"
-      ]
+      "outputs": ["storybook-static"],
+      "env": ["CHROMATIC_PROJECT_TOKEN"]
     },
     "generate:style": {},
     "generate:component": {}

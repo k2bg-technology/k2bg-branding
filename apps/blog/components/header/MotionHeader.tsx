@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { motion, useScroll } from 'motion/react';
+import { useEffect, useState } from 'react';
 
 import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 
@@ -28,7 +28,7 @@ export default function MotionHeader(props: Props) {
     return () => {
       unsubscribe();
     };
-  }, [ref, scrollY, lastScrollY]);
+  }, [scrollY, lastScrollY]);
 
   return (
     <motion.header

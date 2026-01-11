@@ -1,8 +1,7 @@
-import { Metadata } from 'next';
-
+import type { Metadata } from 'next';
+import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { Markdown } from '../../../../components/markdown';
 import Sidebar from '../../../../components/sidebar/Sidebar';
-import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import * as Prisma from '../../../../modules/data-access/prisma';
 
 type Params = Promise<{ id: string; slug: string }>;

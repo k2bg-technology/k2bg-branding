@@ -1,14 +1,11 @@
+import { format } from 'date-fns';
 import path from 'path';
 
-import { format } from 'date-fns';
-
-import * as Domain from '../../domain';
+import type * as Domain from '../../domain';
 import { generateHtmlTemplate } from '../../utility/generateHtmlTemplate';
 
 export class SendEmail {
-  constructor(
-    private ContactAdapter: Domain.Contact.Adapter
-  ) {}
+  constructor(private ContactAdapter: Domain.Contact.Adapter) {}
 
   async execute(visitor: Domain.Contact.Visitor) {
     const emailBody = generateHtmlTemplate(

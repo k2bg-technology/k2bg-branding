@@ -1,4 +1,4 @@
-import { Author } from '../author/types';
+import type { Author } from '../author/types';
 
 export const Type = {
   ARTICLE: 'ARTICLE',

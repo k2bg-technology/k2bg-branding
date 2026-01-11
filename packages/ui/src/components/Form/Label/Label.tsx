@@ -1,9 +1,8 @@
 'use client';
 
 import { cva } from 'class-variance-authority';
-
-import { FormProps, useFormContext } from '../Control/Context';
 import { twMerge } from '../../../utils/extendTailwindMerge';
+import { type FormProps, useFormContext } from '../Control/Context';
 
 const labelVariants = cva('text-body-b-sm font-bold', {
   variants: {
@@ -40,6 +39,7 @@ export function Label(props: Props) {
   } = useFormContext(formProps);
 
   return (
+    // biome-ignore lint/a11y/noLabelWithoutControl: this label is always used with input
     <label
       {...rest}
       className={twMerge(labelVariants({ color, error, disabled }), className)}

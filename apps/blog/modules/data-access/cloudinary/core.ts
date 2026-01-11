@@ -1,15 +1,15 @@
 import {
+  type ConfigAndUrlOptions,
   v2 as cloudinary,
-  ConfigAndUrlOptions,
-  DeliveryType,
-  TransformationOptions,
-  UploadApiOptions,
+  type DeliveryType,
+  type TransformationOptions,
+  type UploadApiOptions,
 } from 'cloudinary';
 
 import {
-  CLOUDINARY_CLOUD_NAME,
   CLOUDINARY_API_KEY,
   CLOUDINARY_API_SECRET,
+  CLOUDINARY_CLOUD_NAME,
 } from './const';
 
 const CLOUDINARY_BASE_URI = 'https://res.cloudinary.com';

@@ -1,7 +1,7 @@
+import type { TFunction } from 'i18next';
 import Image from 'next/image';
+import type { ReactNode } from 'react';
 import { Button, Dialog } from 'ui';
-import { TFunction } from 'i18next';
-import { ReactNode } from 'react';
 
 import { ExternalLinkButton } from '../ExternalLinkButton';
 

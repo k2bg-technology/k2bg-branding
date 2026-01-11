@@ -1,7 +1,7 @@
 import { getExtensionFromUrl } from '../../../utility/getExtensionFromUrl';
 
 import { Entity } from './entity';
-import { MediaImage } from './types';
+import type { MediaImage } from './types';
 
 export class Image extends Entity implements MediaImage {
   get extension() {

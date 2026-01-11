@@ -1,5 +1,5 @@
+import type { TFunction } from 'i18next';
 import Image from 'next/image';
-import { TFunction } from 'i18next';
 import { Icon } from 'ui';
 
 export function Skill({ t }: { t: TFunction }) {

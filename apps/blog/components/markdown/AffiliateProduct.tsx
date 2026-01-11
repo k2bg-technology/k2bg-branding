@@ -1,8 +1,8 @@
-import { ProductPromotion } from '../promotion';
-import {
+import type {
+  AffiliateProduct,
   AffiliateSubProvider,
-  type AffiliateProduct,
 } from '../../modules/interfaces/affiliate/validator';
+import { ProductPromotion } from '../promotion';
 
 interface AffiliateProductProps {
   affiliateProduct: AffiliateProduct;

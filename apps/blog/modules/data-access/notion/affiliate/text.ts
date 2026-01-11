@@ -1,5 +1,5 @@
 import { Entity } from './entity';
-import { AffiliateText } from './types';
+import type { AffiliateText } from './types';
 
 export class Text extends Entity implements AffiliateText {
   toObject() {

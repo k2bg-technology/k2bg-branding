@@ -1,10 +1,10 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Metadata } from 'next';
 
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
-import { Category } from '../../../modules/domain/post/types';
 import * as Prisma from '../../../modules/data-access/prisma';
+import { Category } from '../../../modules/domain/post/types';
 
 const PAGE_SIZE = 6;
 

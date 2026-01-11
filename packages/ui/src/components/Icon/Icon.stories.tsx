@@ -1,8 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-
+import { Icon, type IconProps } from '.';
 import { HERO_ICON_NAMES, ICON_NAMES, MULTI_COLOR_ICON_NAMES } from './const';
-
-import { Icon, IconProps } from '.';
 
 const meta = {
   component: Icon,

@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { Metadata } from 'next';
-import { dir } from 'i18next';
 import { GoogleTagManager } from '@next/third-parties/google';
+import { dir } from 'i18next';
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
 import { languages } from '../../i18n/settings';
 

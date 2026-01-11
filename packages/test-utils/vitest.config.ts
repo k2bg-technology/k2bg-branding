@@ -1,7 +1,7 @@
-import { defineConfig } from 'vitest/config';
-import { join, dirname } from 'path';
-import { fileURLToPath } from 'url';
 import react from '@vitejs/plugin-react-swc';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+import { defineConfig } from 'vitest/config';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

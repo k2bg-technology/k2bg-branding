@@ -1,7 +1,7 @@
 import { Client } from '@notionhq/client';
-import { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints';
+import type { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints';
 import { NotionToMarkdown } from 'notion-to-md';
-import { BlockType, CustomTransformer } from 'notion-to-md/build/types';
+import type { BlockType, CustomTransformer } from 'notion-to-md/build/types';
 
 export class Core {
   private notionClient: Client;

@@ -1,4 +1,4 @@
-import { Post } from './types';
+import type { Post } from './types';
 
 export class Entity {
   constructor(readonly data: Post) {}

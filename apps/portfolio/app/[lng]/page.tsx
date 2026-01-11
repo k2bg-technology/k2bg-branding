@@ -1,16 +1,15 @@
 import { Suspense } from 'react';
-
-import { languages, fallbackLng, Language } from '../../i18n/settings';
-import { getTranslation } from '../../i18n';
-import { Hero } from '../../components/contents/Hero';
 import { Background } from '../../components/contents/Background';
-import { Skill } from '../../components/contents/Skill';
-import { Portfolio } from '../../components/contents/Portfolio';
 import { Contact } from '../../components/contents/Contact';
+import { Hero } from '../../components/contents/Hero';
+import { Portfolio } from '../../components/contents/Portfolio';
+import { Skill } from '../../components/contents/Skill';
 import { Footer } from '../../components/footer/Footer';
 import { LanguageSelector } from '../../components/LanguageSelector';
 import { ScrollHelper } from '../../components/ScrollHelper';
 import { Slider } from '../../components/Slider';
+import { getTranslation } from '../../i18n';
+import { fallbackLng, type Language, languages } from '../../i18n/settings';
 
 import Loading from './loading';
 

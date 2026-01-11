@@ -1,6 +1,6 @@
-import { Page } from '../page';
+import type { Page } from '../page';
 
-import { Media } from './types';
+import type { Media } from './types';
 
 export class Entity implements Media {
   constructor(protected data: Page) {}

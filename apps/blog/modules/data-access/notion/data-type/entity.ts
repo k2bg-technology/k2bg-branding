@@ -1,4 +1,4 @@
-import { DATA_TYPE_NAMES, DataType, DataTypeCore } from './types';
+import { DATA_TYPE_NAMES, type DataType, type DataTypeCore } from './types';
 
 export class Entity implements DataTypeCore {
   constructor(private data: DataType) {}

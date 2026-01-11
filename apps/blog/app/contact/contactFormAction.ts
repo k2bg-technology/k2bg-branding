@@ -4,7 +4,7 @@ import { verify } from 'hcaptcha';
 
 import * as SendGrid from '../../modules/data-access/send-grid';
 import {
-  Contact,
+  type Contact,
   contactSchema,
 } from '../../modules/interfaces/contact/validator';
 import { SendEmail } from '../../modules/use-cases/contact';

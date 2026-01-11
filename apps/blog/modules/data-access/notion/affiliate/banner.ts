@@ -1,5 +1,5 @@
 import { Entity } from './entity';
-import { AffiliateBanner } from './types';
+import type { AffiliateBanner } from './types';
 
 export class Banner extends Entity implements AffiliateBanner {
   get imageSourceUrl() {

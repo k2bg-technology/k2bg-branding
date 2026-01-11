@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
-import { toast, ToasterProps } from 'sonner';
+import { type ToasterProps, toast } from 'sonner';
 
 import { Button } from '../Button';
 

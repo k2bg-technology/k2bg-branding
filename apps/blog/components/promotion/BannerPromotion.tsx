@@ -27,7 +27,6 @@ export default function BannerPromotion(props: BannerPromotionProps) {
       rel="noopener nofollow"
       className="inline-block"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         alt={linkText}
         src={imageUrl}

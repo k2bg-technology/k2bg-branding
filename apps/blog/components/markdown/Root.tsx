@@ -1,10 +1,9 @@
-import React from 'react';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
-import { codeToHtml } from 'shiki';
-import { addCopyButton } from 'shiki-transformer-copy-button';
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import { codeToHtml } from 'shiki';
+import { addCopyButton } from 'shiki-transformer-copy-button';
 
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
@@ -120,7 +119,6 @@ export async function Root(props: Props) {
                           `${styles.codeSnippet} p-6 whitespace-pre-wrap rounded-lg relative before:content-[attr(data-language)] overflow-hidden before:absolute before:bottom-0 before:right-0 before:px-3 before:py-1 before:text-caption before:bg-white/20 before:text-white text-body-r-sm font-original`
                         );
 
-                        // eslint-disable-next-line no-param-reassign
                         node.properties['data-language'] = language;
                       },
                     },

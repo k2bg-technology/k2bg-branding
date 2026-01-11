@@ -1,4 +1,4 @@
-import sgMail, { MailService, ResponseError } from '@sendgrid/mail';
+import sgMail, { type MailService, ResponseError } from '@sendgrid/mail';
 
 export class Core {
   private sgMail: MailService;

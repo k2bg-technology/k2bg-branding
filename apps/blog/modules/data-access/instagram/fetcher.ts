@@ -1,5 +1,5 @@
-import { Core } from './core';
 import { INSTAGRAM_USER_ID } from './const';
+import { Core } from './core';
 
 export class Fetcher extends Core {
   public async fetchUserMedia(): Promise<{
