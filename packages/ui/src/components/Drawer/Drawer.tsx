@@ -8,7 +8,7 @@ import ScrollArea from '../ScrollArea';
 
 import styles from './Drawer.module.css';
 
-interface Props extends React.ComponentPropsWithoutRef<'div'> {
+export interface Props extends React.ComponentPropsWithoutRef<'div'> {
   trigger: React.ReactNode;
   mainContent: React.ReactNode;
   title?: string;

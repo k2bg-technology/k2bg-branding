@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { Button } from '../Button';
 
-import Drawer from './Drawer';
+import { Drawer, type Props } from '.';
 
 const meta = {
   component: Drawer,
@@ -24,7 +24,12 @@ const meta = {
       references: 'components.drawer.references',
     },
   },
-} satisfies Meta<typeof Drawer>;
+  play: async ({ canvas, userEvent }) => {
+    const button = canvas.getByRole('button');
+
+    await userEvent.click(button);
+  },
+} satisfies Meta<Props>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
