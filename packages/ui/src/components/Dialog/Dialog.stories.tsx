@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { Button } from '../Button';
 
-import { Dialog, type Props } from '.';
+import { Dialog } from '.';
 
 const meta = {
   component: Dialog,
@@ -61,7 +61,7 @@ const meta = {
 
     await userEvent.click(button);
   },
-} satisfies Meta<Props>;
+} satisfies Meta<typeof Dialog>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

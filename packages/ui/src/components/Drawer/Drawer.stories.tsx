@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { Button } from '../Button';
 
-import { Drawer, type Props } from '.';
+import { Drawer } from '.';
 
 const meta = {
   component: Drawer,
@@ -29,7 +29,7 @@ const meta = {
 
     await userEvent.click(button);
   },
-} satisfies Meta<Props>;
+} satisfies Meta<typeof Drawer>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
