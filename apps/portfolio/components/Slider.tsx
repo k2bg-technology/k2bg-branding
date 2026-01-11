@@ -1,12 +1,13 @@
+import { twMerge } from 'ui/src/utils/extendTailwindMerge';
 import styles from './Slider.module.css';
 
-type Props = React.HTMLAttributes<HTMLDivElement> & React.PropsWithChildren;
+type Props = React.ComponentPropsWithoutRef<'div'>;
 
 export function Slider(props: Props) {
-  const { children, ...rest } = props;
+  const { children, className, ...rest } = props;
 
   return (
-    <div {...rest} className={styles.Slider}>
+    <div {...rest} className={twMerge(styles.Slider, className)}>
       {children}
     </div>
   );
