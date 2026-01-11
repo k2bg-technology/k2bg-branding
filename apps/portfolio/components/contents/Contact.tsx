@@ -85,6 +85,7 @@ export function Contact({ t }: { t: TFunction }) {
                   rows={4}
                   placeholder={t('contact.form.messagePlaceholder')}
                   required
+                  className="min-h-[4lh] max-h-[15lh]"
                   data-gtm="contact_focus_message_field"
                 />
               </div>

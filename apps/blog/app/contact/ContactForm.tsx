@@ -142,6 +142,7 @@ export default function ContactForm() {
             rows={4}
             placeholder="メッセージ"
             required
+            className="min-h-[4lh] max-h-[15lh]"
             error={!!errors.message}
           />
           {errors.message?.message && (
