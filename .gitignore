@@ -5,6 +5,9 @@ node_modules
 .pnp
 .pnp.js
 
+# TypeScript
+*.tsbuildinfo
+
 # testing
 coverage
 
