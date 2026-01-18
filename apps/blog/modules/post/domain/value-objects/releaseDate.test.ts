@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { ReleaseDate } from './releaseDate';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { InvalidReleaseDateError } from '../errors/errors';
+import { ReleaseDate } from './releaseDate';
 
 describe('ReleaseDate', () => {
   afterEach(() => {
