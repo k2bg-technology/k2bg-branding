@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { SyncError } from '../../shared';
-import type { ExternalImageSource, ImageSourceRecord } from './externalImageSource';
+import type {
+  ExternalImageSource,
+  ImageSourceRecord,
+} from './externalImageSource';
 import type { ImageRepository } from './imageRepository';
 import { SyncHeroImages } from './useCase';
 
@@ -100,7 +103,10 @@ describe('SyncHeroImages', () => {
       ]);
       const source3 = createMockImageSource([]);
       const imageRepository = createMockImageRepository();
-      const sut = new SyncHeroImages([source1, source2, source3], imageRepository);
+      const sut = new SyncHeroImages(
+        [source1, source2, source3],
+        imageRepository
+      );
 
       const result = await sut.execute();
 

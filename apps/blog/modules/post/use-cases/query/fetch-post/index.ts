@@ -1,1 +1,5 @@
-export { FetchPost, type FetchPostInput, type FetchPostOutput } from './useCase';
+export {
+  FetchPost,
+  type FetchPostInput,
+  type FetchPostOutput,
+} from './useCase';

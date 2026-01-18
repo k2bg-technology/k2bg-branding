@@ -89,9 +89,9 @@ describe('SearchPosts', () => {
       const queryService = createMockQueryService();
       const sut = new SearchPosts(queryService);
 
-      await expect(
-        sut.execute({ query: 'test', page: 0 })
-      ).rejects.toThrow(InvalidPaginationError);
+      await expect(sut.execute({ query: 'test', page: 0 })).rejects.toThrow(
+        InvalidPaginationError
+      );
     });
 
     it('calculates pagination correctly', async () => {
