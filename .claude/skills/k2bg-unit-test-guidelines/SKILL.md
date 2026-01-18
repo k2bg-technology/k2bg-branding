@@ -147,15 +147,12 @@ All unit tests must follow the three-phase structure with blank lines separating
 describe('PricingService', () => {
   describe('calculateDiscount', () => {
     it('applies 20% discount for VIP customers', () => {
-      // Arrange
       const sut = new PricingService();
       const customer = new Customer({ type: 'VIP' });
       const originalPrice = 100;
 
-      // Act
       const discountedPrice = sut.calculateDiscount(customer, originalPrice);
 
-      // Assert
       const expectedPrice = 80;
       expect(discountedPrice).toBe(expectedPrice);
     });
@@ -165,8 +162,9 @@ describe('PricingService', () => {
 
 **Guidelines:**
 
-- Visual separation with blank lines is sufficient; phase comments (`// Arrange`, etc.) are optional
-- If phase comments are used, they should be consistent across the test suite
+- Use blank lines to visually separate the three phases
+- Do NOT add phase comments (`// Arrange`, `// Act`, `// Assert`) - they add noise without value
+- The code structure itself should make the phases clear
 
 ### Single Action in Act Phase
 
