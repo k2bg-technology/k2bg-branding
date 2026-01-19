@@ -1,3 +1,4 @@
+export { DEFAULT_VALUES } from './constants';
 export {
   DatabaseConnectionError,
   ExternalSourceError,

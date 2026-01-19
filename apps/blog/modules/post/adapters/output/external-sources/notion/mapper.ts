@@ -18,7 +18,7 @@ import {
   Title,
 } from '../../../../domain';
 import type { ImageSourceRecord } from '../../../../use-cases';
-import { MappingError } from '../../../shared';
+import { DEFAULT_VALUES, MappingError } from '../../../shared';
 
 type NotionProperties = PageObjectResponse['properties'];
 
@@ -57,14 +57,14 @@ export function notionPageToPost(
       type: mapPostType(type),
       excerpt: excerpt ? Excerpt.create(excerpt) : Excerpt.empty(),
       imageUrl: ImageUrl.create(
-        imageUrl || 'https://placeholder.com/image.jpg'
+        imageUrl || DEFAULT_VALUES.PLACEHOLDER_IMAGE_URL
       ),
       slug: Slug.create(slug),
       status: mapPostStatus(status),
       category: mapCategory(category),
       tags: tags.length > 0 ? Tags.create(tags) : Tags.empty(),
       authorId: AuthorId.create(
-        author?.id ?? '00000000-0000-4000-a000-000000000000'
+        author?.id ?? DEFAULT_VALUES.ANONYMOUS_AUTHOR_UUID
       ),
       releaseDate: ReleaseDate.create(releaseDate),
       revisionDate: RevisionDate.create(revisionDate),
