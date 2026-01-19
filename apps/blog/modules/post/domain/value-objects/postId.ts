@@ -4,11 +4,11 @@ import { InvalidPostIdError } from '../errors/errors';
  * PostId Value Object
  *
  * Represents a unique identifier for a Post entity.
- * Validates UUID v4 format.
+ * Validates UUID v4/v7/v8 format.
  */
 export class PostId {
-  private static readonly UUID_V4_PATTERN =
-    /^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
+  private static readonly UUID_PATTERN =
+    /^[a-f0-9]{8}-[a-f0-9]{4}-[478][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
 
   private readonly value: string;
 
@@ -32,8 +32,8 @@ export class PostId {
     if (!value || value.trim() === '') {
       throw new InvalidPostIdError('PostId cannot be empty');
     }
-    if (!PostId.UUID_V4_PATTERN.test(value)) {
-      throw new InvalidPostIdError(`Invalid UUID v4 format: ${value}`);
+    if (!PostId.UUID_PATTERN.test(value)) {
+      throw new InvalidPostIdError(`Invalid UUID format: ${value}`);
     }
     return new PostId(value.toLowerCase());
   }
