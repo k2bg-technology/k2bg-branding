@@ -1,0 +1,1 @@
+export { CloudinaryImageRepository } from './imageRepository';
