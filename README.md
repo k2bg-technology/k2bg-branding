@@ -459,6 +459,45 @@ npx prisma migrate dev # Run migrations
 npx prisma studio      # Open database browser
 ```
 
+### Local Database (Docker)
+
+You can run PostgreSQL locally using Docker for development.
+
+#### Start
+
+```bash
+docker compose up -d
+```
+
+#### Stop
+
+```bash
+docker compose down
+```
+
+#### Initial Setup
+
+```bash
+# 1. Start PostgreSQL
+docker compose up -d
+
+# 2. Set up environment variables
+cp apps/blog/.env.local.example apps/blog/.env.local
+# Or add DATABASE_URL to your existing .env file
+
+# 3. Run migrations
+cd apps/blog && npx prisma migrate dev
+```
+
+#### Reset Database
+
+```bash
+docker compose down
+rm -rf .docker/postgres/data
+docker compose up -d
+cd apps/blog && npx prisma migrate dev
+```
+
 ## ⚙️ Environment Setup
 
 ### Required Environment Variables
