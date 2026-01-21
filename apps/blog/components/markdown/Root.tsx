@@ -1,13 +1,29 @@
+import type { Root as MdastRoot } from 'mdast';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
 import { codeToHtml } from 'shiki';
 import { addCopyButton } from 'shiki-transformer-copy-button';
+import { visit } from 'unist-util-visit';
 
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 import styles from './Root.module.css';
+
+function remarkEmbed() {
+  return (tree: MdastRoot) => {
+    visit(tree, 'leafDirective', (node) => {
+      if (node.name === 'embed') {
+        node.data = {
+          hName: 'embed',
+          hProperties: node.attributes ?? {},
+        };
+      }
+    });
+  };
+}
 
 interface Props {
   content: string;
@@ -19,7 +35,7 @@ export async function Root(props: Props) {
   return (
     <ReactMarkdown
       rehypePlugins={[rehypeRaw]}
-      remarkPlugins={[remarkGfm]}
+      remarkPlugins={[remarkGfm, remarkDirective, remarkEmbed]}
       components={{
         h1: ({ children }) => (
           <h1 className="text-heading-1 leading-heading-1 font-bold">
@@ -172,6 +188,17 @@ export async function Root(props: Props) {
             {children}
           </td>
         ),
+        embed: ({ id }) => {
+          if (!id) {
+            return null;
+          }
+
+          return (
+            <div className="border border-dashed border-gray-400 p-4 rounded my-4">
+              <p className="text-sm text-gray-500">{`Embed: ${id}`}</p>
+            </div>
+          );
+        },
       }}
     >
       {content}

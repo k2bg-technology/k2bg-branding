@@ -163,6 +163,19 @@ Visit https://github.com for more information.`,
 };
 
 /**
+ * Custom directive example
+ */
+export const Directive: Story = {
+  args: {
+    content: `Here is a custom embed directive:
+
+::embed{id=example123}
+
+This should render a custom embed component.`,
+  },
+};
+
+/**
  * Complete article example combining multiple elements
  */
 export const Article: Story = {
