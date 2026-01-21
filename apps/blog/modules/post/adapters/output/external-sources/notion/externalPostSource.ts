@@ -17,7 +17,16 @@ export class NotionExternalPostSource implements ExternalPostSource {
     private readonly notionClient: Client,
     private readonly n2m: NotionToMarkdown,
     private readonly databaseId: string = DATABASE_ID
-  ) {}
+  ) {
+    this.n2m.setCustomTransformer('callout', () => false);
+
+    this.n2m.setCustomTransformer('link_to_page', (block) => {
+      if (!('link_to_page' in block && 'page_id' in block.link_to_page))
+        return false;
+
+      return `::embed{id=${block.link_to_page.page_id}}`;
+    });
+  }
 
   async fetchAllPosts(): Promise<Post[]> {
     try {
