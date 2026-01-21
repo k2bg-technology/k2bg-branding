@@ -36,6 +36,7 @@
     "react-hook-form": "^7.55.0",
     "react-markdown": "^10.0.0",
     "rehype-raw": "^7.0.0",
+    "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "ui": "workspace:*",
     "use-debounce": "^10.0.0",
