@@ -188,14 +188,14 @@ export async function Root(props: Props) {
             {children}
           </td>
         ),
-        embed: ({ id }) => {
-          if (!id) {
+        embed: ({ id, type }) => {
+          if (!id || !type) {
             return null;
           }
 
           return (
             <div className="border border-dashed border-gray-400 p-4 rounded my-4">
-              <p className="text-sm text-gray-500">{`Embed: ${id}`}</p>
+              <p className="text-sm text-gray-500">{`Embed: ${id} (type: ${type})`}</p>
             </div>
           );
         },

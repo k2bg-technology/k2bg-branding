@@ -4,7 +4,7 @@ import type { NotionToMarkdown } from 'notion-to-md';
 import type { Post } from '../../../../domain';
 import type { ExternalPostSource } from '../../../../use-cases';
 import { ExternalSourceError } from '../../../shared';
-import { notionPageToPost } from './mapper';
+import { getEmbedTypeFromPage, mapEmbedType, notionPageToPost } from './mapper';
 
 const DATABASE_ID = process.env.NOTION_POST_DATABASE_ID ?? '';
 
@@ -20,11 +20,28 @@ export class NotionExternalPostSource implements ExternalPostSource {
   ) {
     this.n2m.setCustomTransformer('callout', () => false);
 
-    this.n2m.setCustomTransformer('link_to_page', (block) => {
-      if (!('link_to_page' in block && 'page_id' in block.link_to_page))
+    this.n2m.setCustomTransformer('link_to_page', async (block) => {
+      if (!('link_to_page' in block && 'page_id' in block.link_to_page)) {
         return false;
+      }
 
-      return `::embed{id=${block.link_to_page.page_id}}`;
+      const page = await this.notionClient.pages.retrieve({
+        page_id: block.link_to_page.page_id,
+        filter_properties: ['type'],
+      });
+
+      if (!('properties' in page)) {
+        return false;
+      }
+
+      const typeString = getEmbedTypeFromPage(page as PageObjectResponse);
+      const embedType = typeString ? mapEmbedType(typeString) : null;
+
+      if (!embedType) {
+        return false;
+      }
+
+      return `::embed{id=${block.link_to_page.page_id} type=${embedType}}`;
     });
   }
 

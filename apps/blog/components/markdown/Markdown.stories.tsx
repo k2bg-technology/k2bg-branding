@@ -169,7 +169,7 @@ export const Directive: Story = {
   args: {
     content: `Here is a custom embed directive:
 
-::embed{id=example123}
+::embed{id=example123 type=MEDIA_IMAGE}
 
 This should render a custom embed component.`,
   },

@@ -7,6 +7,9 @@ describe('NotionExternalPostSource', () => {
     databases: {
       query: vi.fn(),
     },
+    pages: {
+      retrieve: vi.fn(),
+    },
   });
 
   const createMockN2M = () => ({
@@ -36,9 +39,15 @@ describe('NotionExternalPostSource', () => {
       expect(calloutTransformer?.()).toBe(false);
     });
 
-    it('registers link_to_page transformer that converts to embed directive', () => {
+    it('registers link_to_page transformer that converts to embed directive with type', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
+      const pageId = '00000000-0000-4000-a000-000000000001';
+      mockClient.pages.retrieve.mockResolvedValue({
+        properties: {
+          type: { type: 'select', select: { name: 'MEDIA_IMAGE' } },
+        },
+      });
 
       new NotionExternalPostSource(
         mockClient as never,
@@ -54,15 +63,18 @@ describe('NotionExternalPostSource', () => {
         mockN2M.setCustomTransformer.mock.calls.find(
           (call) => call[0] === 'link_to_page'
         )?.[1];
-      const pageId = '00000000-0000-4000-a000-000000000001';
       const block = { link_to_page: { page_id: pageId } };
 
-      const result = linkToPageTransformer?.(block);
+      const result = await linkToPageTransformer?.(block);
 
-      expect(result).toBe(`::embed{id=${pageId}}`);
+      expect(mockClient.pages.retrieve).toHaveBeenCalledWith({
+        page_id: pageId,
+        filter_properties: ['type'],
+      });
+      expect(result).toBe(`::embed{id=${pageId} type=MEDIA_IMAGE}`);
     });
 
-    it('returns false when link_to_page block has no page_id', () => {
+    it('returns false when link_to_page block has no page_id', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
 
@@ -78,7 +90,84 @@ describe('NotionExternalPostSource', () => {
         )?.[1];
       const blockWithoutPageId = { link_to_page: { database_id: 'db-id' } };
 
-      const result = linkToPageTransformer?.(blockWithoutPageId);
+      const result = await linkToPageTransformer?.(blockWithoutPageId);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when page has no properties', async () => {
+      const mockClient = createMockNotionClient();
+      const mockN2M = createMockN2M();
+      const pageId = '00000000-0000-4000-a000-000000000001';
+      mockClient.pages.retrieve.mockResolvedValue({});
+
+      new NotionExternalPostSource(
+        mockClient as never,
+        mockN2M as never,
+        'test-database-id'
+      );
+
+      const linkToPageTransformer =
+        mockN2M.setCustomTransformer.mock.calls.find(
+          (call) => call[0] === 'link_to_page'
+        )?.[1];
+      const block = { link_to_page: { page_id: pageId } };
+
+      const result = await linkToPageTransformer?.(block);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when embed type is null', async () => {
+      const mockClient = createMockNotionClient();
+      const mockN2M = createMockN2M();
+      const pageId = '00000000-0000-4000-a000-000000000001';
+      mockClient.pages.retrieve.mockResolvedValue({
+        properties: {
+          type: { type: 'select', select: null },
+        },
+      });
+
+      new NotionExternalPostSource(
+        mockClient as never,
+        mockN2M as never,
+        'test-database-id'
+      );
+
+      const linkToPageTransformer =
+        mockN2M.setCustomTransformer.mock.calls.find(
+          (call) => call[0] === 'link_to_page'
+        )?.[1];
+      const block = { link_to_page: { page_id: pageId } };
+
+      const result = await linkToPageTransformer?.(block);
+
+      expect(result).toBe(false);
+    });
+
+    it('returns false when embed type is unknown', async () => {
+      const mockClient = createMockNotionClient();
+      const mockN2M = createMockN2M();
+      const pageId = '00000000-0000-4000-a000-000000000001';
+      mockClient.pages.retrieve.mockResolvedValue({
+        properties: {
+          type: { type: 'select', select: { name: 'UNKNOWN_TYPE' } },
+        },
+      });
+
+      new NotionExternalPostSource(
+        mockClient as never,
+        mockN2M as never,
+        'test-database-id'
+      );
+
+      const linkToPageTransformer =
+        mockN2M.setCustomTransformer.mock.calls.find(
+          (call) => call[0] === 'link_to_page'
+        )?.[1];
+      const block = { link_to_page: { page_id: pageId } };
+
+      const result = await linkToPageTransformer?.(block);
 
       expect(result).toBe(false);
     });

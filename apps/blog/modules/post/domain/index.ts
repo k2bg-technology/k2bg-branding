@@ -22,7 +22,7 @@ export {
   RevisionDateBeforeReleaseDateError,
 } from './errors/errors';
 export type { PostRepository } from './repositories/repository';
-export { Category, PostStatus, PostType } from './types/enums';
+export { Category, EmbedType, PostStatus, PostType } from './types/enums';
 export {
   AuthorId,
   Content,
