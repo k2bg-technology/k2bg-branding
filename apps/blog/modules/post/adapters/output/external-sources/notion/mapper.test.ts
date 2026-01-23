@@ -1,8 +1,13 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { describe, expect, it } from 'vitest';
-import { Category, PostStatus, PostType } from '../../../../domain';
+import { Category, EmbedType, PostStatus, PostType } from '../../../../domain';
 import { createNotionPageResponse } from '../../../shared';
-import { notionPageToImageSource, notionPageToPost } from './mapper';
+import {
+  getEmbedTypeFromPage,
+  mapEmbedType,
+  notionPageToImageSource,
+  notionPageToPost,
+} from './mapper';
 
 describe('notion/mapper', () => {
   describe('notionPageToPost', () => {
@@ -205,6 +210,61 @@ describe('notion/mapper', () => {
         id: page.id,
         url: 'https://s3.amazonaws.com/image.jpg',
       });
+    });
+  });
+
+  describe('getEmbedTypeFromPage', () => {
+    it('returns type string when page has type select property', () => {
+      const page = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          type: { type: 'select', select: { name: 'MEDIA_IMAGE' } },
+        },
+      }) as unknown as PageObjectResponse;
+
+      const result = getEmbedTypeFromPage(page);
+
+      expect(result).toBe('MEDIA_IMAGE');
+    });
+
+    it('returns null when type select is null', () => {
+      const page = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          type: { type: 'select', select: null },
+        },
+      }) as unknown as PageObjectResponse;
+
+      const result = getEmbedTypeFromPage(page);
+
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('mapEmbedType', () => {
+    it.each([
+      { input: 'AFFILIATE_PRODUCT', expected: EmbedType.AFFILIATE_PRODUCT },
+      { input: 'AFFILIATE_BANNER', expected: EmbedType.AFFILIATE_BANNER },
+      { input: 'AFFILIATE_TEXT', expected: EmbedType.AFFILIATE_TEXT },
+      { input: 'MEDIA_IMAGE', expected: EmbedType.MEDIA_IMAGE },
+      { input: 'MEDIA_VIDEO', expected: EmbedType.MEDIA_VIDEO },
+      { input: 'MEDIA_AUDIO', expected: EmbedType.MEDIA_AUDIO },
+    ])('returns $expected when input is $input', ({ input, expected }) => {
+      const result = mapEmbedType(input);
+
+      expect(result).toBe(expected);
+    });
+
+    it('returns null when input is unknown type', () => {
+      const result = mapEmbedType('UNKNOWN_TYPE');
+
+      expect(result).toBeNull();
+    });
+
+    it('handles case-insensitive input', () => {
+      const result = mapEmbedType('media_image');
+
+      expect(result).toBe(EmbedType.MEDIA_IMAGE);
     });
   });
 });

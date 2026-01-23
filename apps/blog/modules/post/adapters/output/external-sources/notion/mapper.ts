@@ -4,6 +4,7 @@ import {
   AuthorId,
   Category,
   Content,
+  EmbedType,
   Excerpt,
   ImageUrl,
   Post,
@@ -97,6 +98,39 @@ export function notionPageToImageSource(
     id: page.id,
     url: imageUrl,
   };
+}
+
+/**
+ * Extracts embed type from a Notion Page Response.
+ * Returns the type string (e.g., 'MEDIA_IMAGE', 'AFFILIATE_TEXT') or null.
+ */
+export function getEmbedTypeFromPage(page: PageObjectResponse): string | null {
+  return getSelect(page.properties, 'type');
+}
+
+/**
+ * Maps a type string to an EmbedType enum value.
+ * Returns null if the type is unknown.
+ */
+export function mapEmbedType(type: string): EmbedType | null {
+  const normalizedType = type.toUpperCase();
+
+  switch (normalizedType) {
+    case 'AFFILIATE_PRODUCT':
+      return EmbedType.AFFILIATE_PRODUCT;
+    case 'AFFILIATE_BANNER':
+      return EmbedType.AFFILIATE_BANNER;
+    case 'AFFILIATE_TEXT':
+      return EmbedType.AFFILIATE_TEXT;
+    case 'MEDIA_IMAGE':
+      return EmbedType.MEDIA_IMAGE;
+    case 'MEDIA_VIDEO':
+      return EmbedType.MEDIA_VIDEO;
+    case 'MEDIA_AUDIO':
+      return EmbedType.MEDIA_AUDIO;
+    default:
+      return null;
+  }
 }
 
 // =============================================================================

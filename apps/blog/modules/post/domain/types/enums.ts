@@ -42,3 +42,18 @@ export const Category = {
 } as const;
 
 export type Category = (typeof Category)[keyof typeof Category];
+
+// =============================================================================
+// EmbedType
+// =============================================================================
+
+export const EmbedType = {
+  AFFILIATE_PRODUCT: 'AFFILIATE_PRODUCT',
+  AFFILIATE_BANNER: 'AFFILIATE_BANNER',
+  AFFILIATE_TEXT: 'AFFILIATE_TEXT',
+  MEDIA_IMAGE: 'MEDIA_IMAGE',
+  MEDIA_VIDEO: 'MEDIA_VIDEO',
+  MEDIA_AUDIO: 'MEDIA_AUDIO',
+} as const;
+
+export type EmbedType = (typeof EmbedType)[keyof typeof EmbedType];
