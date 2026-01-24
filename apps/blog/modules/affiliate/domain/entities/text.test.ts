@@ -1,12 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { AffiliateType } from '../types/enums';
-import {
-  AffiliateId,
-  Name,
-  Provider,
-  TargetUrl,
-} from '../value-objects';
+import { AffiliateId, Name, Provider, TargetUrl } from '../value-objects';
 
 import { AffiliateText, type AffiliateTextProps } from './text';
 

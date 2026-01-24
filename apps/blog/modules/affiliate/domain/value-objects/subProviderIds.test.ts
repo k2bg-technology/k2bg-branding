@@ -57,10 +57,7 @@ describe('SubProviderIds', () => {
     });
 
     it('throws InvalidSubProviderIdsError when array contains mixed valid and invalid UUIDs', () => {
-      const ids = [
-        '550e8400-e29b-41d4-a716-446655440000',
-        'invalid-uuid',
-      ];
+      const ids = ['550e8400-e29b-41d4-a716-446655440000', 'invalid-uuid'];
 
       expect(() => SubProviderIds.create(ids)).toThrow(
         InvalidSubProviderIdsError

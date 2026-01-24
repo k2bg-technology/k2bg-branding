@@ -64,7 +64,9 @@ describe('AffiliateId', () => {
       expect(() => AffiliateId.create(invalidUuid)).toThrow(
         InvalidAffiliateIdError
       );
-      expect(() => AffiliateId.create(invalidUuid)).toThrow('Invalid UUID format');
+      expect(() => AffiliateId.create(invalidUuid)).toThrow(
+        'Invalid UUID format'
+      );
     });
 
     it('throws InvalidAffiliateIdError when UUID version is not supported (v1)', () => {

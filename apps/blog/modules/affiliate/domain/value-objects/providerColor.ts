@@ -7,7 +7,8 @@ import { InvalidProviderColorError } from '../errors/errors';
  * Must be a valid hex color format (#RGB or #RRGGBB).
  */
 export class ProviderColor {
-  private static readonly HEX_COLOR_PATTERN = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+  private static readonly HEX_COLOR_PATTERN =
+    /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
   private readonly value: string;
 

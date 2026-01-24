@@ -21,7 +21,9 @@ function createValidBannerProps(
     name: Name.create('Banner Ad'),
     targetUrl: TargetUrl.create('https://example.com/affiliate'),
     provider: Provider.create('Amazon'),
-    imageSourceUrl: ImageSourceUrl.create('https://images.example.com/banner.jpg'),
+    imageSourceUrl: ImageSourceUrl.create(
+      'https://images.example.com/banner.jpg'
+    ),
     imageWidth: ImageWidth.create(300),
     imageHeight: ImageHeight.create(250),
     ...overrides,

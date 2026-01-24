@@ -25,7 +25,9 @@ describe('ImageWidth', () => {
     it('throws InvalidImageWidthError when value is zero', () => {
       const zeroValue = 0;
 
-      expect(() => ImageWidth.create(zeroValue)).toThrow(InvalidImageWidthError);
+      expect(() => ImageWidth.create(zeroValue)).toThrow(
+        InvalidImageWidthError
+      );
       expect(() => ImageWidth.create(zeroValue)).toThrow(
         'ImageWidth must be a positive number'
       );

@@ -29,7 +29,9 @@ function createValidProductProps(
       '660f9500-f30c-42e5-b827-557766551111',
     ]),
     imageProvider: ImageProvider.create('Amazon'),
-    imageSourceUrl: ImageSourceUrl.create('https://images.example.com/product.jpg'),
+    imageSourceUrl: ImageSourceUrl.create(
+      'https://images.example.com/product.jpg'
+    ),
     imageWidth: ImageWidth.create(500),
     imageHeight: ImageHeight.create(500),
     ...overrides,
@@ -124,7 +126,9 @@ describe('AffiliateProduct', () => {
     });
 
     it('returns correct image source URL', () => {
-      const imageUrl = ImageSourceUrl.create('https://cdn.example.com/item.png');
+      const imageUrl = ImageSourceUrl.create(
+        'https://cdn.example.com/item.png'
+      );
       const sut = AffiliateProduct.create(
         createValidProductProps({ imageSourceUrl: imageUrl })
       );

@@ -75,8 +75,12 @@ describe('ImageSourceUrl', () => {
     });
 
     it('returns false when comparing different ImageSourceUrls', () => {
-      const url1 = ImageSourceUrl.create('https://images.example.com/product1.jpg');
-      const url2 = ImageSourceUrl.create('https://images.example.com/product2.jpg');
+      const url1 = ImageSourceUrl.create(
+        'https://images.example.com/product1.jpg'
+      );
+      const url2 = ImageSourceUrl.create(
+        'https://images.example.com/product2.jpg'
+      );
 
       const result = url1.equals(url2);
 
