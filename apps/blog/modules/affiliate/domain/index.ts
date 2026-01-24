@@ -28,6 +28,7 @@ export {
 } from './errors/errors';
 
 export type {
+  Affiliate,
   AffiliateRepository,
   ImageSource,
 } from './repositories/repository';

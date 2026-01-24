@@ -1,4 +1,19 @@
+import type {
+  AffiliateBanner,
+  AffiliateProduct,
+  AffiliateSubProvider,
+  AffiliateText,
+} from '../entities';
 import type { AffiliateId, ImageSourceUrl } from '../value-objects';
+
+/**
+ * Union type for all Affiliate entities
+ */
+export type Affiliate =
+  | AffiliateBanner
+  | AffiliateProduct
+  | AffiliateText
+  | AffiliateSubProvider;
 
 /**
  * Image source data returned from the repository
@@ -15,6 +30,12 @@ export interface ImageSource {
  * Implementations should be provided by the infrastructure layer.
  */
 export interface AffiliateRepository {
+  /**
+   * Finds an affiliate by its ID.
+   * Returns null if not found.
+   */
+  findById(id: AffiliateId): Promise<Affiliate | null>;
+
   /**
    * Retrieves all image sources from Banner and Product affiliates.
    * Used for batch image processing and CDN uploads.
