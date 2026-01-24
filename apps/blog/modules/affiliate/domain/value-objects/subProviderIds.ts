@@ -54,7 +54,7 @@ export class SubProviderIds {
       );
     }
     const normalized = values.map((id) => id.toLowerCase());
-    const unique = [...new Set(normalized)];
+    const unique = Array.from(new Set(normalized));
     return new SubProviderIds(unique);
   }
 
