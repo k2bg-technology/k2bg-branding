@@ -1,0 +1,1 @@
+export { NotionAffiliateRepository } from './affiliateRepository';
