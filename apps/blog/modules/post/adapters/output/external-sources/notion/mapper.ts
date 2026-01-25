@@ -1,5 +1,16 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import { format } from 'date-fns';
+
+import {
+  getDate,
+  getFirstFileUrl,
+  getMultiSelect,
+  getPerson,
+  getRichText,
+  getSelect,
+  getStatus,
+  getTitle,
+} from '../../../../../../infrastructure/notion';
 import {
   AuthorId,
   Category,
@@ -21,8 +32,6 @@ import {
 import type { ImageSourceRecord } from '../../../../use-cases';
 import { DEFAULT_VALUES, MappingError } from '../../../shared';
 
-type NotionProperties = PageObjectResponse['properties'];
-
 /**
  * Maps a Notion Page Response to a Domain Post entity.
  *
@@ -39,7 +48,7 @@ export function notionPageToPost(
     const title = getTitle(props, 'content');
     const type = getSelect(props, 'type') ?? 'ARTICLE';
     const excerpt = getRichText(props, 'excerpt');
-    const imageUrl = getFiles(props, 'imageUrl') ?? '';
+    const imageUrl = getFirstFileUrl(props, 'imageUrl') ?? '';
     const slugText = getRichText(props, 'slug');
     const slug = slugText || toKebabCase(page.id);
     const status = getStatus(props, 'status') ?? 'DRAFT';
@@ -90,7 +99,7 @@ export function notionPageToPost(
 export function notionPageToImageSource(
   page: PageObjectResponse
 ): ImageSourceRecord | null {
-  const imageUrl = getFiles(page.properties, 'imageUrl');
+  const imageUrl = getFirstFileUrl(page.properties, 'imageUrl');
   if (!imageUrl) {
     return null;
   }
@@ -131,95 +140,6 @@ export function mapEmbedType(type: string): EmbedType | null {
     default:
       return null;
   }
-}
-
-// =============================================================================
-// Property Extraction Helpers
-// =============================================================================
-
-function getTitle(props: NotionProperties, propName: string): string {
-  const prop = props[propName];
-  if (prop?.type === 'title') {
-    return prop.title.map((t) => t.plain_text).join('');
-  }
-  return '';
-}
-
-function getRichText(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'rich_text') {
-    const text = prop.rich_text.map((t) => t.plain_text).join('');
-    return text || null;
-  }
-  return null;
-}
-
-function getSelect(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'select') {
-    return prop.select?.name ?? null;
-  }
-  return null;
-}
-
-function getStatus(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'status') {
-    return prop.status?.name ?? null;
-  }
-  return null;
-}
-
-function getDate(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'date' && prop.date?.start) {
-    return format(new Date(prop.date.start), 'yyyy-MM-dd');
-  }
-  return null;
-}
-
-function getFiles(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'files' && prop.files.length > 0) {
-    const file = prop.files[0];
-    if (file.type === 'file') {
-      return file.file.url;
-    }
-    if (file.type === 'external') {
-      return file.external.url;
-    }
-  }
-  return null;
-}
-
-function getPerson(
-  props: NotionProperties,
-  propName: string
-): { id: string; name?: string; avatarUrl?: string } | null {
-  const prop = props[propName];
-  if (prop?.type === 'people' && prop.people.length > 0) {
-    const person = prop.people[0];
-    // Check if person has full user data (UserObjectResponse) or partial (PartialUserObjectResponse)
-    const hasFullData = 'name' in person;
-    return {
-      id: person.id,
-      name: hasFullData
-        ? ((person as { name: string | null }).name ?? undefined)
-        : undefined,
-      avatarUrl: hasFullData
-        ? ((person as { avatar_url: string | null }).avatar_url ?? undefined)
-        : undefined,
-    };
-  }
-  return null;
-}
-
-function getMultiSelect(props: NotionProperties, propName: string): string[] {
-  const prop = props[propName];
-  if (prop?.type === 'multi_select') {
-    return prop.multi_select.map((item) => item.name);
-  }
-  return [];
 }
 
 // =============================================================================
