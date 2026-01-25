@@ -12,3 +12,20 @@ export {
   type NotionToMarkdown,
   type QueryDatabaseParameters,
 } from './client';
+
+export {
+  getAllFileUrls,
+  getDate,
+  getFirstFileUrl,
+  getMultiSelect,
+  getNumber,
+  getPerson,
+  getRelations,
+  getRichText,
+  getSelect,
+  getStatus,
+  getTitle,
+  getUrl,
+  type NotionProperties,
+  type PersonData,
+} from './propertyExtractors';

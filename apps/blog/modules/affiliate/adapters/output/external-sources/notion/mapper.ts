@@ -1,6 +1,15 @@
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 import {
+  getAllFileUrls,
+  getNumber,
+  getRelations,
+  getSelect,
+  getTitle,
+  getUrl,
+  type NotionProperties,
+} from '../../../../../../infrastructure/notion';
+import {
   type Affiliate,
   AffiliateBanner,
   AffiliateId,
@@ -21,67 +30,9 @@ import {
 } from '../../../../domain';
 import { DEFAULT_VALUES, MappingError } from '../../../shared';
 
-type NotionProperties = PageObjectResponse['properties'];
-
-// Property extraction helpers
-
-function getTitle(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'title') {
-    return prop.title.map((t) => t.plain_text).join('') || null;
-  }
-  return null;
-}
-
-function getUrl(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'url') {
-    return prop.url;
-  }
-  return null;
-}
-
-function getSelect(props: NotionProperties, propName: string): string | null {
-  const prop = props[propName];
-  if (prop?.type === 'select') {
-    return prop.select?.name ?? null;
-  }
-  return null;
-}
-
-function getNumber(props: NotionProperties, propName: string): number | null {
-  const prop = props[propName];
-  if (prop?.type === 'number') {
-    return prop.number;
-  }
-  return null;
-}
-
-function getFiles(props: NotionProperties, propName: string): string[] | null {
-  const prop = props[propName];
-  if (prop?.type === 'files' && prop.files.length > 0) {
-    return prop.files
-      .map((file) => {
-        if (file.type === 'file') return file.file.url;
-        if (file.type === 'external') return file.external.url;
-        return null;
-      })
-      .filter((url): url is string => url !== null);
-  }
-  return null;
-}
-
-function getRelations(props: NotionProperties, propName: string): string[] {
-  const prop = props[propName];
-  if (prop?.type === 'relation') {
-    return prop.relation.map((rel) => rel.id);
-  }
-  return [];
-}
-
 // Image source URL extraction with file priority
 function getImageSourceUrl(props: NotionProperties): string | null {
-  const fileUrl = getFiles(props, 'imageSourceFile')?.[0];
+  const fileUrl = getAllFileUrls(props, 'imageSourceFile')?.[0];
   if (fileUrl) return fileUrl;
   return getUrl(props, 'imageSourceUrl');
 }
