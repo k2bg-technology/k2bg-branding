@@ -1,0 +1,1 @@
+export { NotionMediaRepository } from './notion';
