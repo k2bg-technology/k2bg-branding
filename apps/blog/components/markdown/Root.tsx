@@ -159,7 +159,7 @@ export async function Root(props: Props) {
           if (!(src && alt && width && height)) return null;
 
           const id = String(node?.properties?.dataId) || '';
-          const unoptimized = Boolean(node?.properties?.dataUnoptoinized);
+          const unoptimized = Boolean(node?.properties?.dataUnoptimized);
 
           return (
             <CloudinaryImage

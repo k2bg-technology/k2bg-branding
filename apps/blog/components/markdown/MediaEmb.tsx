@@ -42,7 +42,7 @@ function ImageContent({ media }: { media: MediaOutput }) {
       file={media.sourceFile ?? undefined}
       width={media.width}
       height={media.height}
-      unoptoinized={media.extension === '.gif'}
+      unoptimized={media.extension === '.gif'}
     />
   );
 }

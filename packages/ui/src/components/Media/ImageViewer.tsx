@@ -7,7 +7,7 @@ interface Props
   file?: string;
   width?: number;
   height?: number;
-  unoptoinized?: boolean;
+  unoptimized?: boolean;
 }
 
 export default function ImageViewer({
@@ -18,7 +18,7 @@ export default function ImageViewer({
   file,
   width,
   height,
-  unoptoinized,
+  unoptimized,
   ...rest
 }: Props) {
   if (linkUrl)
@@ -36,7 +36,7 @@ export default function ImageViewer({
           width={width}
           height={height}
           data-id={id}
-          data-unoptoinized={unoptoinized}
+          data-unoptimized={unoptimized}
         />
       </a>
     );
@@ -49,7 +49,7 @@ export default function ImageViewer({
       width={width}
       height={height}
       data-id={id}
-      data-unoptoinized={unoptoinized}
+      data-unoptimized={unoptimized}
     />
   );
 }
