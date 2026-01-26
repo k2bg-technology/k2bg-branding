@@ -7,9 +7,10 @@ import remarkGfm from 'remark-gfm';
 import { codeToHtml } from 'shiki';
 import { addCopyButton } from 'shiki-transformer-copy-button';
 import { visit } from 'unist-util-visit';
-
+import { EmbedType } from '../../modules/post/domain';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-
+import { AffiliateEmb } from './AffiliateEmb';
+import { MediaEmb } from './MediaEmb';
 import styles from './Root.module.css';
 
 function remarkEmbed() {
@@ -193,11 +194,18 @@ export async function Root(props: Props) {
             return null;
           }
 
-          return (
-            <div className="border border-dashed border-gray-400 p-4 rounded my-4">
-              <p className="text-sm text-gray-500">{`Embed: ${id} (type: ${type})`}</p>
-            </div>
-          );
+          switch (type) {
+            case EmbedType.AFFILIATE_TEXT:
+            case EmbedType.AFFILIATE_BANNER:
+            case EmbedType.AFFILIATE_PRODUCT:
+              return <AffiliateEmb id={id} />;
+            case EmbedType.MEDIA_AUDIO:
+            case EmbedType.MEDIA_VIDEO:
+            case EmbedType.MEDIA_IMAGE:
+              return <MediaEmb id={id} />;
+            default:
+              return null;
+          }
         },
       }}
     >
