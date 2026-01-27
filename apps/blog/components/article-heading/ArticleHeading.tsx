@@ -1,11 +1,11 @@
 import Link from 'next/link';
 import { Avatar } from 'ui';
-import type { Post } from '../../modules/domain/post/types';
+import type { PostOutput } from '../../modules/post/use-cases';
 import BlogCard from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface Props {
-  article: Post;
+  article: PostOutput;
 }
 
 export async function ArticleHeading(props: Props) {
@@ -23,11 +23,14 @@ export async function ArticleHeading(props: Props) {
           </Link>
         }
         heading={<h1 className="text-heading-1 font-bold">{article.title}</h1>}
-        excerpt={article.excerpt}
+        excerpt={article.excerpt ?? undefined}
         avatar={
           article.author && (
             <Avatar>
-              <Avatar.Image alt="author" src={article.author.avatarUrl} />
+              <Avatar.Image
+                alt="author"
+                src={article.author.avatarUrl || undefined}
+              />
             </Avatar>
           )
         }
