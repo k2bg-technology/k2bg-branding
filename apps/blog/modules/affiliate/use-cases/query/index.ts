@@ -4,6 +4,11 @@ export {
   type FetchAffiliateOutput,
 } from './fetch-affiliate';
 export {
+  FetchAffiliatesByIds,
+  type FetchAffiliatesByIdsInput,
+  type FetchAffiliatesByIdsOutput,
+} from './fetch-affiliates-by-ids';
+export {
   FetchAllImageSources,
   type FetchAllImageSourcesOutput,
   type FetchAllImageSourcesQueryService,

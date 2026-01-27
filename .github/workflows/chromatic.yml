@@ -22,6 +22,8 @@ jobs:
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
+      - name: Generate Prisma client
+        run: pnpm --filter=blog exec prisma generate
       - name: Run Design System Chromatic
         uses: chromaui/action@latest
         with:

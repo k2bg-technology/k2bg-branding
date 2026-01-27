@@ -164,12 +164,16 @@ Visit https://github.com for more information.`,
 
 /**
  * Custom directive example
+ *
+ * @remarks
+ * This story may cause infinite re-renders due to a known Storybook issue with async RSC stories.
+ * See: https://github.com/storybookjs/storybook/issues/30317
  */
 export const Directive: Story = {
   args: {
     content: `Here is a custom embed directive:
 
-::embed{id=example123 type=MEDIA_IMAGE}
+::embed{id=example123 type=EMBED_TYPE}
 
 This should render a custom embed component.`,
   },

@@ -18,7 +18,7 @@ export function MediaImage(props: MediaImageProps) {
         file={mediaImage.sourceFile}
         width={mediaImage.width}
         height={mediaImage.height}
-        unoptoinized={mediaImage.extension === '.gif'}
+        unoptimized={mediaImage.extension === '.gif'}
       />
     </div>
   );
