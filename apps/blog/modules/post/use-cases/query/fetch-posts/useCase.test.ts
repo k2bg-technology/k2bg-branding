@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { InvalidPaginationError } from '../../shared';
-import { createPost, createPosts } from '../../shared/testing/factories';
+import {
+  createPostWithAuthor,
+  createPostsWithAuthor,
+} from '../../shared/testing/factories';
 import type { FetchPostsQueryService } from './queryService';
 import { FetchPosts } from './useCase';
 
@@ -14,7 +17,7 @@ describe('FetchPosts', () => {
 
   describe('execute', () => {
     it('returns paginated posts', async () => {
-      const posts = createPosts(3);
+      const posts = createPostsWithAuthor(3);
       const queryService = createMockQueryService({
         fetchPosts: vi.fn().mockResolvedValue({ posts, totalCount: 3 }),
       });
@@ -44,7 +47,7 @@ describe('FetchPosts', () => {
     });
 
     it('calculates pagination correctly', async () => {
-      const posts = createPosts(5);
+      const posts = createPostsWithAuthor(5);
       const queryService = createMockQueryService({
         fetchPosts: vi.fn().mockResolvedValue({ posts, totalCount: 25 }),
       });
@@ -108,9 +111,12 @@ describe('FetchPosts', () => {
     });
 
     it('maps Post entities to PostOutput', async () => {
-      const post = createPost();
+      const postWithAuthor = createPostWithAuthor();
+      const { post } = postWithAuthor;
       const queryService = createMockQueryService({
-        fetchPosts: vi.fn().mockResolvedValue({ posts: [post], totalCount: 1 }),
+        fetchPosts: vi
+          .fn()
+          .mockResolvedValue({ posts: [postWithAuthor], totalCount: 1 }),
       });
       const sut = new FetchPosts(queryService);
 
@@ -118,7 +124,9 @@ describe('FetchPosts', () => {
 
       expect(result.items[0].id).toBe(post.id.getValue());
       expect(result.items[0].title).toBe(post.title.getValue());
-      expect(result.items[0].slug).toBe(post.slug.getValue());
+      expect(result.items[0].slug).toBe(
+        `${post.id.getValue()}/${post.slug.getValue()}`
+      );
     });
   });
 });
