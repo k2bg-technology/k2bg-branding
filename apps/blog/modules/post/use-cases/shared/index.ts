@@ -7,6 +7,7 @@ export {
 } from './errors';
 export { toPostOutput } from './postOutputMapper';
 export type {
+  AuthorOutput,
   PaginatedResult,
   PaginationInput,
   PostOutput,
