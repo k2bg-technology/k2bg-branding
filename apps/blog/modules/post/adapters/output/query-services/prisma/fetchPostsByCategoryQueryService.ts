@@ -40,7 +40,16 @@ export class PrismaFetchPostsByCategoryQueryService
       ]);
 
       return {
-        posts: posts.map(toDomain),
+        posts: posts.map((prismaPost) => ({
+          post: toDomain(prismaPost),
+          author: prismaPost.author
+            ? {
+                id: prismaPost.author.uuid,
+                name: prismaPost.author.name,
+                avatarUrl: prismaPost.author.avatarUrl,
+              }
+            : null,
+        })),
         totalCount,
       };
     } catch (error) {
