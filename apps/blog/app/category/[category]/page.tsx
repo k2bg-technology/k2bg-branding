@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
-import * as Prisma from '../../../modules/data-access/prisma';
+import { createFetchPostsByCategoryUseCase } from '../../../infrastructure/di';
 import { Category } from '../../../modules/domain/post/types';
 
 const PAGE_SIZE = 6;
@@ -47,7 +47,7 @@ export default async function Page({ params, searchParams }: Props) {
   const { page = '1' } = await searchParams;
   const currentPage = Number(page);
 
-  const postRepository = new Prisma.Post.Repository();
+  const fetchPostsByCategory = createFetchPostsByCategoryUseCase();
 
   return (
     <>
@@ -57,17 +57,11 @@ export default async function Page({ params, searchParams }: Props) {
       <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
         <Articles
           fetchArticles={() =>
-            postRepository.getPaginatedArticlesByCategory(
+            fetchPostsByCategory.execute({
               category,
-              PAGE_SIZE,
-              currentPage
-            )
-          }
-          fetchArticlesCount={async () =>
-            Math.ceil(
-              (await postRepository.getArticlesCountByCategory(category)) /
-                PAGE_SIZE
-            )
+              page: currentPage,
+              pageSize: PAGE_SIZE,
+            })
           }
         />
       </Suspense>

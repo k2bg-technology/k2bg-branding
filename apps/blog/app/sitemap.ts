@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import * as Prisma from '../modules/data-access/prisma';
+import { createFetchAllSlugsUseCase } from '../infrastructure/di';
 import { Category } from '../modules/domain/post/types';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -34,12 +34,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const postRepository = new Prisma.Post.Repository();
+    const fetchAllSlugs = createFetchAllSlugsUseCase();
+    const { slugs } = await fetchAllSlugs.execute();
 
-    const articles = await postRepository.getAllArticleSlugs();
-
-    const articlePages: MetadataRoute.Sitemap = articles.map((article) => ({
-      url: `${baseUrl}/blog/${article.slug}`,
+    const articlePages: MetadataRoute.Sitemap = slugs.map((slug) => ({
+      url: `${baseUrl}/blog/${slug}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,

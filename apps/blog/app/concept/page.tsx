@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { Markdown } from '../../components/markdown';
 import { PageHeading } from '../../components/page-heading/PageHeading';
 import Sidebar from '../../components/sidebar/Sidebar';
-import * as Prisma from '../../modules/data-access/prisma';
+import { createFetchPostUseCase } from '../../infrastructure/di';
 
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
 
@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const postRepository = new Prisma.Post.Repository();
-  const article = await postRepository.getPost(CONCEPT_PAGE_ID);
+  const fetchPost = createFetchPostUseCase();
+  const { post: article } = await fetchPost.execute({ id: CONCEPT_PAGE_ID });
 
   return (
     <>
