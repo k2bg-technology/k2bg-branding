@@ -1,0 +1,55 @@
+import { getPrismaClient } from '../prisma';
+import { getNotionClient, getNotionToMarkdown } from '../notion';
+import {
+  NotionExternalPostSource,
+  PrismaFetchAllSlugsQueryService,
+  PrismaFetchPostsByCategoryQueryService,
+  PrismaFetchPostsQueryService,
+  PrismaPostBatchRepository,
+  PrismaPostRepository,
+  PrismaSearchPostsQueryService,
+} from '../../modules/post/adapters/output';
+import { FetchAllSlugs } from '../../modules/post/use-cases/query/fetch-all-slugs';
+import { FetchPost } from '../../modules/post/use-cases/query/fetch-post';
+import { FetchPosts } from '../../modules/post/use-cases/query/fetch-posts';
+import { FetchPostsByCategory } from '../../modules/post/use-cases/query/fetch-posts-by-category';
+import { SearchPosts } from '../../modules/post/use-cases/query/search-posts';
+import { SyncPostsFromExternal } from '../../modules/post/use-cases/sync/sync-posts-from-external';
+
+export function createFetchPostsUseCase(): FetchPosts {
+  const prisma = getPrismaClient();
+  return new FetchPosts(new PrismaFetchPostsQueryService(prisma));
+}
+
+export function createFetchPostUseCase(): FetchPost {
+  const prisma = getPrismaClient();
+  return new FetchPost(new PrismaPostRepository(prisma));
+}
+
+export function createFetchAllSlugsUseCase(): FetchAllSlugs {
+  const prisma = getPrismaClient();
+  return new FetchAllSlugs(new PrismaFetchAllSlugsQueryService(prisma));
+}
+
+export function createFetchPostsByCategoryUseCase(): FetchPostsByCategory {
+  const prisma = getPrismaClient();
+  return new FetchPostsByCategory(
+    new PrismaFetchPostsByCategoryQueryService(prisma)
+  );
+}
+
+export function createSearchPostsUseCase(): SearchPosts {
+  const prisma = getPrismaClient();
+  return new SearchPosts(new PrismaSearchPostsQueryService(prisma));
+}
+
+export function createSyncPostsFromExternalUseCase(): SyncPostsFromExternal {
+  const prisma = getPrismaClient();
+  const notionClient = getNotionClient();
+  const n2m = getNotionToMarkdown();
+
+  return new SyncPostsFromExternal(
+    new NotionExternalPostSource(notionClient, n2m),
+    new PrismaPostBatchRepository(prisma)
+  );
+}
