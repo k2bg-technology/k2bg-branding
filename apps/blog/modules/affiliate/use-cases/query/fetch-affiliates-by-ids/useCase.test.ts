@@ -64,6 +64,7 @@ describe('FetchAffiliatesByIds', () => {
 
     it('returns partial results when some affiliates are not found', async () => {
       const banner = createAffiliateBanner();
+      const nonExistentId = '550e8400-e29b-41d4-a716-999999999999';
       const affiliatesMap = new Map([[banner.id.getValue(), banner]]);
 
       const repository = createMockRepository({
@@ -72,12 +73,12 @@ describe('FetchAffiliatesByIds', () => {
       const sut = new FetchAffiliatesByIds(repository);
 
       const result = await sut.execute({
-        ids: [banner.id.getValue(), 'non-existent-id'],
+        ids: [banner.id.getValue(), nonExistentId],
       });
 
       expect(result.affiliates.size).toBe(1);
       expect(result.affiliates.has(banner.id.getValue())).toBe(true);
-      expect(result.affiliates.has('non-existent-id')).toBe(false);
+      expect(result.affiliates.has(nonExistentId)).toBe(false);
     });
 
     it('calls repository with correct AffiliateIds', async () => {
@@ -122,7 +123,10 @@ describe('FetchAffiliatesByIds', () => {
       const repository = createMockRepository();
       const sut = new FetchAffiliatesByIds(repository);
 
-      const readonlyIds: readonly string[] = ['id1', 'id2'] as const;
+      const readonlyIds: readonly string[] = [
+        '550e8400-e29b-41d4-a716-446655440003',
+        '550e8400-e29b-41d4-a716-446655440004',
+      ] as const;
       const result = await sut.execute({ ids: readonlyIds });
 
       expect(result.affiliates).toBeDefined();

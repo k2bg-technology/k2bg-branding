@@ -40,7 +40,9 @@ export class NotionAffiliateRepository implements AffiliateRepository {
     }
   }
 
-  async findByIds(ids: readonly AffiliateId[]): Promise<Map<string, Affiliate>> {
+  async findByIds(
+    ids: readonly AffiliateId[]
+  ): Promise<Map<string, Affiliate>> {
     const results = new Map<string, Affiliate>();
 
     if (ids.length === 0) {

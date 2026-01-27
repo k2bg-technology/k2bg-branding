@@ -26,7 +26,8 @@ export class FetchAffiliatesByIds {
     }
 
     const affiliateIds = input.ids.map((id) => AffiliateId.create(id));
-    const affiliatesMap = await this.affiliateRepository.findByIds(affiliateIds);
+    const affiliatesMap =
+      await this.affiliateRepository.findByIds(affiliateIds);
 
     const outputMap = new Map<string, AffiliateOutput>();
     affiliatesMap.forEach((affiliate, id) => {
