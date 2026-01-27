@@ -20,7 +20,7 @@ export type SearchPostsOutput = PaginatedResult<PostOutput>;
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_ORDER: SortOrder = 'desc';
-const MIN_QUERY_LENGTH = 2;
+const MIN_QUERY_LENGTH = 0;
 const MAX_QUERY_LENGTH = 100;
 
 /**
@@ -50,7 +50,7 @@ export class SearchPosts {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return {
-      items: posts.map(toPostOutput),
+      items: posts.map(({ post, author }) => toPostOutput(post, author)),
       totalCount,
       totalPages,
       currentPage: page,

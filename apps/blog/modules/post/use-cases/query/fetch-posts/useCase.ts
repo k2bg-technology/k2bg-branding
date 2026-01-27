@@ -43,7 +43,7 @@ export class FetchPosts {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return {
-      items: posts.map(toPostOutput),
+      items: posts.map(({ post, author }) => toPostOutput(post, author)),
       totalCount,
       totalPages,
       currentPage: page,
