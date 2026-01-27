@@ -37,6 +37,12 @@ export interface AffiliateRepository {
   findById(id: AffiliateId): Promise<Affiliate | null>;
 
   /**
+   * Finds multiple affiliates by their IDs.
+   * Returns a map of ID to Affiliate. Missing affiliates are not included in the result.
+   */
+  findByIds(ids: readonly AffiliateId[]): Promise<Map<string, Affiliate>>;
+
+  /**
    * Retrieves all image sources from Banner and Product affiliates.
    * Used for batch image processing and CDN uploads.
    */

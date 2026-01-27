@@ -40,6 +40,45 @@ export class NotionAffiliateRepository implements AffiliateRepository {
     }
   }
 
+  async findByIds(ids: readonly AffiliateId[]): Promise<Map<string, Affiliate>> {
+    const results = new Map<string, Affiliate>();
+
+    if (ids.length === 0) {
+      return results;
+    }
+
+    const fetchPromises = ids.map(async (id) => {
+      try {
+        const page = await this.notionClient.pages.retrieve({
+          page_id: id.getValue(),
+        });
+
+        if ('properties' in page) {
+          const affiliate = notionPageToAffiliate(page as PageObjectResponse);
+          if (affiliate) {
+            return { id: id.getValue(), affiliate };
+          }
+        }
+        return null;
+      } catch (error) {
+        if (error instanceof APIResponseError && error.status === 404) {
+          return null;
+        }
+        throw new ExternalSourceError('Notion', error);
+      }
+    });
+
+    const fetchedResults = await Promise.all(fetchPromises);
+
+    for (const result of fetchedResults) {
+      if (result) {
+        results.set(result.id, result.affiliate);
+      }
+    }
+
+    return results;
+  }
+
   async findAllImageSources(): Promise<ImageSource[]> {
     try {
       const database = await this.notionClient.databases.query({

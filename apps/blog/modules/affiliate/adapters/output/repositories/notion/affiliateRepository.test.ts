@@ -111,6 +111,142 @@ describe('NotionAffiliateRepository', () => {
     });
   });
 
+  describe('findByIds', () => {
+    it('returns empty map when ids array is empty', async () => {
+      const mockClient = createMockNotionClient();
+      const sut = new NotionAffiliateRepository(
+        mockClient as never,
+        'test-db-id'
+      );
+
+      const result = await sut.findByIds([]);
+
+      expect(result.size).toBe(0);
+      expect(mockClient.pages.retrieve).not.toHaveBeenCalled();
+    });
+
+    it('returns map with affiliates when pages exist', async () => {
+      const mockClient = createMockNotionClient();
+      const page1 = createNotionAffiliatePageResponse({
+        type: 'AFFILIATE_BANNER',
+        id: '550e8400-e29b-41d4-a716-446655440001',
+        name: 'Banner 1',
+      });
+      const page2 = createNotionAffiliatePageResponse({
+        type: 'AFFILIATE_TEXT',
+        id: '550e8400-e29b-41d4-a716-446655440002',
+        name: 'Text 1',
+      });
+      mockClient.pages.retrieve
+        .mockResolvedValueOnce(page1)
+        .mockResolvedValueOnce(page2);
+      const sut = new NotionAffiliateRepository(
+        mockClient as never,
+        'test-db-id'
+      );
+      const ids = [
+        AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
+        AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440002'),
+      ];
+
+      const result = await sut.findByIds(ids);
+
+      expect(result.size).toBe(2);
+      expect(
+        result.get('550e8400-e29b-41d4-a716-446655440001')?.name.getValue()
+      ).toBe('Banner 1');
+      expect(
+        result.get('550e8400-e29b-41d4-a716-446655440002')?.name.getValue()
+      ).toBe('Text 1');
+    });
+
+    it('skips not found pages (404)', async () => {
+      const mockClient = createMockNotionClient();
+      const page = createNotionAffiliatePageResponse({
+        type: 'AFFILIATE_BANNER',
+        id: '550e8400-e29b-41d4-a716-446655440001',
+        name: 'Banner',
+      });
+      const error = Object.assign(new Error('Not found'), {
+        status: 404,
+        code: 'object_not_found',
+      });
+      Object.setPrototypeOf(error, APIResponseError.prototype);
+      mockClient.pages.retrieve
+        .mockResolvedValueOnce(page)
+        .mockRejectedValueOnce(error);
+      const sut = new NotionAffiliateRepository(
+        mockClient as never,
+        'test-db-id'
+      );
+      const ids = [
+        AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
+        AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440002'),
+      ];
+
+      const result = await sut.findByIds(ids);
+
+      expect(result.size).toBe(1);
+      expect(result.has('550e8400-e29b-41d4-a716-446655440001')).toBe(true);
+      expect(result.has('550e8400-e29b-41d4-a716-446655440002')).toBe(false);
+    });
+
+    it('throws ExternalSourceError on non-404 API error', async () => {
+      const mockClient = createMockNotionClient();
+      const error = Object.assign(new Error('Internal error'), {
+        status: 500,
+        code: 'internal_server_error',
+      });
+      Object.setPrototypeOf(error, APIResponseError.prototype);
+      mockClient.pages.retrieve.mockRejectedValue(error);
+      const sut = new NotionAffiliateRepository(
+        mockClient as never,
+        'test-db-id'
+      );
+      const ids = [
+        AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
+      ];
+
+      await expect(sut.findByIds(ids)).rejects.toThrow(ExternalSourceError);
+    });
+
+    it('fetches pages in parallel', async () => {
+      const mockClient = createMockNotionClient();
+      const callOrder: string[] = [];
+      mockClient.pages.retrieve.mockImplementation(async ({ page_id }) => {
+        callOrder.push(`start-${page_id}`);
+        await new Promise((resolve) => setTimeout(resolve, 10));
+        callOrder.push(`end-${page_id}`);
+        return createNotionAffiliatePageResponse({
+          type: 'AFFILIATE_BANNER',
+          id: page_id,
+        });
+      });
+      const sut = new NotionAffiliateRepository(
+        mockClient as never,
+        'test-db-id'
+      );
+      const ids = [
+        AffiliateId.reconstitute('id1'),
+        AffiliateId.reconstitute('id2'),
+      ];
+
+      await sut.findByIds(ids);
+
+      // Both starts should happen before any ends (parallel execution)
+      expect(callOrder.indexOf('start-id1')).toBeLessThan(
+        callOrder.indexOf('end-id1')
+      );
+      expect(callOrder.indexOf('start-id2')).toBeLessThan(
+        callOrder.indexOf('end-id2')
+      );
+      // Both starts should happen before both ends
+      expect(callOrder.indexOf('start-id2')).toBeLessThan(
+        callOrder.indexOf('end-id1')
+      );
+    });
+  });
+
   describe('findAllImageSources', () => {
     it('filters by Banner and Product types', async () => {
       const mockClient = createMockNotionClient();
