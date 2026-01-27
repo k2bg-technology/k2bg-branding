@@ -15,7 +15,12 @@ import {
   Tags,
   Title,
 } from '../../../domain';
-import type { PaginatedResult, PostOutput, SlugOutput } from '../types';
+import type {
+  AuthorOutput,
+  PaginatedResult,
+  PostOutput,
+  SlugOutput,
+} from '../types';
 
 /**
  * Creates valid PostProps for testing
@@ -67,6 +72,11 @@ export function createPostOutput(
     category: Category.ENGINEERING,
     tags: ['typescript', 'testing'],
     authorId: '660e8400-e29b-41d4-a716-446655440000',
+    author: {
+      id: '660e8400-e29b-41d4-a716-446655440000',
+      name: 'Test Author',
+      avatarUrl: 'https://example.com/avatar.jpg',
+    },
     releaseDate: '2024-01-15',
     revisionDate: '2024-01-15',
     createdAt: new Date('2024-01-15'),
@@ -123,5 +133,41 @@ export function createPosts(
     const id = PostId.create(`550e8400-e29b-41d4-a716-44665544000${index}`);
     const slug = Slug.create(`test-post-${index}`);
     return createPost({ ...overrides, id, slug });
+  });
+}
+
+export interface PostWithAuthor {
+  post: Post;
+  author: AuthorOutput | null;
+}
+
+/**
+ * Creates a PostWithAuthor for testing
+ */
+export function createPostWithAuthor(
+  overrides: Partial<PostProps> = {},
+  author: AuthorOutput | null = null
+): PostWithAuthor {
+  return {
+    post: createPost(overrides),
+    author,
+  };
+}
+
+/**
+ * Creates multiple PostWithAuthor objects for testing
+ */
+export function createPostsWithAuthor(
+  count: number,
+  overrides: Partial<PostProps> = {},
+  author: AuthorOutput | null = null
+): PostWithAuthor[] {
+  return Array.from({ length: count }, (_, index) => {
+    const id = PostId.create(`550e8400-e29b-41d4-a716-44665544000${index}`);
+    const slug = Slug.create(`test-post-${index}`);
+    return {
+      post: createPost({ ...overrides, id, slug }),
+      author,
+    };
   });
 }
