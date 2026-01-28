@@ -5,6 +5,7 @@ export {
   notionPageToImageSource,
   notionPageToPost,
   PrismaFetchAllSlugsQueryService,
+  PrismaFetchPostQueryService,
   PrismaFetchPostsByCategoryQueryService,
   PrismaFetchPostsQueryService,
   PrismaPostBatchRepository,

@@ -1,5 +1,6 @@
 export {
   PrismaFetchAllSlugsQueryService,
+  PrismaFetchPostQueryService,
   PrismaFetchPostsByCategoryQueryService,
   PrismaFetchPostsQueryService,
   PrismaSearchPostsQueryService,

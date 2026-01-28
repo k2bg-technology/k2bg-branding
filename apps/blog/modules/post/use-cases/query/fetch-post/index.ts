@@ -1,3 +1,4 @@
+export type { FetchPostQueryService, PostWithAuthor } from './queryService';
 export {
   FetchPost,
   type FetchPostInput,
