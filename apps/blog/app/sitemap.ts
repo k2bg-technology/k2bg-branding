@@ -38,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const { slugs } = await fetchAllSlugs.execute();
 
     const articlePages: MetadataRoute.Sitemap = slugs.map((slug) => ({
-      url: `${baseUrl}/blog/${slug}`,
+      url: `${baseUrl}/blog/${slug.id}/${slug.slug}`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
