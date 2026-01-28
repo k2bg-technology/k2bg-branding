@@ -1,5 +1,5 @@
 import type { Post } from '../../../domain';
-import type { SortOrder } from '../../shared';
+import type { AuthorOutput, SortOrder } from '../../shared';
 
 export interface SearchPostsParams {
   query: string;
@@ -8,8 +8,13 @@ export interface SearchPostsParams {
   orderBy: SortOrder;
 }
 
+export interface PostWithAuthor {
+  post: Post;
+  author: AuthorOutput | null;
+}
+
 export interface SearchPostsResult {
-  posts: Post[];
+  posts: PostWithAuthor[];
   totalCount: number;
 }
 

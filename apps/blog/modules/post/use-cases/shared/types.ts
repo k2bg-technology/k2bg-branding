@@ -14,6 +14,15 @@ export interface PaginationInput {
 export type SortOrder = 'asc' | 'desc';
 
 /**
+ * Author output type
+ */
+export interface AuthorOutput {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+}
+
+/**
  * Common output type for post data
  */
 export interface PostOutput {
@@ -28,6 +37,7 @@ export interface PostOutput {
   category: Category;
   tags: readonly string[];
   authorId: string;
+  author: AuthorOutput | null;
   releaseDate: string;
   revisionDate: string;
   createdAt: Date;

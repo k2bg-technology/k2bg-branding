@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 import { InvalidPaginationError, InvalidSearchQueryError } from '../../shared';
-import { createPost, createPosts } from '../../shared/testing/factories';
+import {
+  createPostsWithAuthor,
+  createPostWithAuthor,
+} from '../../shared/testing/factories';
 import type { SearchPostsQueryService } from './queryService';
 import { SearchPosts } from './useCase';
 
@@ -14,7 +17,7 @@ describe('SearchPosts', () => {
 
   describe('execute', () => {
     it('returns search results with pagination', async () => {
-      const posts = createPosts(3);
+      const posts = createPostsWithAuthor(3);
       const queryService = createMockQueryService({
         searchPosts: vi.fn().mockResolvedValue({ posts, totalCount: 3 }),
       });
@@ -57,13 +60,13 @@ describe('SearchPosts', () => {
       });
     });
 
-    it('throws InvalidSearchQueryError when query is too short', async () => {
+    it('allows short queries when MIN_QUERY_LENGTH is 0', async () => {
       const queryService = createMockQueryService();
       const sut = new SearchPosts(queryService);
 
-      await expect(sut.execute({ query: 'a' })).rejects.toThrow(
-        InvalidSearchQueryError
-      );
+      const result = await sut.execute({ query: 'a' });
+
+      expect(result.items).toEqual([]);
     });
 
     it('throws InvalidSearchQueryError when query is too long', async () => {
@@ -76,13 +79,13 @@ describe('SearchPosts', () => {
       );
     });
 
-    it('throws InvalidSearchQueryError when query is only whitespace', async () => {
+    it('allows empty query after trimming when MIN_QUERY_LENGTH is 0', async () => {
       const queryService = createMockQueryService();
       const sut = new SearchPosts(queryService);
 
-      await expect(sut.execute({ query: '   ' })).rejects.toThrow(
-        InvalidSearchQueryError
-      );
+      const result = await sut.execute({ query: '   ' });
+
+      expect(result.items).toEqual([]);
     });
 
     it('throws InvalidPaginationError when page is less than 1', async () => {
@@ -112,11 +115,12 @@ describe('SearchPosts', () => {
     });
 
     it('maps Post entities to PostOutput', async () => {
-      const post = createPost();
+      const postWithAuthor = createPostWithAuthor();
+      const { post } = postWithAuthor;
       const queryService = createMockQueryService({
         searchPosts: vi
           .fn()
-          .mockResolvedValue({ posts: [post], totalCount: 1 }),
+          .mockResolvedValue({ posts: [postWithAuthor], totalCount: 1 }),
       });
       const sut = new SearchPosts(queryService);
 

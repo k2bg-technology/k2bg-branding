@@ -2,7 +2,10 @@ import type { Metadata } from 'next';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { Markdown } from '../../../../components/markdown';
 import Sidebar from '../../../../components/sidebar/Sidebar';
-import * as Prisma from '../../../../modules/data-access/prisma';
+import {
+  createFetchAllSlugsUseCase,
+  createFetchPostUseCase,
+} from '../../../../infrastructure/di';
 
 type Params = Promise<{ id: string; slug: string }>;
 
@@ -11,20 +14,20 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  const postRepository = new Prisma.Post.Repository();
-  const posts = await postRepository.getAllArticleSlugs();
+  const fetchAllSlugs = createFetchAllSlugsUseCase();
+  const { slugs } = await fetchAllSlugs.execute();
 
-  return posts.map((post: { id: string; slug: string }) => ({
-    id: post.id,
-    slug: post.slug,
+  return slugs.map((slug) => ({
+    id: slug.id,
+    slug: slug.slug,
   }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
 
-  const postRepository = new Prisma.Post.Repository();
-  const article = await postRepository.getPost(id);
+  const fetchPost = createFetchPostUseCase();
+  const { post: article } = await fetchPost.execute({ id });
 
   return {
     title: article.title,
@@ -38,8 +41,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { id } = await params;
 
-  const postRepository = new Prisma.Post.Repository();
-  const article = await postRepository.getPost(id);
+  const fetchPost = createFetchPostUseCase();
+  const { post: article } = await fetchPost.execute({ id });
 
   return (
     <>

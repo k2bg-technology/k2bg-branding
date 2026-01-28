@@ -6,6 +6,7 @@ export {
 } from './external-sources';
 export {
   PrismaFetchAllSlugsQueryService,
+  PrismaFetchPostQueryService,
   PrismaFetchPostsByCategoryQueryService,
   PrismaFetchPostsQueryService,
   PrismaSearchPostsQueryService,

@@ -1,5 +1,6 @@
-import { PostId, type PostRepository } from '../../../domain';
+import { PostId } from '../../../domain';
 import { PostNotFoundError, type PostOutput, toPostOutput } from '../../shared';
+import type { FetchPostQueryService } from './queryService';
 
 export interface FetchPostInput {
   id: string;
@@ -15,18 +16,18 @@ export interface FetchPostOutput {
  * Fetches a single post by its ID.
  */
 export class FetchPost {
-  constructor(private readonly postRepository: PostRepository) {}
+  constructor(private readonly queryService: FetchPostQueryService) {}
 
   async execute(input: FetchPostInput): Promise<FetchPostOutput> {
     const postId = PostId.create(input.id);
-    const post = await this.postRepository.findById(postId);
+    const result = await this.queryService.fetchPost(postId);
 
-    if (!post) {
+    if (!result) {
       throw new PostNotFoundError(input.id);
     }
 
     return {
-      post: toPostOutput(post),
+      post: toPostOutput(result.post, result.author),
     };
   }
 }

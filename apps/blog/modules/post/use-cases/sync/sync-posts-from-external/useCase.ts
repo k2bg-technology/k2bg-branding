@@ -27,7 +27,7 @@ export class SyncPostsFromExternal {
       }
 
       return {
-        syncedPosts: posts.map(toPostOutput),
+        syncedPosts: posts.map((post) => toPostOutput(post, null)),
         count: posts.length,
       };
     } catch (error) {

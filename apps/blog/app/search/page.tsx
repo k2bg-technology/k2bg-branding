@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { Articles } from '../../components/articles/Articles';
 import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
-import * as Prisma from '../../modules/data-access/prisma';
+import { createSearchPostsUseCase } from '../../infrastructure/di';
 
 const PAGE_SIZE = 6;
 
@@ -26,7 +26,7 @@ export default async function Page({
   const { query = '', page = '1' } = await searchParams;
   const currentPage = Number(page);
 
-  const postRepository = new Prisma.Post.Repository();
+  const searchPosts = createSearchPostsUseCase();
 
   return (
     <>
@@ -36,17 +36,11 @@ export default async function Page({
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>
         <Articles
           fetchArticles={async () =>
-            postRepository.getPaginatedArticlesByQueryString(
+            searchPosts.execute({
               query,
-              PAGE_SIZE,
-              currentPage
-            )
-          }
-          fetchArticlesCount={async () =>
-            Math.ceil(
-              (await postRepository.getArticlesCountByQueryString(query)) /
-                PAGE_SIZE
-            )
+              page: currentPage,
+              pageSize: PAGE_SIZE,
+            })
           }
         />
       </Suspense>

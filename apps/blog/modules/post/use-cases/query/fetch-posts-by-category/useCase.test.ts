@@ -1,7 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { Category } from '../../../domain';
 import { InvalidPaginationError } from '../../shared';
-import { createPost, createPosts } from '../../shared/testing/factories';
+import {
+  createPostsWithAuthor,
+  createPostWithAuthor,
+} from '../../shared/testing/factories';
 import type { FetchPostsByCategoryQueryService } from './queryService';
 import { FetchPostsByCategory } from './useCase';
 
@@ -17,7 +20,7 @@ describe('FetchPostsByCategory', () => {
 
   describe('execute', () => {
     it('returns paginated posts for given category', async () => {
-      const posts = createPosts(3);
+      const posts = createPostsWithAuthor(3);
       const queryService = createMockQueryService({
         fetchPostsByCategory: vi
           .fn()
@@ -104,11 +107,12 @@ describe('FetchPostsByCategory', () => {
     });
 
     it('maps Post entities to PostOutput', async () => {
-      const post = createPost();
+      const postWithAuthor = createPostWithAuthor();
+      const { post } = postWithAuthor;
       const queryService = createMockQueryService({
         fetchPostsByCategory: vi
           .fn()
-          .mockResolvedValue({ posts: [post], totalCount: 1 }),
+          .mockResolvedValue({ posts: [postWithAuthor], totalCount: 1 }),
       });
       const sut = new FetchPostsByCategory(queryService);
 

@@ -1,5 +1,5 @@
 import type { Category, Post } from '../../../domain';
-import type { SortOrder } from '../../shared';
+import type { AuthorOutput, SortOrder } from '../../shared';
 
 export interface FetchPostsByCategoryParams {
   category: Category;
@@ -8,8 +8,13 @@ export interface FetchPostsByCategoryParams {
   orderBy: SortOrder;
 }
 
+export interface PostWithAuthor {
+  post: Post;
+  author: AuthorOutput | null;
+}
+
 export interface FetchPostsByCategoryResult {
-  posts: Post[];
+  posts: PostWithAuthor[];
   totalCount: number;
 }
 

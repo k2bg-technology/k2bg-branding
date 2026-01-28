@@ -1,20 +1,18 @@
 import Link from 'next/link';
 import { Avatar } from 'ui';
-import type { Post } from '../../modules/domain/post/types';
+import type { PaginatedResult, PostOutput } from '../../modules/post/use-cases';
 import BlogCard from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { Pagination } from '../pagination/Pagination';
 
 interface Props {
-  fetchArticles: () => Promise<Post[]>;
-  fetchArticlesCount: () => Promise<number>;
+  fetchArticles: () => Promise<PaginatedResult<PostOutput>>;
 }
 
 export async function Articles(props: Props) {
-  const { fetchArticles, fetchArticlesCount } = props;
+  const { fetchArticles } = props;
 
-  const articles = await fetchArticles();
-  const totalPageCount = await fetchArticlesCount();
+  const { items: articles, totalPages } = await fetchArticles();
 
   if (articles.length === 0) {
     return (
@@ -70,13 +68,13 @@ export async function Articles(props: Props) {
                     </h2>
                   </Link>
                 }
-                excerpt={article.excerpt}
+                excerpt={article.excerpt ?? undefined}
                 avatar={
                   article.author && (
                     <Avatar>
                       <Avatar.Image
                         alt="author"
-                        src={article.author.avatarUrl}
+                        src={article.author.avatarUrl ?? undefined}
                       />
                     </Avatar>
                   )
@@ -89,7 +87,7 @@ export async function Articles(props: Props) {
         </div>
       </div>
       <div className="flex justify-center grid-cols-[subgrid] col-span-full">
-        <Pagination count={totalPageCount} />
+        <Pagination count={totalPages} />
       </div>
     </>
   );

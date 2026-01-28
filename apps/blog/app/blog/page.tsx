@@ -5,8 +5,9 @@ import { Avatar } from 'ui';
 import BlogCard from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import Sidebar from '../../components/sidebar/Sidebar';
-import * as Prisma from '../../modules/data-access/prisma';
-import type { Post } from '../../modules/domain/post/types';
+import { createFetchPostsUseCase } from '../../infrastructure/di';
+
+const PAGE_SIZE = 8;
 
 export const metadata: Metadata = {
   title: 'K2.B.G Technology Blog',
@@ -68,8 +69,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const postRepository = new Prisma.Post.Repository();
-  const articles = await postRepository.getAllArticles();
+  const fetchPosts = createFetchPostsUseCase();
+  const { items: articles } = await fetchPosts.execute({ pageSize: PAGE_SIZE });
 
   const featureLatest = articles.at(0);
   const featuresRecently = articles.slice(1, 3);
@@ -122,13 +123,13 @@ export default async function Page() {
                     </h2>
                   </Link>
                 }
-                excerpt={featureLatest.excerpt}
+                excerpt={featureLatest.excerpt ?? undefined}
                 avatar={
                   featureLatest.author && (
                     <Avatar>
                       <Avatar.Image
                         alt="author"
-                        src={featureLatest.author.avatarUrl}
+                        src={featureLatest.author.avatarUrl ?? undefined}
                       />
                     </Avatar>
                   )
@@ -183,13 +184,13 @@ export default async function Page() {
                     </h2>
                   </Link>
                 }
-                excerpt={article.excerpt}
+                excerpt={article.excerpt ?? undefined}
                 avatar={
                   article.author && (
                     <Avatar>
                       <Avatar.Image
                         alt="author"
-                        src={article.author?.avatarUrl}
+                        src={article.author?.avatarUrl ?? undefined}
                       />
                     </Avatar>
                   )
@@ -248,13 +249,13 @@ export default async function Page() {
                       </h2>
                     </Link>
                   }
-                  excerpt={article.excerpt}
+                  excerpt={article.excerpt ?? undefined}
                   avatar={
                     article.author && (
                       <Avatar>
                         <Avatar.Image
                           alt="author"
-                          src={article.author.avatarUrl}
+                          src={article.author.avatarUrl ?? undefined}
                         />
                       </Avatar>
                     )
@@ -265,7 +266,7 @@ export default async function Page() {
               </BlogCard>
             </div>
           ))}
-          {featuresPreviously.map((article: Post) => (
+          {featuresPreviously.map((article) => (
             <BlogCard key={article.title} className="flex-col gap-spacious">
               {article.imageUrl && (
                 <Link
@@ -308,13 +309,13 @@ export default async function Page() {
                     </h2>
                   </Link>
                 }
-                excerpt={article.excerpt}
+                excerpt={article.excerpt ?? undefined}
                 avatar={
                   article.author && (
                     <Avatar>
                       <Avatar.Image
                         alt="author"
-                        src={article.author.avatarUrl}
+                        src={article.author.avatarUrl ?? undefined}
                       />
                     </Avatar>
                   )

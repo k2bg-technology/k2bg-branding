@@ -10,6 +10,7 @@ export {
   FetchPost,
   type FetchPostInput,
   type FetchPostOutput,
+  type FetchPostQueryService,
 } from './query/fetch-post';
 export {
   FetchPosts,
