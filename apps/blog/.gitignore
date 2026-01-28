@@ -8,7 +8,7 @@
 # testing
 /coverage
 
-# next.js
+# Next.js
 /.next/
 /out/
 
@@ -30,7 +30,7 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# vercel
+# Vercel
 .vercel
 
 # static images
@@ -42,5 +42,5 @@ storybook-static
 # msw
 /public/mockServiceWorker.js
 
-# typeScript
+# TypeScript
 ./tsconfig.tsbuildinfo
