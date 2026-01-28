@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { InvalidPaginationError } from '../../shared';
 import {
-  createPostWithAuthor,
   createPostsWithAuthor,
+  createPostWithAuthor,
 } from '../../shared/testing/factories';
 import type { FetchPostsQueryService } from './queryService';
 import { FetchPosts } from './useCase';
