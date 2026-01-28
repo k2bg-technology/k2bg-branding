@@ -3,10 +3,10 @@ import { getNotionClient, getNotionToMarkdown } from '../notion';
 import {
   NotionExternalPostSource,
   PrismaFetchAllSlugsQueryService,
+  PrismaFetchPostQueryService,
   PrismaFetchPostsByCategoryQueryService,
   PrismaFetchPostsQueryService,
   PrismaPostBatchRepository,
-  PrismaPostRepository,
   PrismaSearchPostsQueryService,
 } from '../../modules/post/adapters/output';
 import { FetchAllSlugs } from '../../modules/post/use-cases/query/fetch-all-slugs';
@@ -23,7 +23,7 @@ export function createFetchPostsUseCase(): FetchPosts {
 
 export function createFetchPostUseCase(): FetchPost {
   const prisma = getPrismaClient();
-  return new FetchPost(new PrismaPostRepository(prisma));
+  return new FetchPost(new PrismaFetchPostQueryService(prisma));
 }
 
 export function createFetchAllSlugsUseCase(): FetchAllSlugs {
