@@ -283,3 +283,27 @@ export const Minimal: Story = {
     content: 'Just a simple line of text.',
   },
 };
+
+/**
+ * Bold text with zero-width joiner insertion
+ *
+ * @remarks
+ * Tests the automatic zero-width joiner (U+200B) insertion for bold text.
+ * This ensures the markdown parser correctly recognizes **...** patterns,
+ * including Japanese text which is prone to parsing issues.
+ * @see {@link https://github.com/Textualize/rich/issues/400}
+ */
+export const BoldTextWithZeroWidthJoiner: Story = {
+  args: {
+    content: `## Bold Text Zero-Width Joiner Test
+
+Standard: **bold text** in English.
+
+Japanese: **日本語の太字テキスト**です。
+
+Existing joiner preserved: **\u200Balready inserted\u200B** should not duplicate.
+
+Multiline: **text that
+spans lines** works correctly.`,
+  },
+};
