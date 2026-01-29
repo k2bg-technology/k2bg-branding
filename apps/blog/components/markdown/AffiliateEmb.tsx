@@ -4,12 +4,9 @@ import {
   createFetchAffiliateUseCase,
 } from '../../infrastructure';
 import { AffiliateType } from '../../modules/affiliate/domain';
-import type {
-  AffiliateBannerOutput,
-  AffiliateProductOutput,
-  AffiliateTextOutput,
-} from '../../modules/affiliate/use-cases/shared';
-import { BannerPromotion, ProductPromotion, TextPromotion } from '../promotion';
+import { AffiliateBanner } from './AffiliateBanner';
+import { AffiliateProduct } from './AffiliateProduct';
+import { AffiliateText } from './AffiliateText';
 
 /**
  * Request-level memoized affiliate fetcher.
@@ -43,7 +40,7 @@ export async function AffiliateEmb(props: AffiliateEmbProps) {
 
   const { affiliate } = await fetchAffiliateById(id);
 
-  const subProviders =
+  const affiliateSubProviders =
     affiliate.type === AffiliateType.PRODUCT
       ? await fetchSubProviders(affiliate.subProviderIds)
       : [];
@@ -53,14 +50,14 @@ export async function AffiliateEmb(props: AffiliateEmbProps) {
       {(() => {
         switch (affiliate.type) {
           case AffiliateType.TEXT:
-            return <TextContent affiliate={affiliate} />;
+            return <AffiliateText affiliateText={affiliate} />;
           case AffiliateType.BANNER:
-            return <BannerContent affiliate={affiliate} />;
+            return <AffiliateBanner affiliateBanner={affiliate} />;
           case AffiliateType.PRODUCT:
             return (
-              <ProductContent
-                affiliate={affiliate}
-                subProviders={subProviders}
+              <AffiliateProduct
+                affiliateProduct={affiliate}
+                affiliateSubProviders={affiliateSubProviders}
               />
             );
           default:
@@ -102,52 +99,4 @@ async function fetchSubProviders(
       };
     })
     .filter((item): item is SubProvider => item !== null);
-}
-
-function TextContent({ affiliate }: { affiliate: AffiliateTextOutput }) {
-  return (
-    <TextPromotion id={affiliate.id} href={affiliate.targetUrl}>
-      {affiliate.name}
-    </TextPromotion>
-  );
-}
-
-function BannerContent({ affiliate }: { affiliate: AffiliateBannerOutput }) {
-  return (
-    <BannerPromotion
-      id={affiliate.id}
-      linkText={affiliate.name}
-      linkUrl={affiliate.targetUrl}
-      imageUrl={affiliate.imageSourceUrl}
-      imageWidth={affiliate.imageWidth}
-      imageHeight={affiliate.imageHeight}
-    />
-  );
-}
-
-function ProductContent({
-  affiliate,
-  subProviders,
-}: {
-  affiliate: AffiliateProductOutput;
-  subProviders: SubProvider[];
-}) {
-  return (
-    <ProductPromotion
-      id={affiliate.id}
-      linkText={affiliate.name}
-      linkUrl={affiliate.targetUrl}
-      imageUrl={affiliate.imageSourceUrl}
-      imageWidth={affiliate.imageWidth}
-      imageHeight={affiliate.imageHeight}
-      providers={[
-        {
-          linkText: affiliate.provider,
-          linkUrl: affiliate.targetUrl,
-          color: affiliate.providerColor,
-        },
-        ...subProviders,
-      ]}
-    />
-  );
 }

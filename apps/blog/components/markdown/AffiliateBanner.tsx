@@ -1,23 +1,27 @@
-import type { AffiliateBanner } from '../../modules/interfaces/affiliate/validator';
+import type { AffiliateBannerOutput } from '../../modules/affiliate/use-cases';
+import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { BannerPromotion } from '../promotion';
 
 interface AffiliateBannerProps {
-  affiliateBanner: AffiliateBanner;
+  affiliateBanner: AffiliateBannerOutput;
 }
 
 export function AffiliateBanner(props: AffiliateBannerProps) {
   const { affiliateBanner } = props;
 
   return (
-    <div className="mt-8">
-      <BannerPromotion
-        id={affiliateBanner.id}
-        linkText={affiliateBanner.name}
-        linkUrl={affiliateBanner.targetUrl}
-        imageUrl={affiliateBanner.imageSourceUrl}
-        imageWidth={affiliateBanner.imageWidth}
-        imageHeight={affiliateBanner.imageHeight}
-      />
-    </div>
+    <BannerPromotion
+      linkUrl={affiliateBanner.targetUrl}
+      image={
+        <CloudinaryImage
+          publicId={affiliateBanner.id}
+          className="object-contain cursor-pointer"
+          src={affiliateBanner.imageSourceUrl}
+          alt={affiliateBanner.name}
+          width={affiliateBanner.imageWidth}
+          height={affiliateBanner.imageHeight}
+        />
+      }
+    />
   );
 }
