@@ -1,37 +1,35 @@
-import { VideoFilePlayer, VideoStreamingPlayer } from 'ui';
-
-import type { MediaVideo } from '../../modules/interfaces/media/validator';
+import VideoFilePlayer from 'ui/src/components/Media/VideoFilePlayer';
+import VideoStreamingPlayer from 'ui/src/components/Media/VideoStreamingPlayer';
+import type { MediaOutput } from '../../modules/media/use-cases';
 
 interface MediaVideoProps {
-  mediaVideo: MediaVideo;
+  media: MediaOutput;
 }
 
-export function MediaVideo(props: MediaVideoProps) {
-  const { mediaVideo } = props;
+export function MediaVideo({ media }: MediaVideoProps) {
+  if (media.width == null || media.height == null) {
+    return null;
+  }
 
-  if (mediaVideo.sourceFile) {
+  if (media.sourceFile) {
     return (
-      <div className="flex justify-center mt-8">
-        <VideoFilePlayer
-          id={mediaVideo.id}
-          file={mediaVideo.sourceFile}
-          width={mediaVideo.width}
-          height={mediaVideo.height}
-        />
-      </div>
+      <VideoFilePlayer
+        id={media.id}
+        file={media.sourceFile}
+        width={media.width}
+        height={media.height}
+      />
     );
   }
 
-  if (mediaVideo.sourceUrl) {
+  if (media.sourceUrl) {
     return (
-      <div className="flex justify-center mt-8">
-        <VideoStreamingPlayer
-          id={mediaVideo.id}
-          url={mediaVideo.sourceUrl}
-          width={mediaVideo.width}
-          height={mediaVideo.height}
-        />
-      </div>
+      <VideoStreamingPlayer
+        id={media.id}
+        url={media.sourceUrl}
+        width={media.width}
+        height={media.height}
+      />
     );
   }
 

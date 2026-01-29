@@ -1,21 +1,7 @@
-import { Markdown } from '../../../../components/markdown';
 import type * as Domain from '../../../domain';
 import type { Order } from '../../../domain/post/types';
-import {
-  affiliateBannerSchema,
-  affiliateProductSchema,
-  affiliateSubProviderSchema,
-  affiliateTextSchema,
-} from '../../../interfaces/affiliate/validator';
-import {
-  mediaImageSchema,
-  mediaVideoSchema,
-} from '../../../interfaces/media/validator';
 import { postSchema } from '../../../interfaces/post/validator';
-import * as Affiliate from '../affiliate';
 import { Core } from '../core';
-import * as DataType from '../data-type';
-import * as Media from '../media';
 import { Page } from '../page';
 
 import { Entity } from './entity';
@@ -95,111 +81,6 @@ export class Repository extends Core implements Domain.Post.InputRepository {
   }
 
   async generateMarkdownString(pageId: string) {
-    const { renderToString } = await import('react-dom/server');
-
-    this.n2m.setCustomTransformer('callout', () => false);
-
-    this.n2m.setCustomTransformer('link_to_page', (block) => {
-      if (!('link_to_page' in block && 'page_id' in block.link_to_page))
-        return false;
-
-      return `<LinkToPage>${block.link_to_page.page_id}</LinkToPage>`;
-    });
-
-    const markdownStringWithoutAssets =
-      await this.fetchNotionPageAndConvertMarkdownString(pageId);
-
-    const regex = /<LinkToPage>([^<]+)<\/LinkToPage>/g;
-    const matches = Array.from(
-      markdownStringWithoutAssets.matchAll(regex),
-      (m) => m[1]
-    );
-
-    const assets = await Promise.all(
-      matches.map(async (assetId) => {
-        const asset = new Page(await this.fetchPage(assetId));
-
-        const dataType = new DataType.Entity(asset).name;
-
-        switch (dataType) {
-          case 'MEDIA_IMAGE': {
-            const mediaImage = mediaImageSchema.parse(
-              new Media.Image(asset).toObject()
-            );
-
-            return renderToString(
-              <Markdown.MediaImage mediaImage={mediaImage} />
-            );
-          }
-          case 'MEDIA_VIDEO': {
-            const mediaVideo = mediaVideoSchema.parse(
-              new Media.Video(asset).toObject()
-            );
-
-            return renderToString(
-              <Markdown.MediaVideo mediaVideo={mediaVideo} />
-            );
-          }
-          case 'AFFILIATE_TEXT': {
-            const affiliateText = affiliateTextSchema.parse(
-              new Affiliate.Text(asset).toObject()
-            );
-
-            return renderToString(
-              <Markdown.AffiliateText affiliateText={affiliateText} />
-            );
-          }
-          case 'AFFILIATE_BANNER': {
-            const affiliateBanner = affiliateBannerSchema.parse(
-              new Affiliate.Banner(asset).toObject()
-            );
-
-            return renderToString(
-              <Markdown.AffiliateBanner affiliateBanner={affiliateBanner} />
-            );
-          }
-          case 'AFFILIATE_PRODUCT': {
-            const affiliateProduct = affiliateProductSchema.parse(
-              new Affiliate.Product(asset).toObject()
-            );
-
-            const subProviders = await Promise.all(
-              affiliateProduct.subProviders.map(async (subProvider) =>
-                affiliateSubProviderSchema.parse(
-                  new Affiliate.SubProvider(
-                    new Page(await this.fetchPage(subProvider))
-                  ).toObject()
-                )
-              )
-            );
-
-            return renderToString(
-              <Markdown.AffiliateProduct
-                affiliateProduct={affiliateProduct}
-                subProviders={subProviders}
-              />
-            );
-          }
-          default:
-            return null;
-        }
-      })
-    );
-
-    const markdownString = markdownStringWithoutAssets
-      .replace(
-        regex,
-        (_, replaceValue) =>
-          assets.find((asset) => asset?.includes(replaceValue)) || ''
-      )
-      // Insert zero-width joiner inside **...** to help markdown parser recognize bold text correctly
-      // @see {@link https://github.com/Textualize/rich/issues/400}
-      .replace(
-        /\*\*(\u200B)?([\s\S]*?)(\u200B)?\*\*/g,
-        (_match, leading, content, trailing) =>
-          `**${leading ?? '\u200B'}${content}${trailing ?? '\u200B'}**`
-      );
-
-    return markdownString;
+    return this.fetchNotionPageAndConvertMarkdownString(pageId);
   }
 }

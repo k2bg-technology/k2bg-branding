@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from 'ui';
 
 interface Provider {
@@ -11,44 +9,21 @@ interface Provider {
 interface ProductPromotionProps extends React.ComponentPropsWithoutRef<'div'> {
   linkText: string;
   linkUrl: string;
-  imageUrl: string;
-  imageWidth: number;
-  imageHeight: number;
+  image: React.ReactNode;
   providers?: Provider[];
   imagePlaceholder?: string;
 }
 
 export default function ProductPromotion(props: ProductPromotionProps) {
-  const {
-    id,
-    linkText,
-    linkUrl,
-    imageUrl,
-    imageWidth,
-    imageHeight,
-    providers,
-    imagePlaceholder,
-    ...rest
-  } = props;
+  const { linkText, linkUrl, image, providers, ...rest } = props;
 
   return (
     <div
       {...rest}
       className="flex gap-spacious p-spacious border-solid border-4 border-base-white"
     >
-      {/** biome-ignore lint/a11y/useAnchorContent: image link */}
       <a href={linkUrl} target="_blank" rel="noopener nofollow">
-        <img
-          alt={linkText}
-          src={imageUrl}
-          onClick={() => linkUrl && window.open(linkUrl, '_blank')}
-          width={imageWidth}
-          height={imageHeight}
-          data-id={id}
-          data-placeholder={imagePlaceholder}
-          className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
-          aria-hidden="true"
-        />
+        {image}
       </a>
       <div className="flex flex-col gap-spacious w-full">
         <div>
