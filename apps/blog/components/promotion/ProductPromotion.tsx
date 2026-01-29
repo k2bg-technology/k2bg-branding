@@ -45,8 +45,8 @@ export default function ProductPromotion(props: ProductPromotionProps) {
           className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
           src={imageUrl}
           alt={linkText}
-          width={Number(imageWidth)}
-          height={Number(imageHeight)}
+          width={imageWidth}
+          height={imageHeight}
         />
       </a>
       <div className="flex flex-col gap-spacious w-full">

@@ -32,7 +32,7 @@ export async function MediaEmb(props: MediaEmbProps) {
 }
 
 function ImageContent({ media }: { media: MediaOutput }) {
-  if (!media.effectiveSource) {
+  if (!media.effectiveSource || media.width === null || media.height === null) {
     return null;
   }
 
@@ -48,8 +48,8 @@ function ImageContent({ media }: { media: MediaOutput }) {
           publicId={media.id}
           src={media.effectiveSource}
           alt={media.name}
-          width={Number(media.width)}
-          height={Number(media.height)}
+          width={media.width}
+          height={media.height}
           unoptimized={media.extension === '.gif'}
         />
       </a>
@@ -60,8 +60,8 @@ function ImageContent({ media }: { media: MediaOutput }) {
       publicId={media.id}
       src={media.effectiveSource}
       alt={media.name}
-      width={Number(media.width)}
-      height={Number(media.height)}
+      width={media.width}
+      height={media.height}
       unoptimized={media.extension === '.gif'}
     />
   );

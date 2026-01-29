@@ -38,8 +38,8 @@ export default function BannerPromotion(props: BannerPromotionProps) {
         className="object-contain cursor-pointer"
         src={imageUrl}
         alt={linkText}
-        width={Number(imageWidth)}
-        height={Number(imageHeight)}
+        width={imageWidth}
+        height={imageHeight}
       />
     </a>
   );
