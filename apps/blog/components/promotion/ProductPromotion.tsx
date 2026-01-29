@@ -1,5 +1,4 @@
 import { Button } from 'ui';
-import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface Provider {
   linkText: string;
@@ -10,29 +9,13 @@ interface Provider {
 interface ProductPromotionProps extends React.ComponentPropsWithoutRef<'div'> {
   linkText: string;
   linkUrl: string;
-  imageUrl: string;
-  imageWidth: number;
-  imageHeight: number;
+  image: React.ReactNode;
   providers?: Provider[];
   imagePlaceholder?: string;
 }
 
 export default function ProductPromotion(props: ProductPromotionProps) {
-  const {
-    id,
-    linkText,
-    linkUrl,
-    imageUrl,
-    imageWidth,
-    imageHeight,
-    providers,
-    imagePlaceholder,
-    ...rest
-  } = props;
-
-  if (!id) {
-    return null;
-  }
+  const { linkText, linkUrl, image, providers, ...rest } = props;
 
   return (
     <div
@@ -40,14 +23,7 @@ export default function ProductPromotion(props: ProductPromotionProps) {
       className="flex gap-spacious p-spacious border-solid border-4 border-base-white"
     >
       <a href={linkUrl} target="_blank" rel="noopener nofollow">
-        <CloudinaryImage
-          publicId={id}
-          className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
-          src={imageUrl}
-          alt={linkText}
-          width={imageWidth}
-          height={imageHeight}
-        />
+        {image}
       </a>
       <div className="flex flex-col gap-spacious w-full">
         <div>

@@ -1,27 +1,13 @@
-import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-
 interface BannerPromotionProps extends React.ComponentPropsWithoutRef<'a'> {
-  linkText: string;
   linkUrl: string;
-  imageUrl: string;
-  imageWidth: number;
-  imageHeight: number;
-  imagePlaceholder?: string;
+  image?: React.ReactNode;
 }
 
 export default function BannerPromotion(props: BannerPromotionProps) {
-  const {
-    id,
-    linkText,
-    linkUrl,
-    imageUrl,
-    imageWidth,
-    imageHeight,
-    imagePlaceholder,
-    ...rest
-  } = props;
+  const { linkUrl, image, ...rest } = props;
+  props;
 
-  if (!id) {
+  if (!image) {
     return null;
   }
 
@@ -33,14 +19,7 @@ export default function BannerPromotion(props: BannerPromotionProps) {
       rel="noopener nofollow"
       className="inline-block"
     >
-      <CloudinaryImage
-        publicId={id}
-        className="object-contain cursor-pointer"
-        src={imageUrl}
-        alt={linkText}
-        width={imageWidth}
-        height={imageHeight}
-      />
+      {image}
     </a>
   );
 }

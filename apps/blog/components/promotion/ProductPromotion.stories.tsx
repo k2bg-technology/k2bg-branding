@@ -15,10 +15,13 @@ export const Default: Story = {
   render: () => (
     <ProductPromotion
       linkText="商品紹介アフィリエイト"
+      image={
+        <img
+          src="https://dummyimage.com/120x160/000/fff"
+          alt="Product Promotion"
+        />
+      }
       linkUrl="https://www.amazon.co.jp"
-      imageUrl="https://dummyimage.com/120x160/000/fff"
-      imageWidth={120}
-      imageHeight={160}
       providers={[
         {
           linkText: '楽天',
