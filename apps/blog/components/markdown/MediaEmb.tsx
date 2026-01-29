@@ -1,9 +1,9 @@
-import ImageViewer from 'ui/src/components/Media/ImageViewer';
 import VideoFilePlayer from 'ui/src/components/Media/VideoFilePlayer';
 import VideoStreamingPlayer from 'ui/src/components/Media/VideoStreamingPlayer';
 import { createFetchMediaUseCase } from '../../infrastructure';
 import { MediaType } from '../../modules/media/domain';
 import type { MediaOutput } from '../../modules/media/use-cases';
+import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface MediaEmbProps {
   id: string;
@@ -32,16 +32,36 @@ export async function MediaEmb(props: MediaEmbProps) {
 }
 
 function ImageContent({ media }: { media: MediaOutput }) {
-  if (media.width === null || media.height === null) return null;
+  if (!media.effectiveSource) {
+    return null;
+  }
+
+  if (media.targetUrl)
+    return (
+      <a
+        href={media.targetUrl}
+        target="_blank"
+        rel="noopener nofollow"
+        className="inline-block"
+      >
+        <CloudinaryImage
+          publicId={media.id}
+          src={media.effectiveSource}
+          alt={media.name}
+          width={Number(media.width)}
+          height={Number(media.height)}
+          unoptimized={media.extension === '.gif'}
+        />
+      </a>
+    );
 
   return (
-    <ImageViewer
-      id={media.id}
-      name={media.name}
-      url={media.sourceUrl ?? undefined}
-      file={media.sourceFile ?? undefined}
-      width={media.width}
-      height={media.height}
+    <CloudinaryImage
+      publicId={media.id}
+      src={media.effectiveSource}
+      alt={media.name}
+      width={Number(media.width)}
+      height={Number(media.height)}
       unoptimized={media.extension === '.gif'}
     />
   );

@@ -1,6 +1,5 @@
-'use client';
-
 import { Button } from 'ui';
+import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface Provider {
   linkText: string;
@@ -31,23 +30,23 @@ export default function ProductPromotion(props: ProductPromotionProps) {
     ...rest
   } = props;
 
+  if (!id) {
+    return null;
+  }
+
   return (
     <div
       {...rest}
       className="flex gap-spacious p-spacious border-solid border-4 border-base-white"
     >
-      {/** biome-ignore lint/a11y/useAnchorContent: image link */}
       <a href={linkUrl} target="_blank" rel="noopener nofollow">
-        <img
-          alt={linkText}
-          src={imageUrl}
-          onClick={() => linkUrl && window.open(linkUrl, '_blank')}
-          width={imageWidth}
-          height={imageHeight}
-          data-id={id}
-          data-placeholder={imagePlaceholder}
+        <CloudinaryImage
+          publicId={id}
           className="object-contain object-top cursor-pointer w-[120px] max-h-[160px]"
-          aria-hidden="true"
+          src={imageUrl}
+          alt={linkText}
+          width={Number(imageWidth)}
+          height={Number(imageHeight)}
         />
       </a>
       <div className="flex flex-col gap-spacious w-full">
