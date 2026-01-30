@@ -10,4 +10,5 @@ export {
   createFetchPostsByCategoryUseCase,
   createSearchPostsUseCase,
   createSyncPostsFromExternalUseCase,
+  createSyncHeroImagesUseCase,
 } from './post';
