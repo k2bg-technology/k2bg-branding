@@ -1,6 +1,6 @@
 import sgMail, { type MailService, ResponseError } from '@sendgrid/mail';
 
-export class Core {
+export class SendGridCore {
   private sgMail: MailService;
 
   constructor() {

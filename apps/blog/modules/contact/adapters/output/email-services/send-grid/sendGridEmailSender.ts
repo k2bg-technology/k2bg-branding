@@ -1,10 +1,10 @@
-import type * as Domain from '../../domain';
+import type { EmailSender, Visitor } from '../../../../domain';
 
-import { Core } from './core';
+import { SendGridCore } from './core';
 
-export class Adapter extends Core implements Domain.Contact.Adapter {
+export class SendGridEmailSender extends SendGridCore implements EmailSender {
   async sendEmail(
-    visitor: Domain.Contact.Visitor,
+    visitor: Visitor,
     subject: string,
     emailBody: string
   ): Promise<void> {
