@@ -2,12 +2,11 @@
 
 import { verify } from 'hcaptcha';
 
-import * as SendGrid from '../../modules/data-access/send-grid';
+import { createSendEmailUseCase } from '../../infrastructure/di';
 import {
   type Contact,
   contactSchema,
 } from '../../modules/interfaces/contact/validator';
-import { SendEmail } from '../../modules/use-cases/contact';
 
 export async function contactFormAction(
   data: Contact & {
@@ -33,7 +32,7 @@ export async function contactFormAction(
     throw new Error('captcha verification failed');
   }
 
-  await new SendEmail(new SendGrid.Adapter()).execute(validatedFields.data);
+  await createSendEmailUseCase().execute(validatedFields.data);
 
   return null;
 }
