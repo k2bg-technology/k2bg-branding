@@ -74,9 +74,9 @@ describe('SendGridEmailSender', () => {
       const sut = new SendGridEmailSender(apiKey, senderEmail);
       const contact = createContact();
 
-      await expect(
-        sut.send(contact, 'Subject', '<p>Body</p>')
-      ).rejects.toThrow(EmailSendFailedError);
+      await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
+        EmailSendFailedError
+      );
     });
 
     it('throws EmailSendFailedError with message for generic errors', async () => {

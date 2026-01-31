@@ -43,7 +43,8 @@ describe('SendEmail Use Case', () => {
 
       const [contact, subject, htmlBody] = vi.mocked(mockEmailSender.send).mock
         .calls[0] as [Contact, string, string];
-      const expectedSubject = 'John Doe 様。お問合せいただきありがとうございます。';
+      const expectedSubject =
+        'John Doe 様。お問合せいただきありがとうございます。';
       const expectedHtmlBody = '<html>Test Email</html>';
 
       expect(contact.name.getValue()).toBe('John Doe');
