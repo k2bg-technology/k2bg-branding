@@ -1,6 +1,9 @@
 import { getPrismaClient } from '../prisma';
 import { getNotionClient, getNotionToMarkdown } from '../notion';
+import { getCloudinary } from '../cloudinary';
 import {
+  CloudinaryImageRepository,
+  NotionExternalImageSource,
   NotionExternalPostSource,
   PrismaFetchAllSlugsQueryService,
   PrismaFetchPostQueryService,
@@ -9,12 +12,15 @@ import {
   PrismaPostBatchRepository,
   PrismaSearchPostsQueryService,
 } from '../../modules/post/adapters/output';
+import { NotionMediaExternalImageSource } from '../../modules/media/adapters/output';
+import { NotionAffiliateExternalImageSource } from '../../modules/affiliate/adapters/output';
 import { FetchAllSlugs } from '../../modules/post/use-cases/query/fetch-all-slugs';
 import { FetchPost } from '../../modules/post/use-cases/query/fetch-post';
 import { FetchPosts } from '../../modules/post/use-cases/query/fetch-posts';
 import { FetchPostsByCategory } from '../../modules/post/use-cases/query/fetch-posts-by-category';
 import { SearchPosts } from '../../modules/post/use-cases/query/search-posts';
 import { SyncPostsFromExternal } from '../../modules/post/use-cases/sync/sync-posts-from-external';
+import { SyncHeroImages } from '../../modules/post/use-cases/sync/sync-hero-images';
 
 export function createFetchPostsUseCase(): FetchPosts {
   const prisma = getPrismaClient();
@@ -51,5 +57,19 @@ export function createSyncPostsFromExternalUseCase(): SyncPostsFromExternal {
   return new SyncPostsFromExternal(
     new NotionExternalPostSource(notionClient, n2m),
     new PrismaPostBatchRepository(prisma)
+  );
+}
+
+export function createSyncHeroImagesUseCase(): SyncHeroImages {
+  const notionClient = getNotionClient();
+  const cloudinary = getCloudinary();
+
+  return new SyncHeroImages(
+    [
+      new NotionExternalImageSource(notionClient),
+      new NotionMediaExternalImageSource(notionClient),
+      new NotionAffiliateExternalImageSource(notionClient),
+    ],
+    new CloudinaryImageRepository(cloudinary)
   );
 }

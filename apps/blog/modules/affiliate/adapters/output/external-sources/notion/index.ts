@@ -1,3 +1,4 @@
+export { NotionAffiliateExternalImageSource } from './externalImageSource';
 export {
   determineAffiliateType,
   notionPageToAffiliate,
