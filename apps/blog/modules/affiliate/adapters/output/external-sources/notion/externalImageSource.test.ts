@@ -120,7 +120,9 @@ describe('NotionAffiliateExternalImageSource', () => {
         'test-db-id'
       );
 
-      await expect(sut.fetchImageSources()).rejects.toThrow(ExternalSourceError);
+      await expect(sut.fetchImageSources()).rejects.toThrow(
+        ExternalSourceError
+      );
     });
 
     it('includes source name in error message', async () => {
