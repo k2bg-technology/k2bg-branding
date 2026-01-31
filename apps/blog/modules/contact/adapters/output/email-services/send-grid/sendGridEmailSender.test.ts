@@ -27,33 +27,37 @@ vi.mock('@sendgrid/mail', () => ({
   ResponseError: MockResponseError,
 }));
 
+function createContact(): Contact {
+  return Contact.create({
+    name: 'John Doe',
+    email: 'john@example.com',
+    message: 'Test message',
+  });
+}
+
 describe('SendGridEmailSender', () => {
   const apiKey = 'test-api-key';
   const senderEmail = 'sender@example.com';
-  let emailSender: SendGridEmailSender;
-  let contact: Contact;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    emailSender = new SendGridEmailSender(apiKey, senderEmail);
-    contact = Contact.create({
-      name: 'John Doe',
-      email: 'john@example.com',
-      message: 'Test message',
-    });
   });
 
   describe('constructor', () => {
-    it('should set the API key on initialization', () => {
+    it('sets the API key on initialization', () => {
+      new SendGridEmailSender(apiKey, senderEmail);
+
       expect(mockSetApiKey).toHaveBeenCalledWith(apiKey);
     });
   });
 
   describe('send', () => {
-    it('should send email with correct parameters', async () => {
+    it('sends email with correct parameters', async () => {
       mockSend.mockResolvedValue(undefined);
+      const sut = new SendGridEmailSender(apiKey, senderEmail);
+      const contact = createContact();
 
-      await emailSender.send(contact, 'Test Subject', '<p>Test body</p>');
+      await sut.send(contact, 'Test Subject', '<p>Test body</p>');
 
       expect(mockSend).toHaveBeenCalledWith({
         to: 'john@example.com',
@@ -64,35 +68,41 @@ describe('SendGridEmailSender', () => {
       });
     });
 
-    it('should throw EmailSendFailedError when SendGrid returns ResponseError', async () => {
+    it('throws EmailSendFailedError when SendGrid returns ResponseError', async () => {
       const responseError = new MockResponseError({ body: 'API Error' });
       mockSend.mockRejectedValue(responseError);
+      const sut = new SendGridEmailSender(apiKey, senderEmail);
+      const contact = createContact();
 
       await expect(
-        emailSender.send(contact, 'Subject', '<p>Body</p>')
+        sut.send(contact, 'Subject', '<p>Body</p>')
       ).rejects.toThrow(EmailSendFailedError);
     });
 
-    it('should throw EmailSendFailedError with message for generic errors', async () => {
+    it('throws EmailSendFailedError with message for generic errors', async () => {
       mockSend.mockRejectedValue(new Error('Network error'));
+      const sut = new SendGridEmailSender(apiKey, senderEmail);
+      const contact = createContact();
 
-      await expect(
-        emailSender.send(contact, 'Subject', '<p>Body</p>')
-      ).rejects.toThrow(EmailSendFailedError);
-      await expect(
-        emailSender.send(contact, 'Subject', '<p>Body</p>')
-      ).rejects.toThrow('Failed to send email: Network error');
+      await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
+        EmailSendFailedError
+      );
+      await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
+        'Failed to send email: Network error'
+      );
     });
 
-    it('should handle unknown error types', async () => {
+    it('handles unknown error types', async () => {
       mockSend.mockRejectedValue('Unknown error');
+      const sut = new SendGridEmailSender(apiKey, senderEmail);
+      const contact = createContact();
 
-      await expect(
-        emailSender.send(contact, 'Subject', '<p>Body</p>')
-      ).rejects.toThrow(EmailSendFailedError);
-      await expect(
-        emailSender.send(contact, 'Subject', '<p>Body</p>')
-      ).rejects.toThrow('Failed to send email: Unknown error occurred');
+      await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
+        EmailSendFailedError
+      );
+      await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
+        'Failed to send email: Unknown error occurred'
+      );
     });
   });
 });
