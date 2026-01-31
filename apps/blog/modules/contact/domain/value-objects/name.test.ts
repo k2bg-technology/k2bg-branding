@@ -5,29 +5,29 @@ import { Name } from './name';
 
 describe('Name Value Object', () => {
   describe('create', () => {
-    it('should create a valid name', () => {
-      const name = Name.create('John Doe');
+    it('creates a valid name', () => {
+      const sut = Name.create('John Doe');
 
-      expect(name.getValue()).toBe('John Doe');
+      expect(sut.getValue()).toBe('John Doe');
     });
 
-    it('should trim whitespace', () => {
-      const name = Name.create('  John Doe  ');
+    it('trims whitespace', () => {
+      const sut = Name.create('  John Doe  ');
 
-      expect(name.getValue()).toBe('John Doe');
+      expect(sut.getValue()).toBe('John Doe');
     });
 
-    it('should throw InvalidNameError when name is empty', () => {
+    it('throws InvalidNameError when name is empty', () => {
       expect(() => Name.create('')).toThrow(InvalidNameError);
       expect(() => Name.create('')).toThrow('Name cannot be empty');
     });
 
-    it('should throw InvalidNameError when name is whitespace only', () => {
+    it('throws InvalidNameError when name is whitespace only', () => {
       expect(() => Name.create('   ')).toThrow(InvalidNameError);
       expect(() => Name.create('   ')).toThrow('Name cannot be empty');
     });
 
-    it('should throw InvalidNameError when name exceeds max length', () => {
+    it('throws InvalidNameError when name exceeds max length', () => {
       const longName = 'a'.repeat(101);
 
       expect(() => Name.create(longName)).toThrow(InvalidNameError);
@@ -36,24 +36,24 @@ describe('Name Value Object', () => {
       );
     });
 
-    it('should accept name at max length', () => {
+    it('accepts name at max length', () => {
       const maxLengthName = 'a'.repeat(100);
-      const name = Name.create(maxLengthName);
+      const sut = Name.create(maxLengthName);
 
-      expect(name.getValue()).toBe(maxLengthName);
-      expect(name.getLength()).toBe(100);
+      expect(sut.getValue()).toBe(maxLengthName);
+      expect(sut.getLength()).toBe(100);
     });
   });
 
   describe('equals', () => {
-    it('should return true for names with same value', () => {
+    it('returns true for names with same value', () => {
       const name1 = Name.create('John Doe');
       const name2 = Name.create('John Doe');
 
       expect(name1.equals(name2)).toBe(true);
     });
 
-    it('should return false for names with different values', () => {
+    it('returns false for names with different values', () => {
       const name1 = Name.create('John Doe');
       const name2 = Name.create('Jane Doe');
 
@@ -62,10 +62,10 @@ describe('Name Value Object', () => {
   });
 
   describe('reconstitute', () => {
-    it('should create name without validation', () => {
-      const name = Name.reconstitute('Existing Name');
+    it('creates name without validation', () => {
+      const sut = Name.reconstitute('Existing Name');
 
-      expect(name.getValue()).toBe('Existing Name');
+      expect(sut.getValue()).toBe('Existing Name');
     });
   });
 });

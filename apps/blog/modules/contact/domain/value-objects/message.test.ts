@@ -5,29 +5,29 @@ import { Message } from './message';
 
 describe('Message Value Object', () => {
   describe('create', () => {
-    it('should create a valid message', () => {
-      const message = Message.create('Hello, this is a test message.');
+    it('creates a valid message', () => {
+      const sut = Message.create('Hello, this is a test message.');
 
-      expect(message.getValue()).toBe('Hello, this is a test message.');
+      expect(sut.getValue()).toBe('Hello, this is a test message.');
     });
 
-    it('should trim whitespace', () => {
-      const message = Message.create('  Hello World  ');
+    it('trims whitespace', () => {
+      const sut = Message.create('  Hello World  ');
 
-      expect(message.getValue()).toBe('Hello World');
+      expect(sut.getValue()).toBe('Hello World');
     });
 
-    it('should throw InvalidMessageError when message is empty', () => {
+    it('throws InvalidMessageError when message is empty', () => {
       expect(() => Message.create('')).toThrow(InvalidMessageError);
       expect(() => Message.create('')).toThrow('Message cannot be empty');
     });
 
-    it('should throw InvalidMessageError when message is whitespace only', () => {
+    it('throws InvalidMessageError when message is whitespace only', () => {
       expect(() => Message.create('   ')).toThrow(InvalidMessageError);
       expect(() => Message.create('   ')).toThrow('Message cannot be empty');
     });
 
-    it('should throw InvalidMessageError when message exceeds max length', () => {
+    it('throws InvalidMessageError when message exceeds max length', () => {
       const longMessage = 'a'.repeat(5001);
 
       expect(() => Message.create(longMessage)).toThrow(InvalidMessageError);
@@ -36,24 +36,24 @@ describe('Message Value Object', () => {
       );
     });
 
-    it('should accept message at max length', () => {
+    it('accepts message at max length', () => {
       const maxLengthMessage = 'a'.repeat(5000);
-      const message = Message.create(maxLengthMessage);
+      const sut = Message.create(maxLengthMessage);
 
-      expect(message.getValue()).toBe(maxLengthMessage);
-      expect(message.getLength()).toBe(5000);
+      expect(sut.getValue()).toBe(maxLengthMessage);
+      expect(sut.getLength()).toBe(5000);
     });
   });
 
   describe('equals', () => {
-    it('should return true for messages with same value', () => {
+    it('returns true for messages with same value', () => {
       const message1 = Message.create('Hello World');
       const message2 = Message.create('Hello World');
 
       expect(message1.equals(message2)).toBe(true);
     });
 
-    it('should return false for messages with different values', () => {
+    it('returns false for messages with different values', () => {
       const message1 = Message.create('Hello');
       const message2 = Message.create('World');
 
@@ -62,10 +62,10 @@ describe('Message Value Object', () => {
   });
 
   describe('reconstitute', () => {
-    it('should create message without validation', () => {
-      const message = Message.reconstitute('Existing message');
+    it('creates message without validation', () => {
+      const sut = Message.reconstitute('Existing message');
 
-      expect(message.getValue()).toBe('Existing message');
+      expect(sut.getValue()).toBe('Existing message');
     });
   });
 });

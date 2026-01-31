@@ -5,21 +5,19 @@ import { Contact } from './contact';
 
 describe('Contact Entity', () => {
   describe('create', () => {
-    it('should create a valid contact', () => {
-      const contact = Contact.create({
+    it('creates a valid contact', () => {
+      const sut = Contact.create({
         name: 'John Doe',
         email: 'john@example.com',
         message: 'Hello, this is a test message.',
       });
 
-      expect(contact.name.getValue()).toBe('John Doe');
-      expect(contact.email.getValue()).toBe('john@example.com');
-      expect(contact.message.getValue()).toBe(
-        'Hello, this is a test message.'
-      );
+      expect(sut.name.getValue()).toBe('John Doe');
+      expect(sut.email.getValue()).toBe('john@example.com');
+      expect(sut.message.getValue()).toBe('Hello, this is a test message.');
     });
 
-    it('should throw InvalidNameError when name is invalid', () => {
+    it('throws InvalidNameError when name is invalid', () => {
       expect(() =>
         Contact.create({
           name: '',
@@ -29,7 +27,7 @@ describe('Contact Entity', () => {
       ).toThrow(InvalidNameError);
     });
 
-    it('should throw InvalidEmailError when email is invalid', () => {
+    it('throws InvalidEmailError when email is invalid', () => {
       expect(() =>
         Contact.create({
           name: 'John Doe',
@@ -41,14 +39,14 @@ describe('Contact Entity', () => {
   });
 
   describe('toPrimitives', () => {
-    it('should return primitive values', () => {
-      const contact = Contact.create({
+    it('returns primitive values', () => {
+      const sut = Contact.create({
         name: 'John Doe',
         email: 'john@example.com',
         message: 'Test message',
       });
 
-      const primitives = contact.toPrimitives();
+      const primitives = sut.toPrimitives();
 
       expect(primitives).toEqual({
         name: 'John Doe',
