@@ -13,3 +13,4 @@ export {
   createSyncPostsFromExternalUseCase,
   createSyncHeroImagesUseCase,
 } from './post';
+export { createFetchFeedUseCase } from './social-feed';
