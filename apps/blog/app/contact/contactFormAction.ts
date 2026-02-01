@@ -3,10 +3,7 @@
 import { verify } from 'hcaptcha';
 
 import { createSendEmailUseCase } from '../../infrastructure/di';
-import {
-  type Contact,
-  contactSchema,
-} from '../../modules/interfaces/contact/validator';
+import { type Contact, contactSchema } from './contactSchema';
 
 export async function contactFormAction(
   data: Contact & {
