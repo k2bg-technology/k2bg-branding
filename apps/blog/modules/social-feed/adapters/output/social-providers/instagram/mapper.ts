@@ -27,7 +27,9 @@ function mapMediaType(mediaType: string): MediaType {
 /**
  * Maps Instagram API response to domain SocialPost entity
  */
-export function mapToSocialPost(data: InstagramMediaDetailResponse): SocialPost {
+export function mapToSocialPost(
+  data: InstagramMediaDetailResponse
+): SocialPost {
   const props: SocialPostProps = {
     id: PostId.create(data.id),
     mediaUrl: MediaUrl.create(data.media_url),
