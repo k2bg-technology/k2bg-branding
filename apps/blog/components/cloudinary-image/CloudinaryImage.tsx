@@ -1,7 +1,11 @@
 import Image, { type ImageProps } from 'next/image';
 import { Icon, Skelton } from 'ui';
 
-import * as Cloudinary from '../../modules/data-access/cloudinary';
+import {
+  fetchImageVersion,
+  getOptimizedImageUrl,
+  getPlaceholderImageUrl,
+} from '../../infrastructure/cloudinary';
 
 interface CloudinaryImageProps
   extends Omit<ImageProps, 'placeholder' | 'blurDataURL'> {
@@ -11,18 +15,10 @@ interface CloudinaryImageProps
 export async function CloudinaryImage(props: CloudinaryImageProps) {
   const { publicId, alt, ...rest } = props;
 
-  const imageRepository = new Cloudinary.Repository();
-
   try {
-    const version = await imageRepository.fetchImageVersion(publicId);
-    const optimizedImageUrl = imageRepository.getOptimizedImageUrl(
-      publicId,
-      version
-    );
-    const placeholderImageUrl = imageRepository.getPlaceholderImageUrl(
-      publicId,
-      version
-    );
+    const version = await fetchImageVersion(publicId);
+    const optimizedImageUrl = getOptimizedImageUrl(publicId, { version });
+    const placeholderImageUrl = getPlaceholderImageUrl(publicId, { version });
     const placeholderImageBase64 = await fetch(placeholderImageUrl).then(
       async (res) =>
         `data:image/webp;base64,${Buffer.from(await res.arrayBuffer()).toString(
