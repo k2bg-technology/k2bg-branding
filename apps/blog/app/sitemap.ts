@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 import { createFetchAllSlugsUseCase } from '../infrastructure/di';
-import { Category } from '../modules/domain/post/types';
+import { Category } from '../modules/post/domain';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.SITE_BASE_URL || 'http://localhost:3000';
