@@ -1,0 +1,1 @@
+export { InstagramFeedFetcher } from './output';
