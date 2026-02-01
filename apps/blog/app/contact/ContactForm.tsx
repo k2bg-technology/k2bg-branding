@@ -6,10 +6,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Form, useToast } from 'ui';
-
-import { contactSchema } from '../../modules/interfaces/contact/validator';
-
 import { contactFormAction } from './contactFormAction';
+import { contactSchema } from './contactSchema';
 
 export default function ContactForm() {
   const captchaRef = useRef<HCaptcha>(null);
