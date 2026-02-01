@@ -1,12 +1,18 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, type Mock, vi } from 'vitest';
 import { MediaType } from '../../../../domain';
-import { InstagramFeedFetcher } from './feedFetcher';
+import { type InstagramClient, InstagramFeedFetcher } from './feedFetcher';
 
-vi.mock('../../../shared', () => ({
-  INSTAGRAM_GRAPH_API_BASE_URL: 'https://graph.instagram.com',
-  INSTAGRAM_LONG_ACCESS_TOKEN: 'test-token',
-  INSTAGRAM_USER_ID: 'test-user-id',
-}));
+const TEST_USER_ID = 'test-user-id';
+
+interface MockInstagramClient extends InstagramClient {
+  fetch: Mock<InstagramClient['fetch']>;
+}
+
+function createMockClient(): MockInstagramClient {
+  return {
+    fetch: vi.fn(),
+  };
+}
 
 function createMediaListResponse(ids: string[] = ['1', '2', '3']) {
   return {
@@ -29,20 +35,13 @@ function createMediaDetailResponse(
 }
 
 describe('InstagramFeedFetcher', () => {
-  beforeEach(() => {
-    vi.spyOn(globalThis, 'fetch');
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-  });
-
   describe('fetchUserMedia', () => {
     it('returns empty array when API returns no data', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
+      const mockClient = createMockClient();
+      mockClient.fetch.mockResolvedValueOnce({
         json: () => Promise.resolve({ data: undefined }),
       } as Response);
-      const sut = new InstagramFeedFetcher();
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
 
       const result = await sut.fetchUserMedia();
 
@@ -50,10 +49,11 @@ describe('InstagramFeedFetcher', () => {
     });
 
     it('returns empty array when API returns empty data array', async () => {
-      vi.mocked(fetch).mockResolvedValueOnce({
+      const mockClient = createMockClient();
+      mockClient.fetch.mockResolvedValueOnce({
         json: () => Promise.resolve({ data: [] }),
       } as Response);
-      const sut = new InstagramFeedFetcher();
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
 
       const result = await sut.fetchUserMedia();
 
@@ -61,7 +61,8 @@ describe('InstagramFeedFetcher', () => {
     });
 
     it('fetches and maps social posts from Instagram API', async () => {
-      vi.mocked(fetch)
+      const mockClient = createMockClient();
+      mockClient.fetch
         .mockResolvedValueOnce({
           json: () => Promise.resolve(createMediaListResponse(['1', '2'])),
         } as Response)
@@ -71,7 +72,7 @@ describe('InstagramFeedFetcher', () => {
         .mockResolvedValueOnce({
           json: () => Promise.resolve(createMediaDetailResponse('2')),
         } as Response);
-      const sut = new InstagramFeedFetcher();
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
 
       const result = await sut.fetchUserMedia();
 
@@ -81,8 +82,40 @@ describe('InstagramFeedFetcher', () => {
       expect(result[1].id.getValue()).toBe('2');
     });
 
+    it('calls client.fetch with correct userId for media list', async () => {
+      const mockClient = createMockClient();
+      mockClient.fetch.mockResolvedValueOnce({
+        json: () => Promise.resolve({ data: [] }),
+      } as Response);
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
+
+      await sut.fetchUserMedia();
+
+      expect(mockClient.fetch).toHaveBeenCalledWith(`${TEST_USER_ID}/media`);
+    });
+
+    it('calls client.fetch with fields for media detail', async () => {
+      const mockClient = createMockClient();
+      mockClient.fetch
+        .mockResolvedValueOnce({
+          json: () => Promise.resolve(createMediaListResponse(['1'])),
+        } as Response)
+        .mockResolvedValueOnce({
+          json: () => Promise.resolve(createMediaDetailResponse('1')),
+        } as Response);
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
+
+      await sut.fetchUserMedia();
+
+      expect(mockClient.fetch).toHaveBeenCalledWith('1', {
+        fields:
+          'id,media_type,media_url,permalink,thumbnail_url,timestamp,caption',
+      });
+    });
+
     it('respects limit parameter', async () => {
-      vi.mocked(fetch)
+      const mockClient = createMockClient();
+      mockClient.fetch
         .mockResolvedValueOnce({
           json: () =>
             Promise.resolve(createMediaListResponse(['1', '2', '3', '4', '5'])),
@@ -93,17 +126,18 @@ describe('InstagramFeedFetcher', () => {
         .mockResolvedValueOnce({
           json: () => Promise.resolve(createMediaDetailResponse('2')),
         } as Response);
-      const sut = new InstagramFeedFetcher();
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
       const limit = 2;
 
       const result = await sut.fetchUserMedia(limit);
 
       expect(result).toHaveLength(2);
-      expect(fetch).toHaveBeenCalledTimes(3);
+      expect(mockClient.fetch).toHaveBeenCalledTimes(3);
     });
 
     it('maps VIDEO type with thumbnailUrl correctly', async () => {
-      vi.mocked(fetch)
+      const mockClient = createMockClient();
+      mockClient.fetch
         .mockResolvedValueOnce({
           json: () => Promise.resolve(createMediaListResponse(['1'])),
         } as Response)
@@ -116,7 +150,7 @@ describe('InstagramFeedFetcher', () => {
               })
             ),
         } as Response);
-      const sut = new InstagramFeedFetcher();
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
 
       const result = await sut.fetchUserMedia();
 
@@ -128,7 +162,8 @@ describe('InstagramFeedFetcher', () => {
 
     it('includes caption when available', async () => {
       const caption = 'Test caption';
-      vi.mocked(fetch)
+      const mockClient = createMockClient();
+      mockClient.fetch
         .mockResolvedValueOnce({
           json: () => Promise.resolve(createMediaListResponse(['1'])),
         } as Response)
@@ -136,7 +171,7 @@ describe('InstagramFeedFetcher', () => {
           json: () =>
             Promise.resolve(createMediaDetailResponse('1', { caption })),
         } as Response);
-      const sut = new InstagramFeedFetcher();
+      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
 
       const result = await sut.fetchUserMedia();
 

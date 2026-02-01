@@ -1,5 +1,0 @@
-export {
-  INSTAGRAM_GRAPH_API_BASE_URL,
-  INSTAGRAM_LONG_ACCESS_TOKEN,
-  INSTAGRAM_USER_ID,
-} from './constants';
