@@ -1,16 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import Instagram from '../../modules/data-access/instagram';
+import { createFetchFeedUseCase } from '../../infrastructure/di';
 
 const MAX_MEDIA_COUNT = 6;
 
 export default async function InstagramTimeline() {
-  const InstagramFetcher = new Instagram.Fetcher();
+  const fetchFeed = createFetchFeedUseCase();
+  const posts = await fetchFeed.execute({ limit: MAX_MEDIA_COUNT });
 
-  const userMedia = await InstagramFetcher.fetchUserMedia();
-
-  if (!userMedia.data) {
+  if (posts.length === 0) {
     return (
       <div className="p-spacious rounded-lg bg-base-white/50">
         <p className="text-body-r-sm leading-body-r-sm text-base-black">
@@ -20,18 +19,12 @@ export default async function InstagramTimeline() {
     );
   }
 
-  const mediaData = await Promise.all(
-    userMedia.data.flatMap((data, index) =>
-      index < MAX_MEDIA_COUNT ? InstagramFetcher.fetchMediaData(data.id) : []
-    )
-  );
-
   return (
     <div className="grid grid-cols-2 gap-2">
-      {mediaData.map((data) => (
+      {posts.map((post) => (
         <Link
-          key={data.id}
-          href={data.permalink}
+          key={post.id}
+          href={post.permalink}
           passHref
           target="_blank"
           rel="noreferrer"
@@ -39,11 +32,7 @@ export default async function InstagramTimeline() {
           <div className="relative w-[8.8125rem] h-[8.8125rem]">
             <Image
               alt="instagram media"
-              src={
-                data.media_type === 'IMAGE'
-                  ? data.media_url
-                  : data.thumbnail_url
-              }
+              src={post.displayUrl}
               className="aspect-square w-full h-full object-cover"
               fill
               sizes="100%"
