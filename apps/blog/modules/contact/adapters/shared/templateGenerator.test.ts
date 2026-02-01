@@ -2,7 +2,7 @@ import fs from 'fs';
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { generateHtmlTemplate } from './generateHtmlTemplate';
+import { generateHtmlTemplate } from './templateGenerator';
 
 vi.mock('fs', () => ({
   default: {
