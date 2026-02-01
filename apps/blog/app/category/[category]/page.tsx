@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
 import { createFetchPostsByCategoryUseCase } from '../../../infrastructure/di';
-import { Category } from '../../../modules/domain/post/types';
+import { Category } from '../../../modules/post/domain';
 
 const PAGE_SIZE = 6;
 

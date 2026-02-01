@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
-import { Category } from '../../modules/domain/post/types';
+import { Category } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import Search from '../search/Search';
 import Sidebar from '../sidebar/Sidebar';
