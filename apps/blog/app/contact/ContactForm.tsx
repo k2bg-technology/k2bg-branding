@@ -28,7 +28,7 @@ export default function ContactForm() {
   } = useForm({
     resolver: zodResolver(contactSchema),
     defaultValues,
-    mode: 'onBlur',
+    mode: 'onChange',
   });
 
   const mutation = useMutation({
