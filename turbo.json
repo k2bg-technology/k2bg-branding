@@ -22,7 +22,11 @@
         "SEND_GRID_API_KEY",
         "SEND_GRID_SINGLE_SENDER_DOMAIN",
         "NEXT_PUBLIC_H_CAPTCHA_SITE_KEY",
-        "H_CAPTCHA_SECRET"
+        "H_CAPTCHA_SECRET",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "AWS_REGION",
+        "AWS_SES_SENDER_EMAIL"
       ]
     },
     "start": {},
