@@ -28,20 +28,20 @@ describe('Message Value Object', () => {
     });
 
     it('throws InvalidMessageError when message exceeds max length', () => {
-      const longMessage = 'a'.repeat(5001);
+      const longMessage = 'a'.repeat(1001);
 
       expect(() => Message.create(longMessage)).toThrow(InvalidMessageError);
       expect(() => Message.create(longMessage)).toThrow(
-        'Message must be 5000 characters or less'
+        'Message must be 1000 characters or less'
       );
     });
 
     it('accepts message at max length', () => {
-      const maxLengthMessage = 'a'.repeat(5000);
+      const maxLengthMessage = 'a'.repeat(1000);
       const sut = Message.create(maxLengthMessage);
 
       expect(sut.getValue()).toBe(maxLengthMessage);
-      expect(sut.getLength()).toBe(5000);
+      expect(sut.getLength()).toBe(1000);
     });
   });
 

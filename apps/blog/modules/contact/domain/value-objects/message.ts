@@ -7,7 +7,7 @@ import { InvalidMessageError } from '../errors/errors';
  * Validates that the message is not empty and does not exceed maximum length.
  */
 export class Message {
-  private static readonly MAX_LENGTH = 5000;
+  private static readonly MAX_LENGTH = 1000;
 
   private readonly value: string;
 

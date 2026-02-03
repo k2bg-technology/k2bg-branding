@@ -8,5 +8,8 @@ export const contactSchema = z.object({
     .string()
     .min(1, 'Eメールを入力してください')
     .email('有効なEメールアドレスを入力してください'),
-  message: z.string().min(1, 'メッセージを入力してください'),
+  message: z
+    .string()
+    .min(1, 'メッセージを入力してください')
+    .max(1000, 'メッセージは1000文字以内で入力してください'),
 });
