@@ -1,5 +1,6 @@
 import {
   type SESClient,
+  SESServiceException,
   SendEmailCommand,
   type SendEmailCommandInput,
 } from '@aws-sdk/client-ses';
@@ -38,10 +39,12 @@ export class AwsSesEmailSender implements EmailSender {
     try {
       await this.sesClient.send(new SendEmailCommand(params));
     } catch (error) {
-      if (error instanceof Error) {
-        throw new EmailSendFailedError(error.message);
+      if (error instanceof SESServiceException) {
+        throw new EmailSendFailedError(`[${error.name}] ${error.message}`);
       }
-      throw new EmailSendFailedError('Unknown error occurred');
+      throw new EmailSendFailedError(
+        error instanceof Error ? error.message : 'Unknown error occurred'
+      );
     }
   }
 }
