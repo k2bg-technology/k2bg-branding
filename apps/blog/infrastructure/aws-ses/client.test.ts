@@ -28,10 +28,10 @@ describe('aws-ses/client', () => {
     resetAwsSesConfig();
     process.env = {
       ...originalEnv,
-      AWS_REGION: 'us-east-1',
-      AWS_ACCESS_KEY_ID: 'test-access-key',
-      AWS_SECRET_ACCESS_KEY: 'test-secret-key',
-      AWS_SES_SENDER_EMAIL: 'test@example.com',
+      AMAZON_REGION: 'us-east-1',
+      AMAZON_ACCESS_KEY_ID: 'test-access-key',
+      AMAZON_SECRET_ACCESS_KEY: 'test-secret-key',
+      AMAZON_SES_SENDER_EMAIL: 'test@example.com',
     };
   });
 
@@ -61,7 +61,7 @@ describe('aws-ses/client', () => {
     });
 
     it('uses default region when not specified', () => {
-      process.env.AWS_REGION = '';
+      process.env.AMAZON_REGION = '';
 
       resetAwsSesConfig();
       const emailSender = getAwsSesEmailSender();

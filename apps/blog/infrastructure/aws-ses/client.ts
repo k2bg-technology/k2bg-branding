@@ -14,10 +14,10 @@ let currentConfig: AwsSesConfig | null = null;
 
 function createDefaultConfig(): AwsSesConfig {
   return {
-    region: process.env.AWS_REGION ?? 'ap-northeast-1',
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
-    senderEmail: process.env.AWS_SES_SENDER_EMAIL ?? '',
+    region: process.env.AMAZON_REGION ?? 'ap-northeast-1',
+    accessKeyId: process.env.AMAZON_ACCESS_KEY_ID ?? '',
+    secretAccessKey: process.env.AMAZON_SECRET_ACCESS_KEY ?? '',
+    senderEmail: process.env.AMAZON_SES_SENDER_EMAIL ?? '',
   };
 }
 
