@@ -4,4 +4,3 @@ export * from './di';
 export * from './instagram';
 export * from './notion';
 export * from './prisma';
-export * from './sendgrid';
