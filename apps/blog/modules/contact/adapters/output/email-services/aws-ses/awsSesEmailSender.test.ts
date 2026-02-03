@@ -3,7 +3,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Contact, EmailSendFailedError } from '../../../../domain';
 import { AwsSesEmailSender } from './awsSesEmailSender';
 
-const { mockSend, MockSESClient, MockSendEmailCommand } = vi.hoisted(() => {
+const {
+  mockSend,
+  MockSESClient,
+  MockSendEmailCommand,
+  MockSESServiceException,
+} = vi.hoisted(() => {
   const mockSend = vi.fn();
 
   class MockSESClient {
@@ -17,12 +22,26 @@ const { mockSend, MockSESClient, MockSendEmailCommand } = vi.hoisted(() => {
     }
   }
 
-  return { mockSend, MockSESClient, MockSendEmailCommand };
+  class MockSESServiceException extends Error {
+    readonly $fault = 'client';
+    constructor(options: { name: string; message: string }) {
+      super(options.message);
+      this.name = options.name;
+    }
+  }
+
+  return {
+    mockSend,
+    MockSESClient,
+    MockSendEmailCommand,
+    MockSESServiceException,
+  };
 });
 
 vi.mock('@aws-sdk/client-ses', () => ({
   SESClient: MockSESClient,
   SendEmailCommand: MockSendEmailCommand,
+  SESServiceException: MockSESServiceException,
 }));
 
 function createContact(): Contact {
@@ -88,7 +107,10 @@ describe('AwsSesEmailSender', () => {
     });
 
     it('throws EmailSendFailedError when SES returns an error', async () => {
-      const sesError = new Error('SES API Error');
+      const sesError = new MockSESServiceException({
+        name: 'MessageRejected',
+        message: 'Email address is not verified',
+      });
       mockSend.mockRejectedValue(sesError);
       const sut = new AwsSesEmailSender(
         mockSesClient as unknown as ConstructorParameters<
@@ -102,7 +124,7 @@ describe('AwsSesEmailSender', () => {
         EmailSendFailedError
       );
       await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
-        'Failed to send email: SES API Error'
+        'Failed to send email: [MessageRejected] Email address is not verified'
       );
     });
 
@@ -121,6 +143,25 @@ describe('AwsSesEmailSender', () => {
       );
       await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
         'Failed to send email: Unknown error occurred'
+      );
+    });
+
+    it('handles non-SES Error types', async () => {
+      const genericError = new Error('Network timeout');
+      mockSend.mockRejectedValue(genericError);
+      const sut = new AwsSesEmailSender(
+        mockSesClient as unknown as ConstructorParameters<
+          typeof AwsSesEmailSender
+        >[0],
+        senderEmail
+      );
+      const contact = createContact();
+
+      await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
+        EmailSendFailedError
+      );
+      await expect(sut.send(contact, 'Subject', '<p>Body</p>')).rejects.toThrow(
+        'Failed to send email: Network timeout'
       );
     });
   });
