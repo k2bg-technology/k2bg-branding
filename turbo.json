@@ -19,10 +19,12 @@
         "CLOUDINARY_API_KEY",
         "CLOUDINARY_API_SECRET",
         "GOOGLE_TAG_MANAGER_ID",
-        "SEND_GRID_API_KEY",
-        "SEND_GRID_SINGLE_SENDER_DOMAIN",
         "NEXT_PUBLIC_H_CAPTCHA_SITE_KEY",
-        "H_CAPTCHA_SECRET"
+        "H_CAPTCHA_SECRET",
+        "AMAZON_ACCESS_KEY_ID",
+        "AMAZON_SECRET_ACCESS_KEY",
+        "AMAZON_REGION",
+        "AMAZON_SES_SENDER_EMAIL"
       ]
     },
     "start": {},

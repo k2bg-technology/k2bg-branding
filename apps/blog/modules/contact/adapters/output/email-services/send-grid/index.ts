@@ -1,1 +1,0 @@
-export { SendGridEmailSender } from './sendGridEmailSender';

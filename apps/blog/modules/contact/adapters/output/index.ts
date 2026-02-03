@@ -1,1 +1,1 @@
-export { SendGridEmailSender } from './email-services';
+export { AwsSesEmailSender } from './email-services';

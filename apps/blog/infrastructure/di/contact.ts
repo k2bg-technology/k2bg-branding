@@ -1,6 +1,6 @@
 import { SendEmail } from '../../modules/contact/use-cases';
-import { getSendGridEmailSender } from '../sendgrid';
+import { getAwsSesEmailSender } from '../aws-ses';
 
 export function createSendEmailUseCase(): SendEmail {
-  return new SendEmail(getSendGridEmailSender());
+  return new SendEmail(getAwsSesEmailSender());
 }

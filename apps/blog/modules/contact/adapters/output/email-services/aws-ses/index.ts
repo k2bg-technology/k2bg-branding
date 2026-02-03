@@ -1,0 +1,1 @@
+export { AwsSesEmailSender } from './awsSesEmailSender';
