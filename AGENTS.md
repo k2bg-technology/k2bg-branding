@@ -9,7 +9,7 @@
 
 ## Build, Test, and Development Commands
 
-- Install: `pnpm install` (pnpm 8+).
+- Install: `pnpm install` (pnpm 9+).
 - Develop all: `pnpm dev` (runs `turbo run dev`).
 - Filter to one app: `pnpm -F blog dev` or `pnpm -F portfolio dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
