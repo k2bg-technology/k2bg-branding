@@ -48,19 +48,18 @@ pnpm generate:style        # Generate style files
 
 ### Blog App - Clean Architecture Pattern
 
-The blog follows a layered architecture with clear separation:
+The blog follows Clean Architecture with vertical slicing by domain module. Each module (`post`, `contact`, `media`, `affiliate`, `social-feed`) contains three layers:
 
-- **`modules/domain/`** - Business entities and core logic
-- **`modules/data-access/`** - External integrations (Notion, Prisma, Cloudinary, SendGrid)
-- **`modules/use-cases/`** - Application business rules
-- **`modules/interfaces/`** - Input validation and adapters
+- **`modules/<module>/domain/`** - Entities, value objects, repository interfaces (ports), errors
+- **`modules/<module>/use-cases/`** - Application business rules (query / command / sync)
+- **`modules/<module>/adapters/`** - Infrastructure implementations (Notion, Prisma, Cloudinary, AWS SES, Instagram)
 
 ### Key Integrations
 
 - **Notion API** - Content management and blog posts
 - **Prisma + PostgreSQL** - Database ORM and persistence
 - **Cloudinary** - Image optimization and CDN
-- **SendGrid** - Email service for contact forms
+- **AWS SES** - Email service for contact forms
 
 ### Portfolio App
 
@@ -85,7 +84,7 @@ Critical environment variables (see `turbo.json` for complete list):
 - `NOTION_TOKEN` - Notion API access
 - `NOTION_*_DATABASE_ID` - Database IDs for different content types
 - `CLOUDINARY_*` - Image management (cloud name, API key/secret)
-- `SEND_GRID_API_KEY` - Email service for contact forms
+- `AMAZON_ACCESS_KEY_ID` / `AMAZON_SECRET_ACCESS_KEY` / `AMAZON_REGION` / `AMAZON_SES_SENDER_EMAIL` - AWS SES email service
 - `NEXT_PUBLIC_H_CAPTCHA_SITE_KEY` / `H_CAPTCHA_SECRET` - CAPTCHA verification
 - `INSTAGRAM_LONG_ACCESS_TOKEN` - Instagram integration
 - Database connection strings for Prisma
