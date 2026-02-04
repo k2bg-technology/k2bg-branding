@@ -138,7 +138,7 @@ body:
         - label: Notion API integration
         - label: Prisma/Database
         - label: Cloudinary integration
-        - label: Email/SendGrid
+        - label: Email/AWS SES
         - label: Internationalization (i18n)
         - label: Build/Deployment
         - label: Testing
