@@ -80,7 +80,7 @@ import { Button, Drawer, DropdownMenu } from 'ui';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 
 // 3. Domain/business logic
-import { Category } from '../../modules/domain/post/types';
+import { Category } from '../../modules/post/domain/types';
 
 // 4. Local/same-directory imports
 import MotionHeader from './MotionHeader';
@@ -125,12 +125,13 @@ export type Category = (typeof Category)[keyof typeof Category];
 
 ### Blog App - Clean Architecture
 
+The blog follows Clean Architecture with vertical slicing by domain module. Each module (`post`, `contact`, `media`, `affiliate`, `social-feed`) contains three layers:
+
 ```
-modules/
-├── domain/           # Business entities and core logic
-├── data-access/      # External integrations (Notion, Prisma, etc.)
-├── use-cases/        # Application business rules
-└── interfaces/       # Input validation and adapters
+modules/<module>/
+├── domain/           # Entities, value objects, repository interfaces (ports), errors
+├── use-cases/        # Application business rules (query / command / sync)
+└── adapters/         # Infrastructure implementations (Notion, Prisma, Cloudinary, AWS SES, Instagram)
 ```
 
 ### Repository Pattern
@@ -321,7 +322,7 @@ Button.displayName = 'Button';
 
 - `NOTION_TOKEN` - Notion API access
 - `CLOUDINARY_*` - Image management
-- `SEND_GRID_API_KEY` - Email service
+- `AMAZON_ACCESS_KEY_ID` / `AMAZON_SECRET_ACCESS_KEY` / `AMAZON_REGION` / `AMAZON_SES_SENDER_EMAIL` - AWS SES email service
 - Database connection strings
 
 ### Configuration Files
