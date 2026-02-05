@@ -1,6 +1,6 @@
 import Script from 'next/script';
 
-export default function GoogleAdsense() {
+export function GoogleAdsense() {
   if (process.env.NODE_ENV === 'production') {
     return (
       <Script

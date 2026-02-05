@@ -2,7 +2,7 @@ interface Props {
   title: string;
 }
 
-export default function SidebarItem(props: React.PropsWithChildren<Props>) {
+export function SidebarItem(props: React.PropsWithChildren<Props>) {
   const { title, children } = props;
 
   return (

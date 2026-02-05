@@ -1,6 +1,6 @@
 import { Icon } from 'ui';
 
-export default function Skelton() {
+export function Skelton() {
   return (
     <div
       aria-hidden="true"

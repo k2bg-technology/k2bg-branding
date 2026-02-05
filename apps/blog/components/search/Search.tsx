@@ -8,7 +8,7 @@ interface Props {
   placeholder: string;
 }
 
-export default function Search(props: Props) {
+export function Search(props: Props) {
   const { placeholder } = props;
 
   const searchParams = useSearchParams();

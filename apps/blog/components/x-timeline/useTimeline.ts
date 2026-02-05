@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-export default function useTimeline() {
+export function useTimeline() {
   useEffect(() => {
     const script = document.createElement('script');
     script.src = 'https://platform.twitter.com/widgets.js';

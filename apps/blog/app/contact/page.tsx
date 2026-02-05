@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
-import Sidebar from '../../components/sidebar/Sidebar';
+import { Sidebar } from '../../components/sidebar/Sidebar';
 
-import ContactForm from './ContactForm';
+import { ContactForm } from './ContactForm';
 
 export const metadata: Metadata = {
   title: 'お問い合わせページ',

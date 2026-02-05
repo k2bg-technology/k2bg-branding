@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import HatenaShareButton from './HatenaShareButton';
+import { HatenaShareButton } from './HatenaShareButton';
 
 const meta: Meta<typeof HatenaShareButton> = {
   title: 'HatenaShareButton',

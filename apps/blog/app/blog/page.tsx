@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Avatar } from 'ui';
 
-import BlogCard from '../../components/blog-card';
+import { BlogCard } from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
-import Sidebar from '../../components/sidebar/Sidebar';
+import { Sidebar } from '../../components/sidebar/Sidebar';
 import { createFetchPostsUseCase } from '../../infrastructure/di';
 
 const PAGE_SIZE = 8;

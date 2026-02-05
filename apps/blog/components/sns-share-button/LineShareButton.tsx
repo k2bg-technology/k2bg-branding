@@ -4,7 +4,7 @@ import { Button, Icon } from 'ui';
 
 import { useSnsShareInfo } from './useSnsShareInfo';
 
-export default function LineShareButton() {
+export function LineShareButton() {
   const { title, fullUrl } = useSnsShareInfo();
 
   return (

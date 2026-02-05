@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Avatar } from 'ui';
 import type { PaginatedResult, PostOutput } from '../../modules/post/use-cases';
-import BlogCard from '../blog-card';
+import { BlogCard } from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { Pagination } from '../pagination/Pagination';
 

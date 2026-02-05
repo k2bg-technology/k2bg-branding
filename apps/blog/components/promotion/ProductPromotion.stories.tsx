@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
-import ProductPromotion from './ProductPromotion';
+import { ProductPromotion } from './ProductPromotion';
 
 const meta: Meta<typeof ProductPromotion> = {
   title: 'ProductPromotion',

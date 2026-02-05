@@ -9,7 +9,7 @@ import { Button, Form, useToast } from 'ui';
 import { contactFormAction } from './contactFormAction';
 import { contactSchema } from './contactSchema';
 
-export default function ContactForm() {
+export function ContactForm() {
   const captchaRef = useRef<HCaptcha>(null);
   const [token, setToken] = useState<string | null>(null);
   const { toast } = useToast();

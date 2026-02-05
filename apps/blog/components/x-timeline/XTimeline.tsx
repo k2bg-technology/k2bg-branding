@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { X_TIMELINE_URL } from './const';
-import useTimeline from './useTimeline';
+import { useTimeline } from './useTimeline';
 
-export default function XTimeline() {
+export function XTimeline() {
   useTimeline();
 
   return (

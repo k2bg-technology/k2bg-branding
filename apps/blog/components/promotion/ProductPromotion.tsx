@@ -14,7 +14,7 @@ interface ProductPromotionProps extends React.ComponentPropsWithoutRef<'div'> {
   imagePlaceholder?: string;
 }
 
-export default function ProductPromotion(props: ProductPromotionProps) {
+export function ProductPromotion(props: ProductPromotionProps) {
   const { linkText, linkUrl, image, providers, ...rest } = props;
 
   return (

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { Markdown } from '../../../../components/markdown';
-import Sidebar from '../../../../components/sidebar/Sidebar';
+import { Sidebar } from '../../../../components/sidebar/Sidebar';
 import {
   createFetchAllSlugsUseCase,
   createFetchPostUseCase,

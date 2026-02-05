@@ -2,12 +2,12 @@ import Link from 'next/link';
 import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
 import { Category } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
-import Search from '../search/Search';
-import Sidebar from '../sidebar/Sidebar';
+import { Search } from '../search/Search';
+import { Sidebar } from '../sidebar/Sidebar';
 
-import MotionHeader from './MotionHeader';
+import { MotionHeader } from './MotionHeader';
 
-export default function Header() {
+export function Header() {
   return (
     <MotionHeader>
       <div className="col-start-2 -col-end-2 flex place-items-center h-full">
