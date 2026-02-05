@@ -2,7 +2,7 @@ import { twMerge } from '../../utils/extendTailwindMerge';
 
 type Props = React.ComponentPropsWithoutRef<'div'>;
 
-export default function Skelton(props: Props) {
+export function Skelton(props: Props) {
   const { children, className, ...rest } = props;
 
   return (

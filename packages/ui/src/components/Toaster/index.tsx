@@ -1,2 +1,2 @@
-export { default as Toaster } from './Toaster';
-export { default as useToast } from './useToast';
+export { Toaster } from './Toaster';
+export { useToast } from './useToast';

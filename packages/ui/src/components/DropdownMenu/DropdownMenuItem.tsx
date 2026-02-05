@@ -4,7 +4,7 @@ import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
 
 type Props = RadixDropdownMenu.DropdownMenuItemProps;
 
-export default function DropdownMenuItem({ children, ...rest }: Props) {
+export function DropdownMenuItem({ children, ...rest }: Props) {
   return (
     <RadixDropdownMenu.Item
       {...rest}

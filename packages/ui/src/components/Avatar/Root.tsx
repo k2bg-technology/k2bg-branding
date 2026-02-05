@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 
 type Props = React.ComponentPropsWithRef<'span'>;
 
-export default function Root({ className, ...rest }: Props) {
+export function Root({ className, ...rest }: Props) {
   return (
     <AvatarPrimitive.Root
       {...rest}

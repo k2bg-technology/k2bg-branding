@@ -13,7 +13,7 @@ interface Props
   name?: string;
 }
 
-export default function VideoStreamingPlayer({
+export function VideoStreamingPlayer({
   url,
   width,
   height,

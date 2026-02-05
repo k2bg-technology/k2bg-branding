@@ -2,7 +2,7 @@ import { useOf } from '@storybook/addon-docs/blocks';
 import { useTranslation } from 'react-i18next';
 import { Icon } from '../src/components/Icon';
 
-export default function RelatedComponents() {
+export function RelatedComponents() {
   const { story } = useOf('story', ['story']);
   const storyDocs = story?.parameters?.docs || {};
   const { t } = useTranslation();

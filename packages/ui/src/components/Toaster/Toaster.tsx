@@ -4,7 +4,7 @@ import { Icon } from '../Icon';
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
-export default function Toaster(props: ToasterProps) {
+export function Toaster(props: ToasterProps) {
   return (
     <Sonner
       {...props}

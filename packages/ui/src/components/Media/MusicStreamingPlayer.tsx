@@ -13,7 +13,7 @@ interface Props
   name?: string;
 }
 
-export default function MusicStreamingPlayer({
+export function MusicStreamingPlayer({
   url,
   width,
   height,

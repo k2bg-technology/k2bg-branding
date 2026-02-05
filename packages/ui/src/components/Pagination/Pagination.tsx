@@ -13,7 +13,7 @@ export interface PaginationProps extends React.ComponentPropsWithoutRef<'nav'> {
   renderItem: (index: number) => React.ReactNode;
 }
 
-export default function Pagination(props: PaginationProps) {
+export function Pagination(props: PaginationProps) {
   const { count, currentIndex, prevProps, nextProps, renderItem, ...rest } =
     props;
 

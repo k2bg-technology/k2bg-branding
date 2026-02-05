@@ -1,8 +1,8 @@
-import Control from './Control/Control';
+import { Control } from './Control/Control';
 import { HelperText } from './HelperText/HelperText';
-import Input from './Input/Input';
+import { Input } from './Input/Input';
 import { Label } from './Label/Label';
-import Textarea from './Textarea/Textarea';
+import { Textarea } from './Textarea/Textarea';
 
 const Form = {
   Control,
@@ -12,4 +12,4 @@ const Form = {
   Textarea,
 };
 
-export default Form;
+export { Form };

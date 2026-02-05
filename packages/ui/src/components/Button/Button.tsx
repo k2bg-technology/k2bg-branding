@@ -183,7 +183,7 @@ export interface Props
   asChild?: boolean;
 }
 
-export default function Button({
+export function Button({
   variant,
   color,
   size,

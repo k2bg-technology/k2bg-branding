@@ -1,7 +1,7 @@
 import { useOf } from '@storybook/addon-docs/blocks';
 import { useTranslation } from 'react-i18next';
 
-export default function Anatomy() {
+export function Anatomy() {
   const { story } = useOf('story', ['story']);
   const { anatomy } = story?.parameters?.docs || {};
   const { t } = useTranslation();

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import { useState } from 'react';
 import { fn } from 'storybook/test';
 
-import Pagination from '.';
+import { Pagination } from '.';
 
 const meta = {
   component: Pagination,

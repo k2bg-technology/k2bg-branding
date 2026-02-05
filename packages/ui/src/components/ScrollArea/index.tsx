@@ -1,6 +1,6 @@
-import Root from './ScrollArea';
+import { ScrollArea as Root } from './ScrollArea';
 import { ScrollBar } from './ScrollBar/ScrollBar';
 
 const ScrollArea = Object.assign(Root, { ScrollBar });
 
-export default ScrollArea;
+export { ScrollArea };

@@ -6,7 +6,7 @@ type Props = React.ComponentPropsWithoutRef<typeof RadixDropdownMenu.Root> & {
   trigger: React.ReactNode;
 };
 
-export default function DropdownMenu({ children, trigger, ...rest }: Props) {
+export function DropdownMenu({ children, trigger, ...rest }: Props) {
   return (
     <RadixDropdownMenu.Root {...rest}>
       <RadixDropdownMenu.Trigger asChild>{trigger}</RadixDropdownMenu.Trigger>

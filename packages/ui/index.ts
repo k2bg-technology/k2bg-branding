@@ -1,12 +1,12 @@
-export { default as Avatar } from './src/components/Avatar';
+export { Avatar } from './src/components/Avatar';
 export * from './src/components/Button';
 export * from './src/components/Dialog';
 export * from './src/components/Drawer';
 export * from './src/components/DropdownMenu';
-export { default as Form } from './src/components/Form';
+export { Form } from './src/components/Form';
 export * from './src/components/Icon';
 export * from './src/components/Media';
-export { default as Pagination } from './src/components/Pagination';
-export { default as ScrollArea } from './src/components/ScrollArea';
-export { default as Skelton } from './src/components/Skelton';
+export { Pagination } from './src/components/Pagination';
+export { ScrollArea } from './src/components/ScrollArea';
+export { Skelton } from './src/components/Skelton';
 export * from './src/components/Toaster';

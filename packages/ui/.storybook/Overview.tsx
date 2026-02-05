@@ -1,7 +1,7 @@
 import { useOf } from '@storybook/addon-docs/blocks';
 import { useTranslation } from 'react-i18next';
 
-export default function Overview() {
+export function Overview() {
   const { story } = useOf('story', ['story']);
   const { overview } = story?.parameters?.docs || {};
   const { t } = useTranslation();

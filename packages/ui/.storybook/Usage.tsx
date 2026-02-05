@@ -1,7 +1,7 @@
 import { Source, useOf } from '@storybook/addon-docs/blocks';
 import { useTranslation } from 'react-i18next';
 
-export default function Usage() {
+export function Usage() {
   const { story } = useOf('story', ['story']);
   const { usage } = story?.parameters?.docs || {};
   const { t } = useTranslation();

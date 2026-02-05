@@ -7,7 +7,7 @@ interface Dependency {
   reason: string;
 }
 
-export default function Dependencies() {
+export function Dependencies() {
   const { story } = useOf('story', ['story']);
   const storyDocs = story?.parameters?.docs || {};
   const { t } = useTranslation();

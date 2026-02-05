@@ -1,6 +1,6 @@
 import { Item } from './Item';
-import Root from './Pagination';
+import { Pagination as Root } from './Pagination';
 
 const Pagination = Object.assign(Root, { Item });
 
-export default Pagination;
+export { Pagination };

@@ -14,7 +14,7 @@ export interface Props
   description?: string;
 }
 
-export default function Dialog({
+export function Dialog({
   trigger,
   title,
   isTitleHidden = false,

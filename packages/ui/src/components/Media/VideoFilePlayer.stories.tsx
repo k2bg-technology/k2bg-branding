@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
-import VideoFilePlayer from './VideoFilePlayer';
+import { VideoFilePlayer } from './VideoFilePlayer';
 
 const meta: Meta<typeof VideoFilePlayer> = {
   component: VideoFilePlayer,
