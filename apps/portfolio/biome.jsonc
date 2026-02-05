@@ -12,12 +12,35 @@
     ]
   },
 
-  "linter": {
-    "rules": {
-      "style": {
-        // Next.js/Storybook requires default exports.
-        "noDefaultExport": "off"
+  "overrides": [
+    {
+      "includes": [
+        "app/**/page.tsx",
+        "app/**/layout.tsx",
+        "app/**/loading.tsx",
+        "middleware.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.stories.tsx", ".storybook/**"],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["*.config.*"],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
+        }
       }
     }
-  }
+  ]
 }

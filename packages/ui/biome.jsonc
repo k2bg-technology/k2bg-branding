@@ -12,11 +12,6 @@
 
   "linter": {
     "rules": {
-      "style": {
-        // Storybook requires default exports.
-        "noDefaultExport": "off"
-      },
-
       "complexity": {
         // Allow forEach in non-performance-critical code.
         "noForEach": "off"
@@ -34,9 +29,26 @@
       "includes": ["**/*.stories.tsx"],
       "linter": {
         "rules": {
+          "style": { "noDefaultExport": "off" },
           "suspicious": {
             "noShadowRestrictedNames": "off"
           }
+        }
+      }
+    },
+    {
+      "includes": [".storybook/**", "*.config.*", "*.d.ts"],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
+        }
+      }
+    },
+    {
+      "includes": ["turbo/generators/config.ts"],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
         }
       }
     }
