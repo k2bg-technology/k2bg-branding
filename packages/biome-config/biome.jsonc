@@ -35,8 +35,7 @@
       },
 
       "style": {
-        // Required for Next.js/Storybook default exports
-        "noDefaultExport": "off",
+        "noDefaultExport": "error",
         // Enforce explicit type imports (import type { ... })
         "useImportType": "error",
         "useNodejsImportProtocol": "off",

@@ -1,10 +1,10 @@
 import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
-import Footer from '../components/footer/Footer';
-import GoogleAdsense from '../components/google-adsense/GoogleAdsense';
-import Header from '../components/header/Header';
+import { Footer } from '../components/footer/Footer';
+import { GoogleAdsense } from '../components/google-adsense/GoogleAdsense';
+import { Header } from '../components/header/Header';
 import { PageScrollArea } from '../components/page-scroll-area/PageScrollArea';
-import ReactQueryClientProvider from '../components/react-query-client-provider/ReactQueryClientProvider';
+import { ReactQueryClientProvider } from '../components/react-query-client-provider/ReactQueryClientProvider';
 import { Toaster } from '../components/toaster/Toaster';
 
 import './globals.css';

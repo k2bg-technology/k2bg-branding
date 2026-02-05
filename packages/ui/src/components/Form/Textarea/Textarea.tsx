@@ -32,7 +32,7 @@ interface Props
   extends Omit<React.ComponentPropsWithRef<'textarea'>, 'children' | 'color'>,
     FormProps {}
 
-export default function Textarea(props: Props) {
+export function Textarea(props: Props) {
   const { className, ref, ...formProps } = props;
 
   const {

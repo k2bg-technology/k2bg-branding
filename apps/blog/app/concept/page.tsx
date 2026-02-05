@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import { Markdown } from '../../components/markdown';
 import { PageHeading } from '../../components/page-heading/PageHeading';
-import Sidebar from '../../components/sidebar/Sidebar';
+import { Sidebar } from '../../components/sidebar/Sidebar';
 import { createFetchPostUseCase } from '../../infrastructure/di';
 
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';

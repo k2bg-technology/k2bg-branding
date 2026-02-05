@@ -44,7 +44,7 @@ export interface Props
   endAdornment?: React.ReactNode;
 }
 
-export default function Input(props: Props) {
+export function Input(props: Props) {
   const {
     type = 'text',
     className,

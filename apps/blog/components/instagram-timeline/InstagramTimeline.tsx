@@ -5,7 +5,7 @@ import { createFetchFeedUseCase } from '../../infrastructure/di';
 
 const MAX_MEDIA_COUNT = 6;
 
-export default async function InstagramTimeline() {
+export async function InstagramTimeline() {
   const fetchFeed = createFetchFeedUseCase();
   const posts = await fetchFeed.execute({ limit: MAX_MEDIA_COUNT });
 

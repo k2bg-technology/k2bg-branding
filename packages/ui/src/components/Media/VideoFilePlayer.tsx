@@ -7,13 +7,7 @@ interface Props
   name?: string;
 }
 
-export default function VideoFilePlayer({
-  width,
-  height,
-  file,
-  name,
-  ...rest
-}: Props) {
+export function VideoFilePlayer({ width, height, file, name, ...rest }: Props) {
   return (
     <video {...rest} width={width} height={height}>
       <source src={file} type="video/mp4" />

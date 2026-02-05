@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
-import MusicStreamingPlayer from './MusicStreamingPlayer';
+import { MusicStreamingPlayer } from './MusicStreamingPlayer';
 
 const meta: Meta<typeof MusicStreamingPlayer> = {
   component: MusicStreamingPlayer,

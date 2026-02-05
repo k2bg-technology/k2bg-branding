@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 
 type Props = React.ComponentPropsWithRef<'span'>;
 
-export default function Fallback({ className, ...rest }: Props) {
+export function Fallback({ className, ...rest }: Props) {
   return (
     <AvatarPrimitive.Fallback
       {...rest}

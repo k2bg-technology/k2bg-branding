@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import PinterestShareButton from './PinterestShareButton';
+import { PinterestShareButton } from './PinterestShareButton';
 
 const meta: Meta<typeof PinterestShareButton> = {
   title: 'PinterestShareButton',

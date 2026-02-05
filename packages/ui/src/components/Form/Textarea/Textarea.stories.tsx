@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import { userEvent, within } from 'storybook/test';
 
-import Form from '..';
+import { Form } from '..';
 
 const meta: Meta<typeof Form.Textarea> = {
   component: Form.Textarea,

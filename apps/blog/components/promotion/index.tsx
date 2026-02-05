@@ -1,3 +1,3 @@
-export { default as BannerPromotion } from './BannerPromotion';
-export { default as ProductPromotion } from './ProductPromotion';
-export { default as TextPromotion } from './TextPromotion';
+export { BannerPromotion } from './BannerPromotion';
+export { ProductPromotion } from './ProductPromotion';
+export { TextPromotion } from './TextPromotion';

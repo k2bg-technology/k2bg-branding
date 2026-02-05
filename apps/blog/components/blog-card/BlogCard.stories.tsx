@@ -4,7 +4,7 @@ import { Avatar } from 'ui';
 import AvatarImage from '../../.storybook/images/avatar.png';
 import BlogCardMainImage from '../../.storybook/images/blog-card-main.png';
 
-import BlogCard from '.';
+import { BlogCard } from '.';
 
 const meta: Meta<
   typeof BlogCard & typeof BlogCard.Media & typeof BlogCard.Content

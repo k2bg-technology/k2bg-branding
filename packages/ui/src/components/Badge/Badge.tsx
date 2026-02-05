@@ -121,7 +121,7 @@ const badgeVariants = cva(
   }
 );
 
-export default function Badge({
+export function Badge({
   className,
   variant,
   color,

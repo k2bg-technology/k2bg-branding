@@ -3,7 +3,7 @@ interface BannerPromotionProps extends React.ComponentPropsWithoutRef<'a'> {
   image?: React.ReactNode;
 }
 
-export default function BannerPromotion(props: BannerPromotionProps) {
+export function BannerPromotion(props: BannerPromotionProps) {
   const { linkUrl, image, ...rest } = props;
   props;
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { Icon } from '../Icon';
 
-import Button from './Button';
+import { Button } from './Button';
 
 const meta = {
   component: Button,

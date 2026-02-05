@@ -10,7 +10,7 @@ interface Props
   unoptimized?: boolean;
 }
 
-export default function ImageViewer({
+export function ImageViewer({
   id,
   name,
   linkUrl,

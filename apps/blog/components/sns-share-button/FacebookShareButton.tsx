@@ -4,7 +4,7 @@ import { Button, Icon } from 'ui';
 
 import { useSnsShareInfo } from './useSnsShareInfo';
 
-export default function FacebookShareButton() {
+export function FacebookShareButton() {
   const { fullUrl } = useSnsShareInfo();
 
   return (

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '../src/components/Badge';
 import { Icon } from '../src/components/Icon';
 
-export default function DoDont() {
+export function DoDont() {
   const { story } = useOf('story', ['story']);
   const { doList, dontList } = story?.parameters?.docs || {};
   const { t } = useTranslation();

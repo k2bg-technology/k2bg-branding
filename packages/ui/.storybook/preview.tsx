@@ -8,7 +8,7 @@ import { type PropsWithChildren, Suspense, useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import type { PartialStoryFn } from 'storybook/internal/types';
 import type { StoryStore } from 'storybook/preview-api';
-import i18n from '../src/i18n';
+import { i18n } from '../src/i18n';
 import DocumentationTemplate from './DocumentationTemplate.mdx';
 
 import '../src/globals.css';

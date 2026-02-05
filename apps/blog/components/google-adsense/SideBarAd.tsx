@@ -9,7 +9,7 @@ declare global {
   }
 }
 
-export default function SideBarAd() {
+export function SideBarAd() {
   const pathName = usePathname();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: should set ads when page changes

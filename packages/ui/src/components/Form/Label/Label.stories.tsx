@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
-import Form from '..';
+import { Form } from '..';
 
 const meta: Meta<typeof Form.Label> = {
   component: Form.Label,

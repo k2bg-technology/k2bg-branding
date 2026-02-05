@@ -15,11 +15,6 @@
 
   "linter": {
     "rules": {
-      "style": {
-        // Next.js/Storybook requires default exports.
-        "noDefaultExport": "off"
-      },
-
       "suspicious": {
         // Skeleton components use array index as key.
         // Recommended: use a stable unique ID instead.
@@ -52,13 +47,39 @@
 
   "overrides": [
     {
+      "includes": [
+        "app/**/page.tsx",
+        "app/**/layout.tsx",
+        "app/**/not-found.tsx",
+        "app/**/loading.tsx",
+        "app/**/error.tsx",
+        "app/**/route.ts",
+        "app/robots.ts",
+        "app/sitemap.ts"
+      ],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
+        }
+      }
+    },
+    {
       "includes": ["**/*.stories.tsx"],
       "linter": {
         "rules": {
+          "style": { "noDefaultExport": "off" },
           "performance": {
             // Allow <img> for Storybook mock images.
             "noImgElement": "off"
           }
+        }
+      }
+    },
+    {
+      "includes": ["*.config.*", ".storybook/**"],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
         }
       }
     }

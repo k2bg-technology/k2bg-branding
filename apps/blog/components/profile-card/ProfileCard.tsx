@@ -1,6 +1,6 @@
 import { Avatar } from 'ui';
 
-export default function ProfileCard() {
+export function ProfileCard() {
   return (
     <div className="flex flex-col gap-spacious p-spacious rounded-lg bg-base-white/50">
       <span className="inline-flex gap-normal">

@@ -1,6 +1,6 @@
 import { Controls, useOf } from '@storybook/addon-docs/blocks';
 
-export default function API() {
+export function API() {
   const { story } = useOf('story', ['story']);
   const argTypes = story?.argTypes ?? {};
   const controlsDisabled = story?.parameters?.controls?.disable === true;

@@ -8,7 +8,7 @@ interface Props extends React.ComponentPropsWithoutRef<'div'> {
   date?: string;
 }
 
-export default function Content({
+export function Content({
   className,
   category,
   heading,

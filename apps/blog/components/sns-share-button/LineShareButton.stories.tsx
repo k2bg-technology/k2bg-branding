@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import LineShareButton from './LineShareButton';
+import { LineShareButton } from './LineShareButton';
 
 const meta: Meta<typeof LineShareButton> = {
   title: 'LineShareButton',

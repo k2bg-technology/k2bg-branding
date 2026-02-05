@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import AvatarImage from '../../assets/avatar.png';
 
-import Avatar from '.';
+import { Avatar } from '.';
 
 const meta = {
   component: Avatar,

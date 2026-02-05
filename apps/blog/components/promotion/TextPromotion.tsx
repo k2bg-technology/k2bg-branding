@@ -1,6 +1,6 @@
 type TextPromotionProps = React.ComponentPropsWithoutRef<'a'>;
 
-export default function TextPromotion(props: TextPromotionProps) {
+export function TextPromotion(props: TextPromotionProps) {
   const { children, ...rest } = props;
 
   return (

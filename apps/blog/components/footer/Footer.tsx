@@ -4,7 +4,7 @@ import { Button, Icon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 
-export default function Footer() {
+export function Footer() {
   return (
     <footer className="col-span-full grid grid-cols-[subgrid]">
       <div className="col-span-full grid grid-cols-[subgrid] relative mt-[65px] bg-base-black h-full">

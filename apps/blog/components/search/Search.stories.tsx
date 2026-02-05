@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import Search from './Search';
+import { Search } from './Search';
 
 const meta: Meta<typeof Search> = {
   title: 'Search',

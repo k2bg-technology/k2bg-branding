@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
-import ScrollArea from '.';
+import { ScrollArea } from '.';
 
 const meta = {
   component: ScrollArea,

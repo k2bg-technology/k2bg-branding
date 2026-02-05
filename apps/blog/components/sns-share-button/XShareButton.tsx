@@ -4,7 +4,7 @@ import { Button, Icon } from 'ui';
 
 import { useSnsShareInfo } from './useSnsShareInfo';
 
-export default function XShareButton() {
+export function XShareButton() {
   const { title, fullUrl } = useSnsShareInfo();
 
   return (

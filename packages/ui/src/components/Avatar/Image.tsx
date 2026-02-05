@@ -3,7 +3,7 @@ import { twMerge } from 'tailwind-merge';
 
 type Props = React.ComponentPropsWithRef<'img'>;
 
-export default function Image({ className, ...rest }: Props) {
+export function Image({ className, ...rest }: Props) {
   return <AvatarPrimitive.Image {...rest} className={twMerge(className)} />;
 }
 

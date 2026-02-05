@@ -3,7 +3,7 @@ import { type ToasterProps, toast } from 'sonner';
 
 import { Button } from '../Button';
 
-import Toaster from './Toaster';
+import { Toaster } from './Toaster';
 
 const meta = {
   component: Toaster,

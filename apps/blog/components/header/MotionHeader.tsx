@@ -7,7 +7,7 @@ import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 
 type Props = React.ComponentPropsWithoutRef<'header'>;
 
-export default function MotionHeader(props: Props) {
+export function MotionHeader(props: Props) {
   const { children } = props;
 
   const ref = usePageScrollAreaStore((state) => state.ref);

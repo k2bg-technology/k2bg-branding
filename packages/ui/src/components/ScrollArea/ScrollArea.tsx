@@ -13,7 +13,7 @@ interface ScrollAreaProps
   > | null;
 }
 
-export default function ScrollArea({
+export function ScrollArea({
   className,
   children,
   scrollbar,

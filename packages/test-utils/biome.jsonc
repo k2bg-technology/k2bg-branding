@@ -4,5 +4,16 @@
 
   "files": {
     "includes": ["src/**/*.{ts,tsx}", "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"]
-  }
+  },
+
+  "overrides": [
+    {
+      "includes": ["*.config.*"],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
+        }
+      }
+    }
+  ]
 }

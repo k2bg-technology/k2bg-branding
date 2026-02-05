@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Avatar } from 'ui';
 import type { PostOutput } from '../../modules/post/use-cases';
-import BlogCard from '../blog-card';
+import { BlogCard } from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
 interface Props {

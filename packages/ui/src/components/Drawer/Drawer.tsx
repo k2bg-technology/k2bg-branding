@@ -4,7 +4,7 @@ import * as RadixDialog from '@radix-ui/react-dialog';
 import { twMerge } from '../../utils/extendTailwindMerge';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
-import ScrollArea from '../ScrollArea';
+import { ScrollArea } from '../ScrollArea';
 
 import styles from './Drawer.module.css';
 
@@ -15,7 +15,7 @@ export interface Props extends React.ComponentPropsWithoutRef<'div'> {
   description?: string;
 }
 
-export default function Drawer({
+export function Drawer({
   trigger,
   title,
   description,

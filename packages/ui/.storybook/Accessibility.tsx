@@ -1,7 +1,7 @@
 import { useOf } from '@storybook/addon-docs/blocks';
 import { useTranslation } from 'react-i18next';
 
-export default function Accessibility() {
+export function Accessibility() {
   const { story } = useOf('story', ['story']);
   const { accessibility } = story?.parameters?.docs || {};
   const { t } = useTranslation();

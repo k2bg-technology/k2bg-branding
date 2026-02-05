@@ -1,5 +1,5 @@
-import VideoFilePlayer from 'ui/src/components/Media/VideoFilePlayer';
-import VideoStreamingPlayer from 'ui/src/components/Media/VideoStreamingPlayer';
+import { VideoFilePlayer } from 'ui/src/components/Media/VideoFilePlayer';
+import { VideoStreamingPlayer } from 'ui/src/components/Media/VideoStreamingPlayer';
 import type { MediaOutput } from '../../modules/media/use-cases';
 
 interface MediaVideoProps {
