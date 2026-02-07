@@ -9,6 +9,8 @@ import { createFetchPostsUseCase } from '../../infrastructure/di';
 
 const PAGE_SIZE = 8;
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'K2.B.G Technology Blog',
   description:

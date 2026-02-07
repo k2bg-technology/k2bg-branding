@@ -7,6 +7,8 @@ import { createFetchPostUseCase } from '../../infrastructure/di';
 
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'コンセプトページ',
   alternates: {

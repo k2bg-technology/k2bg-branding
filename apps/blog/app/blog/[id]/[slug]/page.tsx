@@ -7,6 +7,8 @@ import {
   createFetchPostUseCase,
 } from '../../../../infrastructure/di';
 
+export const revalidate = 60;
+
 type Params = Promise<{ id: string; slug: string }>;
 
 interface Props {
