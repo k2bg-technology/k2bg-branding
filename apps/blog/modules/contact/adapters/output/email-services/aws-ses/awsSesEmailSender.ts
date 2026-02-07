@@ -7,6 +7,7 @@ import {
 
 import type { Contact, EmailSender } from '../../../../domain';
 import { EmailSendFailedError } from '../../../../domain';
+import { contactLogger } from '../../../shared';
 
 /**
  * AWS SES Email Sender Adapter
@@ -38,10 +39,16 @@ export class AwsSesEmailSender implements EmailSender {
 
     try {
       await this.sesClient.send(new SendEmailCommand(params));
+      contactLogger.info('Email sent successfully via AWS SES');
     } catch (error) {
       if (error instanceof SESServiceException) {
+        contactLogger.error({ err: error }, 'AWS SES service error');
         throw new EmailSendFailedError(`[${error.name}] ${error.message}`);
       }
+      contactLogger.error(
+        { err: error },
+        'Unexpected error sending email via AWS SES'
+      );
       throw new EmailSendFailedError(
         error instanceof Error ? error.message : 'Unknown error occurred'
       );

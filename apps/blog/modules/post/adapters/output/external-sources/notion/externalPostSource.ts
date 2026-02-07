@@ -3,7 +3,7 @@ import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoint
 import type { NotionToMarkdown } from 'notion-to-md';
 import type { Post } from '../../../../domain';
 import type { ExternalPostSource } from '../../../../use-cases';
-import { ExternalSourceError } from '../../../shared';
+import { ExternalSourceError, postLogger } from '../../../shared';
 import { getEmbedTypeFromPage, mapEmbedType, notionPageToPost } from './mapper';
 
 const DATABASE_ID = process.env.NOTION_POST_DATABASE_ID ?? '';
@@ -65,8 +65,10 @@ export class NotionExternalPostSource implements ExternalPostSource {
         })
       );
 
+      postLogger.info({ count: posts.length }, 'Fetched all posts from Notion');
       return posts;
     } catch (error) {
+      postLogger.error({ err: error }, 'Failed to fetch posts from Notion');
       throw new ExternalSourceError('Notion', error);
     }
   }
