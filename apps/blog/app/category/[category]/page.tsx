@@ -8,6 +8,8 @@ import { Category } from '../../../modules/post/domain';
 
 const PAGE_SIZE = 6;
 
+export const revalidate = 60;
+
 type Params = Promise<{ category: Category }>;
 type SearchParams = Promise<{
   page?: string;
