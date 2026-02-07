@@ -6,6 +6,7 @@ export {
   MappingError,
   RepositoryError,
 } from './errors';
+export { postLogger } from './logger';
 export {
   createAuthorRecord,
   createNotionPageResponse,
