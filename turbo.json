@@ -24,7 +24,8 @@
         "AMAZON_ACCESS_KEY_ID",
         "AMAZON_SECRET_ACCESS_KEY",
         "AMAZON_REGION",
-        "AMAZON_SES_SENDER_EMAIL"
+        "AMAZON_SES_SENDER_EMAIL",
+        "LOG_LEVEL"
       ]
     },
     "start": {},
