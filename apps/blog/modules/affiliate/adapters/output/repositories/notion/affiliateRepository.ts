@@ -7,7 +7,7 @@ import type {
   AffiliateRepository,
   ImageSource,
 } from '../../../../domain';
-import { ExternalSourceError } from '../../../shared';
+import { affiliateLogger, ExternalSourceError } from '../../../shared';
 import {
   notionPageToAffiliate,
   notionPageToImageSource,
@@ -36,6 +36,10 @@ export class NotionAffiliateRepository implements AffiliateRepository {
       if (error instanceof APIResponseError && error.status === 404) {
         return null;
       }
+      affiliateLogger.error(
+        { err: error, affiliateId: id.getValue() },
+        'Failed to fetch affiliate from Notion'
+      );
       throw new ExternalSourceError('Notion', error);
     }
   }
@@ -66,6 +70,10 @@ export class NotionAffiliateRepository implements AffiliateRepository {
         if (error instanceof APIResponseError && error.status === 404) {
           return null;
         }
+        affiliateLogger.error(
+          { err: error, affiliateId: id.getValue() },
+          'Failed to fetch affiliate from Notion'
+        );
         throw new ExternalSourceError('Notion', error);
       }
     });
@@ -93,10 +101,19 @@ export class NotionAffiliateRepository implements AffiliateRepository {
         },
       });
 
-      return database.results
+      const sources = database.results
         .map((page) => notionPageToImageSource(page as PageObjectResponse))
         .filter((source): source is ImageSource => source !== null);
+      affiliateLogger.info(
+        { count: sources.length },
+        'Fetched all affiliate image sources from Notion'
+      );
+      return sources;
     } catch (error) {
+      affiliateLogger.error(
+        { err: error },
+        'Failed to fetch affiliate image sources from Notion'
+      );
       throw new ExternalSourceError('Notion', error);
     }
   }

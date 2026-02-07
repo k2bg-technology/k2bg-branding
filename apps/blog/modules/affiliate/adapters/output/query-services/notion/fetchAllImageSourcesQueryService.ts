@@ -3,7 +3,7 @@ import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoint
 
 import type { ImageSource } from '../../../../domain';
 import type { FetchAllImageSourcesQueryService } from '../../../../use-cases/query/fetch-all-image-sources/queryService';
-import { ExternalSourceError } from '../../../shared';
+import { affiliateLogger, ExternalSourceError } from '../../../shared';
 import { notionPageToImageSource } from '../../external-sources/notion/mapper';
 
 const DATABASE_ID = process.env.NOTION_AFFILIATE_DATABASE_ID ?? '';
@@ -28,10 +28,19 @@ export class NotionFetchAllImageSourcesQueryService
         },
       });
 
-      return database.results
+      const sources = database.results
         .map((page) => notionPageToImageSource(page as PageObjectResponse))
         .filter((source): source is ImageSource => source !== null);
+      affiliateLogger.info(
+        { count: sources.length },
+        'Fetched all affiliate image sources via query service'
+      );
+      return sources;
     } catch (error) {
+      affiliateLogger.error(
+        { err: error },
+        'Failed to fetch affiliate image sources via query service'
+      );
       throw new ExternalSourceError('Notion', error);
     }
   }

@@ -7,7 +7,11 @@ import type {
   MediaId,
   MediaRepository,
 } from '../../../../domain';
-import { ExternalSourceError, NOTION_MEDIA_TYPES } from '../../../shared';
+import {
+  ExternalSourceError,
+  mediaLogger,
+  NOTION_MEDIA_TYPES,
+} from '../../../shared';
 import {
   notionPageToImageSource,
   notionPageToMedia,
@@ -36,6 +40,10 @@ export class NotionMediaRepository implements MediaRepository {
       if (error instanceof APIResponseError && error.status === 404) {
         return null;
       }
+      mediaLogger.error(
+        { err: error, mediaId: id.getValue() },
+        'Failed to fetch media from Notion'
+      );
       throw new ExternalSourceError('Notion', error);
     }
   }
@@ -52,10 +60,19 @@ export class NotionMediaRepository implements MediaRepository {
         },
       });
 
-      return database.results
+      const sources = database.results
         .map((page) => notionPageToImageSource(page as PageObjectResponse))
         .filter((source): source is ImageSource => source !== null);
+      mediaLogger.info(
+        { count: sources.length },
+        'Fetched all media image sources from Notion'
+      );
+      return sources;
     } catch (error) {
+      mediaLogger.error(
+        { err: error },
+        'Failed to fetch media image sources from Notion'
+      );
       throw new ExternalSourceError('Notion', error);
     }
   }

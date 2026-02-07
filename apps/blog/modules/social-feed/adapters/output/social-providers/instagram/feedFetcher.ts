@@ -1,4 +1,5 @@
 import type { SocialFeedFetcher, SocialPost } from '../../../../domain';
+import { socialFeedLogger } from '../../../shared/logger';
 import { mapToSocialPost } from './mapper';
 import type {
   InstagramMediaDetailResponse,
@@ -29,18 +30,25 @@ export class InstagramFeedFetcher implements SocialFeedFetcher {
   ) {}
 
   async fetchUserMedia(limit: number = DEFAULT_LIMIT): Promise<SocialPost[]> {
-    const mediaList = await this.fetchMediaList();
+    try {
+      const mediaList = await this.fetchMediaList();
 
-    if (!mediaList.data || mediaList.data.length === 0) {
-      return [];
+      if (!mediaList.data || mediaList.data.length === 0) {
+        return [];
+      }
+
+      const mediaIds = mediaList.data.slice(0, limit).map((item) => item.id);
+      const mediaDetails = await Promise.all(
+        mediaIds.map((id) => this.fetchMediaDetail(id))
+      );
+
+      const posts = mediaDetails.map(mapToSocialPost);
+      socialFeedLogger.info({ count: posts.length }, 'Fetched Instagram feed');
+      return posts;
+    } catch (error) {
+      socialFeedLogger.error({ err: error }, 'Failed to fetch Instagram feed');
+      throw error;
     }
-
-    const mediaIds = mediaList.data.slice(0, limit).map((item) => item.id);
-    const mediaDetails = await Promise.all(
-      mediaIds.map((id) => this.fetchMediaDetail(id))
-    );
-
-    return mediaDetails.map(mapToSocialPost);
   }
 
   private async fetchMediaList(): Promise<InstagramMediaListResponse> {

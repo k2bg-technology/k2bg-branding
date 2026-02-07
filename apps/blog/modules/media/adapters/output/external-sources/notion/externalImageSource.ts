@@ -5,7 +5,11 @@ import type {
   ImageSourceRecord,
 } from '../../../../../post/use-cases';
 import type { ImageSource } from '../../../../domain';
-import { ExternalSourceError, NOTION_MEDIA_TYPES } from '../../../shared';
+import {
+  ExternalSourceError,
+  mediaLogger,
+  NOTION_MEDIA_TYPES,
+} from '../../../shared';
 import { notionPageToImageSource } from './mapper';
 
 const DATABASE_ID = process.env.NOTION_MEDIA_DATABASE_ID ?? '';
@@ -32,14 +36,23 @@ export class NotionMediaExternalImageSource implements ExternalImageSource {
         },
       });
 
-      return database.results
+      const sources = database.results
         .map((page) => notionPageToImageSource(page as PageObjectResponse))
         .filter((item): item is ImageSource => item !== null)
         .map((item) => ({
           id: item.id.getValue(),
           url: item.url.getValue(),
         }));
+      mediaLogger.info(
+        { count: sources.length },
+        'Fetched media image sources from Notion'
+      );
+      return sources;
     } catch (error) {
+      mediaLogger.error(
+        { err: error },
+        'Failed to fetch media image sources from Notion'
+      );
       throw new ExternalSourceError('Notion', error);
     }
   }

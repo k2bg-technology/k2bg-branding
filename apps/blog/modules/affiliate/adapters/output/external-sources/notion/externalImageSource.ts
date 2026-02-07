@@ -5,7 +5,7 @@ import type {
   ImageSourceRecord,
 } from '../../../../../post/use-cases';
 import type { ImageSource } from '../../../../domain';
-import { ExternalSourceError } from '../../../shared';
+import { affiliateLogger, ExternalSourceError } from '../../../shared';
 import { notionPageToImageSource } from './mapper';
 
 const DATABASE_ID = process.env.NOTION_AFFILIATE_DATABASE_ID ?? '';
@@ -32,14 +32,23 @@ export class NotionAffiliateExternalImageSource implements ExternalImageSource {
         },
       });
 
-      return database.results
+      const sources = database.results
         .map((page) => notionPageToImageSource(page as PageObjectResponse))
         .filter((item): item is ImageSource => item !== null)
         .map((item) => ({
           id: item.id.getValue(),
           url: item.url.getValue(),
         }));
+      affiliateLogger.info(
+        { count: sources.length },
+        'Fetched affiliate image sources from Notion'
+      );
+      return sources;
     } catch (error) {
+      affiliateLogger.error(
+        { err: error },
+        'Failed to fetch affiliate image sources from Notion'
+      );
       throw new ExternalSourceError('Notion', error);
     }
   }
