@@ -6,7 +6,7 @@ export async function ArticlesSkelton() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 col-span-full gap-8 place-content-start">
         {Array.from({ length: 6 }).map((_, index) => (
           <Skelton key={index} className="flex flex-col gap-3">
-            <Skelton.Box className="py-28 rounded-xl">
+            <Skelton.Box className="h-[16rem] rounded-xl">
               <Icon
                 name="photo"
                 color="var(--color-base-white)"
