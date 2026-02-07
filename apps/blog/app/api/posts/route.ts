@@ -1,5 +1,6 @@
 import type { NextRequest } from 'next/server';
 import { createSyncPostsFromExternalUseCase } from '../../../infrastructure/di';
+import { postLogger } from '../../../modules/post/adapters/shared';
 
 export async function PATCH(request: NextRequest) {
   const apiKey = request.headers.get('x-api-key');
@@ -8,7 +9,15 @@ export async function PATCH(request: NextRequest) {
     return new Response('unauthorized please set x-api-key', { status: 401 });
   }
 
-  const result = await createSyncPostsFromExternalUseCase().execute();
-
-  return Response.json(result);
+  try {
+    const result = await createSyncPostsFromExternalUseCase().execute();
+    postLogger.info({ path: request.nextUrl.pathname }, 'Posts sync completed');
+    return Response.json(result);
+  } catch (err) {
+    postLogger.error(
+      { err, path: request.nextUrl.pathname },
+      'Posts sync failed'
+    );
+    throw err;
+  }
 }
