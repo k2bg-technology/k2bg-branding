@@ -85,7 +85,6 @@ export function buildImageUrl(
     quality?: string;
     width?: number;
     effect?: string;
-    version?: string;
   }
 ): string {
   ensureConfigured();
@@ -108,9 +107,8 @@ export function buildImageUrl(
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const baseUrl = `https://res.cloudinary.com/${cloudName}/image/upload`;
   const transformation = transformations.length > 0 ? transformations.join(',') : '';
-  const versionPath = options?.version ? `v${options.version}` : '';
 
-  const parts = [baseUrl, transformation, versionPath, publicId].filter(Boolean);
+  const parts = [baseUrl, transformation, publicId].filter(Boolean);
   return parts.join('/');
 }
 
