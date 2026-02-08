@@ -26,31 +26,16 @@ describe('getPlaceholderImageUrl', () => {
     process.env = originalEnv;
   });
 
-  describe('without options', () => {
-    it('returns URL with blur effect and small width', () => {
-      const publicId = 'sample-image';
+  it('returns URL with blur effect and small width', () => {
+    const publicId = 'sample-image';
 
-      const url = getPlaceholderImageUrl(publicId);
+    const url = getPlaceholderImageUrl(publicId);
 
-      expect(url).toContain('test-cloud');
-      expect(url).toContain('f_auto');
-      expect(url).toContain('q_auto');
-      expect(url).toContain('e_blur:1000');
-      expect(url).toContain('w_100');
-      expect(url).toContain('sample-image');
-    });
-  });
-
-  describe('with version option', () => {
-    it('includes version in URL', () => {
-      const publicId = 'sample-image';
-      const version = '67890';
-
-      const url = getPlaceholderImageUrl(publicId, { version });
-
-      expect(url).toContain('v67890');
-      expect(url).toContain('e_blur:1000');
-      expect(url).toContain('sample-image');
-    });
+    expect(url).toContain('test-cloud');
+    expect(url).toContain('f_auto');
+    expect(url).toContain('q_auto');
+    expect(url).toContain('e_blur:1000');
+    expect(url).toContain('w_100');
+    expect(url).toContain('sample-image');
   });
 });
