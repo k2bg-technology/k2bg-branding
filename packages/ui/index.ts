@@ -10,3 +10,4 @@ export { Pagination } from './src/components/Pagination';
 export { ScrollArea } from './src/components/ScrollArea';
 export { Skelton } from './src/components/Skelton';
 export * from './src/components/Toaster';
+export * from './src/utils/extendTailwindMerge';

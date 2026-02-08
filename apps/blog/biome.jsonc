@@ -53,6 +53,7 @@
         "app/**/not-found.tsx",
         "app/**/loading.tsx",
         "app/**/error.tsx",
+        "app/**/global-error.tsx",
         "app/**/route.ts",
         "app/robots.ts",
         "app/sitemap.ts"

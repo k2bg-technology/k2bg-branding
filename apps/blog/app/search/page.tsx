@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { Articles } from '../../components/articles/Articles';
 import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
@@ -28,21 +29,25 @@ export default async function Page({
 
   const searchPosts = createSearchPostsUseCase();
 
+  async function fetchArticles() {
+    return searchPosts
+      .execute({
+        query,
+        page: currentPage,
+        pageSize: PAGE_SIZE,
+      })
+      .catch(() => {
+        notFound();
+      });
+  }
+
   return (
     <>
       <h1 className="col-span-full text-heading-1 font-bold capitalize py-4">
         {query}
       </h1>
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>
-        <Articles
-          fetchArticles={async () =>
-            searchPosts.execute({
-              query,
-              page: currentPage,
-              pageSize: PAGE_SIZE,
-            })
-          }
-        />
+        <Articles fetchArticles={fetchArticles} />
       </Suspense>
     </>
   );
