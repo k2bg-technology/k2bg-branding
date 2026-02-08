@@ -1,0 +1,8 @@
+.textShadow {
+  text-shadow: 2px 0 rgb(255 255 255 / 0.6), -2px 0 rgb(0 0 0 / 0.6);
+}
+
+.ghostLayer {
+  color: var(--ghost-color);
+  clip-path: inset(0);
+}
