@@ -1,13 +1,12 @@
 ---
-name: k2bg-unit-test-guidelines
-description: Comprehensive unit test coding standards and best practices for K2BG projects using Vitest and Testing Library. Use when writing or reviewing unit tests or component tests to ensure high-quality, maintainable test code that follows behavior-driven testing principles, descriptive test naming with describe/it blocks, and AAA pattern structure.
+paths: "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"
 ---
 
-# K2BG Unit Test Guidelines
+# Unit Test Guidelines
 
 ## Overview
 
-This skill provides comprehensive coding standards for writing high-quality unit tests in K2BG projects. These guidelines emphasize testing behavior over implementation, maintaining test code quality equal to production code, and following established patterns for test structure and organization.
+Comprehensive coding standards for writing high-quality unit tests. These guidelines emphasize testing behavior over implementation, maintaining test code quality equal to production code, and following established patterns for test structure and organization.
 
 **Testing Stack:**
 
@@ -57,7 +56,7 @@ Use `describe` blocks to group related tests and `it`/`test` blocks with descrip
 **Examples:**
 
 ```typescript
-// ✅ Good - Descriptive, present tense
+// Good - Descriptive, present tense
 describe('PricingService', () => {
   describe('calculateTotal', () => {
     it('returns sum of prices when given valid items', () => {
@@ -80,7 +79,7 @@ describe('LoginForm', () => {
   });
 });
 
-// ❌ Bad - Vague, abbreviated
+// Bad - Vague, abbreviated
 describe('PricingService', () => {
   test('calc', () => {
     // What does this test?
@@ -119,14 +118,14 @@ describe('OrderService', () => {
 **Examples:**
 
 ```typescript
-// ✅ Good
+// Good
 const expectedAge = 21;
 expect(person.age).toBe(expectedAge);
 
 const minimumPasswordLength = 8;
 expect(password.length).toBeGreaterThanOrEqual(minimumPasswordLength);
 
-// ❌ Bad
+// Bad
 expect(person.age).toBe(21); // What does 21 represent?
 expect(password.length).toBeGreaterThanOrEqual(8); // Why 8?
 ```
@@ -189,7 +188,7 @@ describe('PricingService', () => {
 **Examples:**
 
 ```typescript
-// ❌ Bad - Custom loop with conditional logic
+// Bad - Custom loop with conditional logic
 describe('OrderService', () => {
   it('handles various order states', () => {
     const orders = getTestOrders();
@@ -204,7 +203,7 @@ describe('OrderService', () => {
   });
 });
 
-// ✅ Good - Separate tests for distinct behaviors
+// Good - Separate tests for distinct behaviors
 describe('OrderService', () => {
   describe('processOrder', () => {
     it('returns true when order is paid', () => {
@@ -219,7 +218,7 @@ describe('OrderService', () => {
   });
 });
 
-// ✅ Also Good - Use it.each for similar test cases with different inputs
+// Good - Use it.each for similar test cases with different inputs
 describe('Calculator', () => {
   describe('add', () => {
     it.each([
@@ -233,7 +232,7 @@ describe('Calculator', () => {
   });
 });
 
-// ✅ Also Good - Table notation for better readability with many test cases
+// Good - Table notation for better readability with many test cases
 describe('Calculator', () => {
   describe('multiply', () => {
     it.each`
@@ -261,7 +260,7 @@ describe('Calculator', () => {
 **Examples:**
 
 ```typescript
-// ✅ Good - async/await syntax
+// Good - async/await syntax
 describe('UserService', () => {
   describe('fetchUser', () => {
     it('returns user data when API call succeeds', async () => {
@@ -286,7 +285,7 @@ describe('UserService', () => {
   });
 });
 
-// ✅ Good - Component test with async utilities
+// Good - Component test with async utilities
 describe('UserProfile', () => {
   it('displays user name after loading', async () => {
     const user = { id: '1', name: 'Jane Smith' };
@@ -317,7 +316,7 @@ describe('UserProfile', () => {
   });
 });
 
-// ❌ Bad - Using .then() chains
+// Bad - Using .then() chains
 describe('UserService', () => {
   it('fetches user', () => {
     return sut.fetchUser('123').then((result) => {
@@ -326,7 +325,7 @@ describe('UserService', () => {
   });
 });
 
-// ❌ Bad - Missing await
+// Bad - Missing await
 describe('UserService', () => {
   it('fetches user', async () => {
     const result = sut.fetchUser('123'); // Missing await!
@@ -346,7 +345,7 @@ describe('UserService', () => {
 **Examples:**
 
 ```typescript
-// ✅ Good - Testing synchronous errors
+// Good - Testing synchronous errors
 describe('Validator', () => {
   describe('validateEmail', () => {
     it('throws error when email is empty', () => {
@@ -360,18 +359,10 @@ describe('Validator', () => {
 
       expect(() => sut.validateEmail('invalid-email')).toThrow(ValidationError);
     });
-
-    it('throws error with specific message for missing @ symbol', () => {
-      const sut = new Validator();
-
-      expect(() => sut.validateEmail('invalidemail.com')).toThrow(
-        'Email must contain @ symbol'
-      );
-    });
   });
 });
 
-// ✅ Good - Testing asynchronous errors
+// Good - Testing asynchronous errors
 describe('PaymentService', () => {
   describe('processPayment', () => {
     it('throws error when payment fails', async () => {
@@ -386,37 +377,10 @@ describe('PaymentService', () => {
         'Insufficient funds'
       );
     });
-
-    it('throws PaymentError for declined cards', async () => {
-      const paymentGateway = {
-        charge: vi.fn().mockRejectedValue(new PaymentError('Card declined')),
-      };
-      const sut = new PaymentService(paymentGateway);
-
-      await expect(sut.processPayment({ amount: 100 })).rejects.toThrow(
-        PaymentError
-      );
-    });
   });
 });
 
-// ✅ Good - Testing error with partial message match
-describe('AuthService', () => {
-  describe('login', () => {
-    it('throws error containing username when user not found', async () => {
-      const username = 'nonexistent@example.com';
-      const sut = new AuthService();
-
-      await expect(sut.login(username, 'password')).rejects.toThrow(
-        expect.objectContaining({
-          message: expect.stringContaining(username),
-        })
-      );
-    });
-  });
-});
-
-// ❌ Bad - Not wrapping synchronous throw in arrow function
+// Bad - Not wrapping synchronous throw in arrow function
 describe('Validator', () => {
   it('throws error for invalid input', () => {
     const sut = new Validator();
@@ -424,7 +388,7 @@ describe('Validator', () => {
   });
 });
 
-// ❌ Bad - Using try/catch instead of Vitest matchers
+// Bad - Using try/catch instead of Vitest matchers
 describe('Validator', () => {
   it('throws error for invalid input', () => {
     const sut = new Validator();
@@ -449,36 +413,6 @@ describe('Validator', () => {
 - Do not verify multiple unrelated behaviors in a single test method
 - **Exception**: Multiple assertions are acceptable if they verify a single behavior from different angles
 
-**Examples:**
-
-```typescript
-// ✅ Good - Multiple assertions for one behavior
-describe('UserService', () => {
-  describe('createUser', () => {
-    it('creates user with correct properties when given valid data', () => {
-      const userData = { name: 'John', email: 'john@example.com', age: 30 };
-
-      const user = sut.createUser(userData);
-
-      expect(user.name).toBe('John');
-      expect(user.email).toBe('john@example.com');
-      expect(user.age).toBe(30);
-      // All assertions verify the same behavior: user creation with correct data
-    });
-  });
-});
-
-// ❌ Bad - Multiple unrelated behaviors
-describe('UserService', () => {
-  it('performs various operations', () => {
-    expect(sut.createUser(data)).toBeDefined();
-    expect(sut.deleteUser(id)).toBe(true);
-    expect(sut.findUser(id)).toBeNull();
-    // Each assertion tests a different behavior
-  });
-});
-```
-
 ### Choosing What to Verify
 
 **State-Based Verification (Preferred):**
@@ -496,64 +430,6 @@ describe('UserService', () => {
 - **Do not verify** calls to pure data providers (collaborators that only return values without side effects)
 - **Guideline**: If the dependency's purpose is to provide data for computation, verify the computation result, not the call
 
-**Examples:**
-
-```typescript
-// ✅ Good - State-based verification
-describe('ShoppingCart', () => {
-  describe('addToCart', () => {
-    it('increases cart total when adding valid product', () => {
-      const product = createProduct({ price: 50 });
-
-      sut.addToCart(product);
-
-      expect(sut.getTotal()).toBe(50);
-    });
-  });
-});
-
-// ✅ Good - Communication-based for unmanaged dependency
-describe('OrderService', () => {
-  describe('processOrder', () => {
-    it('sends confirmation email when processing valid order', () => {
-      const emailService = vi.fn();
-      const sut = new OrderService(emailService);
-      const order = createOrder();
-
-      sut.processOrder(order);
-
-      expect(emailService).toHaveBeenCalledWith(
-        expect.objectContaining({ orderId: order.id })
-      );
-    });
-  });
-});
-
-// ❌ Bad - Verifying pure data provider calls
-describe('Calculator', () => {
-  it('calls getPrice once', () => {
-    const priceProvider = vi.fn(() => 100); // Pure data provider
-    const sut = new Calculator(priceProvider);
-
-    sut.calculateTotal();
-
-    expect(priceProvider).toHaveBeenCalledTimes(1); // Don't verify data providers!
-  });
-});
-
-// ✅ Better - Verify the computation result instead
-describe('Calculator', () => {
-  it('calculates correct total using provided price', () => {
-    const priceProvider = vi.fn(() => 100);
-    const sut = new Calculator(priceProvider);
-
-    const total = sut.calculateTotal();
-
-    expect(total).toBe(100); // Verify the result, not the call
-  });
-});
-```
-
 ### Use Vitest's Expressive Matchers
 
 - Use Vitest's built-in matchers that read like English sentences
@@ -563,25 +439,25 @@ describe('Calculator', () => {
 **Examples:**
 
 ```typescript
-// ✅ Good - Expressive Vitest matchers
+// Good - Expressive Vitest matchers
 expect(result).toBeGreaterThan(0);
 expect(user.email).toContain('@');
 expect(errors).toHaveLength(2);
 expect(response).toMatchObject({ status: 'success' });
 
-// ❌ Less readable - Manual comparisons
+// Less readable - Manual comparisons
 expect(result > 0).toBe(true);
 expect(user.email.includes('@')).toBe(true);
 expect(errors.length === 2).toBe(true);
 
-// ✅ Good - Testing Library semantic queries
+// Good - Testing Library semantic queries
 const button = screen.getByRole('button', { name: /submit/i });
 expect(button).toBeInTheDocument();
 
 const input = screen.getByLabelText('Email');
 expect(input).toHaveValue('test@example.com');
 
-// ❌ Bad - Testing implementation details
+// Bad - Testing implementation details
 const button = container.querySelector('.submit-button');
 expect(button?.textContent).toBe('Submit');
 ```
@@ -600,7 +476,6 @@ expect(button?.textContent).toBe('Submit');
 
 - **In Unit Tests**: Mock at the repository/data access boundary (e.g., mock `UserRepository`, not the database)
 - **In Integration Tests**: Use real implementations with test infrastructure (in-memory database, Testcontainers)
-- **Rationale**: Unit tests should be fast and isolated; integration tests verify database interactions
 
 **Domain Logic (Never mock):**
 
@@ -613,45 +488,6 @@ expect(button?.textContent).toBe('Submit');
 - Limit the number of mocks per test (ideally 1-2, maximum 3)
 - Excessive mock setup indicates design problems
 - Consider refactoring if test setup becomes complex
-- **Code smell**: Tests that spend more lines on mock setup than actual testing
-
-**Examples:**
-
-```typescript
-// ❌ Bad - Too many mocks
-describe('OrderService', () => {
-  it('processes order', () => {
-    const repository = vi.fn();
-    const emailService = vi.fn();
-    const smsService = vi.fn();
-    const paymentGateway = vi.fn();
-    const logger = vi.fn();
-    const cache = vi.fn();
-    // ... 20 lines of mock setup ...
-
-    const result = sut.processOrder(order);
-
-    // Test is buried under mock complexity
-  });
-});
-
-// ✅ Good - Minimal mocking
-describe('OrderService', () => {
-  describe('processOrder', () => {
-    it('sends email notification', () => {
-      const emailService = vi.fn();
-      const sut = new OrderService(emailService);
-      const order = createValidOrder();
-
-      sut.processOrder(order);
-
-      expect(emailService).toHaveBeenCalledWith(
-        expect.objectContaining({ orderId: order.id })
-      );
-    });
-  });
-});
-```
 
 ## Setup and Sharing
 
@@ -666,7 +502,6 @@ describe('OrderService', () => {
 
 - Minimize use of `beforeEach` for test data initialization
 - `beforeEach` increases coupling between tests and reduces readability
-- **Problem**: Readers must jump between test and setup block to understand context
 - **Acceptable use**: Resetting shared mocks or test environment cleanup
 
 **Instead, use:**
@@ -679,7 +514,7 @@ describe('OrderService', () => {
 **Examples:**
 
 ```typescript
-// ❌ Bad - beforeEach with test data
+// Bad - beforeEach with test data
 describe('OrderService', () => {
   let sut: OrderService;
   let testCustomer: Customer;
@@ -698,7 +533,7 @@ describe('OrderService', () => {
   });
 });
 
-// ✅ Good - Factory functions
+// Good - Factory functions
 describe('OrderService', () => {
   it('creates order when given valid customer and product', () => {
     const sut = createOrderService();
@@ -711,20 +546,7 @@ describe('OrderService', () => {
   });
 });
 
-// Factory functions
-function createOrderService(): OrderService {
-  return new OrderService(createRepository());
-}
-
-function createValidCustomer(): Customer {
-  return new Customer({ name: 'John Doe', email: 'john@example.com' });
-}
-
-function createProduct(options: Partial<Product> = {}): Product {
-  return new Product({ name: 'Test Product', price: 100, ...options });
-}
-
-// ✅ Acceptable - beforeEach for cleanup
+// Acceptable - beforeEach for cleanup
 describe('DateService', () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -741,20 +563,12 @@ describe('DateService', () => {
 });
 ```
 
-### Reusing Test Fixtures
-
-- Extract common initialization logic into reusable factory methods
-- Share factory methods across test files when appropriate
-- Keep factories focused and composable
-- **Pattern**: Object Mother for complex domain objects, Builder for flexible construction
-
 ## Maintenance
 
 ### Refactoring Test Code
 
 - Refactor test code alongside production code
 - Well-designed tests (testing behavior, not implementation) require minimal changes during refactoring
-- Eliminate duplicated test code and unclear setup logic
 - If many tests break after refactoring production code, the tests were likely coupled to implementation details
 
 ### Delete Dead Code
@@ -762,48 +576,3 @@ describe('DateService', () => {
 - Remove commented-out tests immediately
 - Delete tests that are no longer executed or relevant
 - **Never** commit disabled tests without a clear plan to fix them
-- Dead test code creates confusion and maintenance burden
-
-**Examples:**
-
-```typescript
-// ❌ Bad
-describe('OrderService', () => {
-  // it('old behavior that no longer applies', () => {
-  //   // This test is outdated
-  // });
-
-  // TODO: Fix this test later
-  it.skip('broken test that fails', () => {
-    // Disabled without clear plan
-  });
-
-  it('processes order with valid data', () => {
-    // Active test
-  });
-});
-
-// ✅ Good - Only active, relevant tests
-describe('OrderService', () => {
-  describe('processOrder', () => {
-    it('creates order when given valid data', () => {
-      // Active, maintained test
-    });
-
-    it('throws error when data is invalid', () => {
-      // Active, maintained test
-    });
-  });
-});
-```
-
-## Summary
-
-These guidelines ensure that test code in K2BG projects is:
-
-- **Maintainable**: Tests survive refactoring and remain clear over time
-- **Readable**: Tests serve as living documentation of system behavior
-- **Reliable**: Tests verify meaningful behavior, not implementation details
-- **Independent**: Each test can run in isolation without side effects
-
-Apply these principles consistently to build a robust, valuable test suite that supports rapid development and confident refactoring.
