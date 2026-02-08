@@ -12,7 +12,5 @@ export {
   type UploadApiResponse,
 } from './client';
 
-export { fetchImageVersion } from './fetchImageVersion';
 export { getOptimizedImageUrl } from './getOptimizedImageUrl';
 export { getPlaceholderImageUrl } from './getPlaceholderImageUrl';
-export type { OptimizationOptions } from './types';
