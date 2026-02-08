@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { Markdown } from '../../../../components/markdown';
 import { Sidebar } from '../../../../components/sidebar/Sidebar';
@@ -44,7 +45,10 @@ export default async function Page({ params }: Props) {
   const { id } = await params;
 
   const fetchPost = createFetchPostUseCase();
-  const { post: article } = await fetchPost.execute({ id });
+
+  const { post: article } = await fetchPost.execute({ id }).catch(() => {
+    notFound();
+  });
 
   return (
     <>

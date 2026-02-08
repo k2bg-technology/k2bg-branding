@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
 import { createFetchPostsByCategoryUseCase } from '../../../infrastructure/di';
@@ -51,21 +51,25 @@ export default async function Page({ params, searchParams }: Props) {
 
   const fetchPostsByCategory = createFetchPostsByCategoryUseCase();
 
+  async function fetchArticles() {
+    return fetchPostsByCategory
+      .execute({
+        category,
+        page: currentPage,
+        pageSize: PAGE_SIZE,
+      })
+      .catch(() => {
+        notFound();
+      });
+  }
+
   return (
     <>
       <h1 className="col-span-full text-heading-1 font-bold capitalize">
         {category}
       </h1>
       <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
-        <Articles
-          fetchArticles={() =>
-            fetchPostsByCategory.execute({
-              category,
-              page: currentPage,
-              pageSize: PAGE_SIZE,
-            })
-          }
-        />
+        <Articles fetchArticles={fetchArticles} />
       </Suspense>
     </>
   );
