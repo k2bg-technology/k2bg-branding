@@ -2,7 +2,6 @@ import Image, { type ImageProps } from 'next/image';
 import { Icon, Skelton } from 'ui';
 
 import {
-  fetchImageVersion,
   getOptimizedImageUrl,
   getPlaceholderImageUrl,
 } from '../../infrastructure/cloudinary';
@@ -16,9 +15,8 @@ export async function CloudinaryImage(props: CloudinaryImageProps) {
   const { publicId, alt, ...rest } = props;
 
   try {
-    const version = await fetchImageVersion(publicId);
-    const optimizedImageUrl = getOptimizedImageUrl(publicId, { version });
-    const placeholderImageUrl = getPlaceholderImageUrl(publicId, { version });
+    const optimizedImageUrl = getOptimizedImageUrl(publicId);
+    const placeholderImageUrl = getPlaceholderImageUrl(publicId);
     const placeholderImageBase64 = await fetch(placeholderImageUrl).then(
       async (res) =>
         `data:image/webp;base64,${Buffer.from(await res.arrayBuffer()).toString(
