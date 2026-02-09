@@ -32,15 +32,6 @@ export class ImageUploadError extends RepositoryError {
 }
 
 /**
- * Error thrown when a database connection fails.
- */
-export class DatabaseConnectionError extends RepositoryError {
-  constructor(cause?: unknown) {
-    super('Database connection failed', cause);
-  }
-}
-
-/**
  * Error thrown when mapping between domain and persistence models fails.
  */
 export class MappingError extends RepositoryError {
