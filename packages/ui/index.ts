@@ -1,13 +1,18 @@
 export { Avatar } from './src/components/Avatar';
-export * from './src/components/Button';
-export * from './src/components/Dialog';
-export * from './src/components/Drawer';
-export * from './src/components/DropdownMenu';
+export { Button } from './src/components/Button';
+export { Dialog } from './src/components/Dialog';
+export { Drawer } from './src/components/Drawer';
+export { DropdownMenu, DropdownMenuItem } from './src/components/DropdownMenu';
 export { Form } from './src/components/Form';
-export * from './src/components/Icon';
-export * from './src/components/Media';
+export { Icon, type IconProps } from './src/components/Icon';
+export {
+  ImageViewer,
+  MusicStreamingPlayer,
+  VideoFilePlayer,
+  VideoStreamingPlayer,
+} from './src/components/Media';
 export { Pagination } from './src/components/Pagination';
 export { ScrollArea } from './src/components/ScrollArea';
 export { Skelton } from './src/components/Skelton';
-export * from './src/components/Toaster';
-export * from './src/utils/extendTailwindMerge';
+export { Toaster, useToast } from './src/components/Toaster';
+export { twMerge } from './src/utils/extendTailwindMerge';
