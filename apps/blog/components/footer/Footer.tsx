@@ -29,7 +29,6 @@ export function Footer() {
                 <li>
                   <Link
                     href="/category/ENGINEERING"
-                    passHref
                     data-gtm="footer_click_engineering"
                   >
                     <Button
@@ -43,11 +42,7 @@ export function Footer() {
                 </li>
 
                 <li>
-                  <Link
-                    href="/category/DESIGN"
-                    passHref
-                    data-gtm="footer_click_design"
-                  >
+                  <Link href="/category/DESIGN" data-gtm="footer_click_design">
                     <Button
                       className="!font-normal"
                       color="light"
@@ -61,7 +56,6 @@ export function Footer() {
                 <li>
                   <Link
                     href="/category/DATA_SCIENCE"
-                    passHref
                     data-gtm="footer_click_data_science"
                   >
                     <Button
@@ -77,7 +71,6 @@ export function Footer() {
                 <li>
                   <Link
                     href="/category/LIFE_STYLE"
-                    passHref
                     data-gtm="footer_click_life_style"
                   >
                     <Button
@@ -91,11 +84,7 @@ export function Footer() {
                 </li>
 
                 <li>
-                  <Link
-                    href="/concept"
-                    passHref
-                    data-gtm="footer_click_concept"
-                  >
+                  <Link href="/concept" data-gtm="footer_click_concept">
                     <Button
                       className="!font-normal"
                       color="light"
@@ -107,11 +96,7 @@ export function Footer() {
                 </li>
 
                 <li>
-                  <Link
-                    href="/contact"
-                    passHref
-                    data-gtm="footer_click_contact"
-                  >
+                  <Link href="/contact" data-gtm="footer_click_contact">
                     <Button
                       className="!font-normal"
                       color="light"

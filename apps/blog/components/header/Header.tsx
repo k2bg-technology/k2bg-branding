@@ -23,7 +23,7 @@ export function Header() {
               <nav>
                 <ul className="flex items-center gap-x-4">
                   <li>
-                    <Link href={`/category/${Category.ENGINEERING}`} passHref>
+                    <Link href={`/category/${Category.ENGINEERING}`}>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -35,7 +35,7 @@ export function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href={`/category/${Category.DESIGN}`} passHref>
+                    <Link href={`/category/${Category.DESIGN}`}>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -47,7 +47,7 @@ export function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href={`/category/${Category.DATA_SCIENCE}`} passHref>
+                    <Link href={`/category/${Category.DATA_SCIENCE}`}>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -59,7 +59,7 @@ export function Header() {
                     </Link>
                   </li>
                   <li>
-                    <Link href={`/category/${Category.LIFE_STYLE}`} passHref>
+                    <Link href={`/category/${Category.LIFE_STYLE}`}>
                       <Button
                         className="!font-normal"
                         color="dark"
@@ -74,7 +74,7 @@ export function Header() {
               </nav>
             </div>
             <div className="hidden xl:flex items-center gap-x-4">
-              <Link href="/concept" passHref>
+              <Link href="/concept">
                 <Button
                   className="!font-normal"
                   color="dark"
@@ -84,7 +84,7 @@ export function Header() {
                   Concept
                 </Button>
               </Link>
-              <Link href="/contact" passHref>
+              <Link href="/contact">
                 <Button
                   className="!font-normal"
                   color="dark"
@@ -128,7 +128,6 @@ export function Header() {
                 <DropdownMenuItem>
                   <Link
                     href={`/category/${Category.ENGINEERING}`}
-                    passHref
                     data-gtm="header_click_engineering"
                   >
                     Engineering
@@ -137,7 +136,6 @@ export function Header() {
                 <DropdownMenuItem>
                   <Link
                     href={`/category/${Category.DESIGN}`}
-                    passHref
                     data-gtm="header_click_design"
                   >
                     Design
@@ -146,7 +144,6 @@ export function Header() {
                 <DropdownMenuItem>
                   <Link
                     href={`/category/${Category.DATA_SCIENCE}`}
-                    passHref
                     data-gtm="header_click_data_science"
                   >
                     Data Science
@@ -155,27 +152,18 @@ export function Header() {
                 <DropdownMenuItem>
                   <Link
                     href={`/category/${Category.LIFE_STYLE}`}
-                    passHref
                     data-gtm="header_click_life_style"
                   >
                     Life Style
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link
-                    href="/concept"
-                    passHref
-                    data-gtm="header_click_concept"
-                  >
+                  <Link href="/concept" data-gtm="header_click_concept">
                     Concept
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link
-                    href="/contact"
-                    passHref
-                    data-gtm="header_click_contact"
-                  >
+                  <Link href="/contact" data-gtm="header_click_contact">
                     Contact
                   </Link>
                 </DropdownMenuItem>
