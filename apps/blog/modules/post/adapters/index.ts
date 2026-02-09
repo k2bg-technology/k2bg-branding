@@ -16,7 +16,6 @@ export {
 } from './output';
 
 export {
-  DatabaseConnectionError,
   ExternalSourceError,
   ImageUploadError,
   MappingError,
