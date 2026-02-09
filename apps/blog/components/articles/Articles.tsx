@@ -31,7 +31,6 @@ export async function Articles(props: Props) {
               {article.imageUrl && (
                 <Link
                   href={`/blog/${article.slug}`}
-                  passHref
                   className="peer"
                   data-gtm="article_click_back_number_image"
                 >

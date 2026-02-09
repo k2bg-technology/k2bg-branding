@@ -25,7 +25,6 @@ export async function InstagramTimeline() {
         <Link
           key={post.id}
           href={post.permalink}
-          passHref
           target="_blank"
           rel="noreferrer"
         >

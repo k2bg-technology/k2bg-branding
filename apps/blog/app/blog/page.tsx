@@ -87,7 +87,6 @@ export default async function Page() {
               {featureLatest.imageUrl && (
                 <Link
                   href={`/blog/${featureLatest.slug}`}
-                  passHref
                   className="peer"
                   data-gtm="article_click_feature_latest_image"
                 >
@@ -148,7 +147,6 @@ export default async function Page() {
               {article.imageUrl && (
                 <Link
                   href={`/blog/${article.slug}`}
-                  passHref
                   className="h-full peer"
                   data-gtm="article_click_feature_recently_image"
                 >
@@ -213,7 +211,6 @@ export default async function Page() {
                 {article.imageUrl && (
                   <Link
                     href={`/blog/${article.slug}`}
-                    passHref
                     className="h-full peer"
                     data-gtm="article_click_feature_recently_image"
                   >
@@ -273,7 +270,6 @@ export default async function Page() {
               {article.imageUrl && (
                 <Link
                   href={`/blog/${article.slug}`}
-                  passHref
                   className="peer"
                   data-gtm="article_click_feature_previously_image"
                 >
