@@ -4,9 +4,6 @@
 const config = {
   reactStrictMode: true,
   transpilePackages: ['ui', 'tailwind-config'],
-  experimental: {
-    optimizePackageImports: ['ui'],
-  },
   async redirects() {
     return [
       {
