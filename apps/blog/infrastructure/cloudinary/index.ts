@@ -12,5 +12,6 @@ export {
   type UploadApiResponse,
 } from './client';
 
+export { CloudinaryOgImageUrlGenerator } from './getOgImageUrl';
 export { getOptimizedImageUrl } from './getOptimizedImageUrl';
 export { getPlaceholderImageUrl } from './getPlaceholderImageUrl';

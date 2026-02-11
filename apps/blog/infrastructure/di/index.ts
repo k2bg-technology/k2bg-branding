@@ -12,5 +12,6 @@ export {
   createSearchPostsUseCase,
   createSyncPostsFromExternalUseCase,
   createSyncHeroImagesUseCase,
+  getDefaultOgImageUrl,
 } from './post';
 export { createFetchFeedUseCase } from './social-feed';
