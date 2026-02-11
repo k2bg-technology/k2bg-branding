@@ -1,4 +1,5 @@
 import type { Post } from '../../domain';
+import type { OgImageUrlGenerator } from './ogImageUrlGenerator';
 import type { AuthorOutput, PostOutput } from './types';
 
 /**
@@ -6,7 +7,8 @@ import type { AuthorOutput, PostOutput } from './types';
  */
 export function toPostOutput(
   post: Post,
-  author: AuthorOutput | null = null
+  author: AuthorOutput | null = null,
+  ogImageUrlGenerator?: OgImageUrlGenerator
 ): PostOutput {
   const id = post.id.getValue();
 
@@ -17,6 +19,7 @@ export function toPostOutput(
     type: post.type,
     excerpt: post.excerpt.hasValue() ? post.excerpt.getValue() : null,
     imageUrl: post.imageUrl.getValue(),
+    ogImageUrl: ogImageUrlGenerator ? ogImageUrlGenerator.generate(id) : null,
     slug: `${id}/${post.slug.getValue()}`,
     status: post.status,
     category: post.category,

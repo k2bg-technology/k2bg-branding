@@ -3,7 +3,10 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
-import { createFetchPostsByCategoryUseCase } from '../../../infrastructure/di';
+import {
+  createFetchPostsByCategoryUseCase,
+  getDefaultOgImageUrl,
+} from '../../../infrastructure/di';
 import { Category } from '../../../modules/post/domain';
 
 const PAGE_SIZE = 6;
@@ -35,10 +38,27 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
 
+  const ogImageUrl = getDefaultOgImageUrl();
+  const description = `${category} カテゴリの記事一覧`;
+
   return {
     title: category,
     alternates: {
       canonical: `/category/${category}`,
+    },
+    openGraph: {
+      title: category,
+      description,
+      type: 'website',
+      locale: 'ja_JP',
+      siteName: 'K2.B.G Technology Blog',
+      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: category,
+      description,
+      images: [ogImageUrl],
     },
   };
 }

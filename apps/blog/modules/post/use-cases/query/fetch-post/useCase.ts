@@ -1,5 +1,10 @@
 import { PostId } from '../../../domain';
-import { PostNotFoundError, type PostOutput, toPostOutput } from '../../shared';
+import {
+  type OgImageUrlGenerator,
+  PostNotFoundError,
+  type PostOutput,
+  toPostOutput,
+} from '../../shared';
 import type { FetchPostQueryService } from './queryService';
 
 export interface FetchPostInput {
@@ -16,7 +21,10 @@ export interface FetchPostOutput {
  * Fetches a single post by its ID.
  */
 export class FetchPost {
-  constructor(private readonly queryService: FetchPostQueryService) {}
+  constructor(
+    private readonly queryService: FetchPostQueryService,
+    private readonly ogImageUrlGenerator?: OgImageUrlGenerator
+  ) {}
 
   async execute(input: FetchPostInput): Promise<FetchPostOutput> {
     const postId = PostId.create(input.id);
@@ -27,7 +35,7 @@ export class FetchPost {
     }
 
     return {
-      post: toPostOutput(result.post, result.author),
+      post: toPostOutput(result.post, result.author, this.ogImageUrlGenerator),
     };
   }
 }

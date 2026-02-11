@@ -1,6 +1,6 @@
 import { getPrismaClient } from '../prisma';
 import { getNotionClient, getNotionToMarkdown } from '../notion';
-import { getCloudinary } from '../cloudinary';
+import { CloudinaryOgImageUrlGenerator, getCloudinary } from '../cloudinary';
 import {
   CloudinaryImageRepository,
   NotionExternalImageSource,
@@ -29,7 +29,15 @@ export function createFetchPostsUseCase(): FetchPosts {
 
 export function createFetchPostUseCase(): FetchPost {
   const prisma = getPrismaClient();
-  return new FetchPost(new PrismaFetchPostQueryService(prisma));
+  return new FetchPost(
+    new PrismaFetchPostQueryService(prisma),
+    new CloudinaryOgImageUrlGenerator()
+  );
+}
+
+export function getDefaultOgImageUrl(): string {
+  const generator = new CloudinaryOgImageUrlGenerator();
+  return generator.generate(process.env.DEFAULT_OG_IMAGE_PUBLIC_ID ?? '');
 }
 
 export function createFetchAllSlugsUseCase(): FetchAllSlugs {

@@ -5,16 +5,23 @@ import { Avatar } from 'ui';
 import { BlogCard } from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import { Sidebar } from '../../components/sidebar/Sidebar';
-import { createFetchPostsUseCase } from '../../infrastructure/di';
+import {
+  createFetchPostsUseCase,
+  getDefaultOgImageUrl,
+} from '../../infrastructure/di';
 
 const PAGE_SIZE = 8;
 
 export const revalidate = 60;
 
+const defaultOgImageUrl = getDefaultOgImageUrl();
+
+const blogDescription =
+  'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。';
+
 export const metadata: Metadata = {
   title: 'K2.B.G Technology Blog',
-  description:
-    'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。',
+  description: blogDescription,
   robots: {
     index: true,
     follow: true,
@@ -28,17 +35,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'K2.B.G Technology Blog',
-    description:
-      'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。',
+    description: blogDescription,
     type: 'website',
     locale: 'ja_JP',
     siteName: 'K2.B.G Technology Blog',
+    images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
   },
   twitter: {
-    card: 'summary',
+    card: 'summary_large_image',
     title: 'K2.B.G Technology Blog',
-    description:
-      'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。',
+    description: blogDescription,
+    images: [defaultOgImageUrl],
   },
   alternates: {
     canonical: '/blog',
