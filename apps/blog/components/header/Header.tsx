@@ -105,7 +105,7 @@ export function Header() {
                     <Icon name="magnifying-glass" width={20} height={20} />
                   </Button>
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
+                <DropdownMenu.Content align="end">
                   <DropdownMenu.Item>
                     <Search placeholder="検索" />
                   </DropdownMenu.Item>
