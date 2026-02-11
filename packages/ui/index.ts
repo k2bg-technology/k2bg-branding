@@ -2,7 +2,7 @@ export { Avatar } from './src/components/Avatar';
 export { Button } from './src/components/Button';
 export { Dialog } from './src/components/Dialog';
 export { Drawer } from './src/components/Drawer';
-export { DropdownMenu, DropdownMenuItem } from './src/components/DropdownMenu';
+export { DropdownMenu } from './src/components/DropdownMenu';
 export { Form } from './src/components/Form';
 export { Icon, type IconProps } from './src/components/Icon';
 export {

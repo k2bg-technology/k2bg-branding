@@ -2,16 +2,11 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 
-import { DropdownMenu } from './DropdownMenu';
-import { DropdownMenuItem } from './DropdownMenuItem';
+import { DropdownMenu } from '.';
 
 const meta = {
   component: DropdownMenu,
   argTypes: {
-    trigger: {
-      control: false,
-      description: 'The element that triggers the dropdown menu',
-    },
     children: {
       control: false,
       description: 'The menu items to display in the dropdown',
@@ -58,39 +53,41 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <DropdownMenuItem>
-          <a
-            href="https://example.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Menu item 1
-          </a>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <a
-            href="https://example.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Menu item 2
-          </a>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <a
-            href="https://example.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Menu item 3
-          </a>
-        </DropdownMenuItem>
+        <DropdownMenu.Trigger>
+          <Button color="dark" variant="ghost" size="icon">
+            <Icon name="inbox-stack" className="w-10 h-10" />
+          </Button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Content>
+          <DropdownMenu.Item>
+            <a
+              href="https://example.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Menu item 1
+            </a>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item>
+            <a
+              href="https://example.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Menu item 2
+            </a>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item>
+            <a
+              href="https://example.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Menu item 3
+            </a>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
       </>
-    ),
-    trigger: (
-      <Button color="dark" variant="ghost" size="icon">
-        <Icon name="inbox-stack" className="w-10 h-10" />
-      </Button>
     ),
   },
 };

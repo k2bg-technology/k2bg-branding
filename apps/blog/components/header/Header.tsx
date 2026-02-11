@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, Drawer, DropdownMenu, DropdownMenuItem, Icon } from 'ui';
+import { Button, Drawer, DropdownMenu, Icon } from 'ui';
 import { Category } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import { Search } from '../search/Search';
@@ -94,8 +94,8 @@ export function Header() {
                   Contact
                 </Button>
               </Link>
-              <DropdownMenu
-                trigger={
+              <DropdownMenu>
+                <DropdownMenu.Trigger>
                   <Button
                     color="dark"
                     variant="ghost"
@@ -104,16 +104,17 @@ export function Header() {
                   >
                     <Icon name="magnifying-glass" width={20} height={20} />
                   </Button>
-                }
-              >
-                <DropdownMenuItem>
-                  <Search placeholder="検索" />
-                </DropdownMenuItem>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Item>
+                    <Search placeholder="検索" />
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
               </DropdownMenu>
             </div>
             <div className="flex xl:hidden items-center gap-x-spacious">
-              <DropdownMenu
-                trigger={
+              <DropdownMenu>
+                <DropdownMenu.Trigger>
                   <Button
                     color="dark"
                     size="icon"
@@ -123,50 +124,51 @@ export function Header() {
                   >
                     <Icon name="inbox-stack" />
                   </Button>
-                }
-              >
-                <DropdownMenuItem>
-                  <Link
-                    href={`/category/${Category.ENGINEERING}`}
-                    data-gtm="header_click_engineering"
-                  >
-                    Engineering
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href={`/category/${Category.DESIGN}`}
-                    data-gtm="header_click_design"
-                  >
-                    Design
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href={`/category/${Category.DATA_SCIENCE}`}
-                    data-gtm="header_click_data_science"
-                  >
-                    Data Science
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link
-                    href={`/category/${Category.LIFE_STYLE}`}
-                    data-gtm="header_click_life_style"
-                  >
-                    Life Style
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/concept" data-gtm="header_click_concept">
-                    Concept
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Link href="/contact" data-gtm="header_click_contact">
-                    Contact
-                  </Link>
-                </DropdownMenuItem>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Content>
+                  <DropdownMenu.Item>
+                    <Link
+                      href={`/category/${Category.ENGINEERING}`}
+                      data-gtm="header_click_engineering"
+                    >
+                      Engineering
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
+                    <Link
+                      href={`/category/${Category.DESIGN}`}
+                      data-gtm="header_click_design"
+                    >
+                      Design
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
+                    <Link
+                      href={`/category/${Category.DATA_SCIENCE}`}
+                      data-gtm="header_click_data_science"
+                    >
+                      Data Science
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
+                    <Link
+                      href={`/category/${Category.LIFE_STYLE}`}
+                      data-gtm="header_click_life_style"
+                    >
+                      Life Style
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
+                    <Link href="/concept" data-gtm="header_click_concept">
+                      Concept
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item>
+                    <Link href="/contact" data-gtm="header_click_contact">
+                      Contact
+                    </Link>
+                  </DropdownMenu.Item>
+                </DropdownMenu.Content>
               </DropdownMenu>
               <Drawer
                 trigger={
