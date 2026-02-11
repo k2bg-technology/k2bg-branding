@@ -67,6 +67,7 @@ export function createPostOutput(
     type: PostType.ARTICLE,
     excerpt: 'Test excerpt',
     imageUrl: 'https://example.com/image.jpg',
+    ogImageUrl: null,
     slug: 'test-post',
     status: PostStatus.PUBLISHED,
     category: Category.ENGINEERING,

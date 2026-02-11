@@ -32,6 +32,7 @@ export interface PostOutput {
   type: string;
   excerpt: string | null;
   imageUrl: string;
+  ogImageUrl: string | null;
   slug: string;
   status: string;
   category: Category;
