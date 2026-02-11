@@ -6,6 +6,7 @@ import { Sidebar } from '../../../../components/sidebar/Sidebar';
 import {
   createFetchAllSlugsUseCase,
   createFetchPostUseCase,
+  getDefaultOgImageUrl,
 } from '../../../../infrastructure/di';
 
 export const revalidate = 60;
@@ -32,11 +33,30 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fetchPost = createFetchPostUseCase();
   const { post: article } = await fetchPost.execute({ id });
 
+  const ogImageUrl = article.ogImageUrl ?? getDefaultOgImageUrl();
+
   return {
     title: article.title,
     description: article.excerpt || '',
     alternates: {
       canonical: `/blog/${article.slug}`,
+    },
+    openGraph: {
+      title: article.title,
+      description: article.excerpt || '',
+      type: 'article',
+      locale: 'ja_JP',
+      siteName: 'K2.B.G Technology Blog',
+      images: [{ url: ogImageUrl, width: 1200, height: 630 }],
+      publishedTime: article.releaseDate,
+      authors: article.author ? [article.author.name] : undefined,
+      tags: article.tags.length > 0 ? [...article.tags] : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: article.title,
+      description: article.excerpt || '',
+      images: [ogImageUrl],
     },
   };
 }
