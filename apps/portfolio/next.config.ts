@@ -1,4 +1,6 @@
-module.exports = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ['ui', 'tailwind-config'],
   webpack(config) {
@@ -10,3 +12,5 @@ module.exports = {
     return config;
   },
 };
+
+export default nextConfig;
