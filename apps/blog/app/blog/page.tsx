@@ -204,7 +204,6 @@ export default async function Page() {
                         className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                         fill
                         sizes="100%"
-                        priority
                         quality={30}
                       />
                     </BlogCard.Media>
@@ -263,7 +262,6 @@ export default async function Page() {
                       className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                       fill
                       sizes="100%"
-                      priority
                       quality={30}
                     />
                   </BlogCard.Media>
