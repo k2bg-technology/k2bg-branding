@@ -28,7 +28,9 @@ export default async function RootLayout({
   return (
     <html lang={lng} dir={dir(lng)}>
       <body>{children}</body>
-      <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
+      {process.env.NODE_ENV === 'production' && (
+        <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
+      )}
     </html>
   );
 }
