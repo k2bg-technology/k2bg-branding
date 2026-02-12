@@ -5,6 +5,7 @@ import { GoogleAdsense } from '../components/google-adsense/GoogleAdsense';
 import { Header } from '../components/header/Header';
 import { PageScrollArea } from '../components/page-scroll-area/PageScrollArea';
 import { ReactQueryClientProvider } from '../components/react-query-client-provider/ReactQueryClientProvider';
+import { ScrollToTopButton } from '../components/scroll-to-top-button/ScrollToTopButton';
 import { Toaster } from '../components/toaster/Toaster';
 
 import './globals.css';
@@ -39,6 +40,7 @@ export default function RootLayout({
               <Header />
             </div>
             <Toaster />
+            <ScrollToTopButton />
           </PageScrollArea>
         </ReactQueryClientProvider>
       </body>
