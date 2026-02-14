@@ -30,6 +30,7 @@
     "motion": "^12.4.10",
     "next": "^15.1.9",
     "notion-to-md": "^3.1.1",
+    "pino": "^9.6.0",
     "prisma": "^5.22.0",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
@@ -38,11 +39,11 @@
     "rehype-raw": "^7.0.0",
     "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.1",
+    "security-headers": "workspace:^",
     "ui": "workspace:*",
     "use-debounce": "^10.0.0",
     "zod": "^3.23.8",
-    "zustand": "^5.0.3",
-    "pino": "^9.6.0"
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@storybook/nextjs": "^10.1.11",
@@ -56,6 +57,7 @@
     "biome-config": "workspace:*",
     "msw": "^2.12.7",
     "msw-storybook-addon": "^2.0.6",
+    "pino-pretty": "^13.0.0",
     "postcss": "^8.5.3",
     "postcss-preset-env": "^9.1.1",
     "shiki": "^3.12.1",
@@ -64,7 +66,6 @@
     "tailwind-config": "workspace:*",
     "tailwindcss": "^4.0.9",
     "test-utils": "workspace:*",
-    "pino-pretty": "^13.0.0",
     "tsconfig": "workspace:*"
   }
 }

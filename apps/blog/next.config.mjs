@@ -1,3 +1,5 @@
+import { createBlogSecurityHeaders } from 'security-headers';
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -10,6 +12,14 @@ const config = {
         source: '/',
         destination: '/blog',
         permanent: true,
+      },
+    ];
+  },
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: createBlogSecurityHeaders(true), // true = report-only mode for safe rollout
       },
     ];
   },
