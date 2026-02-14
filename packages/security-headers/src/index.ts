@@ -188,9 +188,7 @@ export function createSecurityHeaders(
  * Preset configuration for blog application
  * Includes allowlists for GTM, AdSense, Cloudinary, and Instagram
  */
-export function createBlogSecurityHeaders(
-  reportOnly = true
-): NextHeader[] {
+export function createBlogSecurityHeaders(reportOnly = true): NextHeader[] {
   return createSecurityHeaders({
     csp: {
       reportOnly,
@@ -221,9 +219,7 @@ export function createBlogSecurityHeaders(
         'https://pagead2.googlesyndication.com',
         'https://*.googlesyndication.com',
       ],
-      fontSrc: [
-        'https://fonts.gstatic.com',
-      ],
+      fontSrc: ['https://fonts.gstatic.com'],
       connectSrc: [
         'https://www.google-analytics.com',
         'https://*.google-analytics.com',
@@ -259,13 +255,8 @@ export function createPortfolioSecurityHeaders(
         "'unsafe-inline'", // Required for styled-components and CSS-in-JS
         'https://fonts.googleapis.com',
       ],
-      imgSrc: [
-        'data:',
-        'blob:',
-      ],
-      fontSrc: [
-        'https://fonts.gstatic.com',
-      ],
+      imgSrc: ['data:', 'blob:'],
+      fontSrc: ['https://fonts.gstatic.com'],
     },
     hsts: true,
   });
