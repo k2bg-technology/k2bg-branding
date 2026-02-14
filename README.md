@@ -12,6 +12,7 @@ A modern **Turborepo monorepo** for K2BG Branding containing a technology blog a
 ### Shared Packages
 
 - **`ui`** - React component library with Storybook documentation
+- **`security-headers`** - Shared security headers configuration for Next.js apps
 - **`tailwind-config`** - Shared Tailwind CSS configuration and design tokens
 - **`biome-config`** - Shared Biome configurations
 - **`tsconfig`** - TypeScript configurations used throughout the monorepo
@@ -192,6 +193,7 @@ flowchart TB
 
 ## Useful Links
 
+- [Security Headers Configuration](docs/security-headers.md) - Implementation guide
 - [Turborepo Documentation](https://turbo.build/repo/docs)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
