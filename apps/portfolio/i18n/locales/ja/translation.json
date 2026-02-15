@@ -50,8 +50,8 @@
     },
     "blogApp": {
       "title": "ブログ運営",
-      "techStack": "HTML、CSS（SASS）、Javascript、PHP、Mysql、Wordpress、Google Analytics、Google AdSense",
-      "overview": "プログラミング・マーケティング・デザイン・ファイナンス・海外などのテーマのコンテンツ記事をwordpressを使用し自分の経験に基づいて作成しております。"
+      "techStack": "TypeScript、React、Next.js(App Router)、Tailwind CSS、Notion API、Prisma、PostgreSQL、Cloudinary、AWS SES、TanStack Query、Zustand、Zod、Vitest、Storybook",
+      "overview": "Clean Architectureで設計した技術ブログです。プログラミング・マーケティング・デザイン・ファイナンスなどのテーマで記事を発信しています。NotionをヘッドレスCMSとして活用し、Prisma + PostgreSQLでデータ永続化、Cloudinaryで画像最適化、AWS SESでメール送信を実現。シンタックスハイライト付きMarkdown表示や検索機能も備えています。"
     },
     "github": "Github",
     "githubApp": "Github（アプリ）",
