@@ -2,6 +2,7 @@ import type { Root as MdastRoot } from 'mdast';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
+import rehypeSlug from 'rehype-slug';
 import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
 import { codeToHtml } from 'shiki';
@@ -35,7 +36,7 @@ export async function Root(props: Props) {
 
   return (
     <ReactMarkdown
-      rehypePlugins={[rehypeRaw]}
+      rehypePlugins={[rehypeSlug, rehypeRaw]}
       remarkPlugins={[remarkGfm, remarkDirective, remarkEmbed]}
       components={{
         h1: ({ children }) => (
@@ -43,13 +44,19 @@ export async function Root(props: Props) {
             {children}
           </h1>
         ),
-        h2: ({ children }) => (
-          <h2 className="first:mt-0 mt-12 text-heading-2 leading-heading-2 font-bold">
+        h2: ({ children, id }) => (
+          <h2
+            id={id}
+            className="first:mt-0 mt-12 text-heading-2 leading-heading-2 font-bold"
+          >
             {children}
           </h2>
         ),
-        h3: ({ children }) => (
-          <h3 className="first:mt-0 mt-8 text-heading-3 leading-heading-3 font-bold">
+        h3: ({ children, id }) => (
+          <h3
+            id={id}
+            className="first:mt-0 mt-8 text-heading-3 leading-heading-3 font-bold"
+          >
             {children}
           </h3>
         ),
