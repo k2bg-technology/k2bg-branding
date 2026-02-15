@@ -6,6 +6,10 @@ import { PageLayout } from '../../../../components/page-layout';
 import { ScrollToTopButton } from '../../../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../../../components/sidebar/Sidebar';
 import {
+  extractHeadings,
+  TableOfContents,
+} from '../../../../components/table-of-contents';
+import {
   createFetchAllSlugsUseCase,
   createFetchPostUseCase,
   getDefaultOgImageUrl,
@@ -76,6 +80,7 @@ export default async function Page({ params }: Props) {
     <PageLayout
       fab={
         <PageLayout.Fab>
+          <TableOfContents headings={extractHeadings(article.content)} />
           <ScrollToTopButton />
         </PageLayout.Fab>
       }
