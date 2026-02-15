@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { Articles } from '../../components/articles/Articles';
 import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
+import { PageLayout } from '../../components/page-layout';
+import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { createSearchPostsUseCase } from '../../infrastructure/di';
 
 const PAGE_SIZE = 6;
@@ -42,13 +44,19 @@ export default async function Page({
   }
 
   return (
-    <>
+    <PageLayout
+      fab={
+        <PageLayout.Fab>
+          <ScrollToTopButton />
+        </PageLayout.Fab>
+      }
+    >
       <h1 className="col-span-full text-heading-1 font-bold capitalize py-4">
         {query}
       </h1>
       <Suspense key={`${currentPage}-${query}`} fallback={<ArticlesSkelton />}>
         <Articles fetchArticles={fetchArticles} />
       </Suspense>
-    </>
+    </PageLayout>
   );
 }

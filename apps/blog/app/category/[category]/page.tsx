@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
+import { PageLayout } from '../../../components/page-layout';
+import { ScrollToTopButton } from '../../../components/scroll-to-top-button/ScrollToTopButton';
 import {
   createFetchPostsByCategoryUseCase,
   getDefaultOgImageUrl,
@@ -84,13 +86,19 @@ export default async function Page({ params, searchParams }: Props) {
   }
 
   return (
-    <>
+    <PageLayout
+      fab={
+        <PageLayout.Fab>
+          <ScrollToTopButton />
+        </PageLayout.Fab>
+      }
+    >
       <h1 className="col-span-full text-heading-1 font-bold capitalize">
         {category}
       </h1>
       <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
         <Articles fetchArticles={fetchArticles} />
       </Suspense>
-    </>
+    </PageLayout>
   );
 }

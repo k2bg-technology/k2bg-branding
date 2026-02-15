@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 
 import { Markdown } from '../../components/markdown';
 import { PageHeading } from '../../components/page-heading/PageHeading';
+import { PageLayout } from '../../components/page-layout';
+import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
 import { createFetchPostUseCase } from '../../infrastructure/di';
 
@@ -21,18 +23,24 @@ export default async function Page() {
   const { post: article } = await fetchPost.execute({ id: CONCEPT_PAGE_ID });
 
   return (
-    <>
-      <div className="grid grid-cols-[subgrid] gap-12 col-span-full">
+    <PageLayout
+      fab={
+        <PageLayout.Fab>
+          <ScrollToTopButton />
+        </PageLayout.Fab>
+      }
+    >
+      <PageLayout.Row gap={12}>
         <PageHeading article={article} />
-      </div>
-      <div className="grid grid-cols-[subgrid] col-span-full">
-        <div className="col-span-full xl:col-start-2 xl:col-end-9">
+      </PageLayout.Row>
+      <PageLayout.Row>
+        <PageLayout.Content className="xl:col-start-2 xl:col-end-9">
           <Markdown content={article.content} />
-        </div>
-        <div className="hidden xl:flex col-start-9 col-end-12">
+        </PageLayout.Content>
+        <PageLayout.Aside colStart={9} colEnd={12}>
           <Sidebar />
-        </div>
-      </div>
-    </>
+        </PageLayout.Aside>
+      </PageLayout.Row>
+    </PageLayout>
   );
 }
