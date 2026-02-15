@@ -7,7 +7,7 @@ export default function NotFound() {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center grid-cols-[subgrid] gap-20 col-span-full py-[30px]">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-20 py-[30px]">
       <ErrorContent
         statusCode="404"
         title="ページが見つかりません"

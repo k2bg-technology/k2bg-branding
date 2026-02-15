@@ -4,6 +4,8 @@ import { Avatar } from 'ui';
 
 import { BlogCard } from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
+import { PageLayout } from '../../components/page-layout';
+import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
 import {
   createFetchPostsUseCase,
@@ -61,8 +63,14 @@ export default async function Page() {
   const featuresPreviously = articles.slice(4, 8);
 
   return (
-    <>
-      <div className="col-span-full grid grid-cols-[subgrid]">
+    <PageLayout
+      fab={
+        <PageLayout.Fab>
+          <ScrollToTopButton />
+        </PageLayout.Fab>
+      }
+    >
+      <PageLayout.Row>
         {featureLatest && (
           <div className="col-start-1 col-end-8">
             <BlogCard className="flex-col gap-spacious">
@@ -183,18 +191,78 @@ export default async function Page() {
             </BlogCard>
           ))}
         </div>
-      </div>
-      <div className="col-span-full border-b-1 border-slate-200" />
-      <div className="col-span-full grid grid-cols-[subgrid]">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 col-start-1 col-end-10 place-content-start">
-          {featuresRecently.map((article) => (
-            <div key={article.title} className="block xl:hidden">
-              <BlogCard className="flex-col gap-spacious">
+      </PageLayout.Row>
+      <PageLayout.Divider />
+      <PageLayout.Row>
+        <PageLayout.Content colStart={1} colEnd={10}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-8 place-content-start">
+            {featuresRecently.map((article) => (
+              <div key={article.title} className="block xl:hidden">
+                <BlogCard className="flex-col gap-spacious">
+                  {article.imageUrl && (
+                    <Link
+                      href={`/blog/${article.slug}`}
+                      className="h-full peer"
+                      data-gtm="article_click_feature_recently_image"
+                    >
+                      <BlogCard.Media className="relative w-full h-[16rem]">
+                        <CloudinaryImage
+                          publicId={article.id}
+                          src={article.imageUrl}
+                          alt="media"
+                          className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
+                          fill
+                          sizes="100%"
+                          priority
+                          quality={30}
+                        />
+                      </BlogCard.Media>
+                    </Link>
+                  )}
+                  <BlogCard.Content
+                    category={
+                      <Link
+                        href={`/category/${article.category}`}
+                        data-gtm="article_click_feature_recently_category"
+                      >
+                        {article.category}
+                      </Link>
+                    }
+                    heading={
+                      <Link
+                        href={`/blog/${article.slug}`}
+                        className="heading-link"
+                        data-gtm="article_click_feature_recently_heading"
+                      >
+                        <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
+                          {article.title}
+                        </h2>
+                      </Link>
+                    }
+                    excerpt={article.excerpt ?? undefined}
+                    avatar={
+                      article.author && (
+                        <Avatar>
+                          <Avatar.Image
+                            alt="author"
+                            src={article.author.avatarUrl ?? undefined}
+                          />
+                        </Avatar>
+                      )
+                    }
+                    date={article.releaseDate}
+                    className="peer-hover:[&>.heading-link]:underline peer-hover:[&>.heading-link]:text-base-black/80"
+                  />
+                </BlogCard>
+              </div>
+            ))}
+            {featuresPreviously.map((article) => (
+              <BlogCard key={article.title} className="flex-col gap-spacious">
                 {article.imageUrl && (
                   <Link
                     href={`/blog/${article.slug}`}
-                    className="h-full peer"
-                    data-gtm="article_click_feature_recently_image"
+                    className="peer"
+                    data-gtm="article_click_feature_previously_image"
                   >
                     <BlogCard.Media className="relative w-full h-[16rem]">
                       <CloudinaryImage
@@ -214,7 +282,7 @@ export default async function Page() {
                   category={
                     <Link
                       href={`/category/${article.category}`}
-                      data-gtm="article_click_feature_recently_category"
+                      data-gtm="article_click_feature_previously_category"
                     >
                       {article.category}
                     </Link>
@@ -223,7 +291,7 @@ export default async function Page() {
                     <Link
                       href={`/blog/${article.slug}`}
                       className="heading-link"
-                      data-gtm="article_click_feature_recently_heading"
+                      data-gtm="article_click_feature_previously_heading"
                     >
                       <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
                         {article.title}
@@ -245,71 +313,13 @@ export default async function Page() {
                   className="peer-hover:[&>.heading-link]:underline peer-hover:[&>.heading-link]:text-base-black/80"
                 />
               </BlogCard>
-            </div>
-          ))}
-          {featuresPreviously.map((article) => (
-            <BlogCard key={article.title} className="flex-col gap-spacious">
-              {article.imageUrl && (
-                <Link
-                  href={`/blog/${article.slug}`}
-                  className="peer"
-                  data-gtm="article_click_feature_previously_image"
-                >
-                  <BlogCard.Media className="relative w-full h-[16rem]">
-                    <CloudinaryImage
-                      publicId={article.id}
-                      src={article.imageUrl}
-                      alt="media"
-                      className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
-                      fill
-                      sizes="100%"
-                      priority
-                      quality={30}
-                    />
-                  </BlogCard.Media>
-                </Link>
-              )}
-              <BlogCard.Content
-                category={
-                  <Link
-                    href={`/category/${article.category}`}
-                    data-gtm="article_click_feature_previously_category"
-                  >
-                    {article.category}
-                  </Link>
-                }
-                heading={
-                  <Link
-                    href={`/blog/${article.slug}`}
-                    className="heading-link"
-                    data-gtm="article_click_feature_previously_heading"
-                  >
-                    <h2 className="text-heading-2 leading-heading-2 font-bold hover:text-base-black/80 hover:underline">
-                      {article.title}
-                    </h2>
-                  </Link>
-                }
-                excerpt={article.excerpt ?? undefined}
-                avatar={
-                  article.author && (
-                    <Avatar>
-                      <Avatar.Image
-                        alt="author"
-                        src={article.author.avatarUrl ?? undefined}
-                      />
-                    </Avatar>
-                  )
-                }
-                date={article.releaseDate}
-                className="peer-hover:[&>.heading-link]:underline peer-hover:[&>.heading-link]:text-base-black/80"
-              />
-            </BlogCard>
-          ))}
-        </div>
-        <div className="hidden xl:flex col-start-10 col-end-13">
+            ))}
+          </div>
+        </PageLayout.Content>
+        <PageLayout.Aside colStart={10} colEnd={13}>
           <Sidebar />
-        </div>
-      </div>
-    </>
+        </PageLayout.Aside>
+      </PageLayout.Row>
+    </PageLayout>
   );
 }
