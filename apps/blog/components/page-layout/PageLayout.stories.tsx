@@ -145,23 +145,3 @@ export const WithFab: Story = {
     </PageLayout>
   ),
 };
-
-export const WithGap: Story = {
-  render: () => (
-    <PageLayout>
-      <PageLayout.Row gap={12}>
-        <PageLayout.Content>
-          <div className="bg-slate-100 p-8 rounded">
-            <h2 className="text-heading-2 font-bold">Section with Gap</h2>
-            <p className="mt-4">This section has gap={12} (3rem).</p>
-          </div>
-        </PageLayout.Content>
-        <PageLayout.Content>
-          <div className="bg-slate-100 p-8 rounded">
-            <p>Second content block within the same gapped section.</p>
-          </div>
-        </PageLayout.Content>
-      </PageLayout.Row>
-    </PageLayout>
-  ),
-};

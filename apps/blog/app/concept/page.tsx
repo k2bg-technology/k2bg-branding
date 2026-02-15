@@ -30,7 +30,7 @@ export default async function Page() {
         </PageLayout.Fab>
       }
     >
-      <PageLayout.Row gap={12}>
+      <PageLayout.Row>
         <PageHeading article={article} />
       </PageLayout.Row>
       <PageLayout.Row>
