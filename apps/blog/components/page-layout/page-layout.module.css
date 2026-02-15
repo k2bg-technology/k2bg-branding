@@ -1,0 +1,11 @@
+.colStart {
+  grid-column-start: var(--col-start);
+}
+
+.colEnd {
+  grid-column-end: var(--col-end);
+}
+
+.gap {
+  gap: calc(var(--spacing) * var(--gap));
+}
