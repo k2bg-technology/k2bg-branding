@@ -87,7 +87,7 @@ export default async function Page() {
                       alt="media"
                       className="absolute aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                       fill
-                      sizes="100%"
+                      sizes="(max-width: 1280px) calc(100vw - 3rem), 45rem"
                       priority
                       quality={30}
                     />
@@ -147,7 +147,7 @@ export default async function Page() {
                       src={article.imageUrl}
                       className="absolute aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                       fill
-                      sizes="100%"
+                      sizes="10rem"
                       priority
                       quality={30}
                     />
@@ -212,8 +212,7 @@ export default async function Page() {
                           alt="media"
                           className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                           fill
-                          sizes="100%"
-                          priority
+                          sizes="(max-width: 768px) calc(100vw - 3rem), 22rem"
                           quality={30}
                         />
                       </BlogCard.Media>
@@ -271,8 +270,7 @@ export default async function Page() {
                         alt="media"
                         className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                         fill
-                        sizes="100%"
-                        priority
+                        sizes="(max-width: 768px) calc(100vw - 3rem), (max-width: 1280px) 22rem, 28rem"
                         quality={30}
                       />
                     </BlogCard.Media>

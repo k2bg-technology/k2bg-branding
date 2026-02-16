@@ -45,7 +45,7 @@ export async function ArticleHeading(props: Props) {
             alt="media"
             className="aspect-square h-full w-full object-cover"
             fill
-            sizes="100%"
+            sizes="(max-width: 768px) calc(100vw - 3rem), (max-width: 1280px) 46rem, 77rem"
             priority
           />
         </BlogCard.Media>
