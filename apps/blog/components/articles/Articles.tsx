@@ -41,7 +41,7 @@ export async function Articles(props: Props) {
                       alt="media"
                       className="aspect-square h-full w-full object-cover hover:scale-105 transition-transform"
                       fill
-                      sizes="100%"
+                      sizes="(max-width: 768px) calc(100vw - 3rem), (max-width: 1280px) 22rem, 25rem"
                       quality={30}
                     />
                   </BlogCard.Media>

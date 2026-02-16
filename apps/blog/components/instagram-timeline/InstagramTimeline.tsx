@@ -28,14 +28,13 @@ export async function InstagramTimeline() {
           target="_blank"
           rel="noreferrer"
         >
-          <div className="relative w-[8.8125rem] h-[8.8125rem]">
+          <div className="relative w-[8.625rem] h-[8.625rem]">
             <Image
               alt="instagram media"
               src={post.displayUrl}
               className="aspect-square w-full h-full object-cover"
-              fill
-              sizes="100%"
-              priority
+              width={138}
+              height={138}
             />
           </div>
         </Link>
