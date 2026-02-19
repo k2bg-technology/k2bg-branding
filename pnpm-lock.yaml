@@ -22,7 +22,7 @@ importers:
         version: 8.4.0(@swc/core@1.13.5)(jiti@2.6.0)(postcss@8.5.3)(typescript@5.5.4)
       turbo:
         specifier: latest
-        version: 2.8.9
+        version: 2.8.10
       typescript:
         specifier: ^5.4.5
         version: 5.5.4
@@ -40,7 +40,7 @@ importers:
         version: 4.1.3(react-hook-form@7.55.0(react@19.2.1))
       '@next/third-parties':
         specifier: ^15.2.0
-        version: 15.2.0(next@15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
+        version: 15.2.0(next@15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)
       '@notionhq/client':
         specifier: ^2.2.13
         version: 2.2.15
@@ -68,12 +68,15 @@ importers:
       hcaptcha:
         specifier: ^0.2.0
         version: 0.2.0
+      hono:
+        specifier: ^4.12.0
+        version: 4.12.0
       motion:
         specifier: ^12.4.10
         version: 12.4.10(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       next:
         specifier: ^15.1.9
-        version: 15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       notion-to-md:
         specifier: ^3.1.1
         version: 3.1.1
@@ -122,7 +125,7 @@ importers:
     devDependencies:
       '@storybook/nextjs':
         specifier: ^10.1.11
-        version: 10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(next@15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(type-fest@2.19.0)(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+        version: 10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(next@15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(type-fest@2.19.0)(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.5.4)
@@ -203,7 +206,7 @@ importers:
         version: 1.2.1
       next:
         specifier: ^15.1.9
-        version: 15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+        version: 15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react:
         specifier: ^19.0.1
         version: 19.2.1
@@ -231,7 +234,7 @@ importers:
         version: 10.1.11(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))
       '@storybook/nextjs':
         specifier: ^10.1.11
-        version: 10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(next@15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(type-fest@2.19.0)(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+        version: 10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(next@15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(type-fest@2.19.0)(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.5.4)
@@ -5355,6 +5358,10 @@ packages:
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
 
+  hono@4.12.0:
+    resolution: {integrity: sha512-NekXntS5M94pUfiVZ8oXXK/kkri+5WpX2/Ik+LVsl+uvw+soj4roXIsPqO+XsWrAw20mOzaXOZf3Q7PfB9A/IA==}
+    engines: {node: '>=16.9.0'}
+
   html-encoding-sniffer@4.0.0:
     resolution: {integrity: sha512-Y22oTqIU4uuPgEemfz7NDJz6OeKf12Lsu+QC+s3BVpda64lTiMYCyGwg5ki4vFxkMwQdeZDl2adZoqUgdFuTgQ==}
     engines: {node: '>=18'}
@@ -7613,38 +7620,38 @@ packages:
   tty-browserify@0.0.1:
     resolution: {integrity: sha512-C3TaO7K81YvjCgQH9Q1S3R3P3BtN3RIM8n+OvX4il1K1zgE8ZhI0op7kClgkxtutIE8hQrcrHBXvIheqKUUCxw==}
 
-  turbo-darwin-64@2.8.9:
-    resolution: {integrity: sha512-KnCw1ZI9KTnEAhdI9avZrnZ/z4wsM++flMA1w8s8PKOqi5daGpFV36qoPafg4S8TmYMe52JPWEoFr0L+lQ5JIw==}
+  turbo-darwin-64@2.8.10:
+    resolution: {integrity: sha512-A03fXh+B7S8mL3PbdhTd+0UsaGrhfyPkODvzBDpKRY7bbeac4MDFpJ7I+Slf2oSkCEeSvHKR7Z4U71uKRUfX7g==}
     cpu: [x64]
     os: [darwin]
 
-  turbo-darwin-arm64@2.8.9:
-    resolution: {integrity: sha512-CbD5Y2NKJKBXTOZ7z7Cc7vGlFPZkYjApA7ri9lH4iFwKV1X7MoZswh9gyRLetXYWImVX1BqIvP8KftulJg/wIA==}
+  turbo-darwin-arm64@2.8.10:
+    resolution: {integrity: sha512-sidzowgWL3s5xCHLeqwC9M3s9M0i16W1nuQF3Mc7fPHpZ+YPohvcbVFBB2uoRRHYZg6yBnwD4gyUHKTeXfwtXA==}
     cpu: [arm64]
     os: [darwin]
 
-  turbo-linux-64@2.8.9:
-    resolution: {integrity: sha512-OXC9HdCtsHvyH+5KUoH8ds+p5WU13vdif0OPbsFzZca4cUXMwKA3HWwUuCgQetk0iAE4cscXpi/t8A263n3VTg==}
+  turbo-linux-64@2.8.10:
+    resolution: {integrity: sha512-YK9vcpL3TVtqonB021XwgaQhY9hJJbKKUhLv16osxV0HkcQASQWUqR56yMge7puh6nxU67rQlTq1b7ksR1T3KA==}
     cpu: [x64]
     os: [linux]
 
-  turbo-linux-arm64@2.8.9:
-    resolution: {integrity: sha512-yI5n8jNXiFA6+CxnXG0gO7h5ZF1+19K8uO3/kXPQmyl37AdiA7ehKJQOvf9OPAnmkGDHcF2HSCPltabERNRmug==}
+  turbo-linux-arm64@2.8.10:
+    resolution: {integrity: sha512-3+j2tL0sG95iBJTm+6J8/45JsETQABPqtFyYjVjBbi6eVGdtNTiBmHNKrbvXRlQ3ZbUG75bKLaSSDHSEEN+btQ==}
     cpu: [arm64]
     os: [linux]
 
-  turbo-windows-64@2.8.9:
-    resolution: {integrity: sha512-/OztzeGftJAg258M/9vK2ZCkUKUzqrWXJIikiD2pm8TlqHcIYUmepDbyZSDfOiUjMy6NzrLFahpNLnY7b5vNgg==}
+  turbo-windows-64@2.8.10:
+    resolution: {integrity: sha512-hdeF5qmVY/NFgiucf8FW0CWJWtyT2QPm5mIsX0W1DXAVzqKVXGq+Zf+dg4EUngAFKjDzoBeN6ec2Fhajwfztkw==}
     cpu: [x64]
     os: [win32]
 
-  turbo-windows-arm64@2.8.9:
-    resolution: {integrity: sha512-xZ2VTwVTjIqpFZKN4UBxDHCPM3oJ2J5cpRzCBSmRpJ/Pn33wpiYjs+9FB2E03svKaD04/lSSLlEUej0UYsugfg==}
+  turbo-windows-arm64@2.8.10:
+    resolution: {integrity: sha512-QGdr/Q8LWmj+ITMkSvfiz2glf0d7JG0oXVzGL3jxkGqiBI1zXFj20oqVY0qWi+112LO9SVrYdpHS0E/oGFrMbQ==}
     cpu: [arm64]
     os: [win32]
 
-  turbo@2.8.9:
-    resolution: {integrity: sha512-G+Mq8VVQAlpz/0HTsxiNNk/xywaHGl+dk1oiBREgOEVCCDjXInDlONWUn5srRnC9s5tdHTFD1bx1N19eR4hI+g==}
+  turbo@2.8.10:
+    resolution: {integrity: sha512-OxbzDES66+x7nnKGg2MwBA1ypVsZoDTLHpeaP4giyiHSixbsiTaMyeJqbEyvBdp5Cm28fc+8GG6RdQtic0ijwQ==}
     hasBin: true
 
   tw-animate-css@1.4.0:
@@ -11572,15 +11579,15 @@ snapshots:
   '@next/swc-win32-x64-msvc@15.5.7':
     optional: true
 
-  '@next/third-parties@15.2.0(next@15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
+  '@next/third-parties@15.2.0(next@15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
     dependencies:
-      next: 15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      next: 15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
       third-party-capital: 1.0.20
 
   '@next/third-parties@15.2.1(next@15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react@19.2.1)':
     dependencies:
-      next: 15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      next: 15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       react: 19.2.1
       third-party-capital: 1.0.20
 
@@ -12742,7 +12749,7 @@ snapshots:
       - '@tmcp/auth'
       - typescript
 
-  '@storybook/nextjs@10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(next@15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(type-fest@2.19.0)(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))':
+  '@storybook/nextjs@10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(next@15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(type-fest@2.19.0)(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))':
     dependencies:
       '@babel/core': 7.26.10
       '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.26.10)
@@ -12766,7 +12773,69 @@ snapshots:
       css-loader: 6.11.0(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
       image-size: 2.0.2
       loader-utils: 3.3.1
-      next: 15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      next: 15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      node-polyfill-webpack-plugin: 2.0.1(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+      postcss: 8.5.3
+      postcss-loader: 8.2.0(postcss@8.5.3)(typescript@5.5.4)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      react-refresh: 0.14.2
+      resolve-url-loader: 5.0.0
+      sass-loader: 16.0.6(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+      semver: 7.7.3
+      storybook: 10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      style-loader: 3.3.4(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+      styled-jsx: 5.1.6(@babel/core@7.26.10)(react@19.2.1)
+      tsconfig-paths: 4.2.0
+      tsconfig-paths-webpack-plugin: 4.2.0
+    optionalDependencies:
+      typescript: 5.5.4
+      webpack: 5.93.0(@swc/core@1.13.5)(esbuild@0.25.2)
+    transitivePeerDependencies:
+      - '@rspack/core'
+      - '@swc/core'
+      - '@types/webpack'
+      - babel-plugin-macros
+      - esbuild
+      - msw
+      - node-sass
+      - sass
+      - sass-embedded
+      - sockjs-client
+      - supports-color
+      - type-fest
+      - uglify-js
+      - vite
+      - webpack-cli
+      - webpack-dev-server
+      - webpack-hot-middleware
+      - webpack-plugin-serve
+
+  '@storybook/nextjs@10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(next@15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(type-fest@2.19.0)(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))':
+    dependencies:
+      '@babel/core': 7.26.10
+      '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.26.10)
+      '@babel/plugin-syntax-dynamic-import': 7.8.3(@babel/core@7.26.10)
+      '@babel/plugin-syntax-import-assertions': 7.24.7(@babel/core@7.26.10)
+      '@babel/plugin-transform-class-properties': 7.24.7(@babel/core@7.26.10)
+      '@babel/plugin-transform-export-namespace-from': 7.24.7(@babel/core@7.26.10)
+      '@babel/plugin-transform-numeric-separator': 7.24.7(@babel/core@7.26.10)
+      '@babel/plugin-transform-object-rest-spread': 7.24.7(@babel/core@7.26.10)
+      '@babel/plugin-transform-runtime': 7.28.5(@babel/core@7.26.10)
+      '@babel/preset-env': 7.24.8(@babel/core@7.26.10)
+      '@babel/preset-react': 7.24.7(@babel/core@7.26.10)
+      '@babel/preset-typescript': 7.24.7(@babel/core@7.26.10)
+      '@babel/runtime': 7.24.8
+      '@pmmmwh/react-refresh-webpack-plugin': 0.5.17(react-refresh@0.14.2)(type-fest@2.19.0)(webpack-hot-middleware@2.26.1)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+      '@storybook/builder-webpack5': 10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(msw@2.12.7(@types/node@17.0.45)(typescript@5.5.4))(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(typescript@5.5.4)(vite@6.2.6(@types/node@17.0.45)(jiti@2.6.0)(lightningcss@1.29.1)(terser@5.31.3))
+      '@storybook/preset-react-webpack': 10.1.11(@swc/core@1.13.5)(esbuild@0.25.2)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(typescript@5.5.4)
+      '@storybook/react': 10.1.11(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(storybook@10.1.11(@testing-library/dom@10.4.0)(prettier@2.8.8)(react-dom@19.2.1(react@19.2.1))(react@19.2.1))(typescript@5.5.4)
+      '@types/semver': 7.5.8
+      babel-loader: 9.2.1(@babel/core@7.26.10)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+      css-loader: 6.11.0(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
+      image-size: 2.0.2
+      loader-utils: 3.3.1
+      next: 15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       node-polyfill-webpack-plugin: 2.0.1(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
       postcss: 8.5.3
       postcss-loader: 8.2.0(postcss@8.5.3)(typescript@5.5.4)(webpack@5.93.0(@swc/core@1.13.5)(esbuild@0.25.2))
@@ -15126,6 +15195,8 @@ snapshots:
     dependencies:
       react-is: 16.13.1
 
+  hono@4.12.0: {}
+
   html-encoding-sniffer@4.0.0:
     dependencies:
       whatwg-encoding: 3.1.1
@@ -16080,7 +16151,30 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next@15.5.7(@babel/core@7.26.10)(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
+  next@15.5.7(@babel/core@7.24.9)(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
+    dependencies:
+      '@next/env': 15.5.7
+      '@swc/helpers': 0.5.15
+      caniuse-lite: 1.0.30001714
+      postcss: 8.4.31
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
+      styled-jsx: 5.1.6(@babel/core@7.24.9)(react@19.2.1)
+    optionalDependencies:
+      '@next/swc-darwin-arm64': 15.5.7
+      '@next/swc-darwin-x64': 15.5.7
+      '@next/swc-linux-arm64-gnu': 15.5.7
+      '@next/swc-linux-arm64-musl': 15.5.7
+      '@next/swc-linux-x64-gnu': 15.5.7
+      '@next/swc-linux-x64-musl': 15.5.7
+      '@next/swc-win32-arm64-msvc': 15.5.7
+      '@next/swc-win32-x64-msvc': 15.5.7
+      sharp: 0.34.5
+    transitivePeerDependencies:
+      - '@babel/core'
+      - babel-plugin-macros
+
+  next@15.5.7(react-dom@19.2.1(react@19.2.1))(react@19.2.1):
     dependencies:
       '@next/env': 15.5.7
       '@swc/helpers': 0.5.15
@@ -17581,6 +17675,13 @@ snapshots:
     dependencies:
       inline-style-parser: 0.2.4
 
+  styled-jsx@5.1.6(@babel/core@7.24.9)(react@19.2.1):
+    dependencies:
+      client-only: 0.0.1
+      react: 19.2.1
+    optionalDependencies:
+      '@babel/core': 7.24.9
+
   styled-jsx@5.1.6(@babel/core@7.26.10)(react@19.2.1):
     dependencies:
       client-only: 0.0.1
@@ -17848,32 +17949,32 @@ snapshots:
 
   tty-browserify@0.0.1: {}
 
-  turbo-darwin-64@2.8.9:
+  turbo-darwin-64@2.8.10:
     optional: true
 
-  turbo-darwin-arm64@2.8.9:
+  turbo-darwin-arm64@2.8.10:
     optional: true
 
-  turbo-linux-64@2.8.9:
+  turbo-linux-64@2.8.10:
     optional: true
 
-  turbo-linux-arm64@2.8.9:
+  turbo-linux-arm64@2.8.10:
     optional: true
 
-  turbo-windows-64@2.8.9:
+  turbo-windows-64@2.8.10:
     optional: true
 
-  turbo-windows-arm64@2.8.9:
+  turbo-windows-arm64@2.8.10:
     optional: true
 
-  turbo@2.8.9:
+  turbo@2.8.10:
     optionalDependencies:
-      turbo-darwin-64: 2.8.9
-      turbo-darwin-arm64: 2.8.9
-      turbo-linux-64: 2.8.9
-      turbo-linux-arm64: 2.8.9
-      turbo-windows-64: 2.8.9
-      turbo-windows-arm64: 2.8.9
+      turbo-darwin-64: 2.8.10
+      turbo-darwin-arm64: 2.8.10
+      turbo-linux-64: 2.8.10
+      turbo-linux-arm64: 2.8.10
+      turbo-windows-64: 2.8.10
+      turbo-windows-arm64: 2.8.10
 
   tw-animate-css@1.4.0: {}
 
