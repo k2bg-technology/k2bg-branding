@@ -1,5 +1,7 @@
 import { Hono } from 'hono';
+import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { SyncPostsFromExternalOutput } from '../../modules/post/use-cases';
 import { postRoutes } from './post';
 
 vi.mock('../../infrastructure/di', () => ({
@@ -9,6 +11,14 @@ vi.mock('../../infrastructure/di', () => ({
 import { createSyncPostsFromExternalUseCase } from '../../infrastructure/di';
 
 const mockCreateUseCase = vi.mocked(createSyncPostsFromExternalUseCase);
+
+function stubUseCaseWith(
+  execute: Mock<() => Promise<SyncPostsFromExternalOutput>>,
+) {
+  mockCreateUseCase.mockReturnValue({ execute } as unknown as ReturnType<
+    typeof createSyncPostsFromExternalUseCase
+  >);
+}
 
 describe('postRoutes', () => {
   describe('PATCH /posts', () => {
@@ -27,9 +37,7 @@ describe('postRoutes', () => {
         syncedPosts: [{ id: 'post-1', title: 'Test Post' }],
         count: 1,
       };
-      mockCreateUseCase.mockReturnValue({
-        execute: vi.fn().mockResolvedValue(syncResult),
-      } as ReturnType<typeof createSyncPostsFromExternalUseCase>);
+      stubUseCaseWith(vi.fn().mockResolvedValue(syncResult));
       const app = createApp();
 
       const res = await app.request('/posts', { method: 'PATCH' });
@@ -45,9 +53,7 @@ describe('postRoutes', () => {
         syncedPosts: [],
         count: 0,
       });
-      mockCreateUseCase.mockReturnValue({
-        execute: mockExecute,
-      } as ReturnType<typeof createSyncPostsFromExternalUseCase>);
+      stubUseCaseWith(mockExecute);
       const app = createApp();
 
       await app.request('/posts', { method: 'PATCH' });
@@ -57,9 +63,9 @@ describe('postRoutes', () => {
     });
 
     it('propagates use case errors', async () => {
-      mockCreateUseCase.mockReturnValue({
-        execute: vi.fn().mockRejectedValue(new Error('Sync failed')),
-      } as ReturnType<typeof createSyncPostsFromExternalUseCase>);
+      stubUseCaseWith(
+        vi.fn().mockRejectedValue(new Error('Sync failed')),
+      );
       const app = createApp();
 
       const res = await app.request('/posts', { method: 'PATCH' });
