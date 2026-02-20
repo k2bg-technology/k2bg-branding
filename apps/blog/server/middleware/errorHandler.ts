@@ -5,6 +5,10 @@ import { logger } from '../../modules/shared/logger';
 
 const apiLogger = logger.child({ module: 'api' });
 
+/**
+ * Maps HTTP status codes to standardized error codes.
+ * Uses Partial<Record> to leverage Hono's type system while allowing subset of codes.
+ */
 const HTTP_STATUS_CODES: Partial<Record<ContentfulStatusCode, string>> = {
   400: 'BAD_REQUEST',
   401: 'UNAUTHORIZED',
