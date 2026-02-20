@@ -29,7 +29,7 @@ describe('postRoutes', () => {
       };
       mockCreateUseCase.mockReturnValue({
         execute: vi.fn().mockResolvedValue(syncResult),
-      } as never);
+      } as ReturnType<typeof createSyncPostsFromExternalUseCase>);
       const app = createApp();
 
       const res = await app.request('/posts', { method: 'PATCH' });
@@ -47,7 +47,7 @@ describe('postRoutes', () => {
       });
       mockCreateUseCase.mockReturnValue({
         execute: mockExecute,
-      } as never);
+      } as ReturnType<typeof createSyncPostsFromExternalUseCase>);
       const app = createApp();
 
       await app.request('/posts', { method: 'PATCH' });
@@ -59,7 +59,7 @@ describe('postRoutes', () => {
     it('propagates use case errors', async () => {
       mockCreateUseCase.mockReturnValue({
         execute: vi.fn().mockRejectedValue(new Error('Sync failed')),
-      } as never);
+      } as ReturnType<typeof createSyncPostsFromExternalUseCase>);
       const app = createApp();
 
       const res = await app.request('/posts', { method: 'PATCH' });
