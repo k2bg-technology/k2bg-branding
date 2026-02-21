@@ -5,7 +5,7 @@ import {
   createSyncPostsFromExternalUseCase,
 } from '../infrastructure/di';
 
-import app from './app';
+import { app } from './app';
 
 const { infoMock, errorMock } = vi.hoisted(() => ({
   infoMock: vi.fn(),
@@ -58,7 +58,7 @@ describe('Hono app composition', () => {
       expect(res.status).toBe(statusUnauthorized);
       expect(infoMock).toHaveBeenCalledWith(
         { method: 'PATCH', path: '/api/posts' },
-        'Request started',
+        'Request started'
       );
     });
 
@@ -66,7 +66,7 @@ describe('Hono app composition', () => {
       await app.request('/api/posts', { method: 'PATCH' });
 
       const completionCall = infoMock.mock.calls.find(
-        (call) => call[1] === 'Request completed',
+        (call) => call[1] === 'Request completed'
       );
       expect(completionCall).toBeDefined();
     });

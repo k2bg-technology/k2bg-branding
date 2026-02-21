@@ -12,9 +12,7 @@ import { createSyncHeroImagesUseCase } from '../../infrastructure/di';
 
 const mockCreateUseCase = vi.mocked(createSyncHeroImagesUseCase);
 
-function stubUseCaseWith(
-  execute: Mock<() => Promise<SyncHeroImagesOutput>>,
-) {
+function stubUseCaseWith(execute: Mock<() => Promise<SyncHeroImagesOutput>>) {
   mockCreateUseCase.mockReturnValue({ execute } as unknown as ReturnType<
     typeof createSyncHeroImagesUseCase
   >);
@@ -65,9 +63,7 @@ describe('mediaRoutes', () => {
     });
 
     it('propagates use case errors', async () => {
-      stubUseCaseWith(
-        vi.fn().mockRejectedValue(new Error('Sync failed')),
-      );
+      stubUseCaseWith(vi.fn().mockRejectedValue(new Error('Sync failed')));
       const app = createApp();
 
       const res = await app.request('/images', { method: 'PATCH' });
