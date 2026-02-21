@@ -16,7 +16,7 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <div className="col-span-full flex items-center justify-center py-12">
+    <div className="min-h-screen flex items-center justify-center py-12">
       <ErrorContent
         statusCode="500"
         title="エラーが発生しました"

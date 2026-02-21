@@ -39,7 +39,7 @@ export function Sidebar() {
                 src="/adsense_dummy.png"
                 className="aspect-square object-cover"
                 fill
-                sizes="100%"
+                sizes="(max-width: 768px) 100vw, 300px"
               />
             </div>
           )}

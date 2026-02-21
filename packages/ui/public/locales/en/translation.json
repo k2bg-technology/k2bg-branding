@@ -736,6 +736,77 @@
         }
       ]
     },
+    "popover": {
+      "description": "Displays rich content in a floating panel anchored to a trigger element for contextual information or interactions.",
+      "overview": "Popover presents contextual content in a floating panel that appears relative to a trigger element. It consists of a trigger that opens the popover, a content area for displaying information or interactive elements, and an optional close button. The component supports controlled and uncontrolled states through the open prop. Content is rendered in a portal to avoid layout issues and automatically positions itself relative to the trigger with configurable alignment and offset.",
+      "usage": "Use Popover for contextual information, settings panels, or interactive content that relates to a specific trigger element. For basic usage, wrap a trigger element with Popover.Trigger and provide content via Popover.Content. Customize alignment using the align prop with center, start, or end values. Adjust spacing between the trigger and content using the sideOffset prop. Include Popover.Close within the content to provide an explicit close action. Combine with form elements for inline editing or configuration panels. The popover dismisses when clicking outside or pressing Escape.",
+      "accessibility": "This component meets the following accessibility requirements. For keyboard support, the popover opens with Enter or Space on the trigger, content is focusable with Tab, and Escape closes the popover. Regarding focus management, focus moves to the popover content when opened and returns to the trigger when closed. The component uses appropriate ARIA attributes including aria-expanded on the trigger and role dialog on the content. Screen readers announce the popover state when it opens and closes. The portal rendering ensures proper stacking context without interfering with page layout.",
+      "doList": [
+        "Provide descriptive trigger labels that indicate popover content",
+        "Keep popover content focused and concise",
+        "Include a close mechanism for longer or interactive content",
+        "Use appropriate alignment relative to the trigger position",
+        "Ensure popover content is accessible via keyboard navigation"
+      ],
+      "dontList": [
+        "Use popover for critical information requiring immediate attention",
+        "Nest popovers within other popovers",
+        "Include excessive content that should be in a dialog or page instead",
+        "Omit accessible labels for icon-only triggers",
+        "Use popover when a tooltip or dropdown menu is more appropriate"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Use Button as the popover trigger element"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "Use DropdownMenu when presenting a list of actions instead of rich content"
+        },
+        {
+          "name": "Dialog",
+          "path": "/?path=/docs/components-dialog--docs",
+          "description": "Use Dialog for complex interactions requiring focused attention"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.0.1",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@radix-ui/react-popover",
+          "version": "^1.1.4",
+          "reason": "Provides accessible popover primitives with positioning and focus management"
+        },
+        {
+          "package": "tailwind-merge",
+          "version": "^2.5.3",
+          "reason": "Utility for merging Tailwind CSS classes without conflicts"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WCAG Dialog Non-modal Guidelines",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/",
+          "description": "Official ARIA Authoring Practices Guide for dialog and popover patterns"
+        },
+        {
+          "linkText": "Radix UI Popover Documentation",
+          "url": "https://www.radix-ui.com/primitives/docs/components/popover",
+          "description": "Official documentation for the underlying popover primitive component"
+        },
+        {
+          "linkText": "WCAG Keyboard Accessible Guidelines",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/keyboard-accessible.html",
+          "description": "Official WCAG documentation on keyboard accessibility requirements"
+        }
+      ]
+    },
     "toaster": {
       "description": "Displays brief notification messages that appear temporarily and dismiss automatically or on user action.",
       "overview": "Toaster provides a non-intrusive way to display feedback messages to users. It renders notifications at the top center of the viewport with a translucent backdrop effect. The component supports four semantic variants: success for positive confirmations, info for neutral information, warning for cautionary messages, and error for failure states. Each variant displays a distinctive icon to reinforce the message type. Notifications can include a close button for manual dismissal and automatically disappear after a configurable duration.",

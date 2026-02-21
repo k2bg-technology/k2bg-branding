@@ -2,7 +2,13 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { Markdown } from '../../../../components/markdown';
+import { PageLayout } from '../../../../components/page-layout';
+import { ScrollToTopButton } from '../../../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../../../components/sidebar/Sidebar';
+import {
+  extractHeadings,
+  TableOfContents,
+} from '../../../../components/table-of-contents';
 import {
   createFetchAllSlugsUseCase,
   createFetchPostUseCase,
@@ -71,18 +77,25 @@ export default async function Page({ params }: Props) {
   });
 
   return (
-    <>
-      <div className="grid grid-cols-[subgrid] col-span-full">
+    <PageLayout
+      fab={
+        <PageLayout.Fab>
+          <TableOfContents headings={extractHeadings(article.content)} />
+          <ScrollToTopButton />
+        </PageLayout.Fab>
+      }
+    >
+      <PageLayout.Row>
         <ArticleHeading article={article} />
-      </div>
-      <div className="grid grid-cols-[subgrid] col-span-full">
-        <div className="col-span-full xl:col-start-2 xl:col-end-9">
+      </PageLayout.Row>
+      <PageLayout.Row>
+        <PageLayout.Content className="xl:col-start-2 xl:col-end-9">
           <Markdown content={article.content} />
-        </div>
-        <div className="hidden xl:flex col-start-9 col-end-12">
+        </PageLayout.Content>
+        <PageLayout.Aside colStart={9} colEnd={12}>
           <Sidebar />
-        </div>
-      </div>
-    </>
+        </PageLayout.Aside>
+      </PageLayout.Row>
+    </PageLayout>
   );
 }

@@ -1,12 +1,9 @@
 import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
-import { Footer } from '../components/footer/Footer';
 import { GoogleAdsense } from '../components/google-adsense/GoogleAdsense';
-import { Header } from '../components/header/Header';
 import { PageScrollArea } from '../components/page-scroll-area/PageScrollArea';
 import { ReactQueryClientProvider } from '../components/react-query-client-provider/ReactQueryClientProvider';
 import { Toaster } from '../components/toaster/Toaster';
-
 import './globals.css';
 
 const siteBaseUrl = process.env.SITE_BASE_URL;
@@ -31,13 +28,7 @@ export default function RootLayout({
       <body>
         <ReactQueryClientProvider>
           <PageScrollArea>
-            <div className="min-h-screen grid grid-rows-[3rem_1fr_18.75rem] grid-cols-[1fr_calc(100%-3rem)_1fr] md:grid-cols-[1fr_46rem_1fr] xl:grid-cols-[1fr_77rem_1fr]">
-              <main className="col-start-2 -col-end-2 grid grid-cols-4 md:grid-cols-6 xl:grid-cols-12 gap-x-8 gap-y-12 py-12">
-                {children}
-              </main>
-              <Footer />
-              <Header />
-            </div>
+            {children}
             <Toaster />
           </PageScrollArea>
         </ReactQueryClientProvider>

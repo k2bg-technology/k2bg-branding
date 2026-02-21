@@ -12,6 +12,7 @@ export {
   VideoStreamingPlayer,
 } from './src/components/Media';
 export { Pagination } from './src/components/Pagination';
+export { Popover } from './src/components/Popover';
 export { ScrollArea } from './src/components/ScrollArea';
 export { Skelton } from './src/components/Skelton';
 export { Toaster, useToast } from './src/components/Toaster';

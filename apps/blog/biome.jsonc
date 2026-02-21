@@ -6,6 +6,7 @@
     "includes": [
       "app/**/*.{ts,tsx}",
       "modules/**/*.{ts,tsx}",
+      "server/**/*.ts",
       "lib/**/*.{ts,tsx}",
       "components/**/*.{ts,tsx}",
       "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",

@@ -7,6 +7,7 @@ A **Next.js 15** blog application with **Notion CMS** integration, built followi
 | Category | Technologies |
 |---|---|
 | **Framework** | Next.js 15, React 19, TypeScript |
+| **API Server** | Hono, @hono/zod-openapi, @hono/swagger-ui |
 | **Styling** | Tailwind CSS v4 |
 | **Database** | PostgreSQL, Prisma ORM |
 | **CMS** | Notion API |
@@ -147,7 +148,13 @@ flowchart TB
     subgraph "App Layer (Next.js Routes)"
         PostRoutes["Post Routes<br/>/blog, /category, /search"]
         ContactRoutes["Contact Routes<br/>/contact"]
-        APIRoutes["API Routes<br/>/api/posts, /api/images"]
+    end
+
+    subgraph "Hono API Server (server/)"
+        APIRoutes["OpenAPIHono<br/>PATCH /api/posts, /api/images"]
+        Middleware["Middleware<br/>apiKeyAuth, errorHandler, requestLogger"]
+        Schemas["Schemas<br/>Zod + OpenAPI"]
+        SwaggerUI["Swagger UI<br/>/api/doc (non-prod)"]
     end
 
     subgraph "Modules"
@@ -186,7 +193,9 @@ flowchart TB
     PostRoutes --> AffiliateUseCases
     PostRoutes --> MediaUseCases
     ContactRoutes --> ContactUseCases
+    Middleware --> APIRoutes
     APIRoutes --> PostUseCases
+    APIRoutes --> MediaUseCases
 
     PostUseCases --> PostDomain
     ContactUseCases --> ContactDomain
@@ -210,12 +219,14 @@ flowchart TB
     SocialFeedAdapters --> Instagram
 
     classDef appStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
+    classDef honoStyle fill:#FF6B35,stroke:#E55A2B,stroke-width:2px,color:#fff
     classDef useCaseStyle fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
     classDef domainStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef adapterStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
     classDef externalStyle fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
 
-    class PostRoutes,ContactRoutes,APIRoutes appStyle
+    class PostRoutes,ContactRoutes appStyle
+    class APIRoutes,Middleware,Schemas,SwaggerUI honoStyle
     class PostUseCases,ContactUseCases,AffiliateUseCases,MediaUseCases,SocialFeedUseCases useCaseStyle
     class PostDomain,ContactDomain,AffiliateDomain,MediaDomain,SocialFeedDomain domainStyle
     class PostAdapters,ContactAdapters,AffiliateAdapters,MediaAdapters,SocialFeedAdapters adapterStyle
@@ -280,6 +291,47 @@ flowchart TB
     class EmailService commStyle
     class SocialMedia,TwitterTimeline socialStyle
     class CaptchaService,Analytics securityStyle
+```
+
+## API Server (Hono)
+
+The blog app includes a **Hono**-based REST API server that integrates into Next.js via a catch-all route handler (`app/api/[[...route]]/route.ts`).
+
+### Key Features
+
+- **OpenAPIHono** - Type-safe API definitions with `createRoute()` and Zod schemas
+- **Swagger UI** - Interactive API documentation at `/api/doc` (non-production only)
+- **OpenAPI Spec** - Auto-generated at `/api/doc.json` (non-production only)
+- **API Key Authentication** - Request authentication via `x-api-key` header
+- **Structured Error Handling** - Centralized error handler with standardized JSON responses
+- **Request Logging** - Pino-based request/response logging
+
+### Endpoints
+
+| Method | Path | Description | Auth |
+|---|---|---|---|
+| `PATCH` | `/api/posts` | Sync posts from Notion to database | `x-api-key` |
+| `PATCH` | `/api/images` | Sync hero images to CDN | `x-api-key` |
+| `GET` | `/api/doc.json` | OpenAPI specification | None |
+| `GET` | `/api/doc` | Swagger UI | None |
+
+### Server Structure
+
+```
+server/
+├── app.ts                 # OpenAPIHono app setup & routing
+├── routes/
+│   ├── index.ts           # Route exports
+│   ├── post.ts            # PATCH /posts endpoint
+│   └── media.ts           # PATCH /images endpoint
+├── schemas/
+│   ├── shared.ts          # Common schemas (ErrorResponse)
+│   ├── post.ts            # Post response schemas
+│   └── media.ts           # Media response schemas
+└── middleware/
+    ├── apiKeyAuth.ts      # API key header validation
+    ├── errorHandler.ts    # Centralized error handler
+    └── requestLogger.ts   # Request/response logging
 ```
 
 ## Database
@@ -354,6 +406,9 @@ AMAZON_SES_SENDER_EMAIL=
 INSTAGRAM_LONG_ACCESS_TOKEN=
 NEXT_PUBLIC_X_TIMELINE_URL=
 
+# API Server (Hono)
+API_KEY=
+
 # Security
 NEXT_PUBLIC_H_CAPTCHA_SITE_KEY=
 H_CAPTCHA_SECRET=
@@ -367,13 +422,18 @@ GOOGLE_TAG_MANAGER_ID=
 ```
 apps/blog/
 ├── app/                       # Next.js App Router
-│   ├── api/                   # API routes (posts, images)
+│   ├── api/[[...route]]/      # Catch-all route handler (delegates to Hono)
 │   ├── blog/                  # Blog pages
 │   ├── category/              # Category pages
 │   ├── contact/               # Contact page
 │   ├── search/                # Search page
 │   ├── concept/               # Concept page
 │   └── _mail-templates/       # Email templates (Handlebars)
+├── server/                    # Hono API server
+│   ├── app.ts                 # OpenAPIHono app setup & routing
+│   ├── routes/                # Route definitions with OpenAPI metadata
+│   ├── schemas/               # Zod schemas for request/response validation
+│   └── middleware/             # Custom middleware (auth, error, logger)
 ├── modules/                   # Domain-driven modules
 │   ├── post/                  # Post domain
 │   ├── contact/               # Contact domain
