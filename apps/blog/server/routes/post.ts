@@ -1,14 +1,34 @@
-import { Hono } from 'hono';
+import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { createSyncPostsFromExternalUseCase } from '../../infrastructure/di';
-import type { SyncPostsFromExternalOutput } from '../../modules/post/use-cases';
+import { SyncPostsResponseSchema } from '../schemas/post';
+import { ErrorResponseSchema } from '../schemas/shared';
 
-const postRoutes = new Hono();
+const syncPostsRoute = createRoute({
+  method: 'patch',
+  path: '/posts',
+  summary: 'Sync posts from Notion to database',
+  security: [{ ApiKeyAuth: [] }],
+  responses: {
+    200: {
+      content: { 'application/json': { schema: SyncPostsResponseSchema } },
+      description: 'Synced posts',
+    },
+    401: {
+      content: { 'application/json': { schema: ErrorResponseSchema } },
+      description: 'Unauthorized',
+    },
+    500: {
+      content: { 'application/json': { schema: ErrorResponseSchema } },
+      description: 'Sync failed',
+    },
+  },
+});
 
-postRoutes.patch('/posts', async (c) => {
-  const result: SyncPostsFromExternalOutput =
-    await createSyncPostsFromExternalUseCase().execute();
+const postRoutes = new OpenAPIHono();
 
-  return c.json(result);
+postRoutes.openapi(syncPostsRoute, async (c) => {
+  const result = await createSyncPostsFromExternalUseCase().execute();
+  return c.json(result, 200);
 });
 
 export { postRoutes };
