@@ -3,7 +3,7 @@
 ## Project Structure & Module Organization
 
 - Monorepo managed by pnpm workspaces and Turborepo.
-- Apps: `apps/blog` (Next.js + Prisma) and `apps/portfolio` (Next.js).
+- Apps: `apps/blog` (Next.js + Prisma + Hono API server) and `apps/portfolio` (Next.js).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils` (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`, `packages/tsconfig`.
 - CI, templates, and bots live under `.github/`. See `PULL_REQUEST_TEMPLATE.md`.
 

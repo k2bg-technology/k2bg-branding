@@ -54,12 +54,28 @@ The blog follows Clean Architecture with vertical slicing by domain module. Each
 - **`modules/<module>/use-cases/`** - Application business rules (query / command / sync)
 - **`modules/<module>/adapters/`** - Infrastructure implementations (Notion, Prisma, Cloudinary, AWS SES, Instagram)
 
+### Blog App - Hono API Server
+
+The blog app includes a **Hono**-based REST API server (`apps/blog/server/`) integrated into Next.js via a catch-all route handler (`app/api/[[...route]]/route.ts`).
+
+- **Framework**: [Hono](https://hono.dev/) with [OpenAPIHono](https://hono.dev/snippets/zod-openapi) for type-safe API definitions
+- **OpenAPI Spec**: Auto-generated at `/api/doc.json` (non-production only)
+- **Swagger UI**: Interactive API docs at `/api/doc` (non-production only)
+- **Authentication**: API key via `x-api-key` header
+- **Endpoints**: `PATCH /api/posts` (sync posts), `PATCH /api/images` (sync images)
+- **Structure**:
+  - `server/app.ts` - Main OpenAPIHono app setup and routing
+  - `server/routes/` - Route definitions with `createRoute()` and OpenAPI metadata
+  - `server/schemas/` - Zod schemas for request/response validation
+  - `server/middleware/` - Custom middleware (apiKeyAuth, errorHandler, requestLogger)
+
 ### Key Integrations
 
 - **Notion API** - Content management and blog posts
 - **Prisma + PostgreSQL** - Database ORM and persistence
 - **Cloudinary** - Image optimization and CDN
 - **AWS SES** - Email service for contact forms
+- **Hono** - Lightweight REST API framework with OpenAPI support
 
 ### Portfolio App
 
@@ -87,6 +103,7 @@ Critical environment variables (see `turbo.json` for complete list):
 - `AMAZON_ACCESS_KEY_ID` / `AMAZON_SECRET_ACCESS_KEY` / `AMAZON_REGION` / `AMAZON_SES_SENDER_EMAIL` - AWS SES email service
 - `NEXT_PUBLIC_H_CAPTCHA_SITE_KEY` / `H_CAPTCHA_SECRET` - CAPTCHA verification
 - `INSTAGRAM_LONG_ACCESS_TOKEN` - Instagram integration
+- `API_KEY` - API key for Hono server authentication (`x-api-key` header)
 - Database connection strings for Prisma
 
 ## Testing
