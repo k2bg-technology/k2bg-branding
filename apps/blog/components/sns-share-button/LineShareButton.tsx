@@ -10,7 +10,7 @@ export function LineShareButton() {
   return (
     <Button variant="ghost" color="dark" size="icon" type="button" asChild>
       <a
-        href={`http://line.me/R/msg/text/?${title}%0D%0A${fullUrl}`}
+        href={`https://line.me/R/msg/text/?${title}%0D%0A${fullUrl}`}
         target="_blank"
         rel="noreferrer"
         aria-label="line"
