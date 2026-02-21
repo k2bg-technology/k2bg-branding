@@ -1,14 +1,34 @@
-import { Hono } from 'hono';
+import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { createSyncHeroImagesUseCase } from '../../infrastructure/di';
-import type { SyncHeroImagesOutput } from '../../modules/post/use-cases';
+import { SyncImagesResponseSchema } from '../schemas/media';
+import { ErrorResponseSchema } from '../schemas/shared';
 
-const mediaRoutes = new Hono();
+const syncImagesRoute = createRoute({
+  method: 'patch',
+  path: '/images',
+  summary: 'Sync hero images to CDN',
+  security: [{ ApiKeyAuth: [] }],
+  responses: {
+    200: {
+      content: { 'application/json': { schema: SyncImagesResponseSchema } },
+      description: 'Synced images',
+    },
+    401: {
+      content: { 'application/json': { schema: ErrorResponseSchema } },
+      description: 'Unauthorized',
+    },
+    500: {
+      content: { 'application/json': { schema: ErrorResponseSchema } },
+      description: 'Sync failed',
+    },
+  },
+});
 
-mediaRoutes.patch('/images', async (c) => {
-  const result: SyncHeroImagesOutput =
-    await createSyncHeroImagesUseCase().execute();
+const mediaRoutes = new OpenAPIHono();
 
-  return c.json(result);
+mediaRoutes.openapi(syncImagesRoute, async (c) => {
+  const result = await createSyncHeroImagesUseCase().execute();
+  return c.json(result, 200);
 });
 
 export { mediaRoutes };

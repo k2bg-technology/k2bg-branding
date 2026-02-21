@@ -25,7 +25,7 @@ const PostOutputSchema = z.object({
   slug: z.string(),
   status: z.string(),
   category: CategorySchema,
-  tags: z.array(z.string()),
+  tags: z.array(z.string()).readonly(),
   authorId: z.string(),
   author: AuthorOutputSchema.nullable(),
   releaseDate: z.string(),
