@@ -44,7 +44,7 @@ function authedHeaders(): HeadersInit {
   return { 'x-api-key': validApiKey };
 }
 
-describe('Hono app composition', () => {
+describe('OpenAPIHono app composition', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     process.env.API_KEY = validApiKey;
@@ -179,6 +179,50 @@ describe('Hono app composition', () => {
         code: 'UNAUTHORIZED',
         message: 'Invalid or missing API key',
       });
+    });
+  });
+
+  describe('OpenAPI documentation (non-production only)', () => {
+    it('serves OpenAPI spec at /api/doc.json without authentication', async () => {
+      const res = await app.request('/api/doc.json', { method: 'GET' });
+
+      const statusOk = 200;
+      expect(res.status).toBe(statusOk);
+      const body = await res.json();
+      expect(body.openapi).toBe('3.1.0');
+      expect(body.info.title).toBe('K2BG Blog API');
+    });
+
+    it('includes both PATCH endpoints in the spec', async () => {
+      const res = await app.request('/api/doc.json', { method: 'GET' });
+
+      const body = await res.json();
+      expect(body.paths['/api/posts']).toBeDefined();
+      expect(body.paths['/api/posts'].patch).toBeDefined();
+      expect(body.paths['/api/images']).toBeDefined();
+      expect(body.paths['/api/images'].patch).toBeDefined();
+    });
+
+    it('includes ApiKeyAuth security scheme', async () => {
+      const res = await app.request('/api/doc.json', { method: 'GET' });
+
+      const body = await res.json();
+      expect(body.components.securitySchemes.ApiKeyAuth).toMatchObject({
+        type: 'apiKey',
+        in: 'header',
+        name: 'x-api-key',
+      });
+    });
+  });
+
+  describe('Swagger UI (non-production only)', () => {
+    it('serves Swagger UI at /api/doc without authentication', async () => {
+      const res = await app.request('/api/doc', { method: 'GET' });
+
+      const statusOk = 200;
+      expect(res.status).toBe(statusOk);
+      const contentType = res.headers.get('content-type');
+      expect(contentType).toContain('text/html');
     });
   });
 });
