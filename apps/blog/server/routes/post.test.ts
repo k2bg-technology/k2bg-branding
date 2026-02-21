@@ -13,7 +13,7 @@ import { createSyncPostsFromExternalUseCase } from '../../infrastructure/di';
 const mockCreateUseCase = vi.mocked(createSyncPostsFromExternalUseCase);
 
 function stubUseCaseWith(
-  execute: Mock<() => Promise<SyncPostsFromExternalOutput>>,
+  execute: Mock<() => Promise<SyncPostsFromExternalOutput>>
 ) {
   mockCreateUseCase.mockReturnValue({ execute } as unknown as ReturnType<
     typeof createSyncPostsFromExternalUseCase
@@ -63,9 +63,7 @@ describe('postRoutes', () => {
     });
 
     it('propagates use case errors', async () => {
-      stubUseCaseWith(
-        vi.fn().mockRejectedValue(new Error('Sync failed')),
-      );
+      stubUseCaseWith(vi.fn().mockRejectedValue(new Error('Sync failed')));
       const app = createApp();
 
       const res = await app.request('/posts', { method: 'PATCH' });

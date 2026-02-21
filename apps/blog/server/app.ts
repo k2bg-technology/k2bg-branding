@@ -12,4 +12,4 @@ app.route('/', postRoutes);
 app.route('/', mediaRoutes);
 app.onError(errorHandler);
 
-export default app;
+export { app };

@@ -32,7 +32,7 @@ export const errorHandler: ErrorHandler = (err, c) => {
 
   apiLogger.error(
     { err, status, errorName: err.name, path: c.req.path },
-    message,
+    message
   );
 
   return c.json(
@@ -44,6 +44,6 @@ export const errorHandler: ErrorHandler = (err, c) => {
         timestamp: new Date().toISOString(),
       },
     },
-    status,
+    status
   );
 };
