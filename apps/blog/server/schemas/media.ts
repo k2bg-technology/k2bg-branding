@@ -6,7 +6,7 @@ export const SyncImagesResponseSchema = z
       z.object({
         id: z.string(),
         url: z.string(),
-      }),
+      })
     ),
     count: z.number(),
     failedCount: z.number(),
