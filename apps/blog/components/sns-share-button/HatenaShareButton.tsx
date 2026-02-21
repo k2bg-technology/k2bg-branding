@@ -10,7 +10,7 @@ export function HatenaShareButton() {
   return (
     <Button variant="ghost" color="dark" size="icon" type="button" asChild>
       <a
-        href={`http://b.hatena.ne.jp/add?mode=confirm&url=${fullUrl}&title=${title}`}
+        href={`https://b.hatena.ne.jp/add?mode=confirm&url=${fullUrl}&title=${title}`}
         target="_blank"
         rel="noreferrer"
         aria-label="hatena"
