@@ -16,6 +16,7 @@ const revalidateRoute = createRoute({
   security: [{ ApiKeyAuth: [] }],
   request: {
     body: {
+      required: false,
       content: {
         'application/json': { schema: RevalidateRequestSchema },
       },
@@ -40,7 +41,8 @@ const revalidateRoute = createRoute({
 const revalidationRoutes = new OpenAPIHono();
 
 revalidationRoutes.openapi(revalidateRoute, async (c) => {
-  const { path, tag } = c.req.valid('json');
+  const body = c.req.valid('json');
+  const { path, tag } = body ?? {};
 
   if (tag) {
     revalidateTag(tag);
