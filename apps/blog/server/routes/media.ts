@@ -1,5 +1,6 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { createSyncHeroImagesUseCase } from '../../infrastructure/di';
+import { revalidateBlogPages } from '../lib/revalidation';
 import { SyncImagesResponseSchema } from '../schemas/media';
 import { ErrorResponseSchema } from '../schemas/shared';
 
@@ -28,6 +29,7 @@ const mediaRoutes = new OpenAPIHono();
 
 mediaRoutes.openapi(syncImagesRoute, async (c) => {
   const result = await createSyncHeroImagesUseCase().execute();
+  revalidateBlogPages();
   return c.json(result, 200);
 });
 

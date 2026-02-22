@@ -1,5 +1,6 @@
 import { createRoute, OpenAPIHono } from '@hono/zod-openapi';
 import { createSyncPostsFromExternalUseCase } from '../../infrastructure/di';
+import { revalidateBlogPages } from '../lib/revalidation';
 import { SyncPostsResponseSchema } from '../schemas/post';
 import { ErrorResponseSchema } from '../schemas/shared';
 
@@ -28,6 +29,7 @@ const postRoutes = new OpenAPIHono();
 
 postRoutes.openapi(syncPostsRoute, async (c) => {
   const result = await createSyncPostsFromExternalUseCase().execute();
+  revalidateBlogPages();
   return c.json(result, 200);
 });
 
