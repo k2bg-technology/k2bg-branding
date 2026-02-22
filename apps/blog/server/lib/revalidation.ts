@@ -11,13 +11,21 @@ const BLOG_PATHS = [
 ] as const;
 
 export function revalidateBlogPages(): void {
-  for (const path of BLOG_PATHS) {
-    revalidatePath(path, 'page');
+  try {
+    for (const path of BLOG_PATHS) {
+      revalidatePath(path, 'page');
+    }
+    revalidationLogger.info('Revalidated all blog pages');
+  } catch (error) {
+    revalidationLogger.error({ error }, 'Failed to revalidate blog pages');
   }
-  revalidationLogger.info('Revalidated all blog pages');
 }
 
 export function revalidateBlogPath(path: string): void {
-  revalidatePath(path);
-  revalidationLogger.info({ path }, 'Revalidated path');
+  try {
+    revalidatePath(path);
+    revalidationLogger.info({ path }, 'Revalidated path');
+  } catch (error) {
+    revalidationLogger.error({ error, path }, 'Failed to revalidate path');
+  }
 }
