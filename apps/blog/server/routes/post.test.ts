@@ -8,6 +8,11 @@ vi.mock('../../infrastructure/di', () => ({
   createSyncPostsFromExternalUseCase: vi.fn(),
 }));
 
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
+}));
+
 import { createSyncPostsFromExternalUseCase } from '../../infrastructure/di';
 
 const mockCreateUseCase = vi.mocked(createSyncPostsFromExternalUseCase);
