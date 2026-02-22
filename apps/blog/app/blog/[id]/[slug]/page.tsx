@@ -15,7 +15,7 @@ import {
   getDefaultOgImageUrl,
 } from '../../../../infrastructure/di';
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 type Params = Promise<{ id: string; slug: string }>;
 

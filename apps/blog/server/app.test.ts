@@ -23,6 +23,11 @@ vi.mock('../infrastructure/di', () => ({
   createSyncHeroImagesUseCase: vi.fn(),
 }));
 
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
+}));
+
 const mockCreatePostUseCase = vi.mocked(createSyncPostsFromExternalUseCase);
 const mockCreateMediaUseCase = vi.mocked(createSyncHeroImagesUseCase);
 

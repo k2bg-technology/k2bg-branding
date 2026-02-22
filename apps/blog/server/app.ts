@@ -3,7 +3,7 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { apiKeyAuth } from './middleware/apiKeyAuth';
 import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
-import { mediaRoutes, postRoutes } from './routes';
+import { mediaRoutes, postRoutes, revalidationRoutes } from './routes';
 
 const app = new OpenAPIHono().basePath('/api');
 
@@ -16,9 +16,11 @@ app.openAPIRegistry.registerComponent('securitySchemes', 'ApiKeyAuth', {
 app.use('*', requestLogger);
 app.use('/posts', apiKeyAuth);
 app.use('/images', apiKeyAuth);
+app.use('/revalidate', apiKeyAuth);
 
 app.route('/', postRoutes);
 app.route('/', mediaRoutes);
+app.route('/', revalidationRoutes);
 
 if (process.env.NODE_ENV !== 'production') {
   app.doc('/doc.json', {

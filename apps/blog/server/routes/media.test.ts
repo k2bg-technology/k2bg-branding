@@ -8,6 +8,11 @@ vi.mock('../../infrastructure/di', () => ({
   createSyncHeroImagesUseCase: vi.fn(),
 }));
 
+vi.mock('next/cache', () => ({
+  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
+}));
+
 import { createSyncHeroImagesUseCase } from '../../infrastructure/di';
 
 const mockCreateUseCase = vi.mocked(createSyncHeroImagesUseCase);
