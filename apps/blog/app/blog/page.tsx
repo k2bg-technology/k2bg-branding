@@ -14,7 +14,7 @@ import {
 
 const PAGE_SIZE = 8;
 
-export const revalidate = 60;
+export const revalidate = 3600;
 
 const defaultOgImageUrl = getDefaultOgImageUrl();
 
