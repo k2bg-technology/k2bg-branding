@@ -30,7 +30,7 @@ export function Contact({ t }: { t: TFunction }) {
         <div className="p-6 w-full h-full md:p-12 md:w-[37.5rem]">
           <form
             method="post"
-            action="https://formspree.io/f/mjvjargb"
+            action={process.env.NEXT_PUBLIC_FORMSPREE_FORM_ACTION_URL}
             className="flex flex-col justify-center gap-spacious h-full"
           >
             <div className="flex flex-col gap-spacious md:flex-row">
