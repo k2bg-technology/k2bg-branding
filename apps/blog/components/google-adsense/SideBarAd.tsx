@@ -28,7 +28,7 @@ export function SideBarAd() {
         style={{ display: 'block' }}
         data-adtest={process.env.NODE_ENV === 'production' ? 'off' : 'on'}
         data-ad-client={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID}
-        data-ad-slot="9152299424"
+        data-ad-slot={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_AD_SLOT_ID}
         data-ad-format="auto"
         data-full-width-responsive="true"
       />
