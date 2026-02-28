@@ -28,6 +28,7 @@ export class SendEmail {
         name: contact.name.getValue(),
         message: contact.message.getValue(),
         year: format(new Date(), 'yyyy'),
+        companyLogoUrl: process.env.COMPANY_LOGO_URL ?? '',
       }
     );
 
