@@ -104,60 +104,44 @@ The portfolio is a single-page application composed of these sections:
 
 ```mermaid
 flowchart TB
-    subgraph "External Services"
-        Formspree["Formspree<br/>Contact Forms"]
+    Request["Client Request"] --> Middleware
+
+    subgraph i18n["Internationalization"]
+        direction TB
+        Middleware["i18n Middleware<br/>Language Detection & Routing"]
+        Translations["Translation Files<br/>en / ja"]
+        Middleware -.-> Translations
     end
 
-    subgraph "Portfolio App Architecture"
-        subgraph "Frontend Layer"
-            Pages["Pages<br/>Next.js Routes"]
-            Components["Components<br/>UI Elements"]
-            Layouts["Layouts<br/>Page Structure"]
-        end
-
-        subgraph "Internationalization"
-            Middleware["i18n Middleware<br/>Language Detection"]
-            Translations["Translation Files<br/>en/ja Resources"]
-            I18NextConfig["i18next Config<br/>Language Setup"]
-        end
-
-        subgraph "Generation & Optimization"
-            SSG["Static Site Generation<br/>Build Time Rendering"]
-            ResponsiveDesign["Responsive Design<br/>Mobile/Desktop"]
-            ImageOptimization["Image Optimization<br/>Next.js Image"]
-        end
-
-        subgraph "Shared Resources"
-            UIPackage["UI Package<br/>Component Library"]
-            TailwindTheme["Tailwind Config<br/>Design System"]
-        end
+    subgraph app["Next.js Application"]
+        direction TB
+        Layout["Layout"] --> Page["Page /[lng]"]
+        Page --> Sections["Sections<br/>Hero / Background / Skill<br/>Portfolio / Contact"]
     end
 
-    Pages --> Middleware
-    Middleware --> Translations
-    Middleware --> I18NextConfig
+    subgraph shared["Shared Packages"]
+        direction TB
+        UIPackage["UI Package<br/>Component Library"]
+        TailwindConfig["Tailwind Config<br/>Design System"]
+    end
 
-    Pages --> Components
-    Components --> Layouts
-    Components --> UIPackage
-    Layouts --> TailwindTheme
+    Formspree["Formspree<br/>Contact Forms"]
 
-    Pages --> SSG
-    SSG --> ResponsiveDesign
-    ResponsiveDesign --> ImageOptimization
+    Middleware -->|locale| Layout
+    Sections --> UIPackage
+    Sections --> TailwindConfig
+    Sections -.->|Contact Form| Formspree
 
-    Components -.->|Contact Form| Formspree
-
-    classDef frontendStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
+    classDef requestStyle fill:#6B7280,stroke:#4B5563,stroke-width:2px,color:#fff
     classDef i18nStyle fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
-    classDef optimizationStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
+    classDef appStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef sharedStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
     classDef externalStyle fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
 
-    class Pages,Components,Layouts frontendStyle
-    class Middleware,Translations,I18NextConfig i18nStyle
-    class SSG,ResponsiveDesign,ImageOptimization optimizationStyle
-    class UIPackage,TailwindTheme sharedStyle
+    class Request requestStyle
+    class Middleware,Translations i18nStyle
+    class Layout,Page,Sections appStyle
+    class UIPackage,TailwindConfig sharedStyle
     class Formspree externalStyle
 ```
 

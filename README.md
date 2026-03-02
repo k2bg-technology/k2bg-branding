@@ -90,31 +90,21 @@ pnpm format       # Format code with Biome
 
 ```mermaid
 flowchart TB
-    subgraph "K2BG Branding Monorepo"
-        subgraph "Apps"
-            Blog["Blog App<br/> (port 3000)"]
-            Portfolio["Portfolio App<br/> (port 3001)"]
-        end
-
-        subgraph "Shared Packages"
-            UI["ui<br/>Component Library"]
-            TailwindConfig["tailwind-config<br/>Design System"]
-            BiomeConfig["biome-config<br/>Code Quality"]
-            TSConfig["tsconfig<br/>TypeScript Config"]
-            TestUtils["test-utils<br/>Testing Utilities"]
-        end
+    subgraph apps["Apps"]
+        Blog["Blog App<br/>(port 3000)"]
+        Portfolio["Portfolio App<br/>(port 3001)"]
     end
 
-    Blog -.-> UI
-    Blog -.-> TailwindConfig
-    Blog -.-> BiomeConfig
-    Blog -.-> TSConfig
-    Blog -.-> TestUtils
+    subgraph packages["Shared Packages"]
+        UI["ui<br/>Component Library"]
+        TailwindConfig["tailwind-config<br/>Design System"]
+        BiomeConfig["biome-config<br/>Code Quality"]
+        TSConfig["tsconfig<br/>TypeScript Config"]
+        TestUtils["test-utils<br/>Testing Utilities"]
+    end
 
-    Portfolio -.-> UI
-    Portfolio -.-> TailwindConfig
-    Portfolio -.-> BiomeConfig
-    Portfolio -.-> TSConfig
+    Blog -.-> packages
+    Portfolio -.-> packages
 
     classDef appStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef packageStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
@@ -127,67 +117,50 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-    subgraph "Development Environment"
-        subgraph "Monorepo Management"
-            Turborepo["Turborepo<br/>- Task Orchestration<br/>- Dependency Caching<br/>- Parallel Execution"]
-            PNPMWorkspaces["PNPM Workspaces<br/>- Package Management<br/>- Dependency Resolution"]
-        end
-
-        subgraph "Development Tools"
-            BiomeTool["Biome<br/>- Code Linting<br/>- Code Formatting<br/>- Auto-fix"]
-            TypeScriptTool["TypeScript<br/>- Type Checking<br/>- Compile-time Safety"]
-        end
-
-        subgraph "Testing Framework"
-            VitestTool["Vitest<br/>- Unit Testing<br/>- Test Runner"]
-            StorybookTool["Storybook<br/>- Component Development<br/>- Visual Testing"]
-            ChromaticTool["Chromatic<br/>- Visual Regression<br/>- UI Review"]
-        end
-
-        subgraph "Build Process"
-            NextJSBuild["Next.js Build<br/>- App Compilation<br/>- Bundle Optimization"]
-            TailwindBuild["Tailwind CSS<br/>- Style Processing<br/>- Purge Unused"]
-            TypeGeneration["Type Generation<br/>- Prisma Client<br/>- API Types"]
-        end
-    end
-
-    subgraph "Development Workflow"
-        DevStart["pnpm dev"]
-        BuildProcess["pnpm build"]
-        TestSuite["pnpm test"]
-        LintCheck["pnpm lint"]
+    subgraph commands["CLI Commands"]
+        Dev["pnpm dev"]
+        Build["pnpm build"]
+        Test["pnpm test"]
+        Lint["pnpm lint"]
         TypeCheck["pnpm typecheck"]
     end
 
-    DevStart --> Turborepo
-    BuildProcess --> Turborepo
-    TestSuite --> Turborepo
-    LintCheck --> Turborepo
-    TypeCheck --> Turborepo
+    Turbo["Turborepo + PNPM Workspaces<br/>Task Orchestration · Caching · Parallel Execution"]
 
-    Turborepo --> PNPMWorkspaces
-    Turborepo --> NextJSBuild
-    Turborepo --> TailwindBuild
-    Turborepo --> TypeGeneration
+    subgraph quality["Code Quality"]
+        Biome["Biome<br/>Lint & Format"]
+        TS["TypeScript<br/>Type Checking"]
+    end
 
-    PNPMWorkspaces --> BiomeTool
-    PNPMWorkspaces --> TypeScriptTool
-    PNPMWorkspaces --> VitestTool
-    PNPMWorkspaces --> StorybookTool
+    subgraph testing["Testing"]
+        Vitest["Vitest<br/>Unit Tests"]
+        Storybook["Storybook<br/>Component Dev"]
+        Chromatic["Chromatic<br/>Visual Regression"]
+    end
 
-    StorybookTool --> ChromaticTool
+    subgraph build["Build Process"]
+        NextJS["Next.js Build<br/>Bundle Optimization"]
+        Tailwind["Tailwind CSS<br/>Style Processing"]
+        TypeGen["Type Generation<br/>Prisma Client"]
+    end
 
-    classDef monorepoStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
-    classDef devToolStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
+    commands --> Turbo
+    Turbo --> quality
+    Turbo --> testing
+    Turbo --> build
+    Storybook --> Chromatic
+
+    classDef commandStyle fill:#EC4899,stroke:#DB2777,stroke-width:2px,color:#fff
+    classDef turboStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
+    classDef qualityStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
     classDef testStyle fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
     classDef buildStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
-    classDef workflowStyle fill:#EC4899,stroke:#DB2777,stroke-width:2px,color:#fff
 
-    class Turborepo,PNPMWorkspaces monorepoStyle
-    class BiomeTool,TypeScriptTool devToolStyle
-    class VitestTool,StorybookTool,ChromaticTool testStyle
-    class NextJSBuild,TailwindBuild,TypeGeneration buildStyle
-    class DevStart,BuildProcess,TestSuite,LintCheck,TypeCheck workflowStyle
+    class Dev,Build,Test,Lint,TypeCheck commandStyle
+    class Turbo turboStyle
+    class Biome,TS qualityStyle
+    class Vitest,Storybook,Chromatic testStyle
+    class NextJS,Tailwind,TypeGen buildStyle
 ```
 
 ## Useful Links

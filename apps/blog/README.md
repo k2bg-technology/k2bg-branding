@@ -79,10 +79,10 @@ The blog follows a **Clean Architecture** pattern with vertical slicing by domai
 
 | Module | Description |
 |---|---|
-| `post` | Blog post management, categories, search |
+| [post](/apps/blog/specs/post.spec.md) | Blog post management, categories, search |
 | `contact` | Contact form handling and email delivery |
-| `media` | Media asset management |
-| `affiliate` | Affiliate link and banner management |
+| [media](/apps/blog/specs/media.spec.md) | Media asset management |
+| [affiliate](/apps/blog/specs/affiliate.spec.md) | Affiliate link and banner management |
 | `social-feed` | Social media feed integration (Instagram) |
 
 ### Layer Structure
@@ -133,164 +133,127 @@ modules/<module>/
 | AWS SES | Amazon SES | contact |
 | Instagram | Instagram API | social-feed |
 
-### Clean Architecture Diagram
+### Clean Architecture Pattern
+
+Each module follows the same layered pattern. Dependencies flow inward, with adapters implementing domain-defined interfaces (ports):
 
 ```mermaid
-flowchart TB
-    subgraph "External Services"
-        Notion["Notion API<br/>CMS Content"]
-        PostgreSQL["PostgreSQL<br/>Database"]
-        Cloudinary["Cloudinary<br/>Image CDN"]
-        AWSSES["AWS SES<br/>Email Service"]
-        Instagram["Instagram API<br/>Social Media"]
-    end
+flowchart LR
+    Route["Route Layer<br/>(Next.js / Hono)"] --> UseCase["Use Case Layer<br/>(Query / Command / Sync)"]
+    UseCase --> Domain["Domain Layer<br/>(Entity / Value Object)"]
+    Domain -.->|"Repository Interface (Port)"| Adapter["Adapter Layer<br/>(Infrastructure)"]
+    Adapter --> Service["External Service"]
 
-    subgraph "App Layer (Next.js Routes)"
-        PostRoutes["Post Routes<br/>/blog, /category, /search"]
-        ContactRoutes["Contact Routes<br/>/contact"]
-    end
-
-    subgraph "Hono API Server (server/)"
-        APIRoutes["OpenAPIHono<br/>PATCH /api/posts, /api/images"]
-        Middleware["Middleware<br/>apiKeyAuth, errorHandler, requestLogger"]
-        Schemas["Schemas<br/>Zod + OpenAPI"]
-        SwaggerUI["Swagger UI<br/>/api/doc (non-prod)"]
-    end
-
-    subgraph "Modules"
-        subgraph "post"
-            PostUseCases["Use Cases<br/>fetch / sync"]
-            PostDomain["Domain<br/>Post, AuthorId"]
-            PostAdapters["Adapters<br/>Notion, Prisma, Cloudinary"]
-        end
-
-        subgraph "contact"
-            ContactUseCases["Use Cases<br/>send-email"]
-            ContactDomain["Domain<br/>Contact, Email, Name"]
-            ContactAdapters["Adapters<br/>AWS SES"]
-        end
-
-        subgraph "affiliate"
-            AffiliateUseCases["Use Cases<br/>fetch"]
-            AffiliateDomain["Domain<br/>Affiliate, Banner, Product"]
-            AffiliateAdapters["Adapters<br/>Notion"]
-        end
-
-        subgraph "media"
-            MediaUseCases["Use Cases<br/>fetch"]
-            MediaDomain["Domain<br/>Media, Image"]
-            MediaAdapters["Adapters<br/>Notion, Cloudinary"]
-        end
-
-        subgraph "social-feed"
-            SocialFeedUseCases["Use Cases<br/>fetch-feed"]
-            SocialFeedDomain["Domain<br/>SocialFeed"]
-            SocialFeedAdapters["Adapters<br/>Instagram"]
-        end
-    end
-
-    PostRoutes --> PostUseCases
-    PostRoutes --> AffiliateUseCases
-    PostRoutes --> MediaUseCases
-    ContactRoutes --> ContactUseCases
-    Middleware --> APIRoutes
-    APIRoutes --> PostUseCases
-    APIRoutes --> MediaUseCases
-
-    PostUseCases --> PostDomain
-    ContactUseCases --> ContactDomain
-    AffiliateUseCases --> AffiliateDomain
-    MediaUseCases --> MediaDomain
-    SocialFeedUseCases --> SocialFeedDomain
-
-    PostDomain -.->|ports| PostAdapters
-    ContactDomain -.->|ports| ContactAdapters
-    AffiliateDomain -.->|ports| AffiliateAdapters
-    MediaDomain -.->|ports| MediaAdapters
-    SocialFeedDomain -.->|ports| SocialFeedAdapters
-
-    PostAdapters --> Notion
-    PostAdapters --> PostgreSQL
-    PostAdapters --> Cloudinary
-    ContactAdapters --> AWSSES
-    AffiliateAdapters --> Notion
-    MediaAdapters --> Notion
-    MediaAdapters --> Cloudinary
-    SocialFeedAdapters --> Instagram
-
-    classDef appStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
-    classDef honoStyle fill:#FF6B35,stroke:#E55A2B,stroke-width:2px,color:#fff
+    classDef routeStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
     classDef useCaseStyle fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
     classDef domainStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef adapterStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
     classDef externalStyle fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
 
-    class PostRoutes,ContactRoutes appStyle
-    class APIRoutes,Middleware,Schemas,SwaggerUI honoStyle
-    class PostUseCases,ContactUseCases,AffiliateUseCases,MediaUseCases,SocialFeedUseCases useCaseStyle
-    class PostDomain,ContactDomain,AffiliateDomain,MediaDomain,SocialFeedDomain domainStyle
-    class PostAdapters,ContactAdapters,AffiliateAdapters,MediaAdapters,SocialFeedAdapters adapterStyle
-    class Notion,PostgreSQL,Cloudinary,AWSSES,Instagram externalStyle
+    class Route routeStyle
+    class UseCase useCaseStyle
+    class Domain domainStyle
+    class Adapter adapterStyle
+    class Service externalStyle
+```
+
+### Module Dependencies
+
+```mermaid
+flowchart LR
+    subgraph routes["Routes"]
+        direction TB
+        HonoAPI["Hono API<br/>PATCH /api/posts, /images"]
+        PostRoutes["Post Routes<br/>/blog, /category, /search"]
+        ContactRoutes["Contact Routes<br/>/contact"]
+    end
+
+    subgraph modules["Domain Modules"]
+        direction TB
+        Post["post"]
+        Media["media"]
+        Affiliate["affiliate"]
+        Contact["contact"]
+        SocialFeed["social-feed"]
+    end
+
+    subgraph services["External Services"]
+        direction TB
+        PostgreSQL["PostgreSQL"]
+        Notion["Notion API"]
+        Cloudinary["Cloudinary"]
+        AWSSES["AWS SES"]
+        Instagram["Instagram API"]
+    end
+
+    HonoAPI --> Post
+    HonoAPI --> Media
+    PostRoutes --> Post
+    PostRoutes --> Media
+    PostRoutes --> Affiliate
+    ContactRoutes --> Contact
+
+    Post --> PostgreSQL
+    Post --> Notion
+    Post --> Cloudinary
+    Media --> Notion
+    Media --> Cloudinary
+    Affiliate --> Notion
+    Contact --> AWSSES
+    SocialFeed --> Instagram
+
+    click Post "specs/post.spec.md" "Post specification"
+    click Media "specs/media.spec.md" "Media specification"
+    click Affiliate "specs/affiliate.spec.md" "Affiliate specification"
+
+    classDef routeStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
+    classDef moduleStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
+    classDef serviceStyle fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
+
+    class PostRoutes,ContactRoutes,HonoAPI routeStyle
+    class Post,Contact,Affiliate,Media,SocialFeed moduleStyle
+    class Notion,PostgreSQL,Cloudinary,AWSSES,Instagram serviceStyle
 ```
 
 ### External Services Integration
 
 ```mermaid
-flowchart TB
-    subgraph "Blog App Ecosystem"
-        BlogApp["Blog App"]
+flowchart LR
+    BlogApp["Blog App"]
 
-        subgraph "Content Management"
-            NotionCMS["Notion API<br/>- Post Database<br/>- Media Database<br/>- Affiliate Database<br/>- Concept Pages"]
-        end
-
-        subgraph "Data Persistence"
-            PostgreSQLDB["PostgreSQL<br/>with Prisma ORM<br/>- Schema Management<br/>- Query Builder"]
-        end
-
-        subgraph "Media & CDN"
-            CloudinaryService["Cloudinary<br/>- Image Optimization<br/>- CDN Delivery<br/>- Asset Management"]
-        end
-
-        subgraph "Communication"
-            EmailService["AWS SES<br/>- Contact Forms<br/>- Email Templates<br/>- Delivery"]
-        end
-
-        subgraph "Social Integration"
-            SocialMedia["Instagram API<br/>- Content Sync<br/>- Media Display"]
-            TwitterTimeline["X Timeline<br/>- Social Feed<br/>- Tweet Embedding"]
-        end
-
-        subgraph "Security & Analytics"
-            CaptchaService["hCaptcha<br/>- Bot Protection<br/>- Form Security"]
-            Analytics["Google Tag Manager<br/>- User Analytics<br/>- Performance Tracking"]
-        end
+    subgraph content["Content & Data"]
+        direction TB
+        Notion["Notion API<br/>Posts / Media / Affiliates"]
+        PostgreSQL["PostgreSQL<br/>Prisma ORM"]
+        Cloudinary["Cloudinary<br/>Image CDN"]
     end
 
-    BlogApp --> NotionCMS
-    BlogApp --> PostgreSQLDB
-    BlogApp --> CloudinaryService
-    BlogApp --> EmailService
-    BlogApp --> SocialMedia
-    BlogApp --> TwitterTimeline
-    BlogApp --> CaptchaService
-    BlogApp --> Analytics
+    subgraph communication["Communication & Social"]
+        direction TB
+        SES["AWS SES<br/>Email"]
+        Instagram["Instagram API"]
+        Twitter["X Timeline"]
+    end
+
+    subgraph infra["Security & Analytics"]
+        direction TB
+        hCaptcha["hCaptcha<br/>Bot Protection"]
+        GTM["Google Tag Manager<br/>Analytics"]
+    end
+
+    BlogApp --> content
+    BlogApp --> communication
+    BlogApp --> infra
 
     classDef appStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
-    classDef cmsStyle fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
-    classDef dataStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
-    classDef mediaStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
+    classDef contentStyle fill:#8B5CF6,stroke:#7C3AED,stroke-width:2px,color:#fff
     classDef commStyle fill:#EC4899,stroke:#DB2777,stroke-width:2px,color:#fff
-    classDef socialStyle fill:#06B6D4,stroke:#0891B2,stroke-width:2px,color:#fff
-    classDef securityStyle fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
+    classDef infraStyle fill:#EF4444,stroke:#DC2626,stroke-width:2px,color:#fff
 
     class BlogApp appStyle
-    class NotionCMS cmsStyle
-    class PostgreSQLDB dataStyle
-    class CloudinaryService mediaStyle
-    class EmailService commStyle
-    class SocialMedia,TwitterTimeline socialStyle
-    class CaptchaService,Analytics securityStyle
+    class Notion,PostgreSQL,Cloudinary contentStyle
+    class SES,Instagram,Twitter commStyle
+    class hCaptcha,GTM infraStyle
 ```
 
 ## API Server (Hono)
