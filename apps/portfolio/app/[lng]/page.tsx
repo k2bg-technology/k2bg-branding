@@ -9,7 +9,7 @@ import { LanguageSelector } from '../../components/LanguageSelector';
 import { ScrollHelper } from '../../components/ScrollHelper';
 import { Slider } from '../../components/Slider';
 import { getTranslation } from '../../i18n';
-import { fallbackLng, type Language, languages } from '../../i18n/settings';
+import { resolveLanguage } from '../../i18n/settings';
 
 import Loading from './loading';
 
@@ -19,9 +19,7 @@ export default async function Page({
   params: Promise<{ lng: string }>;
 }) {
   const { lng } = await params;
-  const language = (languages as readonly string[]).includes(lng)
-    ? (lng as Language)
-    : fallbackLng;
+  const language = resolveLanguage(lng);
   const { t } = await getTranslation(language);
 
   return (
