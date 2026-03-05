@@ -2,8 +2,8 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import { dir } from 'i18next';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-
-import { languages } from '../../i18n/settings';
+import { getTranslation } from '../../i18n';
+import { languages, resolveLanguage } from '../../i18n/settings';
 
 import '../globals.css';
 
@@ -11,10 +11,71 @@ export async function generateStaticParams() {
   return languages.map((lng) => ({ lng }));
 }
 
-export const metadata: Metadata = {
-  title: 'K2.B.G. Technology',
-  description: 'K2.B.G. Technologyが提供できる価値を紹介いたします。',
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lng: string }>;
+}): Promise<Metadata> {
+  const { lng } = await params;
+  const language = resolveLanguage(lng);
+  const { t } = await getTranslation(language);
+  const siteBaseUrl = process.env.PORTFOLIO_SITE_BASE_URL;
+  const title = 'K2.B.G. Technology';
+  const description = t('metadata.description');
+  const minimalMetadata: Metadata = {
+    metadataBase: siteBaseUrl ? new URL(siteBaseUrl) : undefined,
+    title,
+    description,
+    robots: { index: true, follow: true },
+  };
+
+  if (!siteBaseUrl) {
+    return minimalMetadata;
+  }
+
+  const baseUrl = new URL(siteBaseUrl);
+  const url = `${baseUrl.origin}/${language}`;
+  const ogImage = `${baseUrl.origin}/images/hero-og.jpg`;
+
+  return {
+    ...minimalMetadata,
+    alternates: {
+      canonical: url,
+      languages: Object.fromEntries(
+        languages.map((l) => [l, `${baseUrl.origin}/${l}`])
+      ),
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: title,
+      type: 'website',
+      locale: language === 'ja' ? 'ja_JP' : 'en_US',
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+  };
+}
 
 export default async function RootLayout({
   children,
