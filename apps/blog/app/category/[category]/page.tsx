@@ -6,7 +6,7 @@ import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
 import { PageLayout } from '../../../components/page-layout';
 import { ScrollToTopButton } from '../../../components/scroll-to-top-button/ScrollToTopButton';
 import {
-  createFetchPostsByCategoryUseCase,
+  createFetchPostSummariesByCategoryUseCase,
   getDefaultOgImageUrl,
 } from '../../../infrastructure/di';
 import { Category } from '../../../modules/post/domain';
@@ -71,10 +71,11 @@ export default async function Page({ params, searchParams }: Props) {
   const { page = '1' } = await searchParams;
   const currentPage = Number(page);
 
-  const fetchPostsByCategory = createFetchPostsByCategoryUseCase();
+  const fetchPostSummariesByCategory =
+    createFetchPostSummariesByCategoryUseCase();
 
   async function fetchArticles() {
-    return fetchPostsByCategory
+    return fetchPostSummariesByCategory
       .execute({
         category,
         page: currentPage,

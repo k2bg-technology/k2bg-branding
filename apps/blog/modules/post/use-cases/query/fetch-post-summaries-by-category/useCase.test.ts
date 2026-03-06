@@ -2,31 +2,31 @@ import { describe, expect, it, vi } from 'vitest';
 import { Category } from '../../../domain';
 import { InvalidPaginationError } from '../../shared';
 import {
-  createPostsWithAuthor,
-  createPostWithAuthor,
+  createPostSummaryOutput,
+  createPostSummaryOutputs,
 } from '../../shared/testing/factories';
-import type { FetchPostsByCategoryQueryService } from './queryService';
-import { FetchPostsByCategory } from './useCase';
+import type { FetchPostSummariesByCategoryQueryService } from './queryService';
+import { FetchPostSummariesByCategory } from './useCase';
 
-describe('FetchPostsByCategory', () => {
+describe('FetchPostSummariesByCategory', () => {
   const createMockQueryService = (
-    overrides: Partial<FetchPostsByCategoryQueryService> = {}
-  ): FetchPostsByCategoryQueryService => ({
-    fetchPostsByCategory: vi
+    overrides: Partial<FetchPostSummariesByCategoryQueryService> = {}
+  ): FetchPostSummariesByCategoryQueryService => ({
+    fetchPostSummariesByCategory: vi
       .fn()
       .mockResolvedValue({ posts: [], totalCount: 0 }),
     ...overrides,
   });
 
   describe('execute', () => {
-    it('returns paginated posts for given category', async () => {
-      const posts = createPostsWithAuthor(3);
+    it('returns paginated post summaries for given category', async () => {
+      const posts = createPostSummaryOutputs(3);
       const queryService = createMockQueryService({
-        fetchPostsByCategory: vi
+        fetchPostSummariesByCategory: vi
           .fn()
           .mockResolvedValue({ posts, totalCount: 3 }),
       });
-      const sut = new FetchPostsByCategory(queryService);
+      const sut = new FetchPostSummariesByCategory(queryService);
 
       const result = await sut.execute({
         category: Category.ENGINEERING,
@@ -39,29 +39,33 @@ describe('FetchPostsByCategory', () => {
     });
 
     it('passes category to query service', async () => {
-      const fetchPostsByCategory = vi
+      const fetchPostSummariesByCategory = vi
         .fn()
         .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ fetchPostsByCategory });
-      const sut = new FetchPostsByCategory(queryService);
+      const queryService = createMockQueryService({
+        fetchPostSummariesByCategory,
+      });
+      const sut = new FetchPostSummariesByCategory(queryService);
 
       await sut.execute({ category: Category.LIFE_STYLE });
 
-      expect(fetchPostsByCategory).toHaveBeenCalledWith(
+      expect(fetchPostSummariesByCategory).toHaveBeenCalledWith(
         expect.objectContaining({ category: Category.LIFE_STYLE })
       );
     });
 
     it('uses default pagination values', async () => {
-      const fetchPostsByCategory = vi
+      const fetchPostSummariesByCategory = vi
         .fn()
         .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ fetchPostsByCategory });
-      const sut = new FetchPostsByCategory(queryService);
+      const queryService = createMockQueryService({
+        fetchPostSummariesByCategory,
+      });
+      const sut = new FetchPostSummariesByCategory(queryService);
 
       await sut.execute({ category: Category.ENGINEERING });
 
-      expect(fetchPostsByCategory).toHaveBeenCalledWith({
+      expect(fetchPostSummariesByCategory).toHaveBeenCalledWith({
         category: Category.ENGINEERING,
         page: 1,
         pageSize: 10,
@@ -71,11 +75,11 @@ describe('FetchPostsByCategory', () => {
 
     it('calculates pagination correctly', async () => {
       const queryService = createMockQueryService({
-        fetchPostsByCategory: vi
+        fetchPostSummariesByCategory: vi
           .fn()
           .mockResolvedValue({ posts: [], totalCount: 25 }),
       });
-      const sut = new FetchPostsByCategory(queryService);
+      const sut = new FetchPostSummariesByCategory(queryService);
 
       const result = await sut.execute({
         category: Category.ENGINEERING,
@@ -90,7 +94,7 @@ describe('FetchPostsByCategory', () => {
 
     it('throws InvalidPaginationError when page is less than 1', async () => {
       const queryService = createMockQueryService();
-      const sut = new FetchPostsByCategory(queryService);
+      const sut = new FetchPostSummariesByCategory(queryService);
 
       await expect(
         sut.execute({ category: Category.ENGINEERING, page: 0 })
@@ -99,27 +103,29 @@ describe('FetchPostsByCategory', () => {
 
     it('throws InvalidPaginationError when pageSize exceeds 100', async () => {
       const queryService = createMockQueryService();
-      const sut = new FetchPostsByCategory(queryService);
+      const sut = new FetchPostSummariesByCategory(queryService);
 
       await expect(
         sut.execute({ category: Category.ENGINEERING, pageSize: 101 })
       ).rejects.toThrow(InvalidPaginationError);
     });
 
-    it('maps Post entities to PostOutput', async () => {
-      const postWithAuthor = createPostWithAuthor();
-      const { post } = postWithAuthor;
-      const queryService = createMockQueryService({
-        fetchPostsByCategory: vi
-          .fn()
-          .mockResolvedValue({ posts: [postWithAuthor], totalCount: 1 }),
+    it('passes through PostSummaryOutput from query service', async () => {
+      const summary = createPostSummaryOutput({
+        id: 'test-uuid',
+        category: Category.ENGINEERING,
       });
-      const sut = new FetchPostsByCategory(queryService);
+      const queryService = createMockQueryService({
+        fetchPostSummariesByCategory: vi
+          .fn()
+          .mockResolvedValue({ posts: [summary], totalCount: 1 }),
+      });
+      const sut = new FetchPostSummariesByCategory(queryService);
 
       const result = await sut.execute({ category: Category.ENGINEERING });
 
-      expect(result.items[0].id).toBe(post.id.getValue());
-      expect(result.items[0].category).toBe(post.category);
+      expect(result.items[0].id).toBe('test-uuid');
+      expect(result.items[0].category).toBe(Category.ENGINEERING);
     });
   });
 });

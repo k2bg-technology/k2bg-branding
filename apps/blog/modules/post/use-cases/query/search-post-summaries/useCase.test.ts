@@ -1,27 +1,31 @@
 import { describe, expect, it, vi } from 'vitest';
 import { InvalidPaginationError, InvalidSearchQueryError } from '../../shared';
 import {
-  createPostsWithAuthor,
-  createPostWithAuthor,
+  createPostSummaryOutput,
+  createPostSummaryOutputs,
 } from '../../shared/testing/factories';
-import type { SearchPostsQueryService } from './queryService';
-import { SearchPosts } from './useCase';
+import type { SearchPostSummariesQueryService } from './queryService';
+import { SearchPostSummaries } from './useCase';
 
-describe('SearchPosts', () => {
+describe('SearchPostSummaries', () => {
   const createMockQueryService = (
-    overrides: Partial<SearchPostsQueryService> = {}
-  ): SearchPostsQueryService => ({
-    searchPosts: vi.fn().mockResolvedValue({ posts: [], totalCount: 0 }),
+    overrides: Partial<SearchPostSummariesQueryService> = {}
+  ): SearchPostSummariesQueryService => ({
+    searchPostSummaries: vi
+      .fn()
+      .mockResolvedValue({ posts: [], totalCount: 0 }),
     ...overrides,
   });
 
   describe('execute', () => {
     it('returns search results with pagination', async () => {
-      const posts = createPostsWithAuthor(3);
+      const posts = createPostSummaryOutputs(3);
       const queryService = createMockQueryService({
-        searchPosts: vi.fn().mockResolvedValue({ posts, totalCount: 3 }),
+        searchPostSummaries: vi
+          .fn()
+          .mockResolvedValue({ posts, totalCount: 3 }),
       });
-      const sut = new SearchPosts(queryService);
+      const sut = new SearchPostSummaries(queryService);
 
       const result = await sut.execute({ query: 'typescript' });
 
@@ -30,29 +34,29 @@ describe('SearchPosts', () => {
     });
 
     it('trims and passes query to service', async () => {
-      const searchPosts = vi
+      const searchPostSummaries = vi
         .fn()
         .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ searchPosts });
-      const sut = new SearchPosts(queryService);
+      const queryService = createMockQueryService({ searchPostSummaries });
+      const sut = new SearchPostSummaries(queryService);
 
       await sut.execute({ query: '  typescript  ' });
 
-      expect(searchPosts).toHaveBeenCalledWith(
+      expect(searchPostSummaries).toHaveBeenCalledWith(
         expect.objectContaining({ query: 'typescript' })
       );
     });
 
     it('uses default pagination values', async () => {
-      const searchPosts = vi
+      const searchPostSummaries = vi
         .fn()
         .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ searchPosts });
-      const sut = new SearchPosts(queryService);
+      const queryService = createMockQueryService({ searchPostSummaries });
+      const sut = new SearchPostSummaries(queryService);
 
       await sut.execute({ query: 'test' });
 
-      expect(searchPosts).toHaveBeenCalledWith({
+      expect(searchPostSummaries).toHaveBeenCalledWith({
         query: 'test',
         page: 1,
         pageSize: 10,
@@ -62,7 +66,7 @@ describe('SearchPosts', () => {
 
     it('allows short queries when MIN_QUERY_LENGTH is 0', async () => {
       const queryService = createMockQueryService();
-      const sut = new SearchPosts(queryService);
+      const sut = new SearchPostSummaries(queryService);
 
       const result = await sut.execute({ query: 'a' });
 
@@ -71,7 +75,7 @@ describe('SearchPosts', () => {
 
     it('throws InvalidSearchQueryError when query is too long', async () => {
       const queryService = createMockQueryService();
-      const sut = new SearchPosts(queryService);
+      const sut = new SearchPostSummaries(queryService);
       const longQuery = 'a'.repeat(101);
 
       await expect(sut.execute({ query: longQuery })).rejects.toThrow(
@@ -81,7 +85,7 @@ describe('SearchPosts', () => {
 
     it('allows empty query after trimming when MIN_QUERY_LENGTH is 0', async () => {
       const queryService = createMockQueryService();
-      const sut = new SearchPosts(queryService);
+      const sut = new SearchPostSummaries(queryService);
 
       const result = await sut.execute({ query: '   ' });
 
@@ -90,7 +94,7 @@ describe('SearchPosts', () => {
 
     it('throws InvalidPaginationError when page is less than 1', async () => {
       const queryService = createMockQueryService();
-      const sut = new SearchPosts(queryService);
+      const sut = new SearchPostSummaries(queryService);
 
       await expect(sut.execute({ query: 'test', page: 0 })).rejects.toThrow(
         InvalidPaginationError
@@ -99,9 +103,11 @@ describe('SearchPosts', () => {
 
     it('calculates pagination correctly', async () => {
       const queryService = createMockQueryService({
-        searchPosts: vi.fn().mockResolvedValue({ posts: [], totalCount: 25 }),
+        searchPostSummaries: vi
+          .fn()
+          .mockResolvedValue({ posts: [], totalCount: 25 }),
       });
-      const sut = new SearchPosts(queryService);
+      const sut = new SearchPostSummaries(queryService);
 
       const result = await sut.execute({
         query: 'test',
@@ -114,19 +120,18 @@ describe('SearchPosts', () => {
       expect(result.hasPreviousPage).toBe(true);
     });
 
-    it('maps Post entities to PostOutput', async () => {
-      const postWithAuthor = createPostWithAuthor();
-      const { post } = postWithAuthor;
+    it('passes through PostSummaryOutput from query service', async () => {
+      const summary = createPostSummaryOutput({ id: 'test-uuid' });
       const queryService = createMockQueryService({
-        searchPosts: vi
+        searchPostSummaries: vi
           .fn()
-          .mockResolvedValue({ posts: [postWithAuthor], totalCount: 1 }),
+          .mockResolvedValue({ posts: [summary], totalCount: 1 }),
       });
-      const sut = new SearchPosts(queryService);
+      const sut = new SearchPostSummaries(queryService);
 
       const result = await sut.execute({ query: 'test' });
 
-      expect(result.items[0].id).toBe(post.id.getValue());
+      expect(result.items[0].id).toBe('test-uuid');
     });
   });
 });

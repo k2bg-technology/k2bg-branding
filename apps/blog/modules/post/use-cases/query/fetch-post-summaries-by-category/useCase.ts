@@ -2,38 +2,38 @@ import type { Category } from '../../../domain';
 import {
   InvalidPaginationError,
   type PaginatedResult,
-  type PostOutput,
+  type PostSummaryOutput,
   type SortOrder,
-  toPostOutput,
 } from '../../shared';
-import type { FetchPostsByCategoryQueryService } from './queryService';
+import type { FetchPostSummariesByCategoryQueryService } from './queryService';
 
-export interface FetchPostsByCategoryInput {
+export interface FetchPostSummariesByCategoryInput {
   category: Category;
   page?: number;
   pageSize?: number;
   orderBy?: SortOrder;
 }
 
-export type FetchPostsByCategoryOutput = PaginatedResult<PostOutput>;
+export type FetchPostSummariesByCategoryOutput =
+  PaginatedResult<PostSummaryOutput>;
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_ORDER: SortOrder = 'desc';
 
 /**
- * FetchPostsByCategory Use Case
+ * FetchPostSummariesByCategory Use Case
  *
- * Fetches paginated list of posts filtered by category.
+ * Fetches paginated list of post summaries filtered by category.
  */
-export class FetchPostsByCategory {
+export class FetchPostSummariesByCategory {
   constructor(
-    private readonly queryService: FetchPostsByCategoryQueryService
+    private readonly queryService: FetchPostSummariesByCategoryQueryService
   ) {}
 
   async execute(
-    input: FetchPostsByCategoryInput
-  ): Promise<FetchPostsByCategoryOutput> {
+    input: FetchPostSummariesByCategoryInput
+  ): Promise<FetchPostSummariesByCategoryOutput> {
     const { category } = input;
     const page = input.page ?? DEFAULT_PAGE;
     const pageSize = input.pageSize ?? DEFAULT_PAGE_SIZE;
@@ -41,17 +41,18 @@ export class FetchPostsByCategory {
 
     this.validatePagination(page, pageSize);
 
-    const { posts, totalCount } = await this.queryService.fetchPostsByCategory({
-      category,
-      page,
-      pageSize,
-      orderBy,
-    });
+    const { posts, totalCount } =
+      await this.queryService.fetchPostSummariesByCategory({
+        category,
+        page,
+        pageSize,
+        orderBy,
+      });
 
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return {
-      items: posts.map(({ post, author }) => toPostOutput(post, author)),
+      items: posts,
       totalCount,
       totalPages,
       currentPage: page,

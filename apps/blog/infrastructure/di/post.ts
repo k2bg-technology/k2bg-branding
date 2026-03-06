@@ -7,24 +7,26 @@ import {
   NotionExternalPostSource,
   PrismaFetchAllSlugsQueryService,
   PrismaFetchPostQueryService,
-  PrismaFetchPostsByCategoryQueryService,
-  PrismaFetchPostsQueryService,
+  PrismaFetchPostSummariesByCategoryQueryService,
+  PrismaFetchPostSummariesQueryService,
   PrismaPostBatchRepository,
-  PrismaSearchPostsQueryService,
+  PrismaSearchPostSummariesQueryService,
 } from '../../modules/post/adapters/output';
 import { NotionMediaExternalImageSource } from '../../modules/media/adapters/output';
 import { NotionAffiliateExternalImageSource } from '../../modules/affiliate/adapters/output';
 import { FetchAllSlugs } from '../../modules/post/use-cases/query/fetch-all-slugs';
 import { FetchPost } from '../../modules/post/use-cases/query/fetch-post';
-import { FetchPosts } from '../../modules/post/use-cases/query/fetch-posts';
-import { FetchPostsByCategory } from '../../modules/post/use-cases/query/fetch-posts-by-category';
-import { SearchPosts } from '../../modules/post/use-cases/query/search-posts';
+import { FetchPostSummaries } from '../../modules/post/use-cases/query/fetch-post-summaries';
+import { FetchPostSummariesByCategory } from '../../modules/post/use-cases/query/fetch-post-summaries-by-category';
+import { SearchPostSummaries } from '../../modules/post/use-cases/query/search-post-summaries';
 import { SyncPostsFromExternal } from '../../modules/post/use-cases/sync/sync-posts-from-external';
 import { SyncHeroImages } from '../../modules/post/use-cases/sync/sync-hero-images';
 
-export function createFetchPostsUseCase(): FetchPosts {
+export function createFetchPostSummariesUseCase(): FetchPostSummaries {
   const prisma = getPrismaClient();
-  return new FetchPosts(new PrismaFetchPostsQueryService(prisma));
+  return new FetchPostSummaries(
+    new PrismaFetchPostSummariesQueryService(prisma)
+  );
 }
 
 export function createFetchPostUseCase(): FetchPost {
@@ -45,16 +47,18 @@ export function createFetchAllSlugsUseCase(): FetchAllSlugs {
   return new FetchAllSlugs(new PrismaFetchAllSlugsQueryService(prisma));
 }
 
-export function createFetchPostsByCategoryUseCase(): FetchPostsByCategory {
+export function createFetchPostSummariesByCategoryUseCase(): FetchPostSummariesByCategory {
   const prisma = getPrismaClient();
-  return new FetchPostsByCategory(
-    new PrismaFetchPostsByCategoryQueryService(prisma)
+  return new FetchPostSummariesByCategory(
+    new PrismaFetchPostSummariesByCategoryQueryService(prisma)
   );
 }
 
-export function createSearchPostsUseCase(): SearchPosts {
+export function createSearchPostSummariesUseCase(): SearchPostSummaries {
   const prisma = getPrismaClient();
-  return new SearchPosts(new PrismaSearchPostsQueryService(prisma));
+  return new SearchPostSummaries(
+    new PrismaSearchPostSummariesQueryService(prisma)
+  );
 }
 
 export function createSyncPostsFromExternalUseCase(): SyncPostsFromExternal {

@@ -5,7 +5,7 @@ import { Articles } from '../../components/articles/Articles';
 import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
-import { createSearchPostsUseCase } from '../../infrastructure/di';
+import { createSearchPostSummariesUseCase } from '../../infrastructure/di';
 
 const PAGE_SIZE = 6;
 
@@ -29,10 +29,10 @@ export default async function Page({
   const { query = '', page = '1' } = await searchParams;
   const currentPage = Number(page);
 
-  const searchPosts = createSearchPostsUseCase();
+  const searchPostSummaries = createSearchPostSummariesUseCase();
 
   async function fetchArticles() {
-    return searchPosts
+    return searchPostSummaries
       .execute({
         query,
         page: currentPage,

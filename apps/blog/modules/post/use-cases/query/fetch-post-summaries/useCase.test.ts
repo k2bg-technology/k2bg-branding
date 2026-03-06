@@ -1,27 +1,27 @@
 import { describe, expect, it, vi } from 'vitest';
 import { InvalidPaginationError } from '../../shared';
 import {
-  createPostsWithAuthor,
-  createPostWithAuthor,
+  createPostSummaryOutput,
+  createPostSummaryOutputs,
 } from '../../shared/testing/factories';
-import type { FetchPostsQueryService } from './queryService';
-import { FetchPosts } from './useCase';
+import type { FetchPostSummariesQueryService } from './queryService';
+import { FetchPostSummaries } from './useCase';
 
-describe('FetchPosts', () => {
+describe('FetchPostSummaries', () => {
   const createMockQueryService = (
-    overrides: Partial<FetchPostsQueryService> = {}
-  ): FetchPostsQueryService => ({
-    fetchPosts: vi.fn().mockResolvedValue({ posts: [], totalCount: 0 }),
+    overrides: Partial<FetchPostSummariesQueryService> = {}
+  ): FetchPostSummariesQueryService => ({
+    fetchPostSummaries: vi.fn().mockResolvedValue({ posts: [], totalCount: 0 }),
     ...overrides,
   });
 
   describe('execute', () => {
-    it('returns paginated posts', async () => {
-      const posts = createPostsWithAuthor(3);
+    it('returns paginated post summaries', async () => {
+      const posts = createPostSummaryOutputs(3);
       const queryService = createMockQueryService({
-        fetchPosts: vi.fn().mockResolvedValue({ posts, totalCount: 3 }),
+        fetchPostSummaries: vi.fn().mockResolvedValue({ posts, totalCount: 3 }),
       });
-      const sut = new FetchPosts(queryService);
+      const sut = new FetchPostSummaries(queryService);
 
       const result = await sut.execute({ page: 1, pageSize: 10 });
 
@@ -31,15 +31,15 @@ describe('FetchPosts', () => {
     });
 
     it('uses default values when not provided', async () => {
-      const fetchPosts = vi
+      const fetchPostSummaries = vi
         .fn()
         .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ fetchPosts });
-      const sut = new FetchPosts(queryService);
+      const queryService = createMockQueryService({ fetchPostSummaries });
+      const sut = new FetchPostSummaries(queryService);
 
       await sut.execute();
 
-      expect(fetchPosts).toHaveBeenCalledWith({
+      expect(fetchPostSummaries).toHaveBeenCalledWith({
         page: 1,
         pageSize: 10,
         orderBy: 'desc',
@@ -47,11 +47,13 @@ describe('FetchPosts', () => {
     });
 
     it('calculates pagination correctly', async () => {
-      const posts = createPostsWithAuthor(5);
+      const posts = createPostSummaryOutputs(5);
       const queryService = createMockQueryService({
-        fetchPosts: vi.fn().mockResolvedValue({ posts, totalCount: 25 }),
+        fetchPostSummaries: vi
+          .fn()
+          .mockResolvedValue({ posts, totalCount: 25 }),
       });
-      const sut = new FetchPosts(queryService);
+      const sut = new FetchPostSummaries(queryService);
 
       const result = await sut.execute({ page: 2, pageSize: 5 });
 
@@ -63,9 +65,11 @@ describe('FetchPosts', () => {
 
     it('sets hasNextPage to false on last page', async () => {
       const queryService = createMockQueryService({
-        fetchPosts: vi.fn().mockResolvedValue({ posts: [], totalCount: 10 }),
+        fetchPostSummaries: vi
+          .fn()
+          .mockResolvedValue({ posts: [], totalCount: 10 }),
       });
-      const sut = new FetchPosts(queryService);
+      const sut = new FetchPostSummaries(queryService);
 
       const result = await sut.execute({ page: 1, pageSize: 10 });
 
@@ -74,9 +78,11 @@ describe('FetchPosts', () => {
 
     it('sets hasPreviousPage to false on first page', async () => {
       const queryService = createMockQueryService({
-        fetchPosts: vi.fn().mockResolvedValue({ posts: [], totalCount: 10 }),
+        fetchPostSummaries: vi
+          .fn()
+          .mockResolvedValue({ posts: [], totalCount: 10 }),
       });
-      const sut = new FetchPosts(queryService);
+      const sut = new FetchPostSummaries(queryService);
 
       const result = await sut.execute({ page: 1, pageSize: 5 });
 
@@ -85,7 +91,7 @@ describe('FetchPosts', () => {
 
     it('throws InvalidPaginationError when page is less than 1', async () => {
       const queryService = createMockQueryService();
-      const sut = new FetchPosts(queryService);
+      const sut = new FetchPostSummaries(queryService);
 
       await expect(sut.execute({ page: 0 })).rejects.toThrow(
         InvalidPaginationError
@@ -94,7 +100,7 @@ describe('FetchPosts', () => {
 
     it('throws InvalidPaginationError when pageSize is less than 1', async () => {
       const queryService = createMockQueryService();
-      const sut = new FetchPosts(queryService);
+      const sut = new FetchPostSummaries(queryService);
 
       await expect(sut.execute({ pageSize: 0 })).rejects.toThrow(
         InvalidPaginationError
@@ -103,30 +109,31 @@ describe('FetchPosts', () => {
 
     it('throws InvalidPaginationError when pageSize exceeds 100', async () => {
       const queryService = createMockQueryService();
-      const sut = new FetchPosts(queryService);
+      const sut = new FetchPostSummaries(queryService);
 
       await expect(sut.execute({ pageSize: 101 })).rejects.toThrow(
         InvalidPaginationError
       );
     });
 
-    it('maps Post entities to PostOutput', async () => {
-      const postWithAuthor = createPostWithAuthor();
-      const { post } = postWithAuthor;
-      const queryService = createMockQueryService({
-        fetchPosts: vi
-          .fn()
-          .mockResolvedValue({ posts: [postWithAuthor], totalCount: 1 }),
+    it('passes through PostSummaryOutput from query service', async () => {
+      const summary = createPostSummaryOutput({
+        id: 'test-uuid',
+        title: 'My Title',
+        slug: 'test-uuid/my-slug',
       });
-      const sut = new FetchPosts(queryService);
+      const queryService = createMockQueryService({
+        fetchPostSummaries: vi
+          .fn()
+          .mockResolvedValue({ posts: [summary], totalCount: 1 }),
+      });
+      const sut = new FetchPostSummaries(queryService);
 
       const result = await sut.execute();
 
-      expect(result.items[0].id).toBe(post.id.getValue());
-      expect(result.items[0].title).toBe(post.title.getValue());
-      expect(result.items[0].slug).toBe(
-        `${post.id.getValue()}/${post.slug.getValue()}`
-      );
+      expect(result.items[0].id).toBe('test-uuid');
+      expect(result.items[0].title).toBe('My Title');
+      expect(result.items[0].slug).toBe('test-uuid/my-slug');
     });
   });
 });

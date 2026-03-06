@@ -13,29 +13,29 @@ export {
   type FetchPostQueryService,
 } from './query/fetch-post';
 export {
-  FetchPosts,
-  type FetchPostsInput,
-  type FetchPostsOutput,
-  type FetchPostsParams,
-  type FetchPostsQueryService,
-  type FetchPostsResult,
-} from './query/fetch-posts';
+  FetchPostSummaries,
+  type FetchPostSummariesInput,
+  type FetchPostSummariesOutput,
+  type FetchPostSummariesParams,
+  type FetchPostSummariesQueryService,
+  type FetchPostSummariesResult,
+} from './query/fetch-post-summaries';
 export {
-  FetchPostsByCategory,
-  type FetchPostsByCategoryInput,
-  type FetchPostsByCategoryOutput,
-  type FetchPostsByCategoryParams,
-  type FetchPostsByCategoryQueryService,
-  type FetchPostsByCategoryResult,
-} from './query/fetch-posts-by-category';
+  FetchPostSummariesByCategory,
+  type FetchPostSummariesByCategoryInput,
+  type FetchPostSummariesByCategoryOutput,
+  type FetchPostSummariesByCategoryParams,
+  type FetchPostSummariesByCategoryQueryService,
+  type FetchPostSummariesByCategoryResult,
+} from './query/fetch-post-summaries-by-category';
 export {
-  SearchPosts,
-  type SearchPostsInput,
-  type SearchPostsOutput,
-  type SearchPostsParams,
-  type SearchPostsQueryService,
-  type SearchPostsResult,
-} from './query/search-posts';
+  SearchPostSummaries,
+  type SearchPostSummariesInput,
+  type SearchPostSummariesOutput,
+  type SearchPostSummariesParams,
+  type SearchPostSummariesQueryService,
+  type SearchPostSummariesResult,
+} from './query/search-post-summaries';
 export {
   InvalidPaginationError,
   InvalidSearchQueryError,
@@ -44,6 +44,7 @@ export {
   type PaginationInput,
   PostNotFoundError,
   type PostOutput,
+  type PostSummaryOutput,
   type SlugOutput,
   type SortOrder,
   SyncError,

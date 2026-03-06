@@ -12,6 +12,7 @@ export type {
   PaginatedResult,
   PaginationInput,
   PostOutput,
+  PostSummaryOutput,
   SlugOutput,
   SortOrder,
 } from './types';

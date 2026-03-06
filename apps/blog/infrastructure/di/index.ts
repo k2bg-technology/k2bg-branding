@@ -5,11 +5,11 @@ export {
 export { createSendEmailUseCase } from './contact';
 export { createFetchMediaUseCase } from './media';
 export {
-  createFetchPostsUseCase,
+  createFetchPostSummariesUseCase,
   createFetchPostUseCase,
   createFetchAllSlugsUseCase,
-  createFetchPostsByCategoryUseCase,
-  createSearchPostsUseCase,
+  createFetchPostSummariesByCategoryUseCase,
+  createSearchPostSummariesUseCase,
   createSyncPostsFromExternalUseCase,
   createSyncHeroImagesUseCase,
   getDefaultOgImageUrl,
