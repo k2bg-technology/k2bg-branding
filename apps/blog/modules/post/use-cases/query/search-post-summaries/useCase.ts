@@ -2,20 +2,19 @@ import {
   InvalidPaginationError,
   InvalidSearchQueryError,
   type PaginatedResult,
-  type PostOutput,
+  type PostSummaryOutput,
   type SortOrder,
-  toPostOutput,
 } from '../../shared';
-import type { SearchPostsQueryService } from './queryService';
+import type { SearchPostSummariesQueryService } from './queryService';
 
-export interface SearchPostsInput {
+export interface SearchPostSummariesInput {
   query: string;
   page?: number;
   pageSize?: number;
   orderBy?: SortOrder;
 }
 
-export type SearchPostsOutput = PaginatedResult<PostOutput>;
+export type SearchPostSummariesOutput = PaginatedResult<PostSummaryOutput>;
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
@@ -24,14 +23,16 @@ const MIN_QUERY_LENGTH = 0;
 const MAX_QUERY_LENGTH = 100;
 
 /**
- * SearchPosts Use Case
+ * SearchPostSummaries Use Case
  *
- * Searches posts by query string with pagination.
+ * Searches post summaries by query string with pagination.
  */
-export class SearchPosts {
-  constructor(private readonly queryService: SearchPostsQueryService) {}
+export class SearchPostSummaries {
+  constructor(private readonly queryService: SearchPostSummariesQueryService) {}
 
-  async execute(input: SearchPostsInput): Promise<SearchPostsOutput> {
+  async execute(
+    input: SearchPostSummariesInput
+  ): Promise<SearchPostSummariesOutput> {
     const { query } = input;
     const page = input.page ?? DEFAULT_PAGE;
     const pageSize = input.pageSize ?? DEFAULT_PAGE_SIZE;
@@ -40,7 +41,7 @@ export class SearchPosts {
     this.validateQuery(query);
     this.validatePagination(page, pageSize);
 
-    const { posts, totalCount } = await this.queryService.searchPosts({
+    const { posts, totalCount } = await this.queryService.searchPostSummaries({
       query: query.trim(),
       page,
       pageSize,
@@ -50,7 +51,7 @@ export class SearchPosts {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return {
-      items: posts.map(({ post, author }) => toPostOutput(post, author)),
+      items: posts,
       totalCount,
       totalPages,
       currentPage: page,

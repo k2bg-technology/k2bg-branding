@@ -47,6 +47,20 @@ export interface PostOutput {
 }
 
 /**
+ * Lightweight output type for post listings (excludes content)
+ */
+export interface PostSummaryOutput {
+  id: string;
+  title: string;
+  excerpt: string | null;
+  imageUrl: string;
+  slug: string;
+  category: Category;
+  author: AuthorOutput | null;
+  releaseDate: string;
+}
+
+/**
  * Paginated result wrapper
  */
 export interface PaginatedResult<T> {

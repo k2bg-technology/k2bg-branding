@@ -19,6 +19,7 @@ import type {
   AuthorOutput,
   PaginatedResult,
   PostOutput,
+  PostSummaryOutput,
   SlugOutput,
 } from '../types';
 
@@ -171,4 +172,43 @@ export function createPostsWithAuthor(
       author,
     };
   });
+}
+
+/**
+ * Creates a PostSummaryOutput DTO for testing
+ */
+export function createPostSummaryOutput(
+  overrides: Partial<PostSummaryOutput> = {}
+): PostSummaryOutput {
+  return {
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    title: 'Test Post Title',
+    excerpt: 'Test excerpt',
+    imageUrl: 'https://example.com/image.jpg',
+    slug: '550e8400-e29b-41d4-a716-446655440000/test-post',
+    category: Category.ENGINEERING,
+    author: {
+      id: '660e8400-e29b-41d4-a716-446655440000',
+      name: 'Test Author',
+      avatarUrl: 'https://example.com/avatar.jpg',
+    },
+    releaseDate: '2024-01-15',
+    ...overrides,
+  };
+}
+
+/**
+ * Creates multiple PostSummaryOutput objects for testing
+ */
+export function createPostSummaryOutputs(
+  count: number,
+  overrides: Partial<PostSummaryOutput> = {}
+): PostSummaryOutput[] {
+  return Array.from({ length: count }, (_, index) =>
+    createPostSummaryOutput({
+      id: `550e8400-e29b-41d4-a716-44665544000${index}`,
+      slug: `550e8400-e29b-41d4-a716-44665544000${index}/test-post-${index}`,
+      ...overrides,
+    })
+  );
 }

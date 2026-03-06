@@ -1,40 +1,41 @@
 import {
   InvalidPaginationError,
   type PaginatedResult,
-  type PostOutput,
+  type PostSummaryOutput,
   type SortOrder,
-  toPostOutput,
 } from '../../shared';
-import type { FetchPostsQueryService } from './queryService';
+import type { FetchPostSummariesQueryService } from './queryService';
 
-export interface FetchPostsInput {
+export interface FetchPostSummariesInput {
   page?: number;
   pageSize?: number;
   orderBy?: SortOrder;
 }
 
-export type FetchPostsOutput = PaginatedResult<PostOutput>;
+export type FetchPostSummariesOutput = PaginatedResult<PostSummaryOutput>;
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_ORDER: SortOrder = 'desc';
 
 /**
- * FetchPosts Use Case
+ * FetchPostSummaries Use Case
  *
- * Fetches paginated list of posts with sorting.
+ * Fetches paginated list of post summaries (excludes content).
  */
-export class FetchPosts {
-  constructor(private readonly queryService: FetchPostsQueryService) {}
+export class FetchPostSummaries {
+  constructor(private readonly queryService: FetchPostSummariesQueryService) {}
 
-  async execute(input: FetchPostsInput = {}): Promise<FetchPostsOutput> {
+  async execute(
+    input: FetchPostSummariesInput = {}
+  ): Promise<FetchPostSummariesOutput> {
     const page = input.page ?? DEFAULT_PAGE;
     const pageSize = input.pageSize ?? DEFAULT_PAGE_SIZE;
     const orderBy = input.orderBy ?? DEFAULT_ORDER;
 
     this.validatePagination(page, pageSize);
 
-    const { posts, totalCount } = await this.queryService.fetchPosts({
+    const { posts, totalCount } = await this.queryService.fetchPostSummaries({
       page,
       pageSize,
       orderBy,
@@ -43,7 +44,7 @@ export class FetchPosts {
     const totalPages = Math.ceil(totalCount / pageSize);
 
     return {
-      items: posts.map(({ post, author }) => toPostOutput(post, author)),
+      items: posts,
       totalCount,
       totalPages,
       currentPage: page,

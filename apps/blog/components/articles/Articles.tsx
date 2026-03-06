@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import { Avatar } from 'ui';
-import type { PaginatedResult, PostOutput } from '../../modules/post/use-cases';
+import type {
+  PaginatedResult,
+  PostSummaryOutput,
+} from '../../modules/post/use-cases';
 import { BlogCard } from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { Pagination } from '../pagination/Pagination';
 
 interface Props {
-  fetchArticles: () => Promise<PaginatedResult<PostOutput>>;
+  fetchArticles: () => Promise<PaginatedResult<PostSummaryOutput>>;
 }
 
 export async function Articles(props: Props) {

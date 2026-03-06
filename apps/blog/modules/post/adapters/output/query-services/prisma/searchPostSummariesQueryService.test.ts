@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { createPrismaPostsWithAuthor, RepositoryError } from '../../../shared';
-import { PrismaSearchPostsQueryService } from './searchPostsQueryService';
+import { RepositoryError } from '../../../shared';
+import { createPrismaPostsWithAuthor } from '../../../shared/testing/factories';
+import { PrismaSearchPostSummariesQueryService } from './searchPostSummariesQueryService';
 
-describe('PrismaSearchPostsQueryService', () => {
+describe('PrismaSearchPostSummariesQueryService', () => {
   const createMockPrisma = () => ({
     post: {
       findMany: vi.fn(),
@@ -10,15 +11,17 @@ describe('PrismaSearchPostsQueryService', () => {
     },
   });
 
-  describe('searchPosts', () => {
+  describe('searchPostSummaries', () => {
     it('returns paginated search results', async () => {
       const mockPrisma = createMockPrisma();
       const prismaPosts = createPrismaPostsWithAuthor(2);
       mockPrisma.post.findMany.mockResolvedValue(prismaPosts);
       mockPrisma.post.count.mockResolvedValue(5);
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
-      const result = await sut.searchPosts({
+      const result = await sut.searchPostSummaries({
         query: 'test',
         page: 1,
         pageSize: 10,
@@ -33,9 +36,11 @@ describe('PrismaSearchPostsQueryService', () => {
       const mockPrisma = createMockPrisma();
       mockPrisma.post.findMany.mockResolvedValue([]);
       mockPrisma.post.count.mockResolvedValue(0);
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
-      await sut.searchPosts({
+      await sut.searchPostSummaries({
         query: 'TypeScript',
         page: 1,
         pageSize: 10,
@@ -58,9 +63,11 @@ describe('PrismaSearchPostsQueryService', () => {
       const mockPrisma = createMockPrisma();
       mockPrisma.post.findMany.mockResolvedValue([]);
       mockPrisma.post.count.mockResolvedValue(0);
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
-      await sut.searchPosts({
+      await sut.searchPostSummaries({
         query: 'test',
         page: 1,
         pageSize: 10,
@@ -76,13 +83,36 @@ describe('PrismaSearchPostsQueryService', () => {
       );
     });
 
+    it('uses select to exclude content', async () => {
+      const mockPrisma = createMockPrisma();
+      mockPrisma.post.findMany.mockResolvedValue([]);
+      mockPrisma.post.count.mockResolvedValue(0);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
+
+      await sut.searchPostSummaries({
+        query: 'test',
+        page: 1,
+        pageSize: 10,
+        orderBy: 'desc',
+      });
+
+      const callArgs = mockPrisma.post.findMany.mock.calls[0][0];
+      expect(callArgs.select).toBeDefined();
+      expect(callArgs.select.content).toBeUndefined();
+      expect(callArgs.include).toBeUndefined();
+    });
+
     it('calculates correct skip value for pagination', async () => {
       const mockPrisma = createMockPrisma();
       mockPrisma.post.findMany.mockResolvedValue([]);
       mockPrisma.post.count.mockResolvedValue(0);
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
-      await sut.searchPosts({
+      await sut.searchPostSummaries({
         query: 'test',
         page: 3,
         pageSize: 5,
@@ -101,9 +131,11 @@ describe('PrismaSearchPostsQueryService', () => {
       const mockPrisma = createMockPrisma();
       mockPrisma.post.findMany.mockResolvedValue([]);
       mockPrisma.post.count.mockResolvedValue(0);
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
-      await sut.searchPosts({
+      await sut.searchPostSummaries({
         query: 'test',
         page: 1,
         pageSize: 10,
@@ -121,9 +153,11 @@ describe('PrismaSearchPostsQueryService', () => {
       const mockPrisma = createMockPrisma();
       mockPrisma.post.findMany.mockResolvedValue([]);
       mockPrisma.post.count.mockResolvedValue(0);
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
-      const result = await sut.searchPosts({
+      const result = await sut.searchPostSummaries({
         query: 'nonexistent',
         page: 1,
         pageSize: 10,
@@ -137,10 +171,12 @@ describe('PrismaSearchPostsQueryService', () => {
     it('throws RepositoryError on database error', async () => {
       const mockPrisma = createMockPrisma();
       mockPrisma.post.findMany.mockRejectedValue(new Error('DB Error'));
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
       await expect(
-        sut.searchPosts({
+        sut.searchPostSummaries({
           query: 'test',
           page: 1,
           pageSize: 10,
@@ -152,10 +188,12 @@ describe('PrismaSearchPostsQueryService', () => {
     it('includes query in error message', async () => {
       const mockPrisma = createMockPrisma();
       mockPrisma.post.findMany.mockRejectedValue(new Error('DB Error'));
-      const sut = new PrismaSearchPostsQueryService(mockPrisma as never);
+      const sut = new PrismaSearchPostSummariesQueryService(
+        mockPrisma as never
+      );
 
       await expect(
-        sut.searchPosts({
+        sut.searchPostSummaries({
           query: 'my-search-term',
           page: 1,
           pageSize: 10,

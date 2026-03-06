@@ -7,9 +7,9 @@ export {
 export {
   PrismaFetchAllSlugsQueryService,
   PrismaFetchPostQueryService,
-  PrismaFetchPostsByCategoryQueryService,
-  PrismaFetchPostsQueryService,
-  PrismaSearchPostsQueryService,
+  PrismaFetchPostSummariesByCategoryQueryService,
+  PrismaFetchPostSummariesQueryService,
+  PrismaSearchPostSummariesQueryService,
 } from './query-services';
 export {
   CloudinaryImageRepository,

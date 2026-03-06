@@ -8,7 +8,7 @@ import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
 import {
-  createFetchPostsUseCase,
+  createFetchPostSummariesUseCase,
   getDefaultOgImageUrl,
 } from '../../infrastructure/di';
 
@@ -55,8 +55,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const fetchPosts = createFetchPostsUseCase();
-  const { items: articles } = await fetchPosts.execute({ pageSize: PAGE_SIZE });
+  const fetchPostSummaries = createFetchPostSummariesUseCase();
+  const { items: articles } = await fetchPostSummaries.execute({
+    pageSize: PAGE_SIZE,
+  });
 
   const featureLatest = articles.at(0);
   const featuresRecently = articles.slice(1, 3);
