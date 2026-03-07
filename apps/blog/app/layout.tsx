@@ -1,8 +1,7 @@
-import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
-import { GoogleAdsense } from '../components/google-adsense/GoogleAdsense';
 import { PageScrollArea } from '../components/page-scroll-area/PageScrollArea';
 import { ReactQueryClientProvider } from '../components/react-query-client-provider/ReactQueryClientProvider';
+import { ThirdPartyScripts } from '../components/third-party-scripts/ThirdPartyScripts';
 import { Toaster } from '../components/toaster/Toaster';
 import './globals.css';
 
@@ -33,10 +32,7 @@ export default function RootLayout({
           </PageScrollArea>
         </ReactQueryClientProvider>
       </body>
-      {process.env.NODE_ENV === 'production' && (
-        <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
-      )}
-      {process.env.NODE_ENV === 'production' && <GoogleAdsense />}
+      <ThirdPartyScripts />
     </html>
   );
 }
