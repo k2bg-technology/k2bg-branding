@@ -30,7 +30,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' https://res.cloudinary.com https://*.amazonaws.com https://images.unsplash.com https://*.cdninstagram.com https://pbs.twimg.com https://pagead2.googlesyndication.com data:",
       "font-src 'self'",
-      "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.googletagmanager.com https://*.hcaptcha.com https://hcaptcha.com https://api.cloudinary.com https://www.instagram.com https://pagead2.googlesyndication.com https://*.adtrafficquality.google.com https://fundingchoicesmessages.google.com",
+      "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.googletagmanager.com https://*.hcaptcha.com https://hcaptcha.com https://api.cloudinary.com https://www.instagram.com https://pagead2.googlesyndication.com https://*.adtrafficquality.google https://fundingchoicesmessages.google.com",
       'frame-src https://*.hcaptcha.com https://hcaptcha.com https://platform.twitter.com https://syndication.twitter.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.adtrafficquality.google https://www.google.com',
       "object-src 'none'",
       "base-uri 'self'",
