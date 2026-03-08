@@ -23,7 +23,7 @@ const securityHeaders = [
     value: 'max-age=63072000; includeSubDomains; preload',
   },
   {
-    key: 'Content-Security-Policy-Report-Only',
+    key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://platform.twitter.com https://*.hcaptcha.com https://hcaptcha.com https://fundingchoicesmessages.google.com https://*.adtrafficquality.google",
