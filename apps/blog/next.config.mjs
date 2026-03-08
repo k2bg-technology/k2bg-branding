@@ -26,9 +26,9 @@ const securityHeaders = [
     key: 'Content-Security-Policy-Report-Only',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://platform.twitter.com https://*.hcaptcha.com https://hcaptcha.com https://fundingchoicesmessages.google.com",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://pagead2.googlesyndication.com https://platform.twitter.com https://*.hcaptcha.com https://hcaptcha.com https://fundingchoicesmessages.google.com https://*.adtrafficquality.google",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' https://res.cloudinary.com https://*.amazonaws.com https://images.unsplash.com https://*.cdninstagram.com https://pbs.twimg.com https://pagead2.googlesyndication.com data:",
+      "img-src 'self' https://res.cloudinary.com https://*.amazonaws.com https://images.unsplash.com https://*.cdninstagram.com https://pbs.twimg.com https://pagead2.googlesyndication.com https://*.adtrafficquality.google data:",
       "font-src 'self'",
       "connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.googletagmanager.com https://*.hcaptcha.com https://hcaptcha.com https://api.cloudinary.com https://www.instagram.com https://pagead2.googlesyndication.com https://*.adtrafficquality.google https://fundingchoicesmessages.google.com",
       'frame-src https://*.hcaptcha.com https://hcaptcha.com https://platform.twitter.com https://syndication.twitter.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://*.adtrafficquality.google https://www.google.com',
