@@ -42,6 +42,9 @@ module.exports = {
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
   turbopack: {},
+  images: {
+    unoptimized: true,
+  },
   async headers() {
     return [
       {

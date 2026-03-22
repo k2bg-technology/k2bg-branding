@@ -26,5 +26,10 @@
     "typescript": "^5.4.5"
   },
   "packageManager": "pnpm@9.15.9",
-  "name": "k2bg-branding"
+  "name": "k2bg-branding",
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.25.2"
+    }
+  }
 }
