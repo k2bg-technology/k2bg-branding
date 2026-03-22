@@ -11,7 +11,7 @@ export const config = {
   ],
 };
 
-export function proxy(req: NextRequest) {
+export function middleware(req: NextRequest) {
   if (
     req.nextUrl.pathname.indexOf('icon') > -1 ||
     req.nextUrl.pathname.indexOf('chrome') > -1
