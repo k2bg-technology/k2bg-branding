@@ -1,7 +1,3 @@
-const path = require('node:path');
-
-const monorepoRoot = path.resolve(__dirname, '../..');
-
 const securityHeaders = [
   {
     key: 'X-Frame-Options',
@@ -45,10 +41,7 @@ module.exports = {
   reactStrictMode: true,
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
-  outputFileTracingRoot: monorepoRoot,
-  turbopack: {
-    root: monorepoRoot,
-  },
+  turbopack: {},
   async headers() {
     return [
       {
