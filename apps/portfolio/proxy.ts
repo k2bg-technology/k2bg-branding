@@ -6,13 +6,12 @@ import { cookieName, fallbackLng, languages } from './i18n/settings';
 acceptLanguage.languages(languages as unknown as string[]);
 
 export const config = {
-  // matcher: '/:lng*'
   matcher: [
     '/((?!api|_next/static|_next/image|images|videos|assets|favicon.ico|sw.js).*)',
   ],
 };
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   if (
     req.nextUrl.pathname.indexOf('icon') > -1 ||
     req.nextUrl.pathname.indexOf('chrome') > -1

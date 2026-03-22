@@ -45,7 +45,7 @@ revalidationRoutes.openapi(revalidateRoute, async (c) => {
   const { path, tag } = body ?? {};
 
   if (tag) {
-    revalidateTag(tag);
+    revalidateTag(tag, 'max');
   } else if (path) {
     revalidateBlogPath(path);
   } else {

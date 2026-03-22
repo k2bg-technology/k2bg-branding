@@ -39,7 +39,9 @@ const securityHeaders = [
 
 module.exports = {
   reactStrictMode: true,
+  reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
+  turbopack: {},
   async headers() {
     return [
       {

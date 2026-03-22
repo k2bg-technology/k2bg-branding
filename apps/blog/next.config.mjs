@@ -42,7 +42,9 @@ const securityHeaders = [
 
 const config = {
   reactStrictMode: true,
+  reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
+  turbopack: {},
   async redirects() {
     return [
       {
