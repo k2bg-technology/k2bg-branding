@@ -1,12 +1,12 @@
 # K2BG Portfolio
 
-A **Next.js 15** multilingual portfolio website supporting **English** and **Japanese**, with automatic language detection and i18n routing. Part of the [K2BG Branding monorepo](../../README.md).
+A **Next.js 16** multilingual portfolio website supporting **English** and **Japanese**, with automatic language detection and i18n routing. Part of the [K2BG Branding monorepo](../../README.md).
 
 ## Technology Stack
 
 | Category | Technologies |
 |---|---|
-| **Framework** | Next.js 15, React 19, TypeScript |
+| **Framework** | Next.js 16, React 19, TypeScript |
 | **Styling** | Tailwind CSS v4 |
 | **i18n** | i18next, react-i18next, i18next-browser-languagedetector |
 | **Contact** | Formspree |
@@ -18,7 +18,7 @@ A **Next.js 15** multilingual portfolio website supporting **English** and **Jap
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - pnpm 9.15.9+
 
 ### Installation
@@ -66,7 +66,7 @@ Opens on [http://localhost:6008](http://localhost:6008).
 | **Cookie name** | `i18next` |
 | **Detection priority** | path > htmlTag > cookie > navigator |
 
-**Middleware behavior:**
+**Proxy behavior** (Next.js 16 `proxy.ts`)**:**
 
 1. Check `i18next` cookie for saved language preference
 2. Fall back to `Accept-Language` header
@@ -108,7 +108,7 @@ flowchart TB
 
     subgraph i18n["Internationalization"]
         direction TB
-        Middleware["i18n Middleware<br/>Language Detection & Routing"]
+        Middleware["i18n Proxy<br/>Language Detection & Routing"]
         Translations["Translation Files<br/>en / ja"]
         Middleware -.-> Translations
     end
@@ -187,7 +187,7 @@ apps/portfolio/
 │   └── locales/
 │       ├── en/translation.json
 │       └── ja/translation.json
-├── middleware.ts               # Language detection & routing
+├── proxy.ts                    # Language detection & routing (Next.js 16)
 ├── public/
 │   ├── images/                # Background and project images
 │   └── videos/                # Portfolio demo videos
