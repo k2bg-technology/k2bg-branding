@@ -44,7 +44,9 @@ const config = {
   reactStrictMode: true,
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
-  turbopack: {},
+  turbopack: {
+    root: '../..',
+  },
   async redirects() {
     return [
       {
