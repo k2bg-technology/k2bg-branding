@@ -9,6 +9,8 @@
     "lint": "biome check .",
     "typecheck": "tsc --noEmit",
     "format": "biome format --write .",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "storybook": "storybook dev -p 6008",
     "build-storybook": "storybook build"
   },
@@ -26,6 +28,11 @@
     "ui": "workspace:*"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.17.1",
+    "@storybook/addon-a11y": "^10.1.11",
+    "@storybook/addon-docs": "^10.1.11",
+    "@storybook/addon-onboarding": "^10.1.11",
+    "@storybook/nextjs": "^10.1.11",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.0.9",
     "@types/node": "^17.0.12",
@@ -35,13 +42,10 @@
     "biome-config": "workspace:*",
     "postcss": "^8.5.3",
     "postcss-preset-env": "^9.1.1",
+    "storybook": "^10.1.11",
     "tailwind-config": "workspace:*",
     "tailwindcss": "^4.0.9",
     "tsconfig": "workspace:*",
-    "storybook": "^10.1.11",
-    "@storybook/nextjs": "^10.1.11",
-    "@storybook/addon-a11y": "^10.1.11",
-    "@storybook/addon-docs": "^10.1.11",
-    "@storybook/addon-onboarding": "^10.1.11"
+    "wrangler": "^4.76.0"
   }
 }

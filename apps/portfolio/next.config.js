@@ -40,6 +40,9 @@ const securityHeaders = [
 module.exports = {
   reactStrictMode: true,
   transpilePackages: ['ui', 'tailwind-config'],
+  images: {
+    unoptimized: true,
+  },
   async headers() {
     return [
       {
