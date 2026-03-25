@@ -1,8 +1,10 @@
-import type { TFunction } from 'i18next';
 import Image from 'next/image';
 import { Button, Form, Icon } from 'ui';
+import type { Dictionary } from '../../i18n/dictionaries';
 
-export function Contact({ t }: { t: TFunction }) {
+type ContactDictionary = Dictionary['contact'];
+
+export function Contact({ dictionary }: { dictionary: ContactDictionary }) {
   return (
     <section>
       <div className="flex flex-col relative md:flex-row md:h-[37.5rem]">
@@ -15,16 +17,16 @@ export function Contact({ t }: { t: TFunction }) {
         </div>
         <div className="flex flex-col justify-center gap-spacious p-6 w-full text-white h-full md:p-12 md:w-[37.5rem]">
           <h2 className="text-heading-2 leading-heading-2 font-bold">
-            {t('contact.contact')}
+            {dictionary.contact}
           </h2>
           <p className="text-body-r-sm leading-body-r-sm">
-            {t('contact.description1')}
+            {dictionary.description1}
           </p>
           <p className="text-body-r-sm leading-body-r-sm">
-            {t('contact.description2')}
+            {dictionary.description2}
           </p>
           <p className="text-body-r-sm leading-body-r-sm whitespace-pre-line">
-            {t('contact.description3')}
+            {dictionary.description3}
           </p>
         </div>
         <div className="p-6 w-full h-full md:p-12 md:w-[37.5rem]">
@@ -40,13 +42,13 @@ export function Contact({ t }: { t: TFunction }) {
                     htmlFor="name"
                     data-gtm="contact_click_name_label"
                   >
-                    {t('contact.form.nameLabel')}
+                    {dictionary.form.nameLabel}
                   </Form.Label>
                   <Form.Input
                     type="text"
                     name="name"
                     id="name"
-                    placeholder={t('contact.form.namePlaceholder')}
+                    placeholder={dictionary.form.namePlaceholder}
                     required
                     data-gtm="contact_focus_name_field"
                   />
@@ -58,13 +60,13 @@ export function Contact({ t }: { t: TFunction }) {
                     htmlFor="email"
                     data-gtm="contact_click_email_label"
                   >
-                    {t('contact.form.emailLabel')}
+                    {dictionary.form.emailLabel}
                   </Form.Label>
                   <Form.Input
                     type="email"
                     name="email"
                     id="email"
-                    placeholder={t('contact.form.emailPlaceholder')}
+                    placeholder={dictionary.form.emailPlaceholder}
                     required
                     data-gtm="contact_focus_email_field"
                   />
@@ -77,13 +79,13 @@ export function Contact({ t }: { t: TFunction }) {
                   htmlFor="message"
                   data-gtm="contact_click_message_label"
                 >
-                  {t('contact.form.messageLabel')}
+                  {dictionary.form.messageLabel}
                 </Form.Label>
                 <Form.Textarea
                   name="message"
                   id="message"
                   rows={4}
-                  placeholder={t('contact.form.messagePlaceholder')}
+                  placeholder={dictionary.form.messagePlaceholder}
                   required
                   className="min-h-[4lh] max-h-[15lh]"
                   data-gtm="contact_focus_message_field"
@@ -98,7 +100,7 @@ export function Contact({ t }: { t: TFunction }) {
                   variant="outline"
                   data-gtm="contact_submit_form"
                 >
-                  {t('contact.form.submit')}
+                  {dictionary.form.submit}
                 </Button>
               </li>
               <li>
@@ -108,7 +110,7 @@ export function Contact({ t }: { t: TFunction }) {
                   variant="outline"
                   data-gtm="contact_reset_form"
                 >
-                  {t('contact.form.reset')}
+                  {dictionary.form.reset}
                 </Button>
               </li>
             </ul>
@@ -127,7 +129,7 @@ export function Contact({ t }: { t: TFunction }) {
                 className="text-body-r-sm leading-body-r-sm hover:opacity-80"
                 data-gtm="contact_click_github"
               >
-                {t('contact.githubAccountName')}
+                {dictionary.githubAccountName}
               </a>
             </li>
             <li className="flex relative items-center gap-normal">
@@ -141,7 +143,7 @@ export function Contact({ t }: { t: TFunction }) {
                 className="text-body-r-sm leading-body-r-sm hover:opacity-80"
                 data-gtm="contact_click_instagram"
               >
-                {t('contact.instagramAccountName')}
+                {dictionary.instagramAccountName}
               </a>
             </li>
           </ul>

@@ -1,15 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import { useTranslation } from '../../i18n/client';
+import jaTranslation from '../../i18n/locales/ja/translation.json';
 
 import { Background } from './Background';
 
 const meta: Meta<typeof Background> = {
   component: Background,
-  render: function Render() {
-    const { t } = useTranslation('ja');
-
-    return <Background t={t} />;
+  args: {
+    dictionary: jaTranslation.background,
   },
 };
 

@@ -1,11 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
+import jaTranslation from '../../i18n/locales/ja/translation.json';
+
 import { Hero } from './Hero';
 
 const meta: Meta<typeof Hero> = {
   component: Hero,
   args: {
-    lng: 'ja',
+    dictionary: jaTranslation.hero,
   },
 };
 

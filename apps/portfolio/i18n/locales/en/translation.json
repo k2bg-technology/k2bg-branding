@@ -6,7 +6,9 @@
     "corporateName": "K2.B.G. Technology",
     "officialName": "KK Bit Growth Technology",
     "slogan": "Scale up your business with the power of IT",
-    "description": "<0>IT is crucial for modern business, but it's also fast-changing and hard to use effectively.</0><0>From my work across various industries, I've seen the challenges and benefits of shifting to IT-based processes. The transition can be tough but the gains in productivity, flexibility, and risk avoidance are significant.</0><0>We think our best role is to be a strong partner, helping companies improve by supporting them in app development, data analysis, and digital transformation. We believe in growing together for mutual benefit.</0>"
+    "description1": "IT is crucial for modern business, but it's also fast-changing and hard to use effectively.",
+    "description2": "From my work across various industries, I've seen the challenges and benefits of shifting to IT-based processes. The transition can be tough but the gains in productivity, flexibility, and risk avoidance are significant.",
+    "description3": "We think our best role is to be a strong partner, helping companies improve by supporting them in app development, data analysis, and digital transformation. We believe in growing together for mutual benefit."
   },
   "background": {
     "background": "Background",
@@ -82,6 +84,6 @@
     "instagramAccountName": "@k2bg_graphics"
   },
   "footer": {
-    "copyright": "\u00A9 K2.B.G. Technology Design: <0>HTML5 UP</0>"
+    "copyright": "\u00A9 K2.B.G. Technology Design: "
   }
 }

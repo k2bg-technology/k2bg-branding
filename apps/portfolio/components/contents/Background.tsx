@@ -1,7 +1,13 @@
-import type { TFunction } from 'i18next';
 import Image from 'next/image';
+import type { Dictionary } from '../../i18n/dictionaries';
 
-export function Background({ t }: { t: TFunction }) {
+type BackgroundDictionary = Dictionary['background'];
+
+export function Background({
+  dictionary,
+}: {
+  dictionary: BackgroundDictionary;
+}) {
   return (
     <section>
       <div className="flex flex-col gap-spacious relative p-6 w-full text-white md:p-12 md:w-[56rem] md:h-[37.5rem]">
@@ -14,29 +20,29 @@ export function Background({ t }: { t: TFunction }) {
         </div>
         <div className="flex flex-col gap-normal">
           <h2 className="text-heading-2 leading-heading-2 font-bold">
-            {t('background.background')}
+            {dictionary.background}
           </h2>
           <div className="flex flex-col gap-normal">
             <p className="text-body-r-sm leading-body-r-sm">
-              {t('background.description1')}
+              {dictionary.description1}
             </p>
             <p className="text-body-r-sm leading-body-r-sm">
-              {t('background.description2')}
+              {dictionary.description2}
             </p>
             <p className="text-body-r-sm leading-body-r-sm">
-              {t('background.description3')}
+              {dictionary.description3}
             </p>
           </div>
         </div>
         <div className="flex flex-col gap-normal">
           <h2 className="text-heading-2 leading-heading-2 font-bold">
-            {t('background.certification')}
+            {dictionary.certification}
           </h2>
           <ul className="text-body-r-sm leading-body-r-sm">
-            <li>{t('background.certification1')}</li>
-            <li>{t('background.certification2')}</li>
-            <li>{t('background.certification3')}</li>
-            <li>{t('background.certification4')}</li>
+            <li>{dictionary.certification1}</li>
+            <li>{dictionary.certification2}</li>
+            <li>{dictionary.certification3}</li>
+            <li>{dictionary.certification4}</li>
           </ul>
         </div>
       </div>

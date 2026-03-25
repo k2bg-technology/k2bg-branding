@@ -1,9 +1,11 @@
-import type { TFunction } from 'i18next';
 import Image from 'next/image';
 import type { ReactNode } from 'react';
 import { Button, Dialog } from 'ui';
+import type { Dictionary } from '../../i18n/dictionaries';
 
 import { ExternalLinkButton } from '../ExternalLinkButton';
+
+type PortfolioDictionary = Dictionary['portfolio'];
 
 interface DocumentProps {
   title: string;
@@ -77,31 +79,35 @@ function Document(props: DocumentProps) {
   );
 }
 
-export function Portfolio({ t }: { t: TFunction }) {
+export function Portfolio({
+  dictionary,
+}: {
+  dictionary: PortfolioDictionary;
+}) {
   return (
     <section>
       <div className="flex flex-col md:flex-row md:h-[37.5rem]">
         <div className="flex flex-col justify-center gap-spacious p-6 w-full md:p-12 md:w-[28rem]">
           <h2 className="text-heading-2 leading-heading-2 font-bold">
-            {t('portfolio.portfolio')}
+            {dictionary.portfolio}
           </h2>
           <div className="flex flex-col justify-center gap-spacious">
             <p className="text-body-r-sm leading-body-r-sm">
-              {t('portfolio.description1')}
+              {dictionary.description1}
             </p>
             <p className="text-body-r-sm leading-body-r-sm">
-              {t('portfolio.description2')}
+              {dictionary.description2}
             </p>
           </div>
         </div>
         <div className="grid text-white md:grid-cols-4">
           <article>
             <Document
-              title={t('portfolio.webApp.title')}
-              subtitle1={t('portfolio.techStack')}
-              subtitle2={t('portfolio.overview')}
-              techStack={t('portfolio.webApp.techStack')}
-              overview={t('portfolio.webApp.overview')}
+              title={dictionary.webApp.title}
+              subtitle1={dictionary.techStack}
+              subtitle2={dictionary.overview}
+              techStack={dictionary.webApp.techStack}
+              overview={dictionary.webApp.overview}
               backgroundImage="/images/stock.jpg"
               preview={
                 <Button
@@ -109,7 +115,7 @@ export function Portfolio({ t }: { t: TFunction }) {
                   variant="outline"
                   data-gtm="portfolio_click_web_app_preview"
                 >
-                  {t('portfolio.preview')}
+                  {dictionary.preview}
                 </Button>
               }
               previewVideo="/videos/stock-app.mp4"
@@ -119,13 +125,13 @@ export function Portfolio({ t }: { t: TFunction }) {
                     href="https://github.com/k2bg-technology/trading-dashboard"
                     data-gtm="portfolio_click_web_app_github"
                   >
-                    {t('portfolio.githubApp')}
+                    {dictionary.githubApp}
                   </ExternalLinkButton>
                   <ExternalLinkButton
                     href="https://github.com/k2bg-technology/ml-playground-api"
                     data-gtm="portfolio_click_web_app_api_github"
                   >
-                    {t('portfolio.githubApi')}
+                    {dictionary.githubApi}
                   </ExternalLinkButton>
                 </>
               }
@@ -133,11 +139,11 @@ export function Portfolio({ t }: { t: TFunction }) {
           </article>
           <article>
             <Document
-              title={t('portfolio.mobileApp.title')}
-              subtitle1={t('portfolio.techStack')}
-              subtitle2={t('portfolio.overview')}
-              techStack={t('portfolio.mobileApp.techStack')}
-              overview={t('portfolio.mobileApp.overview')}
+              title={dictionary.mobileApp.title}
+              subtitle1={dictionary.techStack}
+              subtitle2={dictionary.overview}
+              techStack={dictionary.mobileApp.techStack}
+              overview={dictionary.mobileApp.overview}
               backgroundImage="/images/mobile.jpg"
               preview={
                 <Button
@@ -145,7 +151,7 @@ export function Portfolio({ t }: { t: TFunction }) {
                   variant="outline"
                   data-gtm="portfolio_click_mobile_app_preview"
                 >
-                  {t('portfolio.preview')}
+                  {dictionary.preview}
                 </Button>
               }
               previewVideo="/videos/mobile.mp4"
@@ -155,13 +161,13 @@ export function Portfolio({ t }: { t: TFunction }) {
                     href="https://github.com/k2bg-technology/merchandise_control_system_native_app"
                     data-gtm="portfolio_click_mobile_app_github"
                   >
-                    {t('portfolio.githubApp')}
+                    {dictionary.githubApp}
                   </ExternalLinkButton>
                   <ExternalLinkButton
                     href="https://github.com/k2bg-technology/merchandise_control_system"
                     data-gtm="portfolio_click_mobile_app_api"
                   >
-                    {t('portfolio.githubApi')}
+                    {dictionary.githubApi}
                   </ExternalLinkButton>
                 </>
               }
@@ -169,11 +175,11 @@ export function Portfolio({ t }: { t: TFunction }) {
           </article>
           <article>
             <Document
-              title={t('portfolio.scrapingApp.title')}
-              subtitle1={t('portfolio.techStack')}
-              subtitle2={t('portfolio.overview')}
-              techStack={t('portfolio.scrapingApp.techStack')}
-              overview={t('portfolio.scrapingApp.overview')}
+              title={dictionary.scrapingApp.title}
+              subtitle1={dictionary.techStack}
+              subtitle2={dictionary.overview}
+              techStack={dictionary.scrapingApp.techStack}
+              overview={dictionary.scrapingApp.overview}
               backgroundImage="/images/web.jpg"
               preview={
                 <Button
@@ -181,7 +187,7 @@ export function Portfolio({ t }: { t: TFunction }) {
                   variant="outline"
                   data-gtm="portfolio_click_scraping_app_preview"
                 >
-                  {t('portfolio.preview')}
+                  {dictionary.preview}
                 </Button>
               }
               previewVideo="/videos/scrapy.mp4"
@@ -190,18 +196,18 @@ export function Portfolio({ t }: { t: TFunction }) {
                   href="https://github.com/krd-knt/scrapy_snippets"
                   data-gtm="portfolio_click_scraping_app_github"
                 >
-                  {t('portfolio.github')}
+                  {dictionary.github}
                 </ExternalLinkButton>
               }
             />
           </article>
           <article>
             <Document
-              title={t('portfolio.blogApp.title')}
-              subtitle1={t('portfolio.techStack')}
-              subtitle2={t('portfolio.overview')}
-              techStack={t('portfolio.blogApp.techStack')}
-              overview={t('portfolio.blogApp.overview')}
+              title={dictionary.blogApp.title}
+              subtitle1={dictionary.techStack}
+              subtitle2={dictionary.overview}
+              techStack={dictionary.blogApp.techStack}
+              overview={dictionary.blogApp.overview}
               backgroundImage="/images/blog.jpg"
               preview={
                 <Button
@@ -209,7 +215,7 @@ export function Portfolio({ t }: { t: TFunction }) {
                   variant="outline"
                   data-gtm="portfolio_click_blog_app_preview"
                 >
-                  {t('portfolio.preview')}
+                  {dictionary.preview}
                 </Button>
               }
               previewVideo="/videos/blog.mp4"
@@ -218,7 +224,7 @@ export function Portfolio({ t }: { t: TFunction }) {
                   href="https://blog.k2bg.technology"
                   data-gtm="portfolio_click_blog_app_url"
                 >
-                  {t('portfolio.siteURL')}
+                  {dictionary.siteURL}
                 </ExternalLinkButton>
               }
             />
