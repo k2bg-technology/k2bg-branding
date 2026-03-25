@@ -8,19 +8,19 @@ import { Footer } from '../../components/footer/Footer';
 import { LanguageSelector } from '../../components/LanguageSelector';
 import { ScrollHelper } from '../../components/ScrollHelper';
 import { Slider } from '../../components/Slider';
-import { getTranslation } from '../../i18n';
+import { getDictionary } from '../../i18n/dictionaries';
 import { resolveLanguage } from '../../i18n/settings';
 
 import Loading from './loading';
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ lng: string }>;
-}) {
-  const { lng } = await params;
-  const language = resolveLanguage(lng);
-  const { t } = await getTranslation(language);
+type PageProps = {
+  params: Promise<{ lang: string }>;
+};
+
+export default async function Page({ params }: PageProps) {
+  const { lang } = await params;
+  const language = resolveLanguage(lang);
+  const dictionary = await getDictionary(language);
 
   return (
     <Suspense fallback={<Loading />}>
@@ -28,15 +28,15 @@ export default async function Page({
         <main>
           <Slider className="contents md:block">
             <div className="grid grid-flow-row auto-cols-fr overflow-hidden md:grid-flow-col md:auto-cols-max md:rounded-3xl md:shadow-2xl md:max-h-[37.5rem]">
-              <Hero lng={language} />
-              <Background t={t} />
-              <Skill t={t} />
-              <Portfolio t={t} />
-              <Contact t={t} />
+              <Hero dictionary={dictionary.hero} />
+              <Background dictionary={dictionary.background} />
+              <Skill dictionary={dictionary.skill} />
+              <Portfolio dictionary={dictionary.portfolio} />
+              <Contact dictionary={dictionary.contact} />
             </div>
           </Slider>
         </main>
-        <Footer lng={language} />
+        <Footer copyright={dictionary.footer.copyright} />
       </div>
       <LanguageSelector />
       <ScrollHelper />
