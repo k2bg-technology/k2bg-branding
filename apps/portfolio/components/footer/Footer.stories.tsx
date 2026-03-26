@@ -1,11 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
+import jaTranslation from '../../i18n/locales/ja/translation.json';
+
 import { Footer } from './Footer';
 
 const meta: Meta<typeof Footer> = {
   component: Footer,
   args: {
-    lng: 'ja',
+    copyright: jaTranslation.footer.copyright,
   },
 };
 

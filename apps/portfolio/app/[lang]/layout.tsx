@@ -1,27 +1,29 @@
 import { GoogleTagManager } from '@next/third-parties/google';
-import { dir } from 'i18next';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-import { getTranslation } from '../../i18n';
+import { getDictionary } from '../../i18n/dictionaries';
 import { languages, resolveLanguage } from '../../i18n/settings';
 
 import '../globals.css';
 
+type LayoutProps = {
+  children: ReactNode;
+  params: Promise<{ lang: string }>;
+};
+
 export async function generateStaticParams() {
-  return languages.map((lng) => ({ lng }));
+  return languages.map((lang) => ({ lang }));
 }
 
 export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ lng: string }>;
-}): Promise<Metadata> {
-  const { lng } = await params;
-  const language = resolveLanguage(lng);
-  const { t } = await getTranslation(language);
+}: LayoutProps): Promise<Metadata> {
+  const { lang } = await params;
+  const language = resolveLanguage(lang);
+  const dictionary = await getDictionary(language);
   const siteBaseUrl = process.env.PORTFOLIO_SITE_BASE_URL;
   const title = 'K2.B.G. Technology';
-  const description = t('metadata.description');
+  const description = dictionary.metadata.description;
   const minimalMetadata: Metadata = {
     metadataBase: siteBaseUrl ? new URL(siteBaseUrl) : undefined,
     title,
@@ -77,17 +79,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  children: ReactNode;
-  params: Promise<{ lng: string }>;
-}) {
-  const { lng } = await params;
+export default async function RootLayout({ children, params }: LayoutProps) {
+  const { lang } = await params;
+  const language = resolveLanguage(lang);
 
   return (
-    <html lang={lng} dir={dir(lng)}>
+    <html lang={language} dir="ltr">
       <body>{children}</body>
       {process.env.NODE_ENV === 'production' && (
         <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
