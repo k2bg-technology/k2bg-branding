@@ -79,11 +79,7 @@ function Document(props: DocumentProps) {
   );
 }
 
-export function Portfolio({
-  dictionary,
-}: {
-  dictionary: PortfolioDictionary;
-}) {
+export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
   return (
     <section>
       <div className="flex flex-col md:flex-row md:h-[37.5rem]">

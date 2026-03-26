@@ -34,10 +34,7 @@ function getLocaleFromAcceptLanguage(request: NextRequest): string {
 
 function getLocale(request: NextRequest): string {
   const cookieLocale = request.cookies.get(cookieName)?.value;
-  if (
-    cookieLocale &&
-    (languages as readonly string[]).includes(cookieLocale)
-  ) {
+  if (cookieLocale && (languages as readonly string[]).includes(cookieLocale)) {
     return cookieLocale;
   }
 
