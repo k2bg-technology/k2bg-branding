@@ -1,48 +1,79 @@
-import acceptLanguage from 'accept-language';
 import { type NextRequest, NextResponse } from 'next/server';
 
-import { cookieName, fallbackLng, languages } from './i18n/settings';
-
-acceptLanguage.languages(languages as unknown as string[]);
+import { cookieName, fallbackLanguage, languages } from './i18n/settings';
 
 export const config = {
-  // matcher: '/:lng*'
   matcher: [
     '/((?!api|_next/static|_next/image|images|videos|assets|favicon.ico|sw.js).*)',
   ],
 };
 
-export function middleware(req: NextRequest) {
-  if (
-    req.nextUrl.pathname.indexOf('icon') > -1 ||
-    req.nextUrl.pathname.indexOf('chrome') > -1
-  )
-    return NextResponse.next();
-  let lng: string | null | undefined = null;
-  if (req.cookies.has(cookieName))
-    lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
-  if (!lng) lng = acceptLanguage.get(req.headers.get('Accept-Language'));
-  if (!lng) lng = fallbackLng;
+function getLocaleFromAcceptLanguage(request: NextRequest): string {
+  const acceptLanguage = request.headers.get('Accept-Language');
+  if (!acceptLanguage) return fallbackLanguage;
 
-  // Redirect if lng in path is not supported
+  const preferred = acceptLanguage
+    .split(',')
+    .map((part) => {
+      const [language, quality] = part.trim().split(';q=');
+      return {
+        language: language.trim().split('-')[0],
+        quality: quality ? Number(quality) : 1,
+      };
+    })
+    .sort((a, b) => b.quality - a.quality);
+
+  for (const { language } of preferred) {
+    if ((languages as readonly string[]).includes(language)) {
+      return language;
+    }
+  }
+
+  return fallbackLanguage;
+}
+
+function getLocale(request: NextRequest): string {
+  const cookieLocale = request.cookies.get(cookieName)?.value;
+  if (cookieLocale && (languages as readonly string[]).includes(cookieLocale)) {
+    return cookieLocale;
+  }
+
+  return getLocaleFromAcceptLanguage(request);
+}
+
+export function middleware(request: NextRequest) {
   if (
-    !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
-    !req.nextUrl.pathname.startsWith('/_next')
+    request.nextUrl.pathname.includes('icon') ||
+    request.nextUrl.pathname.includes('chrome')
   ) {
-    return NextResponse.redirect(
-      new URL(`/${lng}${req.nextUrl.pathname}`, req.url)
-    );
+    return NextResponse.next();
   }
 
-  if (req.headers.has('referer')) {
-    const refererUrl = new URL(req.headers.get('referer') ?? '');
-    const lngInReferer = languages.find((l) =>
-      refererUrl.pathname.startsWith(`/${l}`)
-    );
-    const response = NextResponse.next();
-    if (lngInReferer) response.cookies.set(cookieName, lngInReferer);
-    return response;
+  const { pathname } = request.nextUrl;
+  const pathnameHasLocale = languages.some(
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  );
+
+  if (!pathnameHasLocale) {
+    const locale = getLocale(request);
+    return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+
+  const isPrefetch =
+    request.headers.get('Next-Router-Prefetch') === '1' ||
+    request.headers.get('Purpose') === 'prefetch';
+
+  if (!isPrefetch) {
+    const localeInPath = languages.find(
+      (locale) =>
+        pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
+    if (localeInPath) {
+      response.cookies.set(cookieName, localeInPath);
+    }
+  }
+
+  return response;
 }

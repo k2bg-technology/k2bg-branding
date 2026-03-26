@@ -1,8 +1,10 @@
-import type { TFunction } from 'i18next';
 import Image from 'next/image';
 import { Icon } from 'ui';
+import type { Dictionary } from '../../i18n/dictionaries';
 
-export function Skill({ t }: { t: TFunction }) {
+type SkillDictionary = Dictionary['skill'];
+
+export function Skill({ dictionary }: { dictionary: SkillDictionary }) {
   return (
     <section>
       <div className="relative p-6 w-full md:p-12 md:w-[68rem] md:h-[37.5rem]">
@@ -16,38 +18,38 @@ export function Skill({ t }: { t: TFunction }) {
         <div className="flex flex-col gap-spacious h-full md:flex-row md:gap-0">
           <div className="flex flex-col gap-spacious w-full">
             <h2 className="text-heading-2 leading-heading-2 font-bold">
-              {t('skill.skill')}
+              {dictionary.skill}
             </h2>
             <div className="flex flex-col gap-condensed">
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                {t('skill.programming')}
+                {dictionary.programming}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">
-                {t('skill.programmingStack')}
+                {dictionary.programmingStack}
               </p>
             </div>
             <div className="flex flex-col gap-condensed">
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                {t('skill.uiux')}
+                {dictionary.uiux}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">
-                {t('skill.uiuxStack')}
+                {dictionary.uiuxStack}
               </p>
             </div>
             <div className="flex flex-col gap-condensed">
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                {t('skill.dataAnalysis')}
+                {dictionary.dataAnalysis}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">
-                {t('skill.dataAnalysisStack')}
+                {dictionary.dataAnalysisStack}
               </p>
             </div>
             <div className="flex flex-col gap-condensed">
               <h3 className="text-heading-3 leading-heading-3 font-bold">
-                {t('skill.cloud')}
+                {dictionary.cloud}
               </h3>
               <p className="text-body-r-sm leading-body-r-sm">
-                {t('skill.cloudStack')}
+                {dictionary.cloudStack}
               </p>
             </div>
           </div>
