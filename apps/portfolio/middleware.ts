@@ -60,11 +60,19 @@ export function middleware(request: NextRequest) {
   }
 
   const response = NextResponse.next();
-  const localeInPath = languages.find(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
-  if (localeInPath) {
-    response.cookies.set(cookieName, localeInPath);
+
+  const isPrefetch =
+    request.headers.get('Next-Router-Prefetch') === '1' ||
+    request.headers.get('Purpose') === 'prefetch';
+
+  if (!isPrefetch) {
+    const localeInPath = languages.find(
+      (locale) =>
+        pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
+    if (localeInPath) {
+      response.cookies.set(cookieName, localeInPath);
+    }
   }
 
   return response;
