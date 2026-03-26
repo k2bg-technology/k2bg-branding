@@ -42,6 +42,11 @@ module.exports = {
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
   turbopack: {},
+  experimental: {
+    // Disable Prefetch Hints for OpenNext compatibility
+    // TODO: Remove after @opennextjs/cloudflare supports Next.js 16
+    prefetchHints: false,
+  },
   images: {
     unoptimized: true,
   },
