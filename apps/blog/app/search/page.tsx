@@ -6,6 +6,8 @@ import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { createSearchPostSummariesUseCase } from '../../infrastructure/di';
+import { postLogger } from '../../modules/post/adapters/shared/logger';
+import { UseCaseError } from '../../modules/post/use-cases/shared';
 
 const PAGE_SIZE = 6;
 
@@ -38,7 +40,18 @@ export default async function Page({
         page: currentPage,
         pageSize: PAGE_SIZE,
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error instanceof UseCaseError) {
+          postLogger.warn(
+            { err: error, page: currentPage },
+            'Invalid search request'
+          );
+        } else {
+          postLogger.error(
+            { err: error, page: currentPage },
+            'Failed to search post summaries'
+          );
+        }
         notFound();
       });
   }
