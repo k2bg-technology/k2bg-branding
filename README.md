@@ -21,7 +21,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ## Technology Stack
 
-- **[Next.js 15](https://nextjs.org/)** - React framework for both applications
+- **[Next.js 16](https://nextjs.org/)** - React framework for both applications (Turbopack, React Compiler)
 - **[TypeScript](https://www.typescriptlang.org/)** - Static type checking
 - **[Tailwind CSS v4](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Turborepo](https://turbo.build/repo)** - Monorepo build system
@@ -31,7 +31,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - pnpm 9.15.9+
 
 ### Installation

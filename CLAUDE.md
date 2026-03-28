@@ -80,7 +80,7 @@ The blog app includes a **Hono**-based REST API server (`apps/blog/server/`) int
 ### Portfolio App
 
 - **i18next** - Internationalization (English/Japanese)
-- **Middleware** - Language detection and routing
+- **Proxy** (`proxy.ts`) - Language detection and routing
 
 ## Database
 
@@ -134,7 +134,7 @@ pnpm test:watch  # Watch mode
 ## Development Notes
 
 - Blog app redirects root (`/`) to `/blog` via Next.js config
-- Blog app uses `--turbo` flag for faster development builds
+- Both apps retain legacy `webpack()` config for SVG handling (Turbopack uses default static asset behavior)
 - Blog build process includes automatic Prisma client generation
 - Portfolio app supports automatic language detection
 - All packages are 100% TypeScript

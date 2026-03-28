@@ -1,12 +1,12 @@
 # K2BG Blog
 
-A **Next.js 15** blog application with **Notion CMS** integration, built following **Clean Architecture** and **Domain-Driven Design** principles. Part of the [K2BG Branding monorepo](../../README.md).
+A **Next.js 16** blog application with **Notion CMS** integration, built following **Clean Architecture** and **Domain-Driven Design** principles. Part of the [K2BG Branding monorepo](../../README.md).
 
 ## Technology Stack
 
 | Category | Technologies |
 |---|---|
-| **Framework** | Next.js 15, React 19, TypeScript |
+| **Framework** | Next.js 16, React 19, TypeScript |
 | **API Server** | Hono, @hono/zod-openapi, @hono/swagger-ui |
 | **Styling** | Tailwind CSS v4 |
 | **Database** | PostgreSQL, Prisma ORM |
@@ -24,7 +24,7 @@ A **Next.js 15** blog application with **Notion CMS** integration, built followi
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20.9+
 - pnpm 9.15.9+
 - PostgreSQL (or Docker)
 
