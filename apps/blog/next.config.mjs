@@ -1,3 +1,6 @@
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 /**
  * @type {import('next').NextConfig}
  */
@@ -40,10 +43,17 @@ const securityHeaders = [
   },
 ];
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const monorepoRoot = resolve(__dirname, '..', '..');
+
 const config = {
   reactStrictMode: true,
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config', '@prisma/client'],
+  outputFileTracingRoot: monorepoRoot,
+  outputFileTracingIncludes: {
+    '/*': ['./node_modules/.prisma/client/**/*'],
+  },
   turbopack: {},
   async redirects() {
     return [
