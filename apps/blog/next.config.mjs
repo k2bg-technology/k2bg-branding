@@ -52,7 +52,10 @@ const config = {
   transpilePackages: ['ui', 'tailwind-config', '@prisma/client'],
   outputFileTracingRoot: monorepoRoot,
   outputFileTracingIncludes: {
-    '/*': ['../../node_modules/.prisma/client/**/*'],
+    '/*': [
+      '../../node_modules/.prisma/client/*.node',
+      '../../node_modules/prisma/*.node',
+    ],
   },
   turbopack: {},
   async redirects() {
