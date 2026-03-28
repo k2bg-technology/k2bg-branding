@@ -43,11 +43,7 @@ const securityHeaders = [
 const config = {
   reactStrictMode: true,
   reactCompiler: true,
-  transpilePackages: ['ui', 'tailwind-config'],
-  serverExternalPackages: ['@prisma/client', 'prisma'],
-  outputFileTracingIncludes: {
-    '/*': ['./node_modules/.prisma/client/**/*'],
-  },
+  transpilePackages: ['ui', 'tailwind-config', '@prisma/client'],
   turbopack: {},
   async redirects() {
     return [
