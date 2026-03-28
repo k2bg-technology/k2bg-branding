@@ -45,6 +45,9 @@ const config = {
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
   serverExternalPackages: ['@prisma/client', 'prisma'],
+  outputFileTracingIncludes: {
+    '/*': ['./node_modules/.prisma/client/**/*'],
+  },
   turbopack: {},
   async redirects() {
     return [
