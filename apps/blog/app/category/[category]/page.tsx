@@ -9,6 +9,7 @@ import {
   createFetchPostSummariesByCategoryUseCase,
   getDefaultOgImageUrl,
 } from '../../../infrastructure/di';
+import { postLogger } from '../../../modules/post/adapters/shared/logger';
 import { Category } from '../../../modules/post/domain';
 
 const PAGE_SIZE = 6;
@@ -81,7 +82,11 @@ export default async function Page({ params, searchParams }: Props) {
         page: currentPage,
         pageSize: PAGE_SIZE,
       })
-      .catch(() => {
+      .catch((error) => {
+        postLogger.error(
+          { err: error, category, page: currentPage },
+          'Failed to fetch post summaries by category'
+        );
         notFound();
       });
   }
