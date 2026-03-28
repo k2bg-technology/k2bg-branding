@@ -11,6 +11,7 @@ import {
 } from '../../../infrastructure/di';
 import { postLogger } from '../../../modules/post/adapters/shared/logger';
 import { Category } from '../../../modules/post/domain';
+import { UseCaseError } from '../../../modules/post/use-cases/shared';
 
 const PAGE_SIZE = 6;
 
@@ -83,10 +84,17 @@ export default async function Page({ params, searchParams }: Props) {
         pageSize: PAGE_SIZE,
       })
       .catch((error) => {
-        postLogger.error(
-          { err: error, category, page: currentPage },
-          'Failed to fetch post summaries by category'
-        );
+        if (error instanceof UseCaseError) {
+          postLogger.warn(
+            { err: error, category, page: currentPage },
+            'Invalid category page request',
+          );
+        } else {
+          postLogger.error(
+            { err: error, category, page: currentPage },
+            'Failed to fetch post summaries by category',
+          );
+        }
         notFound();
       });
   }
