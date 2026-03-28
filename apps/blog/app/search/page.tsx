@@ -44,12 +44,12 @@ export default async function Page({
         if (error instanceof UseCaseError) {
           postLogger.warn(
             { err: error, page: currentPage },
-            'Invalid search request',
+            'Invalid search request'
           );
         } else {
           postLogger.error(
             { err: error, page: currentPage },
-            'Failed to search post summaries',
+            'Failed to search post summaries'
           );
         }
         notFound();

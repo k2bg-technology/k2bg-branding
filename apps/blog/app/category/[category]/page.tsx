@@ -87,12 +87,12 @@ export default async function Page({ params, searchParams }: Props) {
         if (error instanceof UseCaseError) {
           postLogger.warn(
             { err: error, category, page: currentPage },
-            'Invalid category page request',
+            'Invalid category page request'
           );
         } else {
           postLogger.error(
             { err: error, category, page: currentPage },
-            'Failed to fetch post summaries by category',
+            'Failed to fetch post summaries by category'
           );
         }
         notFound();
