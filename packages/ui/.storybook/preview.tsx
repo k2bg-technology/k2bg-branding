@@ -2,7 +2,7 @@ import {
   DocsContainer,
   type DocsContainerProps,
 } from '@storybook/addon-docs/blocks';
-import type { Preview, StoryContext } from '@storybook/react';
+import type { Preview, StoryContext } from '@storybook/react-webpack5';
 import type React from 'react';
 import { type PropsWithChildren, Suspense, useMemo } from 'react';
 import { I18nextProvider } from 'react-i18next';

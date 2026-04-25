@@ -1,16 +1,18 @@
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { StorybookConfig } from '@storybook/react-webpack5';
 import remarkGfm from 'remark-gfm';
 
 const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-onboarding',
-    '@storybook/addon-webpack5-compiler-swc',
-    '@chromatic-com/storybook',
-    '@storybook/addon-a11y',
+    getAbsolutePath('@storybook/addon-links'),
+    getAbsolutePath('@storybook/addon-onboarding'),
+    getAbsolutePath('@storybook/addon-webpack5-compiler-swc'),
+    getAbsolutePath('@chromatic-com/storybook'),
+    getAbsolutePath('@storybook/addon-a11y'),
     {
-      name: '@storybook/addon-docs',
+      name: getAbsolutePath('@storybook/addon-docs'),
       options: {
         mdxPluginOptions: {
           mdxCompileOptions: {
@@ -20,7 +22,7 @@ const config: StorybookConfig = {
       },
     },
     {
-      name: '@storybook/addon-styling-webpack',
+      name: getAbsolutePath('@storybook/addon-styling-webpack'),
       options: {
         rules: [
           {
@@ -67,10 +69,10 @@ const config: StorybookConfig = {
         ],
       },
     },
-    '@storybook/addon-mcp',
+    getAbsolutePath('@storybook/addon-mcp'),
   ],
   framework: {
-    name: '@storybook/react-webpack5',
+    name: getAbsolutePath('@storybook/react-webpack5'),
     options: {},
   },
   staticDirs: ['../public'],
@@ -90,3 +92,7 @@ const config: StorybookConfig = {
   }),
 };
 export default config;
+
+function getAbsolutePath(value: string) {
+  return dirname(fileURLToPath(import.meta.resolve(`${value}/package.json`)));
+}
