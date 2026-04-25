@@ -25,7 +25,7 @@ A **Next.js 16** blog application with **Notion CMS** integration, built followi
 ### Prerequisites
 
 - Node.js 20.9+
-- pnpm 9.15.9+
+- pnpm 10.33.2+
 - PostgreSQL (or Docker)
 
 ### Installation
