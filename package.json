@@ -25,11 +25,20 @@
     "turbo": "latest",
     "typescript": "^5.4.5"
   },
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@10.33.2",
   "name": "k2bg-branding",
   "pnpm": {
     "overrides": {
       "esbuild": "0.25.2"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
+      "esbuild",
+      "prisma",
+      "sharp",
+      "workerd"
+    ]
   }
 }

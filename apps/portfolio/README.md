@@ -19,7 +19,7 @@ A **Next.js 16** multilingual portfolio website supporting **English** and **Jap
 ### Prerequisites
 
 - Node.js 20.9+
-- pnpm 9.15.9+
+- pnpm 10.33.2+
 
 ### Installation
 
