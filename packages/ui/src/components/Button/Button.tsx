@@ -1,6 +1,7 @@
-import { Slot } from '@radix-ui/react-slot';
+import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 
+import { asChildToRender } from '../../utils/asChildToRender';
 import { twMerge } from '../../utils/extendTailwindMerge';
 
 const buttonVariants = cva(
@@ -178,8 +179,10 @@ const buttonVariants = cva(
 );
 
 export interface Props
-  extends Omit<React.ComponentPropsWithRef<'button'>, 'color'>,
+  extends Omit<useRender.ComponentProps<'button'>, 'color'>,
     VariantProps<typeof buttonVariants> {
+  // Deprecated. Use the `render` prop. Kept for backward compatibility while
+  // consumer call sites migrate; removed once issue #254 closes.
   asChild?: boolean;
 }
 
@@ -189,15 +192,21 @@ export function Button({
   size,
   asChild = false,
   className,
+  render,
+  children,
   ...rest
 }: Props) {
-  const Comp = asChild ? Slot : 'button';
-  return (
-    <Comp
-      className={twMerge(buttonVariants({ variant, color, size }), className)}
-      {...rest}
-    />
-  );
+  const renderProps = asChildToRender({ asChild, render, children });
+
+  return useRender({
+    defaultTagName: 'button',
+    render: renderProps.render,
+    props: {
+      className: twMerge(buttonVariants({ variant, color, size }), className),
+      children: renderProps.children,
+      ...rest,
+    },
+  });
 }
 
 Button.displayName = 'Button';
