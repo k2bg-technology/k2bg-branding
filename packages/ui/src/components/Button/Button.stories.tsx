@@ -29,9 +29,6 @@ const meta = {
       control: 'select',
       options: ['default', 'sm', 'lg', 'icon'],
     },
-    asChild: {
-      control: 'boolean',
-    },
   },
   parameters: {
     docs: {
@@ -70,26 +67,25 @@ export const IconButton: Story = {
 
 export const ExternalLinkButton: Story = {
   args: {
-    children: (
-      <a href="https://example.com" target="_blank" rel="noopener noreferrer">
-        <span className="flex gap-condensed">
-          <Icon
-            name="arrow-top-right-on-square"
-            color="var(--color-base-white)"
-            width={14}
-            height={14}
-          />
-          External Link
-        </span>
-      </a>
+    render: (
+      <a href="https://example.com" target="_blank" rel="noopener noreferrer" />
     ),
-    asChild: true,
+    children: (
+      <span className="flex gap-condensed">
+        <Icon
+          name="arrow-top-right-on-square"
+          color="var(--color-base-white)"
+          width={14}
+          height={14}
+        />
+        External Link
+      </span>
+    ),
   },
 };
 
 export const InputButton: Story = {
   args: {
-    children: <input type="submit" value="submit" className="cursor-pointer" />,
-    asChild: true,
+    render: <input type="submit" value="submit" className="cursor-pointer" />,
   },
 };
