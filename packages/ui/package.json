@@ -12,6 +12,7 @@
     "chromatic": "chromatic --only-changed --exit-once-uploaded --storybook-config-dir .storybook --project-token $CHROMATIC_PROJECT_TOKEN"
   },
   "dependencies": {
+    "@base-ui/react": "^1.4.1",
     "@heroicons/react": "^2.0.18",
     "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-dialog": "^1.0.4",
@@ -23,9 +24,9 @@
     "i18next": "^23.4.6",
     "i18next-browser-languagedetector": "^7.1.0",
     "i18next-http-backend": "^2.6.1",
-    "react-i18next": "^13.2.2",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "react-i18next": "^13.2.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "^2.5.3"
   },
