@@ -1,0 +1,34 @@
+import * as React from 'react';
+
+type AsChildProps<RenderProp = unknown> = {
+  asChild?: boolean;
+  render?: RenderProp;
+  children?: React.ReactNode;
+};
+
+// Translates the legacy Radix `asChild` API into Base UI's `render` prop so
+// that component public APIs stay stable while internals migrate. Tracked in
+// issue #254. Removed once every consumer call site uses `render` directly.
+export function asChildToRender<Props extends AsChildProps>(
+  props: Props
+): Omit<Props, 'asChild'> {
+  const { asChild, render, children, ...rest } = props;
+
+  if (!asChild || render !== undefined) {
+    return { ...rest, render, children } as Omit<Props, 'asChild'>;
+  }
+
+  if (!React.isValidElement(children)) {
+    return { ...rest, children } as Omit<Props, 'asChild'>;
+  }
+
+  const element = children as React.ReactElement<{
+    children?: React.ReactNode;
+  }>;
+
+  return {
+    ...rest,
+    render: React.cloneElement(element, { children: undefined }),
+    children: element.props.children,
+  } as Omit<Props, 'asChild'>;
+}
