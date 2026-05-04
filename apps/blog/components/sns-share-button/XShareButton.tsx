@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Icon } from 'ui';
+import { buttonVariants, Icon } from 'ui';
 
 import { useSnsShareInfo } from './useSnsShareInfo';
 
@@ -8,15 +8,18 @@ export function XShareButton() {
   const { title, fullUrl } = useSnsShareInfo();
 
   return (
-    <Button variant="ghost" color="dark" size="icon" type="button" asChild>
-      <a
-        href={`https://twitter.com/share?url=${fullUrl}&text=${title}`}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="x"
-      >
-        <Icon name="x" originalColor width={20} height={20} />
-      </a>
-    </Button>
+    <a
+      href={`https://twitter.com/share?url=${fullUrl}&text=${title}`}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="x"
+      className={buttonVariants({
+        variant: 'ghost',
+        color: 'dark',
+        size: 'icon',
+      })}
+    >
+      <Icon name="x" originalColor width={20} height={20} />
+    </a>
   );
 }

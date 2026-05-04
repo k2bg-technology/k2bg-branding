@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import Link from 'next/link';
-import { Button, Icon } from 'ui';
+import { buttonVariants, Icon } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 
@@ -29,81 +29,84 @@ export function Footer() {
                 <li>
                   <Link
                     href="/category/ENGINEERING"
+                    className={buttonVariants({
+                      color: 'light',
+                      variant: 'ghost',
+                      className: '!font-normal',
+                    })}
                     data-gtm="footer_click_engineering"
                   >
-                    <Button
-                      className="!font-normal"
-                      color="light"
-                      variant="ghost"
-                    >
-                      Engineering
-                    </Button>
+                    Engineering
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/category/DESIGN" data-gtm="footer_click_design">
-                    <Button
-                      className="!font-normal"
-                      color="light"
-                      variant="ghost"
-                    >
-                      Design
-                    </Button>
+                  <Link
+                    href="/category/DESIGN"
+                    className={buttonVariants({
+                      color: 'light',
+                      variant: 'ghost',
+                      className: '!font-normal',
+                    })}
+                    data-gtm="footer_click_design"
+                  >
+                    Design
                   </Link>
                 </li>
 
                 <li>
                   <Link
                     href="/category/DATA_SCIENCE"
+                    className={buttonVariants({
+                      color: 'light',
+                      variant: 'ghost',
+                      className: '!font-normal',
+                    })}
                     data-gtm="footer_click_data_science"
                   >
-                    <Button
-                      className="!font-normal"
-                      color="light"
-                      variant="ghost"
-                    >
-                      Data Science
-                    </Button>
+                    Data Science
                   </Link>
                 </li>
 
                 <li>
                   <Link
                     href="/category/LIFE_STYLE"
+                    className={buttonVariants({
+                      color: 'light',
+                      variant: 'ghost',
+                      className: '!font-normal',
+                    })}
                     data-gtm="footer_click_life_style"
                   >
-                    <Button
-                      className="!font-normal"
-                      color="light"
-                      variant="ghost"
-                    >
-                      Life Style
-                    </Button>
+                    Life Style
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/concept" data-gtm="footer_click_concept">
-                    <Button
-                      className="!font-normal"
-                      color="light"
-                      variant="ghost"
-                    >
-                      Concept
-                    </Button>
+                  <Link
+                    href="/concept"
+                    className={buttonVariants({
+                      color: 'light',
+                      variant: 'ghost',
+                      className: '!font-normal',
+                    })}
+                    data-gtm="footer_click_concept"
+                  >
+                    Concept
                   </Link>
                 </li>
 
                 <li>
-                  <Link href="/contact" data-gtm="footer_click_contact">
-                    <Button
-                      className="!font-normal"
-                      color="light"
-                      variant="ghost"
-                    >
-                      Contact
-                    </Button>
+                  <Link
+                    href="/contact"
+                    className={buttonVariants({
+                      color: 'light',
+                      variant: 'ghost',
+                      className: '!font-normal',
+                    })}
+                    data-gtm="footer_click_contact"
+                  >
+                    Contact
                   </Link>
                 </li>
               </ul>
@@ -124,43 +127,37 @@ export function Footer() {
                   className="flex relative items-center gap-5"
                   data-gtm="footer_click_instagram"
                 >
-                  <Button
-                    variant="ghost"
-                    color="light"
-                    size="icon"
-                    type="button"
-                    asChild
+                  <a
+                    href="https://www.instagram.com/k2bg_graphics"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="instagram"
+                    className={buttonVariants({
+                      variant: 'ghost',
+                      color: 'light',
+                      size: 'icon',
+                    })}
                   >
-                    <a
-                      href="https://www.instagram.com/k2bg_graphics"
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="instagram"
-                    >
-                      <Icon name="instagram" color="var(--color-base-white)" />
-                    </a>
-                  </Button>
+                    <Icon name="instagram" color="var(--color-base-white)" />
+                  </a>
                 </li>
                 <li
                   className="flex relative items-center gap-5"
                   data-gtm="footer_click_github"
                 >
-                  <Button
-                    variant="ghost"
-                    color="light"
-                    size="icon"
-                    type="button"
-                    asChild
+                  <a
+                    href="https://github.com/k2bg-technology"
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label="github"
+                    className={buttonVariants({
+                      variant: 'ghost',
+                      color: 'light',
+                      size: 'icon',
+                    })}
                   >
-                    <a
-                      href="https://github.com/k2bg-technology"
-                      target="_blank"
-                      rel="noreferrer"
-                      aria-label="github"
-                    >
-                      <Icon name="github" color="var(--color-base-white)" />
-                    </a>
-                  </Button>
+                    <Icon name="github" color="var(--color-base-white)" />
+                  </a>
                 </li>
               </ul>
             </div>

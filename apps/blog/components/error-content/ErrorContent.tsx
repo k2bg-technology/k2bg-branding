@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react';
 import Link from 'next/link';
-import { Button } from 'ui';
+import { Button, buttonVariants } from 'ui';
 
 const isDev = process.env.NODE_ENV === 'development';
 
@@ -84,9 +84,16 @@ export function ErrorContent({
           <Button variant="outline" color="dark" size="lg" onClick={reset}>
             再読み込み
           </Button>
-          <Button variant="default" color="dark" size="lg" asChild>
-            <Link href="/">ホームに戻る</Link>
-          </Button>
+          <Link
+            href="/"
+            className={buttonVariants({
+              variant: 'default',
+              color: 'dark',
+              size: 'lg',
+            })}
+          >
+            ホームに戻る
+          </Link>
         </motion.div>
 
         <motion.p
