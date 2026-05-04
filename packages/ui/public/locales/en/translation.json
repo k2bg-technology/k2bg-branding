@@ -190,8 +190,8 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-avatar",
-          "version": "^1.1.1",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "Provides accessible avatar primitives with image loading states"
         },
         {
@@ -207,8 +207,8 @@
           "description": "Official WCAG documentation on alternative text requirements"
         },
         {
-          "linkText": "Radix UI Avatar Documentation",
-          "url": "https://www.radix-ui.com/primitives/docs/components/avatar",
+          "linkText": "Base UI Avatar Documentation",
+          "url": "https://base-ui.com/react/components/avatar",
           "description": "Official documentation for the underlying primitive component"
         }
       ]

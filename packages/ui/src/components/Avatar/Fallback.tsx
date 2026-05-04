@@ -1,18 +1,18 @@
-import * as AvatarPrimitive from '@radix-ui/react-avatar';
-import { twMerge } from 'tailwind-merge';
+import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 
-type Props = React.ComponentPropsWithRef<'span'>;
+import { cn } from '../../utils/cn';
 
-export function Fallback({ className, ...rest }: Props) {
+export function Fallback({
+  className,
+  ...rest
+}: AvatarPrimitive.Fallback.Props) {
   return (
     <AvatarPrimitive.Fallback
       {...rest}
-      className={twMerge(
+      className={cn(
         'flex h-full w-full items-center justify-center rounded-full bg-gray-200',
         className
       )}
     />
   );
 }
-
-Fallback.displayName = AvatarPrimitive.Fallback.displayName;
