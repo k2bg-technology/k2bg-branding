@@ -1,4 +1,4 @@
-import { Button } from 'ui';
+import { buttonVariants } from 'ui';
 
 interface Provider {
   linkText: string;
@@ -38,15 +38,15 @@ export function ProductPromotion(props: ProductPromotionProps) {
         <ul className="flex gap-normal list-none">
           {providers?.map((provider) => (
             <li key={provider.linkText}>
-              <Button asChild style={{ backgroundColor: provider.color }}>
-                <a
-                  href={provider.linkUrl}
-                  target="_blank"
-                  rel="noopener nofollow"
-                >
-                  {provider.linkText}
-                </a>
-              </Button>
+              <a
+                href={provider.linkUrl}
+                target="_blank"
+                rel="noopener nofollow"
+                className={buttonVariants()}
+                style={{ backgroundColor: provider.color }}
+              >
+                {provider.linkText}
+              </a>
             </li>
           ))}
         </ul>

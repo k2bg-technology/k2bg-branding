@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button, Drawer, DropdownMenu, Icon } from 'ui';
+import { Button, buttonVariants, Drawer, DropdownMenu, Icon } from 'ui';
 import { Category } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import { Search } from '../search/Search';
@@ -23,76 +23,82 @@ export function Header() {
               <nav>
                 <ul className="flex items-center gap-x-4">
                   <li>
-                    <Link href={`/category/${Category.ENGINEERING}`}>
-                      <Button
-                        className="!font-normal"
-                        color="dark"
-                        variant="ghost"
-                        data-gtm="header_click_engineering"
-                      >
-                        Engineering
-                      </Button>
+                    <Link
+                      href={`/category/${Category.ENGINEERING}`}
+                      className={buttonVariants({
+                        color: 'dark',
+                        variant: 'ghost',
+                        className: '!font-normal',
+                      })}
+                      data-gtm="header_click_engineering"
+                    >
+                      Engineering
                     </Link>
                   </li>
                   <li>
-                    <Link href={`/category/${Category.DESIGN}`}>
-                      <Button
-                        className="!font-normal"
-                        color="dark"
-                        variant="ghost"
-                        data-gtm="header_click_design"
-                      >
-                        Design
-                      </Button>
+                    <Link
+                      href={`/category/${Category.DESIGN}`}
+                      className={buttonVariants({
+                        color: 'dark',
+                        variant: 'ghost',
+                        className: '!font-normal',
+                      })}
+                      data-gtm="header_click_design"
+                    >
+                      Design
                     </Link>
                   </li>
                   <li>
-                    <Link href={`/category/${Category.DATA_SCIENCE}`}>
-                      <Button
-                        className="!font-normal"
-                        color="dark"
-                        variant="ghost"
-                        data-gtm="header_click_data_science"
-                      >
-                        Data Science
-                      </Button>
+                    <Link
+                      href={`/category/${Category.DATA_SCIENCE}`}
+                      className={buttonVariants({
+                        color: 'dark',
+                        variant: 'ghost',
+                        className: '!font-normal',
+                      })}
+                      data-gtm="header_click_data_science"
+                    >
+                      Data Science
                     </Link>
                   </li>
                   <li>
-                    <Link href={`/category/${Category.LIFE_STYLE}`}>
-                      <Button
-                        className="!font-normal"
-                        color="dark"
-                        variant="ghost"
-                        data-gtm="header_click_life_style"
-                      >
-                        Life Style
-                      </Button>
+                    <Link
+                      href={`/category/${Category.LIFE_STYLE}`}
+                      className={buttonVariants({
+                        color: 'dark',
+                        variant: 'ghost',
+                        className: '!font-normal',
+                      })}
+                      data-gtm="header_click_life_style"
+                    >
+                      Life Style
                     </Link>
                   </li>
                 </ul>
               </nav>
             </div>
             <div className="hidden xl:flex items-center gap-x-4">
-              <Link href="/concept">
-                <Button
-                  className="!font-normal"
-                  color="dark"
-                  variant="ghost"
-                  data-gtm="header_click_concept"
-                >
-                  Concept
-                </Button>
+              <Link
+                href="/concept"
+                className={buttonVariants({
+                  color: 'dark',
+                  variant: 'ghost',
+                  className: '!font-normal',
+                })}
+                data-gtm="header_click_concept"
+              >
+                Concept
               </Link>
-              <Link href="/contact">
-                <Button
-                  className="!font-normal"
-                  color="dark"
-                  variant="ghost"
-                  data-gtm="header_click_contact"
-                >
-                  Contact
-                </Button>
+              <Link
+                href="/contact"
+                className={buttonVariants({
+                  color: 'dark',
+                  variant: 'ghost',
+                  className: '!font-normal',
+                })}
+                data-gtm="header_click_contact"
+              >
+                Contact
               </Link>
               <DropdownMenu>
                 <DropdownMenu.Trigger>

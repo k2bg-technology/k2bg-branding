@@ -1,10 +1,18 @@
-import { Slot } from '@radix-ui/react-slot';
+import { Button as ButtonPrimitive } from '@base-ui/react/button';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { twMerge } from '../../utils/extendTailwindMerge';
+import { asChildToRender } from '../../utils/asChildToRender';
+import { cn } from '../../utils/cn';
 
-const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 transition duration-300 ease-in-out',
+/**
+ * Exported standalone so button styling can be applied to non-`<button>`
+ * elements (e.g. `<a>`, `next/link`'s `Link`). Mirrors shadcn/ui's pattern.
+ *
+ * @see https://ui.shadcn.com/docs/components/button
+ * @see https://github.com/shadcn-ui/ui/blob/main/apps/v4/registry/bases/base/ui/button.tsx
+ */
+export const buttonVariants = cva(
+  'inline-flex items-center justify-center whitespace-nowrap text-button-b-md rounded-md font-bold leading-none cursor-pointer focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed transition duration-300 ease-in-out',
   {
     variants: {
       variant: {
@@ -178,8 +186,10 @@ const buttonVariants = cva(
 );
 
 export interface Props
-  extends Omit<React.ComponentPropsWithRef<'button'>, 'color'>,
+  extends Omit<ButtonPrimitive.Props, 'color'>,
     VariantProps<typeof buttonVariants> {
+  // Deprecated. Use the `render` prop. Kept for backward compatibility while
+  // consumer call sites migrate; removed once issue #254 closes.
   asChild?: boolean;
 }
 
@@ -189,14 +199,20 @@ export function Button({
   size,
   asChild = false,
   className,
+  render,
+  children,
   ...rest
 }: Props) {
-  const Comp = asChild ? Slot : 'button';
+  const renderProps = asChildToRender({ asChild, render, children });
+
   return (
-    <Comp
-      className={twMerge(buttonVariants({ variant, color, size }), className)}
+    <ButtonPrimitive
+      className={cn(buttonVariants({ variant, color, size }), className)}
+      render={renderProps.render}
       {...rest}
-    />
+    >
+      {renderProps.children}
+    </ButtonPrimitive>
   );
 }
 

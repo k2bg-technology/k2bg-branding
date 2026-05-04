@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-webpack5';
 
 import { Icon } from '../Icon';
 
-import { Button } from './Button';
+import { Button, buttonVariants } from './Button';
 
 const meta = {
   component: Button,
@@ -28,9 +28,6 @@ const meta = {
     size: {
       control: 'select',
       options: ['default', 'sm', 'lg', 'icon'],
-    },
-    asChild: {
-      control: 'boolean',
     },
   },
   parameters: {
@@ -68,28 +65,40 @@ export const IconButton: Story = {
   },
 };
 
+// Renders as a real `<a>` so that link semantics are preserved.
+// Apply `buttonVariants` directly instead of going through the Button
+// component, because Base UI's Button overrides link semantics with
+// `role="button"` when used with a non-button render target.
 export const ExternalLinkButton: Story = {
-  args: {
-    children: (
-      <a href="https://example.com" target="_blank" rel="noopener noreferrer">
-        <span className="flex gap-condensed">
-          <Icon
-            name="arrow-top-right-on-square"
-            color="var(--color-base-white)"
-            width={14}
-            height={14}
-          />
-          External Link
-        </span>
-      </a>
-    ),
-    asChild: true,
-  },
+  render: () => (
+    <a
+      href="https://example.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={buttonVariants({ color: 'main' })}
+    >
+      <span className="flex gap-condensed">
+        <Icon
+          name="arrow-top-right-on-square"
+          color="var(--color-base-white)"
+          width={14}
+          height={14}
+        />
+        External Link
+      </span>
+    </a>
+  ),
 };
 
+// Renders as `<input type="submit">` for form submissions where a real
+// `<button type="submit">` cannot be used. Apply `buttonVariants` directly
+// to keep native input semantics.
 export const InputButton: Story = {
-  args: {
-    children: <input type="submit" value="submit" className="cursor-pointer" />,
-    asChild: true,
-  },
+  render: () => (
+    <input
+      type="submit"
+      value="submit"
+      className={buttonVariants({ color: 'main' })}
+    />
+  ),
 };
