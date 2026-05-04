@@ -1,5 +1,5 @@
 export { Avatar } from './src/components/Avatar';
-export { Button } from './src/components/Button';
+export { Button, buttonVariants } from './src/components/Button';
 export { Dialog } from './src/components/Dialog';
 export { Drawer } from './src/components/Drawer';
 export { DropdownMenu } from './src/components/DropdownMenu';
