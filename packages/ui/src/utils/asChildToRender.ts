@@ -26,9 +26,12 @@ export function asChildToRender<Props extends AsChildProps>(
     children?: React.ReactNode;
   }>;
 
+  // Forward the element as-is: Base UI's `mergeProps(props, render.props)` is
+  // rightmost-wins, so stripping children here drops the label.
+  // @see https://github.com/k2bg-technology/k2bg-branding/issues/265
   return {
     ...rest,
-    render: React.cloneElement(element, { children: undefined }),
+    render: element,
     children: element.props.children,
   } as Omit<Props, 'asChild'>;
 }
