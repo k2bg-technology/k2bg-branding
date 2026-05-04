@@ -78,3 +78,17 @@ export const Border: Story = {
     color: 'error',
   },
 };
+
+// Regression coverage for the `asChild` API: the rendered element must keep
+// the label that was passed as the child element's children.
+// @see https://github.com/k2bg-technology/k2bg-branding/issues/265
+export const AsChildLink: Story = {
+  args: {
+    asChild: true,
+    children: (
+      <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+        AsChild Link
+      </a>
+    ),
+  },
+};
