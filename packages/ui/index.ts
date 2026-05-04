@@ -16,4 +16,5 @@ export { Popover } from './src/components/Popover';
 export { ScrollArea } from './src/components/ScrollArea';
 export { Skelton } from './src/components/Skelton';
 export { Toaster, useToast } from './src/components/Toaster';
+export { cn } from './src/utils/cn';
 export { twMerge } from './src/utils/extendTailwindMerge';
