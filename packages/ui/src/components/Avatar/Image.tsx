@@ -1,10 +1,5 @@
-import * as AvatarPrimitive from '@radix-ui/react-avatar';
-import { twMerge } from 'tailwind-merge';
+import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 
-type Props = React.ComponentPropsWithRef<'img'>;
-
-export function Image({ className, ...rest }: Props) {
-  return <AvatarPrimitive.Image {...rest} className={twMerge(className)} />;
+export function Image(props: AvatarPrimitive.Image.Props) {
+  return <AvatarPrimitive.Image {...props} />;
 }
-
-Image.displayName = AvatarPrimitive.Image.displayName;
