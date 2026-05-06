@@ -1,13 +1,13 @@
 'use client';
 
-import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
+import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
 import type * as React from 'react';
-import { twMerge } from 'tailwind-merge';
+
+import { cn } from '../../utils/cn';
 
 import { ScrollBar } from './ScrollBar/ScrollBar';
 
-interface ScrollAreaProps
-  extends React.ComponentPropsWithRef<typeof ScrollAreaPrimitive.Root> {
+interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
   scrollbar?: React.ReactElement<
     React.ComponentPropsWithoutRef<typeof ScrollBar>
   > | null;
@@ -23,7 +23,7 @@ export function ScrollArea({
   return (
     <ScrollAreaPrimitive.Root
       {...rest}
-      className={twMerge('flex flex-col relative overflow-hidden', className)}
+      className={cn('flex flex-col relative overflow-hidden', className)}
     >
       <ScrollAreaPrimitive.Viewport
         ref={ref}
@@ -36,4 +36,3 @@ export function ScrollArea({
     </ScrollAreaPrimitive.Root>
   );
 }
-ScrollArea.displayName = ScrollAreaPrimitive.Root.displayName;

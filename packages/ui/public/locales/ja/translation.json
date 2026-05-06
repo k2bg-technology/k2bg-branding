@@ -642,8 +642,8 @@
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-scroll-area",
-          "version": "^1.2.3",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "カスタマイズ可能なスクロールバースタイルを持つアクセシブルなスクロールエリアプリミティブを提供"
         },
         {
@@ -659,8 +659,8 @@
           "description": "コンテンツのリフローとスクロール動作に関する公式WCAGドキュメント"
         },
         {
-          "linkText": "Radix UI Scroll Areaドキュメント",
-          "url": "https://www.radix-ui.com/primitives/docs/components/scroll-area",
+          "linkText": "Base UI Scroll Areaドキュメント",
+          "url": "https://base-ui.com/react/components/scroll-area",
           "description": "基礎となるスクロールエリアプリミティブコンポーネントの公式ドキュメント"
         },
         {
