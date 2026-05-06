@@ -29,7 +29,7 @@ export function ScrollArea({
         ref={ref}
         className="flex-grow w-full rounded-[inherit]"
       >
-        {children}
+        <ScrollAreaPrimitive.Content>{children}</ScrollAreaPrimitive.Content>
       </ScrollAreaPrimitive.Viewport>
       {scrollbar || <ScrollBar />}
       <ScrollAreaPrimitive.Corner />
