@@ -642,8 +642,8 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-scroll-area",
-          "version": "^1.2.3",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "Provides accessible scroll area primitives with customizable scrollbar styling"
         },
         {
@@ -659,8 +659,8 @@
           "description": "Official WCAG documentation on content reflow and scrolling behavior"
         },
         {
-          "linkText": "Radix UI Scroll Area Documentation",
-          "url": "https://www.radix-ui.com/primitives/docs/components/scroll-area",
+          "linkText": "Base UI Scroll Area Documentation",
+          "url": "https://base-ui.com/react/components/scroll-area",
           "description": "Official documentation for the underlying scroll area primitive component"
         },
         {

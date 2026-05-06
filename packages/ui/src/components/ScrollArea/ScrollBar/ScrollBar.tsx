@@ -1,14 +1,12 @@
 'use client';
 
-import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
-import type * as React from 'react';
-import { twMerge } from 'tailwind-merge';
+import { ScrollArea as ScrollAreaPrimitive } from '@base-ui/react/scroll-area';
+
+import { cn } from '../../../utils/cn';
 
 import styles from './ScrollBar.module.css';
 
-type ScrollBarProps = React.ComponentPropsWithRef<
-  typeof ScrollAreaPrimitive.ScrollAreaScrollbar
->;
+type ScrollBarProps = ScrollAreaPrimitive.Scrollbar.Props;
 
 export function ScrollBar({
   className,
@@ -16,10 +14,10 @@ export function ScrollBar({
   ...rest
 }: ScrollBarProps) {
   return (
-    <ScrollAreaPrimitive.ScrollAreaScrollbar
+    <ScrollAreaPrimitive.Scrollbar
       {...rest}
       orientation={orientation}
-      className={twMerge(
+      className={cn(
         'flex touch-none select-none transition-colors',
         orientation === 'vertical' &&
           'h-full w-1.5 md:w-2.5 border-l border-l-transparent p-px',
@@ -29,8 +27,7 @@ export function ScrollBar({
         className
       )}
     >
-      <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 rounded-full bg-neutral-500/40" />
-    </ScrollAreaPrimitive.ScrollAreaScrollbar>
+      <ScrollAreaPrimitive.Thumb className="relative flex-1 rounded-full bg-neutral-500/40" />
+    </ScrollAreaPrimitive.Scrollbar>
   );
 }
-ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
