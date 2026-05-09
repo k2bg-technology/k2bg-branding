@@ -779,8 +779,8 @@
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-popover",
-          "version": "^1.1.4",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "ポジショニングとフォーカス管理を備えたアクセシブルなポップオーバープリミティブを提供"
         },
         {
@@ -796,8 +796,8 @@
           "description": "ダイアログとポップオーバーパターンに関する公式ARIAオーサリングプラクティスガイド"
         },
         {
-          "linkText": "Radix UI Popoverドキュメント",
-          "url": "https://www.radix-ui.com/primitives/docs/components/popover",
+          "linkText": "Base UI Popoverドキュメント",
+          "url": "https://base-ui.com/react/components/popover",
           "description": "基盤となるポップオーバープリミティブコンポーネントの公式ドキュメント"
         },
         {

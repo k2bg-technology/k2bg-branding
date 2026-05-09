@@ -779,8 +779,8 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-popover",
-          "version": "^1.1.4",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "Provides accessible popover primitives with positioning and focus management"
         },
         {
@@ -796,8 +796,8 @@
           "description": "Official ARIA Authoring Practices Guide for dialog and popover patterns"
         },
         {
-          "linkText": "Radix UI Popover Documentation",
-          "url": "https://www.radix-ui.com/primitives/docs/components/popover",
+          "linkText": "Base UI Popover Documentation",
+          "url": "https://base-ui.com/react/components/popover",
           "description": "Official documentation for the underlying popover primitive component"
         },
         {
