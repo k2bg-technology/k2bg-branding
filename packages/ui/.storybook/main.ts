@@ -82,7 +82,7 @@ const config: StorybookConfig = {
       shouldExtractLiteralValuesFromEnum: true,
       shouldRemoveUndefinedFromOptional: true,
       propFilter: (prop) =>
-        prop.parent ? !/node_modules/.test(prop.parent.fileName) : true,
+        prop.parent ? !/@types\/react\//.test(prop.parent.fileName) : true,
     },
   },
   // Explicitly set output directory for Vercel
