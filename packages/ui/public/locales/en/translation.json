@@ -256,8 +256,8 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-dropdown-menu",
-          "version": "^2.0.6",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "Provides accessible dropdown primitives with keyboard navigation and focus management"
         }
       ],
@@ -268,8 +268,8 @@
           "description": "Official ARIA Authoring Practices Guide for menu components"
         },
         {
-          "linkText": "Radix UI Dropdown Menu Documentation",
-          "url": "https://www.radix-ui.com/primitives/docs/components/dropdown-menu",
+          "linkText": "Base UI Menu Documentation",
+          "url": "https://base-ui.com/react/components/menu",
           "description": "Official documentation for the underlying dropdown menu primitive"
         },
         {
