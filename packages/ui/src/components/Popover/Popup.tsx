@@ -20,27 +20,15 @@ const variants = cva(
   }
 );
 
-type Props = PopoverPrimitive.Positioner.Props & VariantProps<typeof variants>;
+type Props = PopoverPrimitive.Popup.Props & VariantProps<typeof variants>;
 
-export function Content({
-  children,
-  className,
-  color,
-  align = 'center',
-  sideOffset = 4,
-  ...rest
-}: Props) {
+export function Popup({ children, className, color, ...rest }: Props) {
   return (
-    <PopoverPrimitive.Portal>
-      <PopoverPrimitive.Positioner
-        align={align}
-        sideOffset={sideOffset}
-        {...rest}
-      >
-        <PopoverPrimitive.Popup className={cn(variants({ color }), className)}>
-          {children}
-        </PopoverPrimitive.Popup>
-      </PopoverPrimitive.Positioner>
-    </PopoverPrimitive.Portal>
+    <PopoverPrimitive.Popup
+      {...rest}
+      className={cn(variants({ color }), className)}
+    >
+      {children}
+    </PopoverPrimitive.Popup>
   );
 }

@@ -57,16 +57,18 @@ export const Default: Story = {
             Open Popover
           </Button>
         </Popover.Trigger>
-        <Popover.Content>
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none">Dimensions</h4>
-              <p className="text-sm text-slate-500">
-                Set the dimensions for the layer.
-              </p>
+        <Popover.Positioner>
+          <Popover.Popup>
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Dimensions</h4>
+                <p className="text-sm text-slate-500">
+                  Set the dimensions for the layer.
+                </p>
+              </div>
             </div>
-          </div>
-        </Popover.Content>
+          </Popover.Popup>
+        </Popover.Positioner>
       </>
     ),
   },
@@ -81,48 +83,50 @@ export const WithForm: Story = {
             Open Popover
           </Button>
         </Popover.Trigger>
-        <Popover.Content className="w-80">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none">Dimensions</h4>
-              <p className="text-sm text-slate-500">
-                Set the dimensions for the layer.
-              </p>
+        <Popover.Positioner>
+          <Popover.Popup className="w-80">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Dimensions</h4>
+                <p className="text-sm text-slate-500">
+                  Set the dimensions for the layer.
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <label htmlFor="width" className="text-sm">
+                    Width
+                  </label>
+                  <input
+                    id="width"
+                    defaultValue="100%"
+                    className="col-span-2 h-8 rounded-md border px-3 text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <label htmlFor="maxWidth" className="text-sm">
+                    Max. width
+                  </label>
+                  <input
+                    id="maxWidth"
+                    defaultValue="300px"
+                    className="col-span-2 h-8 rounded-md border px-3 text-sm"
+                  />
+                </div>
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <label htmlFor="height" className="text-sm">
+                    Height
+                  </label>
+                  <input
+                    id="height"
+                    defaultValue="25px"
+                    className="col-span-2 h-8 rounded-md border px-3 text-sm"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="grid gap-2">
-              <div className="grid grid-cols-3 items-center gap-4">
-                <label htmlFor="width" className="text-sm">
-                  Width
-                </label>
-                <input
-                  id="width"
-                  defaultValue="100%"
-                  className="col-span-2 h-8 rounded-md border px-3 text-sm"
-                />
-              </div>
-              <div className="grid grid-cols-3 items-center gap-4">
-                <label htmlFor="maxWidth" className="text-sm">
-                  Max. width
-                </label>
-                <input
-                  id="maxWidth"
-                  defaultValue="300px"
-                  className="col-span-2 h-8 rounded-md border px-3 text-sm"
-                />
-              </div>
-              <div className="grid grid-cols-3 items-center gap-4">
-                <label htmlFor="height" className="text-sm">
-                  Height
-                </label>
-                <input
-                  id="height"
-                  defaultValue="25px"
-                  className="col-span-2 h-8 rounded-md border px-3 text-sm"
-                />
-              </div>
-            </div>
-          </div>
-        </Popover.Content>
+          </Popover.Popup>
+        </Popover.Positioner>
       </>
     ),
   },
@@ -137,16 +141,18 @@ export const Dark: Story = {
             Open Popover
           </Button>
         </Popover.Trigger>
-        <Popover.Content color="dark">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none">Dimensions</h4>
-              <p className="text-sm text-white/60">
-                Set the dimensions for the layer.
-              </p>
+        <Popover.Positioner>
+          <Popover.Popup color="dark">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Dimensions</h4>
+                <p className="text-sm text-white/60">
+                  Set the dimensions for the layer.
+                </p>
+              </div>
             </div>
-          </div>
-        </Popover.Content>
+          </Popover.Popup>
+        </Popover.Positioner>
       </>
     ),
   },
@@ -161,48 +167,50 @@ export const DarkWithForm: Story = {
             Open Popover
           </Button>
         </Popover.Trigger>
-        <Popover.Content color="dark" className="w-80">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium leading-none">Dimensions</h4>
-              <p className="text-sm text-white/60">
-                Set the dimensions for the layer.
-              </p>
+        <Popover.Positioner>
+          <Popover.Popup color="dark" className="w-80">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <h4 className="font-medium leading-none">Dimensions</h4>
+                <p className="text-sm text-white/60">
+                  Set the dimensions for the layer.
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <label htmlFor="darkWidth" className="text-sm">
+                    Width
+                  </label>
+                  <input
+                    id="darkWidth"
+                    defaultValue="100%"
+                    className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
+                  />
+                </div>
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <label htmlFor="darkMaxWidth" className="text-sm">
+                    Max. width
+                  </label>
+                  <input
+                    id="darkMaxWidth"
+                    defaultValue="300px"
+                    className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
+                  />
+                </div>
+                <div className="grid grid-cols-3 items-center gap-4">
+                  <label htmlFor="darkHeight" className="text-sm">
+                    Height
+                  </label>
+                  <input
+                    id="darkHeight"
+                    defaultValue="25px"
+                    className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="grid gap-2">
-              <div className="grid grid-cols-3 items-center gap-4">
-                <label htmlFor="darkWidth" className="text-sm">
-                  Width
-                </label>
-                <input
-                  id="darkWidth"
-                  defaultValue="100%"
-                  className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
-                />
-              </div>
-              <div className="grid grid-cols-3 items-center gap-4">
-                <label htmlFor="darkMaxWidth" className="text-sm">
-                  Max. width
-                </label>
-                <input
-                  id="darkMaxWidth"
-                  defaultValue="300px"
-                  className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
-                />
-              </div>
-              <div className="grid grid-cols-3 items-center gap-4">
-                <label htmlFor="darkHeight" className="text-sm">
-                  Height
-                </label>
-                <input
-                  id="darkHeight"
-                  defaultValue="25px"
-                  className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
-                />
-              </div>
-            </div>
-          </div>
-        </Popover.Content>
+          </Popover.Popup>
+        </Popover.Positioner>
       </>
     ),
   },
@@ -217,11 +225,13 @@ export const AlignStart: Story = {
             Align Start
           </Button>
         </Popover.Trigger>
-        <Popover.Content align="start">
-          <p className="text-sm">
-            This popover is aligned to the start of the trigger.
-          </p>
-        </Popover.Content>
+        <Popover.Positioner align="start">
+          <Popover.Popup>
+            <p className="text-sm">
+              This popover is aligned to the start of the trigger.
+            </p>
+          </Popover.Popup>
+        </Popover.Positioner>
       </>
     ),
   },
@@ -236,11 +246,13 @@ export const AlignEnd: Story = {
             Align End
           </Button>
         </Popover.Trigger>
-        <Popover.Content align="end">
-          <p className="text-sm">
-            This popover is aligned to the end of the trigger.
-          </p>
-        </Popover.Content>
+        <Popover.Positioner align="end">
+          <Popover.Popup>
+            <p className="text-sm">
+              This popover is aligned to the end of the trigger.
+            </p>
+          </Popover.Popup>
+        </Popover.Positioner>
       </>
     ),
   },
