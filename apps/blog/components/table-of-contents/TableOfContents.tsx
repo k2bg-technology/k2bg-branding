@@ -49,31 +49,33 @@ export function TableOfContents({ headings }: Props) {
           />
         </Button>
       </Popover.Trigger>
-      <Popover.Content side="top" align="end" color="dark">
-        <nav aria-label="目次">
-          <ScrollArea className="w-72 max-h-[500px]">
-            <ul className="space-y-1">
-              {headings.map((heading) => (
-                <li key={heading.id}>
-                  <button
-                    type="button"
-                    onClick={() => handleHeadingClick(heading.id)}
-                    className={`w-full text-left text-sm leading-relaxed py-1 transition-colors hover:text-white ${
-                      heading.level === 3 ? 'pl-4' : ''
-                    } ${
-                      activeId === heading.id
-                        ? 'text-white font-bold'
-                        : 'text-white/60'
-                    }`}
-                  >
-                    {heading.text}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </ScrollArea>
-        </nav>
-      </Popover.Content>
+      <Popover.Positioner side="top" align="end">
+        <Popover.Popup color="dark">
+          <nav aria-label="目次">
+            <ScrollArea className="w-72 max-h-[500px]">
+              <ul className="space-y-1">
+                {headings.map((heading) => (
+                  <li key={heading.id}>
+                    <button
+                      type="button"
+                      onClick={() => handleHeadingClick(heading.id)}
+                      className={`w-full text-left text-sm leading-relaxed py-1 transition-colors hover:text-white ${
+                        heading.level === 3 ? 'pl-4' : ''
+                      } ${
+                        activeId === heading.id
+                          ? 'text-white font-bold'
+                          : 'text-white/60'
+                      }`}
+                    >
+                      {heading.text}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </ScrollArea>
+          </nav>
+        </Popover.Popup>
+      </Popover.Positioner>
     </Popover>
   );
 }

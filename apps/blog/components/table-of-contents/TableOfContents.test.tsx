@@ -48,11 +48,14 @@ vi.mock('ui', async () => {
       </div>
     );
   };
-  PopoverRoot.Content = ({ children }: { children: React.ReactNode }) => {
+  PopoverRoot.Positioner = ({ children }: { children: React.ReactNode }) => {
     const { open } = React.useContext(PopoverContext);
     if (!open) return null;
     return <div>{children}</div>;
   };
+  PopoverRoot.Popup = ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  );
   PopoverRoot.Close = ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
   );

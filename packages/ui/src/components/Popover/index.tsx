@@ -1,8 +1,9 @@
 import { Close } from './Close';
-import { Content } from './Content';
+import { Popup } from './Popup';
+import { Positioner } from './Positioner';
 import { Root } from './Root';
 import { Trigger } from './Trigger';
 
-const Popover = Object.assign(Root, { Trigger, Content, Close });
+const Popover = Object.assign(Root, { Trigger, Positioner, Popup, Close });
 
 export { Popover };
