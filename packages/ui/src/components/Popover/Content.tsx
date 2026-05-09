@@ -1,11 +1,12 @@
 'use client';
 
-import * as RadixPopover from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { twMerge } from '../../..';
+
+import { cn } from '../../utils/cn';
 
 const variants = cva(
-  'rounded-md border p-spacious shadow-md outline-none data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95',
+  'rounded-md border p-spacious shadow-md outline-none data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
   {
     variants: {
       color: {
@@ -19,8 +20,7 @@ const variants = cva(
   }
 );
 
-type Props = React.ComponentPropsWithoutRef<typeof RadixPopover.Content> &
-  VariantProps<typeof variants>;
+type Props = PopoverPrimitive.Positioner.Props & VariantProps<typeof variants>;
 
 export function Content({
   children,
@@ -31,17 +31,16 @@ export function Content({
   ...rest
 }: Props) {
   return (
-    <RadixPopover.Portal>
-      <RadixPopover.Content
-        className={twMerge(variants({ color }), className)}
+    <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Positioner
         align={align}
         sideOffset={sideOffset}
         {...rest}
       >
-        {children}
-      </RadixPopover.Content>
-    </RadixPopover.Portal>
+        <PopoverPrimitive.Popup className={cn(variants({ color }), className)}>
+          {children}
+        </PopoverPrimitive.Popup>
+      </PopoverPrimitive.Positioner>
+    </PopoverPrimitive.Portal>
   );
 }
-
-Content.displayName = RadixPopover.Content.displayName;

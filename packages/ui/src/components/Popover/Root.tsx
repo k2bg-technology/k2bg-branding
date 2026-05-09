@@ -1,11 +1,9 @@
 'use client';
 
-import * as RadixPopover from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
-type Props = React.ComponentPropsWithoutRef<typeof RadixPopover.Root>;
+type Props = React.ComponentProps<typeof PopoverPrimitive.Root>;
 
-export function Root({ children, ...rest }: Props) {
-  return <RadixPopover.Root {...rest}>{children}</RadixPopover.Root>;
+export function Root(props: Props) {
+  return <PopoverPrimitive.Root {...props} />;
 }
-
-Root.displayName = RadixPopover.Root.displayName;

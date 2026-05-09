@@ -1,15 +1,21 @@
 'use client';
 
-import * as RadixPopover from '@radix-ui/react-popover';
+import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
-type Props = React.ComponentPropsWithoutRef<typeof RadixPopover.Trigger>;
+import { asChildToRender } from '../../utils/asChildToRender';
 
-export function Trigger({ children, ...rest }: Props) {
-  return (
-    <RadixPopover.Trigger asChild {...rest}>
-      {children}
-    </RadixPopover.Trigger>
-  );
+interface Props extends PopoverPrimitive.Trigger.Props {
+  // Deprecated. Use the `render` prop. Kept for backward compatibility while
+  // consumer call sites migrate; removed once issue #254 closes.
+  asChild?: boolean;
 }
 
-Trigger.displayName = RadixPopover.Trigger.displayName;
+export function Trigger({ asChild = true, render, children, ...rest }: Props) {
+  const renderProps = asChildToRender({ asChild, render, children });
+
+  return (
+    <PopoverPrimitive.Trigger {...rest} render={renderProps.render}>
+      {renderProps.children}
+    </PopoverPrimitive.Trigger>
+  );
+}
