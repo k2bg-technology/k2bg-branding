@@ -76,6 +76,15 @@ const config: StorybookConfig = {
     options: {},
   },
   staticDirs: ['../public'],
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      shouldExtractLiteralValuesFromEnum: true,
+      shouldRemoveUndefinedFromOptional: true,
+      propFilter: (prop) =>
+        prop.parent ? !/@types\/react\//.test(prop.parent.fileName) : true,
+    },
+  },
   // Explicitly set output directory for Vercel
   managerHead: (head) => `
     ${head}
