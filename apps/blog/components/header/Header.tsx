@@ -111,11 +111,13 @@ export function Header() {
                     <Icon name="magnifying-glass" width={20} height={20} />
                   </Button>
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content align="end">
-                  <DropdownMenu.Item>
-                    <Search placeholder="検索" />
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
+                <DropdownMenu.Positioner align="end">
+                  <DropdownMenu.Popup>
+                    <DropdownMenu.Item>
+                      <Search placeholder="検索" />
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Popup>
+                </DropdownMenu.Positioner>
               </DropdownMenu>
             </div>
             <div className="flex xl:hidden items-center gap-x-spacious">
@@ -131,50 +133,52 @@ export function Header() {
                     <Icon name="inbox-stack" />
                   </Button>
                 </DropdownMenu.Trigger>
-                <DropdownMenu.Content>
-                  <DropdownMenu.Item>
-                    <Link
-                      href={`/category/${Category.ENGINEERING}`}
-                      data-gtm="header_click_engineering"
-                    >
-                      Engineering
-                    </Link>
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item>
-                    <Link
-                      href={`/category/${Category.DESIGN}`}
-                      data-gtm="header_click_design"
-                    >
-                      Design
-                    </Link>
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item>
-                    <Link
-                      href={`/category/${Category.DATA_SCIENCE}`}
-                      data-gtm="header_click_data_science"
-                    >
-                      Data Science
-                    </Link>
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item>
-                    <Link
-                      href={`/category/${Category.LIFE_STYLE}`}
-                      data-gtm="header_click_life_style"
-                    >
-                      Life Style
-                    </Link>
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item>
-                    <Link href="/concept" data-gtm="header_click_concept">
-                      Concept
-                    </Link>
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item>
-                    <Link href="/contact" data-gtm="header_click_contact">
-                      Contact
-                    </Link>
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
+                <DropdownMenu.Positioner>
+                  <DropdownMenu.Popup>
+                    <DropdownMenu.Item>
+                      <Link
+                        href={`/category/${Category.ENGINEERING}`}
+                        data-gtm="header_click_engineering"
+                      >
+                        Engineering
+                      </Link>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item>
+                      <Link
+                        href={`/category/${Category.DESIGN}`}
+                        data-gtm="header_click_design"
+                      >
+                        Design
+                      </Link>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item>
+                      <Link
+                        href={`/category/${Category.DATA_SCIENCE}`}
+                        data-gtm="header_click_data_science"
+                      >
+                        Data Science
+                      </Link>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item>
+                      <Link
+                        href={`/category/${Category.LIFE_STYLE}`}
+                        data-gtm="header_click_life_style"
+                      >
+                        Life Style
+                      </Link>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item>
+                      <Link href="/concept" data-gtm="header_click_concept">
+                        Concept
+                      </Link>
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item>
+                      <Link href="/contact" data-gtm="header_click_contact">
+                        Contact
+                      </Link>
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Popup>
+                </DropdownMenu.Positioner>
               </DropdownMenu>
               <Drawer
                 trigger={

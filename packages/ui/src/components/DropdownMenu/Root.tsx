@@ -1,11 +1,9 @@
 'use client';
 
-import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 
-type Props = React.ComponentPropsWithoutRef<typeof RadixDropdownMenu.Root>;
+type Props = React.ComponentProps<typeof MenuPrimitive.Root>;
 
-export function Root({ children, ...rest }: Props) {
-  return <RadixDropdownMenu.Root {...rest}>{children}</RadixDropdownMenu.Root>;
+export function Root(props: Props) {
+  return <MenuPrimitive.Root {...props} />;
 }
-
-Root.displayName = RadixDropdownMenu.Root.displayName;

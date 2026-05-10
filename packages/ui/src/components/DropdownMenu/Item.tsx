@@ -1,23 +1,35 @@
 'use client';
 
-import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
-import { twMerge } from 'tailwind-merge';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 
-type Props = RadixDropdownMenu.DropdownMenuItemProps;
+import { asChildToRender } from '../../utils/asChildToRender';
+import { cn } from '../../utils/cn';
 
-export function Item({ children, className, ...rest }: Props) {
+interface Props extends MenuPrimitive.Item.Props {
+  // Deprecated. Use the `render` prop. Kept for backward compatibility while
+  // consumer call sites migrate; removed once issue #254 closes.
+  asChild?: boolean;
+}
+
+export function Item({
+  asChild = true,
+  render,
+  children,
+  className,
+  ...rest
+}: Props) {
+  const renderProps = asChildToRender({ asChild, render, children });
+
   return (
-    <RadixDropdownMenu.Item
+    <MenuPrimitive.Item
       {...rest}
-      className={twMerge(
+      className={cn(
         'group text-button-r-sm leading-none rounded-[0.3rem] flex items-center px-2 py-2 relative select-none outline-hidden hover:bg-base-black/10 transition-colors duration-200 ease-in-out',
         className
       )}
-      asChild
+      render={renderProps.render}
     >
-      {children}
-    </RadixDropdownMenu.Item>
+      {renderProps.children}
+    </MenuPrimitive.Item>
   );
 }
-
-Item.displayName = RadixDropdownMenu.Item.displayName;

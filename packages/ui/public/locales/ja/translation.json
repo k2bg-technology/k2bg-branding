@@ -216,7 +216,7 @@
     "dropdownMenu": {
       "description": "ボタンやインタラクティブ要素によってトリガーされるフローティングパネルにアクションやオプションのリストを表示します。",
       "overview": "DropdownMenuは、ユーザーがトリガー要素と対話したときに表示されるアクション、リンク、オプションのセットをコンパクトに提示します。コンポーネントは2つの主要部分で構成されます。メニューを開くトリガー要素と、選択可能なアイテムを含むメニューコンテンツです。メニューアイテムはテキスト、アイコン、リンクなど様々なコンテンツタイプをサポートします。フローティングパネルはトリガーに対して自動的に位置を調整し、ユーザーが外側をクリックするかアイテムを選択すると閉じます。",
-      "usage": "コンテキストアクション、ナビゲーションショートカット、ユーザーアカウントメニュー、設定アクセスにDropdownMenuを使用します。基本的な使い方では、Buttonなどのインタラクティブ要素をtriggerプロップに指定し、DropdownMenuItemコンポーネントを含むchildrenを提供します。各DropdownMenuItemは適切なセマンティクスのためにリンクまたはボタン要素をラップする必要があります。視認性向上のためにアイコンとテキストラベルを組み合わせます。モバイルナビゲーションにはハンバーガーアイコントリガーと組み合わせます。openとdefaultOpenプロップにより制御と非制御の両方の開閉状態をサポートします。",
+      "usage": "コンテキストアクション、ナビゲーションショートカット、ユーザーアカウントメニュー、設定アクセスにDropdownMenuを使用します。基本的な使い方では、トリガー要素をDropdownMenu.Triggerでラップし、メニューアイテムをDropdownMenu.Item として、DropdownMenu.Positioner にネストした DropdownMenu.Popup の中にレンダリングします。DropdownMenu.Positioner はポータルとフローティング要素の位置決めを担当し、DropdownMenu.Popup は可視パネルとしてメニューセマンティクス・スタイル・DOM/ARIA 属性を保持します。各 DropdownMenu.Item は適切なセマンティクスのためにリンクまたはボタン要素をラップする必要があります。配置のカスタマイズには、DropdownMenu.Positioner の align プロップに center、start、end のいずれかを指定します。トリガーとパネルの間隔は、DropdownMenu.Positioner の sideOffset プロップで調整します。視認性向上のためにアイコンとテキストラベルを組み合わせます。モバイルナビゲーションにはハンバーガーアイコントリガーと組み合わせます。open と defaultOpen プロップにより制御と非制御の両方の開閉状態をサポートします。",
       "accessibility": "このコンポーネントは以下のアクセシビリティ要件を満たします。キーボードサポートとして、メニューはトリガー上でEnterまたはSpaceで開き、矢印キーでアイテム間を移動、Enterで選択、Escapeで閉じます。フォーカス管理について、開いたときに最初のメニューアイテムにフォーカスが移動し、閉じたときにトリガーに戻ります。トリガーにaria-expanded、コンテンツにrole menuなど適切なARIA属性を使用します。スクリーンリーダーはメニューの状態とアイテム数を読み上げます。modalプロップは背景コンテンツがインタラクティブのままかどうかを制御します。",
       "doList": [
         "トリガーに説明的なラベルまたはアイコンのみのトリガーにaria-labelを提供します",
@@ -256,8 +256,8 @@
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-dropdown-menu",
-          "version": "^2.0.6",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "キーボードナビゲーションとフォーカス管理を備えたアクセシブルなドロップダウンプリミティブを提供"
         }
       ],
@@ -268,8 +268,8 @@
           "description": "メニューコンポーネントに関する公式ARIAオーサリングプラクティスガイド"
         },
         {
-          "linkText": "Radix UI Dropdown Menuドキュメント",
-          "url": "https://www.radix-ui.com/primitives/docs/components/dropdown-menu",
+          "linkText": "Base UI Menuドキュメント",
+          "url": "https://base-ui.com/react/components/menu",
           "description": "基礎となるドロップダウンメニュープリミティブの公式ドキュメント"
         },
         {

@@ -1,15 +1,21 @@
 'use client';
 
-import * as RadixDropdownMenu from '@radix-ui/react-dropdown-menu';
+import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 
-type Props = React.ComponentPropsWithoutRef<typeof RadixDropdownMenu.Trigger>;
+import { asChildToRender } from '../../utils/asChildToRender';
 
-export function Trigger({ children, ...rest }: Props) {
-  return (
-    <RadixDropdownMenu.Trigger asChild {...rest}>
-      {children}
-    </RadixDropdownMenu.Trigger>
-  );
+interface Props extends MenuPrimitive.Trigger.Props {
+  // Deprecated. Use the `render` prop. Kept for backward compatibility while
+  // consumer call sites migrate; removed once issue #254 closes.
+  asChild?: boolean;
 }
 
-Trigger.displayName = RadixDropdownMenu.Trigger.displayName;
+export function Trigger({ asChild = true, render, children, ...rest }: Props) {
+  const renderProps = asChildToRender({ asChild, render, children });
+
+  return (
+    <MenuPrimitive.Trigger {...rest} render={renderProps.render}>
+      {renderProps.children}
+    </MenuPrimitive.Trigger>
+  );
+}
