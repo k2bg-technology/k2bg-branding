@@ -1,7 +1,6 @@
 .popup {
   transform: translateX(var(--drawer-swipe-movement-x));
   transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-  will-change: transform;
 }
 
 .popup[data-swiping] {
