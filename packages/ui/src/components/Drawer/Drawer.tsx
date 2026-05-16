@@ -1,7 +1,7 @@
 'use client';
 
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
-import { asChildToRender } from '../../utils/asChildToRender';
+import type { ReactElement } from 'react';
 import { twMerge } from '../../utils/extendTailwindMerge';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
@@ -24,17 +24,9 @@ export function Drawer({
   className,
   ...rest
 }: Props) {
-  const triggerRenderProps = asChildToRender<{
-    asChild: boolean;
-    render?: DrawerPrimitive.Trigger.Props['render'];
-    children?: React.ReactNode;
-  }>({ asChild: true, children: trigger });
-
   return (
     <DrawerPrimitive.Root swipeDirection="right">
-      <DrawerPrimitive.Trigger render={triggerRenderProps.render}>
-        {triggerRenderProps.children}
-      </DrawerPrimitive.Trigger>
+      <DrawerPrimitive.Trigger render={trigger as ReactElement} />
       <DrawerPrimitive.Portal>
         <DrawerPrimitive.Backdrop className="fixed bg-black/50 inset-0" />
         <DrawerPrimitive.Viewport>
