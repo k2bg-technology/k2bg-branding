@@ -1,6 +1,7 @@
 'use client';
 
-import * as RadixDialog from '@radix-ui/react-dialog';
+import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
+import { asChildToRender } from '../../utils/asChildToRender';
 import { twMerge } from '../../utils/extendTailwindMerge';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
@@ -23,51 +24,63 @@ export function Drawer({
   className,
   ...rest
 }: Props) {
+  const triggerRenderProps = asChildToRender<{
+    asChild: boolean;
+    render?: DrawerPrimitive.Trigger.Props['render'];
+    children?: React.ReactNode;
+  }>({ asChild: true, children: trigger });
+
   return (
-    <RadixDialog.Root>
-      <RadixDialog.Trigger asChild>{trigger}</RadixDialog.Trigger>
-      <RadixDialog.Portal>
-        <RadixDialog.Overlay className="fixed bg-black/50 inset-0" />
-        <RadixDialog.Content
-          {...rest}
-          className={twMerge(
-            'grid auto-rows-max gap-5 fixed top-0 right-0 w-max h-full rounded-xl bg-white drop-shadow-xl',
-            styles.Content,
-            className
-          )}
-        >
-          <ScrollArea className="p-6 pt-14 max-h-dvh">
-            <RadixDialog.Title
-              className={twMerge(
-                '"text-body-r-sm leading-body-r-sm font-bold"',
-                !title && 'hidden'
-              )}
-            >
-              {title}
-            </RadixDialog.Title>
-            {description && (
-              <RadixDialog.Description className="text-body-r-sm leading-body-r-sm">
-                {description}
-              </RadixDialog.Description>
+    <DrawerPrimitive.Root swipeDirection="right">
+      <DrawerPrimitive.Trigger render={triggerRenderProps.render}>
+        {triggerRenderProps.children}
+      </DrawerPrimitive.Trigger>
+      <DrawerPrimitive.Portal>
+        <DrawerPrimitive.Backdrop className="fixed bg-black/50 inset-0" />
+        <DrawerPrimitive.Viewport>
+          <DrawerPrimitive.Popup
+            {...rest}
+            className={twMerge(
+              'grid auto-rows-max gap-5 fixed top-0 right-0 w-max h-full rounded-xl bg-white drop-shadow-xl',
+              styles.popup,
+              className
             )}
-            {mainContent}
-          </ScrollArea>
-          <RadixDialog.Close asChild>
-            <Button
-              type="button"
-              className="absolute top-2 left-6"
-              aria-label="Close"
-              color="dark"
-              variant="ghost"
-              size="icon"
-            >
-              <Icon name="x-mark" />
-            </Button>
-          </RadixDialog.Close>
-        </RadixDialog.Content>
-      </RadixDialog.Portal>
-    </RadixDialog.Root>
+          >
+            <ScrollArea className="p-6 pt-14 max-h-dvh">
+              <div className="flex flex-col gap-y-spacious">
+                <DrawerPrimitive.Title
+                  className={twMerge(
+                    'text-body-r-sm leading-body-r-sm font-bold',
+                    !title && 'hidden'
+                  )}
+                >
+                  {title}
+                </DrawerPrimitive.Title>
+                {description && (
+                  <DrawerPrimitive.Description className="text-body-r-sm leading-body-r-sm">
+                    {description}
+                  </DrawerPrimitive.Description>
+                )}
+                {mainContent}
+              </div>
+            </ScrollArea>
+            <DrawerPrimitive.Close
+              render={
+                <Button
+                  type="button"
+                  className="absolute top-2 left-6"
+                  aria-label="Close"
+                  color="dark"
+                  variant="ghost"
+                  size="icon"
+                >
+                  <Icon name="x-mark" />
+                </Button>
+              }
+            />
+          </DrawerPrimitive.Popup>
+        </DrawerPrimitive.Viewport>
+      </DrawerPrimitive.Portal>
+    </DrawerPrimitive.Root>
   );
 }
-
-Drawer.displayName = RadixDialog.Root.displayName;

@@ -1,29 +1,15 @@
-.Content {
-  &[data-state='open'] {
-    animation: slidein 0.3s ease-in 1;
-  }
-
-  &[data-state='closed'] {
-    animation: slideout 0.3s ease-in 1;
-  }
+.popup {
+  transform: translateX(var(--drawer-swipe-movement-x));
+  transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  will-change: transform;
 }
 
-@keyframes slidein {
-  from {
-    transform: translate(100%, 0);
-  }
-
-  to {
-    transform: translate(0, 0);
-  }
+.popup[data-swiping] {
+  transition-duration: 0s;
+  user-select: none;
 }
 
-@keyframes slideout {
-  from {
-    transform: translate(0, 0);
-  }
-
-  to {
-    transform: translate(100%, 0);
-  }
+.popup[data-starting-style],
+.popup[data-ending-style] {
+  transform: translateX(calc(100% + 2px));
 }
