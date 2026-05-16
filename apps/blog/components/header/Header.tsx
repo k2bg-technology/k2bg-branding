@@ -1,5 +1,12 @@
 import Link from 'next/link';
-import { Button, buttonVariants, Drawer, DropdownMenu, Icon } from 'ui';
+import {
+  Button,
+  buttonVariants,
+  Drawer,
+  DropdownMenu,
+  Icon,
+  Popover,
+} from 'ui';
 import { Category } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import { Search } from '../search/Search';
@@ -100,83 +107,97 @@ export function Header() {
               >
                 Contact
               </Link>
-              <DropdownMenu>
-                <DropdownMenu.Trigger>
-                  <Button
-                    color="dark"
-                    variant="ghost"
-                    className="pointer-events-auto"
-                    data-gtm="header_click_search"
-                  >
-                    <Icon name="magnifying-glass" width={20} height={20} />
-                  </Button>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Positioner align="end">
-                  <DropdownMenu.Popup>
-                    <DropdownMenu.Item>
-                      <Search placeholder="検索" />
-                    </DropdownMenu.Item>
-                  </DropdownMenu.Popup>
-                </DropdownMenu.Positioner>
-              </DropdownMenu>
+              <Popover>
+                <Popover.Trigger
+                  render={
+                    <Button
+                      color="dark"
+                      variant="ghost"
+                      className="pointer-events-auto"
+                      data-gtm="header_click_search"
+                    >
+                      <Icon name="magnifying-glass" width={20} height={20} />
+                    </Button>
+                  }
+                />
+                <Popover.Positioner align="end">
+                  <Popover.Popup>
+                    <Search placeholder="検索" />
+                  </Popover.Popup>
+                </Popover.Positioner>
+              </Popover>
             </div>
             <div className="flex xl:hidden items-center gap-x-spacious">
               <DropdownMenu>
-                <DropdownMenu.Trigger>
-                  <Button
-                    color="dark"
-                    size="icon"
-                    variant="ghost"
-                    className="pointer-events-auto"
-                    data-gtm="header_click_menu"
-                  >
-                    <Icon name="inbox-stack" />
-                  </Button>
-                </DropdownMenu.Trigger>
+                <DropdownMenu.Trigger
+                  render={
+                    <Button
+                      color="dark"
+                      size="icon"
+                      variant="ghost"
+                      className="pointer-events-auto"
+                      data-gtm="header_click_menu"
+                    >
+                      <Icon name="inbox-stack" />
+                    </Button>
+                  }
+                />
                 <DropdownMenu.Positioner>
                   <DropdownMenu.Popup>
-                    <DropdownMenu.Item>
-                      <Link
-                        href={`/category/${Category.ENGINEERING}`}
-                        data-gtm="header_click_engineering"
-                      >
-                        Engineering
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item>
-                      <Link
-                        href={`/category/${Category.DESIGN}`}
-                        data-gtm="header_click_design"
-                      >
-                        Design
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item>
-                      <Link
-                        href={`/category/${Category.DATA_SCIENCE}`}
-                        data-gtm="header_click_data_science"
-                      >
-                        Data Science
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item>
-                      <Link
-                        href={`/category/${Category.LIFE_STYLE}`}
-                        data-gtm="header_click_life_style"
-                      >
-                        Life Style
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item>
-                      <Link href="/concept" data-gtm="header_click_concept">
-                        Concept
-                      </Link>
-                    </DropdownMenu.Item>
-                    <DropdownMenu.Item>
-                      <Link href="/contact" data-gtm="header_click_contact">
-                        Contact
-                      </Link>
-                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      render={
+                        <Link
+                          href={`/category/${Category.ENGINEERING}`}
+                          data-gtm="header_click_engineering"
+                        >
+                          Engineering
+                        </Link>
+                      }
+                    />
+                    <DropdownMenu.Item
+                      render={
+                        <Link
+                          href={`/category/${Category.DESIGN}`}
+                          data-gtm="header_click_design"
+                        >
+                          Design
+                        </Link>
+                      }
+                    />
+                    <DropdownMenu.Item
+                      render={
+                        <Link
+                          href={`/category/${Category.DATA_SCIENCE}`}
+                          data-gtm="header_click_data_science"
+                        >
+                          Data Science
+                        </Link>
+                      }
+                    />
+                    <DropdownMenu.Item
+                      render={
+                        <Link
+                          href={`/category/${Category.LIFE_STYLE}`}
+                          data-gtm="header_click_life_style"
+                        >
+                          Life Style
+                        </Link>
+                      }
+                    />
+                    <DropdownMenu.Item
+                      render={
+                        <Link href="/concept" data-gtm="header_click_concept">
+                          Concept
+                        </Link>
+                      }
+                    />
+                    <DropdownMenu.Item
+                      render={
+                        <Link href="/contact" data-gtm="header_click_contact">
+                          Contact
+                        </Link>
+                      }
+                    />
                   </DropdownMenu.Popup>
                 </DropdownMenu.Positioner>
               </DropdownMenu>

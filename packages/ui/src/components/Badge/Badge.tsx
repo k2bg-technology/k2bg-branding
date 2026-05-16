@@ -2,8 +2,6 @@ import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { twMerge } from 'tailwind-merge';
 
-import { asChildToRender } from '../../utils/asChildToRender';
-
 const badgeVariants = cva(
   'inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden',
   {
@@ -123,31 +121,23 @@ const badgeVariants = cva(
   }
 );
 
-interface BadgeProps
-  extends Omit<useRender.ComponentProps<'span'>, 'color'>,
-    VariantProps<typeof badgeVariants> {
-  // Deprecated. Use the `render` prop. Kept for backward compatibility while
-  // consumer call sites migrate; removed once issue #254 closes.
-  asChild?: boolean;
-}
+type BadgeProps = Omit<useRender.ComponentProps<'span'>, 'color'> &
+  VariantProps<typeof badgeVariants>;
 
 export function Badge({
   className,
   variant,
   color,
-  asChild = false,
   render,
   children,
   ...rest
 }: BadgeProps) {
-  const renderProps = asChildToRender({ asChild, render, children });
-
   return useRender({
     defaultTagName: 'span',
-    render: renderProps.render,
+    render,
     props: {
       className: twMerge(badgeVariants({ variant, color }), className),
-      children: renderProps.children,
+      children,
       ...rest,
     },
   });

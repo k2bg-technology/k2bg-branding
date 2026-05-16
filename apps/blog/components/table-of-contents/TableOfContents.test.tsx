@@ -40,13 +40,11 @@ vi.mock('ui', async () => {
       <div>{children}</div>
     </PopoverContext.Provider>
   );
-  PopoverRoot.Trigger = ({ children }: { children: React.ReactNode }) => {
+  PopoverRoot.Trigger = ({ render }: { render: React.ReactElement }) => {
     const { open, onOpenChange } = React.useContext(PopoverContext);
-    return (
-      <div role="none" onClick={() => onOpenChange?.(!open)}>
-        {children}
-      </div>
-    );
+    return React.cloneElement(render, {
+      onClick: () => onOpenChange?.(!open),
+    } as React.HTMLAttributes<HTMLElement>);
   };
   PopoverRoot.Positioner = ({ children }: { children: React.ReactNode }) => {
     const { open } = React.useContext(PopoverContext);

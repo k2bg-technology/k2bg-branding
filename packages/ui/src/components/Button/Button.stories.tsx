@@ -103,15 +103,14 @@ export const InputButton: Story = {
   ),
 };
 
-// Regression coverage for the `asChild` API: the rendered element must keep
-// the label that was passed as the child element's children.
+// Regression coverage for the `render` prop: the rendered element must keep
+// the label passed as its own children.
 // @see https://github.com/k2bg-technology/k2bg-branding/issues/265
-export const AsChildLink: Story = {
+export const RenderLink: Story = {
   args: {
-    asChild: true,
-    children: (
+    render: (
       <a href="https://example.com" target="_blank" rel="noopener noreferrer">
-        AsChild Link
+        Render Link
       </a>
     ),
   },

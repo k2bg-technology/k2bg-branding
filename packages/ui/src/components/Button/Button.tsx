@@ -1,7 +1,6 @@
 import { Button as ButtonPrimitive } from '@base-ui/react/button';
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { asChildToRender } from '../../utils/asChildToRender';
 import { cn } from '../../utils/cn';
 
 /**
@@ -185,33 +184,25 @@ export const buttonVariants = cva(
   }
 );
 
-export interface Props
-  extends Omit<ButtonPrimitive.Props, 'color'>,
-    VariantProps<typeof buttonVariants> {
-  // Deprecated. Use the `render` prop. Kept for backward compatibility while
-  // consumer call sites migrate; removed once issue #254 closes.
-  asChild?: boolean;
-}
+export type Props = Omit<ButtonPrimitive.Props, 'color'> &
+  VariantProps<typeof buttonVariants>;
 
 export function Button({
   variant,
   color,
   size,
-  asChild = false,
   className,
   render,
   children,
   ...rest
 }: Props) {
-  const renderProps = asChildToRender({ asChild, render, children });
-
   return (
     <ButtonPrimitive
       className={cn(buttonVariants({ variant, color, size }), className)}
-      render={renderProps.render}
+      render={render}
       {...rest}
     >
-      {renderProps.children}
+      {children}
     </ButtonPrimitive>
   );
 }
