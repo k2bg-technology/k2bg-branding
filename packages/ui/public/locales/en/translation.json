@@ -317,8 +317,8 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-dialog",
-          "version": "^1.0.4",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "Provides accessible dialog primitives with focus management and keyboard handling"
         },
         {
@@ -334,8 +334,8 @@
           "description": "Official ARIA Authoring Practices Guide for modal dialog patterns"
         },
         {
-          "linkText": "Radix UI Dialog Documentation",
-          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
+          "linkText": "Base UI Dialog Documentation",
+          "url": "https://base-ui.com/react/components/dialog",
           "description": "Official documentation for the underlying dialog primitive component"
         }
       ]
