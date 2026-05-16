@@ -52,11 +52,13 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <Popover.Trigger>
-          <Button color="dark" variant="outline">
-            Open Popover
-          </Button>
-        </Popover.Trigger>
+        <Popover.Trigger
+          render={
+            <Button color="dark" variant="outline">
+              Open Popover
+            </Button>
+          }
+        />
         <Popover.Positioner>
           <Popover.Popup>
             <div className="grid gap-4">
@@ -78,11 +80,13 @@ export const WithForm: Story = {
   args: {
     children: (
       <>
-        <Popover.Trigger>
-          <Button color="dark" variant="outline">
-            Open Popover
-          </Button>
-        </Popover.Trigger>
+        <Popover.Trigger
+          render={
+            <Button color="dark" variant="outline">
+              Open Popover
+            </Button>
+          }
+        />
         <Popover.Positioner>
           <Popover.Popup className="w-80">
             <div className="grid gap-4">
@@ -136,11 +140,13 @@ export const Dark: Story = {
   args: {
     children: (
       <>
-        <Popover.Trigger>
-          <Button color="dark" variant="outline">
-            Open Popover
-          </Button>
-        </Popover.Trigger>
+        <Popover.Trigger
+          render={
+            <Button color="dark" variant="outline">
+              Open Popover
+            </Button>
+          }
+        />
         <Popover.Positioner>
           <Popover.Popup color="dark">
             <div className="grid gap-4">
@@ -162,11 +168,13 @@ export const DarkWithForm: Story = {
   args: {
     children: (
       <>
-        <Popover.Trigger>
-          <Button color="dark" variant="outline">
-            Open Popover
-          </Button>
-        </Popover.Trigger>
+        <Popover.Trigger
+          render={
+            <Button color="dark" variant="outline">
+              Open Popover
+            </Button>
+          }
+        />
         <Popover.Positioner>
           <Popover.Popup color="dark" className="w-80">
             <div className="grid gap-4">
@@ -220,11 +228,13 @@ export const AlignStart: Story = {
   args: {
     children: (
       <>
-        <Popover.Trigger>
-          <Button color="dark" variant="outline">
-            Align Start
-          </Button>
-        </Popover.Trigger>
+        <Popover.Trigger
+          render={
+            <Button color="dark" variant="outline">
+              Align Start
+            </Button>
+          }
+        />
         <Popover.Positioner align="start">
           <Popover.Popup>
             <p className="text-sm">
@@ -241,11 +251,13 @@ export const AlignEnd: Story = {
   args: {
     children: (
       <>
-        <Popover.Trigger>
-          <Button color="dark" variant="outline">
-            Align End
-          </Button>
-        </Popover.Trigger>
+        <Popover.Trigger
+          render={
+            <Button color="dark" variant="outline">
+              Align End
+            </Button>
+          }
+        />
         <Popover.Positioner align="end">
           <Popover.Popup>
             <p className="text-sm">

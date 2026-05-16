@@ -43,9 +43,9 @@
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-slot",
-          "version": "^1.1.0",
-          "reason": "カスタム要素合成のためのasChildパターンを有効化"
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
+          "reason": "render プロップによるカスタム要素合成を可能にします"
         },
         {
           "package": "class-variance-authority",
@@ -114,9 +114,9 @@
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-slot",
-          "version": "^1.1.0",
-          "reason": "asChildプロップによるポリモーフィックレンダリングを可能にします"
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
+          "reason": "render プロップによるポリモーフィックレンダリングを可能にします"
         },
         {
           "package": "class-variance-authority",

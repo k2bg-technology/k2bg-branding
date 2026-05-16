@@ -43,9 +43,9 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-slot",
-          "version": "^1.1.0",
-          "reason": "Enables asChild pattern for custom element composition"
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
+          "reason": "Headless button primitive and the render prop for custom element composition"
         },
         {
           "package": "class-variance-authority",
@@ -114,9 +114,9 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-slot",
-          "version": "^1.1.0",
-          "reason": "Enables polymorphic rendering via asChild prop"
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
+          "reason": "Headless rendering via the render prop for custom element composition"
         },
         {
           "package": "class-variance-authority",

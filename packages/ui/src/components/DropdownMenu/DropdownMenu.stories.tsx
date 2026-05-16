@@ -53,40 +53,48 @@ export const Default: Story = {
   args: {
     children: (
       <>
-        <DropdownMenu.Trigger>
-          <Button color="dark" variant="ghost" size="icon">
-            <Icon name="inbox-stack" className="w-10 h-10" />
-          </Button>
-        </DropdownMenu.Trigger>
+        <DropdownMenu.Trigger
+          render={
+            <Button color="dark" variant="ghost" size="icon">
+              <Icon name="inbox-stack" className="w-10 h-10" />
+            </Button>
+          }
+        />
         <DropdownMenu.Positioner>
           <DropdownMenu.Popup>
-            <DropdownMenu.Item>
-              <a
-                href="https://example.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Menu item 1
-              </a>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item>
-              <a
-                href="https://example.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Menu item 2
-              </a>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item>
-              <a
-                href="https://example.com"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Menu item 3
-              </a>
-            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              render={
+                <a
+                  href="https://example.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Menu item 1
+                </a>
+              }
+            />
+            <DropdownMenu.Item
+              render={
+                <a
+                  href="https://example.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Menu item 2
+                </a>
+              }
+            />
+            <DropdownMenu.Item
+              render={
+                <a
+                  href="https://example.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Menu item 3
+                </a>
+              }
+            />
           </DropdownMenu.Popup>
         </DropdownMenu.Positioner>
       </>
