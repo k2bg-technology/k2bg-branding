@@ -1,7 +1,7 @@
 'use client';
 
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
-import type { ReactElement } from 'react';
+import { isValidElement } from 'react';
 import { twMerge } from '../../utils/extendTailwindMerge';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
@@ -24,7 +24,7 @@ export function Dialog({
 }: Props) {
   return (
     <DialogPrimitive.Root {...rest}>
-      <DialogPrimitive.Trigger render={trigger as ReactElement} />
+      {isValidElement(trigger) && <DialogPrimitive.Trigger render={trigger} />}
       <DialogPrimitive.Portal>
         <DialogPrimitive.Backdrop className="fixed bg-black/50 inset-0" />
         <DialogPrimitive.Popup className="flex flex-col gap-6 fixed top-[50%] left-[50%] w-max max-w-[calc(100%-2rem)] h-max max-h-[calc(100%-4rem)] translate-x-[-50%] translate-y-[-50%] rounded-xl p-normal bg-white focus:outline-hidden md:p-6">

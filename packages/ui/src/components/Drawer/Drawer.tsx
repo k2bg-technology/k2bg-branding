@@ -1,7 +1,7 @@
 'use client';
 
 import { Drawer as DrawerPrimitive } from '@base-ui/react/drawer';
-import type { ReactElement } from 'react';
+import { isValidElement } from 'react';
 import { twMerge } from '../../utils/extendTailwindMerge';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
@@ -26,7 +26,7 @@ export function Drawer({
 }: Props) {
   return (
     <DrawerPrimitive.Root swipeDirection="right">
-      <DrawerPrimitive.Trigger render={trigger as ReactElement} />
+      {isValidElement(trigger) && <DrawerPrimitive.Trigger render={trigger} />}
       <DrawerPrimitive.Portal>
         <DrawerPrimitive.Backdrop className="fixed bg-black/50 inset-0" />
         <DrawerPrimitive.Viewport>
