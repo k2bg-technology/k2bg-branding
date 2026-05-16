@@ -1,5 +1,12 @@
 import Link from 'next/link';
-import { Button, buttonVariants, Drawer, DropdownMenu, Icon } from 'ui';
+import {
+  Button,
+  buttonVariants,
+  Drawer,
+  DropdownMenu,
+  Icon,
+  Popover,
+} from 'ui';
 import { Category } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import { Search } from '../search/Search';
@@ -100,8 +107,8 @@ export function Header() {
               >
                 Contact
               </Link>
-              <DropdownMenu>
-                <DropdownMenu.Trigger
+              <Popover>
+                <Popover.Trigger
                   render={
                     <Button
                       color="dark"
@@ -113,12 +120,12 @@ export function Header() {
                     </Button>
                   }
                 />
-                <DropdownMenu.Positioner align="end">
-                  <DropdownMenu.Popup>
-                    <DropdownMenu.Item render={<Search placeholder="検索" />} />
-                  </DropdownMenu.Popup>
-                </DropdownMenu.Positioner>
-              </DropdownMenu>
+                <Popover.Positioner align="end">
+                  <Popover.Popup>
+                    <Search placeholder="検索" />
+                  </Popover.Popup>
+                </Popover.Positioner>
+              </Popover>
             </div>
             <div className="flex xl:hidden items-center gap-x-spacious">
               <DropdownMenu>
