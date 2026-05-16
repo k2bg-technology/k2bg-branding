@@ -439,9 +439,9 @@
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-dialog",
-          "version": "^1.0.4",
-          "reason": "Provides accessible dialog primitives with focus management and overlay behavior"
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
+          "reason": "Provides accessible drawer primitives with focus management and overlay behavior"
         },
         {
           "package": "tailwind-merge",
@@ -456,9 +456,9 @@
           "description": "Official ARIA Authoring Practices Guide for modal dialogs and drawers"
         },
         {
-          "linkText": "Radix UI Dialog Documentation",
-          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
-          "description": "Official documentation for the underlying dialog primitive component"
+          "linkText": "Base UI Drawer Documentation",
+          "url": "https://base-ui.com/react/components/drawer",
+          "description": "Official documentation for the underlying drawer primitive component"
         },
         {
           "linkText": "WCAG Focus Management",

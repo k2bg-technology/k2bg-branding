@@ -322,9 +322,9 @@
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-dialog",
-          "version": "^1.0.4",
-          "reason": "フォーカス管理とオーバーレイ動作を持つアクセシブルなダイアログプリミティブを提供"
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
+          "reason": "フォーカス管理とオーバーレイ動作を持つアクセシブルなDrawerプリミティブを提供"
         },
         {
           "package": "tailwind-merge",
@@ -339,9 +339,9 @@
           "description": "モーダルダイアログとDrawerに関する公式ARIAオーサリングプラクティスガイド"
         },
         {
-          "linkText": "Radix UI Dialogドキュメント",
-          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
-          "description": "基礎となるダイアログプリミティブコンポーネントの公式ドキュメント"
+          "linkText": "Base UI Drawerドキュメント",
+          "url": "https://base-ui.com/react/components/drawer",
+          "description": "基礎となるDrawerプリミティブコンポーネントの公式ドキュメント"
         },
         {
           "linkText": "WCAG フォーカス管理",
