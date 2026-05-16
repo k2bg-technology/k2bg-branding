@@ -520,8 +520,8 @@
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-dialog",
-          "version": "^1.0.4",
+          "package": "@base-ui/react",
+          "version": "^1.4.1",
           "reason": "フォーカス管理とキーボード操作を備えたアクセシブルなダイアログプリミティブを提供"
         },
         {
@@ -537,8 +537,8 @@
           "description": "モーダルダイアログパターンに関する公式ARIAオーサリングプラクティスガイド"
         },
         {
-          "linkText": "Radix UI Dialogドキュメント",
-          "url": "https://www.radix-ui.com/primitives/docs/components/dialog",
+          "linkText": "Base UI Dialogドキュメント",
+          "url": "https://base-ui.com/react/components/dialog",
           "description": "基礎となるダイアログプリミティブコンポーネントの公式ドキュメント"
         }
       ]
