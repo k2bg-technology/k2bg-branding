@@ -36,19 +36,21 @@ export function TableOfContents({ headings }: Props) {
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <Popover.Trigger>
-        <Button
-          size="icon"
-          color="dark"
-          aria-label={isOpen ? '目次を閉じる' : '目次を開く'}
-          aria-expanded={isOpen}
-        >
-          <Icon
-            name={isOpen ? 'x-mark' : 'list-bullet'}
-            color="var(--color-white)"
-          />
-        </Button>
-      </Popover.Trigger>
+      <Popover.Trigger
+        render={
+          <Button
+            size="icon"
+            color="dark"
+            aria-label={isOpen ? '目次を閉じる' : '目次を開く'}
+            aria-expanded={isOpen}
+          >
+            <Icon
+              name={isOpen ? 'x-mark' : 'list-bullet'}
+              color="var(--color-white)"
+            />
+          </Button>
+        }
+      />
       <Popover.Positioner side="top" align="end">
         <Popover.Popup color="dark">
           <nav aria-label="目次">
