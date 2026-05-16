@@ -47,7 +47,7 @@ export function Drawer({
             )}
           >
             <ScrollArea className="p-6 pt-14 max-h-dvh">
-              <div className="flex flex-col gap-y-spacious">
+              <DrawerPrimitive.Content className="flex flex-col gap-y-spacious">
                 <DrawerPrimitive.Title
                   className={twMerge(
                     'text-body-r-sm leading-body-r-sm font-bold',
@@ -62,7 +62,7 @@ export function Drawer({
                   </DrawerPrimitive.Description>
                 )}
                 {mainContent}
-              </div>
+              </DrawerPrimitive.Content>
             </ScrollArea>
             <DrawerPrimitive.Close
               render={
