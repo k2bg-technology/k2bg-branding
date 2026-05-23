@@ -6,8 +6,13 @@ export {
   RepositoryError,
 } from './errors';
 export { postLogger } from './logger';
+export type { DrizzlePostRowWithAuthor } from './testing';
 export {
   createAuthorRecord,
+  createDrizzleAuthorRow,
+  createDrizzlePostRow,
+  createDrizzlePostRowsWithAuthor,
+  createDrizzlePostRowWithAuthor,
   createNotionPageResponse,
   createNotionPageResponses,
   createPrismaPost,
