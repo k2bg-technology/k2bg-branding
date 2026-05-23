@@ -24,7 +24,16 @@ let postgresClientInstance: PostgresClient | null = null;
 let drizzleClientInstance: DrizzleClient | null = null;
 
 function createPostgresClient(): PostgresClient {
-  return postgres(process.env.DATABASE_URL ?? '', LAMBDA_SAFE_OPTIONS);
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) {
+    // Fail fast: an empty connection string makes `postgres` silently fall back
+    // to libpq defaults (local socket / current OS user), which can mask a
+    // misconfigured Lambda secret by connecting to the wrong database.
+    throw new Error(
+      'DATABASE_URL environment variable is required to initialise the Drizzle client'
+    );
+  }
+  return postgres(databaseUrl, LAMBDA_SAFE_OPTIONS);
 }
 
 /**

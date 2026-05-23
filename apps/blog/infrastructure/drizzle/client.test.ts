@@ -16,15 +16,23 @@ vi.mock('drizzle-orm/postgres-js', () => ({
   drizzle: vi.fn((client: unknown) => ({ __client: client })),
 }));
 
+const originalDatabaseUrl = process.env.DATABASE_URL;
+
 describe('drizzle/client', () => {
   beforeEach(async () => {
     await resetDrizzleClient();
     postgresMock.mockClear();
     endMock.mockClear();
+    process.env.DATABASE_URL = 'postgres://test-user@localhost:5432/test-db';
   });
 
   afterEach(async () => {
     await resetDrizzleClient();
+    if (originalDatabaseUrl === undefined) {
+      delete process.env.DATABASE_URL;
+    } else {
+      process.env.DATABASE_URL = originalDatabaseUrl;
+    }
   });
 
   describe('createDrizzleClient', () => {
@@ -74,6 +82,32 @@ describe('drizzle/client', () => {
       getDrizzleClient();
 
       expect(postgresMock).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('when DATABASE_URL is not set', () => {
+    it('throws when createDrizzleClient is called', () => {
+      delete process.env.DATABASE_URL;
+
+      expect(() => createDrizzleClient()).toThrow(
+        'DATABASE_URL environment variable is required'
+      );
+    });
+
+    it('throws when getDrizzleClient is called', () => {
+      delete process.env.DATABASE_URL;
+
+      expect(() => getDrizzleClient()).toThrow(
+        'DATABASE_URL environment variable is required'
+      );
+    });
+
+    it('throws when DATABASE_URL is an empty string', () => {
+      process.env.DATABASE_URL = '';
+
+      expect(() => getDrizzleClient()).toThrow(
+        'DATABASE_URL environment variable is required'
+      );
     });
   });
 
