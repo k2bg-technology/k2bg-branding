@@ -19,7 +19,7 @@
     "db:pull": "drizzle-kit pull",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
-    "db:verify": "pnpm db:up && pnpm db:wait && pnpm db:apply-prisma && pnpm db:pull && pnpm db:check"
+    "db:verify": "pnpm db:up && pnpm db:wait && pnpm db:apply-prisma && pnpm db:pull && pnpm db:check && pnpm db:generate"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.750.0",
