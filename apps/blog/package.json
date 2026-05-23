@@ -12,7 +12,14 @@
     "test": "vitest run",
     "test:watch": "vitest watch",
     "storybook": "storybook dev -p 6007",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "db:up": "docker compose -f ../../docker-compose.yml -p k2bg-branding up -d postgres",
+    "db:wait": "until docker exec k2bg-branding-blog-postgres pg_isready -U postgres >/dev/null 2>&1; do sleep 1; done",
+    "db:apply-prisma": "prisma migrate deploy",
+    "db:pull": "drizzle-kit pull",
+    "db:generate": "drizzle-kit generate",
+    "db:check": "drizzle-kit check",
+    "db:verify": "pnpm db:up && pnpm db:wait && pnpm db:apply-prisma && pnpm db:pull && pnpm db:check && pnpm db:generate"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.750.0",
