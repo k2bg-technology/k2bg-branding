@@ -1,0 +1,1 @@
+export { DrizzleFetchPostQueryService } from './fetchPostQueryService';
