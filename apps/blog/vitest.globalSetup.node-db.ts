@@ -7,8 +7,6 @@ import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { dirname, join } from 'path';
 import postgres from 'postgres';
 import { fileURLToPath } from 'url';
-import { afterAll, beforeAll } from 'vitest';
-import { closeTestDb } from './modules/post/adapters/shared/testing/testDatabase';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MIGRATIONS_FOLDER = join(__dirname, 'infrastructure/drizzle/migrations');
@@ -17,7 +15,7 @@ const POSTGRES_IMAGE = 'postgres:15-alpine';
 
 let container: StartedPostgreSqlContainer | undefined;
 
-beforeAll(async () => {
+export async function setup(): Promise<void> {
   container = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
   const url = container.getConnectionUri();
   process.env.TEST_DATABASE_URL = url;
@@ -30,9 +28,9 @@ beforeAll(async () => {
   } finally {
     await migrationClient.end();
   }
-}, 120_000);
+}
 
-afterAll(async () => {
-  await closeTestDb();
+export async function teardown(): Promise<void> {
   await container?.stop();
-});
+  container = undefined;
+}

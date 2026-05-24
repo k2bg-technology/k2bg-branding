@@ -10,7 +10,7 @@ const jsdomSetupPath = resolve(
   __dirname,
   '../../packages/test-utils/setupTests.ts'
 );
-const dbSetupPath = join(__dirname, 'vitest.setup.node-db.ts');
+const dbGlobalSetupPath = join(__dirname, 'vitest.globalSetup.node-db.ts');
 
 export default defineConfig({
   test: {
@@ -43,10 +43,14 @@ export default defineConfig({
           environment: 'node',
           include: ['**/*.db.test.ts'],
           exclude: ['node_modules/**', 'dist/**'],
-          setupFiles: [dbSetupPath],
-          // Share one Postgres container across all DB tests by running them
-          // in a single forked worker; per-test isolation comes from the
-          // truncateAllTables() helper, not from spinning up a new container.
+          // globalSetup runs once per project (in the main process, before
+          // workers fork) so the Testcontainers Postgres is started exactly
+          // once for every *.db.test.ts file. A setupFile would re-run the
+          // beforeAll/afterAll per test file.
+          globalSetup: [dbGlobalSetupPath],
+          // singleFork keeps all DB test files in one worker so they share the
+          // same connection pool; per-test isolation comes from
+          // truncateAllTables(), not from spinning up a new container.
           pool: 'forks',
           poolOptions: { forks: { singleFork: true } },
           testTimeout: 30_000,
