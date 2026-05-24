@@ -31,6 +31,6 @@ CREATE TABLE "Post" (
 	CONSTRAINT "Post_pkey" PRIMARY KEY("id")
 );
 --> statement-breakpoint
-ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "public"."Author"("uuid") ON DELETE restrict ON UPDATE cascade;--> statement-breakpoint
 CREATE UNIQUE INDEX "Author_uuid_key" ON "Author" USING btree ("uuid");--> statement-breakpoint
-CREATE UNIQUE INDEX "Post_uuid_key" ON "Post" USING btree ("uuid");
+CREATE UNIQUE INDEX "Post_uuid_key" ON "Post" USING btree ("uuid");--> statement-breakpoint
+ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "public"."Author"("uuid") ON DELETE restrict ON UPDATE cascade;
