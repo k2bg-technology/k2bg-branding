@@ -12,10 +12,10 @@ export function getTestDb(): TestDb {
   if (db) {
     return db;
   }
-  const url = process.env.TEST_DATABASE_URL;
+  const url = process.env.DATABASE_URL;
   if (!url) {
     throw new Error(
-      'TEST_DATABASE_URL is not set — make sure the node-db Vitest project ran vitest.setup.node-db.ts.'
+      'DATABASE_URL is not set — make sure the node-db Vitest project ran vitest.globalSetup.node-db.ts.'
     );
   }
   client = postgres(url, { max: 5 });

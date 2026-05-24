@@ -18,7 +18,11 @@ let container: StartedPostgreSqlContainer | undefined;
 export async function setup(): Promise<void> {
   container = await new PostgreSqlContainer(POSTGRES_IMAGE).start();
   const url = container.getConnectionUri();
-  process.env.TEST_DATABASE_URL = url;
+  // Override DATABASE_URL (rather than using a separate TEST_DATABASE_URL)
+  // so any production code path that reads it via getDrizzleClient() lands
+  // on the Testcontainers instance instead of the developer's local or CI
+  // shell value. The override only lives in the test process and its forks.
+  process.env.DATABASE_URL = url;
 
   const migrationClient = postgres(url, { max: 1 });
   try {
