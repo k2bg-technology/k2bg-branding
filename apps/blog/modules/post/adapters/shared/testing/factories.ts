@@ -2,6 +2,16 @@ import type {
   Author as PrismaAuthor,
   Post as PrismaPost,
 } from '@prisma/client';
+import type {
+  authors as drizzleAuthors,
+  posts as drizzlePosts,
+} from '../../../../../infrastructure/drizzle/schema';
+
+type DrizzleAuthorRow = typeof drizzleAuthors.$inferSelect;
+type DrizzlePostRow = typeof drizzlePosts.$inferSelect;
+export type DrizzlePostRowWithAuthor = DrizzlePostRow & {
+  author: DrizzleAuthorRow;
+};
 
 /**
  * Creates a mock Prisma Post record for testing.
@@ -73,6 +83,72 @@ export function createPrismaPostsWithAuthor(
 ): Array<PrismaPost & { author: PrismaAuthor }> {
   return Array.from({ length: count }, (_, index) =>
     createPrismaPostWithAuthor({
+      id: index + 1,
+      uuid: `550e8400-e29b-41d4-a716-44665544000${index}`,
+      slug: `test-post-${index}`,
+      ...overrides,
+    })
+  );
+}
+
+export function createDrizzleAuthorRow(
+  overrides: Partial<DrizzleAuthorRow> = {}
+): DrizzleAuthorRow {
+  return {
+    id: 1,
+    uuid: '660e8400-e29b-41d4-a716-446655440000',
+    name: 'Test Author',
+    avatarUrl: 'https://example.com/avatar.jpg',
+    createdAt: new Date('2024-01-15T00:00:00.000Z'),
+    updatedAt: new Date('2024-01-15T00:00:00.000Z'),
+    ...overrides,
+  };
+}
+
+export function createDrizzlePostRow(
+  overrides: Partial<DrizzlePostRow> = {}
+): DrizzlePostRow {
+  return {
+    id: 1,
+    uuid: '550e8400-e29b-41d4-a716-446655440000',
+    title: 'Test Post Title',
+    content: 'This is the test post content.',
+    type: 'ARTICLE',
+    excerpt: 'Test excerpt',
+    imageUrl: 'https://example.com/image.jpg',
+    slug: 'test-post',
+    status: 'PUBLISHED',
+    category: 'ENGINEERING',
+    tags: ['typescript', 'testing'],
+    releaseDate: '2024-01-15',
+    revisionDate: '2024-01-15',
+    authorId: '660e8400-e29b-41d4-a716-446655440000',
+    createdAt: new Date('2024-01-15T00:00:00.000Z'),
+    updatedAt: new Date('2024-01-15T00:00:00.000Z'),
+    ...overrides,
+  };
+}
+
+export function createDrizzlePostRowWithAuthor(
+  postOverrides: Partial<DrizzlePostRow> = {},
+  authorOverrides: Partial<DrizzleAuthorRow> = {}
+): DrizzlePostRowWithAuthor {
+  const author = createDrizzleAuthorRow(authorOverrides);
+  return {
+    ...createDrizzlePostRow({
+      ...postOverrides,
+      authorId: postOverrides.authorId ?? author.uuid,
+    }),
+    author,
+  };
+}
+
+export function createDrizzlePostRowsWithAuthor(
+  count: number,
+  overrides: Partial<DrizzlePostRow> = {}
+): DrizzlePostRowWithAuthor[] {
+  return Array.from({ length: count }, (_, index) =>
+    createDrizzlePostRowWithAuthor({
       id: index + 1,
       uuid: `550e8400-e29b-41d4-a716-44665544000${index}`,
       slug: `test-post-${index}`,
