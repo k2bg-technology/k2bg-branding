@@ -9,7 +9,7 @@ A **Next.js 16** blog application with **Notion CMS** integration, built followi
 | **Framework** | Next.js 16, React 19, TypeScript |
 | **API Server** | Hono, @hono/zod-openapi, @hono/swagger-ui |
 | **Styling** | Tailwind CSS v4 |
-| **Database** | PostgreSQL, Prisma ORM |
+| **Database** | PostgreSQL, Drizzle ORM |
 | **CMS** | Notion API |
 | **Email** | AWS SES |
 | **Image CDN** | Cloudinary |
@@ -54,7 +54,7 @@ Open [http://localhost:3000](http://localhost:3000).
 pnpm build
 ```
 
-The build runs `prisma generate && next build` to ensure the Prisma client is up to date.
+The build runs `next build --webpack`; the webpack flag is kept until the SVG loader blocker is resolved separately.
 
 ### Storybook
 
@@ -128,7 +128,7 @@ modules/<module>/
 | Adapter | Service | Used By |
 |---|---|---|
 | Notion | Notion API | post, affiliate, media |
-| Prisma | PostgreSQL | post |
+| Drizzle | PostgreSQL | post |
 | Cloudinary | Cloudinary CDN | post, media |
 | AWS SES | Amazon SES | contact |
 | Instagram | Instagram API | social-feed |
@@ -224,7 +224,7 @@ flowchart LR
     subgraph content["Content & Data"]
         direction TB
         Notion["Notion API<br/>Posts / Media / Affiliates"]
-        PostgreSQL["PostgreSQL<br/>Prisma ORM"]
+        PostgreSQL["PostgreSQL<br/>Drizzle ORM"]
         Cloudinary["Cloudinary<br/>Image CDN"]
     end
 
@@ -299,12 +299,12 @@ server/
 
 ## Database
 
-### Prisma Commands
+### Drizzle Commands
 
 ```bash
-npx prisma generate    # Generate Prisma client
-npx prisma migrate dev # Run migrations
-npx prisma studio      # Open database browser
+pnpm db:pull     # Introspect schema
+pnpm db:check    # Check migration consistency
+pnpm db:generate # Generate migrations
 ```
 
 ### Docker Compose (Local PostgreSQL)
@@ -325,7 +325,7 @@ Initial setup:
 
 ```bash
 docker compose up -d
-npx prisma migrate dev
+pnpm db:migrate
 ```
 
 Reset:
@@ -334,7 +334,7 @@ Reset:
 docker compose down
 rm -rf .docker/postgres/data
 docker compose up -d
-npx prisma migrate dev
+pnpm db:migrate
 ```
 
 The Docker Compose configuration runs **PostgreSQL 15 Alpine** on port `5432` with database `k2bg_blog`.
@@ -407,11 +407,10 @@ apps/blog/
 ├── infrastructure/            # External service clients
 │   ├── aws-ses/               # AWS SES client
 │   ├── cloudinary/            # Cloudinary client
+│   ├── drizzle/               # Drizzle client, schema, migrations
 │   ├── notion/                # Notion client
-│   ├── prisma/                # Prisma client
 │   ├── instagram/             # Instagram client
 │   └── di/                    # Dependency injection
-├── prisma/                    # Database schema & migrations
 ├── specs/                     # Domain specifications
 ├── .storybook/                # Storybook config
 └── public/                    # Static assets

@@ -131,7 +131,7 @@ The blog follows Clean Architecture with vertical slicing by domain module. Each
 modules/<module>/
 ├── domain/           # Entities, value objects, repository interfaces (ports), errors
 ├── use-cases/        # Application business rules (query / command / sync)
-└── adapters/         # Infrastructure implementations (Notion, Prisma, Cloudinary, AWS SES, Instagram)
+└── adapters/         # Infrastructure implementations (Notion, Drizzle, Cloudinary, AWS SES, Instagram)
 ```
 
 ### Repository Pattern
@@ -310,11 +310,11 @@ Button.displayName = 'Button';
 
 ## Database (Blog App)
 
-### Prisma Patterns
+### Drizzle Patterns
 
-- Use **Prisma Client** for database operations
-- Generate client with `npx prisma generate`
-- Run migrations with `npx prisma migrate dev`
+- Use **Drizzle ORM** for database operations in the blog app
+- Keep the Drizzle schema in sync with the existing PostgreSQL schema
+- Do not run destructive migration commands against production
 
 ## Environment Configuration
 

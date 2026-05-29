@@ -1,8 +1,4 @@
 import type {
-  Author as PrismaAuthor,
-  Post as PrismaPost,
-} from '@prisma/client';
-import type {
   authors as drizzleAuthors,
   posts as drizzlePosts,
 } from '../../../../../infrastructure/drizzle/schema';
@@ -12,84 +8,6 @@ type DrizzlePostRow = typeof drizzlePosts.$inferSelect;
 export type DrizzlePostRowWithAuthor = DrizzlePostRow & {
   author: DrizzleAuthorRow;
 };
-
-/**
- * Creates a mock Prisma Post record for testing.
- */
-export function createPrismaPost(
-  overrides: Partial<PrismaPost> = {}
-): PrismaPost {
-  return {
-    id: 1,
-    uuid: '550e8400-e29b-41d4-a716-446655440000',
-    title: 'Test Post Title',
-    content: 'This is the test post content.',
-    type: 'ARTICLE',
-    excerpt: 'Test excerpt',
-    imageUrl: 'https://example.com/image.jpg',
-    slug: 'test-post',
-    status: 'PUBLISHED',
-    category: 'ENGINEERING',
-    tags: ['typescript', 'testing'],
-    releaseDate: '2024-01-15',
-    revisionDate: '2024-01-15',
-    authorId: '660e8400-e29b-41d4-a716-446655440000',
-    createdAt: new Date('2024-01-15T00:00:00.000Z'),
-    updatedAt: new Date('2024-01-15T00:00:00.000Z'),
-    ...overrides,
-  };
-}
-
-/**
- * Creates a mock Prisma Author record for testing.
- */
-export function createAuthorRecord(
-  overrides: Partial<PrismaAuthor> = {}
-): PrismaAuthor {
-  return {
-    id: 1,
-    uuid: '660e8400-e29b-41d4-a716-446655440000',
-    name: 'Test Author',
-    avatarUrl: 'https://example.com/avatar.jpg',
-    createdAt: new Date('2024-01-15T00:00:00.000Z'),
-    updatedAt: new Date('2024-01-15T00:00:00.000Z'),
-    ...overrides,
-  };
-}
-
-/**
- * Creates a mock Prisma Post with Author relation for testing.
- */
-export function createPrismaPostWithAuthor(
-  postOverrides: Partial<PrismaPost> = {},
-  authorOverrides: Partial<PrismaAuthor> = {}
-): PrismaPost & { author: PrismaAuthor } {
-  const author = createAuthorRecord(authorOverrides);
-  return {
-    ...createPrismaPost({
-      ...postOverrides,
-      authorId: postOverrides.authorId ?? author.uuid,
-    }),
-    author,
-  };
-}
-
-/**
- * Creates multiple Prisma Posts with Author for testing.
- */
-export function createPrismaPostsWithAuthor(
-  count: number,
-  overrides: Partial<PrismaPost> = {}
-): Array<PrismaPost & { author: PrismaAuthor }> {
-  return Array.from({ length: count }, (_, index) =>
-    createPrismaPostWithAuthor({
-      id: index + 1,
-      uuid: `550e8400-e29b-41d4-a716-44665544000${index}`,
-      slug: `test-post-${index}`,
-      ...overrides,
-    })
-  );
-}
 
 export function createDrizzleAuthorRow(
   overrides: Partial<DrizzleAuthorRow> = {}
