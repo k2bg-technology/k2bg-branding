@@ -4,7 +4,7 @@ import {
   authors,
   posts,
 } from '../../../../../../infrastructure/drizzle/schema';
-import { Title } from '../../../../domain';
+import { AuthorId, Title } from '../../../../domain';
 import {
   createPost,
   createPosts,
@@ -92,6 +92,22 @@ describe('DrizzlePostBatchRepository', () => {
         .from(authors)
         .where(eq(authors.uuid, post.authorId.getValue()));
       expect(storedAuthor.name).toBe(realName);
+    });
+
+    it('does not insert a stand-in author when updating an existing post with a changed authorId', async () => {
+      const sut = new DrizzlePostBatchRepository(getTestDb());
+      const original = createPost();
+      await sut.upsertAll([original]);
+
+      const changedAuthorId = AuthorId.create(
+        '770e8400-e29b-41d4-a716-446655440000'
+      );
+      const revised = createPost({ authorId: changedAuthorId });
+      await sut.upsertAll([revised]);
+
+      const storedAuthors = await getTestDb().select().from(authors);
+      expect(storedAuthors).toHaveLength(1);
+      expect(storedAuthors[0].uuid).toBe(original.authorId.getValue());
     });
   });
 });

@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm';
 import type { DrizzleClient } from '../../../../../../infrastructure/drizzle/client';
 import {
   authors,
@@ -25,14 +26,24 @@ export class DrizzlePostBatchRepository implements PostBatchRepository {
         for (const post of posts) {
           const data = toPersistence(post);
 
-          await tx
-            .insert(authors)
-            .values({
-              uuid: data.authorId,
-              name: UNKNOWN_AUTHOR_NAME,
-              updatedAt: new Date(),
-            })
-            .onConflictDoNothing({ target: authors.uuid });
+          const [existingPost] = await tx
+            .select({ uuid: postsTable.uuid })
+            .from(postsTable)
+            .where(eq(postsTable.uuid, data.uuid))
+            .limit(1);
+
+          // Mirror Prisma connectOrCreate: seed the stand-in author only on the
+          // create path, so updating an existing post never leaves orphan rows.
+          if (!existingPost) {
+            await tx
+              .insert(authors)
+              .values({
+                uuid: data.authorId,
+                name: UNKNOWN_AUTHOR_NAME,
+                updatedAt: new Date(),
+              })
+              .onConflictDoNothing({ target: authors.uuid });
+          }
 
           await tx
             .insert(postsTable)
