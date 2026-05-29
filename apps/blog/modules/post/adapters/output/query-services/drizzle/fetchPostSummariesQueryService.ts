@@ -42,7 +42,7 @@ export class DrizzleFetchPostSummariesQueryService
           .from(posts)
           .leftJoin(authors, eq(posts.authorId, authors.uuid))
           .where(eq(posts.type, 'ARTICLE'))
-          .orderBy(direction(posts.releaseDate))
+          .orderBy(direction(posts.releaseDate), direction(posts.uuid))
           .limit(pageSize)
           .offset(offset),
         this.db

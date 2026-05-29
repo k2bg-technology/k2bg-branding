@@ -40,7 +40,13 @@ describe('DrizzleFetchPostSummariesQueryService', () => {
   it('returns a page of ARTICLE summaries with total count', async () => {
     await seedAuthor();
     const db = getTestDb();
-    const articles = createPosts(3);
+    const articles = createPosts(3).map((post, index) =>
+      createPost({
+        id: post.id,
+        slug: post.slug,
+        releaseDate: ReleaseDate.create(`2024-01-${15 - index}`),
+      })
+    );
     for (const post of articles) {
       await db.insert(posts).values(toPersistence(post));
     }
@@ -136,6 +142,37 @@ describe('DrizzleFetchPostSummariesQueryService', () => {
       '2024-01-14',
       '2024-01-13',
     ]);
+  });
+
+  it('orders by uuid as a stable tiebreaker when releaseDate ties', async () => {
+    await seedAuthor();
+    const db = getTestDb();
+    const sharedDate = ReleaseDate.create('2024-01-10');
+    const articles = createPosts(4, { releaseDate: sharedDate });
+    for (const post of articles) {
+      await db.insert(posts).values(toPersistence(post));
+    }
+    const sut = new DrizzleFetchPostSummariesQueryService(db);
+
+    const page1 = await sut.fetchPostSummaries({
+      page: 1,
+      pageSize: 2,
+      orderBy: 'desc',
+    });
+    const page2 = await sut.fetchPostSummaries({
+      page: 2,
+      pageSize: 2,
+      orderBy: 'desc',
+    });
+
+    const expectedDescIds = articles
+      .map((post) => post.id.getValue())
+      .sort()
+      .reverse();
+    expect(page1.posts.map((p) => p.id)).toEqual(expectedDescIds.slice(0, 2));
+    expect(page2.posts.map((p) => p.id)).toEqual(expectedDescIds.slice(2, 4));
+    const combinedIds = [...page1.posts, ...page2.posts].map((p) => p.id);
+    expect(new Set(combinedIds).size).toBe(4);
   });
 
   it('returns an empty page and zero total when no posts exist', async () => {
