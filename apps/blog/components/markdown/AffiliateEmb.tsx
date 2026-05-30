@@ -2,7 +2,7 @@ import { cache } from 'react';
 import {
   createFetchAffiliatesByIdsUseCase,
   createFetchAffiliateUseCase,
-} from '../../infrastructure';
+} from '../../infrastructure/di/affiliate';
 import { AffiliateType } from '../../modules/affiliate/domain';
 import { AffiliateBanner } from './AffiliateBanner';
 import { AffiliateProduct } from './AffiliateProduct';

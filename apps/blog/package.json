@@ -21,10 +21,11 @@
     "db:pull": "drizzle-kit pull",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
-    "db:verify": "pnpm db:up && pnpm db:wait && pnpm db:pull && pnpm db:check && pnpm db:generate"
+    "db:verify": "pnpm db:up && pnpm db:wait && pnpm db:migrate && pnpm db:pull && pnpm db:check && pnpm db:generate"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.750.0",
+    "@emotion/is-prop-valid": "^1.4.0",
     "@hcaptcha/react-hcaptcha": "^1.12.0",
     "@hono/swagger-ui": "^0.5.1",
     "@hono/zod-openapi": "^0.19.10",

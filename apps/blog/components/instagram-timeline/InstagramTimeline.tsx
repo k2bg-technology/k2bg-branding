@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { createFetchFeedUseCase } from '../../infrastructure/di';
+import { createFetchFeedUseCase } from '../../infrastructure/di/social-feed';
 
 const MAX_MEDIA_COUNT = 6;
 
