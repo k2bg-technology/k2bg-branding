@@ -1,3 +1,6 @@
+-- Historical Prisma baseline migration kept for reference only.
+-- Do not apply this file with Drizzle Kit.
+
 /*
   Warnings:
 

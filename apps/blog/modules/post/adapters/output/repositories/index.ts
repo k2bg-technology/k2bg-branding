@@ -1,7 +1,7 @@
 export { CloudinaryImageRepository } from './cloudinary';
 export {
-  PrismaPostBatchRepository,
-  PrismaPostRepository,
+  DrizzlePostBatchRepository,
+  DrizzlePostRepository,
   toDomain,
   toPersistence,
-} from './prisma';
+} from './drizzle';

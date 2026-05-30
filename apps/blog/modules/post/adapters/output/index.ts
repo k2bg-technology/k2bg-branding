@@ -5,16 +5,16 @@ export {
   notionPageToPost,
 } from './external-sources';
 export {
-  PrismaFetchAllSlugsQueryService,
-  PrismaFetchPostQueryService,
-  PrismaFetchPostSummariesByCategoryQueryService,
-  PrismaFetchPostSummariesQueryService,
-  PrismaSearchPostSummariesQueryService,
+  DrizzleFetchAllSlugsQueryService,
+  DrizzleFetchPostQueryService,
+  DrizzleFetchPostSummariesByCategoryQueryService,
+  DrizzleFetchPostSummariesQueryService,
+  DrizzleSearchPostSummariesQueryService,
 } from './query-services';
 export {
   CloudinaryImageRepository,
-  PrismaPostBatchRepository,
-  PrismaPostRepository,
+  DrizzlePostBatchRepository,
+  DrizzlePostRepository,
   toDomain,
   toPersistence,
 } from './repositories';

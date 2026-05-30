@@ -1,4 +1,4 @@
-import { createFetchMediaUseCase } from '../../infrastructure';
+import { createFetchMediaUseCase } from '../../infrastructure/di/media';
 import { MediaType } from '../../modules/media/domain';
 import { MediaImage } from './MediaImage';
 import { MediaVideo } from './MediaVideo';

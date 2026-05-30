@@ -1,16 +1,16 @@
-import { getPrismaClient } from '../prisma';
+import { getDrizzleClient } from '../drizzle';
 import { getNotionClient, getNotionToMarkdown } from '../notion';
 import { CloudinaryOgImageUrlGenerator, getCloudinary } from '../cloudinary';
 import {
   CloudinaryImageRepository,
   NotionExternalImageSource,
   NotionExternalPostSource,
-  PrismaFetchAllSlugsQueryService,
-  PrismaFetchPostQueryService,
-  PrismaFetchPostSummariesByCategoryQueryService,
-  PrismaFetchPostSummariesQueryService,
-  PrismaPostBatchRepository,
-  PrismaSearchPostSummariesQueryService,
+  DrizzleFetchAllSlugsQueryService,
+  DrizzleFetchPostQueryService,
+  DrizzleFetchPostSummariesByCategoryQueryService,
+  DrizzleFetchPostSummariesQueryService,
+  DrizzlePostBatchRepository,
+  DrizzleSearchPostSummariesQueryService,
 } from '../../modules/post/adapters/output';
 import { NotionMediaExternalImageSource } from '../../modules/media/adapters/output';
 import { NotionAffiliateExternalImageSource } from '../../modules/affiliate/adapters/output';
@@ -23,16 +23,16 @@ import { SyncPostsFromExternal } from '../../modules/post/use-cases/sync/sync-po
 import { SyncHeroImages } from '../../modules/post/use-cases/sync/sync-hero-images';
 
 export function createFetchPostSummariesUseCase(): FetchPostSummaries {
-  const prisma = getPrismaClient();
+  const db = getDrizzleClient();
   return new FetchPostSummaries(
-    new PrismaFetchPostSummariesQueryService(prisma)
+    new DrizzleFetchPostSummariesQueryService(db)
   );
 }
 
 export function createFetchPostUseCase(): FetchPost {
-  const prisma = getPrismaClient();
+  const db = getDrizzleClient();
   return new FetchPost(
-    new PrismaFetchPostQueryService(prisma),
+    new DrizzleFetchPostQueryService(db),
     new CloudinaryOgImageUrlGenerator()
   );
 }
@@ -43,32 +43,32 @@ export function getDefaultOgImageUrl(): string {
 }
 
 export function createFetchAllSlugsUseCase(): FetchAllSlugs {
-  const prisma = getPrismaClient();
-  return new FetchAllSlugs(new PrismaFetchAllSlugsQueryService(prisma));
+  const db = getDrizzleClient();
+  return new FetchAllSlugs(new DrizzleFetchAllSlugsQueryService(db));
 }
 
 export function createFetchPostSummariesByCategoryUseCase(): FetchPostSummariesByCategory {
-  const prisma = getPrismaClient();
+  const db = getDrizzleClient();
   return new FetchPostSummariesByCategory(
-    new PrismaFetchPostSummariesByCategoryQueryService(prisma)
+    new DrizzleFetchPostSummariesByCategoryQueryService(db)
   );
 }
 
 export function createSearchPostSummariesUseCase(): SearchPostSummaries {
-  const prisma = getPrismaClient();
+  const db = getDrizzleClient();
   return new SearchPostSummaries(
-    new PrismaSearchPostSummariesQueryService(prisma)
+    new DrizzleSearchPostSummariesQueryService(db)
   );
 }
 
 export function createSyncPostsFromExternalUseCase(): SyncPostsFromExternal {
-  const prisma = getPrismaClient();
+  const db = getDrizzleClient();
   const notionClient = getNotionClient();
   const n2m = getNotionToMarkdown();
 
   return new SyncPostsFromExternal(
     new NotionExternalPostSource(notionClient, n2m),
-    new PrismaPostBatchRepository(prisma)
+    new DrizzlePostBatchRepository(db)
   );
 }
 

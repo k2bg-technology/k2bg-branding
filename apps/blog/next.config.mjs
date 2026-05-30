@@ -50,14 +50,7 @@ const config = {
   reactStrictMode: true,
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
-  serverExternalPackages: ['@prisma/client'],
   outputFileTracingRoot: monorepoRoot,
-  outputFileTracingIncludes: {
-    '/*': [
-      '../../node_modules/.prisma/client/libquery_engine-rhel-openssl-3.0.x.so.node',
-      '../../node_modules/.prisma/client/schema.prisma',
-    ],
-  },
   turbopack: {},
   async redirects() {
     return [

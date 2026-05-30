@@ -1,7 +1,7 @@
 export {
-  PrismaFetchAllSlugsQueryService,
-  PrismaFetchPostQueryService,
-  PrismaFetchPostSummariesByCategoryQueryService,
-  PrismaFetchPostSummariesQueryService,
-  PrismaSearchPostSummariesQueryService,
-} from './prisma';
+  DrizzleFetchAllSlugsQueryService,
+  DrizzleFetchPostQueryService,
+  DrizzleFetchPostSummariesByCategoryQueryService,
+  DrizzleFetchPostSummariesQueryService,
+  DrizzleSearchPostSummariesQueryService,
+} from './drizzle';
