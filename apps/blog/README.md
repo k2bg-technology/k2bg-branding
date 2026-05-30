@@ -302,7 +302,9 @@ server/
 ### Drizzle Commands
 
 ```bash
+pnpm db:baseline  # Mark the existing Prisma-created schema as the Drizzle baseline
 pnpm db:pull     # Introspect schema
+pnpm db:migrate  # Baseline existing schema when needed, then apply pending migrations
 pnpm db:check    # Check migration consistency
 pnpm db:generate # Generate migrations
 ```
@@ -327,6 +329,11 @@ Initial setup:
 docker compose up -d
 pnpm db:migrate
 ```
+
+Existing databases created by the historical Prisma migrations already contain
+the baseline `Author` / `Post` schema. Run `pnpm db:migrate`; it first records
+that baseline in Drizzle's migration journal when needed, then applies any
+pending Drizzle migrations.
 
 Reset:
 
