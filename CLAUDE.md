@@ -160,3 +160,4 @@ Remember: A story name might not reflect the property name correctly, so always 
 - All packages are 100% TypeScript
 - Use pnpm for package management (configured as package manager)
 - Turborepo handles build caching and task orchestration
+- After pushing fixes that address Codex PR feedback, post a top-level `@codex review` comment — Codex does not re-review unless explicitly asked. See `AGENTS.md` (Codex Usage).

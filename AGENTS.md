@@ -43,6 +43,32 @@
 - Environment variables are required for builds (see `turbo.json` env list). Place app-specific secrets in `apps/*/.env.local` and never commit them.
 - Avoid storing tokens in code or stories; prefer `.env` and runtime config.
 
+## Codex Review Guidelines
+
+Codex posts only P0/P1 issues. Apply these rules when reviewing a pull request:
+
+- **Missing tests (P1):** New or changed logic without co-located `*.test.ts(x)`
+  coverage. Follow `.claude/rules/unit-test-guidelines.md` (behavior-focused tests,
+  AAA structure, `sut` naming, no custom loops — use `it.each`).
+- **Clean Architecture violations (P1):** Wrong dependency direction or layer-boundary
+  crossings in the blog app's `domain` / `use-cases` / `adapters` slices.
+  See the `clean-architecture-guidelines` skill.
+- **Security / secrets (P0):** PII in logs, API keys or secrets leaked into code or
+  stories, missing authentication on Hono routes/`x-api-key` checks.
+- **Type safety (P1):** `any` overuse and unjustified type casts. Flag abbreviated
+  identifiers (use full names — `dictionary` not `dict`, `language` not `lang`)
+  where Biome does not already catch them.
+
+Defer formatting/style nits already enforced by Biome; do not duplicate lint output.
+
+## Codex Usage & Roles
+
+- **Codex = primary reviewer.** Automatic review runs on every PR. Use
+  `@codex review` to re-review after pushing changes (Codex does not re-review
+  unless asked), and `@codex fix the P1 issue` for small, scoped corrections.
+- **Claude (`@claude` / local Claude Code) = primary implementer** for feature work.
+- Keep the two agents from overlapping: do not ask both to implement the same PR.
+
 ## Storybook & Chromatic
 
 - Location: UI Storybook in `packages/ui/.storybook` with Webpack + SWC.
