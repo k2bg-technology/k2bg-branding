@@ -141,7 +141,7 @@ flowchart TB
     subgraph build["Build Process"]
         NextJS["Next.js Build<br/>Bundle Optimization"]
         Tailwind["Tailwind CSS<br/>Style Processing"]
-        TypeGen["Type Generation<br/>Prisma Client"]
+        DrizzleGen["Database<br/>Drizzle ORM"]
     end
 
     commands --> Turbo
@@ -160,8 +160,14 @@ flowchart TB
     class Turbo turboStyle
     class Biome,TS qualityStyle
     class Vitest,Storybook,Chromatic testStyle
-    class NextJS,Tailwind,TypeGen buildStyle
+    class NextJS,Tailwind,DrizzleGen buildStyle
 ```
+
+## Contributing
+
+Project conventions and AI-agent instructions (architecture, coding style, testing, commit
+and PR rules) live in a single source of truth: **[AGENTS.md](AGENTS.md)**. All AI agents
+(Codex, Claude Code, GitHub Copilot) and contributors should follow it.
 
 ## Useful Links
 

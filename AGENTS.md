@@ -1,47 +1,255 @@
 # Repository Guidelines
 
+This file is the **single source of truth** for all AI agents (Codex, Claude Code, GitHub
+Copilot) and human contributors working in this repository. Codex and Copilot read
+`AGENTS.md` natively; `CLAUDE.md` imports it. Keep shared rules here — do not duplicate
+them in other files.
+
 ## Project Structure & Module Organization
 
 - Monorepo managed by pnpm workspaces and Turborepo.
-- Apps: `apps/blog` (Next.js + Prisma + Hono API server) and `apps/portfolio` (Next.js).
-- Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils` (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`, `packages/tsconfig`.
-- CI, templates, and bots live under `.github/`. See `PULL_REQUEST_TEMPLATE.md`.
+- Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000) and
+  `apps/portfolio` (Next.js, multilingual, port 3001).
+- Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
+  (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
+  `packages/tsconfig`.
+- CI, templates, and bots live under `.github/`. See `.github/PULL_REQUEST_TEMPLATE.md`.
+- Tech stack: Next.js 16 (Turbopack, React Compiler), TypeScript (strict, 100%),
+  Tailwind CSS v4, Turborepo, pnpm 10+.
 
 ## Build, Test, and Development Commands
 
-- Install: `pnpm install` (pnpm 10+).
-- Develop all: `pnpm dev` (runs `turbo run dev`).
-- Filter to one app: `pnpm -F blog dev` or `pnpm -F portfolio dev`.
+- Install: `pnpm install` (pnpm 10+, Node 20.9+).
+- Develop all: `pnpm dev` (runs `turbo run dev`); filter: `pnpm -F blog dev` / `pnpm -F portfolio dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
 - Lint/Types/Format: `pnpm lint` (Biome), `pnpm typecheck`, `pnpm format` (Biome).
 - Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog and Test Utils).
-- Storybook (UI): `pnpm -F ui storybook`; Chromatic via CI.
+- Component scaffolding: `pnpm generate:component`, `pnpm generate:style`.
+- Storybook (UI): `pnpm -F ui storybook` (port 6006); Chromatic via CI.
+
+## Architecture
+
+### Blog App — Clean Architecture
+
+The blog follows Clean Architecture with vertical slicing by domain module. Each module
+(`post`, `contact`, `media`, `affiliate`, `social-feed`) contains three layers:
+
+```
+modules/<module>/
+├── domain/      # Entities, value objects, repository interfaces (ports), errors
+├── use-cases/   # Application business rules (query / command / sync)
+└── adapters/    # Infrastructure (Notion, Drizzle, Cloudinary, AWS SES, Instagram)
+```
+
+Respect dependency direction: `domain` ← `use-cases` ← `adapters`. Never let inner layers
+depend on outer ones. See the `clean-architecture-guidelines` skill for details.
+
+Repository and Entity patterns:
+
+```typescript
+export class PostRepository {
+  async findById(id: string): Promise<Post | null> {
+    // Implementation
+  }
+}
+
+export class PostEntity {
+  constructor(private readonly post: PostData) {}
+  toObject(): Post {
+    return { id: this.post.id, title: this.post.title /* ... */ };
+  }
+}
+```
+
+### Blog App — Hono API Server
+
+A Hono-based REST API is integrated into Next.js via a catch-all route handler
+(`app/api/[[...route]]/route.ts`).
+
+- Framework: [Hono](https://hono.dev/) with `OpenAPIHono` for type-safe definitions.
+- OpenAPI spec at `/api/doc.json` and Swagger UI at `/api/doc` (non-production only).
+- Auth: API key via `x-api-key` header.
+- Structure: `server/app.ts` (app setup/routing), `server/routes/` (`createRoute()` + OpenAPI
+  metadata), `server/schemas/` (Zod request/response), `server/middleware/` (apiKeyAuth,
+  errorHandler, requestLogger).
+
+### Portfolio App
+
+- i18next for internationalization (English/Japanese).
+- Middleware-based language detection and routing (`proxy.ts`); dynamic language routing
+  with Next.js.
+
+### Key Integrations
+
+- **Notion API** — content management and blog posts.
+- **Drizzle ORM + PostgreSQL** — database access and persistence.
+- **Cloudinary** — image optimization and CDN (use Next.js `Image` for rendering).
+- **AWS SES** — email service for contact forms.
+- **Hono** — lightweight REST API framework with OpenAPI support.
+
+## Database (Blog App) — Drizzle
+
+- Use **Drizzle ORM** (`drizzle-orm` / `drizzle-kit`) for database operations.
+- Commands: `pnpm -F blog db:pull`, `db:generate`, `db:check` (drizzle-kit).
+- Keep the Drizzle schema in sync with the existing PostgreSQL schema.
+- Do not run destructive migration commands against production.
 
 ## Coding Style & Naming Conventions
 
-- Biome enforced: configured in `biome.jsonc` files.
-- TypeScript across repo; shared configs in `packages/tsconfig`.
-- Components: PascalCase (e.g., `Button.tsx` in `packages/ui`). Routes/pages follow Next.js conventions.
+- Biome enforced (`biome.jsonc`); TypeScript strict across the repo (shared `packages/tsconfig`).
+- Prefer full, descriptive identifiers — avoid abbreviations (`dictionary` not `dict`,
+  `language` not `lang`).
+
+### File & Directory Naming
+
+- React components: **PascalCase** (`Header.tsx`, `ArticleHeading.tsx`).
+- Component stories: **PascalCase** `.stories.tsx` (`Button.stories.tsx`).
+- Tests: **camelCase** `.test.ts(x)` / `.spec.ts(x)` (`useSnsShareInfo.test.ts`).
+- Utility files: **camelCase** (`generateHtmlTemplate.ts`).
+- Entity/domain files: **PascalCase** (`Entity.ts`, `Repository.ts`).
+- Config files: **lowercase** (`globals.css`, `middleware.ts`).
+- Component directories: **kebab-case** (`article-heading/`); domain/module directories:
+  **camelCase** (`useCases/`). `packages/ui` `*.module.css` keys must be lowerCamelCase.
+
+### Component Patterns
+
+- Always name the main props interface `Props`; compose with `extends` for HTML props.
+
+```typescript
+interface Props
+  extends Omit<React.ComponentPropsWithRef<'button'>, 'color'>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+```
+
+```
+components/component-name/
+├── ComponentName.tsx
+├── ComponentName.stories.tsx   # if UI component
+└── componentName.test.ts
+```
+
+### Import / Export Patterns
+
+Import order (Biome enforced, newline between groups): external libraries → internal
+components (relative) → domain/business logic → local same-directory.
+
+```typescript
+import Link from 'next/link';
+import { Button, DropdownMenu } from 'ui';
+
+import { CompanyLogo } from '../company-logo/CompanyLogo';
+
+import { Category } from '../../modules/post/domain/types';
+
+import MotionHeader from './MotionHeader';
+```
+
+- Use `workspace:*` for internal packages; import UI components via `import { Button } from 'ui'`.
+- Default exports for main components; named exports for utilities/types; barrel re-exports
+  (`export * from './entity'`).
+
+### TypeScript Patterns
+
+```typescript
+// Const-assertion enums
+export const Category = { ENGINEERING: 'ENGINEERING', DESIGN: 'DESIGN' } as const;
+export type Category = (typeof Category)[keyof typeof Category];
+```
+
+Strict mode, composite projects, path mapping via workspace resolution.
+
+### Design System (UI Package)
+
+- Use Class Variance Authority (CVA) for component variants.
+- Use dot notation for compound components; set `displayName`.
+- Component slot props: keep a permissive `ReactNode` type and render nothing for invalid
+  (non-element) values — do not narrow the type or add a default fallback.
+
+## State Management
+
+- **React Query** for server state; wrap the app with `ReactQueryClientProvider`.
+- **Custom hooks** prefixed with `use` (`useSnsShareInfo`), co-located when component-specific.
+- **Zustand** (if used) for client-side global state; keep stores focused and minimal.
+
+## Validation & Error Handling
+
+- Use **Zod** for schema validation (request/response, domain input).
+
+```typescript
+export const postSchema = z.object({ id: z.string(), title: z.string() })
+  .extend({ author: authorSchema });
+```
+
+- Wrap data-fetching in try/catch; use React error boundaries for components.
 
 ## Testing Guidelines
 
-- Framework: Vitest with jsdom. Co-locate tests as `*.test.ts(x)` or `*.spec.ts(x)` near source.
-- Shared config: apps can re-export `defineConfig` from `test-utils` (see `apps/blog/vitest.config.mts`).
-- Setup: `packages/test-utils/setupTests.ts` loads `@testing-library/jest-dom/vitest` matchers.
-- Libraries: prefer React Testing Library (`@testing-library/react`, `user-event`), `vi` mocks.
-- Coverage: reporters `text,json,html` (see `packages/test-utils/vitest.config.ts`).
-- Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` or scope via `pnpm -F blog test`.
+- Framework: Vitest with jsdom. Co-locate tests as `*.test.ts(x)` / `*.spec.ts(x)` near source.
+- Libraries: React Testing Library (`@testing-library/react`, `user-event`), `vi` mocks.
+- Shared config: apps re-export `defineConfig` from `test-utils` (see `apps/blog/vitest.config.mts`);
+  setup `packages/test-utils/setupTests.ts` loads `@testing-library/jest-dom/vitest`.
+- Coverage reporters: `text,json,html` (see `packages/test-utils/vitest.config.ts`).
+- Test behavior over implementation; AAA structure; name the subject `sut`; prefer `it.each`
+  over loops. Full standards: `.claude/rules/unit-test-guidelines.md`.
+- Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` (or scope via `pnpm -F blog test`).
+
+## Internationalization (Portfolio App)
+
+```typescript
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation('common'); // namespace-based translations
+```
+
+Middleware-based language detection with dynamic Next.js routing.
+
+## Environment Variables
+
+See `turbo.json` for the complete env list. Critical variables:
+
+- `NOTION_TOKEN`, `NOTION_*_DATABASE_ID` — Notion API access and content database IDs.
+- `CLOUDINARY_*` — image management (cloud name, API key/secret).
+- `AMAZON_ACCESS_KEY_ID` / `AMAZON_SECRET_ACCESS_KEY` / `AMAZON_REGION` /
+  `AMAZON_SES_SENDER_EMAIL` — AWS SES email service.
+- `NEXT_PUBLIC_H_CAPTCHA_SITE_KEY` / `H_CAPTCHA_SECRET` — CAPTCHA verification.
+- `INSTAGRAM_LONG_ACCESS_TOKEN` — Instagram integration.
+- `API_KEY` — Hono server authentication (`x-api-key` header).
+- Database connection strings for Drizzle/PostgreSQL.
+
+## Security & Configuration
+
+- Environment variables are required for builds (see `turbo.json` env list). Place
+  app-specific secrets in `apps/*/.env.local` and never commit them.
+- Avoid storing tokens in code or stories; prefer `.env` and runtime config.
+- Never log PII; ensure authentication wraps protected Hono routes (`x-api-key`).
 
 ## Commit & Pull Request Guidelines
 
-- Commits: use Conventional Commits or the existing emoji-prefixed style (e.g., `feat: ...`, `🐛 fix: ...`). Keep messages imperative and scoped when useful.
-- PRs: use the template in `.github/PULL_REQUEST_TEMPLATE.md`. Include description, linked issues, screenshots for UI, and notes on env/config changes.
-- CI: PRs run Biome checks, typecheck, tests, Storybook/Chromatic. Ensure local checks pass first.
+- Commits: gitmoji + Type format with issue reference — `<gitmoji> <Type>: #<issue> <Subject>`
+  (imperative, capitalized, no trailing period). See the `commit-guidelines` skill.
+- Branches: `<prefix>/<issue-number>-<summary>` derived from `main`. See the
+  `branch-guidelines` skill.
+- PRs: use `.github/PULL_REQUEST_TEMPLATE.md`. Include description, linked issues,
+  screenshots for UI, and notes on env/config changes.
+- CI: PRs run Biome checks, typecheck, tests, and Storybook/Chromatic. Ensure local checks
+  pass first.
 
-## Security & Configuration Tips
+## Storybook & Chromatic
 
-- Environment variables are required for builds (see `turbo.json` env list). Place app-specific secrets in `apps/*/.env.local` and never commit them.
-- Avoid storing tokens in code or stories; prefer `.env` and runtime config.
+- Location: UI Storybook in `packages/ui/.storybook` with Webpack + SWC.
+- Stories: `src/**/*.stories.@(js|jsx|ts|tsx)` and MDX docs; static assets under `packages/ui/public`.
+- Local: `pnpm -F ui storybook` (port 6006). Build: `pnpm -F ui build-storybook` →
+  `packages/ui/storybook-static`.
+- Visual tests: `pnpm -F ui chromatic` (requires `CHROMATIC_PROJECT_TOKEN`).
+- CI: `.github/workflows/chromatic.yml` uploads on push with `onlyChanged: true`;
+  review/approve diffs in Chromatic.
+
+**Verify component properties before using them.** Before applying ANY prop on a design
+system component (even common-sounding ones like `shadow`), confirm it is actually
+documented for that component via its Storybook documentation or example stories. Do not
+assume props from naming conventions or other libraries; if a prop is not documented, ask
+rather than guess. (Claude Code: use the `k2bg-design-system` MCP tools — see `CLAUDE.md`.)
 
 ## Codex Review Guidelines
 
@@ -68,23 +276,3 @@ Defer formatting/style nits already enforced by Biome; do not duplicate lint out
   unless asked), and `@codex fix the P1 issue` for small, scoped corrections.
 - **Claude (`@claude` / local Claude Code) = primary implementer** for feature work.
 - Keep the two agents from overlapping: do not ask both to implement the same PR.
-
-## Storybook & Chromatic
-
-- Location: UI Storybook in `packages/ui/.storybook` with Webpack + SWC.
-- Stories: `src/**/*.stories.@(js|jsx|ts|tsx)` and MDX docs; static assets under `packages/ui/public`.
-- Local: `pnpm -F ui storybook` (port 6006). Build: `pnpm -F ui build-storybook` → `packages/ui/storybook-static`.
-- Visual tests: `pnpm -F ui chromatic` (requires `CHROMATIC_PROJECT_TOKEN`).
-- CI: `.github/workflows/chromatic.yml` uploads on push with `onlyChanged: true`; review/approve diffs in Chromatic.
-
-When working on UI components, always use the `k2bg-design-system` MCP tools to access Storybook's component and documentation knowledge before answering or taking any action.
-
-- **CRITICAL: Never hallucinate component properties!** Before using ANY property on a component from a design system (including common-sounding ones like `shadow`, etc.), you MUST use the MCP tools to check if the property is actually documented for that component.
-- Query `list-all-documentation` to get a list of all components
-- Query `get-documentation` for that component to see all available properties and examples
-- Only use properties that are explicitly documented or shown in example stories
-- If a property isn't documented, do not assume properties based on naming conventions or common patterns from other libraries. Check back with the user in these cases.
-- Use the `get-storybook-story-instructions` tool to fetch the latest instructions for creating or updating stories. This will ensure you follow current conventions and recommendations.
-- Check your work by running `run-story-tests`.
-
-Remember: A story name might not reflect the property name correctly, so always verify properties through documentation or example stories before using them.
