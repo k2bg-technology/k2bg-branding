@@ -4,21 +4,21 @@ A **Next.js 16** blog application with **Notion CMS** integration, built followi
 
 ## Technology Stack
 
-| Category | Technologies |
-|---|---|
-| **Framework** | Next.js 16, React 19, TypeScript |
+| Category       | Technologies                              |
+| -------------- | ----------------------------------------- |
+| **Framework**  | Next.js 16, React 19, TypeScript          |
 | **API Server** | Hono, @hono/zod-openapi, @hono/swagger-ui |
-| **Styling** | Tailwind CSS v4 |
-| **Database** | PostgreSQL, Drizzle ORM |
-| **CMS** | Notion API |
-| **Email** | AWS SES |
-| **Image CDN** | Cloudinary |
-| **State** | Zustand, TanStack React Query |
-| **Forms** | React Hook Form, Zod, hCaptcha |
-| **Templating** | Handlebars (email templates) |
-| **Testing** | Vitest, Testing Library, MSW |
-| **Linting** | Biome |
-| **Docs** | Storybook 10 |
+| **Styling**    | Tailwind CSS v4                           |
+| **Database**   | PostgreSQL, Drizzle ORM                   |
+| **CMS**        | Notion API                                |
+| **Email**      | AWS SES                                   |
+| **Image CDN**  | Cloudinary                                |
+| **State**      | Zustand, TanStack React Query             |
+| **Forms**      | React Hook Form, Zod, hCaptcha            |
+| **Templating** | Handlebars (email templates)              |
+| **Testing**    | Vitest, Testing Library, MSW              |
+| **Linting**    | Biome                                     |
+| **Docs**       | Storybook 10                              |
 
 ## Getting Started
 
@@ -77,13 +77,13 @@ The blog follows a **Clean Architecture** pattern with vertical slicing by domai
 
 ### Domain Modules
 
-| Module | Description |
-|---|---|
-| [post](/apps/blog/specs/post.spec.md) | Blog post management, categories, search |
-| `contact` | Contact form handling and email delivery |
-| [media](/apps/blog/specs/media.spec.md) | Media asset management |
-| [affiliate](/apps/blog/specs/affiliate.spec.md) | Affiliate link and banner management |
-| `social-feed` | Social media feed integration (Instagram) |
+| Module                                         | Description                               |
+| ---------------------------------------------- | ----------------------------------------- |
+| [post](/apps/blog/specs/post.md)               | Blog post management, categories, search  |
+| [contact](/apps/blog/specs/contact.md)         | Contact form handling and email delivery  |
+| [media](/apps/blog/specs/media.md)             | Media asset management                    |
+| [affiliate](/apps/blog/specs/affiliate.md)     | Affiliate link and banner management      |
+| [social-feed](/apps/blog/specs/social-feed.md) | Social media feed integration (Instagram) |
 
 ### Layer Structure
 
@@ -108,30 +108,35 @@ modules/<module>/
 ### Use Cases
 
 **Post**
+
 - `fetch-posts` / `fetch-post` / `fetch-posts-by-category` / `fetch-all-slugs` / `search-posts`
 - `sync-posts-from-external` / `sync-hero-images`
 
 **Contact**
+
 - `send-email`
 
 **Affiliate**
+
 - `fetch-affiliate` / `fetch-affiliates-by-ids` / `fetch-all-image-sources`
 
 **Media**
+
 - `fetch-media` / `fetch-all-image-sources`
 
 **Social Feed**
+
 - `fetch-feed`
 
 ### Adapters
 
-| Adapter | Service | Used By |
-|---|---|---|
-| Notion | Notion API | post, affiliate, media |
-| Drizzle | PostgreSQL | post |
-| Cloudinary | Cloudinary CDN | post, media |
-| AWS SES | Amazon SES | contact |
-| Instagram | Instagram API | social-feed |
+| Adapter    | Service        | Used By                |
+| ---------- | -------------- | ---------------------- |
+| Notion     | Notion API     | post, affiliate, media |
+| Drizzle    | PostgreSQL     | post                   |
+| Cloudinary | Cloudinary CDN | post, media            |
+| AWS SES    | Amazon SES     | contact                |
+| Instagram  | Instagram API  | social-feed            |
 
 ### Clean Architecture Pattern
 
@@ -202,9 +207,9 @@ flowchart LR
     Contact --> AWSSES
     SocialFeed --> Instagram
 
-    click Post "specs/post.spec.md" "Post specification"
-    click Media "specs/media.spec.md" "Media specification"
-    click Affiliate "specs/affiliate.spec.md" "Affiliate specification"
+    click Post "specs/post.md" "Post specification"
+    click Media "specs/media.md" "Media specification"
+    click Affiliate "specs/affiliate.md" "Affiliate specification"
 
     classDef routeStyle fill:#F59E0B,stroke:#D97706,stroke-width:2px,color:#fff
     classDef moduleStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
@@ -271,12 +276,12 @@ The blog app includes a **Hono**-based REST API server that integrates into Next
 
 ### Endpoints
 
-| Method | Path | Description | Auth |
-|---|---|---|---|
-| `PATCH` | `/api/posts` | Sync posts from Notion to database | `x-api-key` |
-| `PATCH` | `/api/images` | Sync hero images to CDN | `x-api-key` |
-| `GET` | `/api/doc.json` | OpenAPI specification | None |
-| `GET` | `/api/doc` | Swagger UI | None |
+| Method  | Path            | Description                        | Auth        |
+| ------- | --------------- | ---------------------------------- | ----------- |
+| `PATCH` | `/api/posts`    | Sync posts from Notion to database | `x-api-key` |
+| `PATCH` | `/api/images`   | Sync hero images to CDN            | `x-api-key` |
+| `GET`   | `/api/doc.json` | OpenAPI specification              | None        |
+| `GET`   | `/api/doc`      | Swagger UI                         | None        |
 
 ### Server Structure
 
