@@ -9,8 +9,8 @@ Use a decision record when the team needs to remember why a meaningful technical
 Use a four-digit sequence and a short kebab-case title:
 
 ```text
-0001-short-decision-title.md
-0002-another-decision-title.md
+0001-use-better-auth.md
+0002-keep-user-and-author-separate.md
 ```
 
 If the sequence reaches `9999`, continue with `10000`. The prefix is for stable ordering, not a hard limit.

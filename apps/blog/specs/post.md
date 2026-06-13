@@ -66,13 +66,14 @@ Out of scope:
 > **Aspirational — not yet invoked.** These transition operations (`publish`, `archive`, `softDelete`,
 > `restore`) and their guards are modeled on `Post` but no application workflow calls them today. Post
 > status is set by mapping from the external content source during sync; there is no command use case and
-> no editing UI. The transitions become active when the settings console gains post-management UI.
-> Until then, treat this table as the intended rule set, not active behavior.
+> no editing UI. The transitions become active when the settings console (see [`auth.md`](./auth.md))
+> gains post-management UI. Until then, treat this table as the intended rule set, not active behavior.
 
 ### Aggregate
 
 `Post` is the aggregate root and the only entry point. `Author` is a separate aggregate referenced by
-id (`AuthorId`); the post never holds an `Author` object.
+id (`AuthorId`); the post never holds an `Author` object. See
+[`decisions/0002`](./decisions/0002-keep-user-and-author-separate.md).
 
 ## Use Cases
 
