@@ -16,6 +16,7 @@ The repository follows a code-first documentation model:
 | [`post.md`](./post.md)               | Post lifecycle, publication rules, queries, and sync boundaries |
 | [`media.md`](./media.md)             | Media asset rules and retrieval operations                      |
 | [`affiliate.md`](./affiliate.md)     | Affiliate link types, provider rules, and retrieval operations  |
+| [`auth.md`](./auth.md)               | Blog settings authentication and access policy                  |
 | [`contact.md`](./contact.md)         | Contact form submission and confirmation email behavior         |
 | [`social-feed.md`](./social-feed.md) | Social media feed retrieval and display rules                   |
 | [`decisions/`](./decisions/)         | Architecture decision records                                   |

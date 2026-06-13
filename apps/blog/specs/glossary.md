@@ -28,6 +28,7 @@ The operation list for each module is owned by that module spec's Contracts sect
 | Post        | `Post`                                 |
 | Media       | `Media`                                |
 | Affiliate   | `Affiliate` union                      |
+| Auth        | `User`, `Session` owned by better-auth |
 | Contact     | `Contact`                              |
 | Social Feed | `SocialPost`                           |
 
@@ -35,6 +36,7 @@ The operation list for each module is owned by that module spec's Contracts sect
 
 | Name              | Contexts            | Resolution                                                                                                                                                                     |
 | ----------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `User` / `Author` | Auth / Post         | `User` is an authenticatable account. `Author` is post metadata and must not be merged with `User`. See [`decisions/0002`](./decisions/0002-keep-user-and-author-separate.md). |
 | `PostId`          | Post / Social Feed  | Post `PostId` is UUID-based. Social Feed `PostId` wraps an external provider string.                                                                                           |
 | `MediaType`       | Media / Social Feed | Media supports `IMAGE` and `VIDEO`. Social Feed also supports `CAROUSEL_ALBUM`. Keep the enums separate.                                                                       |
 | `Name`            | Affiliate / Contact | Affiliate `Name` is display text for an affiliate item. Contact `Name` is the submitter's name.                                                                                |
