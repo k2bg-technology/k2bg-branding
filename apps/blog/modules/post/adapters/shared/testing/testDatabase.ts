@@ -34,6 +34,6 @@ export async function closeTestDb(): Promise<void> {
 
 export async function truncateAllTables(): Promise<void> {
   await getTestDb().execute(
-    sql`TRUNCATE TABLE "Post", "Author" RESTART IDENTITY CASCADE`
+    sql`TRUNCATE TABLE "Post", "Author", "Session", "Account", "Verification", "User" RESTART IDENTITY CASCADE`
   );
 }

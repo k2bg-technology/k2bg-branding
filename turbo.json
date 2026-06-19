@@ -34,7 +34,9 @@
         "PORTFOLIO_SITE_BASE_URL",
         "API_KEY",
         "INSTAGRAM_GRAPH_API_BASE_URL",
-        "INSTAGRAM_USER_ID"
+        "INSTAGRAM_USER_ID",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL"
       ]
     },
     "start": {},
