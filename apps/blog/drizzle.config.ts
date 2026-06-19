@@ -10,7 +10,14 @@ export default defineConfig({
   // Restrict introspection to the application's own tables so a `drizzle-kit
   // pull` / `generate` diff against the live database is not polluted by the
   // residual `_prisma_migrations` bookkeeping table.
-  tablesFilter: ['Author', 'Post'],
+  tablesFilter: [
+    'Author',
+    'Post',
+    'User',
+    'Session',
+    'Account',
+    'Verification',
+  ],
   strict: true,
   verbose: true,
 });
