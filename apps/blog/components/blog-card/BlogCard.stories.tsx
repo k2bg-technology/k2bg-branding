@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react-webpack5';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Avatar } from 'ui';
 
 import AvatarImage from '../../.storybook/images/avatar.png';
