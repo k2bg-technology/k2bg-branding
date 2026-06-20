@@ -3,7 +3,22 @@
 import { type CSSProperties, memo } from 'react';
 
 import type { ICON_NAMES } from './const';
+import {
+  heroOutlineIcons,
+  heroSolidIcons,
+  type IconUrl,
+  multiColorIcons,
+} from './iconUrls.generated';
 import styles from './index.module.css';
+
+// An imported SVG resolves to different shapes per bundler: a URL string
+// (webpack asset/resource, esbuild dataurl), a StaticImageData `{ src }`
+// (Next.js / Turbopack), or a module namespace `{ default: { src } }`.
+function resolveIconSrc(value: IconUrl | undefined): string | undefined {
+  if (typeof value === 'string') return value;
+  if (value && 'src' in value) return value.src;
+  return value?.default?.src;
+}
 
 export interface IconProps extends React.HTMLAttributes<HTMLElement> {
   name: (typeof ICON_NAMES)[number];
@@ -26,49 +41,26 @@ function IconInner(props: IconProps) {
     ...rest
   } = props;
 
-  const importAll = (r: __WebpackModuleApi.RequireContext) =>
-    r
-      .keys()
-      .map((key) => [key, r(key)])
-      .reduce(
-        (prev, [key, image]) => ({
-          ...prev,
-          [key]: image,
-        }),
-        {} as Record<string, string | { default: { src: string } }>
-      );
-
-  const multiColorIcons = importAll(
-    require.context('./multi-color-icons', false, /\.(svg)$/)
-  );
-
-  const heroOutlineIcons = importAll(
-    require.context('./hero-icons/outline', false, /\.(svg)$/)
-  );
-
-  const heroSolidIcons = importAll(
-    require.context('./hero-icons/solid', false, /\.(svg)$/)
-  );
-
-  const iconUrl = {
-    ...multiColorIcons,
-    ...(appearance === 'outline' ? heroOutlineIcons : heroSolidIcons),
-  }[`./${name}.svg`];
+  const heroIcons =
+    appearance === 'outline' ? heroOutlineIcons : heroSolidIcons;
+  const iconUrl = multiColorIcons[name] ?? heroIcons[name];
+  // Quote the url() target: esbuild's dataurl loader inlines SVGs with raw
+  // double-quotes/angle-brackets, which break an unquoted CSS url(). Single
+  // quotes are safe — the inlined data URLs never contain single quotes.
+  const iconSrc = resolveIconSrc(iconUrl);
 
   return (
     <i
       {...rest}
-      className={`${styles.icon} ${
-        originalColor && `${styles.originalColor}`
-      } ${className}`}
-      style={{
-        '--image-url': `url(${
-          typeof iconUrl === 'string' ? iconUrl : iconUrl?.default?.src
-        })`,
-        '--icon-color': color,
-        '--icon-width': width,
-        '--icon-height': height,
-      }}
+      className={`${styles.icon} ${originalColor ? styles.originalColor : ''} ${className ?? ''}`}
+      style={
+        {
+          '--image-url': `url('${iconSrc}')`,
+          '--icon-color': color,
+          '--icon-width': width,
+          '--icon-height': height,
+        } as CSSProperties
+      }
     />
   );
 }
