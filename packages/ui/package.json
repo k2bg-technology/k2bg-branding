@@ -1,12 +1,13 @@
 {
   "name": "ui",
   "version": "0.0.0",
-  "main": "./index.tsx",
-  "types": "./index.tsx",
+  "main": "./index.ts",
+  "types": "./index.ts",
   "license": "MIT",
   "scripts": {
     "lint": "biome check .",
     "generate:component": "turbo gen react-component",
+    "generate:icons": "node src/components/Icon/generateIconUrls.mjs",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "rm -rf storybook-static && storybook build --output-dir storybook-static",
     "chromatic": "chromatic --only-changed --exit-once-uploaded --storybook-config-dir .storybook --project-token $CHROMATIC_PROJECT_TOKEN"

@@ -60,3 +60,13 @@ dist
 
 # Database backups (e.g. pre-migration pg_dump snapshots)
 .backups/
+
+# design-sync (claude.ai/design) — local working state + build artifacts
+.design-sync/sb-reference/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.ds-sync/
+ds-bundle/
+packages/ui/.ds-tailwind.css
+.design-sync/*.log

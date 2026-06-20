@@ -1,0 +1,17 @@
+{
+  "projectId": "b2cc8db1-4c17-4e1f-9e1c-10ceadb60620",
+  "pkg": "ui",
+  "globalName": "K2bgUi",
+  "shape": "storybook",
+  "storybookConfigDir": "packages/ui/.storybook",
+  "storybookStatic": ".design-sync/sb-reference",
+  "entry": "packages/ui/index.ts",
+  "cssEntry": ".ds-tailwind.css",
+  "buildCmd": "npx @tailwindcss/cli -i packages/ui/src/globals.css -o packages/ui/.ds-tailwind.css",
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "Pagination": { "cardMode": "column" },
+    "ScrollArea": { "cardMode": "column" },
+    "VideoStreamingPlayer": { "cardMode": "column" }
+  }
+}

@@ -6,7 +6,8 @@
     "includes": [
       "src/**/*.{ts,tsx}",
       "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
-      ".storybook/**/*.{ts,tsx,js,mjs}"
+      ".storybook/**/*.{ts,tsx,js,mjs}",
+      "!src/**/*.generated.ts"
     ]
   },
 

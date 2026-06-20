@@ -93,3 +93,29 @@ jobs:
 
       - name: Type check
         run: pnpm typecheck
+
+  icon-map:
+    name: Icon Map Sync
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Regenerate icon map
+        run: node packages/ui/src/components/Icon/generateIconUrls.mjs
+
+      - name: Verify icon map is committed and up to date
+        run: |
+          if ! git diff --exit-code packages/ui/src/components/Icon/iconUrls.generated.ts; then
+            echo "::error::iconUrls.generated.ts is out of date. Run 'pnpm -F ui generate:icons' and commit the result."
+            exit 1
+          fi
