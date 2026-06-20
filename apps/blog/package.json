@@ -22,6 +22,7 @@
     "db:verify:down": "docker stop k2bg-branding-blog-postgres-verify >/dev/null 2>&1 || true",
     "db:baseline": "node ./scripts/baseline-drizzle-migration.mjs",
     "db:migrate": "pnpm db:baseline && drizzle-kit migrate",
+    "db:seed:admin": "tsx ./scripts/seed-admin-user.ts",
     "db:pull": "drizzle-kit pull",
     "db:generate": "drizzle-kit generate",
     "db:check": "drizzle-kit check",
