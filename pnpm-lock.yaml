@@ -211,6 +211,9 @@ importers:
       tsconfig:
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      tsx:
+        specifier: ^4.20.6
+        version: 4.22.0
 
   apps/portfolio:
     dependencies:
