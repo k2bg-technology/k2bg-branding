@@ -58,6 +58,25 @@ describe('provisionAdminUser', () => {
     expect(storedUsers).toHaveLength(1);
   });
 
+  it('repairs an administrator left without a credential account by an interrupted run', async () => {
+    const sut = provisionAdminUser;
+    const input = createAdminInput();
+    const context = await auth.$context;
+    await context.internalAdapter.createUser({
+      email: input.email,
+      name: input.name,
+      emailVerified: false,
+    });
+
+    const result = await sut(input);
+
+    expect(result.status).toBe('created');
+    const signIn = await auth.api.signInEmail({
+      body: { email: input.email, password: input.password },
+    });
+    expect(signIn.user.email).toBe(input.email);
+  });
+
   it('throws when the password is shorter than the minimum length', async () => {
     const sut = provisionAdminUser;
     const input = createAdminInput({ password: 'short' });

@@ -19,7 +19,13 @@ interface ProvisionAdminResult {
  * Create the first administrator. Public sign-up is disabled
  * (`disableSignUp: true`), so we provision through the auth context exactly as
  * better-auth's own admin plugin does: createUser + provider-owned password
- * hash + credential account link. Idempotent — re-running is a no-op.
+ * hash + credential account link.
+ *
+ * Idempotent and self-healing: an admin counts as provisioned only once a
+ * credential account exists, so a bare User row left by an interrupted run is
+ * repaired on re-run. A successful run therefore always yields a sign-in-capable
+ * admin, even though the adapter spans createUser/linkAccount without a single
+ * transaction.
  *
  * @see apps/blog/specs/auth.md (first-administrator provisioning)
  */
@@ -38,9 +44,28 @@ export async function provisionAdminUser(
 
   const context = await auth.$context;
 
-  const existing = await context.internalAdapter.findUserByEmail(email);
-  if (existing) {
+  const existing = await context.internalAdapter.findUserByEmail(email, {
+    includeAccounts: true,
+  });
+  const hasCredential = existing?.accounts.some(
+    (account) => account.providerId === 'credential'
+  );
+  if (existing && hasCredential) {
     return { status: 'already-exists', userId: existing.user.id };
+  }
+
+  // Hash before createUser so a hashing failure never leaves a credential-less
+  // User row behind.
+  const hashedPassword = await context.password.hash(input.password);
+
+  if (existing) {
+    await context.internalAdapter.linkAccount({
+      accountId: existing.user.id,
+      providerId: 'credential',
+      password: hashedPassword,
+      userId: existing.user.id,
+    });
+    return { status: 'created', userId: existing.user.id };
   }
 
   const user = await context.internalAdapter.createUser({
@@ -48,8 +73,6 @@ export async function provisionAdminUser(
     name: input.name,
     emailVerified: false,
   });
-
-  const hashedPassword = await context.password.hash(input.password);
   await context.internalAdapter.linkAccount({
     accountId: user.id,
     providerId: 'credential',

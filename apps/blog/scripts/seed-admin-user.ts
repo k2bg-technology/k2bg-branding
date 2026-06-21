@@ -15,13 +15,13 @@ async function main(): Promise<void> {
     );
   }
 
-  // Never log the password.
+  // Never log the password or the email (PII): status only.
   const result = await provisionAdminUser({ email, password, name });
   if (result.status === 'already-exists') {
-    console.log(`Administrator already exists: ${email} (no changes)`);
+    console.log('Administrator already exists; no changes');
     return;
   }
-  console.log(`Administrator created: ${email}`);
+  console.log('Administrator provisioned');
 }
 
 main()
