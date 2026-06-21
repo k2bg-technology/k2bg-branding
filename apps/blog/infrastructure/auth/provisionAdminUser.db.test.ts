@@ -77,6 +77,17 @@ describe('provisionAdminUser', () => {
     expect(signIn.user.email).toBe(input.email);
   });
 
+  it('refuses to provision a second administrator with a different email', async () => {
+    const sut = provisionAdminUser;
+    await sut(createAdminInput());
+
+    await expect(
+      sut(createAdminInput({ email: 'second@example.com' }))
+    ).rejects.toThrow('refusing to provision a second administrator');
+    const storedUsers = await getTestDb().select().from(users);
+    expect(storedUsers).toHaveLength(1);
+  });
+
   it('throws when the password is shorter than the minimum length', async () => {
     const sut = provisionAdminUser;
     const input = createAdminInput({ password: 'short' });

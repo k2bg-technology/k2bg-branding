@@ -54,6 +54,17 @@ export async function provisionAdminUser(
     return { status: 'already-exists', userId: existing.user.id };
   }
 
+  // Single-administrator model: there is no public sign-up, so every User is a
+  // seeded admin. Refuse to provision another one with a different email — the
+  // settings gate only checks for a session, so a second account would also get
+  // admin access.
+  const totalUsers = await context.adapter.count({ model: 'user' });
+  if (totalUsers > (existing ? 1 : 0)) {
+    throw new Error(
+      'An administrator already exists; refusing to provision a second administrator'
+    );
+  }
+
   // Hash before createUser so a hashing failure never leaves a credential-less
   // User row behind.
   const hashedPassword = await context.password.hash(input.password);
