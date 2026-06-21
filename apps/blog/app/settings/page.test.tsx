@@ -20,6 +20,10 @@ vi.mock('./LogoutButton', () => ({
   LogoutButton: () => <button type="button">ログアウト</button>,
 }));
 
+vi.mock('./SyncTriggers', () => ({
+  SyncTriggers: () => <div>SyncTriggers</div>,
+}));
+
 describe('SettingsPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
