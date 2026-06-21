@@ -88,6 +88,15 @@ describe('provisionAdminUser', () => {
     expect(storedUsers).toHaveLength(1);
   });
 
+  it('throws and creates no user when the admin email is invalid', async () => {
+    const sut = provisionAdminUser;
+    const input = createAdminInput({ email: 'admin' });
+
+    await expect(sut(input)).rejects.toThrow('valid email address');
+    const storedUsers = await getTestDb().select().from(users);
+    expect(storedUsers).toHaveLength(0);
+  });
+
   it('throws when the password is shorter than the minimum length', async () => {
     const sut = provisionAdminUser;
     const input = createAdminInput({ password: 'short' });

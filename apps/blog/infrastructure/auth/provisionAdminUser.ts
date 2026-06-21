@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { auth } from './auth';
 
 // better-auth's default emailAndPassword.minPasswordLength. internalAdapter
@@ -33,8 +35,11 @@ export async function provisionAdminUser(
   input: ProvisionAdminInput
 ): Promise<ProvisionAdminResult> {
   const email = input.email.trim().toLowerCase();
-  if (!email) {
-    throw new Error('Admin email is required');
+  // Validate before creating the singleton: better-auth's signInEmail rejects
+  // invalid emails, so an unverified bad address would lock out the admin and
+  // the single-administrator guard would block reseeding a corrected one.
+  if (!z.string().email().safeParse(email).success) {
+    throw new Error('Admin email must be a valid email address');
   }
   if (input.password.length < MINIMUM_PASSWORD_LENGTH) {
     throw new Error(
