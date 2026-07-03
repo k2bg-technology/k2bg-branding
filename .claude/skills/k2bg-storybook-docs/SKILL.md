@@ -66,7 +66,7 @@ Verify the following for the target component:
 ```typescript
 // packages/ui/src/components/[ComponentName]/[ComponentName].stories.tsx
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import ComponentName from '.';
 
 const meta = {
