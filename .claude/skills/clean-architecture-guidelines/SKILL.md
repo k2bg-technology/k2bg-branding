@@ -70,9 +70,9 @@ src/
 │   ├── notion/
 │   │   ├── client.ts           # Notion API client
 │   │   └── types.ts            # Notion type definitions
-│   ├── prisma/
-│   │   ├── client.ts           # Prisma client
-│   │   └── schema.prisma
+│   ├── drizzle/
+│   │   ├── client.ts           # Drizzle client
+│   │   └── schema.ts           # Drizzle schema
 │   ├── logging/
 │   │   └── logger.ts           # Logger implementation
 │   └── config/
@@ -117,7 +117,7 @@ src/
 **Key Points:**
 - **Vertical Slicing**: Each business module (e.g., `post/`, `user/`, `comment/`) contains its own domain, use-cases, and adapters
   - ⚠️ **Naming Convention**: Avoid repeating module name in file names (e.g., `post/domain/entities/entity.ts` not `post.ts`)
-- **Shared Infrastructure**: Common technical foundations (Notion client, Prisma client, logger, config) live in `infrastructure/`
+- **Shared Infrastructure**: Common technical foundations (Notion client, Drizzle client, logger, config) live in `infrastructure/`
   - ⚠️ **Dependency Rule**: Domain and Use Cases must NEVER import from `infrastructure/`
   - ✅ Only `adapters/output/` can import from `infrastructure/`
 - Repository **interfaces** live in `modules/{module}/domain/repositories` (Output Ports)
@@ -130,7 +130,8 @@ src/
   - Feature-specific data retrieval (e.g., for specific pages)
   - Example: `PublishedPostsQueryService`, `PostSearchQueryService`
 - Repository **implementations** live in `modules/{module}/adapters/output/repositories`
-  - These implementations use `infrastructure/` clients (Notion, Prisma, etc.)
+  - These implementations use `infrastructure/` clients (Notion, Drizzle, etc.)
+  - Real example: `apps/blog/modules/post/adapters/output/repositories/drizzle/postRepository.ts`
 - Use Cases depend only on Domain (entities + repository interfaces)
 - Adapters depend on both Domain and Use Cases, never the reverse
 - Modules should be independent; cross-module dependencies require careful design

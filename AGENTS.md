@@ -76,8 +76,11 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 ### Portfolio App
 
 - i18next for internationalization (English/Japanese).
-- Middleware-based language detection and routing (`proxy.ts`); dynamic language routing
-  with Next.js.
+- Middleware-based language detection and routing (`apps/portfolio/middleware.ts`); dynamic
+  language routing with Next.js.
+- Next.js 16 renamed `middleware.ts` to `proxy.ts`, but the portfolio deliberately keeps
+  `middleware.ts` because i18n locale detection requires the edge runtime — do not rename it.
+  Use `proxy.ts` only when adding new middleware to the blog app.
 
 ### Key Integrations
 
@@ -108,8 +111,10 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Utility files: **camelCase** (`generateHtmlTemplate.ts`).
 - Entity/domain files: **PascalCase** (`Entity.ts`, `Repository.ts`).
 - Config files: **lowercase** (`globals.css`, `middleware.ts`).
-- Component directories: **kebab-case** (`article-heading/`); domain/module directories:
-  **camelCase** (`useCases/`). `packages/ui` `*.module.css` keys must be lowerCamelCase.
+- Component directories: **kebab-case** in apps (`apps/blog/components/article-heading/`);
+  **PascalCase** in `packages/ui` (`packages/ui/src/components/Avatar/`); domain/module
+  directories: **camelCase** (`useCases/`). `packages/ui` `*.module.css` keys must be
+  lowerCamelCase.
 
 ### Component Patterns
 
@@ -237,7 +242,7 @@ See `turbo.json` for the complete env list. Critical variables:
 
 ## Storybook & Chromatic
 
-- Location: UI Storybook in `packages/ui/.storybook` with Webpack + SWC.
+- Location: UI Storybook in `packages/ui/.storybook` with the Vite builder (`@storybook/react-vite`).
 - Stories: `src/**/*.stories.@(js|jsx|ts|tsx)` and MDX docs; static assets under `packages/ui/public`.
 - Local: `pnpm -F ui storybook` (port 6006). Build: `pnpm -F ui build-storybook` →
   `packages/ui/storybook-static`.

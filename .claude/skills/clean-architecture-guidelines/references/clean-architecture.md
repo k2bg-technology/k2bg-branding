@@ -333,40 +333,45 @@ export interface PostDetail {
 
 #### Query Service Implementation (Adapter)
 
-```typescript
-// modules/post/adapters/output/services/prismaPostQueryService.ts
-import { PostQueryService, PostSummary } from '../../../domain/services/postQueryService';
+Real example: `apps/blog/modules/post/adapters/output/query-services/drizzle/fetchPostSummariesQueryService.ts`
 
-export class PrismaPostQueryService implements PostQueryService {
-  constructor(private readonly prisma: PrismaClient) {}
+```typescript
+// modules/post/adapters/output/query-services/drizzle/postQueryService.ts
+import { count, desc, eq } from 'drizzle-orm';
+import { PostQueryService, PostSummary } from '../../../../domain/services/postQueryService';
+
+export class DrizzlePostQueryService implements PostQueryService {
+  constructor(private readonly db: DrizzleClient) {}
 
   async findPublishedPosts(options: PaginationOptions): Promise<PostSummary[]> {
     // Direct query optimized for reading (no domain entity mapping)
-    const posts = await this.prisma.post.findMany({
-      where: { status: 'PUBLISHED' },
-      select: {
-        id: true,
-        title: true,
-        excerpt: true,
-        publishedAt: true,
-        category: true,
-        author: { select: { name: true, avatarUrl: true } },
-      },
-      orderBy: { publishedAt: 'desc' },
-      skip: options.offset,
-      take: options.limit,
-    });
+    const rows = await this.db
+      .select({
+        id: posts.uuid,
+        title: posts.title,
+        excerpt: posts.excerpt,
+        publishedAt: posts.releaseDate,
+        category: posts.category,
+        authorName: authors.name,
+        authorAvatarUrl: authors.avatarUrl,
+      })
+      .from(posts)
+      .leftJoin(authors, eq(posts.authorId, authors.uuid))
+      .where(eq(posts.status, 'PUBLISHED'))
+      .orderBy(desc(posts.releaseDate))
+      .limit(options.limit)
+      .offset(options.offset);
 
-    return posts;  // Already in view model shape
+    return rows.map(toPostSummary); // Map rows into the view model shape
   }
 
   async getCategoryStats(): Promise<CategoryStats[]> {
     // Aggregation query - not possible with entity-based repository
-    return await this.prisma.post.groupBy({
-      by: ['category'],
-      _count: { id: true },
-      where: { status: 'PUBLISHED' },
-    });
+    return await this.db
+      .select({ category: posts.category, count: count() })
+      .from(posts)
+      .where(eq(posts.status, 'PUBLISHED'))
+      .groupBy(posts.category);
   }
 }
 ```
@@ -509,9 +514,10 @@ describe('GetPublishedPostsUseCase', () => {
 });
 
 // Integration Test - Adapter (test with real infrastructure)
-describe('PrismaPostRepository', () => {
+// Real example: apps/blog/modules/post/adapters/output/repositories/drizzle/postRepository.db.test.ts
+describe('DrizzlePostRepository', () => {
   it('saves and retrieves post correctly', async () => {
-    const sut = new PrismaPostRepository(testPrismaClient);
+    const sut = new DrizzlePostRepository(getTestDb());
     const post = Post.createDraft('Test', 'Content');
 
     await sut.save(post);
