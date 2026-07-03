@@ -94,6 +94,25 @@ jobs:
       - name: Type check
         run: pnpm typecheck
 
+  docs-check:
+    name: Agent Docs Check
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Verify agent documentation references
+        run: node scripts/check-docs.mjs
+
   icon-map:
     name: Icon Map Sync
     runs-on: ubuntu-latest

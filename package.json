@@ -9,6 +9,7 @@
     "format": "turbo run format",
     "check": "biome check .",
     "check:write": "biome check --write .",
+    "docs:check": "node scripts/check-docs.mjs",
     "storybook": "turbo run storybook",
     "build-storybook": "turbo run build-storybook",
     "chromatic": "turbo run chromatic",

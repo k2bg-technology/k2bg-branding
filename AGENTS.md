@@ -254,6 +254,18 @@ See `turbo.json` for the complete env list. Critical variables:
 - Avoid storing tokens in code or stories; prefer `.env` and runtime config.
 - Never log PII; ensure authentication wraps protected Hono routes (`x-api-key`).
 
+## Documentation Rules (Agent Docs)
+
+Rules for editing `AGENTS.md`, `CLAUDE.md`, and `.claude/**` documentation:
+
+- Never pin exact dependency versions in docs (write "Storybook 10.x" or nothing) —
+  `package.json` is the source of truth.
+- Code examples must reference real repository files by path, not invented ones.
+- Shared cross-agent rules live only in `AGENTS.md`; deep dives go to `.claude/rules/`
+  (path-scoped) or `.claude/skills/` (on-demand), with a one-line pointer from `AGENTS.md`.
+- Run `pnpm docs:check` after editing agent docs — it verifies referenced paths exist and
+  guards against re-introducing removed tech (`scripts/check-docs.mjs`); CI runs it too.
+
 ## Commit & Pull Request Guidelines
 
 - Commits: gitmoji + Type format with issue reference — `<gitmoji> <Type>: #<issue> <Subject>`
