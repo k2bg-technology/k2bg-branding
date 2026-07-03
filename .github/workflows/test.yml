@@ -110,6 +110,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Run docs checker tests
+        run: node --test scripts/check-docs.test.mjs
+
       - name: Verify agent documentation references
         run: node scripts/check-docs.mjs
 

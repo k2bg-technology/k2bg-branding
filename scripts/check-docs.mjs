@@ -7,25 +7,13 @@
  *    the docs (AI agents tend to reproduce legacy examples from training data).
  *
  * Append `docs-check-ignore` (e.g. in an HTML comment) to a line to exempt it.
+ *
+ * Co-located tests: scripts/check-docs.test.mjs
+ * (run with `node --test scripts/check-docs.test.mjs`).
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const repositoryRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
-
-function markdownFilesUnder(directory) {
-  return readdirSync(join(repositoryRoot, directory), { recursive: true })
-    .filter((entry) => entry.endsWith('.md'))
-    .map((entry) => join(directory, entry));
-}
-
-const documentationFiles = [
-  'AGENTS.md',
-  'CLAUDE.md',
-  ...markdownFilesUnder('.claude/rules'),
-  ...markdownFilesUnder('.claude/skills'),
-];
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const PATH_PATTERN = /`((?:apps|packages|scripts|\.claude|\.github)\/[^`\s]+)`/g;
 const GLOB_OR_PLACEHOLDER = /[*{}<>[\]]/;
@@ -58,24 +46,25 @@ const VERSION_PIN_GUARD = {
 
 const DENYLIST = [...REMOVED_TECH_GUARDS, VERSION_PIN_GUARD];
 
-const failures = [];
+/**
+ * Scan one document's content and return failure messages.
+ * `pathExists` is injected so the scan logic stays testable without disk fixtures.
+ */
+export function findDocumentationProblems(content, { fileLabel, pathExists }) {
+  const failures = [];
 
-for (const documentationFile of documentationFiles) {
-  const content = readFileSync(join(repositoryRoot, documentationFile), 'utf8');
-  const lines = content.split('\n');
-
-  lines.forEach((line, index) => {
+  content.split('\n').forEach((line, index) => {
     if (line.includes(IGNORE_MARKER)) {
       return;
     }
-    const location = `${documentationFile}:${index + 1}`;
+    const location = `${fileLabel}:${index + 1}`;
 
     for (const match of line.matchAll(PATH_PATTERN)) {
       const referencedPath = match[1].replace(/[.,;:]+$/, '');
       if (GLOB_OR_PLACEHOLDER.test(referencedPath)) {
         continue;
       }
-      if (!existsSync(join(repositoryRoot, referencedPath))) {
+      if (!pathExists(referencedPath)) {
         failures.push(`${location}: referenced path does not exist: ${referencedPath}`);
       }
     }
@@ -86,14 +75,52 @@ for (const documentationFile of documentationFiles) {
       }
     }
   });
+
+  return failures;
 }
 
-if (failures.length > 0) {
-  console.error(`docs:check failed with ${failures.length} problem(s):\n`);
-  for (const failure of failures) {
-    console.error(`  ${failure}`);
+export function collectDocumentationFiles(repositoryRoot) {
+  function markdownFilesUnder(directory) {
+    return readdirSync(join(repositoryRoot, directory), { recursive: true })
+      .filter((entry) => entry.endsWith('.md'))
+      .map((entry) => join(directory, entry));
   }
-  process.exit(1);
+
+  return [
+    'AGENTS.md',
+    'CLAUDE.md',
+    ...markdownFilesUnder('.claude/rules'),
+    ...markdownFilesUnder('.claude/skills'),
+  ];
 }
 
-console.log(`docs:check passed (${documentationFiles.length} files scanned)`);
+function runCheck() {
+  const repositoryRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
+  const documentationFiles = collectDocumentationFiles(repositoryRoot);
+
+  const failures = documentationFiles.flatMap((documentationFile) =>
+    findDocumentationProblems(
+      readFileSync(join(repositoryRoot, documentationFile), 'utf8'),
+      {
+        fileLabel: documentationFile,
+        pathExists: (referencedPath) => existsSync(join(repositoryRoot, referencedPath)),
+      }
+    )
+  );
+
+  if (failures.length > 0) {
+    console.error(`docs:check failed with ${failures.length} problem(s):\n`);
+    for (const failure of failures) {
+      console.error(`  ${failure}`);
+    }
+    process.exit(1);
+  }
+
+  console.log(`docs:check passed (${documentationFiles.length} files scanned)`);
+}
+
+const isDirectRun =
+  process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isDirectRun) {
+  runCheck();
+}
