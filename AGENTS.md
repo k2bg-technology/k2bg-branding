@@ -110,6 +110,8 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   only after the PR is merged, with a backup taken first.
 - Never run `db:up` / docker compose from a git worktree — the relative bind mount forks
   the Postgres data directory and the dev DB appears wiped.
+- Detailed persistence conventions (schema, client, repositories vs. query services,
+  transactions, mapping): `.claude/rules/drizzle-guidelines.md`.
 
 ## Coding Style & Naming Conventions
 
@@ -208,6 +210,8 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
   (`modules/<module>/adapters/shared/errors.ts`) instead of leaking raw driver errors.
 - In the Hono API, `errorHandler` maps `HTTPException` to its status; any other error
   becomes 500 — throw `HTTPException` from handlers for intentional statuses.
+- Detailed error taxonomy (domain → adapter → use-case → API/page boundaries):
+  `.claude/rules/error-handling-guidelines.md`.
 
 ## Testing Guidelines
 
