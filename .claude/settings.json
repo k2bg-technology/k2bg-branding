@@ -1,5 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "enabledMcpjsonServers": ["k2bg-design-system"],
   "hooks": {
     "PreToolUse": [
       {

@@ -319,21 +319,21 @@ export class PostPublishingService {
   }
 }
 
-// modules/post/adapters/output/services/prismaSlugChecker.ts
+// modules/post/adapters/output/services/drizzleSlugChecker.ts
 // Implementation in Adapter layer
+import { and, eq, ne } from 'drizzle-orm';
 import { SlugUniquenessChecker } from '../../../domain/services/slugUniquenessChecker';
 
-export class PrismaSlugUniquenessChecker implements SlugUniquenessChecker {
-  constructor(private readonly prisma: PrismaClient) {}
+export class DrizzleSlugUniquenessChecker implements SlugUniquenessChecker {
+  constructor(private readonly db: DrizzleClient) {}
 
   async isUnique(slug: Slug, excludePostId?: PostId): Promise<boolean> {
-    const existing = await this.prisma.post.findFirst({
-      where: {
-        slug: slug.getValue(),
-        ...(excludePostId && { id: { not: excludePostId.getValue() } }),
-      },
+    const existing = await this.db.query.posts.findFirst({
+      where: excludePostId
+        ? and(eq(posts.slug, slug.getValue()), ne(posts.uuid, excludePostId.getValue()))
+        : eq(posts.slug, slug.getValue()),
     });
-    return existing === null;
+    return existing === undefined;
   }
 }
 ```
@@ -544,28 +544,29 @@ export interface PostRepository {
   delete(id: PostId): Promise<void>;
 }
 
-// modules/post/adapters/output/repositories/prisma.ts
+// modules/post/adapters/output/repositories/drizzle/postRepository.ts
 // Implementation in ADAPTER layer
-import { PostRepository } from '../../../domain/repositories/repository';
-import { PostMapper } from '../mappers/mapper';
+// Real example: apps/blog/modules/post/adapters/output/repositories/drizzle/postRepository.ts
+import { eq } from 'drizzle-orm';
+import { PostRepository } from '../../../../domain/repositories/repository';
+import { toDomain, toPersistence } from './mapper';
 
-class PrismaPostRepository implements PostRepository {
-  constructor(private prisma: PrismaClient) {}
+class DrizzlePostRepository implements PostRepository {
+  constructor(private readonly db: DrizzleClient) {}
 
   async findById(id: PostId) {
-    const record = await this.prisma.post.findUnique({
-      where: { id: id.getValue() }
+    const row = await this.db.query.posts.findFirst({
+      where: eq(posts.uuid, id.getValue()),
     });
-    return record ? PostMapper.toDomain(record) : null;
+    return row ? toDomain(row) : null;
   }
 
   async save(post: Post) {
-    const data = PostMapper.toPersistence(post);
-    await this.prisma.post.upsert({
-      where: { id: data.id },
-      create: data,
-      update: data,
-    });
+    const data = toPersistence(post);
+    await this.db
+      .insert(posts)
+      .values(data)
+      .onConflictDoUpdate({ target: posts.uuid, set: data });
   }
 }
 

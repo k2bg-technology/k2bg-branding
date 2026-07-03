@@ -72,12 +72,18 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Structure: `server/app.ts` (app setup/routing), `server/routes/` (`createRoute()` + OpenAPI
   metadata), `server/schemas/` (Zod request/response), `server/middleware/` (apiKeyAuth,
   errorHandler, requestLogger).
+- Detailed conventions: `.claude/rules/hono-api-guidelines.md` (Claude Code auto-loads it;
+  other agents can read it directly).
 
 ### Portfolio App
 
-- i18next for internationalization (English/Japanese).
-- Middleware-based language detection and routing (`proxy.ts`); dynamic language routing
-  with Next.js.
+- Server-only dictionary-based internationalization (Japanese/English) — no react-i18next.
+  Detailed conventions: `.claude/rules/portfolio-i18n-guidelines.md`.
+- Middleware-based language detection and routing (`apps/portfolio/middleware.ts`); dynamic
+  language routing with Next.js (`app/[lang]/`).
+- Next.js 16 renamed `middleware.ts` to `proxy.ts`, but the portfolio deliberately keeps
+  `middleware.ts` because i18n locale detection requires the edge runtime — do not rename it.
+  Use `proxy.ts` only when adding new middleware to the blog app.
 
 ### Key Integrations
 
@@ -90,9 +96,20 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 ## Database (Blog App) — Drizzle
 
 - Use **Drizzle ORM** (`drizzle-orm` / `drizzle-kit`) for database operations.
-- Commands: `pnpm -F blog db:pull`, `db:generate`, `db:check` (drizzle-kit).
-- Keep the Drizzle schema in sync with the existing PostgreSQL schema.
-- Do not run destructive migration commands against production.
+- Schema lives in `apps/blog/infrastructure/drizzle/schema.ts`; migrations in
+  `apps/blog/infrastructure/drizzle/migrations/`; config in `apps/blog/drizzle.config.ts`.
+- Repositories and query services receive the client (`getDrizzleClient()` from
+  `apps/blog/infrastructure/drizzle/client.ts`) via constructor injection — never create
+  ad-hoc connections.
+- Commands (`pnpm -F blog ...`): `db:up` (local Postgres via Docker), `db:migrate` (apply
+  migrations), `db:pull` / `db:generate` / `db:check` (drizzle-kit), `db:verify`
+  (full round-trip against a disposable Postgres).
+- Schema change workflow: edit `schema.ts` → `db:generate` → review the SQL → `db:migrate`;
+  run `db:verify` before pushing.
+- Do not run destructive migration commands against production; run production migrations
+  only after the PR is merged, with a backup taken first.
+- Never run `db:up` / docker compose from a git worktree — the relative bind mount forks
+  the Postgres data directory and the dev DB appears wiped.
 
 ## Coding Style & Naming Conventions
 
@@ -108,8 +125,10 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Utility files: **camelCase** (`generateHtmlTemplate.ts`).
 - Entity/domain files: **PascalCase** (`Entity.ts`, `Repository.ts`).
 - Config files: **lowercase** (`globals.css`, `middleware.ts`).
-- Component directories: **kebab-case** (`article-heading/`); domain/module directories:
-  **camelCase** (`useCases/`). `packages/ui` `*.module.css` keys must be lowerCamelCase.
+- Component directories: **kebab-case** in apps (`apps/blog/components/article-heading/`);
+  **PascalCase** in `packages/ui` (`packages/ui/src/components/Avatar/`); domain/module
+  directories: **camelCase** (`useCases/`). `packages/ui` `*.module.css` keys must be
+  lowerCamelCase.
 
 ### Component Patterns
 
@@ -183,6 +202,12 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
 ```
 
 - Wrap data-fetching in try/catch; use React error boundaries for components.
+- Domain errors live per module in `modules/<module>/domain/errors/errors.ts` (base class
+  `DomainError`; e.g. `PostAlreadyPublishedError` in the post module).
+- Adapters wrap infrastructure failures in `RepositoryError`
+  (`modules/<module>/adapters/shared/errors.ts`) instead of leaking raw driver errors.
+- In the Hono API, `errorHandler` maps `HTTPException` to its status; any other error
+  becomes 500 — throw `HTTPException` from handlers for intentional statuses.
 
 ## Testing Guidelines
 
@@ -198,11 +223,16 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
 ## Internationalization (Portfolio App)
 
 ```typescript
-import { useTranslation } from 'react-i18next';
-const { t } = useTranslation('common'); // namespace-based translations
+const { lang } = await params;
+const language = resolveLanguage(lang);
+const dictionary = await getDictionary(language); // server-only loader (i18n/dictionaries.ts)
 ```
 
-Middleware-based language detection with dynamic Next.js routing.
+Locale detection lives in `apps/portfolio/middleware.ts` (cookie → Accept-Language →
+fallback `ja`); routes are nested under `app/[lang]/`. Add new translation keys to BOTH
+locale files (`apps/portfolio/i18n/locales/{ja,en}/translation.json`). Detailed
+conventions: `.claude/rules/portfolio-i18n-guidelines.md`. (react-i18next is used only by
+the Storybook docs in `packages/ui`.)
 
 ## Environment Variables
 
@@ -224,6 +254,18 @@ See `turbo.json` for the complete env list. Critical variables:
 - Avoid storing tokens in code or stories; prefer `.env` and runtime config.
 - Never log PII; ensure authentication wraps protected Hono routes (`x-api-key`).
 
+## Documentation Rules (Agent Docs)
+
+Rules for editing `AGENTS.md`, `CLAUDE.md`, and `.claude/**` documentation:
+
+- Never pin exact dependency versions in docs (write "Storybook 10.x" or nothing) —
+  `package.json` is the source of truth.
+- Code examples must reference real repository files by path, not invented ones.
+- Shared cross-agent rules live only in `AGENTS.md`; deep dives go to `.claude/rules/`
+  (path-scoped) or `.claude/skills/` (on-demand), with a one-line pointer from `AGENTS.md`.
+- Run `pnpm docs:check` after editing agent docs — it verifies referenced paths exist and
+  guards against re-introducing removed tech (`scripts/check-docs.mjs`); CI runs it too.
+
 ## Commit & Pull Request Guidelines
 
 - Commits: gitmoji + Type format with issue reference — `<gitmoji> <Type>: #<issue> <Subject>`
@@ -237,10 +279,10 @@ See `turbo.json` for the complete env list. Critical variables:
 
 ## Storybook & Chromatic
 
-- Location: UI Storybook in `packages/ui/.storybook` with Webpack + SWC.
+- Location: UI Storybook in `packages/ui/.storybook` with the Vite builder (`@storybook/react-vite`).
 - Stories: `src/**/*.stories.@(js|jsx|ts|tsx)` and MDX docs; static assets under `packages/ui/public`.
 - Local: `pnpm -F ui storybook` (port 6006). Build: `pnpm -F ui build-storybook` →
-  `packages/ui/storybook-static`.
+  `packages/ui/storybook-static` (build output). <!-- docs-check-ignore -->
 - Visual tests: `pnpm -F ui chromatic` (requires `CHROMATIC_PROJECT_TOKEN`).
 - CI: `.github/workflows/chromatic.yml` uploads on push with `onlyChanged: true`;
   review/approve diffs in Chromatic.

@@ -15,10 +15,9 @@ This skill assists with creating and updating Storybook documentation for the `p
 
 ### Storybook Configuration
 
-- **Version**: Storybook 10.0.6
+- **Version**: Storybook 10.x (see `packages/ui/package.json` for the exact version)
 - **Format**: CSF3 (Component Story Format 3)
-- **Framework**: `@storybook/react-webpack5`
-- **Compiler**: SWC with React 19
+- **Framework**: `@storybook/react-vite` (Vite builder)
 
 ### i18n Configuration
 
@@ -50,7 +49,7 @@ Verify the following for the target component:
 
 1. Component path (e.g., `packages/ui/src/components/Button/`)
 2. Main component props (variant, color, size, etc.)
-3. External libraries used (@radix-ui, clsx, etc.)
+3. External libraries used (@base-ui/react, clsx, etc.)
 4. Presence of sub-components (e.g., Avatar.Image, Avatar.Fallback)
 ```
 
@@ -67,7 +66,7 @@ Verify the following for the target component:
 ```typescript
 // packages/ui/src/components/[ComponentName]/[ComponentName].stories.tsx
 
-import type { Meta, StoryObj } from '@storybook/react-webpack5';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import ComponentName from '.';
 
 const meta = {
@@ -193,7 +192,7 @@ export const Default: Story = {
           "reason": "Core React library for component functionality"
         },
         {
-          "package": "@radix-ui/react-[component]",
+          "package": "@base-ui/react",
           "version": "^1.0.0",
           "reason": "Provides accessible primitives and [specific features]"
         },
@@ -210,8 +209,8 @@ export const Default: Story = {
           "description": "Official WCAG documentation on accessibility requirements"
         },
         {
-          "linkText": "Radix UI [Component] Documentation",
-          "url": "https://www.radix-ui.com/primitives/docs/components/[component]",
+          "linkText": "Base UI [Component] Documentation",
+          "url": "https://base-ui.com/react/components/[component]",
           "description": "Official documentation for the underlying primitive component"
         }
       ]
@@ -260,7 +259,7 @@ export const Default: Story = {
           "reason": "コンポーネント機能のためのコアReactライブラリ"
         },
         {
-          "package": "@radix-ui/react-[component]",
+          "package": "@base-ui/react",
           "version": "^1.0.0",
           "reason": "アクセシブルなプリミティブと[特定機能]を提供"
         },
@@ -277,8 +276,8 @@ export const Default: Story = {
           "description": "アクセシビリティ要件に関する公式WCAGドキュメント"
         },
         {
-          "linkText": "Radix UI [Component]ドキュメント",
-          "url": "https://www.radix-ui.com/primitives/docs/components/[component]",
+          "linkText": "Base UI [Component]ドキュメント",
+          "url": "https://base-ui.com/react/components/[component]",
           "description": "基礎となるプリミティブコンポーネントの公式ドキュメント"
         }
       ]
@@ -414,11 +413,11 @@ All `accessibility` sections must include:
 }
 ```
 
-**Radix UI packages:**
+**Base UI package:**
 
 ```json
 {
-  "package": "@radix-ui/react-[component]",
+  "package": "@base-ui/react",
   "version": "^1.x.x", // Get exact version from package.json
   "reason": "Provides accessible [component] primitives and [specific features]"
 }
@@ -479,13 +478,13 @@ Before finalizing translation files, verify each value:
 
 **Library-Agnostic Component Descriptions**
 
-- **CRITICAL**: Do NOT mention specific library names (Radix UI, Tailwind CSS, etc.) in `description` or `overview` sections
+- **CRITICAL**: Do NOT mention specific library names (Base UI, Tailwind CSS, etc.) in `description` or `overview` sections
 - Focus on what the component does, not what it's built with
 - Describe functionality, behavior, and purpose in universal terms
 - Examples of FORBIDDEN mentions in description/overview:
-  - ❌ "Built on Radix UI primitives"
+  - ❌ "Built on Base UI primitives"
   - ❌ "Uses Tailwind CSS for styling"
-  - ❌ "Powered by @radix-ui/react-avatar"
+  - ❌ "Powered by @base-ui/react"
   - ❌ "Styled with Tailwind utility classes"
 - Examples of CORRECT descriptions:
   - ✅ "Displays user profile images with fallback support"
@@ -753,7 +752,7 @@ pnpm build-storybook
 - [Storybook CSF3 Documentation](https://storybook.js.org/docs/react/api/csf)
 - [Storybook Autodocs](https://storybook.js.org/docs/react/writing-docs/autodocs)
 - [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
-- [Radix UI Documentation](https://www.radix-ui.com/primitives/docs/overview/introduction)
+- [Base UI Documentation](https://base-ui.com/react/overview/quick-start)
 
 ## Execution Commands
 

@@ -70,7 +70,7 @@
 
 - [ ] No database changes
 - [ ] Database migration included
-- [ ] Prisma schema updated
+- [ ] Drizzle schema updated
 - [ ] Seed data updated
 
 **Migration details:**
