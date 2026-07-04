@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 
 import { Button } from '../Button';
 
@@ -28,6 +29,10 @@ const meta = {
     const button = canvas.getByRole('button');
 
     await userEvent.click(button);
+
+    await expect(
+      within(document.body).findByRole('dialog')
+    ).resolves.toBeVisible();
   },
 } satisfies Meta<typeof Drawer>;
 

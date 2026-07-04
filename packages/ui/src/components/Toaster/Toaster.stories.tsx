@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ToasterProps, toast } from 'sonner';
+import { expect, within } from 'storybook/test';
 
 import { Button } from '../Button';
 
@@ -51,8 +52,20 @@ export const Default: Story = {
   ),
   play: async ({ canvas, userEvent }) => {
     const button = canvas.getByRole('button');
+    const expectedMessage =
+      {
+        'Show default toast': 'Default notification',
+        'Show success toast': 'Operation completed successfully',
+        'Show info toast': 'Here is some helpful information',
+        'Show warning toast': 'Please review before continuing',
+        'Show error toast': 'An error occurred while processing',
+      }[button.textContent ?? ''] ?? 'Default notification';
 
     await userEvent.click(button);
+
+    await expect(
+      within(document.body).findByText(expectedMessage)
+    ).resolves.toBeVisible();
   },
 };
 

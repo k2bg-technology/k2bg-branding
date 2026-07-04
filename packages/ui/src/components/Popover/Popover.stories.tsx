@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { Button } from '../Button';
 
 import { Popover } from '.';
@@ -42,6 +43,10 @@ const meta = {
     const button = canvas.getByRole('button');
 
     await userEvent.click(button);
+
+    await expect(
+      within(document.body).findByText('Set the dimensions for the layer.')
+    ).resolves.toBeVisible();
   },
 } satisfies Meta<typeof Popover>;
 

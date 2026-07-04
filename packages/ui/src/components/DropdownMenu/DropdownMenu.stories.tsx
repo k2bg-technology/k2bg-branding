@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, within } from 'storybook/test';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 
@@ -43,6 +44,10 @@ const meta = {
     const button = canvas.getByRole('button');
 
     await userEvent.click(button);
+
+    await expect(
+      within(document.body).findByRole('menuitem', { name: 'Menu item 1' })
+    ).resolves.toBeVisible();
   },
 } satisfies Meta<typeof DropdownMenu>;
 
