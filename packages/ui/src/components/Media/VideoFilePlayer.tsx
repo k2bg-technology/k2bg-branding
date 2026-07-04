@@ -5,13 +5,23 @@ interface Props
   width: number;
   height: number;
   name?: string;
+  captionsSource?: string;
 }
 
-export function VideoFilePlayer({ width, height, file, name, ...rest }: Props) {
+export function VideoFilePlayer({
+  width,
+  height,
+  file,
+  name,
+  captionsSource,
+  ...rest
+}: Props) {
   return (
     <video {...rest} width={width} height={height}>
       <source src={file} type="video/mp4" />
-      <track kind="captions" label={name} />
+      {captionsSource && (
+        <track kind="captions" src={captionsSource} label={name} />
+      )}
     </video>
   );
 }

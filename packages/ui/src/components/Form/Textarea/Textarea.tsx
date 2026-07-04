@@ -2,7 +2,11 @@
 
 import { cva } from 'class-variance-authority';
 import { twMerge } from '../../../utils/extendTailwindMerge';
-import { type FormProps, useFormContext } from '../Control/Context';
+import {
+  type FormProps,
+  resolveAriaDescribedBy,
+  useFormContext,
+} from '../Control/Context';
 
 const inputVariants = cva(
   'appearance-none focus-visible:border-ring focus-visible:ring-[3px] border rounded-md px-2 py-3 w-full min-h-[3lh] max-h-[10lh] text-body-r-sm field-sizing-content',
@@ -33,12 +37,18 @@ interface Props
     FormProps {}
 
 export function Textarea(props: Props) {
-  const { className, ref, ...formProps } = props;
+  const {
+    className,
+    ref,
+    'aria-describedby': explicitAriaDescribedBy,
+    ...formProps
+  } = props;
 
   const {
     color = 'dark',
     error,
     disabled,
+    helperTextId,
     ...rest
   } = useFormContext(formProps);
 
@@ -46,6 +56,11 @@ export function Textarea(props: Props) {
     <textarea
       {...rest}
       ref={ref}
+      aria-invalid={error ? true : undefined}
+      aria-describedby={resolveAriaDescribedBy(
+        explicitAriaDescribedBy,
+        error ? helperTextId : undefined
+      )}
       className={twMerge(
         inputVariants({
           color,

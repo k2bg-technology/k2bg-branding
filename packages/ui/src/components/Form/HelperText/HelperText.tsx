@@ -26,18 +26,20 @@ export type Props = Omit<React.ComponentPropsWithoutRef<'span'>, 'color'> &
   FormProps;
 
 export function HelperText(props: React.PropsWithChildren<Props>) {
-  const { children, className, ...formProps } = props;
+  const { children, className, id: explicitId, ...formProps } = props;
 
   const {
     color = 'dark',
     error,
     disabled,
+    helperTextId,
     ...rest
   } = useFormContext(formProps);
 
   return (
     <span
       {...rest}
+      id={explicitId ?? helperTextId}
       className={twMerge(
         helperTextVariants({ color, error, disabled }),
         className
