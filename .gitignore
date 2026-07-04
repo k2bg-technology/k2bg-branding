@@ -43,6 +43,9 @@ storybook-static
 build-storybook.log
 chromatic.config.json
 
+# generated image variants
+apps/portfolio/public/images/generated/
+
 # vi test
 dist
 

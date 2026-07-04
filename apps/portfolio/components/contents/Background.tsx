@@ -16,6 +16,7 @@ export function Background({
             src="/images/background-pattern.jpg"
             fill
             alt="Background Pattern Image"
+            sizes="(min-width: 768px) 56rem, 100vw"
           />
         </div>
         <div className="flex flex-col gap-normal">

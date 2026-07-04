@@ -39,6 +39,7 @@ function Document(props: DocumentProps) {
           src={backgroundImage}
           fill
           alt="Stock Image"
+          sizes="(min-width: 768px) 25vw, 100vw"
           className="object-cover brightness-50 transition-all duration-300 ease-in group-hover:scale-110"
         />
         <div className="absolute top-0 left-0 w-full h-full backdrop-blur-xs" />
