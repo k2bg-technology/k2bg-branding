@@ -1,5 +1,7 @@
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
+// `bg-gray-300` is a deliberate exception to the design-token color rule: no
+// base-* token is a visually reasonable match. See Skelton/Box/Box.tsx.
 type Props = React.PropsWithChildren & React.HTMLAttributes<HTMLDivElement>;
 
 export function Round(props: Props) {

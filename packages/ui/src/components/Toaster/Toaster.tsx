@@ -12,7 +12,7 @@ export function Toaster(props: ToasterProps) {
       className="toaster group !font-original !text-button-r-sm"
       toastOptions={{
         classNames: {
-          toast: 'group toast !backdrop-blur-sm !bg-white/10',
+          toast: 'group toast !backdrop-blur-sm !bg-base-white/10',
         },
       }}
       icons={{

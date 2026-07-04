@@ -6,6 +6,6 @@ export function Line(props: Props) {
   const { className = 'py-0.5' } = props;
 
   return (
-    <div {...props} className={twMerge('bg-gray-200 rounded-5', className)} />
+    <div {...props} className={twMerge('bg-base-light rounded-5', className)} />
   );
 }

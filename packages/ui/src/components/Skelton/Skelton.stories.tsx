@@ -4,6 +4,8 @@ import { Icon } from '../Icon';
 
 import { Skelton } from '.';
 
+// `border-gray-200` below is a decorative demo card border (not real
+// component styling) and has no reasonable base-* token match; kept as-is.
 const meta = {
   component: Skelton,
   parameters: {

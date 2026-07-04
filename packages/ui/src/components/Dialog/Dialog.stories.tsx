@@ -4,6 +4,8 @@ import { Button } from '../Button';
 
 import { Dialog } from '.';
 
+// `bg-gray-500` below is a decorative video-placeholder box (not real
+// component styling) and has no reasonable base-* token match; kept as-is.
 const meta = {
   component: Dialog,
   argTypes: {
