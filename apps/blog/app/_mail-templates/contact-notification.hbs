@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>お問合せいただきありがとうございます、{{ name }} 様！</title>
+  <title>{{ name }} 様からお問合せが届きました。</title>
   <style type="text/css">
     /* Reset styles */
     body,
@@ -89,7 +89,7 @@
 <body style="margin: 0; padding: 0; background-color: #f4f4f4;">
   <!-- Preheader text (hidden) -->
   <div style="display: none; max-height: 0px; overflow: hidden;">
-    お問合せいただきありがとうございます、{{ name }} 様！
+    {{ name }} 様からお問合せが届きました。
   </div>
 
   <!-- Email container -->
@@ -110,22 +110,19 @@
           <!-- Main content -->
           <tr>
             <td align="left" valign="top" class="mobile-padding" style="padding: 30px 40px;">
-              <h1 style="color: #333333; font-size: 24px; margin: 0 0 20px 0;">お問合せいただきありがとうございます、{{ name }} 様！</h1>
+              <h1 style="color: #333333; font-size: 24px; margin: 0 0 20px 0;">{{ name }} 様からお問合せが届きました。</h1>
               <p style="color: #666666; font-size: 16px; margin: 0 0 20px 0;">
-                お問合せを受け付けました。内容を確認のうえ、必要に応じて返信いたします。
+                送信者メールアドレス
               </p>
-
-              <ul style="color: #666666; font-size: 12px; margin: 20px 0 20px 0;">
-                <li>
-                  返信には数日かかる場合がございますが、極力早急に返信するように致します。
-                </li>
-                <li>
-                  誠に恐れ入りますが、平日は9:00〜20:00以外でのご対応となります。
-                </li>
-                <li>
-                  案件によってはお受けするのが難しい場合もございます。
-                </li>
-              </ul>
+              <p style="color: #666666; font-size: 16px; margin: 0 0 20px 0;">
+                {{ email }}
+              </p>
+              <p style="color: #666666; font-size: 16px; margin: 0 0 20px 0;">
+                お問合せ内容
+              </p>
+              <p style="color: #666666; font-size: 16px; margin: 0 0 20px 0;">
+                {{ message }}
+              </p>
             </td>
           </tr>
 

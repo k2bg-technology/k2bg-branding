@@ -22,18 +22,39 @@ export class SendEmail {
   async execute(input: SendEmailInput): Promise<void> {
     const contact = Contact.create(input);
 
-    const emailBody = generateHtmlTemplate(
-      path.join(process.cwd(), 'app', '_mail-templates', 'contact.hbs'),
+    const sharedTemplateValues = {
+      name: contact.name.getValue(),
+      year: format(new Date(), 'yyyy'),
+      companyLogoUrl: process.env.COMPANY_LOGO_URL ?? '',
+    };
+
+    const ownerEmailBody = generateHtmlTemplate(
+      path.join(
+        process.cwd(),
+        'app',
+        '_mail-templates',
+        'contact-notification.hbs'
+      ),
       {
-        name: contact.name.getValue(),
+        ...sharedTemplateValues,
+        email: contact.email.getValue(),
         message: contact.message.getValue(),
-        year: format(new Date(), 'yyyy'),
-        companyLogoUrl: process.env.COMPANY_LOGO_URL ?? '',
       }
     );
 
-    const subject = `${contact.name.getValue()} 様。お問合せいただきありがとうございます。`;
+    const visitorEmailBody = generateHtmlTemplate(
+      path.join(process.cwd(), 'app', '_mail-templates', 'contact.hbs'),
+      sharedTemplateValues
+    );
 
-    await this.emailSender.send(contact, subject, emailBody);
+    const visitorSubject = `${contact.name.getValue()} 様。お問合せいただきありがとうございます。`;
+    const ownerSubject = `${contact.name.getValue()} 様からお問合せが届きました。`;
+
+    await this.emailSender.sendToOwner(ownerSubject, ownerEmailBody);
+    await this.emailSender.sendToVisitor(
+      contact,
+      visitorSubject,
+      visitorEmailBody
+    );
   }
 }

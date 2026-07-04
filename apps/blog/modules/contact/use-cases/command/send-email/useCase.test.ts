@@ -1,12 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import type { Contact } from '../../../domain';
 import type { EmailSender } from './emailSender';
 import { SendEmail, type SendEmailInput } from './useCase';
-
-vi.mock('../../../adapters/shared', () => ({
-  generateHtmlTemplate: vi.fn().mockReturnValue('<html>Test Email</html>'),
-}));
 
 vi.mock('date-fns', () => ({
   format: vi.fn().mockReturnValue('2024'),
@@ -14,7 +9,8 @@ vi.mock('date-fns', () => ({
 
 function createMockEmailSender(): EmailSender {
   return {
-    send: vi.fn().mockResolvedValue(undefined),
+    sendToOwner: vi.fn().mockResolvedValue(undefined),
+    sendToVisitor: vi.fn().mockResolvedValue(undefined),
   };
 }
 
@@ -39,19 +35,44 @@ describe('SendEmail Use Case', () => {
 
       await sut.execute(input);
 
-      expect(mockEmailSender.send).toHaveBeenCalledTimes(1);
+      expect(mockEmailSender.sendToOwner).toHaveBeenCalledTimes(1);
+      expect(mockEmailSender.sendToVisitor).toHaveBeenCalledTimes(1);
 
-      const [contact, subject, htmlBody] = vi.mocked(mockEmailSender.send).mock
-        .calls[0] as [Contact, string, string];
-      const expectedSubject =
+      const expectedOwnerSubject = 'John Doe 様からお問合せが届きました。';
+      const expectedVisitorSubject =
         'John Doe 様。お問合せいただきありがとうございます。';
-      const expectedHtmlBody = '<html>Test Email</html>';
 
-      expect(contact.name.getValue()).toBe('John Doe');
-      expect(contact.email.getValue()).toBe('john@example.com');
-      expect(contact.message.getValue()).toBe('Test message');
-      expect(subject).toBe(expectedSubject);
-      expect(htmlBody).toBe(expectedHtmlBody);
+      expect(mockEmailSender.sendToOwner).toHaveBeenCalledWith(
+        expectedOwnerSubject,
+        expect.stringContaining('Test message')
+      );
+      expect(mockEmailSender.sendToOwner).toHaveBeenCalledWith(
+        expectedOwnerSubject,
+        expect.stringContaining('john@example.com')
+      );
+      expect(mockEmailSender.sendToVisitor).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: expect.objectContaining({ value: 'John Doe' }),
+          email: expect.objectContaining({ value: 'john@example.com' }),
+          message: expect.objectContaining({ value: 'Test message' }),
+        }),
+        expectedVisitorSubject,
+        expect.not.stringContaining('Test message')
+      );
+    });
+
+    it('sends owner notification before visitor confirmation', async () => {
+      const mockEmailSender = createMockEmailSender();
+      const sut = new SendEmail(mockEmailSender);
+      const input = createValidInput();
+
+      await sut.execute(input);
+
+      const [ownerCallOrder] = vi.mocked(mockEmailSender.sendToOwner).mock
+        .invocationCallOrder;
+      const [visitorCallOrder] = vi.mocked(mockEmailSender.sendToVisitor).mock
+        .invocationCallOrder;
+      expect(ownerCallOrder).toBeLessThan(visitorCallOrder);
     });
 
     it('throws error when name is empty', async () => {
@@ -66,7 +87,8 @@ describe('SendEmail Use Case', () => {
       await expect(sut.execute(invalidInput)).rejects.toThrow(
         'Name cannot be empty'
       );
-      expect(mockEmailSender.send).not.toHaveBeenCalled();
+      expect(mockEmailSender.sendToOwner).not.toHaveBeenCalled();
+      expect(mockEmailSender.sendToVisitor).not.toHaveBeenCalled();
     });
 
     it('throws error when email format is invalid', async () => {
@@ -81,12 +103,13 @@ describe('SendEmail Use Case', () => {
       await expect(sut.execute(invalidInput)).rejects.toThrow(
         'Invalid email format'
       );
-      expect(mockEmailSender.send).not.toHaveBeenCalled();
+      expect(mockEmailSender.sendToOwner).not.toHaveBeenCalled();
+      expect(mockEmailSender.sendToVisitor).not.toHaveBeenCalled();
     });
 
     it('propagates error when email sending fails', async () => {
       const mockEmailSender = createMockEmailSender();
-      vi.mocked(mockEmailSender.send).mockRejectedValue(
+      vi.mocked(mockEmailSender.sendToOwner).mockRejectedValue(
         new Error('Email send failed')
       );
       const sut = new SendEmail(mockEmailSender);
