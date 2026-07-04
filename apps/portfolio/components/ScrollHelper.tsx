@@ -1,8 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useState } from 'react';
-import { Icon } from 'ui';
-import { twMerge } from 'ui/src/utils/extendTailwindMerge';
+import { Icon, twMerge } from 'ui';
 
 import { useMatchMedia } from '../hooks/useMatchMedia';
 
