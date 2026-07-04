@@ -3,8 +3,11 @@ import {
   authors,
   posts,
 } from '../../../../../../infrastructure/drizzle/schema';
-import { Category, PostType } from '../../../../domain';
-import { createPost } from '../../../../use-cases/shared/testing/factories';
+import { Category, PostType, ReleaseDate } from '../../../../domain';
+import {
+  createPost,
+  createPosts,
+} from '../../../../use-cases/shared/testing/factories';
 import { createDrizzleAuthorRow } from '../../../shared';
 import {
   getTestDb,
@@ -100,6 +103,43 @@ describe('DrizzleFetchPostSummariesByCategoryQueryService', () => {
     });
 
     expect(result).toEqual({ posts: [], totalCount: 0 });
+  });
+
+  it('orders by uuid as a stable tiebreaker when releaseDate ties', async () => {
+    await seedAuthor();
+    const sharedDate = ReleaseDate.create('2024-01-10');
+    const articles = createPosts(4, {
+      category: Category.ENGINEERING,
+      releaseDate: sharedDate,
+    });
+    for (const post of articles) {
+      await insertPost(post);
+    }
+    const sut = new DrizzleFetchPostSummariesByCategoryQueryService(
+      getTestDb()
+    );
+
+    const page1 = await sut.fetchPostSummariesByCategory({
+      category: Category.ENGINEERING,
+      page: 1,
+      pageSize: 2,
+      orderBy: 'desc',
+    });
+    const page2 = await sut.fetchPostSummariesByCategory({
+      category: Category.ENGINEERING,
+      page: 2,
+      pageSize: 2,
+      orderBy: 'desc',
+    });
+
+    const expectedDescIds = articles
+      .map((post) => post.id.getValue())
+      .sort()
+      .reverse();
+    expect(page1.posts.map((p) => p.id)).toEqual(expectedDescIds.slice(0, 2));
+    expect(page2.posts.map((p) => p.id)).toEqual(expectedDescIds.slice(2, 4));
+    const combinedIds = [...page1.posts, ...page2.posts].map((p) => p.id);
+    expect(new Set(combinedIds).size).toBe(4);
   });
 
   it('returns an empty page when the category has no posts', async () => {
