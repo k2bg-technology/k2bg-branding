@@ -4,7 +4,7 @@ import { cookieName, fallbackLanguage, languages } from './i18n/settings';
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|images|videos|assets|favicon.ico|sw.js).*)',
+    '/((?!api|_next/static|_next/image|images|videos|assets|favicon.ico|sw.js|robots.txt|sitemap.xml|.*\\..*).*)',
   ],
 };
 
