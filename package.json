@@ -21,12 +21,14 @@
   "devDependencies": {
     "@turbo/gen": "^1.9.7",
     "@types/webpack-env": "^1.18.4",
-    "has": "^1.0.4",
     "tsup": "^8.4.0",
-    "turbo": "latest",
+    "turbo": "2.9.9",
     "typescript": "^5.4.5"
   },
   "packageManager": "pnpm@10.33.2",
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "name": "k2bg-branding",
   "pnpm": {
     "overrides": {
