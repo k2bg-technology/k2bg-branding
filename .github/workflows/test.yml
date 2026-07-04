@@ -94,6 +94,43 @@ jobs:
       - name: Type check
         run: pnpm typecheck
 
+  # Advisory until the pre-existing violations tracked in #372 are fixed; then remove continue-on-error to make it a required gate.
+  storybook-a11y:
+    name: Storybook A11y
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+
+      - name: Build Storybook
+        run: pnpm -F ui build-storybook
+
+      - name: Run Storybook accessibility tests
+        run: >
+          pnpm exec concurrently -k -s first -n server,tests
+          "pnpm exec http-server packages/ui/storybook-static -p 6006 -a 127.0.0.1 --silent"
+          "until curl -s http://127.0.0.1:6006 >/dev/null; do sleep 1; done; pnpm -F ui test:storybook --url http://127.0.0.1:6006"
+
   docs-check:
     name: Agent Docs Check
     runs-on: ubuntu-latest
