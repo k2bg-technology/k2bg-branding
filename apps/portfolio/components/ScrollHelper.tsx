@@ -5,10 +5,17 @@ import { Icon } from 'ui';
 import { twMerge } from 'ui/src/utils/extendTailwindMerge';
 
 import { useMatchMedia } from '../hooks/useMatchMedia';
+import type { Dictionary } from '../i18n/dictionaries';
 
 import styles from './ScrollHelper.module.css';
 
-export function ScrollHelper() {
+type ScrollHelperDictionary = Dictionary['scrollHelper'];
+
+export function ScrollHelper({
+  dictionary,
+}: {
+  dictionary: ScrollHelperDictionary;
+}) {
   const [isShow, setIsShow] = useState(false);
   const isDesktopLayout = useMatchMedia('(min-width: 768px)');
 
@@ -50,7 +57,7 @@ export function ScrollHelper() {
             styles.ScrollHelp
           )}
         >
-          <span className="text-button-r-sm">Scroll</span>
+          <span className="text-button-r-sm">{dictionary.label}</span>
           <Icon
             name="chevron-double-right"
             color="var(--color-base-white)"

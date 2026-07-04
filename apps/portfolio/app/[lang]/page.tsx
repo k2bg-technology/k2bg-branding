@@ -39,7 +39,7 @@ export default async function Page({ params }: PageProps) {
         <Footer copyright={dictionary.footer.copyright} />
       </div>
       <LanguageSelector />
-      <ScrollHelper />
+      <ScrollHelper dictionary={dictionary.scrollHelper} />
     </Suspense>
   );
 }
