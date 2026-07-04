@@ -6,12 +6,14 @@ export interface PaginationItemProps
 }
 
 export function Item(props: PaginationItemProps) {
-  const { selected, children, ...rest } = props;
+  const { selected, render, children, ...rest } = props;
 
   return (
     <Button
       {...rest}
-      type="button"
+      render={render}
+      type={render ? undefined : 'button'}
+      aria-current={selected ? 'page' : undefined}
       color={selected ? 'main' : 'dark'}
       variant={selected ? 'default' : 'outline'}
     >

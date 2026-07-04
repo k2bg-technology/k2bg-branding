@@ -21,6 +21,12 @@ export function MusicStreamingPlayer({
   ...rest
 }: Props) {
   return (
-    <iframe {...rest} src={url} width={width} height={height} title={name} />
+    <iframe
+      {...rest}
+      src={url}
+      width={width}
+      height={height}
+      title={name ?? 'Embedded music player'}
+    />
   );
 }
