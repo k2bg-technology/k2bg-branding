@@ -17,7 +17,8 @@
       "includes": [
         "app/**/page.tsx",
         "app/**/layout.tsx",
-        "app/**/loading.tsx",
+        "app/**/error.tsx",
+        "app/**/not-found.tsx",
         "proxy.ts"
       ],
       "linter": {

@@ -6,12 +6,11 @@ import { Portfolio } from '../../components/contents/Portfolio';
 import { Skill } from '../../components/contents/Skill';
 import { Footer } from '../../components/footer/Footer';
 import { LanguageSelector } from '../../components/LanguageSelector';
+import { PortfolioLoading } from '../../components/PortfolioLoading';
 import { ScrollHelper } from '../../components/ScrollHelper';
 import { Slider } from '../../components/Slider';
 import { getDictionary } from '../../i18n/dictionaries';
 import { resolveLanguage } from '../../i18n/settings';
-
-import Loading from './loading';
 
 type PageProps = {
   params: Promise<{ lang: string }>;
@@ -23,7 +22,7 @@ export default async function Page({ params }: PageProps) {
   const dictionary = await getDictionary(language);
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<PortfolioLoading />}>
       <div className="flex flex-col gap-condensed md:absolute md:top-1/2 md:-translate-y-1/2 md:px-20">
         <main>
           <Slider className="contents md:block">
