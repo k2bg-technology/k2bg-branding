@@ -1,5 +1,5 @@
 import type { Client } from '@notionhq/client';
-import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import { filterFullPageObjectResponses } from '../../../../../../infrastructure/notion';
 import type {
   ExternalImageSource,
   ImageSourceRecord,
@@ -32,8 +32,8 @@ export class NotionAffiliateExternalImageSource implements ExternalImageSource {
         },
       });
 
-      const sources = database.results
-        .map((page) => notionPageToImageSource(page as PageObjectResponse))
+      const sources = filterFullPageObjectResponses(database.results)
+        .map((page) => notionPageToImageSource(page))
         .filter((item): item is ImageSource => item !== null)
         .map((item) => ({
           id: item.id.getValue(),

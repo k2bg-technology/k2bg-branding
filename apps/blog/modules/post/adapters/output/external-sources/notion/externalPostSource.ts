@@ -1,6 +1,7 @@
 import type { Client } from '@notionhq/client';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import type { NotionToMarkdown } from 'notion-to-md';
+import { filterFullPageObjectResponses } from '../../../../../../infrastructure/notion';
 import type { Post } from '../../../../domain';
 import type { ExternalPostSource } from '../../../../use-cases';
 import { ExternalSourceError, postLogger } from '../../../shared';
@@ -57,11 +58,10 @@ export class NotionExternalPostSource implements ExternalPostSource {
       });
 
       const posts = await Promise.all(
-        database.results.map(async (page) => {
-          const pageResponse = page as PageObjectResponse;
+        filterFullPageObjectResponses(database.results).map(async (page) => {
           const mdBlocks = await this.n2m.pageToMarkdown(page.id);
           const content = this.n2m.toMarkdownString(mdBlocks).parent;
-          return notionPageToPost(pageResponse, content);
+          return notionPageToPost(page, content);
         })
       );
 

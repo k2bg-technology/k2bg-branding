@@ -1,6 +1,10 @@
+import { HandlebarsEmailTemplateRenderer } from '../../modules/contact/adapters';
 import { SendEmail } from '../../modules/contact/use-cases';
 import { getAwsSesEmailSender } from '../aws-ses';
 
 export function createSendEmailUseCase(): SendEmail {
-  return new SendEmail(getAwsSesEmailSender());
+  return new SendEmail(
+    getAwsSesEmailSender(),
+    new HandlebarsEmailTemplateRenderer()
+  );
 }

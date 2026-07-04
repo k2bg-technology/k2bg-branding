@@ -1,6 +1,7 @@
 import { APIResponseError, type Client } from '@notionhq/client';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
+import { filterFullPageObjectResponses } from '../../../../../../infrastructure/notion';
 import type {
   ImageSource,
   Media,
@@ -60,8 +61,8 @@ export class NotionMediaRepository implements MediaRepository {
         },
       });
 
-      const sources = database.results
-        .map((page) => notionPageToImageSource(page as PageObjectResponse))
+      const sources = filterFullPageObjectResponses(database.results)
+        .map((page) => notionPageToImageSource(page))
         .filter((source): source is ImageSource => source !== null);
       mediaLogger.info(
         { count: sources.length },

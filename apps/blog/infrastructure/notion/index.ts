@@ -14,6 +14,11 @@ export {
 } from './client';
 
 export {
+  filterFullPageObjectResponses,
+  isFullPageObjectResponse,
+} from './pageGuards';
+
+export {
   getAllFileUrls,
   getDate,
   getFirstFileUrl,

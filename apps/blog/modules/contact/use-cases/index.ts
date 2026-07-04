@@ -1,1 +1,6 @@
-export { type EmailSender, SendEmail, type SendEmailInput } from './command';
+export {
+  type EmailSender,
+  type EmailTemplateRenderer,
+  SendEmail,
+  type SendEmailInput,
+} from './command';
