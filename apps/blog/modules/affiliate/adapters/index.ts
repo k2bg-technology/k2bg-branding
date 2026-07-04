@@ -1,7 +1,6 @@
 export {
   determineAffiliateType,
   NotionAffiliateRepository,
-  NotionFetchAllImageSourcesQueryService,
   notionPageToAffiliate,
   notionPageToImageSource,
 } from './output';
