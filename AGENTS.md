@@ -5,6 +5,10 @@ Copilot) and human contributors working in this repository. Codex and Copilot re
 `AGENTS.md` natively; `CLAUDE.md` imports it. Keep shared rules here — do not duplicate
 them in other files.
 
+When a product, design, or writing decision is ambiguous and no rule below settles it,
+consult the `k2bg-principles` skill — the brand's decision-making principles (feature
+selection, engineering trade-offs, writing tone).
+
 ## Project Structure & Module Organization
 
 - Monorepo managed by pnpm workspaces and Turborepo.
