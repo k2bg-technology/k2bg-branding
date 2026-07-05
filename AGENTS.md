@@ -221,8 +221,8 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
 
 - Framework: Vitest with jsdom. Co-locate tests as `*.test.ts(x)` / `*.spec.ts(x)` near source.
 - Libraries: React Testing Library (`@testing-library/react`, `user-event`), `vi` mocks.
-- Shared config: apps re-export `defineConfig` from `test-utils` (see `apps/blog/vitest.config.mts`);
-  setup `packages/test-utils/setupTests.ts` loads `@testing-library/jest-dom/vitest`.
+- Shared config: apps reference `packages/test-utils/setupTests.ts` by relative path (see
+  `apps/blog/vitest.config.mts`); it loads `@testing-library/jest-dom/vitest`.
 - Coverage reporters: `text,json,html` (see `packages/test-utils/vitest.config.ts`).
 - Test behavior over implementation; AAA structure; name the subject `sut`; prefer `it.each`
   over loops. Full standards: `.claude/rules/unit-test-guidelines.md`.
