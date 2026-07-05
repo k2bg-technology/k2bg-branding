@@ -1,9 +1,12 @@
+import { logger } from '../../../../shared/logger';
 import { SyncError } from '../../shared';
 import type {
   ExternalImageSource,
   ImageSourceRecord,
 } from './externalImageSource';
 import type { ImageRepository } from './imageRepository';
+
+const syncHeroImagesLogger = logger.child({ module: 'post' });
 
 export interface SyncHeroImagesOutput {
   uploadedImages: ImageSourceRecord[];
@@ -65,7 +68,11 @@ export class SyncHeroImages {
         try {
           await this.imageRepository.uploadImage(image.id, image.url);
           return { image, success: true };
-        } catch {
+        } catch (error) {
+          syncHeroImagesLogger.error(
+            { err: error, imageId: image.id },
+            'Failed to upload hero image'
+          );
           return { image, success: false };
         }
       })

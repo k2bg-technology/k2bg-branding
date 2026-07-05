@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SyncError } from '../../shared';
 import type {
   ExternalImageSource,
@@ -7,7 +7,19 @@ import type {
 import type { ImageRepository } from './imageRepository';
 import { SyncHeroImages } from './useCase';
 
+const { mockLoggerError } = vi.hoisted(() => ({
+  mockLoggerError: vi.fn(),
+}));
+
+vi.mock('../../../../shared/logger', () => ({
+  logger: { child: () => ({ error: mockLoggerError }) },
+}));
+
 describe('SyncHeroImages', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   const createMockImageSource = (
     images: ImageSourceRecord[] = []
   ): ExternalImageSource => ({
@@ -125,6 +137,22 @@ describe('SyncHeroImages', () => {
       expect(result.count).toBe(0);
       expect(result.failedCount).toBe(2);
       expect(result.uploadedImages).toEqual([]);
+    });
+
+    it('logs the caught cause when an individual upload fails', async () => {
+      const images = createImageRecords(1);
+      const source = createMockImageSource(images);
+      const uploadError = new Error('Upload failed');
+      const uploadImage = vi.fn().mockRejectedValue(uploadError);
+      const imageRepository = createMockImageRepository({ uploadImage });
+      const sut = new SyncHeroImages([source], imageRepository);
+
+      await sut.execute();
+
+      expect(mockLoggerError).toHaveBeenCalledWith(
+        { err: uploadError, imageId: images[0].id },
+        'Failed to upload hero image'
+      );
     });
   });
 });
