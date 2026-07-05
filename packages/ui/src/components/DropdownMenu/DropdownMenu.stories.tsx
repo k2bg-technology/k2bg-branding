@@ -55,7 +55,12 @@ export const Default: Story = {
       <>
         <DropdownMenu.Trigger
           render={
-            <Button color="dark" variant="ghost" size="icon">
+            <Button
+              aria-label="Open menu"
+              color="dark"
+              variant="ghost"
+              size="icon"
+            >
               <Icon name="inbox-stack" className="w-10 h-10" />
             </Button>
           }

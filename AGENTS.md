@@ -221,6 +221,10 @@ Strict mode, composite projects, path mapping via workspace resolution.
 - Use dot notation for compound components; set `displayName`.
 - Component slot props: keep a permissive `ReactNode` type and render nothing for invalid
   (non-element) values — do not narrow the type or add a default fallback.
+- Icon-only buttons must carry an accessible name (`aria-label` or `aria-labelledby`), in
+  the surrounding UI language. This is a convention, not type-enforced: an accessible name
+  may also come from text children, and `size="icon"` is only a styling variant, so
+  requiring `aria-label` at the type level would false-positive on validly-labeled buttons.
 
 ## State Management
 

@@ -22,6 +22,7 @@ export function Pagination(props: PaginationProps) {
   return (
     <nav {...rest} className="flex gap-normal">
       <Button
+        aria-label="Previous page"
         {...prevProps}
         type={prevProps.render ? undefined : 'button'}
         color="inherit"
@@ -42,6 +43,7 @@ export function Pagination(props: PaginationProps) {
         ))}
       </ul>
       <Button
+        aria-label="Next page"
         {...nextProps}
         type={nextProps.render ? undefined : 'button'}
         color="inherit"
