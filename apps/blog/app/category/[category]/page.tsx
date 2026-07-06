@@ -87,7 +87,7 @@ export default async function Page({ params, searchParams }: Props) {
     createFetchPostSummariesByCategoryUseCase();
 
   async function fetchArticles() {
-    return fetchPostSummariesByCategory
+    const result = await fetchPostSummariesByCategory
       .execute({
         category,
         page: currentPage,
@@ -107,6 +107,14 @@ export default async function Page({ params, searchParams }: Props) {
         }
         notFound();
       });
+
+    // An empty first page is a legitimate empty-category state and must still
+    // render; only paginated out-of-range requests (page > 1) are thin content.
+    if (result.items.length === 0 && currentPage > 1) {
+      notFound();
+    }
+
+    return result;
   }
 
   return (
