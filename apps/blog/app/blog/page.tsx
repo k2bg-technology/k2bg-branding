@@ -1,18 +1,32 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Suspense } from 'react';
 import { Avatar } from 'ui';
 
+import { Articles } from '../../components/articles/Articles';
+import { ArticlesSkelton } from '../../components/articles/ArticlesSkelton';
 import { BlogCard } from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import { PageLayout } from '../../components/page-layout';
+import { Pagination } from '../../components/pagination/Pagination';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
 import {
   createFetchPostSummariesUseCase,
   getDefaultOgImageUrl,
 } from '../../infrastructure/di';
+import { postLogger } from '../../modules/post/adapters/shared/logger';
+import { UseCaseError } from '../../modules/post/use-cases/shared';
+import {
+  buildCanonicalPath,
+  buildPaginatedTitle,
+  resolvePageParam,
+} from '../_lib/pagination';
 
 const PAGE_SIZE = 8;
+const BLOG_TITLE = 'K2.B.G Technology Blog';
+const BLOG_CANONICAL_PATH = '/blog';
 
 export const revalidate = 3600;
 
@@ -21,57 +35,111 @@ const defaultOgImageUrl = getDefaultOgImageUrl();
 const blogDescription =
   'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。';
 
-export const metadata: Metadata = {
-  title: 'K2.B.G Technology Blog',
-  description: blogDescription,
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+type SearchParams = Promise<{
+  page?: string;
+}>;
+
+interface Props {
+  searchParams: SearchParams;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: Props): Promise<Metadata> {
+  const { page } = await searchParams;
+  const currentPage = resolvePageParam(page);
+
+  return {
+    title: buildPaginatedTitle(BLOG_TITLE, currentPage),
+    description: blogDescription,
+    robots: {
       index: true,
       follow: true,
-      'max-snippet': -1,
-      'max-image-preview': 'large',
-      'max-video-preview': -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-snippet': -1,
+        'max-image-preview': 'large',
+        'max-video-preview': -1,
+      },
     },
-  },
-  openGraph: {
-    title: 'K2.B.G Technology Blog',
-    description: blogDescription,
-    type: 'website',
-    locale: 'ja_JP',
-    siteName: 'K2.B.G Technology Blog',
-    images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'K2.B.G Technology Blog',
-    description: blogDescription,
-    images: [defaultOgImageUrl],
-  },
-  alternates: {
-    canonical: '/blog',
-  },
-};
+    openGraph: {
+      title: BLOG_TITLE,
+      description: blogDescription,
+      type: 'website',
+      locale: 'ja_JP',
+      siteName: BLOG_TITLE,
+      images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: BLOG_TITLE,
+      description: blogDescription,
+      images: [defaultOgImageUrl],
+    },
+    alternates: {
+      canonical: buildCanonicalPath(BLOG_CANONICAL_PATH, currentPage),
+    },
+  };
+}
 
-export default async function Page() {
+export default async function Page({ searchParams }: Props) {
+  const { page } = await searchParams;
+  const currentPage = resolvePageParam(page);
+
   const fetchPostSummaries = createFetchPostSummariesUseCase();
-  const { items: articles } = await fetchPostSummaries.execute({
+
+  const fab = (
+    <PageLayout.Fab>
+      <ScrollToTopButton />
+    </PageLayout.Fab>
+  );
+
+  if (currentPage !== 1) {
+    const fetchArticles = async () => {
+      const result = await fetchPostSummaries
+        .execute({ page: currentPage, pageSize: PAGE_SIZE })
+        .catch((error) => {
+          if (error instanceof UseCaseError) {
+            postLogger.warn(
+              { err: error, page: currentPage },
+              'Invalid blog archive page request'
+            );
+          } else {
+            postLogger.error(
+              { err: error, page: currentPage },
+              'Failed to fetch post summaries'
+            );
+          }
+          notFound();
+        });
+
+      if (result.items.length === 0) {
+        notFound();
+      }
+
+      return result;
+    };
+
+    return (
+      <PageLayout fab={fab}>
+        <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
+          <Articles fetchArticles={fetchArticles} />
+        </Suspense>
+      </PageLayout>
+    );
+  }
+
+  const { items: articles, totalPages } = await fetchPostSummaries.execute({
     pageSize: PAGE_SIZE,
   });
 
   const featureLatest = articles.at(0);
   const featuresRecently = articles.slice(1, 3);
-  const featuresPreviously = articles.slice(4, 8);
+  const featuresPreviously = articles.slice(3, 8);
 
   return (
-    <PageLayout
-      fab={
-        <PageLayout.Fab>
-          <ScrollToTopButton />
-        </PageLayout.Fab>
-      }
-    >
+    <PageLayout fab={fab}>
       <PageLayout.Row>
         {featureLatest && (
           <div className="col-start-1 col-end-8">
@@ -320,6 +388,9 @@ export default async function Page() {
           <Sidebar />
         </PageLayout.Aside>
       </PageLayout.Row>
+      <div className="flex justify-center col-span-full">
+        <Pagination count={totalPages} />
+      </div>
     </PageLayout>
   );
 }

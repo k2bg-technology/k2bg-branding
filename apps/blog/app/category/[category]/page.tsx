@@ -12,6 +12,11 @@ import {
 import { postLogger } from '../../../modules/post/adapters/shared/logger';
 import { Category } from '../../../modules/post/domain';
 import { UseCaseError } from '../../../modules/post/use-cases/shared';
+import {
+  buildCanonicalPath,
+  buildPaginatedTitle,
+  resolvePageParam,
+} from '../../_lib/pagination';
 
 const PAGE_SIZE = 6;
 
@@ -39,16 +44,21 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { category } = await params;
+  const { page } = await searchParams;
+  const currentPage = resolvePageParam(page);
 
   const ogImageUrl = getDefaultOgImageUrl();
   const description = `${category} カテゴリの記事一覧`;
 
   return {
-    title: category,
+    title: buildPaginatedTitle(category, currentPage),
     alternates: {
-      canonical: `/category/${category}`,
+      canonical: buildCanonicalPath(`/category/${category}`, currentPage),
     },
     openGraph: {
       title: category,
@@ -77,7 +87,7 @@ export default async function Page({ params, searchParams }: Props) {
     createFetchPostSummariesByCategoryUseCase();
 
   async function fetchArticles() {
-    return fetchPostSummariesByCategory
+    const result = await fetchPostSummariesByCategory
       .execute({
         category,
         page: currentPage,
@@ -97,6 +107,14 @@ export default async function Page({ params, searchParams }: Props) {
         }
         notFound();
       });
+
+    // An empty first page is a legitimate empty-category state and must still
+    // render; only paginated out-of-range requests (page > 1) are thin content.
+    if (result.items.length === 0 && currentPage > 1) {
+      notFound();
+    }
+
+    return result;
   }
 
   return (
