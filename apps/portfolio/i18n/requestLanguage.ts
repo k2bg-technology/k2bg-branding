@@ -9,6 +9,15 @@ import {
 } from './settings';
 
 export async function getRequestLanguage(): Promise<Language> {
+  const headerStore = await headers();
+
+  // The middleware sets `x-locale` from the URL's [lang] segment; it is
+  // authoritative so the boundary matches the URL, not the cookie.
+  const languageFromUrl = headerStore.get('x-locale');
+  if (languageFromUrl && isSupportedLanguage(languageFromUrl)) {
+    return languageFromUrl;
+  }
+
   const cookieStore = await cookies();
   const cookieLanguage = cookieStore.get(cookieName)?.value;
 
@@ -16,7 +25,6 @@ export async function getRequestLanguage(): Promise<Language> {
     return cookieLanguage;
   }
 
-  const headerStore = await headers();
   return getLanguageFromAcceptLanguage(headerStore.get('Accept-Language'));
 }
 
