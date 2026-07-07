@@ -5,21 +5,12 @@ import type {
   Affiliate,
   AffiliateId,
   AffiliateRepository,
-  ImageSource,
 } from '../../../../domain';
 import { affiliateLogger, ExternalSourceError } from '../../../shared';
-import {
-  notionPageToAffiliate,
-  notionPageToImageSource,
-} from '../../external-sources/notion/mapper';
-
-const DATABASE_ID = process.env.NOTION_AFFILIATE_DATABASE_ID ?? '';
+import { notionPageToAffiliate } from '../../external-sources/notion/mapper';
 
 export class NotionAffiliateRepository implements AffiliateRepository {
-  constructor(
-    private readonly notionClient: Client,
-    private readonly databaseId: string = DATABASE_ID
-  ) {}
+  constructor(private readonly notionClient: Client) {}
 
   async findById(id: AffiliateId): Promise<Affiliate | null> {
     try {
@@ -87,34 +78,5 @@ export class NotionAffiliateRepository implements AffiliateRepository {
     }
 
     return results;
-  }
-
-  async findAllImageSources(): Promise<ImageSource[]> {
-    try {
-      const database = await this.notionClient.databases.query({
-        database_id: this.databaseId,
-        filter: {
-          or: [
-            { property: 'type', select: { equals: 'AFFILIATE_BANNER' } },
-            { property: 'type', select: { equals: 'AFFILIATE_PRODUCT' } },
-          ],
-        },
-      });
-
-      const sources = database.results
-        .map((page) => notionPageToImageSource(page as PageObjectResponse))
-        .filter((source): source is ImageSource => source !== null);
-      affiliateLogger.info(
-        { count: sources.length },
-        'Fetched all affiliate image sources from Notion'
-      );
-      return sources;
-    } catch (error) {
-      affiliateLogger.error(
-        { err: error },
-        'Failed to fetch affiliate image sources from Notion'
-      );
-      throw new ExternalSourceError('Notion', error);
-    }
   }
 }

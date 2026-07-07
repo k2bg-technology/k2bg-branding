@@ -3,7 +3,7 @@ import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoint
 import type {
   ExternalImageSource,
   ImageSourceRecord,
-} from '../../../../use-cases';
+} from '../../../../../shared/externalImageSource';
 import { ExternalSourceError, postLogger } from '../../../shared';
 import { notionPageToImageSource } from './mapper';
 

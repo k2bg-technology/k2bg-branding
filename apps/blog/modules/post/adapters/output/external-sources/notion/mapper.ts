@@ -11,6 +11,7 @@ import {
   getStatus,
   getTitle,
 } from '../../../../../../infrastructure/notion';
+import type { ImageSourceRecord } from '../../../../../shared/externalImageSource';
 import {
   AuthorId,
   Category,
@@ -29,7 +30,6 @@ import {
   Tags,
   Title,
 } from '../../../../domain';
-import type { ImageSourceRecord } from '../../../../use-cases';
 import { DEFAULT_VALUES, MappingError } from '../../../shared';
 
 /**
