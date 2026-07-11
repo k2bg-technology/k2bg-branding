@@ -1,0 +1,28 @@
+{
+  "name": "scene-studio",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio --port 3002",
+    "build": "remotion bundle",
+    "render": "remotion render",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write ."
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.488",
+    "react": "^19.0.1",
+    "react-dom": "^19.0.1",
+    "remotion": "4.0.488"
+  },
+  "devDependencies": {
+    "@remotion/tailwind-v4": "4.0.488",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "biome-config": "workspace:*",
+    "tailwind-config": "workspace:*",
+    "tailwindcss": "^4.0.9",
+    "tsconfig": "workspace:*"
+  }
+}
