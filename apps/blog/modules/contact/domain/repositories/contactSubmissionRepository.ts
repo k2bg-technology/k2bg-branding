@@ -7,12 +7,15 @@
  */
 export interface ContactSubmissionRepository {
   /**
-   * Count submissions for an IP hash since the given timestamp.
+   * Atomically record a submission for an IP hash unless it already has
+   * `maxSubmissions` submissions since the given timestamp. Returns `true`
+   * when the submission was recorded, `false` when the limit was reached
+   * (in which case nothing is recorded). Implementations must guard the
+   * check-and-insert against concurrent submissions from the same IP hash.
    */
-  countSince(ipHash: string, since: Date): Promise<number>;
-
-  /**
-   * Record a contact form submission for an IP hash.
-   */
-  record(ipHash: string): Promise<void>;
+  recordIfUnderLimit(
+    ipHash: string,
+    since: Date,
+    maxSubmissions: number
+  ): Promise<boolean>;
 }

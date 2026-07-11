@@ -9,8 +9,27 @@ import {
 import { DrizzleContactSubmissionRepository } from './contactSubmissionRepository';
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
+const TWO_HOURS_IN_MS = 2 * ONE_HOUR_IN_MS;
 const TWENTY_FIVE_HOURS_IN_MS = 25 * ONE_HOUR_IN_MS;
 const TWENTY_THREE_HOURS_IN_MS = 23 * ONE_HOUR_IN_MS;
+const MAX_SUBMISSIONS = 5;
+
+async function countSubmissionsFor(ipHash: string): Promise<number> {
+  const [result] = await getTestDb()
+    .select({ value: count() })
+    .from(contactSubmissions)
+    .where(eq(contactSubmissions.ipHash, ipHash));
+
+  return result.value;
+}
+
+function createSubmissionRows(
+  ipHash: string,
+  amount: number,
+  createdAt: Date
+): { ipHash: string; createdAt: Date }[] {
+  return Array.from({ length: amount }, () => ({ ipHash, createdAt }));
+}
 
 describe('DrizzleContactSubmissionRepository', () => {
   beforeAll(async () => {
@@ -21,42 +40,75 @@ describe('DrizzleContactSubmissionRepository', () => {
     await truncateAllTables();
   });
 
-  describe('countSince', () => {
-    it('counts only submissions for the IP hash inside the time window', async () => {
+  describe('recordIfUnderLimit', () => {
+    it('records the submission and returns true when the IP hash is under the limit', async () => {
+      const db = getTestDb();
+      const sut = new DrizzleContactSubmissionRepository(db);
+      const ipHash = 'target-ip-hash';
+      const since = new Date(Date.now() - ONE_HOUR_IN_MS);
+      await db
+        .insert(contactSubmissions)
+        .values(createSubmissionRows(ipHash, MAX_SUBMISSIONS - 1, new Date()));
+
+      const result = await sut.recordIfUnderLimit(
+        ipHash,
+        since,
+        MAX_SUBMISSIONS
+      );
+
+      expect(result).toBe(true);
+      await expect(countSubmissionsFor(ipHash)).resolves.toBe(MAX_SUBMISSIONS);
+    });
+
+    it('returns false without recording when the IP hash reached the limit', async () => {
+      const db = getTestDb();
+      const sut = new DrizzleContactSubmissionRepository(db);
+      const ipHash = 'target-ip-hash';
+      const since = new Date(Date.now() - ONE_HOUR_IN_MS);
+      await db
+        .insert(contactSubmissions)
+        .values(createSubmissionRows(ipHash, MAX_SUBMISSIONS, new Date()));
+
+      const result = await sut.recordIfUnderLimit(
+        ipHash,
+        since,
+        MAX_SUBMISSIONS
+      );
+
+      expect(result).toBe(false);
+      await expect(countSubmissionsFor(ipHash)).resolves.toBe(MAX_SUBMISSIONS);
+    });
+
+    it('ignores submissions outside the window and from other IP hashes', async () => {
       const db = getTestDb();
       const sut = new DrizzleContactSubmissionRepository(db);
       const ipHash = 'target-ip-hash';
       const otherIpHash = 'other-ip-hash';
-      const windowStart = new Date('2026-07-04T11:00:00.000Z');
-      await db.insert(contactSubmissions).values([
-        {
-          ipHash,
-          createdAt: new Date('2026-07-04T11:30:00.000Z'),
-        },
-        {
-          ipHash,
-          createdAt: new Date('2026-07-04T10:59:59.000Z'),
-        },
-        {
-          ipHash: otherIpHash,
-          createdAt: new Date('2026-07-04T11:45:00.000Z'),
-        },
-      ]);
+      const since = new Date(Date.now() - ONE_HOUR_IN_MS);
+      const beforeWindow = new Date(Date.now() - TWO_HOURS_IN_MS);
+      await db
+        .insert(contactSubmissions)
+        .values([
+          ...createSubmissionRows(ipHash, MAX_SUBMISSIONS, beforeWindow),
+          ...createSubmissionRows(otherIpHash, MAX_SUBMISSIONS, new Date()),
+        ]);
 
-      const result = await sut.countSince(ipHash, windowStart);
+      const result = await sut.recordIfUnderLimit(
+        ipHash,
+        since,
+        MAX_SUBMISSIONS
+      );
 
-      const expectedCount = 1;
-      expect(result).toBe(expectedCount);
+      expect(result).toBe(true);
     });
-  });
 
-  describe('record', () => {
-    it('inserts a submission and prunes submissions older than twenty four hours', async () => {
+    it('prunes submissions older than twenty four hours when recording', async () => {
       const db = getTestDb();
       const sut = new DrizzleContactSubmissionRepository(db);
       const ipHash = 'target-ip-hash';
       const oldIpHash = 'old-ip-hash';
       const recentIpHash = 'recent-ip-hash';
+      const since = new Date(Date.now() - ONE_HOUR_IN_MS);
       await db.insert(contactSubmissions).values([
         {
           ipHash: oldIpHash,
@@ -68,26 +120,42 @@ describe('DrizzleContactSubmissionRepository', () => {
         },
       ]);
 
-      await sut.record(ipHash);
+      await sut.recordIfUnderLimit(ipHash, since, MAX_SUBMISSIONS);
 
-      const [oldSubmissionCount] = await db
-        .select({ value: count() })
-        .from(contactSubmissions)
-        .where(eq(contactSubmissions.ipHash, oldIpHash));
-      const [recentSubmissionCount] = await db
-        .select({ value: count() })
-        .from(contactSubmissions)
-        .where(eq(contactSubmissions.ipHash, recentIpHash));
-      const [newSubmissionCount] = await db
-        .select({ value: count() })
-        .from(contactSubmissions)
-        .where(eq(contactSubmissions.ipHash, ipHash));
       const expectedOldSubmissionCount = 0;
       const expectedRecentSubmissionCount = 1;
       const expectedNewSubmissionCount = 1;
-      expect(oldSubmissionCount.value).toBe(expectedOldSubmissionCount);
-      expect(recentSubmissionCount.value).toBe(expectedRecentSubmissionCount);
-      expect(newSubmissionCount.value).toBe(expectedNewSubmissionCount);
+      await expect(countSubmissionsFor(oldIpHash)).resolves.toBe(
+        expectedOldSubmissionCount
+      );
+      await expect(countSubmissionsFor(recentIpHash)).resolves.toBe(
+        expectedRecentSubmissionCount
+      );
+      await expect(countSubmissionsFor(ipHash)).resolves.toBe(
+        expectedNewSubmissionCount
+      );
+    });
+
+    it('allows only the remaining quota when submissions arrive concurrently', async () => {
+      const db = getTestDb();
+      const sut = new DrizzleContactSubmissionRepository(db);
+      const ipHash = 'target-ip-hash';
+      const since = new Date(Date.now() - ONE_HOUR_IN_MS);
+      const concurrentAttempts = MAX_SUBMISSIONS;
+      await db
+        .insert(contactSubmissions)
+        .values(createSubmissionRows(ipHash, MAX_SUBMISSIONS - 1, new Date()));
+
+      const results = await Promise.all(
+        Array.from({ length: concurrentAttempts }, () =>
+          sut.recordIfUnderLimit(ipHash, since, MAX_SUBMISSIONS)
+        )
+      );
+
+      const recordedCount = results.filter((recorded) => recorded).length;
+      const expectedRecordedCount = 1;
+      expect(recordedCount).toBe(expectedRecordedCount);
+      await expect(countSubmissionsFor(ipHash)).resolves.toBe(MAX_SUBMISSIONS);
     });
   });
 });

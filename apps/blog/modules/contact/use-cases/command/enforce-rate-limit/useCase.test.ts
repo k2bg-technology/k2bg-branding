@@ -10,8 +10,7 @@ const RATE_LIMIT_MAX_SUBMISSIONS = 5;
 
 function createMockContactSubmissionRepository(): ContactSubmissionRepository {
   return {
-    countSince: vi.fn().mockResolvedValue(0),
-    record: vi.fn().mockResolvedValue(undefined),
+    recordIfUnderLimit: vi.fn().mockResolvedValue(true),
   };
 }
 
@@ -26,40 +25,39 @@ describe('EnforceContactRateLimit', () => {
   });
 
   describe('execute', () => {
-    it('records the submission when the IP hash is under the limit', async () => {
+    it('records the submission atomically with the hourly window and limit', async () => {
       const repository = createMockContactSubmissionRepository();
-      const underLimitSubmissionCount = RATE_LIMIT_MAX_SUBMISSIONS - 1;
-      vi.mocked(repository.countSince).mockResolvedValue(
-        underLimitSubmissionCount
-      );
       const sut = new EnforceContactRateLimit(repository);
       const ipHash = 'hashed-client-ip';
 
       await sut.execute({ ipHash });
 
       const expectedSince = new Date(FIXED_NOW.getTime() - ONE_HOUR_IN_MS);
-      expect(repository.countSince).toHaveBeenCalledWith(ipHash, expectedSince);
-      expect(repository.record).toHaveBeenCalledWith(ipHash);
+      expect(repository.recordIfUnderLimit).toHaveBeenCalledWith(
+        ipHash,
+        expectedSince,
+        RATE_LIMIT_MAX_SUBMISSIONS
+      );
     });
 
-    it.each`
-      submissionCount
-      ${RATE_LIMIT_MAX_SUBMISSIONS}
-      ${RATE_LIMIT_MAX_SUBMISSIONS + 1}
-    `(
-      'throws without recording when submission count is $submissionCount',
-      async ({ submissionCount }: { submissionCount: number }) => {
-        const repository = createMockContactSubmissionRepository();
-        vi.mocked(repository.countSince).mockResolvedValue(submissionCount);
-        const sut = new EnforceContactRateLimit(repository);
-        const ipHash = 'hashed-client-ip';
+    it('resolves when the repository records the submission', async () => {
+      const repository = createMockContactSubmissionRepository();
+      vi.mocked(repository.recordIfUnderLimit).mockResolvedValue(true);
+      const sut = new EnforceContactRateLimit(repository);
 
-        await expect(sut.execute({ ipHash })).rejects.toThrow(
-          ContactRateLimitExceededError
-        );
+      await expect(
+        sut.execute({ ipHash: 'hashed-client-ip' })
+      ).resolves.toBeUndefined();
+    });
 
-        expect(repository.record).not.toHaveBeenCalled();
-      }
-    );
+    it('throws when the repository reports the limit is reached', async () => {
+      const repository = createMockContactSubmissionRepository();
+      vi.mocked(repository.recordIfUnderLimit).mockResolvedValue(false);
+      const sut = new EnforceContactRateLimit(repository);
+
+      await expect(sut.execute({ ipHash: 'hashed-client-ip' })).rejects.toThrow(
+        ContactRateLimitExceededError
+      );
+    });
   });
 });

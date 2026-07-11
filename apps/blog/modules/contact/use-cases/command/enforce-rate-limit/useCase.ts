@@ -15,15 +15,16 @@ export class EnforceContactRateLimit {
 
   async execute(input: EnforceContactRateLimitInput): Promise<void> {
     const since = new Date(Date.now() - RATE_LIMIT_WINDOW_MS);
-    const submissionCount = await this.contactSubmissionRepository.countSince(
+    // Check-and-record must be one atomic repository operation; a separate
+    // count + insert lets concurrent submissions all pass the check together.
+    const recorded = await this.contactSubmissionRepository.recordIfUnderLimit(
       input.ipHash,
-      since
+      since,
+      RATE_LIMIT_MAX_SUBMISSIONS
     );
 
-    if (submissionCount >= RATE_LIMIT_MAX_SUBMISSIONS) {
+    if (!recorded) {
       throw new ContactRateLimitExceededError();
     }
-
-    await this.contactSubmissionRepository.record(input.ipHash);
   }
 }
