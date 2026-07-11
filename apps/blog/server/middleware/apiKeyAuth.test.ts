@@ -52,4 +52,19 @@ describe('apiKeyAuth', () => {
     const statusUnauthorized = 401;
     expect(res.status).toBe(statusUnauthorized);
   });
+
+  describe('when the server API key is not configured', () => {
+    it.each<{ description: string; headers: HeadersInit }>([
+      { description: 'with a header', headers: { 'x-api-key': validApiKey } },
+      { description: 'without a header', headers: {} },
+    ])('returns 500 $description', async ({ headers }) => {
+      delete process.env.API_KEY;
+      const app = createApp();
+
+      const res = await app.request('/test', { headers });
+
+      const statusInternalServerError = 500;
+      expect(res.status).toBe(statusInternalServerError);
+    });
+  });
 });

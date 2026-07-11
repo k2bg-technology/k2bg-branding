@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { PostStatus } from '../../../domain';
 import { InvalidPaginationError } from '../../shared';
 import {
   createPostSummaryOutput,
@@ -43,6 +44,24 @@ describe('FetchPostSummaries', () => {
         page: 1,
         pageSize: 10,
         orderBy: 'desc',
+        status: undefined,
+      });
+    });
+
+    it('passes status filter to the query service', async () => {
+      const fetchPostSummaries = vi
+        .fn()
+        .mockResolvedValue({ posts: [], totalCount: 0 });
+      const queryService = createMockQueryService({ fetchPostSummaries });
+      const sut = new FetchPostSummaries(queryService);
+
+      await sut.execute({ status: PostStatus.PUBLISHED });
+
+      expect(fetchPostSummaries).toHaveBeenCalledWith({
+        page: 1,
+        pageSize: 10,
+        orderBy: 'desc',
+        status: PostStatus.PUBLISHED,
       });
     });
 

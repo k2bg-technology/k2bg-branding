@@ -129,7 +129,8 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Component stories: **PascalCase** `.stories.tsx` (`Button.stories.tsx`).
 - Tests: **camelCase** `.test.ts(x)` / `.spec.ts(x)` (`useSnsShareInfo.test.ts`).
 - Utility files: **camelCase** (`generateHtmlTemplate.ts`).
-- Entity/domain files: **PascalCase** (`Entity.ts`, `Repository.ts`).
+- Entity/domain files: **camelCase** (`apps/blog/modules/post/domain/entities/entity.ts`,
+  `apps/blog/modules/contact/domain/repositories/emailSender.ts`).
 - Config files: **lowercase** (`globals.css`, `middleware.ts`).
 - Component directories: **kebab-case** in apps (`apps/blog/components/article-heading/`);
   **PascalCase** in `packages/ui` (`packages/ui/src/components/Avatar/`); domain/module
@@ -221,9 +222,10 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
 
 - Framework: Vitest with jsdom. Co-locate tests as `*.test.ts(x)` / `*.spec.ts(x)` near source.
 - Libraries: React Testing Library (`@testing-library/react`, `user-event`), `vi` mocks.
-- Shared config: apps re-export `defineConfig` from `test-utils` (see `apps/blog/vitest.config.mts`);
-  setup `packages/test-utils/setupTests.ts` loads `@testing-library/jest-dom/vitest`.
-- Coverage reporters: `text,json,html` (see `packages/test-utils/vitest.config.ts`).
+- App Vitest configs define projects inline and resolve the shared setup file directly
+  (see `apps/blog/vitest.config.mts`); `packages/test-utils/setupTests.ts` loads
+  `@testing-library/jest-dom/vitest`.
+- Coverage reporters: `text,json,html` (see `apps/blog/vitest.config.mts`).
 - Test behavior over implementation; AAA structure; name the subject `sut`; prefer `it.each`
   over loops. Full standards: `.claude/rules/unit-test-guidelines.md`.
 - Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` (or scope via `pnpm -F blog test`).

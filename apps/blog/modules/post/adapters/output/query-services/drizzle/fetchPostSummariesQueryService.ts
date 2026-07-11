@@ -1,4 +1,4 @@
-import { asc, count, desc, eq } from 'drizzle-orm';
+import { and, asc, count, desc, eq } from 'drizzle-orm';
 import type { DrizzleClient } from '../../../../../../infrastructure/drizzle/client';
 import {
   authors,
@@ -23,6 +23,9 @@ export class DrizzleFetchPostSummariesQueryService
     const { page, pageSize, orderBy } = params;
     const offset = (page - 1) * pageSize;
     const direction = orderBy === 'asc' ? asc : desc;
+    const whereClause = params.status
+      ? and(eq(posts.type, 'ARTICLE'), eq(posts.status, params.status))
+      : eq(posts.type, 'ARTICLE');
 
     try {
       const [rows, totalRow] = await Promise.all([
@@ -41,14 +44,11 @@ export class DrizzleFetchPostSummariesQueryService
           })
           .from(posts)
           .leftJoin(authors, eq(posts.authorId, authors.uuid))
-          .where(eq(posts.type, 'ARTICLE'))
+          .where(whereClause)
           .orderBy(direction(posts.releaseDate), direction(posts.uuid))
           .limit(pageSize)
           .offset(offset),
-        this.db
-          .select({ value: count() })
-          .from(posts)
-          .where(eq(posts.type, 'ARTICLE')),
+        this.db.select({ value: count() }).from(posts).where(whereClause),
       ]);
 
       return {

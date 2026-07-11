@@ -21,10 +21,4 @@ export interface MediaRepository {
    * Returns null if not found.
    */
   findById(id: MediaId): Promise<Media | null>;
-
-  /**
-   * Retrieves all image sources from image media.
-   * Used for batch image processing and CDN uploads.
-   */
-  findAllImageSources(): Promise<ImageSource[]>;
 }

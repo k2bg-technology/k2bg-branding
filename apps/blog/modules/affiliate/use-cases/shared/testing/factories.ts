@@ -6,7 +6,6 @@ import {
   AffiliateText,
   ImageHeight,
   ImageProvider,
-  type ImageSource,
   ImageSourceUrl,
   ImageWidth,
   Name,
@@ -17,36 +16,6 @@ import {
 } from '../../../domain';
 
 let counter = 0;
-
-/**
- * Creates a test ImageSource with optional overrides
- */
-export const createImageSource = (
-  overrides: Partial<{
-    id: AffiliateId;
-    url: ImageSourceUrl;
-  }> = {}
-): ImageSource => {
-  counter++;
-  return {
-    id:
-      overrides.id ??
-      AffiliateId.reconstitute(
-        `550e8400-e29b-41d4-a716-${String(counter).padStart(12, '0')}`
-      ),
-    url:
-      overrides.url ??
-      ImageSourceUrl.reconstitute(
-        `https://example.com/images/affiliate-${counter}.jpg`
-      ),
-  };
-};
-
-/**
- * Creates multiple test ImageSources
- */
-export const createImageSources = (count: number): ImageSource[] =>
-  Array.from({ length: count }, () => createImageSource());
 
 /**
  * Creates a test AffiliateBanner entity

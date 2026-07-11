@@ -3,13 +3,35 @@ import type { Metadata } from 'next';
 import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
+import { getDefaultOgImageUrl } from '../../infrastructure/di';
+import { blogSiteName } from '../siteMetadata';
 
 import { ContactForm } from './ContactForm';
 
+const contactDescription =
+  'K2.B.G Technology Blog へのお問い合わせはこちらからお送りください。';
+const defaultOgImageUrl = getDefaultOgImageUrl();
+
 export const metadata: Metadata = {
   title: 'お問い合わせページ',
+  description: contactDescription,
   alternates: {
     canonical: '/contact',
+  },
+  openGraph: {
+    title: 'お問い合わせページ',
+    description: contactDescription,
+    type: 'website',
+    locale: 'ja_JP',
+    url: '/contact',
+    siteName: blogSiteName,
+    images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'お問い合わせページ',
+    description: contactDescription,
+    images: [defaultOgImageUrl],
   },
 };
 

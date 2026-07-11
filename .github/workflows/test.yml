@@ -42,6 +42,35 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+  test-db:
+    name: DB Integration Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build test-utils package
+        run: pnpm --filter=test-utils build
+
+      - name: Run DB integration tests
+        run: pnpm -F blog test:db
+
   lint:
     name: Lint
     runs-on: ubuntu-latest

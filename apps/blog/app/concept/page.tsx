@@ -5,16 +5,38 @@ import { PageHeading } from '../../components/page-heading/PageHeading';
 import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
-import { createFetchPostUseCase } from '../../infrastructure/di';
+import {
+  createFetchPostUseCase,
+  getDefaultOgImageUrl,
+} from '../../infrastructure/di';
+import { blogSiteName } from '../siteMetadata';
 
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
+const conceptDescription = 'K2.B.G Technology Blog のコンセプトを紹介します。';
+const defaultOgImageUrl = getDefaultOgImageUrl();
 
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'コンセプトページ',
+  description: conceptDescription,
   alternates: {
     canonical: '/concept',
+  },
+  openGraph: {
+    title: 'コンセプトページ',
+    description: conceptDescription,
+    type: 'website',
+    locale: 'ja_JP',
+    url: '/concept',
+    siteName: blogSiteName,
+    images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'コンセプトページ',
+    description: conceptDescription,
+    images: [defaultOgImageUrl],
   },
 };
 

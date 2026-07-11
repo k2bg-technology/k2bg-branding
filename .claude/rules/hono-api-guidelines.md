@@ -13,8 +13,10 @@ Conventions for the Hono REST API integrated into the blog app. The server lives
 - The app is an `OpenAPIHono` (from `@hono/zod-openapi`) with `.basePath('/api')`.
 - Middleware order matters and is fixed:
   1. `app.use('*', requestLogger)` — global logging.
-  2. `app.use('/<path>', apiKeyAuth)` — per-path auth for every protected route
-     (`/posts`, `/images`, `/revalidate`). New protected routes MUST be added here.
+  2. `app.use('*', ...)` — default-deny auth guard: every path runs through
+     `apiKeyAuth` unless it is listed in `PUBLIC_PATHS`. New routes are protected by
+     default; only add a path to `PUBLIC_PATHS` when it must be reachable without a
+     key (e.g. the OpenAPI docs).
   3. `app.route('/', <routes>)` — mount route groups.
   4. `app.onError(errorHandler)` — registered last.
 - OpenAPI docs (`/api/doc.json`) and Swagger UI (`/api/doc`) are exposed only when
@@ -51,6 +53,7 @@ Canonical example: `apps/blog/server/routes/post.ts`.
 ## Middleware & Errors (`apps/blog/server/middleware/`)
 
 - `apiKeyAuth` — compares the `x-api-key` header to `process.env.API_KEY`; throws
+  `HTTPException(500)` if `API_KEY` is not configured (fail-closed) and
   `HTTPException(401)` on mismatch.
 - `requestLogger` — logs request start/completion with method, path, status, duration.
 - `errorHandler` — maps `HTTPException` to its status; everything else (including domain
@@ -70,5 +73,7 @@ Canonical example: `apps/blog/server/routes/post.ts`.
 
 ## Security
 
-- Every state-changing route MUST be behind `apiKeyAuth` (wired in `app.ts`).
+- Auth is default-deny: every route is behind `apiKeyAuth` unless explicitly listed in
+  `PUBLIC_PATHS` (`app.ts`). Do not add a route to `PUBLIC_PATHS` unless it must be
+  publicly reachable.
 - Never log request bodies or PII in `requestLogger` or handlers.

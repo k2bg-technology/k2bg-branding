@@ -3,7 +3,7 @@ import {
   authors,
   posts,
 } from '../../../../../../infrastructure/drizzle/schema';
-import { PostType, ReleaseDate, Slug } from '../../../../domain';
+import { PostStatus, PostType, ReleaseDate, Slug } from '../../../../domain';
 import {
   createPost,
   createPosts,
@@ -96,6 +96,37 @@ describe('DrizzleFetchPostSummariesQueryService', () => {
 
     expect(result.totalCount).toBe(1);
     expect(result.posts.map((p) => p.id)).toEqual([article.id.getValue()]);
+  });
+
+  it('excludes posts whose status is not the requested status', async () => {
+    await seedAuthor();
+    const db = getTestDb();
+    const publishedArticle = createPost();
+    const draftArticle = createPost({
+      id: publishedArticle.id,
+      slug: Slug.create('draft-slug'),
+      status: PostStatus.DRAFT,
+    });
+    // Use a fresh id to avoid clobbering the published article on insert.
+    await db.insert(posts).values(toPersistence(publishedArticle));
+    await db.insert(posts).values({
+      ...toPersistence(draftArticle),
+      uuid: '550e8400-e29b-41d4-a716-446655440001',
+      slug: 'draft-only',
+    });
+    const sut = new DrizzleFetchPostSummariesQueryService(db);
+
+    const result = await sut.fetchPostSummaries({
+      page: 1,
+      pageSize: 10,
+      orderBy: 'desc',
+      status: PostStatus.PUBLISHED,
+    });
+
+    expect(result.totalCount).toBe(1);
+    expect(result.posts.map((p) => p.id)).toEqual([
+      publishedArticle.id.getValue(),
+    ]);
   });
 
   it('paginates with limit and offset and orders by releaseDate', async () => {

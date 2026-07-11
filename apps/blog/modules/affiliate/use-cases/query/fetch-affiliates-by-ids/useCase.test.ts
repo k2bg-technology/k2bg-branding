@@ -21,7 +21,6 @@ describe('FetchAffiliatesByIds', () => {
   ): AffiliateRepository => ({
     findById: vi.fn().mockResolvedValue(null),
     findByIds: vi.fn().mockResolvedValue(new Map()),
-    findAllImageSources: vi.fn().mockResolvedValue([]),
     ...overrides,
   });
 
