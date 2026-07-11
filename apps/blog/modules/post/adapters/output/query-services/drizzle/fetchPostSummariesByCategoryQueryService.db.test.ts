@@ -112,9 +112,9 @@ describe('DrizzleFetchPostSummariesByCategoryQueryService', () => {
       category: Category.ENGINEERING,
       releaseDate: sharedDate,
     });
-    for (const post of articles) {
-      await insertPost(post);
-    }
+    await getTestDb()
+      .insert(posts)
+      .values(articles.map((post) => toPersistence(post)));
     const sut = new DrizzleFetchPostSummariesByCategoryQueryService(
       getTestDb()
     );

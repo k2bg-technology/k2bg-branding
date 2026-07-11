@@ -130,9 +130,7 @@ describe('DrizzleSearchPostSummariesQueryService', () => {
       title: Title.create('Tiebreaker Match'),
       releaseDate: sharedDate,
     });
-    for (const post of articles) {
-      await db.insert(posts).values(toPersistence(post));
-    }
+    await db.insert(posts).values(articles.map((post) => toPersistence(post)));
     const sut = new DrizzleSearchPostSummariesQueryService(db);
 
     const page1 = await sut.searchPostSummaries({
