@@ -12,8 +12,9 @@ selection, engineering trade-offs, writing tone).
 ## Project Structure & Module Organization
 
 - Monorepo managed by pnpm workspaces and Turborepo.
-- Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000) and
-  `apps/portfolio` (Next.js, multilingual, port 3001).
+- Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000),
+  `apps/portfolio` (Next.js, multilingual, port 3001), and `apps/scene-studio`
+  (Remotion Studio for programmatic short-form videos, port 3002).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
   (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
   `packages/tsconfig`.
@@ -30,6 +31,8 @@ selection, engineering trade-offs, writing tone).
 - Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog and Test Utils).
 - Component scaffolding: `pnpm generate:component`, `pnpm generate:style`.
 - Storybook (UI): `pnpm -F ui storybook` (port 6006); Chromatic via CI.
+- Video (Scene Studio): `pnpm -F scene-studio dev` (Remotion Studio, port 3002);
+  render locally via `pnpm -F scene-studio render <composition-id>`.
 
 ## Architecture
 
@@ -88,6 +91,21 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Next.js 16 renamed `middleware.ts` to `proxy.ts`, but the portfolio deliberately keeps
   `middleware.ts` because i18n locale detection requires the edge runtime — do not rename it.
   Use `proxy.ts` only when adding new middleware to the blog app.
+
+### Scene Studio (Video Generation)
+
+- `apps/scene-studio` renders short-form vertical videos (1080×1920) with
+  [Remotion](https://www.remotion.dev/): compositions are React components driven by
+  props/JSON, styled with Tailwind v4 reusing `packages/tailwind-config` tokens.
+- Animations must be deterministic: derive all state from `useCurrentFrame()` and props —
+  never `requestAnimationFrame`, unseeded randomness, or the current time.
+- Media assets are never committed; `apps/scene-studio/public/assets/` is gitignored
+  (reference files via `staticFile()`). Rendering is local-macOS-only for now (brand
+  system fonts are unavailable on Linux/CI).
+- All `remotion` / `@remotion/*` packages stay on one identical exact-pinned version;
+  bump them together in a single commit.
+- Template/composition design and naming (three-layer structure, no universal
+  templates): `.claude/rules/remotion-template-guidelines.md`.
 
 ### Key Integrations
 
