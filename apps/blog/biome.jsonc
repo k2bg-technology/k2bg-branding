@@ -56,6 +56,7 @@
         "app/**/error.tsx",
         "app/**/global-error.tsx",
         "app/**/route.ts",
+        "app/manifest.ts",
         "app/robots.ts",
         "app/sitemap.ts"
       ],

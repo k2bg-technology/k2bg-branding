@@ -1,7 +1,6 @@
 import {
   Extension,
   Height,
-  type ImageSource,
   Media,
   MediaId,
   MediaName,
@@ -21,34 +20,6 @@ let counter = 0;
 export const resetFactoryCounter = (): void => {
   counter = 0;
 };
-
-/**
- * Creates a test ImageSource with optional overrides
- */
-export const createImageSource = (
-  overrides: Partial<{
-    id: MediaId;
-    url: SourceUrl;
-  }> = {}
-): ImageSource => {
-  counter++;
-  return {
-    id:
-      overrides.id ??
-      MediaId.reconstitute(
-        `550e8400-e29b-41d4-a716-${String(counter).padStart(12, '0')}`
-      ),
-    url:
-      overrides.url ??
-      SourceUrl.reconstitute(`https://example.com/images/media-${counter}.jpg`),
-  };
-};
-
-/**
- * Creates multiple test ImageSources
- */
-export const createImageSources = (count: number): ImageSource[] =>
-  Array.from({ length: count }, () => createImageSource());
 
 /**
  * Creates valid MediaProps for testing
