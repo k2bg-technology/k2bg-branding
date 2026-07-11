@@ -39,6 +39,7 @@ export {
 export {
   InvalidPaginationError,
   InvalidSearchQueryError,
+  type Logger,
   type OgImageUrlGenerator,
   type PaginatedResult,
   type PaginationInput,

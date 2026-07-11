@@ -1,12 +1,9 @@
-import { logger } from '../../../../shared/logger';
-import { SyncError } from '../../shared';
+import { type Logger, SyncError } from '../../shared';
 import type {
   ExternalImageSource,
   ImageSourceRecord,
 } from './externalImageSource';
 import type { ImageRepository } from './imageRepository';
-
-const syncHeroImagesLogger = logger.child({ module: 'post' });
 
 export interface SyncHeroImagesOutput {
   uploadedImages: ImageSourceRecord[];
@@ -22,7 +19,8 @@ export interface SyncHeroImagesOutput {
 export class SyncHeroImages {
   constructor(
     private readonly imageSources: ExternalImageSource[],
-    private readonly imageRepository: ImageRepository
+    private readonly imageRepository: ImageRepository,
+    private readonly logger: Logger
   ) {}
 
   async execute(): Promise<SyncHeroImagesOutput> {
@@ -69,7 +67,7 @@ export class SyncHeroImages {
           await this.imageRepository.uploadImage(image.id, image.url);
           return { image, success: true };
         } catch (error) {
-          syncHeroImagesLogger.error(
+          this.logger.error(
             { err: error, imageId: image.id },
             'Failed to upload hero image'
           );
