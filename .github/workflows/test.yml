@@ -42,6 +42,35 @@ jobs:
       - name: Run tests
         run: pnpm test
 
+  test-db:
+    name: Blog DB Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # vitest.globalSetup.node-db.ts starts a disposable Testcontainers
+      # postgres:15-alpine, applies the Drizzle migrations, and sets
+      # DATABASE_URL itself; Docker is preinstalled on ubuntu-latest runners.
+      - name: Run blog DB tests
+        run: pnpm -F blog test:db
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
