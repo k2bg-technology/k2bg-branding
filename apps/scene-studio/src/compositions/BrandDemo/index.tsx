@@ -1,24 +1,19 @@
 import { AbsoluteFill, Series } from 'remotion';
 
-import { TitleScene } from './TitleScene';
-import { TokenScene } from './TokenScene';
-import { TypographyScene } from './TypographyScene';
-
-const SCENE_DURATION_IN_FRAMES = 150;
+import { brandDemoScenes, SCENE_DURATION_IN_FRAMES } from './scenes';
 
 export function BrandDemo() {
   return (
     <AbsoluteFill className="bg-base-black">
       <Series>
-        <Series.Sequence durationInFrames={SCENE_DURATION_IN_FRAMES}>
-          <TitleScene />
-        </Series.Sequence>
-        <Series.Sequence durationInFrames={SCENE_DURATION_IN_FRAMES}>
-          <TokenScene />
-        </Series.Sequence>
-        <Series.Sequence durationInFrames={SCENE_DURATION_IN_FRAMES}>
-          <TypographyScene />
-        </Series.Sequence>
+        {brandDemoScenes.map((scene) => (
+          <Series.Sequence
+            key={scene.name}
+            durationInFrames={SCENE_DURATION_IN_FRAMES}
+          >
+            <scene.component />
+          </Series.Sequence>
+        ))}
       </Series>
     </AbsoluteFill>
   );

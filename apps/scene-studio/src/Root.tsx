@@ -1,6 +1,7 @@
 import { Composition, Folder } from 'remotion';
 
 import { BrandDemo } from './compositions/BrandDemo';
+import { getBrandDemoDurationInFrames } from './compositions/BrandDemo/scenes';
 
 import './style.css';
 
@@ -17,7 +18,7 @@ export function RemotionRoot() {
         width={SCENE_WIDTH}
         height={SCENE_HEIGHT}
         fps={SCENE_FPS}
-        durationInFrames={450}
+        durationInFrames={getBrandDemoDurationInFrames()}
       />
     </Folder>
   );
