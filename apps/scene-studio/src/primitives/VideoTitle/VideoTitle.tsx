@@ -3,7 +3,7 @@ import { spring, useCurrentFrame, useVideoConfig } from 'remotion';
 import { springs } from '../../tokens/motion';
 import { cn } from '../../utils/cn';
 
-const TONE_CLASS_NAMES = {
+export const TONE_CLASS_NAMES = {
   main: 'text-main-default',
   accent: 'text-accent-default',
   white: 'text-base-white',

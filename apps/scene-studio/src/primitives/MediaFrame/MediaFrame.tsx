@@ -1,6 +1,7 @@
 import { AbsoluteFill, Img, OffthreadVideo, staticFile } from 'remotion';
 
 import { cn } from '../../utils/cn';
+import { isSelfContainedSource } from './isSelfContainedSource';
 
 interface Props {
   src: string;
@@ -12,11 +13,6 @@ interface Props {
   className?: string;
 }
 
-function resolveSource(src: string): string {
-  const isSelfContained = /^(https?:|data:)/.test(src);
-  return isSelfContained ? src : staticFile(src);
-}
-
 export function MediaFrame({
   src,
   mediaType,
@@ -26,7 +22,7 @@ export function MediaFrame({
   muted = true,
   className,
 }: Props) {
-  const resolvedSource = resolveSource(src);
+  const resolvedSource = isSelfContainedSource(src) ? src : staticFile(src);
   const mediaStyle = {
     width: '100%',
     height: '100%',

@@ -1,7 +1,7 @@
-import { interpolate, useCurrentFrame } from 'remotion';
+import { useCurrentFrame } from 'remotion';
 
-import { durationsInFrames } from '../../tokens/motion';
 import { cn } from '../../utils/cn';
+import { getCaptionMotion } from './captionMotion';
 
 interface Props {
   text: string;
@@ -18,21 +18,11 @@ export function Caption({
 }: Props) {
   const frame = useCurrentFrame();
 
-  const enter = interpolate(
-    frame - enterDelayInFrames,
-    [0, durationsInFrames.enter],
-    [0, 1],
-    { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
-  );
-  const exit =
-    exitAtFrame === undefined
-      ? 1
-      : interpolate(
-          frame,
-          [exitAtFrame, exitAtFrame + durationsInFrames.fast],
-          [1, 0],
-          { extrapolateLeft: 'clamp', extrapolateRight: 'clamp' }
-        );
+  const { opacity, translateYInPx } = getCaptionMotion({
+    frame,
+    enterDelayInFrames,
+    exitAtFrame,
+  });
 
   return (
     <p
@@ -41,8 +31,8 @@ export function Caption({
         className
       )}
       style={{
-        opacity: Math.min(enter, exit),
-        transform: `translateY(${(1 - enter) * 24}px)`,
+        opacity,
+        transform: `translateY(${translateYInPx}px)`,
       }}
     >
       {text}
