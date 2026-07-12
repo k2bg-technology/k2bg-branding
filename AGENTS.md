@@ -19,16 +19,17 @@ selection, engineering trade-offs, writing tone).
   (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
   `packages/tsconfig`.
 - CI, templates, and bots live under `.github/`. See `.github/PULL_REQUEST_TEMPLATE.md`.
-- Tech stack: Next.js 16 (Turbopack, React Compiler), TypeScript (strict, 100%),
-  Tailwind CSS v4, Turborepo, pnpm 10+.
+- Tech stack: Next.js 16 (Turbopack, React Compiler), Remotion, TypeScript (strict,
+  100%), Tailwind CSS v4, Turborepo, pnpm 10+.
 
 ## Build, Test, and Development Commands
 
 - Install: `pnpm install` (pnpm 10+, Node 20.9+).
-- Develop all: `pnpm dev` (runs `turbo run dev`); filter: `pnpm -F blog dev` / `pnpm -F portfolio dev`.
+- Develop all: `pnpm dev` (runs `turbo run dev`); filter with `pnpm -F blog dev`,
+  `pnpm -F portfolio dev`, or `pnpm -F scene-studio dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
 - Lint/Types/Format: `pnpm lint` (Biome), `pnpm typecheck`, `pnpm format` (Biome).
-- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog and Test Utils).
+- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog, Portfolio, Scene Studio, and Test Utils).
 - Component scaffolding: `pnpm generate:component`, `pnpm generate:style`.
 - Storybook (UI): `pnpm -F ui storybook` (port 6006); Chromatic via CI.
 - Video (Scene Studio): `pnpm -F scene-studio dev` (Remotion Studio, port 3002);
