@@ -326,6 +326,9 @@ importers:
       '@remotion/cli':
         specifier: 4.0.488
         version: 4.0.488(@swc/core@1.13.5)(@swc/helpers@0.5.15)(lightningcss@1.32.0)(postcss@8.5.15)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)(webpack-hot-middleware@2.26.1)
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
       react:
         specifier: ^19.0.1
         version: 19.2.1
@@ -335,6 +338,9 @@ importers:
       remotion:
         specifier: 4.0.488
         version: 4.0.488(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
+      tailwind-merge:
+        specifier: ^2.5.3
+        version: 2.5.3
     devDependencies:
       '@remotion/tailwind-v4':
         specifier: 4.0.488
