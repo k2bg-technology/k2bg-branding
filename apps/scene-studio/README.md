@@ -21,6 +21,20 @@ pnpm -F scene-studio typecheck            # tsc --noEmit
 
 Rendered files (`out/`), bundles (`build/`), and media assets are gitignored.
 
+## Structure
+
+- `src/primitives/` — layer-1 generic video components (`VideoTitle`, `Caption`,
+  `SafeArea`, `GradientOverlay`, `Logo`, `MediaFrame`, `BrandOutro`) plus the
+  video typography theme (`video-theme.css`).
+- `src/tokens/` — motion (frame-based durations, easings, springs) and
+  safe-area tokens.
+- `src/compositions/` — compositions registered in Studio, including one demo
+  composition per primitive (`primitives` folder in the sidebar).
+
+Layer rules live in `.claude/rules/remotion-template-guidelines.md`. The layers
+are app-internal directories on purpose — extract one into a `packages/`-level
+workspace only when a second workspace actually consumes it.
+
 ## Assets
 
 Media files are **never committed**. Put local photos/videos into
