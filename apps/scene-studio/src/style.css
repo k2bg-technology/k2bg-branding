@@ -1,0 +1,12 @@
+@source './**/*.{ts,tsx}';
+@import 'tailwindcss';
+@import 'tailwind-config/design-token/variables.css';
+
+@theme {
+  /* NOTE: duplicated from packages/ui/src/globals.css — keep in sync manually.
+     Importing ui's globals would pull web-only base styles and tw-animate-css
+     into video compositions. */
+  --font-original: 'Menlo', 'YuGothic', 'Hiragino Kaku Gothic ProN',
+    'Hiragino Sans', 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco',
+    'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
+}
