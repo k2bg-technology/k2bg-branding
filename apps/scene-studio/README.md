@@ -14,6 +14,7 @@ generic primitives → generic patterns → use-case compositions).
 ```bash
 pnpm -F scene-studio dev                  # Remotion Studio on http://localhost:3002
 pnpm -F scene-studio render brand-demo    # render an MP4 to out/<composition-id>.mp4
+pnpm -F scene-studio render visual-showcase --props=./data/visual-showcase.sample.json
 pnpm -F scene-studio build                # bundle (webpack smoke test, outputs build/)
 pnpm -F scene-studio lint                 # biome check
 pnpm -F scene-studio typecheck            # tsc --noEmit
@@ -30,6 +31,9 @@ Rendered files (`out/`), bundles (`build/`), and media assets are gitignored.
   safe-area tokens.
 - `src/compositions/` — compositions registered in Studio, including one demo
   composition per primitive (`primitives` folder in the sidebar).
+- `src/patterns/VisualShowcase/` — the layer-2, data-driven vertical media
+  showcase pattern. Its schema-conforming sample input lives at
+  `data/visual-showcase.sample.json`.
 
 Layer rules live in `.claude/rules/remotion-template-guidelines.md`. The layers
 are app-internal directories on purpose — extract one into a `packages/`-level
