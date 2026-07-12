@@ -97,6 +97,11 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - `apps/scene-studio` renders short-form vertical videos (1080×1920) with
   [Remotion](https://www.remotion.dev/): compositions are React components driven by
   props/JSON, styled with Tailwind v4 reusing `packages/tailwind-config` tokens.
+- Reusable video primitives (titles, captions, safe area, overlays, media, brand outro)
+  live in `apps/scene-studio/src/primitives/`; keep them use-case-agnostic per the
+  template guidelines and verify them via the `primitives` demo compositions in Studio
+  (no Storybook). Extract them into a `packages/`-level workspace only when a second
+  consumer (e.g. a web preview app) actually exists.
 - Animations must be deterministic: derive all state from `useCurrentFrame()` and props —
   never `requestAnimationFrame`, unseeded randomness, or the current time.
 - Media assets are never committed; `apps/scene-studio/public/assets/` is gitignored

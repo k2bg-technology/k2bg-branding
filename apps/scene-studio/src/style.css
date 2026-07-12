@@ -1,6 +1,7 @@
 @source './**/*.{ts,tsx}';
 @import 'tailwindcss';
 @import 'tailwind-config/design-token/variables.css';
+@import './primitives/video-theme.css';
 
 @theme {
   /* NOTE: duplicated from packages/ui/src/globals.css — keep in sync manually.

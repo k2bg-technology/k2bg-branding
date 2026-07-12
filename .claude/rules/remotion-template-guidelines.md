@@ -1,11 +1,11 @@
 ---
-paths: apps/scene-studio/**/*,packages/scene-ui/**/*
+paths: apps/scene-studio/**/*
 ---
 
 # Remotion Template Design & Naming Guidelines
 
 How to decide the granularity and names of Remotion templates, compositions, and
-components in the video platform (`apps/scene-studio`, `packages/scene-ui`). <!-- docs-check-ignore: scene-ui lands in #381 --> These
+components in the video platform (`apps/scene-studio`). These
 rules are use-case-agnostic: they apply equally to travel videos, AI-generated
 graphics, 3D works, tech explainers, blog-to-video, and brand/product intros.
 
@@ -15,7 +15,7 @@ videos, observe actual duplication, and evolve the design incrementally.
 ## Three-layer structure
 
 ```
-Layer 1: generic primitives     — small video parts (scene-ui)
+Layer 1: generic primitives     — small video parts (src/primitives/)
         ↓
 Layer 2: generic patterns       — video structures reusable across use cases
         ↓
@@ -24,10 +24,16 @@ Layer 3: use-case compositions  — finished videos with a fixed purpose
 
 ### Layer 1 — generic primitives
 
-Small building blocks: `VideoTitle`, `Caption`, `SafeArea`, `GradientOverlay`,
-`Logo`, `MediaFrame`, `BrandOutro`, transitions. **Never** encode a use case,
-material, or platform in a primitive's name — no `TravelTitle`, `ArtworkCaption`,
-`InstagramLogo`. Primitives must work for every video genre.
+Small building blocks in `apps/scene-studio/src/primitives/`: `VideoTitle`,
+`Caption`, `SafeArea`, `GradientOverlay`, `Logo`, `MediaFrame`, `BrandOutro`,
+transitions. **Never** encode a use case, material, or platform in a primitive's
+name — no `TravelTitle`, `ArtworkCaption`, `InstagramLogo`. Primitives must work
+for every video genre.
+
+The layers are directories inside the app, not workspace packages. Extract a
+layer into a `packages/`-level workspace only when a second workspace actually
+consumes it (e.g. a web preview app using the Remotion Player) — the same
+"commonize after real duplication" rule that governs templates.
 
 ### Layer 2 — generic patterns
 

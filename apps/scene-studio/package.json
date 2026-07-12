@@ -14,15 +14,19 @@
   },
   "dependencies": {
     "@remotion/cli": "4.0.488",
+    "clsx": "^2.1.1",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
-    "remotion": "4.0.488"
+    "remotion": "4.0.488",
+    "tailwind-merge": "^2.5.3"
   },
   "devDependencies": {
     "@remotion/tailwind-v4": "4.0.488",
+    "@testing-library/react": "^16.3.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "biome-config": "workspace:*",
+    "jsdom": "^26.0.0",
     "tailwind-config": "workspace:*",
     "tailwindcss": "^4.0.9",
     "tsconfig": "workspace:*",
