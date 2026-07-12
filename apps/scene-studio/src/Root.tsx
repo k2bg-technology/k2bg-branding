@@ -2,6 +2,10 @@ import { Composition, Folder } from 'remotion';
 
 import { BrandDemo } from './compositions/BrandDemo';
 import { getBrandDemoDurationInFrames } from './compositions/BrandDemo/scenes';
+import {
+  PRIMITIVE_DEMO_DURATION_IN_FRAMES,
+  primitiveDemos,
+} from './compositions/primitives/demos';
 
 import './style.css';
 
@@ -11,15 +15,30 @@ const SCENE_FPS = 30;
 
 export function RemotionRoot() {
   return (
-    <Folder name="demo">
-      <Composition
-        id="brand-demo"
-        component={BrandDemo}
-        width={SCENE_WIDTH}
-        height={SCENE_HEIGHT}
-        fps={SCENE_FPS}
-        durationInFrames={getBrandDemoDurationInFrames()}
-      />
-    </Folder>
+    <>
+      <Folder name="demo">
+        <Composition
+          id="brand-demo"
+          component={BrandDemo}
+          width={SCENE_WIDTH}
+          height={SCENE_HEIGHT}
+          fps={SCENE_FPS}
+          durationInFrames={getBrandDemoDurationInFrames()}
+        />
+      </Folder>
+      <Folder name="primitives">
+        {primitiveDemos.map((demo) => (
+          <Composition
+            key={demo.id}
+            id={demo.id}
+            component={demo.component}
+            width={SCENE_WIDTH}
+            height={SCENE_HEIGHT}
+            fps={SCENE_FPS}
+            durationInFrames={PRIMITIVE_DEMO_DURATION_IN_FRAMES}
+          />
+        ))}
+      </Folder>
+    </>
   );
 }
