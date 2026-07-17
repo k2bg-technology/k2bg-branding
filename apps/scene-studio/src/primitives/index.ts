@@ -1,8 +1,13 @@
 export { BrandOutro } from './BrandOutro';
 export { Caption } from './Caption';
+export { ChannelShift } from './ChannelShift';
 export { DepthGallery } from './DepthGallery';
+export { GradientFlow } from './GradientFlow';
 export { GradientOverlay } from './GradientOverlay';
+export { InvertBlend } from './InvertBlend';
 export { Logo } from './Logo';
 export { MediaFrame } from './MediaFrame';
+export { Mosaic } from './Mosaic';
 export { SafeArea } from './SafeArea';
+export { SignalNoise } from './SignalNoise';
 export { VideoTitle } from './VideoTitle';
