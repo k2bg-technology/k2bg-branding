@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 
 import { BrandOutroDemo } from './BrandOutroDemo';
 import { CaptionDemo } from './CaptionDemo';
+import { DepthGalleryDemo } from './DepthGalleryDemo';
 import { GradientOverlayDemo } from './GradientOverlayDemo';
 import { LogoDemo } from './LogoDemo';
 import { MediaFrameDemo } from './MediaFrameDemo';
@@ -17,6 +18,7 @@ export const primitiveDemos = [
   { id: 'primitive-gradient-overlay', component: GradientOverlayDemo },
   { id: 'primitive-logo', component: LogoDemo },
   { id: 'primitive-media-frame', component: MediaFrameDemo },
+  { id: 'primitive-depth-gallery', component: DepthGalleryDemo },
   { id: 'primitive-brand-outro', component: BrandOutroDemo },
 ] as const satisfies ReadonlyArray<{
   id: string;
