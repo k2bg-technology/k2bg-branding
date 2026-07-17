@@ -7,4 +7,7 @@ Config.setEntryPoint('./src/index.ts');
 Config.overrideWebpackConfig((currentConfiguration) =>
   enableTailwind(currentConfiguration)
 );
+// WebGL content (ThreeCanvas primitives) needs a GPU-backed renderer in
+// headless rendering; 'angle' is the recommended backend on macOS.
+Config.setChromiumOpenGlRenderer('angle');
 Config.setOverwriteOutput(true);

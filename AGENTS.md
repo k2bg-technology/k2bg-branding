@@ -105,6 +105,10 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   consumer (e.g. a web preview app) actually exists.
 - Animations must be deterministic: derive all state from `useCurrentFrame()` and props —
   never `requestAnimationFrame`, unseeded randomness, or the current time.
+- 3D is supported via `@remotion/three`: each 3D effect is a focused primitive built on
+  `ThreeCanvas` (e.g. `DepthGallery`), driven by props and `useCurrentFrame()` — never
+  React Three Fiber's `useFrame`. Headless rendering uses the `angle` OpenGL renderer set
+  in `remotion.config.ts`. There is no general-purpose 3D abstraction or scene DSL.
 - Media assets are never committed; `apps/scene-studio/public/assets/` is gitignored
   (reference files via `staticFile()`). Rendering is local-macOS-only for now (brand
   system fonts are unavailable on Linux/CI).
