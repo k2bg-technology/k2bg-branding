@@ -1,7 +1,7 @@
 import type { Texture } from 'three';
 import { describe, expect, it } from 'vitest';
 
-import { getCoverUvScale, getImageAspect } from './coverFit';
+import { getCoverUvScale, getImageAspect, getTextureAspect } from './coverFit';
 
 describe('getCoverUvScale', () => {
   it.each([
@@ -39,5 +39,27 @@ describe('getImageAspect', () => {
     const aspect = getImageAspect(texture);
 
     expect(aspect).toBeCloseTo(2 / 3);
+  });
+});
+
+describe('getTextureAspect', () => {
+  it('derives the aspect from image dimensions', () => {
+    const texture = {
+      image: { width: 600, height: 900 },
+    } as unknown as Texture;
+
+    const aspect = getTextureAspect(texture);
+
+    expect(aspect).toBeCloseTo(2 / 3);
+  });
+
+  it('prefers the intrinsic video dimensions over the element size', () => {
+    const texture = {
+      image: { width: 300, height: 300, videoWidth: 1920, videoHeight: 1080 },
+    } as unknown as Texture;
+
+    const aspect = getTextureAspect(texture);
+
+    expect(aspect).toBeCloseTo(16 / 9);
   });
 });
