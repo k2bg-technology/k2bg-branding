@@ -89,6 +89,7 @@ The layers remain app-internal until another workspace needs to consume them.
 | Folder | Composition ID | Description |
 | --- | --- | --- |
 | `demo` | `brand-demo` | Brand typography and design-token demonstration |
+| `demo` | `shader-demo` | Shader effect showcase with one labeled segment per effect primitive |
 | `primitives` | `primitive-*` | One Studio demonstration for each video primitive |
 | `patterns` | `visual-showcase` | Validated vertical media showcase with captions, transitions, and brand outro |
 

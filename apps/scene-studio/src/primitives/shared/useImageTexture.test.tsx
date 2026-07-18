@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 import { act, cleanup, render } from '@testing-library/react';
+import type { ColorSpace } from 'three';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ImagePlane } from './ImagePlane';
+import { useImageTexture } from './useImageTexture';
 
 const mocks = vi.hoisted(() => ({
   delayRender: vi.fn(() => 42),
@@ -32,6 +33,7 @@ vi.mock('@react-three/fiber', () => ({
 
 vi.mock('three', () => ({
   SRGBColorSpace: 'srgb',
+  NoColorSpace: '',
   TextureLoader: class {
     load(
       _src: string,
@@ -45,14 +47,13 @@ vi.mock('three', () => ({
   },
 }));
 
-function renderImagePlane() {
-  return render(
-    <ImagePlane
-      src="data:image/svg+xml,card"
-      position={[0, 0, -2.5]}
-      opacity={1}
-    />
+function TextureProbe({ colorSpace }: { colorSpace?: ColorSpace }) {
+  useImageTexture(
+    'data:image/svg+xml,card',
+    colorSpace === undefined ? undefined : { colorSpace }
   );
+
+  return null;
 }
 
 beforeEach(() => {
@@ -66,16 +67,16 @@ afterEach(() => {
   cleanup();
 });
 
-describe('ImagePlane', () => {
+describe('useImageTexture', () => {
   it('delays the render until the texture has loaded', () => {
-    renderImagePlane();
+    render(<TextureProbe />);
 
     expect(mocks.delayRender).toHaveBeenCalledTimes(1);
     expect(mocks.continueRender).not.toHaveBeenCalled();
   });
 
   it('releases the delayed render once the texture has loaded', () => {
-    renderImagePlane();
+    render(<TextureProbe />);
 
     act(() => {
       mocks.textureLoad.onLoad?.({});
@@ -86,7 +87,7 @@ describe('ImagePlane', () => {
   });
 
   it('redraws the frozen canvas before releasing the render while rendering', () => {
-    renderImagePlane();
+    render(<TextureProbe />);
 
     act(() => {
       mocks.textureLoad.onLoad?.({});
@@ -100,7 +101,7 @@ describe('ImagePlane', () => {
 
   it('does not redraw the canvas in the preview environment', () => {
     mocks.environment.isRendering = false;
-    renderImagePlane();
+    render(<TextureProbe />);
 
     act(() => {
       mocks.textureLoad.onLoad?.({});
@@ -110,8 +111,8 @@ describe('ImagePlane', () => {
     expect(mocks.continueRender).toHaveBeenCalledTimes(1);
   });
 
-  it('marks the loaded texture as sRGB for correct colors', () => {
-    renderImagePlane();
+  it('marks the loaded texture as sRGB by default', () => {
+    render(<TextureProbe />);
     const loadedTexture: { colorSpace?: string } = {};
 
     act(() => {
@@ -121,8 +122,19 @@ describe('ImagePlane', () => {
     expect(loadedTexture.colorSpace).toBe('srgb');
   });
 
+  it('applies a color space override to the loaded texture', () => {
+    render(<TextureProbe colorSpace="" />);
+    const loadedTexture: { colorSpace?: string } = {};
+
+    act(() => {
+      mocks.textureLoad.onLoad?.(loadedTexture);
+    });
+
+    expect(loadedTexture.colorSpace).toBe('');
+  });
+
   it('cancels the render when the texture fails to load', () => {
-    renderImagePlane();
+    render(<TextureProbe />);
     const loadError = new Error('texture decode failed');
 
     act(() => {

@@ -6,6 +6,8 @@ import {
   PRIMITIVE_DEMO_DURATION_IN_FRAMES,
   primitiveDemos,
 } from './compositions/primitives/demos';
+import { ShaderDemo } from './compositions/ShaderDemo';
+import { getShaderDemoDurationInFrames } from './compositions/ShaderDemo/scenes';
 import { VisualShowcase } from './patterns/VisualShowcase';
 import {
   calculateVisualShowcaseMetadata,
@@ -32,6 +34,14 @@ export function RemotionRoot() {
           height={SCENE_HEIGHT}
           fps={SCENE_FPS}
           durationInFrames={getBrandDemoDurationInFrames()}
+        />
+        <Composition
+          id="shader-demo"
+          component={ShaderDemo}
+          width={SCENE_WIDTH}
+          height={SCENE_HEIGHT}
+          fps={SCENE_FPS}
+          durationInFrames={getShaderDemoDurationInFrames()}
         />
       </Folder>
       <Folder name="primitives">
