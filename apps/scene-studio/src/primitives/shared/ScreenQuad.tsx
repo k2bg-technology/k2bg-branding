@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import type { IUniform, Texture, Vector2 } from 'three';
+import type { IUniform, Texture, Vector2, Vector3 } from 'three';
 
-type UniformValue = number | Vector2 | Texture;
+type UniformValue = number | Vector2 | Vector3 | Texture;
 
 interface Props {
   fragmentShader: string;
   vertexShader?: string;
   uniformValues: Record<string, UniformValue>;
+  transparent?: boolean;
 }
 
 const PASSTHROUGH_VERTEX_SHADER = `
@@ -31,6 +32,7 @@ export function ScreenQuad({
   fragmentShader,
   vertexShader = PASSTHROUGH_VERTEX_SHADER,
   uniformValues,
+  transparent = false,
 }: Props) {
   const [uniforms] = useState<Record<string, IUniform>>(() =>
     Object.fromEntries(
@@ -52,6 +54,7 @@ export function ScreenQuad({
         uniforms={uniforms}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
+        transparent={transparent}
         {...piercedUniformProps}
       />
     </mesh>
