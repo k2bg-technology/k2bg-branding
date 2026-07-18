@@ -2,8 +2,10 @@ import {
   Bloom,
   DepthOfField,
   EffectComposer,
+  ToneMapping,
 } from '@react-three/postprocessing';
 import { ThreeCanvas } from '@remotion/three';
+import { ToneMappingMode } from 'postprocessing';
 import type { ReactNode } from 'react';
 import { useVideoConfig } from 'remotion';
 
@@ -49,6 +51,15 @@ export function PostFxStage({ bloom, depthOfField, children }: Props) {
       />
     ) : null,
   ].filter((effect) => effect !== null);
+
+  if (effects.length > 0) {
+    // The composer disables the renderer's tone mapping while mounted, so
+    // restore the default ACES output as the final pass — enabling an
+    // effect must not change the color pipeline.
+    effects.push(
+      <ToneMapping key="tone-mapping" mode={ToneMappingMode.ACES_FILMIC} />
+    );
+  }
 
   return (
     <ThreeCanvas width={width} height={height}>

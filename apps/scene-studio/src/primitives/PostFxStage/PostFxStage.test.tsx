@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   composerProps: null as Record<string, unknown> | null,
   bloomProps: null as Record<string, unknown> | null,
   depthOfFieldProps: null as Record<string, unknown> | null,
+  toneMappingProps: null as Record<string, unknown> | null,
 }));
 
 vi.mock('remotion', () => ({
@@ -32,12 +33,21 @@ vi.mock('@react-three/postprocessing', () => ({
     mocks.depthOfFieldProps = props;
     return null;
   },
+  ToneMapping: (props: Record<string, unknown>) => {
+    mocks.toneMappingProps = props;
+    return null;
+  },
+}));
+
+vi.mock('postprocessing', () => ({
+  ToneMappingMode: { ACES_FILMIC: 'aces-filmic' },
 }));
 
 beforeEach(() => {
   mocks.composerProps = null;
   mocks.bloomProps = null;
   mocks.depthOfFieldProps = null;
+  mocks.toneMappingProps = null;
 });
 
 afterEach(() => {
@@ -91,5 +101,15 @@ describe('PostFxStage', () => {
 
     expect(mocks.bloomProps).not.toBeNull();
     expect(mocks.depthOfFieldProps).not.toBeNull();
+  });
+
+  it('restores the default tone mapping whenever the composer mounts', () => {
+    render(
+      <PostFxStage bloom={{}}>
+        <span data-testid="scene" />
+      </PostFxStage>
+    );
+
+    expect(mocks.toneMappingProps?.mode).toBe('aces-filmic');
   });
 });
