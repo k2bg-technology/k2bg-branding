@@ -21,6 +21,19 @@ export function getImageAspect(texture: Texture): number {
   return image.width / image.height;
 }
 
+// Media textures back onto different sources per path: HTMLImageElement
+// (TextureLoader) or HTMLVideoElement (preview VideoTexture). Videos expose
+// their intrinsic size only via videoWidth/videoHeight.
+export function getTextureAspect(texture: Texture): number {
+  const image = texture.image as HTMLImageElement | HTMLVideoElement;
+
+  if ('videoWidth' in image && image.videoWidth > 0) {
+    return image.videoWidth / image.videoHeight;
+  }
+
+  return image.width / image.height;
+}
+
 export function getCoverUvScale(input: {
   canvasAspect: number;
   imageAspect: number;
