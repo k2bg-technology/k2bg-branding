@@ -2,6 +2,7 @@ import type { ComponentType } from 'react';
 
 import { ChannelShiftDemo } from '../primitives/ChannelShiftDemo';
 import { FluidDistortionDemo } from '../primitives/FluidDistortionDemo';
+import { GlitchShiftDemo } from '../primitives/GlitchShiftDemo';
 import { GradientFlowDemo } from '../primitives/GradientFlowDemo';
 import { GridDisplacementDemo } from '../primitives/GridDisplacementDemo';
 import { InvertBlendDemo } from '../primitives/InvertBlendDemo';
@@ -34,6 +35,7 @@ export const shaderDemoScenes = [
     label: 'Grid Displacement',
     component: GridDisplacementDemo,
   },
+  { name: 'glitch-shift', label: 'Glitch Shift', component: GlitchShiftDemo },
   {
     name: 'gradient-flow',
     label: 'Gradient Flow',
