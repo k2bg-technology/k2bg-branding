@@ -18,6 +18,9 @@ describe('shaderDemoScenes', () => {
       'fluid-distortion',
       'grid-displacement',
       'glitch-shift',
+      'halftone',
+      'duotone',
+      'kaleidoscope',
       'gradient-flow',
       'signal-noise',
     ]);
@@ -37,6 +40,6 @@ describe('getShaderDemoDurationInFrames', () => {
     const expectedDuration =
       shaderDemoScenes.length * SHADER_SCENE_DURATION_IN_FRAMES;
     expect(duration).toBe(expectedDuration);
-    expect(duration).toBe(1350);
+    expect(duration).toBe(1800);
   });
 });

@@ -4,6 +4,7 @@ import { BrandOutroDemo } from './BrandOutroDemo';
 import { CaptionDemo } from './CaptionDemo';
 import { ChannelShiftDemo } from './ChannelShiftDemo';
 import { DepthGalleryDemo } from './DepthGalleryDemo';
+import { DuotoneDemo } from './DuotoneDemo';
 import { EdgeBlurDemo } from './EdgeBlurDemo';
 import { FilmGrainDemo } from './FilmGrainDemo';
 import { FluidDistortionDemo } from './FluidDistortionDemo';
@@ -11,7 +12,9 @@ import { GlitchShiftDemo } from './GlitchShiftDemo';
 import { GradientFlowDemo } from './GradientFlowDemo';
 import { GradientOverlayDemo } from './GradientOverlayDemo';
 import { GridDisplacementDemo } from './GridDisplacementDemo';
+import { HalftoneDemo } from './HalftoneDemo';
 import { InvertBlendDemo } from './InvertBlendDemo';
+import { KaleidoscopeDemo } from './KaleidoscopeDemo';
 import { LightLeakDemo } from './LightLeakDemo';
 import { LogoDemo } from './LogoDemo';
 import { MediaFrameDemo } from './MediaFrameDemo';
@@ -49,6 +52,9 @@ export const primitiveDemos = [
   { id: 'primitive-fluid-distortion', component: FluidDistortionDemo },
   { id: 'primitive-grid-displacement', component: GridDisplacementDemo },
   { id: 'primitive-glitch-shift', component: GlitchShiftDemo },
+  { id: 'primitive-halftone', component: HalftoneDemo },
+  { id: 'primitive-duotone', component: DuotoneDemo },
+  { id: 'primitive-kaleidoscope', component: KaleidoscopeDemo },
   { id: 'primitive-paint-reveal', component: PaintRevealDemo },
   { id: 'primitive-paint-smear', component: PaintSmearDemo },
   { id: 'primitive-gradient-flow', component: GradientFlowDemo },
