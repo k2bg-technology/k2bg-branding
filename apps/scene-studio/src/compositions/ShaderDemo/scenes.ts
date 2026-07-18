@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 
 import { ChannelShiftDemo } from '../primitives/ChannelShiftDemo';
+import { DepthParallaxDemo } from '../primitives/DepthParallaxDemo';
 import { DuotoneDemo } from '../primitives/DuotoneDemo';
 import { FluidDistortionDemo } from '../primitives/FluidDistortionDemo';
 import { GlitchShiftDemo } from '../primitives/GlitchShiftDemo';
@@ -45,6 +46,11 @@ export const shaderDemoScenes = [
     name: 'kaleidoscope',
     label: 'Kaleidoscope',
     component: KaleidoscopeDemo,
+  },
+  {
+    name: 'depth-parallax',
+    label: 'Depth Parallax',
+    component: DepthParallaxDemo,
   },
   {
     name: 'gradient-flow',
