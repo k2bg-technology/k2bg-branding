@@ -6,8 +6,10 @@ import { ChannelShiftDemo } from './ChannelShiftDemo';
 import { DepthGalleryDemo } from './DepthGalleryDemo';
 import { EdgeBlurDemo } from './EdgeBlurDemo';
 import { FilmGrainDemo } from './FilmGrainDemo';
+import { FluidDistortionDemo } from './FluidDistortionDemo';
 import { GradientFlowDemo } from './GradientFlowDemo';
 import { GradientOverlayDemo } from './GradientOverlayDemo';
+import { GridDisplacementDemo } from './GridDisplacementDemo';
 import { InvertBlendDemo } from './InvertBlendDemo';
 import { LightLeakDemo } from './LightLeakDemo';
 import { LogoDemo } from './LogoDemo';
@@ -20,6 +22,7 @@ import { ParticleRevealDemo } from './ParticleRevealDemo';
 import { SafeAreaDemo } from './SafeAreaDemo';
 import { SignalNoiseDemo } from './SignalNoiseDemo';
 import { VideoTitleDemo } from './VideoTitleDemo';
+import { WaveDistortionDemo } from './WaveDistortionDemo';
 
 export const PRIMITIVE_DEMO_DURATION_IN_FRAMES = 150;
 
@@ -39,6 +42,9 @@ export const primitiveDemos = [
   { id: 'primitive-channel-shift', component: ChannelShiftDemo },
   { id: 'primitive-invert-blend', component: InvertBlendDemo },
   { id: 'primitive-mosaic', component: MosaicDemo },
+  { id: 'primitive-wave-distortion', component: WaveDistortionDemo },
+  { id: 'primitive-fluid-distortion', component: FluidDistortionDemo },
+  { id: 'primitive-grid-displacement', component: GridDisplacementDemo },
   { id: 'primitive-paint-reveal', component: PaintRevealDemo },
   { id: 'primitive-paint-smear', component: PaintSmearDemo },
   { id: 'primitive-gradient-flow', component: GradientFlowDemo },
