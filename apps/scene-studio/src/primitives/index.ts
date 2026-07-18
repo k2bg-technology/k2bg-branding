@@ -22,6 +22,7 @@ export { PaintReveal } from './PaintReveal';
 export { PaintSmear } from './PaintSmear';
 export { ParticleDrift } from './ParticleDrift';
 export { ParticleReveal } from './ParticleReveal';
+export { PostFxStage } from './PostFxStage';
 export { SafeArea } from './SafeArea';
 export { Scanline } from './Scanline';
 export { SignalNoise } from './SignalNoise';

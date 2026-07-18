@@ -24,6 +24,7 @@ import { PaintRevealDemo } from './PaintRevealDemo';
 import { PaintSmearDemo } from './PaintSmearDemo';
 import { ParticleDriftDemo } from './ParticleDriftDemo';
 import { ParticleRevealDemo } from './ParticleRevealDemo';
+import { PostFxStageDemo } from './PostFxStageDemo';
 import { SafeAreaDemo } from './SafeAreaDemo';
 import { ScanlineDemo } from './ScanlineDemo';
 import { SignalNoiseDemo } from './SignalNoiseDemo';
@@ -47,6 +48,7 @@ export const primitiveDemos = [
   { id: 'primitive-media-frame', component: MediaFrameDemo },
   { id: 'primitive-depth-gallery', component: DepthGalleryDemo },
   { id: 'primitive-depth-parallax', component: DepthParallaxDemo },
+  { id: 'primitive-post-fx-stage', component: PostFxStageDemo },
   { id: 'primitive-channel-shift', component: ChannelShiftDemo },
   { id: 'primitive-invert-blend', component: InvertBlendDemo },
   { id: 'primitive-mosaic', component: MosaicDemo },
