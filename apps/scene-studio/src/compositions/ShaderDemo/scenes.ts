@@ -1,11 +1,14 @@
 import type { ComponentType } from 'react';
 
 import { ChannelShiftDemo } from '../primitives/ChannelShiftDemo';
+import { DuotoneDemo } from '../primitives/DuotoneDemo';
 import { FluidDistortionDemo } from '../primitives/FluidDistortionDemo';
 import { GlitchShiftDemo } from '../primitives/GlitchShiftDemo';
 import { GradientFlowDemo } from '../primitives/GradientFlowDemo';
 import { GridDisplacementDemo } from '../primitives/GridDisplacementDemo';
+import { HalftoneDemo } from '../primitives/HalftoneDemo';
 import { InvertBlendDemo } from '../primitives/InvertBlendDemo';
+import { KaleidoscopeDemo } from '../primitives/KaleidoscopeDemo';
 import { MosaicDemo } from '../primitives/MosaicDemo';
 import { SignalNoiseDemo } from '../primitives/SignalNoiseDemo';
 import { WaveDistortionDemo } from '../primitives/WaveDistortionDemo';
@@ -36,6 +39,13 @@ export const shaderDemoScenes = [
     component: GridDisplacementDemo,
   },
   { name: 'glitch-shift', label: 'Glitch Shift', component: GlitchShiftDemo },
+  { name: 'halftone', label: 'Halftone', component: HalftoneDemo },
+  { name: 'duotone', label: 'Duotone', component: DuotoneDemo },
+  {
+    name: 'kaleidoscope',
+    label: 'Kaleidoscope',
+    component: KaleidoscopeDemo,
+  },
   {
     name: 'gradient-flow',
     label: 'Gradient Flow',
