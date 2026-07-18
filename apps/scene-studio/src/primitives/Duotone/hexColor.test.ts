@@ -23,7 +23,11 @@ describe('parseHexColor', () => {
     expect(color.blue).toBeCloseTo(0);
   });
 
-  it('throws on a malformed value', () => {
-    expect(() => parseHexColor('#12345')).toThrow('Invalid hex color');
+  it.each([
+    { hex: '#12345', reason: 'wrong length' },
+    { hex: '#12zzzz', reason: 'non-hex digits after a valid prefix' },
+    { hex: '#f8z', reason: 'non-hex digit in the shorthand' },
+  ])('throws on $hex ($reason)', ({ hex }) => {
+    expect(() => parseHexColor(hex)).toThrow('Invalid hex color');
   });
 });

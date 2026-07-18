@@ -12,10 +12,12 @@ export function parseHexColor(hex: string): {
           .map((digit) => digit + digit)
           .join('')
       : digits;
-  const value = Number.parseInt(expanded, 16);
-  if (expanded.length !== 6 || Number.isNaN(value)) {
+  // parseInt would silently accept strings that merely start with hex
+  // digits, so validate the whole value first.
+  if (!/^[0-9a-fA-F]{6}$/.test(expanded)) {
     throw new Error(`Invalid hex color: ${hex}`);
   }
+  const value = Number.parseInt(expanded, 16);
 
   return {
     red: ((value >> 16) & 0xff) / 255,
