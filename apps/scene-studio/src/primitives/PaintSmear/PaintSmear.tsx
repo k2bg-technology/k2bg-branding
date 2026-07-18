@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import { AbsoluteFill } from 'remotion';
 
 import { clampUnit } from '../../utils/clampUnit';
@@ -18,7 +18,9 @@ const TURBULENCE_OCTAVES = 2;
 // untouched, so transitions can cross that endpoint invisibly.
 export function PaintSmear({ intensity, seed = 0, children }: Props) {
   const clampedIntensity = clampUnit(intensity);
-  const filterId = `paint-smear-${seed}`;
+  // Instance-unique: SVG ids are document-wide, so seed-derived ids would
+  // collide across simultaneously mounted instances.
+  const filterId = useId();
 
   return (
     <>

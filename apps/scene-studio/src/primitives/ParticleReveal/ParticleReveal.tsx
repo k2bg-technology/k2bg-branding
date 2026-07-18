@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { type ReactNode, useId } from 'react';
 import { AbsoluteFill } from 'remotion';
 
 import { clampUnit } from '../../utils/clampUnit';
@@ -22,7 +22,9 @@ const THRESHOLD_SLOPE = 25;
 // that endpoint invisibly; at 0 nothing remains.
 export function ParticleReveal({ coverage, seed = 0, children }: Props) {
   const clampedCoverage = clampUnit(coverage);
-  const filterId = `particle-reveal-${seed}`;
+  // Instance-unique: SVG ids are document-wide, so seed-derived ids would
+  // collide across simultaneously mounted instances.
+  const filterId = useId();
 
   return (
     <>
