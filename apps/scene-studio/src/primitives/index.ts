@@ -2,6 +2,7 @@ export { BrandOutro } from './BrandOutro';
 export { Caption } from './Caption';
 export { ChannelShift } from './ChannelShift';
 export { DepthGallery } from './DepthGallery';
+export { DepthParallax } from './DepthParallax';
 export { Duotone } from './Duotone';
 export { EdgeBlur } from './EdgeBlur';
 export { FilmGrain } from './FilmGrain';

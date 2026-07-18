@@ -4,6 +4,7 @@ import { BrandOutroDemo } from './BrandOutroDemo';
 import { CaptionDemo } from './CaptionDemo';
 import { ChannelShiftDemo } from './ChannelShiftDemo';
 import { DepthGalleryDemo } from './DepthGalleryDemo';
+import { DepthParallaxDemo } from './DepthParallaxDemo';
 import { DuotoneDemo } from './DuotoneDemo';
 import { EdgeBlurDemo } from './EdgeBlurDemo';
 import { FilmGrainDemo } from './FilmGrainDemo';
@@ -45,6 +46,7 @@ export const primitiveDemos = [
   { id: 'primitive-logo', component: LogoDemo },
   { id: 'primitive-media-frame', component: MediaFrameDemo },
   { id: 'primitive-depth-gallery', component: DepthGalleryDemo },
+  { id: 'primitive-depth-parallax', component: DepthParallaxDemo },
   { id: 'primitive-channel-shift', component: ChannelShiftDemo },
   { id: 'primitive-invert-blend', component: InvertBlendDemo },
   { id: 'primitive-mosaic', component: MosaicDemo },
