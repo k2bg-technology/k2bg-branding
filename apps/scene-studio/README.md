@@ -72,9 +72,8 @@ pnpm -F scene-studio typecheck   # Run TypeScript checks
 
 The app follows a three-layer video structure:
 
-1. **Primitives** — generic visual building blocks such as `VideoTitle`,
-   `Caption`, `SafeArea`, `GradientOverlay`, `Logo`, `MediaFrame`, and
-   `BrandOutro`.
+1. **Primitives** — generic visual building blocks; see the
+   [Primitive Inventory](#primitive-inventory) below.
 2. **Patterns** — reusable viewing structures such as `VisualShowcase`.
 3. **Use-case compositions** — finished videos with a specific purpose. Add
    these only when a use case requires a structure that the generic patterns
@@ -83,6 +82,84 @@ The app follows a three-layer video structure:
 Template design and naming rules are defined in
 [`.claude/rules/remotion-template-guidelines.md`](../../.claude/rules/remotion-template-guidelines.md).
 The layers remain app-internal until another workspace needs to consume them.
+
+### Primitive Inventory
+
+All Layer-1 primitives live in `src/primitives/` and are exported from
+`src/primitives/index.ts`. Every primitive has a Studio demo composition named
+`primitive-<kebab-case-name>`, and the fullscreen shader effects are also
+collected as labeled segments in `shader-demo`
+(see `src/compositions/ShaderDemo/scenes.ts`).
+
+Effect primitives share these conventions: output derives only from
+`useCurrentFrame()` and props, media sources are cover-fitted to the frame, and
+the neutral endpoint (effect amount `0`, full coverage, or zero intensity)
+renders an untouched passthrough so transitions can cross it invisibly.
+
+#### Layout and brand
+
+| Primitive | Description |
+| --- | --- |
+| `VideoTitle` | Animated headline with tone variants and a configurable entrance delay |
+| `Caption` | Timed caption text with enter and exit animations |
+| `SafeArea` | Padding container that keeps content inside platform-safe insets, with optional guides |
+| `Logo` | Brand logo pinned to a corner with adjustable opacity |
+| `MediaFrame` | Cover- or contain-fitted image/video frame with transform and start-offset control |
+| `BrandOutro` | Closing brand card with call-to-action text and social handle |
+
+#### Atmosphere overlays
+
+| Primitive | Description |
+| --- | --- |
+| `GradientOverlay` | Directional gradient scrim for legibility and mood |
+| `FilmGrain` | Seeded photographic grain overlay |
+| `ParticleDrift` | Slowly drifting field of seeded dust particles |
+| `LightLeak` | Warm radial light washes drifting across the frame |
+| `EdgeBlur` | Miniature-style defocus that blurs the frame's top and bottom bands |
+| `Scanline` | CRT-style horizontal scanlines with optional downward drift |
+
+#### Reveal effects
+
+| Primitive | Description |
+| --- | --- |
+| `PaintReveal` | Transparent paint wash that covers the frame as coverage grows |
+| `PaintSmear` | Warps its children into painterly smears; intensity `0` leaves them untouched |
+| `ParticleReveal` | Dissolves its children into granular dust via a noise-thresholded alpha matte |
+
+#### Media shaders (image and video sources)
+
+| Primitive | Description |
+| --- | --- |
+| `WaveDistortion` | Sine-wave surface displacement with optional RGB shift and ripple center |
+| `FluidDistortion` | Seeded fluid warp driven by fractal noise |
+| `GridDisplacement` | Per-cell grid displacement with RGB separation |
+| `GlitchShift` | Seeded glitch bursts combining band tears with a global RGB split |
+| `Halftone` | Print-style halftone dots with size and angle control |
+| `Duotone` | Two-color tone mapping between shadow and highlight colors |
+| `Kaleidoscope` | Mirrored wedge segments with segment-count and rotation control |
+
+#### Image shaders (image sources)
+
+| Primitive | Description |
+| --- | --- |
+| `ChannelShift` | Opposing UV shift of the red and blue channels |
+| `InvertBlend` | Color inversion blended in by amount |
+| `Mosaic` | Screen-space mosaic cells that quantize the image |
+
+#### Procedural shaders (no source media)
+
+| Primitive | Description |
+| --- | --- |
+| `GradientFlow` | Flowing full-screen color gradient |
+| `SignalNoise` | Full-screen white-noise static |
+
+#### 3D and post-processing
+
+| Primitive | Description |
+| --- | --- |
+| `DepthGallery` | Camera dolly through depth-staggered image planes |
+| `DepthParallax` | Depth-map-driven parallax sway and dolly zoom over a still image, with focus-aware blur |
+| `PostFxStage` | Stage that finishes a hosted 3D scene with composer effects (bloom, depth of field) |
 
 ### Registered Compositions
 

@@ -24,11 +24,14 @@ Layer 3: use-case compositions  — finished videos with a fixed purpose
 
 ### Layer 1 — generic primitives
 
-Small building blocks in `apps/scene-studio/src/primitives/`: `VideoTitle`,
-`Caption`, `SafeArea`, `GradientOverlay`, `Logo`, `MediaFrame`, `BrandOutro`,
-transitions. **Never** encode a use case, material, or platform in a primitive's
-name — no `TravelTitle`, `ArtworkCaption`, `InstagramLogo`. Primitives must work
-for every video genre.
+Small building blocks in `apps/scene-studio/src/primitives/`: layout and brand
+parts (`VideoTitle`, `Caption`, `SafeArea`), overlays (`GradientOverlay`,
+`FilmGrain`), fullscreen effect shaders (`WaveDistortion`, `Kaleidoscope`), and
+3D stages (`DepthGallery`, `PostFxStage`). The full inventory with descriptions
+lives in the Primitive Inventory section of `apps/scene-studio/README.md`.
+**Never** encode a use case, material, or platform in a primitive's name — no
+`TravelTitle`, `ArtworkCaption`, `InstagramLogo`. Primitives must work for
+every video genre.
 
 The layers are directories inside the app, not workspace packages. Extract a
 layer into a `packages/`-level workspace only when a second workspace actually
