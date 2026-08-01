@@ -59,6 +59,8 @@ export {
   type SyncHeroImagesOutput,
 } from './sync/sync-hero-images';
 export {
+  type AuthorRecord,
+  type ExternalPostBatch,
   type ExternalPostSource,
   type PostBatchRepository,
   SyncPostsFromExternal,
