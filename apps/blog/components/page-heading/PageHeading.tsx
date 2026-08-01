@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Avatar } from 'ui';
 import type { PostOutput } from '../../modules/post/use-cases';
+import { AuthorAvatar } from '../author-avatar/AuthorAvatar';
 import { BlogCard } from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
@@ -20,12 +20,10 @@ export async function PageHeading(props: Props) {
         heading={<h1 className="text-heading-1 font-bold">{article.title}</h1>}
         avatar={
           article.author && (
-            <Avatar>
-              <Avatar.Image
-                alt="author"
-                src={article.author.avatarUrl ?? undefined}
-              />
-            </Avatar>
+            <AuthorAvatar
+              name={article.author.name}
+              avatarUrl={article.author.avatarUrl}
+            />
           )
         }
         date={article.releaseDate}
