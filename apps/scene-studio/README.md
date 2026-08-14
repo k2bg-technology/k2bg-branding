@@ -105,7 +105,11 @@ renders an untouched passthrough so transitions can cross it invisibly.
 | `SafeArea` | Padding container that keeps content inside platform-safe insets, with optional guides |
 | `Logo` | Brand logo pinned to a corner with adjustable opacity |
 | `MediaFrame` | Cover- or contain-fitted image/video frame with transform and start-offset control |
-| `BrandOutro` | Closing brand card with call-to-action text and social handle |
+| `BrandOutro` | Closing brand card with configurable wordmark, call-to-action text, and social handle |
+| `AccentLabel` | Small accent text mark with block, underline, or side-bar variants and a staged entrance |
+| `TextReveal` | Text revealed per character or word with stagger, offset, and blur-in control |
+| `TextScramble` | Text that settles from seeded glyph scrambling into the final string |
+| `PanelGrid` | Bordered grid of media panels with staggered entrances (two to four panels intended) |
 
 #### Atmosphere overlays
 
@@ -117,6 +121,7 @@ renders an untouched passthrough so transitions can cross it invisibly.
 | `LightLeak` | Warm radial light washes drifting across the frame |
 | `EdgeBlur` | Miniature-style defocus that blurs the frame's top and bottom bands |
 | `Scanline` | CRT-style horizontal scanlines with optional downward drift |
+| `HudOverlay` | Seeded instrumentation overlay of frame marks with an optional timecode readout |
 
 #### Reveal effects
 
@@ -125,6 +130,15 @@ renders an untouched passthrough so transitions can cross it invisibly.
 | `PaintReveal` | Transparent paint wash that covers the frame as coverage grows |
 | `PaintSmear` | Warps its children into painterly smears; intensity `0` leaves them untouched |
 | `ParticleReveal` | Dissolves its children into granular dust via a noise-thresholded alpha matte |
+
+#### Transitions and timing
+
+| Primitive | Description |
+| --- | --- |
+| `BlockWipe` | Flat-color band wipe whose coverage endpoints render nothing, hiding the cut at full coverage |
+| `ExposureFlash` | Exposure burst that spans a hard cut and blows out to solid white at peak intensity |
+| `OcclusionWipe` | Defocused foreground silhouette sweeping across the frame to mask a cut |
+| `SpeedRamp` | Variable-speed video playback from a piecewise-linear speed curve, with ghost-frame smear above normal speed |
 
 #### Media shaders (image and video sources)
 
@@ -137,6 +151,10 @@ renders an untouched passthrough so transitions can cross it invisibly.
 | `Halftone` | Print-style halftone dots with size and angle control |
 | `Duotone` | Two-color tone mapping between shadow and highlight colors |
 | `Kaleidoscope` | Mirrored wedge segments with segment-count and rotation control |
+| `DirectionalBlur` | Motion-blur smear along a fixed screen axis |
+| `RadialBlur` | Radial zoom blur pulling toward the center |
+| `TwirlDistortion` | Vortex swirl around a center point with falloff and optional channel spread |
+| `HighlightBloom` | Overexposed-film bloom where highlights above a luminance threshold bleed outward |
 
 #### Image shaders (image sources)
 
