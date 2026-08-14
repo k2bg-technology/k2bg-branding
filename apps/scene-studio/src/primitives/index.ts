@@ -35,6 +35,7 @@ export { RadialBlur } from './RadialBlur';
 export { SafeArea } from './SafeArea';
 export { Scanline } from './Scanline';
 export { SignalNoise } from './SignalNoise';
+export { SpeedRamp } from './SpeedRamp';
 export { TextReveal } from './TextReveal';
 export { TextScramble } from './TextScramble';
 export { TwirlDistortion } from './TwirlDistortion';

@@ -37,6 +37,7 @@ import { RadialBlurDemo } from './RadialBlurDemo';
 import { SafeAreaDemo } from './SafeAreaDemo';
 import { ScanlineDemo } from './ScanlineDemo';
 import { SignalNoiseDemo } from './SignalNoiseDemo';
+import { SpeedRampDemo } from './SpeedRampDemo';
 import { TextRevealDemo } from './TextRevealDemo';
 import { TextScrambleDemo } from './TextScrambleDemo';
 import { TwirlDistortionDemo } from './TwirlDistortionDemo';
@@ -87,6 +88,7 @@ export const primitiveDemos = [
   { id: 'primitive-exposure-flash', component: ExposureFlashDemo },
   { id: 'primitive-highlight-bloom', component: HighlightBloomDemo },
   { id: 'primitive-occlusion-wipe', component: OcclusionWipeDemo },
+  { id: 'primitive-speed-ramp', component: SpeedRampDemo },
   { id: 'primitive-brand-outro', component: BrandOutroDemo },
 ] as const satisfies ReadonlyArray<{
   id: string;
