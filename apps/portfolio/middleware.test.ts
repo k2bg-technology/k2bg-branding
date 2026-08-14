@@ -60,6 +60,32 @@ describe('middleware', () => {
         'http://localhost/ja/about'
       );
     });
+
+    it('preserves the query string when redirecting to the locale path', () => {
+      const request = new NextRequest(
+        new URL('http://localhost/?utm_source=x&b=2'),
+        { headers: { cookie: `${cookieName}=ja` } }
+      );
+
+      const response = middleware(request);
+
+      expect(response.headers.get('location')).toBe(
+        'http://localhost/ja?utm_source=x&b=2'
+      );
+    });
+
+    it('preserves the query string when redirecting a nested path to the locale path', () => {
+      const request = new NextRequest(
+        new URL('http://localhost/about?utm_source=x&b=2'),
+        { headers: { cookie: `${cookieName}=ja` } }
+      );
+
+      const response = middleware(request);
+
+      expect(response.headers.get('location')).toBe(
+        'http://localhost/ja/about?utm_source=x&b=2'
+      );
+    });
   });
 
   describe('when the request path already has a locale prefix', () => {
