@@ -10,6 +10,7 @@ import { DepthParallaxDemo } from './DepthParallaxDemo';
 import { DirectionalBlurDemo } from './DirectionalBlurDemo';
 import { DuotoneDemo } from './DuotoneDemo';
 import { EdgeBlurDemo } from './EdgeBlurDemo';
+import { ExposureFlashDemo } from './ExposureFlashDemo';
 import { FilmGrainDemo } from './FilmGrainDemo';
 import { FluidDistortionDemo } from './FluidDistortionDemo';
 import { GlitchShiftDemo } from './GlitchShiftDemo';
@@ -17,6 +18,7 @@ import { GradientFlowDemo } from './GradientFlowDemo';
 import { GradientOverlayDemo } from './GradientOverlayDemo';
 import { GridDisplacementDemo } from './GridDisplacementDemo';
 import { HalftoneDemo } from './HalftoneDemo';
+import { HighlightBloomDemo } from './HighlightBloomDemo';
 import { HudOverlayDemo } from './HudOverlayDemo';
 import { InvertBlendDemo } from './InvertBlendDemo';
 import { KaleidoscopeDemo } from './KaleidoscopeDemo';
@@ -24,6 +26,7 @@ import { LightLeakDemo } from './LightLeakDemo';
 import { LogoDemo } from './LogoDemo';
 import { MediaFrameDemo } from './MediaFrameDemo';
 import { MosaicDemo } from './MosaicDemo';
+import { OcclusionWipeDemo } from './OcclusionWipeDemo';
 import { PaintRevealDemo } from './PaintRevealDemo';
 import { PaintSmearDemo } from './PaintSmearDemo';
 import { PanelGridDemo } from './PanelGridDemo';
@@ -81,6 +84,9 @@ export const primitiveDemos = [
   { id: 'primitive-directional-blur', component: DirectionalBlurDemo },
   { id: 'primitive-radial-blur', component: RadialBlurDemo },
   { id: 'primitive-twirl-distortion', component: TwirlDistortionDemo },
+  { id: 'primitive-exposure-flash', component: ExposureFlashDemo },
+  { id: 'primitive-highlight-bloom', component: HighlightBloomDemo },
+  { id: 'primitive-occlusion-wipe', component: OcclusionWipeDemo },
   { id: 'primitive-brand-outro', component: BrandOutroDemo },
 ] as const satisfies ReadonlyArray<{
   id: string;
