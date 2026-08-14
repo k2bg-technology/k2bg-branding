@@ -9,12 +9,18 @@ import { springs } from '../../tokens/motion';
 import { cn } from '../../utils/cn';
 
 interface Props {
+  wordmark?: string;
   cta?: string;
   handle?: string;
   className?: string;
 }
 
-export function BrandOutro({ cta, handle, className }: Props) {
+export function BrandOutro({
+  wordmark = 'K2BG',
+  cta,
+  handle,
+  className,
+}: Props) {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -35,7 +41,7 @@ export function BrandOutro({ cta, handle, className }: Props) {
           transform: `translateY(${(1 - enter) * 40}px)`,
         }}
       >
-        K2BG
+        {wordmark}
       </p>
       <div className="h-2 w-60 bg-main-default" />
       {cta === undefined ? null : (
