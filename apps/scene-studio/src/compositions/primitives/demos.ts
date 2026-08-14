@@ -7,6 +7,7 @@ import { CaptionDemo } from './CaptionDemo';
 import { ChannelShiftDemo } from './ChannelShiftDemo';
 import { DepthGalleryDemo } from './DepthGalleryDemo';
 import { DepthParallaxDemo } from './DepthParallaxDemo';
+import { DirectionalBlurDemo } from './DirectionalBlurDemo';
 import { DuotoneDemo } from './DuotoneDemo';
 import { EdgeBlurDemo } from './EdgeBlurDemo';
 import { FilmGrainDemo } from './FilmGrainDemo';
@@ -29,11 +30,13 @@ import { PanelGridDemo } from './PanelGridDemo';
 import { ParticleDriftDemo } from './ParticleDriftDemo';
 import { ParticleRevealDemo } from './ParticleRevealDemo';
 import { PostFxStageDemo } from './PostFxStageDemo';
+import { RadialBlurDemo } from './RadialBlurDemo';
 import { SafeAreaDemo } from './SafeAreaDemo';
 import { ScanlineDemo } from './ScanlineDemo';
 import { SignalNoiseDemo } from './SignalNoiseDemo';
 import { TextRevealDemo } from './TextRevealDemo';
 import { TextScrambleDemo } from './TextScrambleDemo';
+import { TwirlDistortionDemo } from './TwirlDistortionDemo';
 import { VideoTitleDemo } from './VideoTitleDemo';
 import { WaveDistortionDemo } from './WaveDistortionDemo';
 
@@ -75,6 +78,9 @@ export const primitiveDemos = [
   { id: 'primitive-hud-overlay', component: HudOverlayDemo },
   { id: 'primitive-block-wipe', component: BlockWipeDemo },
   { id: 'primitive-panel-grid', component: PanelGridDemo },
+  { id: 'primitive-directional-blur', component: DirectionalBlurDemo },
+  { id: 'primitive-radial-blur', component: RadialBlurDemo },
+  { id: 'primitive-twirl-distortion', component: TwirlDistortionDemo },
   { id: 'primitive-brand-outro', component: BrandOutroDemo },
 ] as const satisfies ReadonlyArray<{
   id: string;
