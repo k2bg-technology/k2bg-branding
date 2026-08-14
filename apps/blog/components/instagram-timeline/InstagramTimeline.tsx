@@ -2,12 +2,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { createFetchFeedUseCase } from '../../infrastructure/di/social-feed';
+import { socialFeedLogger } from '../../modules/social-feed/adapters/shared/logger';
 
 const MAX_MEDIA_COUNT = 6;
 
 export async function InstagramTimeline() {
   const fetchFeed = createFetchFeedUseCase();
-  const posts = await fetchFeed.execute({ limit: MAX_MEDIA_COUNT });
+  const posts = await fetchFeed
+    .execute({ limit: MAX_MEDIA_COUNT })
+    .catch((error) => {
+      socialFeedLogger.error({ err: error }, 'Failed to fetch Instagram feed');
+      return null;
+    });
+
+  if (posts === null) {
+    return null;
+  }
 
   if (posts.length === 0) {
     return (
