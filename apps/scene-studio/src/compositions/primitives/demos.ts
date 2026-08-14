@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 
 import { AccentLabelDemo } from './AccentLabelDemo';
+import { BlockWipeDemo } from './BlockWipeDemo';
 import { BrandOutroDemo } from './BrandOutroDemo';
 import { CaptionDemo } from './CaptionDemo';
 import { ChannelShiftDemo } from './ChannelShiftDemo';
@@ -24,6 +25,7 @@ import { MediaFrameDemo } from './MediaFrameDemo';
 import { MosaicDemo } from './MosaicDemo';
 import { PaintRevealDemo } from './PaintRevealDemo';
 import { PaintSmearDemo } from './PaintSmearDemo';
+import { PanelGridDemo } from './PanelGridDemo';
 import { ParticleDriftDemo } from './ParticleDriftDemo';
 import { ParticleRevealDemo } from './ParticleRevealDemo';
 import { PostFxStageDemo } from './PostFxStageDemo';
@@ -71,6 +73,8 @@ export const primitiveDemos = [
   { id: 'primitive-text-reveal', component: TextRevealDemo },
   { id: 'primitive-text-scramble', component: TextScrambleDemo },
   { id: 'primitive-hud-overlay', component: HudOverlayDemo },
+  { id: 'primitive-block-wipe', component: BlockWipeDemo },
+  { id: 'primitive-panel-grid', component: PanelGridDemo },
   { id: 'primitive-brand-outro', component: BrandOutroDemo },
 ] as const satisfies ReadonlyArray<{
   id: string;

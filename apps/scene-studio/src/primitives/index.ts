@@ -1,4 +1,5 @@
 export { AccentLabel } from './AccentLabel';
+export { BlockWipe } from './BlockWipe';
 export { BrandOutro } from './BrandOutro';
 export { Caption } from './Caption';
 export { ChannelShift } from './ChannelShift';
@@ -22,6 +23,7 @@ export { MediaFrame } from './MediaFrame';
 export { Mosaic } from './Mosaic';
 export { PaintReveal } from './PaintReveal';
 export { PaintSmear } from './PaintSmear';
+export { PanelGrid } from './PanelGrid';
 export { ParticleDrift } from './ParticleDrift';
 export { ParticleReveal } from './ParticleReveal';
 export { PostFxStage } from './PostFxStage';
