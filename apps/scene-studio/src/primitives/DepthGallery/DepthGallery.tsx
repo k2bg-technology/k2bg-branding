@@ -10,16 +10,23 @@ import { ImagePlane } from './ImagePlane';
 
 interface Props {
   sources: string[];
+  durationInFrames?: number;
 }
 
 const CAMERA_FOV_IN_DEGREES = 50;
 
-export function DepthGallery({ sources }: Props) {
+// The dolly spans `durationInFrames`; it defaults to the composition length,
+// so override it when the gallery lives inside a shorter Sequence.
+export function DepthGallery({ sources, durationInFrames }: Props) {
   const frame = useCurrentFrame();
-  const { width, height, durationInFrames } = useVideoConfig();
+  const {
+    width,
+    height,
+    durationInFrames: compositionDurationInFrames,
+  } = useVideoConfig();
   const dollyDistance = getDollyDistance({
     frame,
-    durationInFrames,
+    durationInFrames: durationInFrames ?? compositionDurationInFrames,
     planeCount: sources.length,
   });
 
