@@ -23,9 +23,10 @@ function hashClientIp(clientIp: string): string {
 
 async function getClientIpHash(): Promise<string> {
   const forwardedFor = (await headers()).get('x-forwarded-for');
-  const clientIp = forwardedFor?.split(',')[0]?.trim() || UNKNOWN_CLIENT_IP;
+  const proxyObservedClientIp =
+    forwardedFor?.split(',').at(-1)?.trim() || UNKNOWN_CLIENT_IP;
 
-  return hashClientIp(clientIp);
+  return hashClientIp(proxyObservedClientIp);
 }
 
 export async function contactFormAction(

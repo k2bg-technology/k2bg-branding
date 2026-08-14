@@ -57,7 +57,7 @@ describe('contactFormAction', () => {
     mockSendEmailExecute.mockResolvedValue(undefined);
   });
 
-  it('checks the rate limit with a hashed client IP before verifying hCaptcha', async () => {
+  it('checks the rate limit with the hashed proxy-appended IP before verifying hCaptcha', async () => {
     const data = {
       name: 'John Doe',
       email: 'john@example.com',
@@ -68,7 +68,7 @@ describe('contactFormAction', () => {
     await contactFormAction(data);
 
     const expectedIpHash =
-      'a1ceb3dc7b127ea22d04f67b50908245930cfa9a3f91e1d38c0b266c44669ee7';
+      '7f60d869b36f6e64c0c99395754c14658bc62173eadceb489ea008ddfe76398d';
     expect(mockEnforceContactRateLimitExecute).toHaveBeenCalledWith({
       ipHash: expectedIpHash,
     });
