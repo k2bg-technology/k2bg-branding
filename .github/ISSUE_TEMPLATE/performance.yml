@@ -30,6 +30,7 @@ body:
       options:
         - Blog app (apps/blog/)
         - Portfolio app (apps/portfolio/)
+        - Scene Studio (apps/scene-studio/)
         - UI package (packages/ui/)
         - Shared packages
         - Build process
@@ -49,6 +50,7 @@ body:
         - High memory usage
         - Large bundle size
         - Slow build time
+        - Slow video rendering
         - Inefficient database queries
         - API response time
         - Image loading performance
@@ -254,11 +256,11 @@ body:
       placeholder: e.g., v20.10.0
 
   - type: input
-    id: next-version
+    id: framework-version
     attributes:
-      label: Next.js Version
-      description: What version of Next.js are you using?
-      placeholder: e.g., 14.0.4
+      label: Framework Version
+      description: What version of Next.js or Remotion are you using?
+      placeholder: e.g., Next.js 16.x or Remotion 4.x
 
   - type: textarea
     id: additional-context

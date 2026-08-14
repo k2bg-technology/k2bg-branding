@@ -21,7 +21,6 @@ describe('FetchMedia', () => {
     overrides: Partial<MediaRepository> = {}
   ): MediaRepository => ({
     findById: vi.fn().mockResolvedValue(null),
-    findAllImageSources: vi.fn().mockResolvedValue([]),
     ...overrides,
   });
 

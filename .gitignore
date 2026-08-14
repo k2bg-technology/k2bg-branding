@@ -70,3 +70,12 @@ dist
 ds-bundle/
 packages/ui/.ds-tailwind.css
 .design-sync/*.log
+
+# scene-studio (Remotion) — user-supplied media, never committed
+apps/scene-studio/public/assets/*
+!apps/scene-studio/public/assets/README.md
+apps/scene-studio/**/*.mp4
+apps/scene-studio/**/*.mov
+apps/scene-studio/**/*.webm
+apps/scene-studio/**/*.mp3
+apps/scene-studio/**/*.wav

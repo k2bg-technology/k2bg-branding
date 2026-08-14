@@ -1,12 +1,10 @@
-import { Avatar } from 'ui';
+import { AuthorAvatar } from '../author-avatar/AuthorAvatar';
 
 export function ProfileCard() {
   return (
     <div className="flex flex-col gap-spacious p-spacious rounded-lg bg-base-white/50">
       <span className="inline-flex gap-normal">
-        <Avatar>
-          <Avatar.Image alt="author" src="/me.png" />
-        </Avatar>
+        <AuthorAvatar name="krd-knt" avatarUrl="/me.png" />
         <span>krd-knt</span>
       </span>
       <div className="flex flex-col gap-condensed">
