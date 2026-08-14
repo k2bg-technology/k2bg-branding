@@ -1,25 +1,27 @@
 # K2BG Portfolio
 
-A **Next.js 16** multilingual portfolio website supporting **English** and **Japanese**, with automatic language detection and i18n routing. Part of the [K2BG Branding monorepo](../../README.md).
+A multilingual portfolio website supporting **English** and **Japanese**, with
+automatic language detection and locale routing. Part of the
+[K2BG Branding monorepo](../../README.md).
 
 ## Technology Stack
 
 | Category | Technologies |
-|---|---|
-| **Framework** | Next.js 16, React 19, TypeScript |
-| **Styling** | Tailwind CSS v4 |
-| **i18n** | i18next, react-i18next, i18next-browser-languagedetector |
+| --- | --- |
+| **Framework** | Next.js, React, TypeScript |
+| **Styling** | Tailwind CSS |
+| **i18n** | Server-only dictionary loader |
 | **Contact** | Formspree |
 | **Analytics** | Google Tag Manager |
 | **Linting** | Biome |
-| **Docs** | Storybook 10 |
+| **Docs** | Storybook |
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 20.9+
-- pnpm 10.33.2+
+- pnpm 10+
 
 ### Installation
 
@@ -33,7 +35,7 @@ pnpm install
 
 ```bash
 # From monorepo root
-pnpm dev --filter=portfolio
+pnpm -F portfolio dev
 
 # Or from this directory
 pnpm dev
@@ -55,24 +57,33 @@ pnpm storybook
 
 Opens on [http://localhost:6008](http://localhost:6008).
 
+### Testing
+
+```bash
+pnpm test          # Run once
+pnpm test:watch    # Watch mode
+pnpm lint          # Run Biome checks
+pnpm typecheck     # Run TypeScript checks
+```
+
 ## Architecture
 
 ### i18n System
 
 | Setting | Value |
-|---|---|
+| --- | --- |
 | **Languages** | Japanese (`ja`), English (`en`) |
 | **Default / Fallback** | `ja` |
-| **Cookie name** | `i18next` |
-| **Detection priority** | path > htmlTag > cookie > navigator |
+| **Cookie name** | `NEXT_LOCALE` |
+| **Detection priority** | cookie > `Accept-Language` header > fallback |
 
-**Proxy behavior** (Next.js 16 `proxy.ts`)**:**
+The edge-runtime `middleware.ts` handles locale detection and routing:
 
-1. Check `i18next` cookie for saved language preference
+1. Check the `NEXT_LOCALE` cookie for a saved language preference
 2. Fall back to `Accept-Language` header
 3. Default to `ja` if no preference is detected
 4. Redirect paths without a language prefix to `/{detected-language}{pathname}`
-5. Update cookie from referer URL when present
+5. Write the locale in an already-prefixed path to the cookie, except for router prefetches
 
 All routes are prefixed with the language code (e.g., `/ja`, `/en`).
 
@@ -108,14 +119,14 @@ flowchart TB
 
     subgraph i18n["Internationalization"]
         direction TB
-        Middleware["i18n Proxy<br/>Language Detection & Routing"]
+        Middleware["i18n Middleware<br/>Language Detection & Routing"]
         Translations["Translation Files<br/>en / ja"]
         Middleware -.-> Translations
     end
 
     subgraph app["Next.js Application"]
         direction TB
-        Layout["Layout"] --> Page["Page /[lng]"]
+        Layout["Layout"] --> Page["Page /[lang]"]
         Page --> Sections["Sections<br/>Hero / Background / Skill<br/>Portfolio / Contact"]
     end
 
@@ -150,11 +161,14 @@ flowchart TB
 Create `apps/portfolio/.env.local`:
 
 ```bash
-# Contact Form
-FORMSPREE_FORM_ACTION_URL=
+# Site
+PORTFOLIO_SITE_BASE_URL=
 
-# Analytics
+# Google
 GOOGLE_TAG_MANAGER_ID=
+
+# Formspree (Contact Form)
+NEXT_PUBLIC_FORMSPREE_FORM_ACTION_URL=
 ```
 
 ## Project Structure
@@ -162,7 +176,7 @@ GOOGLE_TAG_MANAGER_ID=
 ```
 apps/portfolio/
 ├── app/
-│   └── [lng]/                 # Language-specific routes
+│   └── [lang]/                # Language-specific routes
 │       ├── layout.tsx         # Root layout with GTM
 │       ├── page.tsx           # Main page (all sections)
 │       └── loading.tsx        # Loading fallback
@@ -182,12 +196,11 @@ apps/portfolio/
 │   └── useMatchMedia.ts       # Responsive media query hook
 ├── i18n/
 │   ├── settings.ts            # Language configuration
-│   ├── client.ts              # Client-side i18n
-│   ├── index.ts               # Server-side translation helper
+│   ├── dictionaries.ts        # Server-only dictionary loader
 │   └── locales/
 │       ├── en/translation.json
 │       └── ja/translation.json
-├── proxy.ts                    # Language detection & routing (Next.js 16)
+├── middleware.ts               # Language detection & routing
 ├── public/
 │   ├── images/                # Background and project images
 │   └── videos/                # Portfolio demo videos

@@ -12,6 +12,7 @@ import {
   DrizzlePostBatchRepository,
   DrizzleSearchPostSummariesQueryService,
 } from '../../modules/post/adapters/output';
+import { postLogger } from '../../modules/post/adapters/shared';
 import { NotionMediaExternalImageSource } from '../../modules/media/adapters/output';
 import { NotionAffiliateExternalImageSource } from '../../modules/affiliate/adapters/output';
 import { FetchAllSlugs } from '../../modules/post/use-cases/query/fetch-all-slugs';
@@ -82,6 +83,7 @@ export function createSyncHeroImagesUseCase(): SyncHeroImages {
       new NotionMediaExternalImageSource(notionClient),
       new NotionAffiliateExternalImageSource(notionClient),
     ],
-    new CloudinaryImageRepository(cloudinary)
+    new CloudinaryImageRepository(cloudinary),
+    postLogger
   );
 }
