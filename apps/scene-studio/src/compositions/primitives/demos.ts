@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 
+import { AccentLabelDemo } from './AccentLabelDemo';
 import { BrandOutroDemo } from './BrandOutroDemo';
 import { CaptionDemo } from './CaptionDemo';
 import { ChannelShiftDemo } from './ChannelShiftDemo';
@@ -14,6 +15,7 @@ import { GradientFlowDemo } from './GradientFlowDemo';
 import { GradientOverlayDemo } from './GradientOverlayDemo';
 import { GridDisplacementDemo } from './GridDisplacementDemo';
 import { HalftoneDemo } from './HalftoneDemo';
+import { HudOverlayDemo } from './HudOverlayDemo';
 import { InvertBlendDemo } from './InvertBlendDemo';
 import { KaleidoscopeDemo } from './KaleidoscopeDemo';
 import { LightLeakDemo } from './LightLeakDemo';
@@ -28,6 +30,8 @@ import { PostFxStageDemo } from './PostFxStageDemo';
 import { SafeAreaDemo } from './SafeAreaDemo';
 import { ScanlineDemo } from './ScanlineDemo';
 import { SignalNoiseDemo } from './SignalNoiseDemo';
+import { TextRevealDemo } from './TextRevealDemo';
+import { TextScrambleDemo } from './TextScrambleDemo';
 import { VideoTitleDemo } from './VideoTitleDemo';
 import { WaveDistortionDemo } from './WaveDistortionDemo';
 
@@ -63,6 +67,10 @@ export const primitiveDemos = [
   { id: 'primitive-paint-smear', component: PaintSmearDemo },
   { id: 'primitive-gradient-flow', component: GradientFlowDemo },
   { id: 'primitive-signal-noise', component: SignalNoiseDemo },
+  { id: 'primitive-accent-label', component: AccentLabelDemo },
+  { id: 'primitive-text-reveal', component: TextRevealDemo },
+  { id: 'primitive-text-scramble', component: TextScrambleDemo },
+  { id: 'primitive-hud-overlay', component: HudOverlayDemo },
   { id: 'primitive-brand-outro', component: BrandOutroDemo },
 ] as const satisfies ReadonlyArray<{
   id: string;
