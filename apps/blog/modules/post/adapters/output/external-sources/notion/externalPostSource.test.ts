@@ -173,7 +173,7 @@ describe('NotionExternalPostSource', () => {
     });
   });
 
-  describe('fetchAllPosts', () => {
+  describe('fetchAll', () => {
     it('fetches and maps posts from Notion', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
@@ -195,9 +195,9 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      const result = await sut.fetchAllPosts();
+      const result = await sut.fetchAll();
 
-      expect(result).toHaveLength(2);
+      expect(result.posts).toHaveLength(2);
       expect(mockClient.databases.query).toHaveBeenCalledWith(
         expect.objectContaining({
           database_id: 'test-database-id',
@@ -216,7 +216,7 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      await sut.fetchAllPosts();
+      await sut.fetchAll();
 
       expect(mockClient.databases.query).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -239,7 +239,7 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      await sut.fetchAllPosts();
+      await sut.fetchAll();
 
       expect(mockClient.databases.query).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -264,7 +264,7 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      await sut.fetchAllPosts();
+      await sut.fetchAll();
 
       expect(mockN2M.pageToMarkdown).toHaveBeenCalledWith(
         '00000000-0000-4000-a000-000000000001'
@@ -272,7 +272,7 @@ describe('NotionExternalPostSource', () => {
       expect(mockN2M.toMarkdownString).toHaveBeenCalled();
     });
 
-    it('returns empty array when no posts exist', async () => {
+    it('returns an empty batch when no posts exist', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
       mockClient.databases.query.mockResolvedValue({ results: [] });
@@ -283,9 +283,70 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      const result = await sut.fetchAllPosts();
+      const result = await sut.fetchAll();
 
-      expect(result).toEqual([]);
+      expect(result).toEqual({ posts: [], authors: [] });
+    });
+
+    it('returns a single author record when pages share one author', async () => {
+      const mockClient = createMockNotionClient();
+      const mockN2M = createMockN2M();
+      const notionPages = [
+        createNotionPageResponse({
+          id: '00000000-0000-4000-a000-000000000001',
+        }),
+        createNotionPageResponse({
+          id: '00000000-0000-4000-a000-000000000002',
+        }),
+      ];
+      mockClient.databases.query.mockResolvedValue({ results: notionPages });
+      mockN2M.pageToMarkdown.mockResolvedValue([]);
+      mockN2M.toMarkdownString.mockReturnValue({ parent: 'Markdown content' });
+
+      const sut = new NotionExternalPostSource(
+        mockClient as never,
+        mockN2M as never,
+        'test-database-id'
+      );
+
+      const result = await sut.fetchAll();
+
+      expect(result.authors).toEqual([
+        {
+          id: '660e8400-e29b-41d4-a716-446655440000',
+          name: 'Test Author',
+          avatarUrl: 'https://example.com/avatar.jpg',
+        },
+      ]);
+    });
+
+    it('omits author records for pages with a partial person', async () => {
+      const mockClient = createMockNotionClient();
+      const mockN2M = createMockN2M();
+      const pageWithPartialPerson = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          author: {
+            type: 'people',
+            people: [{ id: '660e8400-e29b-41d4-a716-446655440000' }],
+          },
+        },
+      });
+      mockClient.databases.query.mockResolvedValue({
+        results: [pageWithPartialPerson],
+      });
+      mockN2M.pageToMarkdown.mockResolvedValue([]);
+      mockN2M.toMarkdownString.mockReturnValue({ parent: 'Markdown content' });
+
+      const sut = new NotionExternalPostSource(
+        mockClient as never,
+        mockN2M as never,
+        'test-database-id'
+      );
+
+      const result = await sut.fetchAll();
+
+      expect(result.authors).toEqual([]);
     });
 
     it('throws ExternalSourceError on Notion API error', async () => {
@@ -299,7 +360,7 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      await expect(sut.fetchAllPosts()).rejects.toThrow(ExternalSourceError);
+      await expect(sut.fetchAll()).rejects.toThrow(ExternalSourceError);
     });
 
     it('includes source name in error', async () => {
@@ -313,7 +374,7 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      await expect(sut.fetchAllPosts()).rejects.toThrow('Notion');
+      await expect(sut.fetchAll()).rejects.toThrow('Notion');
     });
   });
 });

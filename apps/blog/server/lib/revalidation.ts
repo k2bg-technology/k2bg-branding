@@ -18,6 +18,7 @@ export function revalidateBlogPages(): void {
     revalidationLogger.info('Revalidated all blog pages');
   } catch (error) {
     revalidationLogger.error({ error }, 'Failed to revalidate blog pages');
+    throw error;
   }
 }
 
@@ -27,5 +28,6 @@ export function revalidateBlogPath(path: string): void {
     revalidationLogger.info({ path }, 'Revalidated path');
   } catch (error) {
     revalidationLogger.error({ error, path }, 'Failed to revalidate path');
+    throw error;
   }
 }

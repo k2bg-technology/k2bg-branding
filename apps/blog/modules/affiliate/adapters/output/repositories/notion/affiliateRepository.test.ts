@@ -30,10 +30,7 @@ describe('NotionAffiliateRepository', () => {
         name: 'Test Banner',
       });
       mockClient.pages.retrieve.mockResolvedValue(page);
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const affiliateId = AffiliateId.reconstitute(
         '550e8400-e29b-41d4-a716-446655440001'
       );
@@ -57,10 +54,7 @@ describe('NotionAffiliateRepository', () => {
       });
       Object.setPrototypeOf(error, APIResponseError.prototype);
       mockClient.pages.retrieve.mockRejectedValue(error);
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const affiliateId = AffiliateId.reconstitute(
         '550e8400-e29b-41d4-a716-446655440001'
       );
@@ -78,10 +72,7 @@ describe('NotionAffiliateRepository', () => {
       });
       Object.setPrototypeOf(error, APIResponseError.prototype);
       mockClient.pages.retrieve.mockRejectedValue(error);
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const affiliateId = AffiliateId.reconstitute(
         '550e8400-e29b-41d4-a716-446655440001'
       );
@@ -97,10 +88,7 @@ describe('NotionAffiliateRepository', () => {
         object: 'page',
         id: '550e8400-e29b-41d4-a716-446655440001',
       });
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const affiliateId = AffiliateId.reconstitute(
         '550e8400-e29b-41d4-a716-446655440001'
       );
@@ -114,10 +102,7 @@ describe('NotionAffiliateRepository', () => {
   describe('findByIds', () => {
     it('returns empty map when ids array is empty', async () => {
       const mockClient = createMockNotionClient();
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
 
       const result = await sut.findByIds([]);
 
@@ -140,10 +125,7 @@ describe('NotionAffiliateRepository', () => {
       mockClient.pages.retrieve
         .mockResolvedValueOnce(page1)
         .mockResolvedValueOnce(page2);
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const ids = [
         AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
         AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440002'),
@@ -175,10 +157,7 @@ describe('NotionAffiliateRepository', () => {
       mockClient.pages.retrieve
         .mockResolvedValueOnce(page)
         .mockRejectedValueOnce(error);
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const ids = [
         AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
         AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440002'),
@@ -199,10 +178,7 @@ describe('NotionAffiliateRepository', () => {
       });
       Object.setPrototypeOf(error, APIResponseError.prototype);
       mockClient.pages.retrieve.mockRejectedValue(error);
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const ids = [
         AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
       ];
@@ -222,10 +198,7 @@ describe('NotionAffiliateRepository', () => {
           id: page_id,
         });
       });
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
+      const sut = new NotionAffiliateRepository(mockClient as never);
       const ids = [
         AffiliateId.reconstitute('id1'),
         AffiliateId.reconstitute('id2'),
@@ -243,123 +216,6 @@ describe('NotionAffiliateRepository', () => {
       // Both starts should happen before both ends
       expect(callOrder.indexOf('start-id2')).toBeLessThan(
         callOrder.indexOf('end-id1')
-      );
-    });
-  });
-
-  describe('findAllImageSources', () => {
-    it('filters by Banner and Product types', async () => {
-      const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
-
-      await sut.findAllImageSources();
-
-      expect(mockClient.databases.query).toHaveBeenCalledWith({
-        database_id: 'test-db-id',
-        filter: {
-          or: [
-            { property: 'type', select: { equals: 'AFFILIATE_BANNER' } },
-            { property: 'type', select: { equals: 'AFFILIATE_PRODUCT' } },
-          ],
-        },
-      });
-    });
-
-    it('returns ImageSource array for valid pages', async () => {
-      const mockClient = createMockNotionClient();
-      const bannerPage = createNotionAffiliatePageResponse({
-        type: 'AFFILIATE_BANNER',
-        id: '550e8400-e29b-41d4-a716-446655440001',
-        imageSourceUrl: 'https://example.com/banner.jpg',
-      });
-      const productPage = createNotionAffiliatePageResponse({
-        type: 'AFFILIATE_PRODUCT',
-        id: '550e8400-e29b-41d4-a716-446655440002',
-        imageSourceUrl: 'https://example.com/product.jpg',
-      });
-      mockClient.databases.query.mockResolvedValue({
-        results: [bannerPage, productPage],
-      });
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
-
-      const result = await sut.findAllImageSources();
-
-      expect(result).toHaveLength(2);
-      expect(result[0].id.getValue()).toBe(
-        '550e8400-e29b-41d4-a716-446655440001'
-      );
-      expect(result[0].url.getValue()).toBe('https://example.com/banner.jpg');
-      expect(result[1].id.getValue()).toBe(
-        '550e8400-e29b-41d4-a716-446655440002'
-      );
-      expect(result[1].url.getValue()).toBe('https://example.com/product.jpg');
-    });
-
-    it('filters out pages without image URLs', async () => {
-      const mockClient = createMockNotionClient();
-      const pageWithImage = createNotionAffiliatePageResponse({
-        type: 'AFFILIATE_BANNER',
-        id: '550e8400-e29b-41d4-a716-446655440001',
-        imageSourceUrl: 'https://example.com/image.jpg',
-      });
-      const pageWithoutImage = createNotionAffiliatePageResponse({
-        type: 'AFFILIATE_BANNER',
-        id: '550e8400-e29b-41d4-a716-446655440002',
-      });
-      // Remove image URL from second page
-      (
-        pageWithoutImage.properties.imageSourceFile as unknown as { files: [] }
-      ).files = [];
-      (
-        pageWithoutImage.properties.imageSourceUrl as unknown as { url: null }
-      ).url = null;
-
-      mockClient.databases.query.mockResolvedValue({
-        results: [pageWithImage, pageWithoutImage],
-      });
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
-
-      const result = await sut.findAllImageSources();
-
-      expect(result).toHaveLength(1);
-      expect(result[0].id.getValue()).toBe(
-        '550e8400-e29b-41d4-a716-446655440001'
-      );
-    });
-
-    it('returns empty array when no results', async () => {
-      const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
-
-      const result = await sut.findAllImageSources();
-
-      expect(result).toEqual([]);
-    });
-
-    it('throws ExternalSourceError on API error', async () => {
-      const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockRejectedValue(new Error('API Error'));
-      const sut = new NotionAffiliateRepository(
-        mockClient as never,
-        'test-db-id'
-      );
-
-      await expect(sut.findAllImageSources()).rejects.toThrow(
-        ExternalSourceError
       );
     });
   });

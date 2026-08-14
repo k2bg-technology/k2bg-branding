@@ -116,7 +116,7 @@ async function fetchSubProviders(
         linkText: subProvider.provider,
         linkUrl: subProvider.targetUrl,
         color:
-          subProvider.type === AffiliateType.PRODUCT
+          subProvider.type === AffiliateType.SUB_PROVIDER
             ? subProvider.providerColor
             : '',
       };

@@ -5,6 +5,7 @@ import { createNotionPageResponse } from '../../../shared';
 import {
   getEmbedTypeFromPage,
   mapEmbedType,
+  notionPageToAuthorRecord,
   notionPageToImageSource,
   notionPageToPost,
 } from './mapper';
@@ -209,6 +210,75 @@ describe('notion/mapper', () => {
       expect(result).toEqual({
         id: page.id,
         url: 'https://s3.amazonaws.com/image.jpg',
+      });
+    });
+  });
+
+  describe('notionPageToAuthorRecord', () => {
+    it('returns AuthorRecord when the person has full data', () => {
+      const page = createNotionPageResponse() as unknown as PageObjectResponse;
+
+      const result = notionPageToAuthorRecord(page);
+
+      expect(result).toEqual({
+        id: '660e8400-e29b-41d4-a716-446655440000',
+        name: 'Test Author',
+        avatarUrl: 'https://example.com/avatar.jpg',
+      });
+    });
+
+    it('returns null when the author property has no people', () => {
+      const page = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          author: { type: 'people', people: [] },
+        },
+      }) as unknown as PageObjectResponse;
+
+      const result = notionPageToAuthorRecord(page);
+
+      expect(result).toBeNull();
+    });
+
+    it('returns null when the person is partial without a name', () => {
+      const page = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          author: {
+            type: 'people',
+            people: [{ id: '660e8400-e29b-41d4-a716-446655440000' }],
+          },
+        },
+      }) as unknown as PageObjectResponse;
+
+      const result = notionPageToAuthorRecord(page);
+
+      expect(result).toBeNull();
+    });
+
+    it('returns AuthorRecord with null avatarUrl when avatar_url is null', () => {
+      const page = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          author: {
+            type: 'people',
+            people: [
+              {
+                id: '660e8400-e29b-41d4-a716-446655440000',
+                name: 'Test Author',
+                avatar_url: null,
+              },
+            ],
+          },
+        },
+      }) as unknown as PageObjectResponse;
+
+      const result = notionPageToAuthorRecord(page);
+
+      expect(result).toEqual({
+        id: '660e8400-e29b-41d4-a716-446655440000',
+        name: 'Test Author',
+        avatarUrl: null,
       });
     });
   });

@@ -20,10 +20,10 @@ export class SyncPostsFromExternal {
 
   async execute(): Promise<SyncPostsFromExternalOutput> {
     try {
-      const posts = await this.externalSource.fetchAllPosts();
+      const { posts, authors } = await this.externalSource.fetchAll();
 
       if (posts.length > 0) {
-        await this.batchRepository.upsertAll(posts);
+        await this.batchRepository.upsertAll(posts, authors);
       }
 
       return {

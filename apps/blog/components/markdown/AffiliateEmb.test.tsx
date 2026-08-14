@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
 import { AffiliateType } from '../../modules/affiliate/domain';
 import type { AffiliateTextOutput } from '../../modules/affiliate/use-cases/shared';
 import { AffiliateEmb } from './AffiliateEmb';
@@ -27,16 +28,12 @@ vi.mock('../../modules/affiliate/adapters/shared/logger', () => ({
   affiliateLogger: { error: mockLoggerError },
 }));
 
+vi.mock('../cloudinary-image/CloudinaryImage', () => ({
+  CloudinaryImage: () => <div data-testid="cloudinary-image" />,
+}));
+
 vi.mock('./AffiliateText', () => ({
   AffiliateText: () => <div data-testid="affiliate-text" />,
-}));
-
-vi.mock('./AffiliateBanner', () => ({
-  AffiliateBanner: () => <div data-testid="affiliate-banner" />,
-}));
-
-vi.mock('./AffiliateProduct', () => ({
-  AffiliateProduct: () => <div data-testid="affiliate-product" />,
 }));
 
 const createTextAffiliateFixture = (): AffiliateTextOutput => ({
@@ -74,5 +71,44 @@ describe('AffiliateEmb', () => {
 
     expect(screen.getByTestId('affiliate-text')).toBeInTheDocument();
     expect(mockLoggerError).not.toHaveBeenCalled();
+  });
+
+  it('renders the sub-provider link with its configured provider color', async () => {
+    const subProviderColor = '#BF0000';
+    mockFetchAffiliate.mockResolvedValue({
+      affiliate: {
+        id: 'product-1',
+        name: 'Test Product',
+        type: AffiliateType.PRODUCT,
+        targetUrl: 'https://example.com/product',
+        provider: 'Amazon',
+        providerColor: '#FF9900',
+        subProviderIds: ['sub-1'],
+        imageProvider: 'Amazon',
+        imageSourceUrl: 'https://example.com/images/product.jpg',
+        imageWidth: 200,
+        imageHeight: 200,
+      },
+    });
+    mockFetchAffiliatesByIds.mockResolvedValue({
+      affiliates: new Map([
+        [
+          'sub-1',
+          {
+            id: 'sub-1',
+            name: 'Test SubProvider',
+            type: AffiliateType.SUB_PROVIDER,
+            targetUrl: 'https://example.com/subprovider',
+            provider: 'Rakuten',
+            providerColor: subProviderColor,
+          },
+        ],
+      ]),
+    });
+
+    render(await AffiliateEmb({ id: 'product-1' }));
+
+    const subProviderLink = screen.getByRole('link', { name: 'Rakuten' });
+    expect(subProviderLink).toHaveStyle({ backgroundColor: subProviderColor });
   });
 });

@@ -13,10 +13,15 @@ app.openAPIRegistry.registerComponent('securitySchemes', 'ApiKeyAuth', {
   name: 'x-api-key',
 });
 
+const PUBLIC_PATHS = ['/api/doc', '/api/doc.json'];
+
 app.use('*', requestLogger);
-app.use('/posts', apiKeyAuth);
-app.use('/images', apiKeyAuth);
-app.use('/revalidate', apiKeyAuth);
+app.use('*', async (c, next) => {
+  if (PUBLIC_PATHS.includes(c.req.path)) {
+    return next();
+  }
+  return apiKeyAuth(c, next);
+});
 
 app.route('/', postRoutes);
 app.route('/', mediaRoutes);

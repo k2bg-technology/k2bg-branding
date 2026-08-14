@@ -1,14 +1,6 @@
 import type { AffiliateType } from '../../domain';
 
 /**
- * Output type for affiliate image source data
- */
-export interface ImageSourceOutput {
-  id: string;
-  url: string;
-}
-
-/**
  * Base output type for all affiliates
  */
 interface AffiliateBaseOutput {

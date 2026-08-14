@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 import { SyncError } from '../../shared';
-import { createPost, createPosts } from '../../shared/testing/factories';
+import {
+  createAuthorRecord,
+  createPost,
+  createPosts,
+} from '../../shared/testing/factories';
 import type { ExternalPostSource } from './externalPostSource';
 import type { PostBatchRepository } from './postBatchRepository';
 import { SyncPostsFromExternal } from './useCase';
@@ -9,7 +13,7 @@ describe('SyncPostsFromExternal', () => {
   const createMockExternalSource = (
     overrides: Partial<ExternalPostSource> = {}
   ): ExternalPostSource => ({
-    fetchAllPosts: vi.fn().mockResolvedValue([]),
+    fetchAll: vi.fn().mockResolvedValue({ posts: [], authors: [] }),
     ...overrides,
   });
 
@@ -24,7 +28,7 @@ describe('SyncPostsFromExternal', () => {
     it('syncs posts from external source', async () => {
       const posts = createPosts(3);
       const externalSource = createMockExternalSource({
-        fetchAllPosts: vi.fn().mockResolvedValue(posts),
+        fetchAll: vi.fn().mockResolvedValue({ posts, authors: [] }),
       });
       const batchRepository = createMockBatchRepository();
       const sut = new SyncPostsFromExternal(externalSource, batchRepository);
@@ -35,10 +39,11 @@ describe('SyncPostsFromExternal', () => {
       expect(result.syncedPosts).toHaveLength(3);
     });
 
-    it('calls upsertAll with fetched posts', async () => {
+    it('calls upsertAll with fetched posts and author records', async () => {
       const posts = createPosts(2);
+      const authors = [createAuthorRecord()];
       const externalSource = createMockExternalSource({
-        fetchAllPosts: vi.fn().mockResolvedValue(posts),
+        fetchAll: vi.fn().mockResolvedValue({ posts, authors }),
       });
       const upsertAll = vi.fn().mockResolvedValue(undefined);
       const batchRepository = createMockBatchRepository({ upsertAll });
@@ -46,12 +51,12 @@ describe('SyncPostsFromExternal', () => {
 
       await sut.execute();
 
-      expect(upsertAll).toHaveBeenCalledWith(posts);
+      expect(upsertAll).toHaveBeenCalledWith(posts, authors);
     });
 
     it('does not call upsertAll when no posts are found', async () => {
       const externalSource = createMockExternalSource({
-        fetchAllPosts: vi.fn().mockResolvedValue([]),
+        fetchAll: vi.fn().mockResolvedValue({ posts: [], authors: [] }),
       });
       const upsertAll = vi.fn();
       const batchRepository = createMockBatchRepository({ upsertAll });
@@ -65,7 +70,7 @@ describe('SyncPostsFromExternal', () => {
 
     it('throws SyncError when external source fails', async () => {
       const externalSource = createMockExternalSource({
-        fetchAllPosts: vi.fn().mockRejectedValue(new Error('API error')),
+        fetchAll: vi.fn().mockRejectedValue(new Error('API error')),
       });
       const batchRepository = createMockBatchRepository();
       const sut = new SyncPostsFromExternal(externalSource, batchRepository);
@@ -77,7 +82,7 @@ describe('SyncPostsFromExternal', () => {
     it('throws SyncError when batch repository fails', async () => {
       const posts = createPosts(1);
       const externalSource = createMockExternalSource({
-        fetchAllPosts: vi.fn().mockResolvedValue(posts),
+        fetchAll: vi.fn().mockResolvedValue({ posts, authors: [] }),
       });
       const batchRepository = createMockBatchRepository({
         upsertAll: vi.fn().mockRejectedValue(new Error('Database error')),
@@ -91,7 +96,7 @@ describe('SyncPostsFromExternal', () => {
     it('maps synced posts to PostOutput', async () => {
       const post = createPost();
       const externalSource = createMockExternalSource({
-        fetchAllPosts: vi.fn().mockResolvedValue([post]),
+        fetchAll: vi.fn().mockResolvedValue({ posts: [post], authors: [] }),
       });
       const batchRepository = createMockBatchRepository();
       const sut = new SyncPostsFromExternal(externalSource, batchRepository);
