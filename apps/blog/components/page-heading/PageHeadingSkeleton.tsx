@@ -1,21 +1,21 @@
-import { Icon, Skelton } from 'ui';
+import { Icon, Skeleton } from 'ui';
 
-export async function PageHeadingSkelton() {
+export async function PageHeadingSkeleton() {
   return (
     <div className="grid grid-cols-[subgrid] col-span-full">
       <div className="grid grid-cols-1 col-span-full place-content-start">
-        <Skelton className="flex flex-col gap-8">
+        <Skeleton className="flex flex-col gap-8">
           <div className="flex flex-row gap-4">
             <div className="flex justify-center flex-col gap-2 w-full">
-              <Skelton.Line className="py-3 max-w-96" />
-              <Skelton.Line className="py-6 max-w-[50rem]" />
-              <Skelton.Line />
-              <Skelton.Line />
-              <Skelton.Line />
+              <Skeleton.Line className="py-3 max-w-96" />
+              <Skeleton.Line className="py-6 max-w-[50rem]" />
+              <Skeleton.Line />
+              <Skeleton.Line />
+              <Skeleton.Line />
             </div>
           </div>
           <div className="flex flex-row gap-4">
-            <Skelton.Round>
+            <Skeleton.Round>
               <Icon
                 name="user"
                 appearance="solid"
@@ -23,23 +23,23 @@ export async function PageHeadingSkelton() {
                 width={20}
                 height={20}
               />
-            </Skelton.Round>
+            </Skeleton.Round>
             <div className="flex justify-center flex-col gap-2 w-full">
-              <Skelton.Line className="py-3 max-w-96" />
-              <Skelton.Line />
-              <Skelton.Line />
-              <Skelton.Line />
+              <Skeleton.Line className="py-3 max-w-96" />
+              <Skeleton.Line />
+              <Skeleton.Line />
+              <Skeleton.Line />
             </div>
           </div>
-          <Skelton.Box className="py-52">
+          <Skeleton.Box className="py-52">
             <Icon
               name="photo"
               color="var(--color-base-white)"
               width={30}
               height={30}
             />
-          </Skelton.Box>
-        </Skelton>
+          </Skeleton.Box>
+        </Skeleton>
       </div>
     </div>
   );

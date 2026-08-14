@@ -1,6 +1,6 @@
 import { Icon } from 'ui';
 
-export function Skelton() {
+export function Skeleton() {
   return (
     <div
       aria-hidden="true"
