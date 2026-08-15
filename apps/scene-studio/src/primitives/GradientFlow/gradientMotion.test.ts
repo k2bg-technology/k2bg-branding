@@ -13,15 +13,15 @@ describe('getGradientTime', () => {
     { earlierFrame: 0, laterFrame: 15 },
     { earlierFrame: 15, laterFrame: 90 },
     { earlierFrame: 90, laterFrame: 9000 },
-  ])('advances monotonically between frame $earlierFrame and $laterFrame', ({
-    earlierFrame,
-    laterFrame,
-  }) => {
-    const earlierTime = getGradientTime({ frame: earlierFrame, fps: 30 });
-    const laterTime = getGradientTime({ frame: laterFrame, fps: 30 });
+  ])(
+    'advances monotonically between frame $earlierFrame and $laterFrame',
+    ({ earlierFrame, laterFrame }) => {
+      const earlierTime = getGradientTime({ frame: earlierFrame, fps: 30 });
+      const laterTime = getGradientTime({ frame: laterFrame, fps: 30 });
 
-    expect(laterTime).toBeGreaterThan(earlierTime);
-  });
+      expect(laterTime).toBeGreaterThan(earlierTime);
+    }
+  );
 
   it('advances at the same speed regardless of the frame rate', () => {
     const timeAtThirtyFps = getGradientTime({ frame: 30, fps: 30 });

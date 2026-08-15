@@ -82,41 +82,38 @@ describe('getTextUnitMotion', () => {
     expect(result.blurInPx).toBeCloseTo(blurInPx);
   });
 
-  it.each([
-    { unitIndex: 0 },
-    { unitIndex: 3 },
-    { unitIndex: 7 },
-  ])('settles unit $unitIndex once its stagger slot and duration have passed', ({
-    unitIndex,
-  }) => {
-    const settledFrame =
-      enterDelayInFrames + unitIndex * staggerInFrames + unitDurationInFrames;
+  it.each([{ unitIndex: 0 }, { unitIndex: 3 }, { unitIndex: 7 }])(
+    'settles unit $unitIndex once its stagger slot and duration have passed',
+    ({ unitIndex }) => {
+      const settledFrame =
+        enterDelayInFrames + unitIndex * staggerInFrames + unitDurationInFrames;
 
-    const result = getMotionAtFrame({ unitIndex, frame: settledFrame });
+      const result = getMotionAtFrame({ unitIndex, frame: settledFrame });
 
-    expect(result.opacity).toBeCloseTo(1);
-    expect(result.translateYInPx).toBeCloseTo(0);
-    expect(result.blurInPx).toBeCloseTo(0);
-  });
+      expect(result.opacity).toBeCloseTo(1);
+      expect(result.translateYInPx).toBeCloseTo(0);
+      expect(result.blurInPx).toBeCloseTo(0);
+    }
+  );
 
   it.each([
     { unitIndex: 1, frame: 16 },
     { unitIndex: 2, frame: 20 },
     { unitIndex: 5, frame: 30 },
-  ])('starts unit $unitIndex one stagger step behind the previous unit', ({
-    unitIndex,
-    frame,
-  }) => {
-    const result = getMotionAtFrame({ unitIndex, frame });
+  ])(
+    'starts unit $unitIndex one stagger step behind the previous unit',
+    ({ unitIndex, frame }) => {
+      const result = getMotionAtFrame({ unitIndex, frame });
 
-    const previousResult = getMotionAtFrame({
-      unitIndex: unitIndex - 1,
-      frame: frame - staggerInFrames,
-    });
-    expect(result.opacity).toBeCloseTo(previousResult.opacity);
-    expect(result.opacity).toBeGreaterThan(0);
-    expect(result.opacity).toBeLessThan(1);
-  });
+      const previousResult = getMotionAtFrame({
+        unitIndex: unitIndex - 1,
+        frame: frame - staggerInFrames,
+      });
+      expect(result.opacity).toBeCloseTo(previousResult.opacity);
+      expect(result.opacity).toBeGreaterThan(0);
+      expect(result.opacity).toBeLessThan(1);
+    }
+  );
 });
 
 describe('groupUnitsIntoWrappableRuns', () => {

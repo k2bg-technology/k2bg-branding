@@ -30,32 +30,34 @@ describe('getOcclusionOffset', () => {
     { directionInDegrees: 90, progress: 1 },
     { directionInDegrees: 180, progress: 0 },
     { directionInDegrees: 180, progress: 1 },
-  ])('places the silhouette fully off-screen at progress $progress travelling at $directionInDegrees degrees', ({
-    directionInDegrees,
-    progress,
-  }) => {
-    const directionInRadians = (directionInDegrees * Math.PI) / 180;
-    const silhouetteHalfDiagonalInPx =
-      (MAX_SILHOUETTE_SCALE *
-        Math.hypot(FRAME_WIDTH_IN_PX, FRAME_HEIGHT_IN_PX)) /
-      2;
-    const frameHalfProjectionInPx =
-      (Math.abs(FRAME_WIDTH_IN_PX * Math.cos(directionInRadians)) +
-        Math.abs(FRAME_HEIGHT_IN_PX * Math.sin(directionInRadians))) /
-      2;
+  ])(
+    'places the silhouette fully off-screen at progress $progress travelling at $directionInDegrees degrees',
+    ({ directionInDegrees, progress }) => {
+      const directionInRadians = (directionInDegrees * Math.PI) / 180;
+      const silhouetteHalfDiagonalInPx =
+        (MAX_SILHOUETTE_SCALE *
+          Math.hypot(FRAME_WIDTH_IN_PX, FRAME_HEIGHT_IN_PX)) /
+        2;
+      const frameHalfProjectionInPx =
+        (Math.abs(FRAME_WIDTH_IN_PX * Math.cos(directionInRadians)) +
+          Math.abs(FRAME_HEIGHT_IN_PX * Math.sin(directionInRadians))) /
+        2;
 
-    const result = getOcclusionOffset({
-      progress,
-      directionInDegrees,
-      widthInPx: FRAME_WIDTH_IN_PX,
-      heightInPx: FRAME_HEIGHT_IN_PX,
-    });
+      const result = getOcclusionOffset({
+        progress,
+        directionInDegrees,
+        widthInPx: FRAME_WIDTH_IN_PX,
+        heightInPx: FRAME_HEIGHT_IN_PX,
+      });
 
-    const offsetDistanceInPx = Math.hypot(result.xInPx, result.yInPx);
-    expect(offsetDistanceInPx).toBeGreaterThanOrEqual(
-      silhouetteHalfDiagonalInPx + frameHalfProjectionInPx + EDGE_SOFTNESS_IN_PX
-    );
-  });
+      const offsetDistanceInPx = Math.hypot(result.xInPx, result.yInPx);
+      expect(offsetDistanceInPx).toBeGreaterThanOrEqual(
+        silhouetteHalfDiagonalInPx +
+          frameHalfProjectionInPx +
+          EDGE_SOFTNESS_IN_PX
+      );
+    }
+  );
 });
 
 describe('getSilhouetteShape', () => {
@@ -68,18 +70,17 @@ describe('getSilhouetteShape', () => {
     expect(firstShape).toEqual(secondShape);
   });
 
-  it.each([
-    { seed: 0 },
-    { seed: 1 },
-    { seed: 7 },
-  ])('oversizes the silhouette beyond the frame for seed $seed', ({ seed }) => {
-    const minimumSizeInPercent = 100;
+  it.each([{ seed: 0 }, { seed: 1 }, { seed: 7 }])(
+    'oversizes the silhouette beyond the frame for seed $seed',
+    ({ seed }) => {
+      const minimumSizeInPercent = 100;
 
-    const result = getSilhouetteShape({ seed });
+      const result = getSilhouetteShape({ seed });
 
-    expect(result.widthInPercent).toBeGreaterThan(minimumSizeInPercent);
-    expect(result.heightInPercent).toBeGreaterThan(minimumSizeInPercent);
-  });
+      expect(result.widthInPercent).toBeGreaterThan(minimumSizeInPercent);
+      expect(result.heightInPercent).toBeGreaterThan(minimumSizeInPercent);
+    }
+  );
 
   it('keeps every corner radius inside the irregularity bounds', () => {
     const minimumRadiusInPercent = 30;
@@ -107,14 +108,14 @@ describe('getSilhouetteRotationInDegrees', () => {
     expect(Math.abs(result)).toBe(0);
   });
 
-  it.each([
-    { progress: 0 },
-    { progress: 1 },
-  ])('stays within the drift bound at progress $progress', ({ progress }) => {
-    const maximumDriftInDegrees = 6;
+  it.each([{ progress: 0 }, { progress: 1 }])(
+    'stays within the drift bound at progress $progress',
+    ({ progress }) => {
+      const maximumDriftInDegrees = 6;
 
-    const result = getSilhouetteRotationInDegrees({ progress, seed: 3 });
+      const result = getSilhouetteRotationInDegrees({ progress, seed: 3 });
 
-    expect(Math.abs(result)).toBeLessThanOrEqual(maximumDriftInDegrees);
-  });
+      expect(Math.abs(result)).toBeLessThanOrEqual(maximumDriftInDegrees);
+    }
+  );
 });

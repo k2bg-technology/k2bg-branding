@@ -54,14 +54,14 @@ describe('RadialBlur', () => {
   it.each([
     { amount: 0.5, expectedStrength: FULL_AMOUNT_STRENGTH / 2 },
     { amount: 1, expectedStrength: FULL_AMOUNT_STRENGTH },
-  ])('derives the strength $expectedStrength from amount $amount', ({
-    amount,
-    expectedStrength,
-  }) => {
-    render(<RadialBlur src="card.svg" amount={amount} />);
+  ])(
+    'derives the strength $expectedStrength from amount $amount',
+    ({ amount, expectedStrength }) => {
+      render(<RadialBlur src="card.svg" amount={amount} />);
 
-    expect(mocks.capturedUniforms?.uStrength).toBeCloseTo(expectedStrength);
-  });
+      expect(mocks.capturedUniforms?.uStrength).toBeCloseTo(expectedStrength);
+    }
+  );
 
   it('clamps the strength at the full zoom pull', () => {
     render(<RadialBlur src="card.svg" amount={2} />);

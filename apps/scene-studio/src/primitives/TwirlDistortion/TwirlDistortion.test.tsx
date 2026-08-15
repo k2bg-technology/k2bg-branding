@@ -56,22 +56,22 @@ describe('TwirlDistortion', () => {
   it.each([
     { amount: 0.5, maxRotationInDegrees: 180 },
     { amount: 1, maxRotationInDegrees: 90 },
-  ])('scales $maxRotationInDegrees degrees by amount $amount', ({
-    amount,
-    maxRotationInDegrees,
-  }) => {
-    render(
-      <TwirlDistortion
-        src="card.svg"
-        amount={amount}
-        maxRotationInDegrees={maxRotationInDegrees}
-      />
-    );
+  ])(
+    'scales $maxRotationInDegrees degrees by amount $amount',
+    ({ amount, maxRotationInDegrees }) => {
+      render(
+        <TwirlDistortion
+          src="card.svg"
+          amount={amount}
+          maxRotationInDegrees={maxRotationInDegrees}
+        />
+      );
 
-    expect(mocks.capturedUniforms?.uRotationInRadians).toBeCloseTo(
-      amount * maxRotationInDegrees * DEGREES_TO_RADIANS
-    );
-  });
+      expect(mocks.capturedUniforms?.uRotationInRadians).toBeCloseTo(
+        amount * maxRotationInDegrees * DEGREES_TO_RADIANS
+      );
+    }
+  );
 
   it('clamps amount into the unit range', () => {
     render(<TwirlDistortion src="card.svg" amount={2} />);
