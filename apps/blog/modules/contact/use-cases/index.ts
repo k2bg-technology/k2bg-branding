@@ -1,5 +1,6 @@
 export {
   type EmailSender,
+  type EmailTemplateRenderer,
   EnforceContactRateLimit,
   type EnforceContactRateLimitInput,
   SendEmail,

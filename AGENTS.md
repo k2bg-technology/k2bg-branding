@@ -13,8 +13,9 @@ selection, engineering trade-offs, writing tone).
 
 - Monorepo managed by pnpm workspaces and Turborepo.
 - Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000),
-  `apps/portfolio` (Next.js, multilingual, port 3001), and `apps/scene-studio`
-  (Remotion Studio for programmatic short-form videos, port 3002).
+  `apps/portfolio` (Next.js, multilingual, port 3001), `apps/scene-studio`
+  (Remotion Studio for programmatic short-form videos, port 3002), and
+  `apps/observatory` (Next.js, personal data visualization, port 3003).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
   (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
   `packages/tsconfig`.
@@ -26,10 +27,10 @@ selection, engineering trade-offs, writing tone).
 
 - Install: `pnpm install` (pnpm 10+, Node 20.9+).
 - Develop all: `pnpm dev` (runs `turbo run dev`); filter with `pnpm -F blog dev`,
-  `pnpm -F portfolio dev`, or `pnpm -F scene-studio dev`.
+  `pnpm -F portfolio dev`, `pnpm -F scene-studio dev`, or `pnpm -F observatory dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
 - Lint/Types/Format: `pnpm lint` (Biome), `pnpm typecheck`, `pnpm format` (Biome).
-- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog, Portfolio, Scene Studio, and Test Utils).
+- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog, Portfolio, Scene Studio, Observatory, and Test Utils).
 - Component scaffolding: `pnpm generate:component`, `pnpm generate:style`.
 - Storybook (UI): `pnpm -F ui storybook` (port 6006); Chromatic via CI.
 - Video (Scene Studio): `pnpm -F scene-studio dev` (Remotion Studio, port 3002);
@@ -117,6 +118,15 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   bump them together in a single commit.
 - Template/composition design and naming (three-layer structure, no universal
   templates): `.claude/rules/remotion-template-guidelines.md`.
+
+### Observatory App
+
+- `apps/observatory` is a Next.js app (port 3003) that visualizes accumulated personal
+  data: finances, health, home environment, and web analytics. It is a scaffold with a
+  placeholder page only.
+- Single-locale (Japanese): no i18n dictionaries and no `middleware.ts` / `proxy.ts`.
+- Domain modules and data-warehouse reads arrive in later issues (#415, #417).
+- Visualization components belong in `packages/ui`, not in the app.
 
 ### Key Integrations
 
