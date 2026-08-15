@@ -20,6 +20,7 @@ Run commands from the monorepo root:
 ```bash
 pnpm -F portfolio dev
 pnpm -F portfolio build
+pnpm -F portfolio test
 pnpm -F portfolio typecheck
 pnpm -F portfolio lint
 pnpm -F portfolio storybook

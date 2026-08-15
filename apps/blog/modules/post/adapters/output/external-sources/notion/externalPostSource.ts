@@ -1,10 +1,18 @@
 import type { Client } from '@notionhq/client';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import type { NotionToMarkdown } from 'notion-to-md';
-import type { Post } from '../../../../domain';
-import type { ExternalPostSource } from '../../../../use-cases';
+import type {
+  AuthorRecord,
+  ExternalPostBatch,
+  ExternalPostSource,
+} from '../../../../use-cases';
 import { ExternalSourceError, postLogger } from '../../../shared';
-import { getEmbedTypeFromPage, mapEmbedType, notionPageToPost } from './mapper';
+import {
+  getEmbedTypeFromPage,
+  mapEmbedType,
+  notionPageToAuthorRecord,
+  notionPageToPost,
+} from './mapper';
 
 const DATABASE_ID = process.env.NOTION_POST_DATABASE_ID ?? '';
 
@@ -45,7 +53,7 @@ export class NotionExternalPostSource implements ExternalPostSource {
     });
   }
 
-  async fetchAllPosts(): Promise<Post[]> {
+  async fetchAll(): Promise<ExternalPostBatch> {
     try {
       const database = await this.notionClient.databases.query({
         database_id: this.databaseId,
@@ -65,8 +73,16 @@ export class NotionExternalPostSource implements ExternalPostSource {
         })
       );
 
+      const authorsById = new Map<string, AuthorRecord>();
+      for (const page of database.results) {
+        const author = notionPageToAuthorRecord(page as PageObjectResponse);
+        if (author) {
+          authorsById.set(author.id, author);
+        }
+      }
+
       postLogger.info({ count: posts.length }, 'Fetched all posts from Notion');
-      return posts;
+      return { posts, authors: Array.from(authorsById.values()) };
     } catch (error) {
       postLogger.error({ err: error }, 'Failed to fetch posts from Notion');
       throw new ExternalSourceError('Notion', error);

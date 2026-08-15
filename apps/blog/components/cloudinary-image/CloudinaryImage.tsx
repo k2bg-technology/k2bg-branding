@@ -1,5 +1,5 @@
 import Image, { type ImageProps } from 'next/image';
-import { Icon, Skelton } from 'ui';
+import { Icon, Skeleton } from 'ui';
 
 import {
   getOptimizedImageUrl,
@@ -35,16 +35,16 @@ export async function CloudinaryImage(props: CloudinaryImageProps) {
     );
   } catch {
     return (
-      <Skelton className="w-full h-full">
-        <Skelton.Box className="w-full h-full">
+      <Skeleton className="w-full h-full">
+        <Skeleton.Box className="w-full h-full">
           <Icon
             name="photo"
             color="var(--color-base-white)"
             width={30}
             height={30}
           />
-        </Skelton.Box>
-      </Skelton>
+        </Skeleton.Box>
+      </Skeleton>
     );
   }
 }

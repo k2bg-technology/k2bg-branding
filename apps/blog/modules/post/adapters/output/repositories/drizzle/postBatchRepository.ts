@@ -5,7 +5,7 @@ import {
   posts as postsTable,
 } from '../../../../../../infrastructure/drizzle/schema';
 import type { Post } from '../../../../domain';
-import type { PostBatchRepository } from '../../../../use-cases';
+import type { AuthorRecord, PostBatchRepository } from '../../../../use-cases';
 import { RepositoryError } from '../../../shared';
 import { toPersistence } from './mapper';
 
@@ -16,13 +16,35 @@ const UNKNOWN_AUTHOR_NAME = 'Unknown Author';
 export class DrizzlePostBatchRepository implements PostBatchRepository {
   constructor(private readonly db: DrizzleClient) {}
 
-  async upsertAll(posts: Post[]): Promise<void> {
+  async upsertAll(posts: Post[], authorRecords: AuthorRecord[]): Promise<void> {
     if (posts.length === 0) {
       return;
     }
 
     try {
       await this.db.transaction(async (tx) => {
+        // Authors go first: Post_authorId_fkey requires the rows to exist
+        // before any new post referencing them is inserted.
+        const now = new Date();
+        for (const record of authorRecords) {
+          await tx
+            .insert(authors)
+            .values({
+              uuid: record.id,
+              name: record.name,
+              avatarUrl: record.avatarUrl,
+              updatedAt: now,
+            })
+            .onConflictDoUpdate({
+              target: authors.uuid,
+              set: {
+                name: record.name,
+                avatarUrl: record.avatarUrl,
+                updatedAt: now,
+              },
+            });
+        }
+
         for (const post of posts) {
           const data = toPersistence(post);
 
