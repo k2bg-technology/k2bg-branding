@@ -13,6 +13,7 @@ export function Skill({ dictionary }: { dictionary: SkillDictionary }) {
             src="/images/skill-pattern.jpg"
             fill
             alt="Skill Pattern Image"
+            sizes="(min-width: 768px) 68rem, 100vw"
           />
         </div>
         <div className="flex flex-col gap-spacious h-full md:flex-row md:gap-0">
