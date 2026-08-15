@@ -22,10 +22,19 @@ export class SendEmail {
   async execute(input: SendEmailInput): Promise<void> {
     const contact = Contact.create(input);
 
-    const emailBody = this.emailTemplateRenderer.render(contact);
+    const ownerEmailBody =
+      this.emailTemplateRenderer.renderOwnerNotification(contact);
+    const visitorEmailBody =
+      this.emailTemplateRenderer.renderVisitorConfirmation(contact);
 
-    const subject = `${contact.name.getValue()} 様。お問合せいただきありがとうございます。`;
+    const visitorSubject = `${contact.name.getValue()} 様。お問合せいただきありがとうございます。`;
+    const ownerSubject = `${contact.name.getValue()} 様からお問合せが届きました。`;
 
-    await this.emailSender.send(contact, subject, emailBody);
+    await this.emailSender.sendToOwner(ownerSubject, ownerEmailBody);
+    await this.emailSender.sendToVisitor(
+      contact,
+      visitorSubject,
+      visitorEmailBody
+    );
   }
 }

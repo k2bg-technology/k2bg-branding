@@ -10,8 +10,8 @@ const variants = cva(
   {
     variants: {
       color: {
-        light: 'bg-white border-base-default/20 text-base-black',
-        dark: 'bg-base-black border-base-black/50 text-white',
+        light: 'bg-base-white border-base-default/20 text-base-black',
+        dark: 'bg-base-black border-base-black/50 text-base-white',
       },
     },
     defaultVariants: {

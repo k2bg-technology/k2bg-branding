@@ -3,7 +3,7 @@ import { filterFullPageObjectResponses } from '../../../../../../infrastructure/
 import type {
   ExternalImageSource,
   ImageSourceRecord,
-} from '../../../../../post/use-cases';
+} from '../../../../../shared/externalImageSource';
 import type { ImageSource } from '../../../../domain';
 import {
   ExternalSourceError,

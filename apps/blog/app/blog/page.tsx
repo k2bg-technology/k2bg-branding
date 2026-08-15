@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Avatar } from 'ui';
 
+import { AuthorAvatar } from '../../components/author-avatar/AuthorAvatar';
 import { BlogCard } from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import { PageLayout } from '../../components/page-layout';
@@ -119,12 +119,10 @@ export default async function Page() {
                 excerpt={featureLatest.excerpt ?? undefined}
                 avatar={
                   featureLatest.author && (
-                    <Avatar>
-                      <Avatar.Image
-                        alt="author"
-                        src={featureLatest.author.avatarUrl ?? undefined}
-                      />
-                    </Avatar>
+                    <AuthorAvatar
+                      name={featureLatest.author.name}
+                      avatarUrl={featureLatest.author.avatarUrl}
+                    />
                   )
                 }
                 date={featureLatest.releaseDate}
@@ -179,12 +177,10 @@ export default async function Page() {
                 excerpt={article.excerpt ?? undefined}
                 avatar={
                   article.author && (
-                    <Avatar>
-                      <Avatar.Image
-                        alt="author"
-                        src={article.author?.avatarUrl ?? undefined}
-                      />
-                    </Avatar>
+                    <AuthorAvatar
+                      name={article.author.name}
+                      avatarUrl={article.author.avatarUrl}
+                    />
                   )
                 }
                 date={article.releaseDate}
@@ -243,12 +239,10 @@ export default async function Page() {
                     excerpt={article.excerpt ?? undefined}
                     avatar={
                       article.author && (
-                        <Avatar>
-                          <Avatar.Image
-                            alt="author"
-                            src={article.author.avatarUrl ?? undefined}
-                          />
-                        </Avatar>
+                        <AuthorAvatar
+                          name={article.author.name}
+                          avatarUrl={article.author.avatarUrl}
+                        />
                       )
                     }
                     date={article.releaseDate}
@@ -301,12 +295,10 @@ export default async function Page() {
                   excerpt={article.excerpt ?? undefined}
                   avatar={
                     article.author && (
-                      <Avatar>
-                        <Avatar.Image
-                          alt="author"
-                          src={article.author.avatarUrl ?? undefined}
-                        />
-                      </Avatar>
+                      <AuthorAvatar
+                        name={article.author.name}
+                        avatarUrl={article.author.avatarUrl}
+                      />
                     )
                   }
                   date={article.releaseDate}

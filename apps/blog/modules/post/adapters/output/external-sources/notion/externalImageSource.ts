@@ -3,7 +3,7 @@ import { filterFullPageObjectResponses } from '../../../../../../infrastructure/
 import type {
   ExternalImageSource,
   ImageSourceRecord,
-} from '../../../../use-cases';
+} from '../../../../../shared/externalImageSource';
 import { ExternalSourceError, postLogger } from '../../../shared';
 import { notionPageToImageSource } from './mapper';
 

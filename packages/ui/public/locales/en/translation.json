@@ -660,11 +660,11 @@
         }
       ]
     },
-    "skelton": {
+    "skeleton": {
       "description": "Displays animated placeholder content while the actual content is loading, providing visual feedback to users.",
-      "overview": "Skelton is a loading state component that shows placeholder shapes mimicking the layout of content being loaded. It consists of three sub-components: Line for text placeholders, Box for rectangular content areas like images, and Round for circular elements like avatars. The root component wraps all skeleton elements and applies a pulsing animation to indicate loading state. Each sub-component accepts className props for customizing dimensions and spacing.",
-      "usage": "Use Skelton to indicate content is loading and prevent layout shifts when data arrives. For basic usage, wrap Skelton.Line, Skelton.Box, or Skelton.Round components within the Skelton root. Use Skelton.Line for text content placeholders with customizable height via className. Use Skelton.Box for image or card placeholders with optional centered icon. Use Skelton.Round for avatar or circular element placeholders. Combine multiple sub-components to create layouts that match the expected content structure. Apply width constraints via className to match actual content dimensions.",
-      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the root Skelton component includes role status to indicate the loading state to screen readers. The pulsing animation is subtle and does not cause distraction or trigger vestibular disorders. For screen reader users, the loading state is communicated through the status role. Ensure skeleton layouts match actual content structure to prevent confusion when content loads. Consider adding aria-busy on parent containers when skeleton content is displayed.",
+      "overview": "Skeleton is a loading state component that shows placeholder shapes mimicking the layout of content being loaded. It consists of three sub-components: Line for text placeholders, Box for rectangular content areas like images, and Round for circular elements like avatars. The root component wraps all skeleton elements and applies a pulsing animation to indicate loading state. Each sub-component accepts className props for customizing dimensions and spacing.",
+      "usage": "Use Skeleton to indicate content is loading and prevent layout shifts when data arrives. For basic usage, wrap Skeleton.Line, Skeleton.Box, or Skeleton.Round components within the Skeleton root. Use Skeleton.Line for text content placeholders with customizable height via className. Use Skeleton.Box for image or card placeholders with optional centered icon. Use Skeleton.Round for avatar or circular element placeholders. Combine multiple sub-components to create layouts that match the expected content structure. Apply width constraints via className to match actual content dimensions.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the root Skeleton component includes role status to indicate the loading state to screen readers. The pulsing animation is subtle and does not cause distraction or trigger vestibular disorders. For screen reader users, the loading state is communicated through the status role. Ensure skeleton layouts match actual content structure to prevent confusion when content loads. Consider adding aria-busy on parent containers when skeleton content is displayed.",
       "doList": [
         "Match skeleton layout to the expected content structure",
         "Use appropriate sub-components for different content types",
@@ -683,17 +683,17 @@
         {
           "name": "Avatar",
           "path": "/?path=/docs/components-avatar--docs",
-          "description": "Use Skelton.Round as placeholder while Avatar images load"
+          "description": "Use Skeleton.Round as placeholder while Avatar images load"
         },
         {
           "name": "BlogCard",
           "path": "/?path=/docs/components-blogcard--docs",
-          "description": "Use Skelton to create loading states for blog card layouts"
+          "description": "Use Skeleton to create loading states for blog card layouts"
         },
         {
           "name": "Icon",
           "path": "/?path=/docs/components-icon--docs",
-          "description": "Use Icon within Skelton.Box or Skelton.Round as visual indicators"
+          "description": "Use Icon within Skeleton.Box or Skeleton.Round as visual indicators"
         }
       ],
       "dependencies": [

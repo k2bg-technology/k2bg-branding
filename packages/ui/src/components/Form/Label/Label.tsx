@@ -4,11 +4,13 @@ import { cva } from 'class-variance-authority';
 import { twMerge } from '../../../utils/extendTailwindMerge';
 import { type FormProps, useFormContext } from '../Control/Context';
 
+// `text-neutral-300` (disabled) is a deliberate exception: no base-* token is
+// a visually reasonable match for this disabled-state gray.
 const labelVariants = cva('text-body-b-sm font-bold', {
   variants: {
     color: {
       dark: 'text-base-black',
-      light: 'text-white',
+      light: 'text-base-white',
     },
     error: {
       true: ['text-error'],

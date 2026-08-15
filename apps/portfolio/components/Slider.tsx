@@ -1,4 +1,5 @@
-import { twMerge } from 'ui/src/utils/extendTailwindMerge';
+import { twMerge } from 'ui';
+
 import styles from './Slider.module.css';
 
 type Props = React.ComponentPropsWithoutRef<'div'>;

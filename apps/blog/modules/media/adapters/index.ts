@@ -1,6 +1,5 @@
 export {
   determineMediaType,
-  NotionFetchAllImageSourcesQueryService,
   NotionMediaRepository,
   notionPageToImageSource,
   notionPageToMedia,

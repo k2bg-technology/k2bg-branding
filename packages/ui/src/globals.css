@@ -44,6 +44,11 @@
     cursor: pointer;
   }
 
+  /*
+   * `--color-gray-200` here is Tailwind's own v4 upgrade-guide recipe for
+   * restoring the v3 default border color, not a component color choice —
+   * deliberately left as-is (no base-* token substitution).
+   */
   *,
   ::after,
   ::before,

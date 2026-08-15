@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { Markdown } from '../../../../components/markdown';
 import { PageLayout } from '../../../../components/page-layout';
@@ -14,6 +13,7 @@ import {
   createFetchPostUseCase,
   getDefaultOgImageUrl,
 } from '../../../../infrastructure/di';
+import { handlePostFetchError } from './handlePostFetchError';
 
 export const revalidate = 3600;
 
@@ -37,7 +37,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
 
   const fetchPost = createFetchPostUseCase();
-  const { post: article } = await fetchPost.execute({ id });
+  const { post: article } = await fetchPost
+    .execute({ id })
+    .catch((error) => handlePostFetchError(error, id));
 
   const ogImageUrl = article.ogImageUrl ?? getDefaultOgImageUrl();
 
@@ -72,9 +74,9 @@ export default async function Page({ params }: Props) {
 
   const fetchPost = createFetchPostUseCase();
 
-  const { post: article } = await fetchPost.execute({ id }).catch(() => {
-    notFound();
-  });
+  const { post: article } = await fetchPost
+    .execute({ id })
+    .catch((error) => handlePostFetchError(error, id));
 
   return (
     <PageLayout

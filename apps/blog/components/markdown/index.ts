@@ -1,6 +1,6 @@
 import { Root } from './Root';
-import { Skelton } from './Skelton';
+import { Skeleton } from './Skeleton';
 
 export const Markdown = Object.assign(Root, {
-  Skelton,
+  Skeleton,
 });

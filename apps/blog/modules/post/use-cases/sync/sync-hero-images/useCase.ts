@@ -1,4 +1,4 @@
-import { SyncError } from '../../shared';
+import { type Logger, SyncError } from '../../shared';
 import type {
   ExternalImageSource,
   ImageSourceRecord,
@@ -19,7 +19,8 @@ export interface SyncHeroImagesOutput {
 export class SyncHeroImages {
   constructor(
     private readonly imageSources: ExternalImageSource[],
-    private readonly imageRepository: ImageRepository
+    private readonly imageRepository: ImageRepository,
+    private readonly logger: Logger
   ) {}
 
   async execute(): Promise<SyncHeroImagesOutput> {
@@ -65,7 +66,11 @@ export class SyncHeroImages {
         try {
           await this.imageRepository.uploadImage(image.id, image.url);
           return { image, success: true };
-        } catch {
+        } catch (error) {
+          this.logger.error(
+            { err: error, imageId: image.id },
+            'Failed to upload hero image'
+          );
           return { image, success: false };
         }
       })
