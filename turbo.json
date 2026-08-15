@@ -33,6 +33,7 @@
         "BLOG_SITE_BASE_URL",
         "PORTFOLIO_SITE_BASE_URL",
         "API_KEY",
+        "DATABASE_URL",
         "INSTAGRAM_GRAPH_API_BASE_URL",
         "INSTAGRAM_USER_ID",
         "BETTER_AUTH_SECRET",

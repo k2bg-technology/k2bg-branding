@@ -1,0 +1,96 @@
+import type { ComponentType } from 'react';
+
+import { AccentLabelDemo } from './AccentLabelDemo';
+import { BlockWipeDemo } from './BlockWipeDemo';
+import { BrandOutroDemo } from './BrandOutroDemo';
+import { CaptionDemo } from './CaptionDemo';
+import { ChannelShiftDemo } from './ChannelShiftDemo';
+import { DepthGalleryDemo } from './DepthGalleryDemo';
+import { DepthParallaxDemo } from './DepthParallaxDemo';
+import { DirectionalBlurDemo } from './DirectionalBlurDemo';
+import { DuotoneDemo } from './DuotoneDemo';
+import { EdgeBlurDemo } from './EdgeBlurDemo';
+import { ExposureFlashDemo } from './ExposureFlashDemo';
+import { FilmGrainDemo } from './FilmGrainDemo';
+import { FluidDistortionDemo } from './FluidDistortionDemo';
+import { GlitchShiftDemo } from './GlitchShiftDemo';
+import { GradientFlowDemo } from './GradientFlowDemo';
+import { GradientOverlayDemo } from './GradientOverlayDemo';
+import { GridDisplacementDemo } from './GridDisplacementDemo';
+import { HalftoneDemo } from './HalftoneDemo';
+import { HighlightBloomDemo } from './HighlightBloomDemo';
+import { HudOverlayDemo } from './HudOverlayDemo';
+import { InvertBlendDemo } from './InvertBlendDemo';
+import { KaleidoscopeDemo } from './KaleidoscopeDemo';
+import { LightLeakDemo } from './LightLeakDemo';
+import { LogoDemo } from './LogoDemo';
+import { MediaFrameDemo } from './MediaFrameDemo';
+import { MosaicDemo } from './MosaicDemo';
+import { OcclusionWipeDemo } from './OcclusionWipeDemo';
+import { PaintRevealDemo } from './PaintRevealDemo';
+import { PaintSmearDemo } from './PaintSmearDemo';
+import { PanelGridDemo } from './PanelGridDemo';
+import { ParticleDriftDemo } from './ParticleDriftDemo';
+import { ParticleRevealDemo } from './ParticleRevealDemo';
+import { PostFxStageDemo } from './PostFxStageDemo';
+import { RadialBlurDemo } from './RadialBlurDemo';
+import { SafeAreaDemo } from './SafeAreaDemo';
+import { ScanlineDemo } from './ScanlineDemo';
+import { SignalNoiseDemo } from './SignalNoiseDemo';
+import { SpeedRampDemo } from './SpeedRampDemo';
+import { TextRevealDemo } from './TextRevealDemo';
+import { TextScrambleDemo } from './TextScrambleDemo';
+import { TwirlDistortionDemo } from './TwirlDistortionDemo';
+import { VideoTitleDemo } from './VideoTitleDemo';
+import { WaveDistortionDemo } from './WaveDistortionDemo';
+
+export const PRIMITIVE_DEMO_DURATION_IN_FRAMES = 150;
+
+export const primitiveDemos = [
+  { id: 'primitive-video-title', component: VideoTitleDemo },
+  { id: 'primitive-caption', component: CaptionDemo },
+  { id: 'primitive-safe-area', component: SafeAreaDemo },
+  { id: 'primitive-gradient-overlay', component: GradientOverlayDemo },
+  { id: 'primitive-film-grain', component: FilmGrainDemo },
+  { id: 'primitive-particle-drift', component: ParticleDriftDemo },
+  { id: 'primitive-particle-reveal', component: ParticleRevealDemo },
+  { id: 'primitive-light-leak', component: LightLeakDemo },
+  { id: 'primitive-edge-blur', component: EdgeBlurDemo },
+  { id: 'primitive-scanline', component: ScanlineDemo },
+  { id: 'primitive-logo', component: LogoDemo },
+  { id: 'primitive-media-frame', component: MediaFrameDemo },
+  { id: 'primitive-depth-gallery', component: DepthGalleryDemo },
+  { id: 'primitive-depth-parallax', component: DepthParallaxDemo },
+  { id: 'primitive-post-fx-stage', component: PostFxStageDemo },
+  { id: 'primitive-channel-shift', component: ChannelShiftDemo },
+  { id: 'primitive-invert-blend', component: InvertBlendDemo },
+  { id: 'primitive-mosaic', component: MosaicDemo },
+  { id: 'primitive-wave-distortion', component: WaveDistortionDemo },
+  { id: 'primitive-fluid-distortion', component: FluidDistortionDemo },
+  { id: 'primitive-grid-displacement', component: GridDisplacementDemo },
+  { id: 'primitive-glitch-shift', component: GlitchShiftDemo },
+  { id: 'primitive-halftone', component: HalftoneDemo },
+  { id: 'primitive-duotone', component: DuotoneDemo },
+  { id: 'primitive-kaleidoscope', component: KaleidoscopeDemo },
+  { id: 'primitive-paint-reveal', component: PaintRevealDemo },
+  { id: 'primitive-paint-smear', component: PaintSmearDemo },
+  { id: 'primitive-gradient-flow', component: GradientFlowDemo },
+  { id: 'primitive-signal-noise', component: SignalNoiseDemo },
+  { id: 'primitive-accent-label', component: AccentLabelDemo },
+  { id: 'primitive-text-reveal', component: TextRevealDemo },
+  { id: 'primitive-text-scramble', component: TextScrambleDemo },
+  { id: 'primitive-hud-overlay', component: HudOverlayDemo },
+  { id: 'primitive-block-wipe', component: BlockWipeDemo },
+  { id: 'primitive-panel-grid', component: PanelGridDemo },
+  { id: 'primitive-directional-blur', component: DirectionalBlurDemo },
+  { id: 'primitive-radial-blur', component: RadialBlurDemo },
+  { id: 'primitive-twirl-distortion', component: TwirlDistortionDemo },
+  { id: 'primitive-exposure-flash', component: ExposureFlashDemo },
+  { id: 'primitive-highlight-bloom', component: HighlightBloomDemo },
+  { id: 'primitive-occlusion-wipe', component: OcclusionWipeDemo },
+  { id: 'primitive-speed-ramp', component: SpeedRampDemo },
+  { id: 'primitive-brand-outro', component: BrandOutroDemo },
+] as const satisfies ReadonlyArray<{
+  id: string;
+  component: ComponentType;
+}>;

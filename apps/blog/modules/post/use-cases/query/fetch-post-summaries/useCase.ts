@@ -1,3 +1,4 @@
+import type { PostStatus } from '../../../domain';
 import {
   InvalidPaginationError,
   type PaginatedResult,
@@ -10,6 +11,7 @@ export interface FetchPostSummariesInput {
   page?: number;
   pageSize?: number;
   orderBy?: SortOrder;
+  status?: PostStatus;
 }
 
 export type FetchPostSummariesOutput = PaginatedResult<PostSummaryOutput>;
@@ -32,6 +34,7 @@ export class FetchPostSummaries {
     const page = input.page ?? DEFAULT_PAGE;
     const pageSize = input.pageSize ?? DEFAULT_PAGE_SIZE;
     const orderBy = input.orderBy ?? DEFAULT_ORDER;
+    const { status } = input;
 
     this.validatePagination(page, pageSize);
 
@@ -39,6 +42,7 @@ export class FetchPostSummaries {
       page,
       pageSize,
       orderBy,
+      status,
     });
 
     const totalPages = Math.ceil(totalCount / pageSize);
