@@ -58,12 +58,12 @@ describe('getGlitchTick', () => {
     { frame: 3, expectedTick: 0 },
     { frame: 4, expectedTick: 1 },
     { frame: 30, expectedTick: 8 },
-  ])('steps to tick $expectedTick at frame $frame', ({
-    frame,
-    expectedTick,
-  }) => {
-    const tick = getGlitchTick({ frame, fps: 30 });
+  ])(
+    'steps to tick $expectedTick at frame $frame',
+    ({ frame, expectedTick }) => {
+      const tick = getGlitchTick({ frame, fps: 30 });
 
-    expect(tick).toBe(expectedTick);
-  });
+      expect(tick).toBe(expectedTick);
+    }
+  );
 });

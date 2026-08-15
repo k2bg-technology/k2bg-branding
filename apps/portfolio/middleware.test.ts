@@ -79,30 +79,30 @@ describe('middleware', () => {
       expect(response.cookies.get(cookieName)?.value).toBe('en');
     });
 
-    it.each(
-      prefetchHeaderVariants
-    )('does not write the locale cookie for a prefetch request with headers %o', (headers) => {
-      const request = new NextRequest(new URL('http://localhost/en/about'), {
-        headers,
-      });
+    it.each(prefetchHeaderVariants)(
+      'does not write the locale cookie for a prefetch request with headers %o',
+      (headers) => {
+        const request = new NextRequest(new URL('http://localhost/en/about'), {
+          headers,
+        });
 
-      const response = middleware(request);
+        const response = middleware(request);
 
-      expect(response.cookies.get(cookieName)).toBeUndefined();
-    });
+        expect(response.cookies.get(cookieName)).toBeUndefined();
+      }
+    );
   });
 
   describe('when the path contains "icon" or "chrome"', () => {
-    it.each([
-      '/icon.png',
-      '/apple-touch-icon.png',
-      '/chrome-devtools.json',
-    ])('returns NextResponse.next() without redirecting for %s', (pathname) => {
-      const request = new NextRequest(new URL(`http://localhost${pathname}`));
+    it.each(['/icon.png', '/apple-touch-icon.png', '/chrome-devtools.json'])(
+      'returns NextResponse.next() without redirecting for %s',
+      (pathname) => {
+        const request = new NextRequest(new URL(`http://localhost${pathname}`));
 
-      const response = middleware(request);
+        const response = middleware(request);
 
-      expect(response.headers.get('location')).toBeNull();
-    });
+        expect(response.headers.get('location')).toBeNull();
+      }
+    );
   });
 });

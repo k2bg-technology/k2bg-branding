@@ -45,14 +45,17 @@ describe('getBloomRadiusInUv', () => {
     expect(result).toEqual({ x: 0, y: 0 });
   });
 
-  it.each([
-    { amount: 1 },
-    { amount: 1.6 },
-  ])('caps the radius at the maximum for amount $amount', ({ amount }) => {
-    const result = getBloomRadiusInUv({ amount, canvasAspect: CANVAS_ASPECT });
+  it.each([{ amount: 1 }, { amount: 1.6 }])(
+    'caps the radius at the maximum for amount $amount',
+    ({ amount }) => {
+      const result = getBloomRadiusInUv({
+        amount,
+        canvasAspect: CANVAS_ASPECT,
+      });
 
-    expect(result.y).toBeCloseTo(MAX_BLOOM_RADIUS_IN_SCREEN);
-  });
+      expect(result.y).toBeCloseTo(MAX_BLOOM_RADIUS_IN_SCREEN);
+    }
+  );
 
   it('converts only the x component into UV space via the canvas aspect', () => {
     const result = getBloomRadiusInUv({

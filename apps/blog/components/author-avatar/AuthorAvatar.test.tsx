@@ -9,14 +9,14 @@ describe('AuthorAvatar', () => {
     { name: 'krd-knt', expectedInitial: 'K' },
     { name: 'Test Author', expectedInitial: 'T' },
     { name: 'unknown author', expectedInitial: 'U' },
-  ])('displays fallback initial $expectedInitial for name $name', ({
-    name,
-    expectedInitial,
-  }) => {
-    render(<AuthorAvatar name={name} avatarUrl={null} />);
+  ])(
+    'displays fallback initial $expectedInitial for name $name',
+    ({ name, expectedInitial }) => {
+      render(<AuthorAvatar name={name} avatarUrl={null} />);
 
-    expect(screen.getByText(expectedInitial)).toBeInTheDocument();
-  });
+      expect(screen.getByText(expectedInitial)).toBeInTheDocument();
+    }
+  );
 
   it('displays the fallback initial while the image has not loaded', () => {
     render(

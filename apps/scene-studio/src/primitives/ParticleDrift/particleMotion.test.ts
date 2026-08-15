@@ -34,20 +34,17 @@ describe('getParticleState', () => {
     );
   });
 
-  it.each([
-    { frame: 0 },
-    { frame: 150 },
-    { frame: 900 },
-  ])('keeps opacity and vertical position bounded at frame $frame', ({
-    frame,
-  }) => {
-    const result = getParticleState({ particleIndex: 7, frame });
+  it.each([{ frame: 0 }, { frame: 150 }, { frame: 900 }])(
+    'keeps opacity and vertical position bounded at frame $frame',
+    ({ frame }) => {
+      const result = getParticleState({ particleIndex: 7, frame });
 
-    expect(result.opacity).toBeGreaterThanOrEqual(0.1);
-    expect(result.opacity).toBeLessThanOrEqual(0.55);
-    expect(result.yInPercent).toBeGreaterThanOrEqual(-5);
-    expect(result.yInPercent).toBeLessThanOrEqual(105);
-  });
+      expect(result.opacity).toBeGreaterThanOrEqual(0.1);
+      expect(result.opacity).toBeLessThanOrEqual(0.55);
+      expect(result.yInPercent).toBeGreaterThanOrEqual(-5);
+      expect(result.yInPercent).toBeLessThanOrEqual(105);
+    }
+  );
 
   it('drifts particles upward over time modulo the wrap', () => {
     const earlyState = getParticleState({ particleIndex: 3, frame: 10 });

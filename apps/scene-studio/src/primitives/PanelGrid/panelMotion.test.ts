@@ -15,15 +15,14 @@ describe('getPanelEnterDirection', () => {
     { panelIndex: 1, enterFrom: 'left' as const, expected: -1 },
     { panelIndex: 0, enterFrom: 'right' as const, expected: 1 },
     { panelIndex: 3, enterFrom: 'right' as const, expected: 1 },
-  ])('returns $expected for panel $panelIndex entering from $enterFrom', ({
-    panelIndex,
-    enterFrom,
-    expected,
-  }) => {
-    const result = getPanelEnterDirection({ panelIndex, enterFrom });
+  ])(
+    'returns $expected for panel $panelIndex entering from $enterFrom',
+    ({ panelIndex, enterFrom, expected }) => {
+      const result = getPanelEnterDirection({ panelIndex, enterFrom });
 
-    expect(result).toBe(expected);
-  });
+      expect(result).toBe(expected);
+    }
+  );
 });
 
 describe('getPanelMotion', () => {

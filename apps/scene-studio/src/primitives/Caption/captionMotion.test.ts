@@ -32,17 +32,20 @@ describe('getCaptionMotion', () => {
       expectedOpacity: 1,
       expectedTranslateYInPx: 0,
     },
-  ])('$description', ({
-    frame,
-    enterDelayInFrames,
-    expectedOpacity,
-    expectedTranslateYInPx,
-  }) => {
-    const result = getCaptionMotion({ frame, enterDelayInFrames });
+  ])(
+    '$description',
+    ({
+      frame,
+      enterDelayInFrames,
+      expectedOpacity,
+      expectedTranslateYInPx,
+    }) => {
+      const result = getCaptionMotion({ frame, enterDelayInFrames });
 
-    expect(result.opacity).toBeCloseTo(expectedOpacity);
-    expect(result.translateYInPx).toBeCloseTo(expectedTranslateYInPx);
-  });
+      expect(result.opacity).toBeCloseTo(expectedOpacity);
+      expect(result.translateYInPx).toBeCloseTo(expectedTranslateYInPx);
+    }
+  );
 
   it.each([
     {

@@ -38,35 +38,33 @@ describe('getBandProgress', () => {
   const bandCount = 3;
   const staggerShare = 0.18;
 
-  it.each([
-    { bandIndex: 0 },
-    { bandIndex: 1 },
-    { bandIndex: 2 },
-  ])('leaves band $bandIndex uncovered at coverage 0', ({ bandIndex }) => {
-    const result = getBandProgress({
-      bandIndex,
-      bandCount,
-      coverage: 0,
-      staggerShare,
-    });
+  it.each([{ bandIndex: 0 }, { bandIndex: 1 }, { bandIndex: 2 }])(
+    'leaves band $bandIndex uncovered at coverage 0',
+    ({ bandIndex }) => {
+      const result = getBandProgress({
+        bandIndex,
+        bandCount,
+        coverage: 0,
+        staggerShare,
+      });
 
-    expect(result).toBe(0);
-  });
+      expect(result).toBe(0);
+    }
+  );
 
-  it.each([
-    { bandIndex: 0 },
-    { bandIndex: 1 },
-    { bandIndex: 2 },
-  ])('fills band $bandIndex completely at coverage 1', ({ bandIndex }) => {
-    const result = getBandProgress({
-      bandIndex,
-      bandCount,
-      coverage: 1,
-      staggerShare,
-    });
+  it.each([{ bandIndex: 0 }, { bandIndex: 1 }, { bandIndex: 2 }])(
+    'fills band $bandIndex completely at coverage 1',
+    ({ bandIndex }) => {
+      const result = getBandProgress({
+        bandIndex,
+        bandCount,
+        coverage: 1,
+        staggerShare,
+      });
 
-    expect(result).toBe(1);
-  });
+      expect(result).toBe(1);
+    }
+  );
 
   it('lags each band behind the previous one by the stagger share', () => {
     const coverage = 0.5;
@@ -91,19 +89,19 @@ describe('getBandProgress', () => {
     { coverage: 0.37, expected: 0.37 },
     { coverage: 1.4, expected: 1 },
     { coverage: -0.2, expected: 0 },
-  ])('returns the clamped coverage $coverage for a single band', ({
-    coverage,
-    expected,
-  }) => {
-    const result = getBandProgress({
-      bandIndex: 0,
-      bandCount: 1,
-      coverage,
-      staggerShare,
-    });
+  ])(
+    'returns the clamped coverage $coverage for a single band',
+    ({ coverage, expected }) => {
+      const result = getBandProgress({
+        bandIndex: 0,
+        bandCount: 1,
+        coverage,
+        staggerShare,
+      });
 
-    expect(result).toBeCloseTo(expected);
-  });
+      expect(result).toBeCloseTo(expected);
+    }
+  );
 });
 
 describe('getWipeClipPathPolygon', () => {
@@ -165,17 +163,18 @@ describe('getWipeClipPathPolygon', () => {
     { directionInDegrees: 137 },
     { directionInDegrees: 180 },
     { directionInDegrees: 315 },
-  ])('covers the whole frame at progress 1 travelling at $directionInDegrees degrees', ({
-    directionInDegrees,
-  }) => {
-    const result = getWipeClipPathPolygon({
-      progress: 1,
-      directionInDegrees,
-      canvasAspect: CANVAS_ASPECT,
-    });
+  ])(
+    'covers the whole frame at progress 1 travelling at $directionInDegrees degrees',
+    ({ directionInDegrees }) => {
+      const result = getWipeClipPathPolygon({
+        progress: 1,
+        directionInDegrees,
+        canvasAspect: CANVAS_ASPECT,
+      });
 
-    expect(parseSortedPolygonPoints(result)).toEqual(FULL_RECTANGLE);
-  });
+      expect(parseSortedPolygonPoints(result)).toEqual(FULL_RECTANGLE);
+    }
+  );
 
   it.each([
     { directionInDegrees: 25, progress: 0.1 },
@@ -184,20 +183,20 @@ describe('getWipeClipPathPolygon', () => {
     { directionInDegrees: 205, progress: 0.5 },
     { directionInDegrees: 315, progress: 0.9 },
     { directionInDegrees: 315, progress: 1 },
-  ])('keeps every vertex inside the frame at $directionInDegrees degrees and progress $progress', ({
-    directionInDegrees,
-    progress,
-  }) => {
-    const result = getWipeClipPathPolygon({
-      progress,
-      directionInDegrees,
-      canvasAspect: CANVAS_ASPECT,
-    });
+  ])(
+    'keeps every vertex inside the frame at $directionInDegrees degrees and progress $progress',
+    ({ directionInDegrees, progress }) => {
+      const result = getWipeClipPathPolygon({
+        progress,
+        directionInDegrees,
+        canvasAspect: CANVAS_ASPECT,
+      });
 
-    const coordinates = parsePolygonPoints(result).flat();
-    expect(Math.min(...coordinates)).toBeGreaterThanOrEqual(0);
-    expect(Math.max(...coordinates)).toBeLessThanOrEqual(100);
-  });
+      const coordinates = parsePolygonPoints(result).flat();
+      expect(Math.min(...coordinates)).toBeGreaterThanOrEqual(0);
+      expect(Math.max(...coordinates)).toBeLessThanOrEqual(100);
+    }
+  );
 
   it('collapses to an empty polygon at progress 0', () => {
     const expectedEmptyPolygon = 'polygon(0% 0%, 0% 0%, 0% 0%)';
