@@ -38,6 +38,25 @@ const REMOVED_TECH_GUARDS = [
   },
 ];
 
+const PORTFOLIO_CONTENT_DRIFT_FILES = [
+  'apps/portfolio/README.md',
+  'apps/portfolio/i18n/locales/en/translation.json',
+  'apps/portfolio/i18n/locales/ja/translation.json',
+];
+
+export const PORTFOLIO_CONTENT_DRIFT_GUARDS = [
+  {
+    pattern: /\bprisma\b/i,
+    reason:
+      'Portfolio content drift: Prisma was replaced by Drizzle (#255) — use Drizzle ORM',
+  },
+  {
+    pattern: /react-i18next/i,
+    reason:
+      'Portfolio content drift: portfolio i18n is server-only dictionaries, not react-i18next',
+  },
+];
+
 const VERSION_PIN_GUARD = {
   pattern:
     /\b(?:Storybook|Next\.js|React|TypeScript|Node|pnpm|Vite|Tailwind)\s+v?\d+\.\d+\.\d+\b/,
@@ -50,7 +69,10 @@ const DENYLIST = [...REMOVED_TECH_GUARDS, VERSION_PIN_GUARD];
  * Scan one document's content and return failure messages.
  * `pathExists` is injected so the scan logic stays testable without disk fixtures.
  */
-export function findDocumentationProblems(content, { fileLabel, pathExists }) {
+export function findDocumentationProblems(
+  content,
+  { fileLabel, pathExists, denylist = DENYLIST, checkPaths = true }
+) {
   const failures = [];
 
   content.split('\n').forEach((line, index) => {
@@ -59,17 +81,21 @@ export function findDocumentationProblems(content, { fileLabel, pathExists }) {
     }
     const location = `${fileLabel}:${index + 1}`;
 
-    for (const match of line.matchAll(PATH_PATTERN)) {
-      const referencedPath = match[1].replace(/[.,;:]+$/, '');
-      if (GLOB_OR_PLACEHOLDER.test(referencedPath)) {
-        continue;
-      }
-      if (!pathExists(referencedPath)) {
-        failures.push(`${location}: referenced path does not exist: ${referencedPath}`);
+    if (checkPaths) {
+      for (const match of line.matchAll(PATH_PATTERN)) {
+        const referencedPath = match[1].replace(/[.,;:]+$/, '');
+        if (GLOB_OR_PLACEHOLDER.test(referencedPath)) {
+          continue;
+        }
+        if (!pathExists(referencedPath)) {
+          failures.push(
+            `${location}: referenced path does not exist: ${referencedPath}`
+          );
+        }
       }
     }
 
-    for (const { pattern, reason } of DENYLIST) {
+    for (const { pattern, reason } of denylist) {
       if (pattern.test(line)) {
         failures.push(`${location}: ${reason} (matched ${pattern})`);
       }
@@ -98,15 +124,31 @@ function runCheck() {
   const repositoryRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
   const documentationFiles = collectDocumentationFiles(repositoryRoot);
 
-  const failures = documentationFiles.flatMap((documentationFile) =>
+  const documentationFailures = documentationFiles.flatMap((documentationFile) =>
     findDocumentationProblems(
       readFileSync(join(repositoryRoot, documentationFile), 'utf8'),
       {
         fileLabel: documentationFile,
-        pathExists: (referencedPath) => existsSync(join(repositoryRoot, referencedPath)),
+        pathExists: (referencedPath) =>
+          existsSync(join(repositoryRoot, referencedPath)),
       }
     )
   );
+
+  const portfolioContentFailures = PORTFOLIO_CONTENT_DRIFT_FILES.flatMap(
+    (documentationFile) =>
+      findDocumentationProblems(
+        readFileSync(join(repositoryRoot, documentationFile), 'utf8'),
+        {
+          fileLabel: documentationFile,
+          pathExists: () => true,
+          denylist: PORTFOLIO_CONTENT_DRIFT_GUARDS,
+          checkPaths: false,
+        }
+      )
+  );
+
+  const failures = [...documentationFailures, ...portfolioContentFailures];
 
   if (failures.length > 0) {
     console.error(`docs:check failed with ${failures.length} problem(s):\n`);
@@ -116,7 +158,9 @@ function runCheck() {
     process.exit(1);
   }
 
-  console.log(`docs:check passed (${documentationFiles.length} files scanned)`);
+  console.log(
+    `docs:check passed (${documentationFiles.length + PORTFOLIO_CONTENT_DRIFT_FILES.length} files scanned)`
+  );
 }
 
 const isDirectRun =
