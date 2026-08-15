@@ -71,6 +71,7 @@ export function VisualShowcase(props: VisualShowcaseProps) {
     <AbsoluteFill className="bg-base-black">
       <TransitionSeries>
         {props.items.map((item, itemIndex) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: items are static composition props and never reorder at runtime
           <Fragment key={`${item.src}-${itemIndex}`}>
             <TransitionSeries.Sequence
               durationInFrames={getItemDurationInFrames(item.durationInSeconds)}
