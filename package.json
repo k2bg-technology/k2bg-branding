@@ -32,7 +32,7 @@
   "name": "k2bg-branding",
   "pnpm": {
     "overrides": {
-      "esbuild": "0.25.2",
+      "esbuild": "0.28.1",
       "@floating-ui/utils": "^0.2.11"
     },
     "onlyBuiltDependencies": [
