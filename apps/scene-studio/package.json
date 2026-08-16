@@ -23,9 +23,9 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "remotion": "4.0.509",
-    "tailwind-merge": "^2.5.3",
+    "tailwind-merge": "^2.6.1",
     "three": "^0.185.1",
-    "zod": "^3.23.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@remotion/tailwind-v4": "4.0.509",
@@ -34,10 +34,10 @@
     "@types/react-dom": "^19.2.4",
     "@types/three": "^0.185.4",
     "biome-config": "workspace:*",
-    "jsdom": "^26.0.0",
+    "jsdom": "^26.1.0",
     "tailwind-config": "workspace:*",
     "tailwindcss": "^4.3.3",
     "tsconfig": "workspace:*",
-    "vitest": "^3.1.1"
+    "vitest": "^3.2.7"
   }
 }
