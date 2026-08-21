@@ -49,7 +49,7 @@ const monorepoRoot = resolve(__dirname, '..', '..');
 const config = {
   reactStrictMode: true,
   reactCompiler: true,
-  transpilePackages: ['ui', 'tailwind-config'],
+  transpilePackages: ['ui', 'tailwind-config', 'logger'],
   outputFileTracingRoot: monorepoRoot,
   turbopack: {},
   async redirects() {
