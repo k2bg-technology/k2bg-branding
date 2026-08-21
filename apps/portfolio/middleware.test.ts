@@ -104,24 +104,23 @@ describe('middleware', () => {
   });
 
   describe('config matcher', () => {
-    it.each([
-      '/robots.txt',
-      '/sitemap.xml',
-    ])('excludes %s from locale handling', (pathname) => {
-      const isMatched = matchesMiddlewareMatcher(pathname);
+    it.each(['/robots.txt', '/sitemap.xml'])(
+      'excludes %s from locale handling',
+      (pathname) => {
+        const isMatched = matchesMiddlewareMatcher(pathname);
 
-      expect(isMatched).toBe(false);
-    });
+        expect(isMatched).toBe(false);
+      }
+    );
 
-    it.each([
-      '/',
-      '/about',
-      '/en/about',
-    ])('includes the page path %s in locale handling', (pathname) => {
-      const isMatched = matchesMiddlewareMatcher(pathname);
+    it.each(['/', '/about', '/en/about'])(
+      'includes the page path %s in locale handling',
+      (pathname) => {
+        const isMatched = matchesMiddlewareMatcher(pathname);
 
-      expect(isMatched).toBe(true);
-    });
+        expect(isMatched).toBe(true);
+      }
+    );
   });
 
   describe('when the path contains "icon" or "chrome"', () => {

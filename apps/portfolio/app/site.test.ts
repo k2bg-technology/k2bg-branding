@@ -37,30 +37,28 @@ describe('siteBaseUrl', () => {
     expect(siteBaseUrl.href).toBe(`${configuredBaseUrl}/`);
   });
 
-  it.each(
-    absentValueCases
-  )('falls back to http://localhost:3001 outside production when PORTFOLIO_SITE_BASE_URL is $description', async ({
-    value,
-  }) => {
-    vi.stubEnv('PORTFOLIO_SITE_BASE_URL', value);
+  it.each(absentValueCases)(
+    'falls back to http://localhost:3001 outside production when PORTFOLIO_SITE_BASE_URL is $description',
+    async ({ value }) => {
+      vi.stubEnv('PORTFOLIO_SITE_BASE_URL', value);
 
-    const { siteBaseUrl } = await importSite();
+      const { siteBaseUrl } = await importSite();
 
-    expect(siteBaseUrl.href).toBe('http://localhost:3001/');
-  });
+      expect(siteBaseUrl.href).toBe('http://localhost:3001/');
+    }
+  );
 
-  it.each(
-    absentValueCases
-  )('throws in production when PORTFOLIO_SITE_BASE_URL is $description', async ({
-    value,
-  }) => {
-    vi.stubEnv('NODE_ENV', 'production');
-    vi.stubEnv('PORTFOLIO_SITE_BASE_URL', value);
+  it.each(absentValueCases)(
+    'throws in production when PORTFOLIO_SITE_BASE_URL is $description',
+    async ({ value }) => {
+      vi.stubEnv('NODE_ENV', 'production');
+      vi.stubEnv('PORTFOLIO_SITE_BASE_URL', value);
 
-    await expect(importSite()).rejects.toThrow(
-      'PORTFOLIO_SITE_BASE_URL environment variable is required in production'
-    );
-  });
+      await expect(importSite()).rejects.toThrow(
+        'PORTFOLIO_SITE_BASE_URL environment variable is required in production'
+      );
+    }
+  );
 });
 
 describe('getLocalizedUrl', () => {
@@ -68,15 +66,15 @@ describe('getLocalizedUrl', () => {
     vi.unstubAllEnvs();
   });
 
-  it.each([
-    'ja',
-    'en',
-  ] as const)('returns the base URL suffixed with the language path for "%s"', async (language) => {
-    vi.stubEnv('PORTFOLIO_SITE_BASE_URL', configuredBaseUrl);
-    const { getLocalizedUrl } = await importSite();
+  it.each(['ja', 'en'] as const)(
+    'returns the base URL suffixed with the language path for "%s"',
+    async (language) => {
+      vi.stubEnv('PORTFOLIO_SITE_BASE_URL', configuredBaseUrl);
+      const { getLocalizedUrl } = await importSite();
 
-    const localizedUrl = getLocalizedUrl(language);
+      const localizedUrl = getLocalizedUrl(language);
 
-    expect(localizedUrl).toBe(`${configuredBaseUrl}/${language}`);
-  });
+      expect(localizedUrl).toBe(`${configuredBaseUrl}/${language}`);
+    }
+  );
 });
