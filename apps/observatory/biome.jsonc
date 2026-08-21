@@ -7,6 +7,8 @@
       "app/**/*.{ts,tsx}",
       "lib/**/*.{ts,tsx}",
       "components/**/*.{ts,tsx}",
+      "infrastructure/**/*.{ts,tsx}",
+      "modules/**/*.{ts,tsx}",
       "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"
     ]
   },
