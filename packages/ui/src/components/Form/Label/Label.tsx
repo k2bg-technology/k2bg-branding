@@ -35,6 +35,7 @@ export function Label(props: Props) {
     color = 'dark',
     error,
     disabled,
+    helperTextId,
     ...rest
   } = useFormContext(formProps);
 

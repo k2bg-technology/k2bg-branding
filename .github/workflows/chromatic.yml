@@ -1,6 +1,12 @@
+# Chromatic is intentionally advisory in this solo-maintained repository.
+# Visual diffs are reviewed in the Chromatic UI, and intentional visual changes are frequent.
+# Requiring this check would block every restyle; revisit the policy if contributors join.
 name: 'Chromatic'
 
 on: push
+
+permissions:
+  contents: read
 
 jobs:
   chromatic:

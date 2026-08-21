@@ -12,7 +12,7 @@ export function Contact({ dictionary }: { dictionary: ContactDictionary }) {
           <Image
             src="/images/contact-pattern.jpg"
             fill
-            alt="Contact Pattern Image"
+            alt={dictionary.imageAlt}
           />
         </div>
         <div className="flex flex-col justify-center gap-spacious p-6 w-full text-white h-full md:p-12 md:w-[37.5rem]">
