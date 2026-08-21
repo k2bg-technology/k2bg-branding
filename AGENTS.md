@@ -12,24 +12,29 @@ selection, engineering trade-offs, writing tone).
 ## Project Structure & Module Organization
 
 - Monorepo managed by pnpm workspaces and Turborepo.
-- Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000) and
-  `apps/portfolio` (Next.js, multilingual, port 3001).
+- Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000),
+  `apps/portfolio` (Next.js, multilingual, port 3001), `apps/scene-studio`
+  (Remotion Studio for programmatic short-form videos, port 3002), and
+  `apps/observatory` (Next.js, personal data visualization, port 3003).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
   (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
   `packages/tsconfig`.
 - CI, templates, and bots live under `.github/`. See `.github/PULL_REQUEST_TEMPLATE.md`.
-- Tech stack: Next.js 16 (Turbopack, React Compiler), TypeScript (strict, 100%),
-  Tailwind CSS v4, Turborepo, pnpm 10+.
+- Tech stack: Next.js 16 (Turbopack, React Compiler), Remotion, TypeScript (strict,
+  100%), Tailwind CSS v4, Turborepo, pnpm 10+.
 
 ## Build, Test, and Development Commands
 
 - Install: `pnpm install` (pnpm 10+, Node 20.9+).
-- Develop all: `pnpm dev` (runs `turbo run dev`); filter: `pnpm -F blog dev` / `pnpm -F portfolio dev`.
+- Develop all: `pnpm dev` (runs `turbo run dev`); filter with `pnpm -F blog dev`,
+  `pnpm -F portfolio dev`, `pnpm -F scene-studio dev`, or `pnpm -F observatory dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
 - Lint/Types/Format: `pnpm lint` (Biome), `pnpm typecheck`, `pnpm format` (Biome).
-- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog and Test Utils).
+- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog, Portfolio, Scene Studio, Observatory, and Test Utils).
 - Component scaffolding: `pnpm generate:component`, `pnpm generate:style`.
 - Storybook (UI): `pnpm -F ui storybook` (port 6006); Chromatic via CI.
+- Video (Scene Studio): `pnpm -F scene-studio dev` (Remotion Studio, port 3002);
+  render locally via `pnpm -F scene-studio render <composition-id>`.
 
 ## Architecture
 
@@ -88,6 +93,40 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Next.js 16 renamed `middleware.ts` to `proxy.ts`, but the portfolio deliberately keeps
   `middleware.ts` because i18n locale detection requires the edge runtime — do not rename it.
   Use `proxy.ts` only when adding new middleware to the blog app.
+
+### Scene Studio (Video Generation)
+
+- `apps/scene-studio` renders short-form vertical videos (1080×1920) with
+  [Remotion](https://www.remotion.dev/): compositions are React components driven by
+  props/JSON, styled with Tailwind v4 reusing `packages/tailwind-config` tokens.
+- Reusable video primitives (titles, captions, safe area, overlays, media, effect
+  shaders, 3D stages, brand outro) live in `apps/scene-studio/src/primitives/` — the
+  full inventory is documented in `apps/scene-studio/README.md`; keep them
+  use-case-agnostic per the template guidelines and verify them via the `primitives`
+  demo compositions in Studio (no Storybook). Extract them into a `packages/`-level
+  workspace only when a second consumer (e.g. a web preview app) actually exists.
+- Animations must be deterministic: derive all state from `useCurrentFrame()` and props —
+  never `requestAnimationFrame`, unseeded randomness, or the current time.
+- 3D is supported via `@remotion/three`: each 3D effect is a focused primitive built on
+  `ThreeCanvas` (e.g. `DepthGallery`), driven by props and `useCurrentFrame()` — never
+  React Three Fiber's `useFrame`. Headless rendering uses the `angle` OpenGL renderer set
+  in `remotion.config.ts`. There is no general-purpose 3D abstraction or scene DSL.
+- Media assets are never committed; `apps/scene-studio/public/assets/` is gitignored
+  (reference files via `staticFile()`). Rendering is local-macOS-only for now (brand
+  system fonts are unavailable on Linux/CI).
+- All `remotion` / `@remotion/*` packages stay on one identical exact-pinned version;
+  bump them together in a single commit.
+- Template/composition design and naming (three-layer structure, no universal
+  templates): `.claude/rules/remotion-template-guidelines.md`.
+
+### Observatory App
+
+- `apps/observatory` is a Next.js app (port 3003) that visualizes accumulated personal
+  data: finances, health, home environment, and web analytics. It is a scaffold with a
+  placeholder page only.
+- Single-locale (Japanese): no i18n dictionaries and no `middleware.ts` / `proxy.ts`.
+- Domain modules and data-warehouse reads arrive in later issues (#415, #417).
+- Visualization components belong in `packages/ui`, not in the app.
 
 ### Key Integrations
 

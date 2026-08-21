@@ -11,7 +11,7 @@ export function Hero({ dictionary }: { dictionary: HeroDictionary }) {
           <Image
             src="/images/hero.jpg"
             fill
-            alt="Hero Image"
+            alt={dictionary.imageAlt}
             className="object-cover"
           />
         </div>

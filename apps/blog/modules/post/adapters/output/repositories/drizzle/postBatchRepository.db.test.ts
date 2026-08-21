@@ -6,6 +6,7 @@ import {
 } from '../../../../../../infrastructure/drizzle/schema';
 import { AuthorId, Title } from '../../../../domain';
 import {
+  createAuthorRecord,
   createPost,
   createPosts,
 } from '../../../../use-cases/shared/testing/factories';
@@ -28,7 +29,7 @@ describe('DrizzlePostBatchRepository', () => {
     it('does nothing when posts array is empty', async () => {
       const sut = new DrizzlePostBatchRepository(getTestDb());
 
-      await sut.upsertAll([]);
+      await sut.upsertAll([], []);
 
       const [postCount] = await getTestDb()
         .select({ value: count() })
@@ -44,7 +45,7 @@ describe('DrizzlePostBatchRepository', () => {
       const sut = new DrizzlePostBatchRepository(getTestDb());
       const newPosts = createPosts(3);
 
-      await sut.upsertAll(newPosts);
+      await sut.upsertAll(newPosts, []);
 
       const storedPosts = await getTestDb().select().from(posts);
       const storedAuthors = await getTestDb().select().from(authors);
@@ -59,11 +60,11 @@ describe('DrizzlePostBatchRepository', () => {
     it('updates posts that already exist by uuid without duplicating the author row', async () => {
       const sut = new DrizzlePostBatchRepository(getTestDb());
       const original = createPost();
-      await sut.upsertAll([original]);
+      await sut.upsertAll([original], []);
 
       const revisedTitle = 'Revised in Batch';
       const revised = createPost({ title: Title.create(revisedTitle) });
-      await sut.upsertAll([revised]);
+      await sut.upsertAll([revised], []);
 
       const [storedPost] = await getTestDb()
         .select()
@@ -74,7 +75,7 @@ describe('DrizzlePostBatchRepository', () => {
       expect(storedAuthors).toHaveLength(1);
     });
 
-    it('preserves a pre-existing author name instead of overwriting it', async () => {
+    it('preserves a pre-existing author name when no author record is provided', async () => {
       const db = getTestDb();
       const realName = 'Real Person';
       const post = createPost();
@@ -85,7 +86,7 @@ describe('DrizzlePostBatchRepository', () => {
       });
 
       const sut = new DrizzlePostBatchRepository(db);
-      await sut.upsertAll([post]);
+      await sut.upsertAll([post], []);
 
       const [storedAuthor] = await db
         .select()
@@ -97,17 +98,87 @@ describe('DrizzlePostBatchRepository', () => {
     it('does not insert a stand-in author when updating an existing post with a changed authorId', async () => {
       const sut = new DrizzlePostBatchRepository(getTestDb());
       const original = createPost();
-      await sut.upsertAll([original]);
+      await sut.upsertAll([original], []);
 
       const changedAuthorId = AuthorId.create(
         '770e8400-e29b-41d4-a716-446655440000'
       );
       const revised = createPost({ authorId: changedAuthorId });
-      await sut.upsertAll([revised]);
+      await sut.upsertAll([revised], []);
 
       const storedAuthors = await getTestDb().select().from(authors);
       expect(storedAuthors).toHaveLength(1);
       expect(storedAuthors[0].uuid).toBe(original.authorId.getValue());
+    });
+
+    it('inserts an author row with name and avatarUrl from the record', async () => {
+      const sut = new DrizzlePostBatchRepository(getTestDb());
+      const post = createPost();
+      const record = createAuthorRecord({ id: post.authorId.getValue() });
+
+      await sut.upsertAll([post], [record]);
+
+      const [storedAuthor] = await getTestDb()
+        .select()
+        .from(authors)
+        .where(eq(authors.uuid, record.id));
+      expect(storedAuthor).toMatchObject({
+        uuid: record.id,
+        name: record.name,
+        avatarUrl: record.avatarUrl,
+      });
+    });
+
+    it('updates an existing author name and avatarUrl on conflict', async () => {
+      const db = getTestDb();
+      const post = createPost();
+      await db.insert(authors).values({
+        uuid: post.authorId.getValue(),
+        name: 'Unknown Author',
+        avatarUrl: null,
+        updatedAt: new Date('2024-01-15T00:00:00.000Z'),
+      });
+      const record = createAuthorRecord({
+        id: post.authorId.getValue(),
+        name: 'Real Person',
+        avatarUrl: 'https://example.com/new-avatar.jpg',
+      });
+
+      const sut = new DrizzlePostBatchRepository(db);
+      await sut.upsertAll([post], [record]);
+
+      const [storedAuthor] = await db
+        .select()
+        .from(authors)
+        .where(eq(authors.uuid, record.id));
+      expect(storedAuthor).toMatchObject({
+        name: 'Real Person',
+        avatarUrl: 'https://example.com/new-avatar.jpg',
+      });
+    });
+
+    it('overwrites avatarUrl with null when the record has no avatar', async () => {
+      const db = getTestDb();
+      const post = createPost();
+      await db.insert(authors).values({
+        uuid: post.authorId.getValue(),
+        name: 'Real Person',
+        avatarUrl: 'https://example.com/old-avatar.jpg',
+        updatedAt: new Date('2024-01-15T00:00:00.000Z'),
+      });
+      const record = createAuthorRecord({
+        id: post.authorId.getValue(),
+        avatarUrl: null,
+      });
+
+      const sut = new DrizzlePostBatchRepository(db);
+      await sut.upsertAll([post], [record]);
+
+      const [storedAuthor] = await db
+        .select()
+        .from(authors)
+        .where(eq(authors.uuid, record.id));
+      expect(storedAuthor.avatarUrl).toBeNull();
     });
   });
 });

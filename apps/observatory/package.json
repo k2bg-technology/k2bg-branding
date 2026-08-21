@@ -1,0 +1,40 @@
+{
+  "name": "observatory",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3003",
+    "build": "next build",
+    "start": "next start",
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "format": "biome format --write .",
+    "test": "vitest run",
+    "test:watch": "vitest watch"
+  },
+  "dependencies": {
+    "next": "^16.3.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "ui": "workspace:*"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^17.0.45",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react-swc": "^3.11.0",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "biome-config": "workspace:*",
+    "jsdom": "^26.1.0",
+    "postcss": "^8.5.26",
+    "tailwind-config": "workspace:*",
+    "tailwindcss": "^4.3.3",
+    "test-utils": "workspace:*",
+    "tsconfig": "workspace:*",
+    "vite": "^6.4.3",
+    "vitest": "^3.2.7"
+  }
+}

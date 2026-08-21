@@ -1,9 +1,6 @@
-import { format } from 'date-fns';
-import path from 'path';
-
-import { generateHtmlTemplate } from '../../../adapters/shared';
 import { Contact } from '../../../domain';
 import type { EmailSender } from './emailSender';
+import type { EmailTemplateRenderer } from './emailTemplateRenderer';
 
 export interface SendEmailInput {
   name: string;
@@ -17,23 +14,27 @@ export interface SendEmailInput {
  * Sends a confirmation email to the contact form submitter.
  */
 export class SendEmail {
-  constructor(private readonly emailSender: EmailSender) {}
+  constructor(
+    private readonly emailSender: EmailSender,
+    private readonly emailTemplateRenderer: EmailTemplateRenderer
+  ) {}
 
   async execute(input: SendEmailInput): Promise<void> {
     const contact = Contact.create(input);
 
-    const emailBody = generateHtmlTemplate(
-      path.join(process.cwd(), 'app', '_mail-templates', 'contact.hbs'),
-      {
-        name: contact.name.getValue(),
-        message: contact.message.getValue(),
-        year: format(new Date(), 'yyyy'),
-        companyLogoUrl: process.env.COMPANY_LOGO_URL ?? '',
-      }
+    const ownerEmailBody =
+      this.emailTemplateRenderer.renderOwnerNotification(contact);
+    const visitorEmailBody =
+      this.emailTemplateRenderer.renderVisitorConfirmation(contact);
+
+    const visitorSubject = `${contact.name.getValue()} 様。お問合せいただきありがとうございます。`;
+    const ownerSubject = `${contact.name.getValue()} 様からお問合せが届きました。`;
+
+    await this.emailSender.sendToOwner(ownerSubject, ownerEmailBody);
+    await this.emailSender.sendToVisitor(
+      contact,
+      visitorSubject,
+      visitorEmailBody
     );
-
-    const subject = `${contact.name.getValue()} 様。お問合せいただきありがとうございます。`;
-
-    await this.emailSender.send(contact, subject, emailBody);
   }
 }
