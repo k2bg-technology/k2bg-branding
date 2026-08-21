@@ -85,6 +85,9 @@ importers:
       hono:
         specifier: ^4.13.2
         version: 4.13.2
+      logger:
+        specifier: workspace:*
+        version: link:../../packages/logger
       motion:
         specifier: ^12.43.0
         version: 12.43.0(@emotion/is-prop-valid@1.4.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -94,9 +97,6 @@ importers:
       notion-to-md:
         specifier: ^3.1.9
         version: 3.1.9
-      pino:
-        specifier: ^9.14.0
-        version: 9.14.0
       postgres:
         specifier: ^3.4.9
         version: 3.4.9
@@ -467,6 +467,25 @@ importers:
       '@biomejs/biome':
         specifier: ^2.5.8
         version: 2.5.8
+
+  packages/logger:
+    dependencies:
+      pino:
+        specifier: ^9.14.0
+        version: 9.14.0
+    devDependencies:
+      '@types/node':
+        specifier: ^17.0.45
+        version: 17.0.45
+      biome-config:
+        specifier: workspace:*
+        version: link:../biome-config
+      tsconfig:
+        specifier: workspace:*
+        version: link:../tsconfig
+      vitest:
+        specifier: ^3.2.7
+        version: 3.2.7(@types/debug@4.1.13)(@types/node@17.0.45)(jiti@2.7.0)(jsdom@26.1.0)(lightningcss@1.32.0)(msw@2.15.0(@types/node@17.0.45)(typescript@5.9.3))(terser@5.50.0)(tsx@4.23.12)(yaml@2.9.0)
 
   packages/tailwind-config:
     devDependencies:
@@ -14012,7 +14031,7 @@ snapshots:
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 6.0.0
-      '@types/node': 26.2.0
+      '@types/node': 17.0.45
 
   '@types/hast@3.0.5':
     dependencies:
@@ -14106,7 +14125,7 @@ snapshots:
 
   '@types/through@0.0.33':
     dependencies:
-      '@types/node': 26.2.0
+      '@types/node': 17.0.45
 
   '@types/tinycolor2@1.4.6': {}
 

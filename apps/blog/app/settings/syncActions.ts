@@ -1,11 +1,11 @@
 'use server';
 
+import { logger } from 'logger';
 import { getSession } from '../../infrastructure/auth/getSession';
 import {
   createSyncHeroImagesUseCase,
   createSyncPostsFromExternalUseCase,
 } from '../../infrastructure/di';
-import { logger } from '../../modules/shared/logger';
 import { revalidateBlogPages } from '../../server/lib/revalidation';
 
 const syncLogger = logger.child({ module: 'settings-sync' });

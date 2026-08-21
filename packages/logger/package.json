@@ -1,0 +1,29 @@
+{
+  "name": "logger",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    }
+  },
+  "license": "MIT",
+  "scripts": {
+    "lint": "biome check .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "pino": "^9.14.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.45",
+    "biome-config": "workspace:*",
+    "tsconfig": "workspace:*",
+    "vitest": "^3.2.7"
+  }
+}

@@ -20,6 +20,7 @@ app built with TypeScript.
 - **`biome-config`** - Shared Biome configurations
 - **`tsconfig`** - TypeScript configurations used throughout the monorepo
 - **`test-utils`** - Shared testing utilities with Vitest
+- **`logger`** - Shared pino logger with PII redaction
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
@@ -110,6 +111,7 @@ flowchart TB
         BiomeConfig["biome-config<br/>Code Quality"]
         TSConfig["tsconfig<br/>TypeScript Config"]
         TestUtils["test-utils<br/>Testing Utilities"]
+        Logger["logger<br/>Logging"]
     end
 
     Blog -.-> packages
@@ -121,7 +123,7 @@ flowchart TB
     classDef packageStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
 
     class Blog,Portfolio,SceneStudio,Observatory appStyle
-    class UI,TailwindConfig,BiomeConfig,TSConfig,TestUtils packageStyle
+    class UI,TailwindConfig,BiomeConfig,TSConfig,TestUtils,Logger packageStyle
 ```
 
 ### Development & Build Pipeline

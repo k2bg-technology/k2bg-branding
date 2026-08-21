@@ -1,3 +1,3 @@
-import { logger } from '../../../shared/logger';
+import { logger } from 'logger';
 
 export const contactLogger = logger.child({ module: 'contact' });

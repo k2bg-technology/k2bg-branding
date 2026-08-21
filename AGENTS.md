@@ -17,8 +17,9 @@ selection, engineering trade-offs, writing tone).
   (Remotion Studio for programmatic short-form videos, port 3002), and
   `apps/observatory` (Next.js, personal data visualization, port 3003).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
-  (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
-  `packages/tsconfig`.
+  (Vitest helpers), `packages/logger` (pino root logger with PII redaction; apps create
+  module loggers via `logger.child({ module })`), `packages/tailwind-config` (design
+  tokens), `packages/biome-config`, `packages/tsconfig`.
 - CI, templates, and bots live under `.github/`. See `.github/PULL_REQUEST_TEMPLATE.md`.
 - Tech stack: Next.js 16 (Turbopack, React Compiler), Remotion, TypeScript (strict,
   100%), Tailwind CSS v4, Turborepo, pnpm 10+.
