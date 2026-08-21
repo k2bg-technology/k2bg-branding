@@ -1,13 +1,23 @@
+import { tryToParsePath } from 'next/dist/lib/try-to-parse-path';
 import { NextRequest } from 'next/server';
 import { describe, expect, it } from 'vitest';
 
 import { cookieName } from './i18n/settings';
-import { middleware } from './middleware';
+import { config, middleware } from './middleware';
 
 const prefetchHeaderVariants: Record<string, string>[] = [
   { 'Next-Router-Prefetch': '1' },
   { Purpose: 'prefetch' },
 ];
+
+// Compiles config.matcher the same way the Next.js build does, so the tests
+// exercise the exclusions the framework actually applies.
+function matchesMiddlewareMatcher(pathname: string): boolean {
+  return config.matcher.some((matcherPattern) => {
+    const { regexStr } = tryToParsePath(matcherPattern);
+    return regexStr !== undefined && new RegExp(regexStr).test(pathname);
+  });
+}
 
 describe('middleware', () => {
   describe('when the request path has no locale prefix', () => {
@@ -89,6 +99,35 @@ describe('middleware', () => {
         const response = middleware(request);
 
         expect(response.cookies.get(cookieName)).toBeUndefined();
+      }
+    );
+  });
+
+  describe('config matcher', () => {
+    it.each(['/robots.txt', '/sitemap.xml'])(
+      'excludes %s from locale handling',
+      (pathname) => {
+        const isMatched = matchesMiddlewareMatcher(pathname);
+
+        expect(isMatched).toBe(false);
+      }
+    );
+
+    it.each(['/manifest.webmanifest', '/og/hero.png', '/en/logo.svg'])(
+      'excludes the static-like dotted path %s from locale handling',
+      (pathname) => {
+        const isMatched = matchesMiddlewareMatcher(pathname);
+
+        expect(isMatched).toBe(false);
+      }
+    );
+
+    it.each(['/', '/about', '/en/about'])(
+      'includes the page path %s in locale handling',
+      (pathname) => {
+        const isMatched = matchesMiddlewareMatcher(pathname);
+
+        expect(isMatched).toBe(true);
       }
     );
   });
