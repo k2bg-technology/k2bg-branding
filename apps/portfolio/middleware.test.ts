@@ -113,6 +113,15 @@ describe('middleware', () => {
       }
     );
 
+    it.each(['/manifest.webmanifest', '/og/hero.png', '/en/logo.svg'])(
+      'excludes the static-like dotted path %s from locale handling',
+      (pathname) => {
+        const isMatched = matchesMiddlewareMatcher(pathname);
+
+        expect(isMatched).toBe(false);
+      }
+    );
+
     it.each(['/', '/about', '/en/about'])(
       'includes the page path %s in locale handling',
       (pathname) => {
