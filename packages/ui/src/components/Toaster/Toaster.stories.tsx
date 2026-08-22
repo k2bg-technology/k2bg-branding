@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { type ToasterProps, toast } from 'sonner';
-import { expect, within } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '../Button';
 
@@ -37,6 +37,24 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Each story triggers a different message, so the assertion is built per story
+ * rather than shared through one play function.
+ */
+const createToastPlay =
+  (expectedMessage: string): NonNullable<Story['play']> =>
+  async ({ canvas, userEvent }) => {
+    const button = canvas.getByRole('button');
+
+    await userEvent.click(button);
+
+    // Retry the visibility check: Sonner mounts the toast at opacity 0 and
+    // fades it in, so a one-shot assertion races the enter animation.
+    await waitFor(() =>
+      expect(within(document.body).getByText(expectedMessage)).toBeVisible()
+    );
+  };
+
 export const Default: Story = {
   render: () => (
     <Button
@@ -50,23 +68,7 @@ export const Default: Story = {
       Show default toast
     </Button>
   ),
-  play: async ({ canvas, userEvent }) => {
-    const button = canvas.getByRole('button');
-    const expectedMessage =
-      {
-        'Show default toast': 'Default notification',
-        'Show success toast': 'Operation completed successfully',
-        'Show info toast': 'Here is some helpful information',
-        'Show warning toast': 'Please review before continuing',
-        'Show error toast': 'An error occurred while processing',
-      }[button.textContent ?? ''] ?? 'Default notification';
-
-    await userEvent.click(button);
-
-    await expect(
-      within(document.body).findByText(expectedMessage)
-    ).resolves.toBeVisible();
-  },
+  play: createToastPlay('Default notification'),
 };
 
 export const Success: Story = {
@@ -83,7 +85,7 @@ export const Success: Story = {
       Show success toast
     </Button>
   ),
-  play: Default.play,
+  play: createToastPlay('Operation completed successfully'),
 };
 
 export const Info: Story = {
@@ -100,7 +102,7 @@ export const Info: Story = {
       Show info toast
     </Button>
   ),
-  play: Default.play,
+  play: createToastPlay('Here is some helpful information'),
 };
 
 export const Warning: Story = {
@@ -117,7 +119,7 @@ export const Warning: Story = {
       Show warning toast
     </Button>
   ),
-  play: Default.play,
+  play: createToastPlay('Please review before continuing'),
 };
 
 export const Error: Story = {
@@ -134,7 +136,7 @@ export const Error: Story = {
       Show error toast
     </Button>
   ),
-  play: Default.play,
+  play: createToastPlay('An error occurred while processing'),
 };
 
 export const AllVariants: Story = {

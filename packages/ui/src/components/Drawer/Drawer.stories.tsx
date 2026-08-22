@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, within } from 'storybook/test';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '../Button';
 
@@ -30,9 +30,11 @@ const meta = {
 
     await userEvent.click(button);
 
-    await expect(
-      within(document.body).findByRole('dialog')
-    ).resolves.toBeVisible();
+    // Retry the visibility check: the popup mounts at opacity 0 and fades in,
+    // so a one-shot assertion races the enter animation.
+    await waitFor(() =>
+      expect(within(document.body).getByRole('dialog')).toBeVisible()
+    );
   },
 } satisfies Meta<typeof Drawer>;
 
