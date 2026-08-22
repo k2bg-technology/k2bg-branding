@@ -15,6 +15,7 @@ import {
   Tags,
   Title,
 } from '../../../domain';
+import type { AuthorRecord } from '../../sync/sync-posts-from-external';
 import type {
   AuthorOutput,
   PaginatedResult,
@@ -136,6 +137,17 @@ export function createPosts(
     const slug = Slug.create(`test-post-${index}`);
     return createPost({ ...overrides, id, slug });
   });
+}
+
+export function createAuthorRecord(
+  overrides: Partial<AuthorRecord> = {}
+): AuthorRecord {
+  return {
+    id: '660e8400-e29b-41d4-a716-446655440000',
+    name: 'Test Author',
+    avatarUrl: 'https://example.com/avatar.jpg',
+    ...overrides,
+  };
 }
 
 export interface PostWithAuthor {

@@ -14,7 +14,11 @@ export {
 export { Pagination } from './src/components/Pagination';
 export { Popover } from './src/components/Popover';
 export { ScrollArea } from './src/components/ScrollArea';
-export { Skelton } from './src/components/Skelton';
+export {
+  Skeleton,
+  /** @deprecated Use `Skeleton` instead. */
+  Skeleton as Skelton,
+} from './src/components/Skeleton';
 export { Toaster, useToast } from './src/components/Toaster';
 export { cn } from './src/utils/cn';
 export { twMerge } from './src/utils/extendTailwindMerge';

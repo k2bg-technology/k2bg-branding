@@ -19,6 +19,8 @@
         "app/**/layout.tsx",
         "app/**/error.tsx",
         "app/**/not-found.tsx",
+        "app/robots.ts",
+        "app/sitemap.ts",
         "proxy.ts"
       ],
       "linter": {

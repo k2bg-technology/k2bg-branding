@@ -10,7 +10,7 @@ vi.mock('next/cache', () => ({
   revalidatePath: vi.fn(),
 }));
 
-vi.mock('../../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ error: errorMock, info: vi.fn() }),
   },

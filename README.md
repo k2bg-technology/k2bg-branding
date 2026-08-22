@@ -1,13 +1,17 @@
 # K2BG Branding
 
-A modern **Turborepo monorepo** for K2BG Branding containing a technology blog and multilingual portfolio website built with Next.js and TypeScript.
+A modern **Turborepo monorepo** for K2BG Branding containing a technology blog,
+multilingual portfolio, programmatic video studio, and personal data visualization
+app built with TypeScript.
 
 ## What's Inside
 
 ### Applications
 
 - **[Blog](apps/blog/README.md)** - Next.js blog with Notion CMS and Clean Architecture (port 3000)
-- **[Portfolio](apps/portfolio/README.md)** - Multilingual portfolio with i18next (port 3001)
+- **[Portfolio](apps/portfolio/README.md)** - Multilingual portfolio with server-only dictionary-based internationalization (port 3001)
+- **[Scene Studio](apps/scene-studio/README.md)** - Remotion studio for data-driven short-form video compositions (port 3002)
+- **[Observatory](apps/observatory/README.md)** - Personal data visualization app for finances, health, home environment, and web analytics (port 3003)
 
 ### Shared Packages
 
@@ -16,12 +20,14 @@ A modern **Turborepo monorepo** for K2BG Branding containing a technology blog a
 - **`biome-config`** - Shared Biome configurations
 - **`tsconfig`** - TypeScript configurations used throughout the monorepo
 - **`test-utils`** - Shared testing utilities with Vitest
+- **`logger`** - Shared pino logger with PII redaction
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ## Technology Stack
 
-- **[Next.js 16](https://nextjs.org/)** - React framework for both applications (Turbopack, React Compiler)
+- **[Next.js](https://nextjs.org/)** - React framework for the blog, portfolio, and observatory applications (Turbopack, React Compiler)
+- **[Remotion](https://www.remotion.dev/)** - React framework for programmatic video rendering
 - **[TypeScript](https://www.typescriptlang.org/)** - Static type checking
 - **[Tailwind CSS v4](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Turborepo](https://turbo.build/repo)** - Monorepo build system
@@ -47,14 +53,16 @@ pnpm install
 ### Start All Applications
 
 ```bash
-pnpm dev          # Start both blog (3000) and portfolio (3001) apps
+pnpm dev          # Start all development applications
 ```
 
 ### Start Individual Applications
 
 ```bash
-pnpm dev --filter=blog        # Blog app only
-pnpm dev --filter=portfolio   # Portfolio app only
+pnpm -F blog dev           # Blog app (port 3000)
+pnpm -F portfolio dev      # Portfolio app (port 3001)
+pnpm -F scene-studio dev   # Scene Studio (port 3002)
+pnpm -F observatory dev    # Observatory app (port 3003)
 ```
 
 ### Component Development
@@ -93,6 +101,8 @@ flowchart TB
     subgraph apps["Apps"]
         Blog["Blog App<br/>(port 3000)"]
         Portfolio["Portfolio App<br/>(port 3001)"]
+        SceneStudio["Scene Studio<br/>(port 3002)"]
+        Observatory["Observatory App<br/>(port 3003)"]
     end
 
     subgraph packages["Shared Packages"]
@@ -101,16 +111,19 @@ flowchart TB
         BiomeConfig["biome-config<br/>Code Quality"]
         TSConfig["tsconfig<br/>TypeScript Config"]
         TestUtils["test-utils<br/>Testing Utilities"]
+        Logger["logger<br/>Logging"]
     end
 
     Blog -.-> packages
     Portfolio -.-> packages
+    SceneStudio -.-> packages
+    Observatory -.-> packages
 
     classDef appStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef packageStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
 
-    class Blog,Portfolio appStyle
-    class UI,TailwindConfig,BiomeConfig,TSConfig,TestUtils packageStyle
+    class Blog,Portfolio,SceneStudio,Observatory appStyle
+    class UI,TailwindConfig,BiomeConfig,TSConfig,TestUtils,Logger packageStyle
 ```
 
 ### Development & Build Pipeline
@@ -140,6 +153,7 @@ flowchart TB
 
     subgraph build["Build Process"]
         NextJS["Next.js Build<br/>Bundle Optimization"]
+        Remotion["Remotion Bundle<br/>Video Composition"]
         Tailwind["Tailwind CSS<br/>Style Processing"]
         DrizzleGen["Database<br/>Drizzle ORM"]
     end
@@ -160,7 +174,7 @@ flowchart TB
     class Turbo turboStyle
     class Biome,TS qualityStyle
     class Vitest,Storybook,Chromatic testStyle
-    class NextJS,Tailwind,DrizzleGen buildStyle
+    class NextJS,Remotion,Tailwind,DrizzleGen buildStyle
 ```
 
 ## Contributing
@@ -175,3 +189,4 @@ and PR rules) live in a single source of truth: **[AGENTS.md](AGENTS.md)**. All 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 - [Storybook Documentation](https://storybook.js.org/docs)
+- [Remotion Documentation](https://www.remotion.dev/docs)

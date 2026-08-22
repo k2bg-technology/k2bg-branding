@@ -6,6 +6,7 @@ import { defineConfig } from 'vitest/config';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const uiAlias = resolve(__dirname, '../../packages/ui/index.ts');
+const loggerAlias = resolve(__dirname, '../../packages/logger/index.ts');
 const jsdomSetupPath = resolve(
   __dirname,
   '../../packages/test-utils/setupTests.ts'
@@ -23,7 +24,7 @@ export default defineConfig({
     workspace: [
       {
         plugins: [react()],
-        resolve: { alias: { ui: uiAlias } },
+        resolve: { alias: { ui: uiAlias, logger: loggerAlias } },
         test: {
           name: 'jsdom',
           globals: true,
@@ -36,7 +37,7 @@ export default defineConfig({
         },
       },
       {
-        resolve: { alias: { ui: uiAlias } },
+        resolve: { alias: { ui: uiAlias, logger: loggerAlias } },
         test: {
           name: 'node-db',
           globals: true,

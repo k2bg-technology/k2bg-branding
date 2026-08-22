@@ -2,7 +2,10 @@ export {
   createFetchAffiliateUseCase,
   createFetchAffiliatesByIdsUseCase,
 } from './affiliate';
-export { createSendEmailUseCase } from './contact';
+export {
+  createEnforceContactRateLimitUseCase,
+  createSendEmailUseCase,
+} from './contact';
 export { createFetchMediaUseCase } from './media';
 export {
   createFetchPostSummariesUseCase,

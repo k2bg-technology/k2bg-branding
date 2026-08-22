@@ -1,9 +1,9 @@
 import Link from 'next/link';
-import { Avatar } from 'ui';
 import type {
   PaginatedResult,
   PostSummaryOutput,
 } from '../../modules/post/use-cases';
+import { AuthorAvatar } from '../author-avatar/AuthorAvatar';
 import { BlogCard } from '../blog-card';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { Pagination } from '../pagination/Pagination';
@@ -73,12 +73,10 @@ export async function Articles(props: Props) {
                 excerpt={article.excerpt ?? undefined}
                 avatar={
                   article.author && (
-                    <Avatar>
-                      <Avatar.Image
-                        alt="author"
-                        src={article.author.avatarUrl ?? undefined}
-                      />
-                    </Avatar>
+                    <AuthorAvatar
+                      name={article.author.name}
+                      avatarUrl={article.author.avatarUrl}
+                    />
                   )
                 }
                 date={article.releaseDate}

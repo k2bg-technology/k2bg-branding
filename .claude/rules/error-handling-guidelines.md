@@ -1,8 +1,8 @@
 ---
-paths: apps/blog/modules/**/*.ts, apps/blog/app/**/*.tsx, apps/blog/server/middleware/*.ts
+paths: apps/blog/modules/**/*.ts, apps/blog/app/**/*.tsx, apps/blog/server/middleware/*.ts, apps/observatory/modules/**/*.ts, apps/observatory/app/**/*.tsx, apps/observatory/components/**/*.tsx
 ---
 
-# Error Handling Guidelines (Blog App)
+# Error Handling Guidelines (Blog and Observatory Apps)
 
 Errors are layered and translated at each boundary — never leaked raw across layers:
 
@@ -74,10 +74,14 @@ Canonical: `apps/blog/app/search/page.tsx` and
   same call gets the same discrimination, not a different (or missing) catch.
 - Rendering errors are caught by the global boundaries (`apps/blog/app/error.tsx`,
   `apps/blog/app/not-found.tsx`) — do not add per-page try/catch around rendering.
+- Observatory dashboards degrade instead of 404ing: the async section component
+  awaits the fetch, logs with `logger.error`, and renders an inline unavailable
+  state (canonical: `apps/observatory/components/table-catalog/TableCatalog.tsx`).
+  MUST NOT `notFound()` on a data failure.
 
 ## Verification
 
-- `pnpm -F blog typecheck && pnpm -F blog lint && pnpm -F blog test`.
+- `pnpm -F blog typecheck && pnpm -F blog lint && pnpm -F blog test` (or `-F observatory`).
 - Error mapping and discrimination are behavior — cover them in co-located
   `*.test.ts(x)` per `.claude/rules/unit-test-guidelines.md` (e.g. assert an adapter
   wraps a failing driver call in `RepositoryError` with `cause` preserved).

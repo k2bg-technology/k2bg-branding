@@ -3,6 +3,7 @@ import {
   createFetchAffiliatesByIdsUseCase,
   createFetchAffiliateUseCase,
 } from '../../infrastructure/di/affiliate';
+import { affiliateLogger } from '../../modules/affiliate/adapters/shared/logger';
 import { AffiliateType } from '../../modules/affiliate/domain';
 import { AffiliateBanner } from './AffiliateBanner';
 import { AffiliateProduct } from './AffiliateProduct';
@@ -38,12 +39,19 @@ interface SubProvider {
 export async function AffiliateEmb(props: AffiliateEmbProps) {
   const { id } = props;
 
-  const { affiliate } = await fetchAffiliateById(id);
+  const data = await loadAffiliateEmbData(id).catch((error) => {
+    affiliateLogger.error(
+      { err: error, id },
+      'Failed to fetch affiliate embed'
+    );
+    return null;
+  });
 
-  const affiliateSubProviders =
-    affiliate.type === AffiliateType.PRODUCT
-      ? await fetchSubProviders(affiliate.subProviderIds)
-      : [];
+  if (data === null) {
+    return null;
+  }
+
+  const { affiliate, affiliateSubProviders } = data;
 
   return (
     <div className="mt-8">
@@ -66,6 +74,21 @@ export async function AffiliateEmb(props: AffiliateEmbProps) {
       })()}
     </div>
   );
+}
+
+/**
+ * Loads the affiliate and, for product affiliates, its sub-providers.
+ * Isolated from rendering so the caller can fail soft on any fetch error.
+ */
+async function loadAffiliateEmbData(id: string) {
+  const { affiliate } = await fetchAffiliateById(id);
+
+  const affiliateSubProviders =
+    affiliate.type === AffiliateType.PRODUCT
+      ? await fetchSubProviders(affiliate.subProviderIds)
+      : [];
+
+  return { affiliate, affiliateSubProviders };
 }
 
 /**

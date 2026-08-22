@@ -26,8 +26,8 @@ export function Dialog({
     <DialogPrimitive.Root {...rest}>
       {isValidElement(trigger) && <DialogPrimitive.Trigger render={trigger} />}
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Backdrop className="fixed bg-black/50 inset-0" />
-        <DialogPrimitive.Popup className="flex flex-col gap-6 fixed top-[50%] left-[50%] w-max max-w-[calc(100%-2rem)] h-max max-h-[calc(100%-4rem)] translate-x-[-50%] translate-y-[-50%] rounded-xl p-normal bg-white focus:outline-hidden md:p-6">
+        <DialogPrimitive.Backdrop className="fixed bg-base-black/50 inset-0" />
+        <DialogPrimitive.Popup className="flex flex-col gap-6 fixed top-[50%] left-[50%] w-max max-w-[calc(100%-2rem)] h-max max-h-[calc(100%-4rem)] translate-x-[-50%] translate-y-[-50%] rounded-xl p-normal bg-base-white focus:outline-hidden md:p-6">
           <DialogPrimitive.Title
             className={twMerge(
               'text-body-r-sm leading-body-r-sm font-bold',

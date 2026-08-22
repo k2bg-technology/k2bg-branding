@@ -1,0 +1,19 @@
+{
+  "root": false,
+  "extends": ["biome-config/biome.jsonc"],
+
+  "files": {
+    "includes": ["*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"]
+  },
+
+  "overrides": [
+    {
+      "includes": ["*.config.*"],
+      "linter": {
+        "rules": {
+          "style": { "noDefaultExport": "off" }
+        }
+      }
+    }
+  ]
+}

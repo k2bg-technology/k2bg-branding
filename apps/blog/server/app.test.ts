@@ -12,7 +12,7 @@ const { infoMock, errorMock } = vi.hoisted(() => ({
   errorMock: vi.fn(),
 }));
 
-vi.mock('../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ info: infoMock, error: errorMock }),
   },

@@ -1,4 +1,5 @@
 import type { Post } from '../../../domain';
+import type { AuthorRecord } from './authorRecord';
 
 /**
  * Repository interface for batch post operations
@@ -7,7 +8,7 @@ import type { Post } from '../../../domain';
  */
 export interface PostBatchRepository {
   /**
-   * Upserts multiple posts (insert or update)
+   * Upserts multiple posts (insert or update) and their author records
    */
-  upsertAll(posts: Post[]): Promise<void>;
+  upsertAll(posts: Post[], authorRecords: AuthorRecord[]): Promise<void>;
 }

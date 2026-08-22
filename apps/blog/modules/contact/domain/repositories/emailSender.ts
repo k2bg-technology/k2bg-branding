@@ -7,5 +7,10 @@ import type { Contact } from '../entities/contact';
  * This is a port that will be implemented by adapters (e.g., AWS SES).
  */
 export interface EmailSender {
-  send(contact: Contact, subject: string, htmlBody: string): Promise<void>;
+  sendToVisitor(
+    contact: Contact,
+    subject: string,
+    htmlBody: string
+  ): Promise<void>;
+  sendToOwner(subject: string, htmlBody: string): Promise<void>;
 }
