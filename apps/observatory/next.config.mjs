@@ -49,7 +49,9 @@ const monorepoRoot = resolve(__dirname, '..', '..');
 const config = {
   reactStrictMode: true,
   reactCompiler: true,
-  transpilePackages: ['ui', 'tailwind-config'],
+  transpilePackages: ['ui', 'tailwind-config', 'logger'],
+  // The warehouse SDK relies on Node.js APIs; load it natively instead of bundling.
+  serverExternalPackages: ['@google-cloud/bigquery'],
   outputFileTracingRoot: monorepoRoot,
   turbopack: {},
   async headers() {

@@ -1,0 +1,1 @@
+export { createFetchTableCatalogUseCase } from './catalog';
