@@ -62,12 +62,12 @@ describe('pagination ranges', () => {
       siblingCount: 2,
       expectedItems: [1, 2, 'start-ellipsis', 13, 14, 15, 16, 17, 18, 19, 20],
     },
-  ])('returns visible pages and ellipses for page $currentIndex of $count', ({
-    expectedItems,
-    ...props
-  }) => {
-    const sut = usePagination(props);
+  ])(
+    'returns visible pages and ellipses for page $currentIndex of $count',
+    ({ expectedItems, ...props }) => {
+      const sut = usePagination(props);
 
-    expect(sut).toEqual(expectedItems);
-  });
+      expect(sut).toEqual(expectedItems);
+    }
+  );
 });

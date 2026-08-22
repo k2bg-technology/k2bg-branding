@@ -10,7 +10,7 @@ describe('button variant classes', () => {
         'px-3',
         'h-8',
         'bg-main-default',
-        'text-white',
+        'text-base-white',
         'hover:bg-main-default/90',
       ],
     },
