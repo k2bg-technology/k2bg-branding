@@ -1,6 +1,12 @@
+# Chromatic is intentionally advisory in this solo-maintained repository.
+# Visual diffs are reviewed in the Chromatic UI, and intentional visual changes are frequent.
+# Requiring this check would block every restyle; revisit the policy if contributors join.
 name: 'Chromatic'
 
 on: push
+
+permissions:
+  contents: read
 
 jobs:
   chromatic:
@@ -8,15 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20]
+        node-version: [24]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+        uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'pnpm'

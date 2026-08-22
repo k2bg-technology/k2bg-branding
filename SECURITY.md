@@ -2,12 +2,15 @@
 
 ## Supported Versions
 
-This is a monorepo containing two Next.js applications. Security updates are applied to the latest version on the `main` branch.
+This monorepo contains three Next.js applications and one Remotion video application.
+Security updates are applied to the latest version on the `main` branch.
 
 | Application | Supported |
-| ----------- | --------- |
-| Blog app    | Yes       |
-| Portfolio app | Yes     |
+| --- | --- |
+| Blog app | Yes |
+| Portfolio app | Yes |
+| Scene Studio | Yes |
+| Observatory app | Yes |
 
 ## Reporting a Vulnerability
 
@@ -30,7 +33,7 @@ You should receive an initial response within 72 hours. We will keep you informe
 
 - Never commit secrets, API keys, or credentials to the repository
 - Use `.env.local` for local development (this file is gitignored)
-- Refer to `.env.example` files in each app directory for required variables
+- Refer to an app's README and, when present, `.env.example` for its required configuration
 
 ### Dependencies
 

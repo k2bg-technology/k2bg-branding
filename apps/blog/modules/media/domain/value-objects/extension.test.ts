@@ -30,20 +30,14 @@ describe('Extension', () => {
       expect(sut.getValue()).toBe('jpg');
     });
 
-    it.each([
-      'jpg',
-      'jpeg',
-      'png',
-      'gif',
-      'webp',
-      'svg',
-      'mp4',
-      'webm',
-    ])('creates Extension for valid type: %s', (ext) => {
-      const sut = Extension.create(ext);
+    it.each(['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'mp4', 'webm'])(
+      'creates Extension for valid type: %s',
+      (ext) => {
+        const sut = Extension.create(ext);
 
-      expect(sut.getValue()).toBe(ext);
-    });
+        expect(sut.getValue()).toBe(ext);
+      }
+    );
 
     it('throws InvalidExtensionError when value is empty string', () => {
       const emptyValue = '';

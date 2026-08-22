@@ -6,7 +6,7 @@ const { infoMock } = vi.hoisted(() => ({
   infoMock: vi.fn(),
 }));
 
-vi.mock('../../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ info: infoMock }),
   },

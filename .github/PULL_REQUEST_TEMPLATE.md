@@ -32,6 +32,8 @@
 
 - [ ] 📝 Blog app (`apps/blog/`)
 - [ ] 💼 Portfolio app (`apps/portfolio/`)
+- [ ] 🎬 Scene Studio (`apps/scene-studio/`)
+- [ ] 🔭 Observatory app (`apps/observatory/`)
 - [ ] 🎨 UI package (`packages/ui/`)
 - [ ] 🔧 Shared packages (`packages/`)
 - [ ] 🏗️ Build configuration (Turborepo, configs)

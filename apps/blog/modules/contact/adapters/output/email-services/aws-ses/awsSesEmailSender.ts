@@ -20,16 +20,27 @@ export class AwsSesEmailSender implements EmailSender {
     private readonly senderEmail: string
   ) {}
 
-  async send(
+  async sendToVisitor(
     contact: Contact,
+    subject: string,
+    htmlBody: string
+  ): Promise<void> {
+    await this.sendEmail([contact.email.getValue()], subject, htmlBody);
+  }
+
+  async sendToOwner(subject: string, htmlBody: string): Promise<void> {
+    await this.sendEmail([this.senderEmail], subject, htmlBody);
+  }
+
+  private async sendEmail(
+    toAddresses: string[],
     subject: string,
     htmlBody: string
   ): Promise<void> {
     const params: SendEmailCommandInput = {
       Source: this.senderEmail,
       Destination: {
-        ToAddresses: [contact.email.getValue()],
-        BccAddresses: [this.senderEmail],
+        ToAddresses: toAddresses,
       },
       Message: {
         Subject: { Data: subject, Charset: 'UTF-8' },

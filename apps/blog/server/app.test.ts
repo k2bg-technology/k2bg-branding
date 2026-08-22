@@ -12,7 +12,7 @@ const { infoMock, errorMock } = vi.hoisted(() => ({
   errorMock: vi.fn(),
 }));
 
-vi.mock('../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ info: infoMock, error: errorMock }),
   },
@@ -105,6 +105,13 @@ describe('OpenAPIHono app composition', () => {
 
       const statusOk = 200;
       expect(res.status).toBe(statusOk);
+    });
+
+    it('rejects an unmounted path without an API key (default-deny before routing)', async () => {
+      const res = await app.request('/api/does-not-exist', { method: 'GET' });
+
+      const statusUnauthorized = 401;
+      expect(res.status).toBe(statusUnauthorized);
     });
   });
 

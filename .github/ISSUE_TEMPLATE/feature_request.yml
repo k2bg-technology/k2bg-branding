@@ -30,6 +30,8 @@ body:
       options:
         - Blog app (apps/blog/)
         - Portfolio app (apps/portfolio/)
+        - Scene Studio (apps/scene-studio/)
+        - Observatory app (apps/observatory/)
         - UI package (packages/ui/)
         - Shared packages
         - Build/Configuration
@@ -46,6 +48,7 @@ body:
       options:
         - New component/UI element
         - New page/route
+        - New video composition/pattern
         - API enhancement
         - Performance improvement
         - Developer experience
@@ -147,6 +150,7 @@ body:
         - label: Requires accessibility considerations
         - label: Requires internationalization (i18n)
         - label: Requires SEO optimization
+        - label: Requires video rendering
 
   - type: textarea
     id: technical-details
