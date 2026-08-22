@@ -1,5 +1,17 @@
 export { Avatar } from './src/components/Avatar';
 export { Button, buttonVariants } from './src/components/Button';
+export {
+  BarChart,
+  type BarChartProps,
+  type BarSeries,
+  ChartColor,
+  type ChartHeight,
+  ChartPeriod,
+  TimeSeriesChart,
+  type TimeSeriesChartProps,
+  type TimeSeriesPoint,
+  type TimeSeriesSeries,
+} from './src/components/Chart';
 export { Dialog } from './src/components/Dialog';
 export { Drawer } from './src/components/Drawer';
 export { DropdownMenu } from './src/components/DropdownMenu';
