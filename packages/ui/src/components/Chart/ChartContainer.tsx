@@ -16,7 +16,7 @@ import { cn } from '../../utils/cn';
 const chartContainerVariants = cva(
   [
     'flex w-full justify-center text-caption',
-    '[&_.recharts-cartesian-axis-tick_text]:fill-base-dark',
+    '[&_.recharts-cartesian-axis-tick-value]:fill-base-dark',
     '[&_.recharts-cartesian-grid_line]:stroke-base-light/50',
     '[&_.recharts-curve.recharts-tooltip-cursor]:stroke-base-light',
     '[&_.recharts-rectangle.recharts-tooltip-cursor]:fill-base-light/50',
