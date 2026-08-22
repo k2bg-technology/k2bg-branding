@@ -1,5 +1,7 @@
 # K2BG Blog
 
+![A 1990s bookstore at dawn just before opening, bundles of fresh magazines on the sidewalk, its shelves dissolving into article cards and text blocks](public/hero.jpg)
+
 A **Next.js 16** blog application with **Notion CMS** integration, built following **Clean Architecture** and **Domain-Driven Design** principles. Part of the [K2BG Branding monorepo](../../README.md).
 
 ## Technology Stack

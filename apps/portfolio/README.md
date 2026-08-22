@@ -1,5 +1,7 @@
 # K2BG Portfolio
 
+![A white curved retro-futuristic office building in morning light, its facade dissolving into layout grids and bilingual signage panels](public/images/hero-readme.jpg)
+
 A Next.js 16 portfolio site for K2.B.G. Technology. It supports Japanese and English with server-only dictionary-based internationalization and language-prefixed routes.
 
 ## Stack

@@ -1,5 +1,7 @@
 # K2BG Scene Studio
 
+![A film soundstage opening onto a late-80s Tokyo street set moments before the first take, dissolving into film frames and editing timelines](public/images/hero.jpg)
+
 A **Remotion** studio for data-driven short-form videos. Each video is defined
 by a composition, brand rules, media assets, and validated props; its output is
 deterministically derived from frame numbers. Part of the
