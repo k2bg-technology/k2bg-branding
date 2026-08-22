@@ -10,15 +10,14 @@ describe('formatTimecode', () => {
     { frame: 1800, fps: 30, expected: '00:01:00:00' },
     { frame: 367, fps: 60, expected: '00:00:06:07' },
     { frame: 216000, fps: 60, expected: '01:00:00:00' },
-  ])('formats frame $frame at $fps fps as $expected', ({
-    frame,
-    fps,
-    expected,
-  }) => {
-    const result = formatTimecode({ frame, fps });
+  ])(
+    'formats frame $frame at $fps fps as $expected',
+    ({ frame, fps, expected }) => {
+      const result = formatTimecode({ frame, fps });
 
-    expect(result).toBe(expected);
-  });
+      expect(result).toBe(expected);
+    }
+  );
 });
 
 describe('getHudMarkState', () => {
@@ -29,33 +28,29 @@ describe('getHudMarkState', () => {
     expect(firstResult).toEqual(secondResult);
   });
 
-  it.each([
-    { frame: 0 },
-    { frame: 97 },
-    { frame: 900 },
-  ])('keeps the mark inside the frame at frame $frame', ({ frame }) => {
-    const result = getHudMarkState({ markIndex: 7, frame });
+  it.each([{ frame: 0 }, { frame: 97 }, { frame: 900 }])(
+    'keeps the mark inside the frame at frame $frame',
+    ({ frame }) => {
+      const result = getHudMarkState({ markIndex: 7, frame });
 
-    expect(result.xInPercent).toBeGreaterThanOrEqual(0);
-    expect(result.xInPercent).toBeLessThanOrEqual(100);
-    expect(result.yInPercent).toBeGreaterThanOrEqual(0);
-    expect(result.yInPercent).toBeLessThanOrEqual(100);
-  });
+      expect(result.xInPercent).toBeGreaterThanOrEqual(0);
+      expect(result.xInPercent).toBeLessThanOrEqual(100);
+      expect(result.yInPercent).toBeGreaterThanOrEqual(0);
+      expect(result.yInPercent).toBeLessThanOrEqual(100);
+    }
+  );
 
-  it.each([
-    { frame: 0 },
-    { frame: 97 },
-    { frame: 900 },
-  ])('blinks between the minimum and full opacity at frame $frame', ({
-    frame,
-  }) => {
-    const minimumOpacity = 0.25;
+  it.each([{ frame: 0 }, { frame: 97 }, { frame: 900 }])(
+    'blinks between the minimum and full opacity at frame $frame',
+    ({ frame }) => {
+      const minimumOpacity = 0.25;
 
-    const result = getHudMarkState({ markIndex: 3, frame });
+      const result = getHudMarkState({ markIndex: 3, frame });
 
-    expect(result.opacity).toBeGreaterThanOrEqual(minimumOpacity);
-    expect(result.opacity).toBeLessThanOrEqual(1);
-  });
+      expect(result.opacity).toBeGreaterThanOrEqual(minimumOpacity);
+      expect(result.opacity).toBeLessThanOrEqual(1);
+    }
+  );
 
   it('keeps the mark kind stable while the frame advances', () => {
     const kinds = [0, 15, 240].map(

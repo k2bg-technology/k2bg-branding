@@ -1,5 +1,5 @@
 import { createMiddleware } from 'hono/factory';
-import { logger } from '../../modules/shared/logger';
+import { logger } from 'logger';
 
 const apiLogger = logger.child({ module: 'api' });
 

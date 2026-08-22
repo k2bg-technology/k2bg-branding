@@ -1,7 +1,8 @@
 # K2BG Branding
 
 A modern **Turborepo monorepo** for K2BG Branding containing a technology blog,
-multilingual portfolio, and programmatic video studio built with TypeScript.
+multilingual portfolio, programmatic video studio, and personal data visualization
+app built with TypeScript.
 
 ## What's Inside
 
@@ -10,6 +11,7 @@ multilingual portfolio, and programmatic video studio built with TypeScript.
 - **[Blog](apps/blog/README.md)** - Next.js blog with Notion CMS and Clean Architecture (port 3000)
 - **[Portfolio](apps/portfolio/README.md)** - Multilingual portfolio with server-only dictionary-based internationalization (port 3001)
 - **[Scene Studio](apps/scene-studio/README.md)** - Remotion studio for data-driven short-form video compositions (port 3002)
+- **[Observatory](apps/observatory/README.md)** - Personal data visualization app for finances, health, home environment, and web analytics (port 3003)
 
 ### Shared Packages
 
@@ -18,12 +20,13 @@ multilingual portfolio, and programmatic video studio built with TypeScript.
 - **`biome-config`** - Shared Biome configurations
 - **`tsconfig`** - TypeScript configurations used throughout the monorepo
 - **`test-utils`** - Shared testing utilities with Vitest
+- **`logger`** - Shared pino logger with PII redaction
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ## Technology Stack
 
-- **[Next.js](https://nextjs.org/)** - React framework for the blog and portfolio applications (Turbopack, React Compiler)
+- **[Next.js](https://nextjs.org/)** - React framework for the blog, portfolio, and observatory applications (Turbopack, React Compiler)
 - **[Remotion](https://www.remotion.dev/)** - React framework for programmatic video rendering
 - **[TypeScript](https://www.typescriptlang.org/)** - Static type checking
 - **[Tailwind CSS v4](https://tailwindcss.com/)** - Utility-first CSS framework
@@ -59,6 +62,7 @@ pnpm dev          # Start all development applications
 pnpm -F blog dev           # Blog app (port 3000)
 pnpm -F portfolio dev      # Portfolio app (port 3001)
 pnpm -F scene-studio dev   # Scene Studio (port 3002)
+pnpm -F observatory dev    # Observatory app (port 3003)
 ```
 
 ### Component Development
@@ -98,6 +102,7 @@ flowchart TB
         Blog["Blog App<br/>(port 3000)"]
         Portfolio["Portfolio App<br/>(port 3001)"]
         SceneStudio["Scene Studio<br/>(port 3002)"]
+        Observatory["Observatory App<br/>(port 3003)"]
     end
 
     subgraph packages["Shared Packages"]
@@ -106,17 +111,19 @@ flowchart TB
         BiomeConfig["biome-config<br/>Code Quality"]
         TSConfig["tsconfig<br/>TypeScript Config"]
         TestUtils["test-utils<br/>Testing Utilities"]
+        Logger["logger<br/>Logging"]
     end
 
     Blog -.-> packages
     Portfolio -.-> packages
     SceneStudio -.-> packages
+    Observatory -.-> packages
 
     classDef appStyle fill:#3B82F6,stroke:#1E40AF,stroke-width:2px,color:#fff
     classDef packageStyle fill:#10B981,stroke:#059669,stroke-width:2px,color:#fff
 
-    class Blog,Portfolio,SceneStudio appStyle
-    class UI,TailwindConfig,BiomeConfig,TSConfig,TestUtils packageStyle
+    class Blog,Portfolio,SceneStudio,Observatory appStyle
+    class UI,TailwindConfig,BiomeConfig,TSConfig,TestUtils,Logger packageStyle
 ```
 
 ### Development & Build Pipeline

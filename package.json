@@ -19,11 +19,11 @@
     "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
-    "@turbo/gen": "^1.9.7",
-    "@types/webpack-env": "^1.18.4",
-    "tsup": "^8.4.0",
-    "turbo": "2.9.9",
-    "typescript": "^5.4.5"
+    "@turbo/gen": "^1.13.4",
+    "@types/webpack-env": "^1.18.8",
+    "tsup": "^8.5.1",
+    "turbo": "2.10.9",
+    "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.33.2",
   "engines": {
@@ -32,8 +32,9 @@
   "name": "k2bg-branding",
   "pnpm": {
     "overrides": {
-      "esbuild": "0.25.2",
-      "@floating-ui/utils": "^0.2.11"
+      "esbuild": "0.28.1",
+      "@floating-ui/utils": "^0.2.11",
+      "tmp": ">=0.2.6"
     },
     "onlyBuiltDependencies": [
       "@swc/core",

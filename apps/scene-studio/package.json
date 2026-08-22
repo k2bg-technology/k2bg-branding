@@ -13,31 +13,31 @@
     "test:watch": "vitest watch"
   },
   "dependencies": {
-    "@react-three/fiber": "^9.6.1",
-    "@react-three/postprocessing": "^3.0.4",
-    "@remotion/cli": "4.0.488",
-    "@remotion/three": "4.0.488",
-    "@remotion/transitions": "4.0.488",
+    "@react-three/fiber": "^9.7.0",
+    "@react-three/postprocessing": "^3.0.5",
+    "@remotion/cli": "4.0.509",
+    "@remotion/three": "4.0.509",
+    "@remotion/transitions": "4.0.509",
     "clsx": "^2.1.1",
-    "postprocessing": "^6.39.3",
-    "react": "^19.0.1",
-    "react-dom": "^19.0.1",
-    "remotion": "4.0.488",
-    "tailwind-merge": "^2.5.3",
+    "postprocessing": "^6.39.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "remotion": "4.0.509",
+    "tailwind-merge": "^2.6.1",
     "three": "^0.185.1",
-    "zod": "^3.23.8"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@remotion/tailwind-v4": "4.0.488",
-    "@testing-library/react": "^16.3.0",
-    "@types/react": "^19.0.10",
-    "@types/react-dom": "^19.0.4",
-    "@types/three": "^0.185.1",
+    "@remotion/tailwind-v4": "4.0.509",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@types/three": "^0.185.4",
     "biome-config": "workspace:*",
-    "jsdom": "^26.0.0",
+    "jsdom": "^26.1.0",
     "tailwind-config": "workspace:*",
-    "tailwindcss": "^4.0.9",
+    "tailwindcss": "^4.3.3",
     "tsconfig": "workspace:*",
-    "vitest": "^3.1.1"
+    "vitest": "^3.2.7"
   }
 }

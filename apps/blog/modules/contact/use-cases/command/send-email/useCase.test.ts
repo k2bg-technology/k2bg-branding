@@ -1,16 +1,25 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { Contact } from '../../../domain';
 import type { EmailSender } from './emailSender';
+import type { EmailTemplateRenderer } from './emailTemplateRenderer';
 import { SendEmail, type SendEmailInput } from './useCase';
-
-vi.mock('date-fns', () => ({
-  format: vi.fn().mockReturnValue('2024'),
-}));
 
 function createMockEmailSender(): EmailSender {
   return {
     sendToOwner: vi.fn().mockResolvedValue(undefined),
     sendToVisitor: vi.fn().mockResolvedValue(undefined),
+  };
+}
+
+function createFakeEmailTemplateRenderer(): EmailTemplateRenderer {
+  return {
+    renderOwnerNotification: vi
+      .fn()
+      .mockReturnValue('<html>Owner Notification</html>'),
+    renderVisitorConfirmation: vi
+      .fn()
+      .mockReturnValue('<html>Visitor Confirmation</html>'),
   };
 }
 
@@ -28,15 +37,27 @@ describe('SendEmail Use Case', () => {
   });
 
   describe('execute', () => {
-    it('creates contact and sends email with correct parameters', async () => {
+    it('creates contact and sends both emails with correct parameters', async () => {
       const mockEmailSender = createMockEmailSender();
-      const sut = new SendEmail(mockEmailSender);
+      const fakeEmailTemplateRenderer = createFakeEmailTemplateRenderer();
+      const sut = new SendEmail(mockEmailSender, fakeEmailTemplateRenderer);
       const input = createValidInput();
 
       await sut.execute(input);
 
-      expect(mockEmailSender.sendToOwner).toHaveBeenCalledTimes(1);
-      expect(mockEmailSender.sendToVisitor).toHaveBeenCalledTimes(1);
+      expect(
+        fakeEmailTemplateRenderer.renderOwnerNotification
+      ).toHaveBeenCalledTimes(1);
+      expect(
+        fakeEmailTemplateRenderer.renderVisitorConfirmation
+      ).toHaveBeenCalledTimes(1);
+
+      const [renderedContact] = vi.mocked(
+        fakeEmailTemplateRenderer.renderOwnerNotification
+      ).mock.calls[0] as [Contact];
+      expect(renderedContact.name.getValue()).toBe('John Doe');
+      expect(renderedContact.email.getValue()).toBe('john@example.com');
+      expect(renderedContact.message.getValue()).toBe('Test message');
 
       const expectedOwnerSubject = 'John Doe 様からお問合せが届きました。';
       const expectedVisitorSubject =
@@ -44,26 +65,23 @@ describe('SendEmail Use Case', () => {
 
       expect(mockEmailSender.sendToOwner).toHaveBeenCalledWith(
         expectedOwnerSubject,
-        expect.stringContaining('Test message')
+        '<html>Owner Notification</html>'
       );
-      expect(mockEmailSender.sendToOwner).toHaveBeenCalledWith(
-        expectedOwnerSubject,
-        expect.stringContaining('john@example.com')
-      );
-      expect(mockEmailSender.sendToVisitor).toHaveBeenCalledWith(
-        expect.objectContaining({
-          name: expect.objectContaining({ value: 'John Doe' }),
-          email: expect.objectContaining({ value: 'john@example.com' }),
-          message: expect.objectContaining({ value: 'Test message' }),
-        }),
-        expectedVisitorSubject,
-        expect.not.stringContaining('Test message')
-      );
+
+      const [contact, visitorSubject, visitorHtmlBody] = vi.mocked(
+        mockEmailSender.sendToVisitor
+      ).mock.calls[0] as [Contact, string, string];
+      expect(contact.name.getValue()).toBe('John Doe');
+      expect(contact.email.getValue()).toBe('john@example.com');
+      expect(contact.message.getValue()).toBe('Test message');
+      expect(visitorSubject).toBe(expectedVisitorSubject);
+      expect(visitorHtmlBody).toBe('<html>Visitor Confirmation</html>');
     });
 
     it('sends owner notification before visitor confirmation', async () => {
       const mockEmailSender = createMockEmailSender();
-      const sut = new SendEmail(mockEmailSender);
+      const fakeEmailTemplateRenderer = createFakeEmailTemplateRenderer();
+      const sut = new SendEmail(mockEmailSender, fakeEmailTemplateRenderer);
       const input = createValidInput();
 
       await sut.execute(input);
@@ -77,7 +95,8 @@ describe('SendEmail Use Case', () => {
 
     it('throws error when name is empty', async () => {
       const mockEmailSender = createMockEmailSender();
-      const sut = new SendEmail(mockEmailSender);
+      const fakeEmailTemplateRenderer = createFakeEmailTemplateRenderer();
+      const sut = new SendEmail(mockEmailSender, fakeEmailTemplateRenderer);
       const invalidInput: SendEmailInput = {
         name: '',
         email: 'john@example.com',
@@ -87,13 +106,17 @@ describe('SendEmail Use Case', () => {
       await expect(sut.execute(invalidInput)).rejects.toThrow(
         'Name cannot be empty'
       );
+      expect(
+        fakeEmailTemplateRenderer.renderOwnerNotification
+      ).not.toHaveBeenCalled();
       expect(mockEmailSender.sendToOwner).not.toHaveBeenCalled();
       expect(mockEmailSender.sendToVisitor).not.toHaveBeenCalled();
     });
 
     it('throws error when email format is invalid', async () => {
       const mockEmailSender = createMockEmailSender();
-      const sut = new SendEmail(mockEmailSender);
+      const fakeEmailTemplateRenderer = createFakeEmailTemplateRenderer();
+      const sut = new SendEmail(mockEmailSender, fakeEmailTemplateRenderer);
       const invalidInput: SendEmailInput = {
         name: 'John Doe',
         email: 'invalid-email',
@@ -103,6 +126,9 @@ describe('SendEmail Use Case', () => {
       await expect(sut.execute(invalidInput)).rejects.toThrow(
         'Invalid email format'
       );
+      expect(
+        fakeEmailTemplateRenderer.renderOwnerNotification
+      ).not.toHaveBeenCalled();
       expect(mockEmailSender.sendToOwner).not.toHaveBeenCalled();
       expect(mockEmailSender.sendToVisitor).not.toHaveBeenCalled();
     });
@@ -112,10 +138,29 @@ describe('SendEmail Use Case', () => {
       vi.mocked(mockEmailSender.sendToOwner).mockRejectedValue(
         new Error('Email send failed')
       );
-      const sut = new SendEmail(mockEmailSender);
+      const fakeEmailTemplateRenderer = createFakeEmailTemplateRenderer();
+      const sut = new SendEmail(mockEmailSender, fakeEmailTemplateRenderer);
       const input = createValidInput();
 
       await expect(sut.execute(input)).rejects.toThrow('Email send failed');
+    });
+
+    it('propagates error when template rendering fails', async () => {
+      const mockEmailSender = createMockEmailSender();
+      const fakeEmailTemplateRenderer = createFakeEmailTemplateRenderer();
+      vi.mocked(
+        fakeEmailTemplateRenderer.renderOwnerNotification
+      ).mockImplementation(() => {
+        throw new Error('Template render failed');
+      });
+      const sut = new SendEmail(mockEmailSender, fakeEmailTemplateRenderer);
+      const input = createValidInput();
+
+      await expect(sut.execute(input)).rejects.toThrow(
+        'Template render failed'
+      );
+      expect(mockEmailSender.sendToOwner).not.toHaveBeenCalled();
+      expect(mockEmailSender.sendToVisitor).not.toHaveBeenCalled();
     });
   });
 });

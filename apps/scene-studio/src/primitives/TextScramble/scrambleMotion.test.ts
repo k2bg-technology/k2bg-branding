@@ -101,25 +101,22 @@ describe('getScrambleCharacter', () => {
     expect(result[characterIndex].isSettled).toBe(expectedIsSettled);
   });
 
-  it.each([
-    { frame: 0 },
-    { frame: 8 },
-    { frame: 20 },
-  ])('draws every unsettled character from the glyph set at frame $frame', ({
-    frame,
-  }) => {
-    const result = getScrambledCharacters({ text: scrambledText, frame });
+  it.each([{ frame: 0 }, { frame: 8 }, { frame: 20 }])(
+    'draws every unsettled character from the glyph set at frame $frame',
+    ({ frame }) => {
+      const result = getScrambledCharacters({ text: scrambledText, frame });
 
-    const unsettledCharacters = result.filter(
-      (character) => !character.isSettled
-    );
-    expect(unsettledCharacters.length).toBeGreaterThan(0);
-    expect(
-      unsettledCharacters.every((character) =>
-        DEFAULT_SCRAMBLE_GLYPHS.includes(character.character)
-      )
-    ).toBe(true);
-  });
+      const unsettledCharacters = result.filter(
+        (character) => !character.isSettled
+      );
+      expect(unsettledCharacters.length).toBeGreaterThan(0);
+      expect(
+        unsettledCharacters.every((character) =>
+          DEFAULT_SCRAMBLE_GLYPHS.includes(character.character)
+        )
+      ).toBe(true);
+    }
+  );
 
   it.each([
     {

@@ -1,5 +1,5 @@
+import { logger } from 'logger';
 import { revalidatePath } from 'next/cache';
-import { logger } from '../../modules/shared/logger';
 
 const revalidationLogger = logger.child({ module: 'revalidation' });
 

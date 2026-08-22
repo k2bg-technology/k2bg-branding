@@ -40,13 +40,12 @@ describe('getAccentLabelMotion', () => {
     expect(result.textTranslateXInPx).toBeCloseTo(0);
   });
 
-  it.each([
-    { frame: 6 },
-    { frame: 10 },
-    { frame: 16 },
-  ])('grows the bar ahead of the text at frame $frame', ({ frame }) => {
-    const result = getAccentLabelMotion({ frame, enterDelayInFrames: 0 });
+  it.each([{ frame: 6 }, { frame: 10 }, { frame: 16 }])(
+    'grows the bar ahead of the text at frame $frame',
+    ({ frame }) => {
+      const result = getAccentLabelMotion({ frame, enterDelayInFrames: 0 });
 
-    expect(result.barScale).toBeGreaterThan(result.textOpacity);
-  });
+      expect(result.barScale).toBeGreaterThan(result.textOpacity);
+    }
+  );
 });

@@ -117,33 +117,33 @@ describe('SpeedRamp', () => {
     expect(root.style.filter).toBe('');
   });
 
-  it.each([
-    { ghostIndex: 0 },
-    { ghostIndex: 1 },
-  ])('trims ghost $ghostIndex to its trailing source frame and fades it', ({
-    ghostIndex,
-  }) => {
-    mocks.frame = 60;
+  it.each([{ ghostIndex: 0 }, { ghostIndex: 1 }])(
+    'trims ghost $ghostIndex to its trailing source frame and fades it',
+    ({ ghostIndex }) => {
+      mocks.frame = 60;
 
-    render(
-      <SpeedRamp
-        src="clip.mp4"
-        speedKeyframes={RAMP_KEYFRAMES}
-        sourceStartInFrames={SOURCE_START_IN_FRAMES}
-        echoCount={2}
-      />
-    );
+      render(
+        <SpeedRamp
+          src="clip.mp4"
+          speedKeyframes={RAMP_KEYFRAMES}
+          sourceStartInFrames={SOURCE_START_IN_FRAMES}
+          echoCount={2}
+        />
+      );
 
-    const ghost = screen.getAllByTestId('layer')[ghostIndex + 1];
-    const echoLayer = getEchoLayers({ speed: 3, echoCount: 2 })[ghostIndex];
-    const expectedTrim = Math.round(
-      LIVE_TRIM_AT_60 - echoLayer.sourceOffsetInFrames
-    );
-    expect(ghost.getAttribute('data-trim-before')).toBe(String(expectedTrim));
+      const ghost = screen.getAllByTestId('layer')[ghostIndex + 1];
+      const echoLayer = getEchoLayers({ speed: 3, echoCount: 2 })[ghostIndex];
+      const expectedTrim = Math.round(
+        LIVE_TRIM_AT_60 - echoLayer.sourceOffsetInFrames
+      );
+      expect(ghost.getAttribute('data-trim-before')).toBe(String(expectedTrim));
 
-    const opacityWrapper = ghost.parentElement?.parentElement as HTMLElement;
-    expect(Number(opacityWrapper.style.opacity)).toBeCloseTo(echoLayer.opacity);
-  });
+      const opacityWrapper = ghost.parentElement?.parentElement as HTMLElement;
+      expect(Number(opacityWrapper.style.opacity)).toBeCloseTo(
+        echoLayer.opacity
+      );
+    }
+  );
 
   it('applies the full smear blur at rush speed', () => {
     mocks.frame = 60;

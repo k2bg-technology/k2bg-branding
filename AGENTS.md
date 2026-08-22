@@ -13,11 +13,13 @@ selection, engineering trade-offs, writing tone).
 
 - Monorepo managed by pnpm workspaces and Turborepo.
 - Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000),
-  `apps/portfolio` (Next.js, multilingual, port 3001), and `apps/scene-studio`
-  (Remotion Studio for programmatic short-form videos, port 3002).
+  `apps/portfolio` (Next.js, multilingual, port 3001), `apps/scene-studio`
+  (Remotion Studio for programmatic short-form videos, port 3002), and
+  `apps/observatory` (Next.js, personal data visualization, port 3003).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
-  (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
-  `packages/tsconfig`.
+  (Vitest helpers), `packages/logger` (pino root logger with PII redaction; apps create
+  module loggers via `logger.child({ module })`), `packages/tailwind-config` (design
+  tokens), `packages/biome-config`, `packages/tsconfig`.
 - CI, templates, and bots live under `.github/`. See `.github/PULL_REQUEST_TEMPLATE.md`.
 - Tech stack: Next.js 16 (Turbopack, React Compiler), Remotion, TypeScript (strict,
   100%), Tailwind CSS v4, Turborepo, pnpm 10+.
@@ -26,10 +28,10 @@ selection, engineering trade-offs, writing tone).
 
 - Install: `pnpm install` (pnpm 10+, Node 20.9+).
 - Develop all: `pnpm dev` (runs `turbo run dev`); filter with `pnpm -F blog dev`,
-  `pnpm -F portfolio dev`, or `pnpm -F scene-studio dev`.
+  `pnpm -F portfolio dev`, `pnpm -F scene-studio dev`, or `pnpm -F observatory dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
 - Lint/Types/Format: `pnpm lint` (Biome), `pnpm typecheck`, `pnpm format` (Biome).
-- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog, Portfolio, Scene Studio, and Test Utils).
+- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog, Portfolio, Scene Studio, Observatory, and Test Utils).
 - Component scaffolding: `pnpm generate:component`, `pnpm generate:style`.
 - Storybook (UI): `pnpm -F ui storybook` (port 6006); Chromatic via CI.
 - Video (Scene Studio): `pnpm -F scene-studio dev` (Remotion Studio, port 3002);
@@ -117,6 +119,37 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   bump them together in a single commit.
 - Template/composition design and naming (three-layer structure, no universal
   templates): `.claude/rules/remotion-template-guidelines.md`.
+
+### Observatory App
+
+- `apps/observatory` is a Next.js app (port 3003) that visualizes accumulated personal
+  data: finances, health, home environment, and web analytics. It runs locally only.
+- Single-locale: no i18n dictionaries and no `middleware.ts` / `proxy.ts`.
+- Clean Architecture vertical slices mirror the blog: `apps/observatory/modules/<module>/`
+  holds `use-cases/` (use cases, query-service ports, read models) and `adapters/`
+  (warehouse query services, mappers, `RepositoryError` / `MappingError`, module
+  logger); add `domain/` only when a module has entities or invariants. Use-case
+  factories live in `apps/observatory/infrastructure/di/`.
+- Warehouse reads: `apps/observatory/infrastructure/warehouse/` wraps the data
+  warehouse SDK (BigQuery) behind the app-owned `WarehouseClient` interface. Every
+  read goes through `WarehouseClient.query()`, which caches rows in the Next.js data
+  cache (`unstable_cache`) under the `warehouse` tag for the `revalidate` window each
+  query declares (warehouse data changes at most daily — long windows bound scan
+  costs); rows are normalized to plain JSON so cache hits and misses match. Query
+  services receive the client (plus the location or dataset id they need) via
+  constructor injection and wrap driver failures in `RepositoryError`.
+- The warehouse SDK is Node-only: query code stays in server components and
+  `server-only` modules, and dashboard pages export `dynamic = 'force-dynamic'` so
+  `next build` never queries the warehouse.
+- A failed warehouse read renders an inline unavailable state (canonical:
+  `apps/observatory/components/table-catalog/TableCatalog.tsx`) after `logger.error`;
+  dashboards never `notFound()` on data failures.
+- Env vars: `WAREHOUSE_PROJECT_ID` and `WAREHOUSE_LOCATION` (required),
+  `GOOGLE_APPLICATION_CREDENTIALS` (optional) — see `apps/observatory/.env.example`.
+  Datasets are per data source: each domain module declares
+  `WAREHOUSE_<DOMAIN>_DATASET_ID` (role-named variable, dataset id as the value) so
+  data-source product names never appear in code.
+- Visualization components belong in `packages/ui`, not in the app.
 
 ### Key Integrations
 
@@ -285,6 +318,9 @@ See `turbo.json` for the complete env list. Critical variables:
 - `INSTAGRAM_LONG_ACCESS_TOKEN` — Instagram integration.
 - `API_KEY` — Hono server authentication (`x-api-key` header).
 - Database connection strings for Drizzle/PostgreSQL.
+- `WAREHOUSE_PROJECT_ID` / `WAREHOUSE_LOCATION` — Observatory warehouse reads;
+  `WAREHOUSE_<DOMAIN>_DATASET_ID` per domain module; `GOOGLE_APPLICATION_CREDENTIALS`
+  (optional) points Application Default Credentials at a service-account key.
 
 ## Security & Configuration
 

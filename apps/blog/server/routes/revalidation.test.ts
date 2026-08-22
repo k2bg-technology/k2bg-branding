@@ -9,7 +9,7 @@ vi.mock('next/cache', () => ({
   revalidateTag: vi.fn(),
 }));
 
-vi.mock('../../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ error: vi.fn(), info: vi.fn() }),
   },

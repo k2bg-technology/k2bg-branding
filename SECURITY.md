@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-This monorepo contains two Next.js applications and one Remotion video application.
+This monorepo contains three Next.js applications and one Remotion video application.
 Security updates are applied to the latest version on the `main` branch.
 
 | Application | Supported |
@@ -10,6 +10,7 @@ Security updates are applied to the latest version on the `main` branch.
 | Blog app | Yes |
 | Portfolio app | Yes |
 | Scene Studio | Yes |
+| Observatory app | Yes |
 
 ## Reporting a Vulnerability
 

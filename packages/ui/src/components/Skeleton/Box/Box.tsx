@@ -1,5 +1,9 @@
 import { twMerge } from '../../../utils/extendTailwindMerge';
 
+// `bg-gray-300` is a deliberate exception to the design-token color rule: no
+// base-* token is a visually reasonable match (base-light is much lighter,
+// base-default/base-dark are much darker/warmer). See packages/ui/src/components/Skelton/Round/Round.tsx
+// for the same exception.
 type LineProps = React.ComponentPropsWithoutRef<'div'>;
 
 export function Box(props: LineProps) {

@@ -29,7 +29,7 @@ describe('logger', () => {
   it('is a valid pino instance', async () => {
     delete process.env.LOG_LEVEL;
 
-    const { logger } = await import('./logger');
+    const { logger } = await import('./index');
 
     expect(logger).toBeDefined();
     expect(typeof logger.info).toBe('function');
@@ -42,7 +42,7 @@ describe('logger', () => {
   it('defaults to info level when LOG_LEVEL is not set', async () => {
     delete process.env.LOG_LEVEL;
 
-    const { logger } = await import('./logger');
+    const { logger } = await import('./index');
 
     expect(logger.level).toBe('info');
   });
@@ -50,7 +50,7 @@ describe('logger', () => {
   it('respects LOG_LEVEL environment variable', async () => {
     process.env.LOG_LEVEL = 'debug';
 
-    const { logger } = await import('./logger');
+    const { logger } = await import('./index');
 
     expect(logger.level).toBe('debug');
   });

@@ -9,6 +9,8 @@ import {
   useFormContext,
 } from '../Control/Context';
 
+// `neutral-300` (disabled) is a deliberate exception: no base-* token is a
+// visually reasonable match for this disabled-state gray.
 const inputVariants = cva(
   'appearance-none focus-visible:border-ring focus-visible:ring-[3px] border rounded-md px-2 py-3 w-full text-body-r-sm leading-none',
   {
@@ -16,7 +18,7 @@ const inputVariants = cva(
       color: {
         dark: 'focus-visible:ring-base-default/30 border-base-default/50 text-base-default placeholder-base-default/50',
         light:
-          'focus-visible:ring-white/30 border-white/50 text-white placeholder-white/50',
+          'focus-visible:ring-base-white/30 border-base-white/50 text-base-white placeholder-base-white/50',
       },
       error: {
         true: ['border-error focus-visible:ring-error/30'],

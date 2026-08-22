@@ -1,0 +1,1 @@
+export { HandlebarsEmailTemplateRenderer } from './handlebars';
