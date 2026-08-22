@@ -16,6 +16,7 @@ import {
 import { ChartContainer } from './ChartContainer';
 import { ChartLegend } from './ChartLegend';
 import { ChartTooltip } from './ChartTooltip';
+import { seriesDataKey } from './chartSeries';
 import { chartAccessibleName, resolveSeriesColor } from './chartTheme';
 import { defaultValueFormatter, getTimeAxisTicks } from './chartTicks';
 import type {
@@ -34,7 +35,7 @@ function buildRows(series: TimeSeriesSeries[]): TimeSeriesRow[] {
       const row = rowsByTimestamp.get(point.timestamp) ?? {
         timestamp: point.timestamp,
       };
-      row[seriesItem.id] = point.value;
+      row[seriesDataKey(seriesItem.id)] = point.value;
       rowsByTimestamp.set(point.timestamp, row);
     }
   }
@@ -77,15 +78,18 @@ export function TimeSeriesChart({
     rows.map((row) => row.timestamp),
     period
   );
-  const seriesInfoById = new Map(
+  const seriesInfoByDataKey = new Map(
     series.map((seriesItem, index) => [
-      seriesItem.id,
+      seriesDataKey(seriesItem.id),
       {
+        id: seriesItem.id,
         label: seriesItem.label,
         color: resolveSeriesColor(seriesItem, index),
       },
     ])
   );
+  const seriesColor = (seriesId: string) =>
+    seriesInfoByDataKey.get(seriesDataKey(seriesId))?.color;
 
   const toTooltipData = ({
     label: hoveredTimestamp,
@@ -96,12 +100,12 @@ export function TimeSeriesChart({
         ? formatTick(hoveredTimestamp)
         : String(hoveredTimestamp ?? ''),
     items: (payload ?? []).flatMap((entry) => {
-      const seriesInfo = seriesInfoById.get(String(entry.dataKey));
+      const seriesInfo = seriesInfoByDataKey.get(String(entry.dataKey));
       if (seriesInfo === undefined || typeof entry.value !== 'number') {
         return [];
       }
       return {
-        id: String(entry.dataKey),
+        id: seriesInfo.id,
         label: seriesInfo.label,
         color: seriesInfo.color,
         value: valueFormatter(entry.value),
@@ -164,12 +168,12 @@ export function TimeSeriesChart({
             >
               <stop
                 offset="5%"
-                stopColor={seriesInfoById.get(seriesItem.id)?.color}
+                stopColor={seriesColor(seriesItem.id)}
                 stopOpacity={0.8}
               />
               <stop
                 offset="95%"
-                stopColor={seriesInfoById.get(seriesItem.id)?.color}
+                stopColor={seriesColor(seriesItem.id)}
                 stopOpacity={0.1}
               />
             </linearGradient>
@@ -182,11 +186,11 @@ export function TimeSeriesChart({
         {series.map((seriesItem) => (
           <Area
             key={seriesItem.id}
-            dataKey={seriesItem.id}
+            dataKey={seriesDataKey(seriesItem.id)}
             type="natural"
             fill={`url(#${gradientId(seriesItem.id)})`}
             fillOpacity={0.4}
-            stroke={seriesInfoById.get(seriesItem.id)?.color}
+            stroke={seriesColor(seriesItem.id)}
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 4 }}
@@ -204,9 +208,9 @@ export function TimeSeriesChart({
         {series.map((seriesItem) => (
           <Line
             key={seriesItem.id}
-            dataKey={seriesItem.id}
+            dataKey={seriesDataKey(seriesItem.id)}
             type="natural"
-            stroke={seriesInfoById.get(seriesItem.id)?.color}
+            stroke={seriesColor(seriesItem.id)}
             strokeWidth={2}
             dot={false}
             activeDot={{ r: 4 }}
@@ -221,7 +225,7 @@ export function TimeSeriesChart({
   const legendItems = series.map((seriesItem) => ({
     id: seriesItem.id,
     label: seriesItem.label,
-    color: seriesInfoById.get(seriesItem.id)?.color ?? '',
+    color: seriesColor(seriesItem.id) ?? '',
   }));
 
   return (

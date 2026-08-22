@@ -13,6 +13,7 @@ import {
 import { ChartContainer } from './ChartContainer';
 import { ChartLegend } from './ChartLegend';
 import { ChartTooltip } from './ChartTooltip';
+import { seriesDataKey } from './chartSeries';
 import { chartAccessibleName, resolveSeriesColor } from './chartTheme';
 import { defaultValueFormatter } from './chartTicks';
 import type { BarSeries, ChartHeight, ChartTooltipData } from './types';
@@ -23,7 +24,8 @@ function buildRows(categories: string[], series: BarSeries[]): BarRow[] {
   return categories.map((category, categoryIndex) => {
     const row: BarRow = { category };
     for (const seriesItem of series) {
-      row[seriesItem.id] = seriesItem.values[categoryIndex] ?? null;
+      row[seriesDataKey(seriesItem.id)] =
+        seriesItem.values[categoryIndex] ?? null;
     }
     return row;
   });
@@ -52,15 +54,18 @@ export function BarChart({
   className,
 }: BarChartProps) {
   const rows = buildRows(categories, series);
-  const seriesInfoById = new Map(
+  const seriesInfoByDataKey = new Map(
     series.map((seriesItem, index) => [
-      seriesItem.id,
+      seriesDataKey(seriesItem.id),
       {
+        id: seriesItem.id,
         label: seriesItem.label,
         color: resolveSeriesColor(seriesItem, index),
       },
     ])
   );
+  const seriesColor = (seriesId: string) =>
+    seriesInfoByDataKey.get(seriesDataKey(seriesId))?.color;
 
   const toTooltipData = ({
     label: hoveredCategory,
@@ -68,12 +73,12 @@ export function BarChart({
   }: TooltipContentProps): ChartTooltipData => ({
     heading: String(hoveredCategory ?? ''),
     items: (payload ?? []).flatMap((entry) => {
-      const seriesInfo = seriesInfoById.get(String(entry.dataKey));
+      const seriesInfo = seriesInfoByDataKey.get(String(entry.dataKey));
       if (seriesInfo === undefined || typeof entry.value !== 'number') {
         return [];
       }
       return {
-        id: String(entry.dataKey),
+        id: seriesInfo.id,
         label: seriesInfo.label,
         color: seriesInfo.color,
         value: valueFormatter(entry.value),
@@ -92,7 +97,7 @@ export function BarChart({
   const legendItems = series.map((seriesItem) => ({
     id: seriesItem.id,
     label: seriesItem.label,
-    color: seriesInfoById.get(seriesItem.id)?.color ?? '',
+    color: seriesColor(seriesItem.id) ?? '',
   }));
 
   return (
@@ -121,8 +126,8 @@ export function BarChart({
           {series.map((seriesItem) => (
             <Bar
               key={seriesItem.id}
-              dataKey={seriesItem.id}
-              fill={seriesInfoById.get(seriesItem.id)?.color}
+              dataKey={seriesDataKey(seriesItem.id)}
+              fill={seriesColor(seriesItem.id)}
               radius={[4, 4, 0, 0]}
               isAnimationActive={animated}
             />
