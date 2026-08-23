@@ -5,6 +5,7 @@ import { twMerge } from '../../../utils/extendTailwindMerge';
 import {
   type FormProps,
   resolveAriaDescribedBy,
+  resolveAriaInvalid,
   useFormContext,
 } from '../Control/Context';
 
@@ -43,6 +44,7 @@ export function Textarea(props: Props) {
     className,
     ref,
     'aria-describedby': explicitAriaDescribedBy,
+    'aria-invalid': explicitAriaInvalid,
     ...formProps
   } = props;
 
@@ -58,7 +60,7 @@ export function Textarea(props: Props) {
     <textarea
       {...rest}
       ref={ref}
-      aria-invalid={error ? true : undefined}
+      aria-invalid={resolveAriaInvalid(explicitAriaInvalid, error)}
       aria-describedby={resolveAriaDescribedBy(
         explicitAriaDescribedBy,
         error ? helperTextId : undefined

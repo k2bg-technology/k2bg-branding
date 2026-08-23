@@ -11,7 +11,12 @@ export interface FormProps {
   helperTextId?: string;
 }
 
-const FormContext = createContext<FormProps>({
+interface FormContextValue extends FormProps {
+  /** Lets a HelperText with an explicit `id` keep the control pointing at it. */
+  registerHelperTextId?: (helperTextId: string | undefined) => void;
+}
+
+const FormContext = createContext<FormContextValue>({
   required: false,
   error: false,
   disabled: false,
@@ -21,17 +26,30 @@ const FormContext = createContext<FormProps>({
 export function FormProvider({
   children,
   ...formProps
-}: React.PropsWithChildren<FormProps>) {
+}: React.PropsWithChildren<FormContextValue>) {
   return <FormContext value={formProps}>{children}</FormContext>;
 }
 
-export function useFormContext(formProps?: FormProps) {
-  const formContext = use(FormContext);
+export function useFormContext(formProps?: FormProps): FormProps {
+  const { registerHelperTextId: _registerHelperTextId, ...formContext } =
+    use(FormContext);
 
   return {
     ...formContext,
     ...formProps,
   };
+}
+
+export function useRegisterHelperTextId() {
+  return use(FormContext).registerHelperTextId;
+}
+
+/** Keeps a consumer-provided `aria-invalid` over the `error`-derived one. */
+export function resolveAriaInvalid(
+  explicitAriaInvalid: React.AriaAttributes['aria-invalid'],
+  error: boolean | undefined
+): React.AriaAttributes['aria-invalid'] {
+  return explicitAriaInvalid ?? (error ? true : undefined);
 }
 
 /** Combines a consumer-provided `aria-describedby` with the HelperText id. */

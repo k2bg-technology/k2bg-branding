@@ -1,6 +1,13 @@
+'use client';
+
 import { cva } from 'class-variance-authority';
+import { useEffect } from 'react';
 import { twMerge } from '../../../utils/extendTailwindMerge';
-import { type FormProps, useFormContext } from '../Control/Context';
+import {
+  type FormProps,
+  useFormContext,
+  useRegisterHelperTextId,
+} from '../Control/Context';
 
 // `text-neutral-300` (disabled) is a deliberate exception: no base-* token is
 // a visually reasonable match for this disabled-state gray.
@@ -37,6 +44,15 @@ export function HelperText(props: React.PropsWithChildren<Props>) {
     helperTextId,
     ...rest
   } = useFormContext(formProps);
+  const registerHelperTextId = useRegisterHelperTextId();
+
+  useEffect(() => {
+    if (explicitId === undefined) {
+      return;
+    }
+    registerHelperTextId?.(explicitId);
+    return () => registerHelperTextId?.(undefined);
+  }, [explicitId, registerHelperTextId]);
 
   return (
     <span

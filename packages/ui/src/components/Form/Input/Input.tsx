@@ -6,6 +6,7 @@ import { twMerge } from '../../../utils/extendTailwindMerge';
 import {
   type FormProps,
   resolveAriaDescribedBy,
+  resolveAriaInvalid,
   useFormContext,
 } from '../Control/Context';
 
@@ -57,6 +58,7 @@ export function Input(props: Props) {
     startAdornment,
     endAdornment,
     'aria-describedby': explicitAriaDescribedBy,
+    'aria-invalid': explicitAriaInvalid,
     ...formProps
   } = props;
   const { color, error, disabled, helperTextId, ...rest } =
@@ -71,7 +73,7 @@ export function Input(props: Props) {
       )}
       <input
         {...rest}
-        aria-invalid={error ? true : undefined}
+        aria-invalid={resolveAriaInvalid(explicitAriaInvalid, error)}
         aria-describedby={resolveAriaDescribedBy(
           explicitAriaDescribedBy,
           error ? helperTextId : undefined
