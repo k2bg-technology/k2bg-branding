@@ -106,6 +106,52 @@ describe('TimeSeriesChart', () => {
     expect(timeAxisLabels(container)).toEqual(['1/1', '1/2']);
   });
 
+  it.each`
+    variant
+    ${'line'}
+    ${'area'}
+  `(
+    'marks measurements isolated by gaps in the $variant variant',
+    ({ variant }) => {
+      const series = [
+        createSeries({
+          points: [
+            { timestamp: Date.UTC(2026, 0, 1), value: 20 },
+            { timestamp: Date.UTC(2026, 0, 2), value: null },
+            { timestamp: Date.UTC(2026, 0, 3), value: 21 },
+            { timestamp: Date.UTC(2026, 0, 4), value: 22 },
+          ],
+        }),
+      ];
+
+      const { container } = render(
+        <TimeSeriesChart
+          label="Temperature"
+          period="month"
+          series={series}
+          variant={variant}
+        />
+      );
+
+      const isolatedPointCount = 1;
+      expect(container.querySelectorAll('circle.recharts-dot')).toHaveLength(
+        isolatedPointCount
+      );
+    }
+  );
+
+  it('does not mark points that are part of a line segment', () => {
+    const { container } = render(
+      <TimeSeriesChart
+        label="Temperature"
+        period="month"
+        series={[createSeries()]}
+      />
+    );
+
+    expect(container.querySelectorAll('circle.recharts-dot')).toHaveLength(0);
+  });
+
   it('formats the value axis with valueFormatter', () => {
     const valueFormatter = (value: number) => `${value}°C`;
 

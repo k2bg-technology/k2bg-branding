@@ -5,6 +5,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  type DotItemDotProps,
   Line,
   LineChart,
   Tooltip,
@@ -42,6 +43,38 @@ function buildRows(series: TimeSeriesSeries[]): TimeSeriesRow[] {
   return Array.from(rowsByTimestamp.values()).sort(
     (first, second) => first.timestamp - second.timestamp
   );
+}
+
+// A measurement whose neighbours are gaps never gets a line segment, so it
+// needs its own marker or it silently vanishes from the chart.
+function isolatedTimestamps(
+  rows: TimeSeriesRow[],
+  dataKey: string
+): Set<number> {
+  const hasValue = (index: number) =>
+    typeof rows[index]?.[dataKey] === 'number';
+  const isolated = new Set<number>();
+  rows.forEach((row, index) => {
+    if (hasValue(index) && !hasValue(index - 1) && !hasValue(index + 1)) {
+      isolated.add(row.timestamp);
+    }
+  });
+  return isolated;
+}
+
+function renderIsolatedPointDot(timestamps: Set<number>, color: string) {
+  return ({ cx, cy, payload, index }: DotItemDotProps) =>
+    timestamps.has(payload.timestamp) ? (
+      <circle
+        key={index}
+        className="recharts-dot"
+        cx={cx}
+        cy={cy}
+        r={3}
+        fill={color}
+        stroke="none"
+      />
+    ) : null;
 }
 
 export interface TimeSeriesChartProps {
@@ -90,6 +123,11 @@ export function TimeSeriesChart({
   );
   const seriesColor = (seriesId: string) =>
     seriesInfoByDataKey.get(seriesDataKey(seriesId))?.color;
+  const isolatedPointDot = (seriesId: string) =>
+    renderIsolatedPointDot(
+      isolatedTimestamps(rows, seriesDataKey(seriesId)),
+      seriesColor(seriesId) ?? 'currentColor'
+    );
 
   const toTooltipData = ({
     label: hoveredTimestamp,
@@ -192,7 +230,7 @@ export function TimeSeriesChart({
             fillOpacity={0.4}
             stroke={seriesColor(seriesItem.id)}
             strokeWidth={2}
-            dot={false}
+            dot={isolatedPointDot(seriesItem.id)}
             activeDot={{ r: 4 }}
             connectNulls={false}
             isAnimationActive={animated}
@@ -212,7 +250,7 @@ export function TimeSeriesChart({
             type="natural"
             stroke={seriesColor(seriesItem.id)}
             strokeWidth={2}
-            dot={false}
+            dot={isolatedPointDot(seriesItem.id)}
             activeDot={{ r: 4 }}
             connectNulls={false}
             isAnimationActive={animated}
