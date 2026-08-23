@@ -95,12 +95,11 @@ describe('Textarea', () => {
     }
   );
 
-  it('describes the textarea with an explicitly identified helper text', () => {
+  it('describes the textarea with the helper text id given to the control', () => {
     const customHelperTextId = 'custom-helper';
 
     renderInControl({
-      controlProps: { error: true },
-      helperTextProps: { id: customHelperTextId },
+      controlProps: { error: true, helperTextId: customHelperTextId },
     });
 
     expect(getHelperText()).toHaveAttribute('id', customHelperTextId);

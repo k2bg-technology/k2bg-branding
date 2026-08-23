@@ -1,21 +1,14 @@
-'use client';
-
-import { useId, useState } from 'react';
+import { useId } from 'react';
 import { type FormProps, FormProvider } from './Context';
 
 type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'color'> & FormProps;
 
 export function Control(props: Props) {
   const { children, ...formProps } = props;
-  const generatedHelperTextId = useId();
-  const [explicitHelperTextId, setExplicitHelperTextId] = useState<string>();
+  const helperTextId = useId();
 
   return (
-    <FormProvider
-      helperTextId={explicitHelperTextId ?? generatedHelperTextId}
-      registerHelperTextId={setExplicitHelperTextId}
-      {...formProps}
-    >
+    <FormProvider helperTextId={helperTextId} {...formProps}>
       {children}
     </FormProvider>
   );

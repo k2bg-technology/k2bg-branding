@@ -1,13 +1,6 @@
-'use client';
-
 import { cva } from 'class-variance-authority';
-import { useEffect } from 'react';
 import { twMerge } from '../../../utils/extendTailwindMerge';
-import {
-  type FormProps,
-  useFormContext,
-  useRegisterHelperTextId,
-} from '../Control/Context';
+import { type FormProps, useFormContext } from '../Control/Context';
 
 // `text-neutral-300` (disabled) is a deliberate exception: no base-* token is
 // a visually reasonable match for this disabled-state gray.
@@ -31,11 +24,16 @@ const helperTextVariants = cva('text-caption leading-none', {
   },
 });
 
-export type Props = Omit<React.ComponentPropsWithoutRef<'span'>, 'color'> &
+// `id` is owned by Control (`helperTextId`) so the control's
+// `aria-describedby` and this element agree in server-rendered HTML.
+export type Props = Omit<
+  React.ComponentPropsWithoutRef<'span'>,
+  'color' | 'id'
+> &
   FormProps;
 
 export function HelperText(props: React.PropsWithChildren<Props>) {
-  const { children, className, id: explicitId, ...formProps } = props;
+  const { children, className, ...formProps } = props;
 
   const {
     color = 'dark',
@@ -44,20 +42,11 @@ export function HelperText(props: React.PropsWithChildren<Props>) {
     helperTextId,
     ...rest
   } = useFormContext(formProps);
-  const registerHelperTextId = useRegisterHelperTextId();
-
-  useEffect(() => {
-    if (explicitId === undefined) {
-      return;
-    }
-    registerHelperTextId?.(explicitId);
-    return () => registerHelperTextId?.(undefined);
-  }, [explicitId, registerHelperTextId]);
 
   return (
     <span
       {...rest}
-      id={explicitId ?? helperTextId}
+      id={helperTextId}
       className={twMerge(
         helperTextVariants({ color, error, disabled }),
         className

@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import type React from 'react';
+import { renderToString } from 'react-dom/server';
 import { describe, expect, it } from 'vitest';
 
 import { Form } from '..';
@@ -69,13 +70,12 @@ describe('Form.HelperText', () => {
     expect(getInput()).toHaveAttribute('aria-describedby', getHelperText().id);
   });
 
-  it('keeps an explicit id and lets the control point the input at it', () => {
+  it('uses the helper text id given to the control', () => {
     const customHelperTextId = 'custom-helper';
 
     render(
       buildControl({
-        controlProps: { error: true },
-        helperTextProps: { id: customHelperTextId },
+        controlProps: { error: true, helperTextId: customHelperTextId },
       })
     );
 
@@ -83,19 +83,17 @@ describe('Form.HelperText', () => {
     expect(getInput()).toHaveAttribute('aria-describedby', customHelperTextId);
   });
 
-  it('restores the generated id when the explicit id is removed', () => {
+  it('agrees with the input about a custom id in server-rendered markup', () => {
     const customHelperTextId = 'custom-helper';
-    const { rerender } = render(
+
+    const html = renderToString(
       buildControl({
-        controlProps: { error: true },
-        helperTextProps: { id: customHelperTextId },
+        controlProps: { error: true, helperTextId: customHelperTextId },
       })
     );
 
-    rerender(buildControl({ controlProps: { error: true } }));
-
-    expect(getHelperText()).not.toHaveAttribute('id', customHelperTextId);
-    expect(getInput()).toHaveAttribute('aria-describedby', getHelperText().id);
+    expect(html).toContain(`aria-describedby="${customHelperTextId}"`);
+    expect(html).toContain(`id="${customHelperTextId}"`);
   });
 
   it.each(stateClassCases)(
