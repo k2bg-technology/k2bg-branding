@@ -18,6 +18,13 @@
         "noForEach": "off"
       },
 
+      "style": {
+        // The shared config bans recharts everywhere; the chart components
+        // in this package are the one place that wraps it.
+        // Recommended: keep recharts imports inside src/components/Chart.
+        "noRestrictedImports": "off"
+      },
+
       "suspicious": {
         // Storybook docs components use array index as key.
         // Recommended: avoid this in production components.

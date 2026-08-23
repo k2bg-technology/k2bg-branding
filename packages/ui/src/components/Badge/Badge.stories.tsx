@@ -4,6 +4,20 @@ import { Icon } from '../Icon';
 
 import { Badge } from '.';
 
+const colors = [
+  'main',
+  'accent',
+  'inherit',
+  'success',
+  'info',
+  'error',
+  'warning',
+  'dark',
+  'light',
+] as const;
+
+const variants = ['default', 'outline'] as const;
+
 const meta = {
   component: Badge,
   args: {
@@ -74,6 +88,29 @@ export const Border: Story = {
     variant: 'outline',
     color: 'error',
   },
+};
+
+export const Variants: Story = {
+  render: () => (
+    <div className="flex flex-col gap-spacious p-4">
+      {variants.map((variant) => (
+        <div key={variant} className="flex flex-wrap items-center gap-normal">
+          {colors.map((color) => (
+            <span
+              key={`${variant}-${color}`}
+              className={`rounded-md p-2 ${
+                color === 'light' ? 'bg-base-black' : 'bg-base-white'
+              }`}
+            >
+              <Badge variant={variant} color={color}>
+                {color}
+              </Badge>
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  ),
 };
 
 // Regression coverage for the `render` prop: the rendered element must keep

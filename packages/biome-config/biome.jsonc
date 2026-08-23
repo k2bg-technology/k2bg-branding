@@ -39,7 +39,23 @@
         // Enforce explicit type imports (import type { ... })
         "useImportType": "error",
         "useNodejsImportProtocol": "off",
-        "noNonNullAssertion": "warn"
+        "noNonNullAssertion": "warn",
+        // Charting stays encapsulated in packages/ui (which opts out of this
+        // rule); apps compose charts through the ui barrel only.
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "recharts": "Import chart components from 'ui' instead; recharts stays inside packages/ui."
+            },
+            "patterns": [
+              {
+                "group": ["recharts/**"],
+                "message": "Import chart components from 'ui' instead; recharts stays inside packages/ui."
+              }
+            ]
+          }
+        }
       },
 
       "suspicious": {
