@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { userEvent, within } from 'storybook/test';
+import { expect, userEvent, within } from 'storybook/test';
 
 import { Icon } from '../../../..';
 import { Form } from '..';
@@ -30,6 +30,8 @@ export const Focused: Story = {
     const input = within(canvasElement).getByRole('textbox');
 
     await userEvent.click(input);
+
+    await expect(input).toHaveFocus();
   },
 };
 

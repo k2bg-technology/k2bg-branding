@@ -23,6 +23,16 @@
   --color-success: var(--color-green-500);
   --color-success-light: var(--color-green-400);
   --color-success-dark: var(--color-green-600);
+  /*
+   * Chart series palette: fixed order validated for color-vision-deficiency
+   * separation, lightness, and chroma on base-white. Interim values until
+   * the design file defines the official chart tokens.
+   */
+  --color-chart-1: #2a78d6;
+  --color-chart-2: #eb6834;
+  --color-chart-3: #1baf7a;
+  --color-chart-4: #eda100;
+  --color-chart-5: #e87ba4;
 }
 
 @layer base {
