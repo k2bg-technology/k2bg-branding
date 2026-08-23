@@ -1,4 +1,5 @@
 import { cookies, headers } from 'next/headers';
+import { lang } from 'next/root-params';
 
 import {
   cookieName,
@@ -8,12 +9,16 @@ import {
   resolveLanguage,
 } from './settings';
 
+/**
+ * Resolves the request language for server components that cannot receive
+ * route params, such as the not-found boundary.
+ *
+ * @see https://nextjs.org/docs/app/api-reference/functions/root-params
+ */
 export async function getRequestLanguage(): Promise<Language> {
-  const headerStore = await headers();
-
-  // The middleware sets `x-locale` from the URL's [lang] segment; it is
-  // authoritative so the boundary matches the URL, not the cookie.
-  const languageFromUrl = headerStore.get('x-locale');
+  // `[lang]` is a root param, so it mirrors the URL even for requests the
+  // middleware never sees; it is authoritative over the cookie.
+  const languageFromUrl: string | undefined = await lang();
   if (languageFromUrl && isSupportedLanguage(languageFromUrl)) {
     return languageFromUrl;
   }
@@ -24,6 +29,8 @@ export async function getRequestLanguage(): Promise<Language> {
   if (cookieLanguage && isSupportedLanguage(cookieLanguage)) {
     return cookieLanguage;
   }
+
+  const headerStore = await headers();
 
   return getLanguageFromAcceptLanguage(headerStore.get('Accept-Language'));
 }

@@ -10,15 +10,6 @@ const prefetchHeaderVariants: Record<string, string>[] = [
   { Purpose: 'prefetch' },
 ];
 
-// `NextResponse.next({ request: { headers } })` encodes forwarded request
-// headers on the response as `x-middleware-request-<name>`; Next.js replays
-// them onto the request that reaches server components such as not-found.tsx.
-function getForwardedLocale(
-  response: ReturnType<typeof middleware>
-): string | null {
-  return response.headers.get('x-middleware-request-x-locale');
-}
-
 // Compiles config.matcher the same way the Next.js build does, so the tests
 // exercise the exclusions the framework actually applies.
 function matchesMiddlewareMatcher(pathname: string): boolean {
@@ -108,85 +99,6 @@ describe('middleware', () => {
         const response = middleware(request);
 
         expect(response.cookies.get(cookieName)).toBeUndefined();
-      }
-    );
-  });
-
-  describe('locale propagation to server components', () => {
-    it.each([
-      { pathname: '/ja/about', expectedLocale: 'ja' },
-      { pathname: '/en/about', expectedLocale: 'en' },
-      { pathname: '/ja', expectedLocale: 'ja' },
-      { pathname: '/en', expectedLocale: 'en' },
-    ])(
-      'forwards "$expectedLocale" as the x-locale request header for $pathname',
-      ({ pathname, expectedLocale }) => {
-        const request = new NextRequest(new URL(`http://localhost${pathname}`));
-
-        const response = middleware(request);
-
-        expect(getForwardedLocale(response)).toBe(expectedLocale);
-      }
-    );
-
-    it.each([
-      { pathname: '/ja/about', cookieLocale: 'en', expectedLocale: 'ja' },
-      { pathname: '/en/about', cookieLocale: 'ja', expectedLocale: 'en' },
-    ])(
-      'forwards the URL locale "$expectedLocale" for $pathname when the cookie says "$cookieLocale"',
-      ({ pathname, cookieLocale, expectedLocale }) => {
-        const request = new NextRequest(
-          new URL(`http://localhost${pathname}`),
-          { headers: { cookie: `${cookieName}=${cookieLocale}` } }
-        );
-
-        const response = middleware(request);
-
-        expect(getForwardedLocale(response)).toBe(expectedLocale);
-      }
-    );
-
-    it('forwards the URL locale when Accept-Language prefers another language', () => {
-      const request = new NextRequest(new URL('http://localhost/ja/about'), {
-        headers: { 'Accept-Language': 'en;q=0.9' },
-      });
-
-      const response = middleware(request);
-
-      expect(getForwardedLocale(response)).toBe('ja');
-    });
-
-    it.each(prefetchHeaderVariants)(
-      'forwards the URL locale for a prefetch request with headers %o even though the cookie is left untouched',
-      (headers) => {
-        const request = new NextRequest(new URL('http://localhost/en/about'), {
-          headers,
-        });
-
-        const response = middleware(request);
-
-        expect(getForwardedLocale(response)).toBe('en');
-      }
-    );
-
-    it('does not forward an x-locale header when the request is redirected to a localized path', () => {
-      const request = new NextRequest(new URL('http://localhost/about'), {
-        headers: { cookie: `${cookieName}=en` },
-      });
-
-      const response = middleware(request);
-
-      expect(getForwardedLocale(response)).toBeNull();
-    });
-
-    it.each(['/icon.png', '/chrome-devtools.json'])(
-      'does not forward an x-locale header for the bypassed path %s',
-      (pathname) => {
-        const request = new NextRequest(new URL(`http://localhost${pathname}`));
-
-        const response = middleware(request);
-
-        expect(getForwardedLocale(response)).toBeNull();
       }
     );
   });

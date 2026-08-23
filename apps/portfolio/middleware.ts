@@ -59,25 +59,20 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
   }
 
-  const localeInPath = languages.find(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
-  );
-
-  // Propagate the URL's locale to server components (e.g. the not-found
-  // boundary, which cannot receive route params) so the URL stays authoritative.
-  const requestHeaders = new Headers(request.headers);
-  if (localeInPath) {
-    requestHeaders.set('x-locale', localeInPath);
-  }
-
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  const response = NextResponse.next();
 
   const isPrefetch =
     request.headers.get('Next-Router-Prefetch') === '1' ||
     request.headers.get('Purpose') === 'prefetch';
 
-  if (!isPrefetch && localeInPath) {
-    response.cookies.set(cookieName, localeInPath);
+  if (!isPrefetch) {
+    const localeInPath = languages.find(
+      (locale) =>
+        pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    );
+    if (localeInPath) {
+      response.cookies.set(cookieName, localeInPath);
+    }
   }
 
   return response;
