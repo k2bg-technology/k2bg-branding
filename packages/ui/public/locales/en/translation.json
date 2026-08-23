@@ -978,6 +978,174 @@
           "description": "Guidance on providing text alternatives for charts and graphs"
         }
       ]
+    },
+    "statTile": {
+      "description": "Presents one headline number with its label, an optional change badge with a trend arrow, and a short supporting line.",
+      "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. It stacks a small label, a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat, and an optional description such as the comparison period. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
+      "usage": "Use StatTile for the key figures at the top of a dashboard page, typically in a row of two to four tiles: total portfolio value, period return, dividends received, overall yield. Pass a short label that names the measurement, the formatted value, and a delta whose label includes its sign so the direction is readable as text. The delta chip is tinted by direction, up as positive and down as negative; when a falling number is good news, such as a drop in expenses, set the delta sentiment to positive so the color matches the meaning. Reserve the description for context the reader needs to interpret the number, such as the comparison period. When the question is how a value changed over time or how categories compare, use a chart instead.",
+      "accessibility": "The label, value, delta text, and description are all rendered as plain text in reading order, so screen readers announce the tile as a short sentence. The trend arrow is decorative and hidden from assistive technology; the direction must be carried by the delta text itself, for example with a leading plus or minus sign. The delta chip keeps its text in the default ink color and conveys sentiment only through its tint and icon, so the chip meets contrast requirements while never relying on color alone. The tile has no interactive parts of its own.",
+      "doList": [
+        "Keep the label to a few words that name the measurement",
+        "Format the value and the delta in the consuming app, including units and sign",
+        "Use the description for the comparison period or data source",
+        "Group related tiles in a single row with consistent spacing",
+        "Pair the tiles with the charts and tables that explain them"
+      ],
+      "dontList": [
+        "Put a trend or time series inside the tile (use TimeSeriesChart)",
+        "Rely on the arrow alone to communicate direction without a sign in the text",
+        "Use the delta badge for unrelated status text",
+        "Stack more than four tiles in one row on wide screens",
+        "Nest interactive controls inside the tile"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Provides the trend arrow inside the delta chip"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows the shape of a value over time instead of a single magnitude"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "HyperUI Stats",
+          "url": "https://hyperui.dev/components/application/stats",
+          "description": "Reference stat blocks whose layout and delta chip this component mirrors"
+        },
+        {
+          "linkText": "shadcn/ui Dashboard blocks",
+          "url": "https://ui.shadcn.com/blocks",
+          "description": "Reference layouts whose building blocks this component mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Authoring Practices",
+          "url": "https://www.w3.org/WAI/ARIA/apg/",
+          "description": "Patterns for accessible composite controls and tables"
+        }
+      ]
+    },
+    "dataTable": {
+      "description": "Renders tabular data as a semantic table with a caption, column headers, and right-aligned numeric columns.",
+      "overview": "DataTable is the text view of dashboard data: the same numbers that charts draw, laid out as rows and columns that every reader and assistive technology can traverse. Columns declare their heading and whether they hold numbers, and rows map column ids to cell content. The table always carries a caption that names it, which can be visually hidden when a heading above the table already does that job. Sorting, pagination, and selection are intentionally out of scope.",
+      "usage": "Use DataTable next to every chart on a page so that the underlying values are available as text, and on their own for lists that are naturally tabular such as allocation by asset class or transactions in a period. Provide a caption that says what the table contains and for which period, localize headers and cell content in the consuming app, and mark numeric columns with align end so their digits line up. Keep the number of columns small enough to read without horizontal scrolling on common screens; the container scrolls horizontally only as a fallback.",
+      "accessibility": "The component renders a native table with a caption, so assistive technology announces the table name, row and column counts, and each cell with its column header. Column headers are marked with the column scope. The caption remains in the accessibility tree when it is visually hidden. Numeric columns use tabular figures and right alignment for scanning. Rows are separated by rules only and carry no hover or interactive state.",
+      "doList": [
+        "Give every table a caption that names its content and period",
+        "Mark numeric columns with align end",
+        "Format cell values and localize headers in the consuming app",
+        "Place the table next to the chart that visualizes the same data",
+        "Keep column counts small enough to avoid horizontal scrolling"
+      ],
+      "dontList": [
+        "Use it for layout or for a grid of unrelated widgets",
+        "Omit the caption because a heading exists (hide it visually instead)",
+        "Put interactive controls in cells without their own accessible names",
+        "Rely on row hover to convey selection or state",
+        "Render hundreds of rows without pagination in the consuming app"
+      ],
+      "relatedComponents": [
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Chart whose values a table view makes available as text"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Chart whose values a table view makes available as text"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "HyperUI Tables",
+          "url": "https://hyperui.dev/components/application/tables",
+          "description": "Reference tables whose rules and spacing this component mirrors"
+        },
+        {
+          "linkText": "shadcn/ui Dashboard blocks",
+          "url": "https://ui.shadcn.com/blocks",
+          "description": "Reference layouts whose building blocks this component mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Authoring Practices",
+          "url": "https://www.w3.org/WAI/ARIA/apg/",
+          "description": "Patterns for accessible composite controls and tables"
+        }
+      ]
+    },
+    "periodSelector": {
+      "description": "Steps through periods with previous and next buttons around a label naming the current period.",
+      "overview": "PeriodSelector is the control for choosing which month, quarter, or year a dashboard page shows. It shows the current period as text between two icon buttons for stepping backwards and forwards. The component is fully controlled: the app owns the current period, formats its label, decides when the boundaries are reached, and reacts to the previous and next callbacks. No date arithmetic or calendar logic lives in the component, so it works for any period vocabulary.",
+      "usage": "Place PeriodSelector above the tiles and charts whose data it drives. Pass the localized label for the current period, handlers that move the period in the app state, and disable the button that would step past the available data range. Provide accessible names for both buttons that say what they do, such as previous month and next month. Keep one selector per page so that every section reads from the same period.",
+      "accessibility": "The two buttons are icon-only and receive their accessible names from the previousLabel and nextLabel props, so screen readers announce their purpose. Both are native buttons: they are focusable, activate with Enter or Space, and expose the disabled state at the range boundaries. The period label is a polite live region, so a change is announced after the step without interrupting. The controls are grouped in a fieldset so their relationship is conveyed.",
+      "doList": [
+        "Provide previousLabel and nextLabel that describe the step",
+        "Disable the button that would leave the available data range",
+        "Localize and format the period label in the consuming app",
+        "Drive every tile, chart, and table on the page from the selected period",
+        "Keep the label short and stable in width"
+      ],
+      "dontList": [
+        "Leave the buttons without accessible names",
+        "Implement date arithmetic inside the component",
+        "Use it for arbitrary navigation that is not a period",
+        "Wrap the label in a heading or other landmark",
+        "Place several selectors on one page that disagree with each other"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Used for the previous and next icon buttons"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Provides the chevron icons"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "HyperUI Pagination",
+          "url": "https://hyperui.dev/components/application/pagination",
+          "description": "Reference previous and next controls whose proportions this component mirrors"
+        },
+        {
+          "linkText": "shadcn/ui Dashboard blocks",
+          "url": "https://ui.shadcn.com/blocks",
+          "description": "Reference layouts whose building blocks this component mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Authoring Practices",
+          "url": "https://www.w3.org/WAI/ARIA/apg/",
+          "description": "Patterns for accessible composite controls and tables"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
