@@ -38,6 +38,9 @@ import ho_arrow_left from './hero-icons/outline/arrow-left.svg';
 import ho_arrow_right from './hero-icons/outline/arrow-right.svg';
 import ho_chevron_up from './hero-icons/outline/chevron-up.svg';
 import ho_list_bullet from './hero-icons/outline/list-bullet.svg';
+import ho_arrow_trending_up from './hero-icons/outline/arrow-trending-up.svg';
+import ho_arrow_trending_down from './hero-icons/outline/arrow-trending-down.svg';
+import ho_minus from './hero-icons/outline/minus.svg';
 import hs_arrow_top_right_on_square from './hero-icons/solid/arrow-top-right-on-square.svg';
 import hs_x_mark from './hero-icons/solid/x-mark.svg';
 import hs_chevron_double_right from './hero-icons/solid/chevron-double-right.svg';
@@ -57,6 +60,9 @@ import hs_arrow_left from './hero-icons/solid/arrow-left.svg';
 import hs_arrow_right from './hero-icons/solid/arrow-right.svg';
 import hs_chevron_up from './hero-icons/solid/chevron-up.svg';
 import hs_list_bullet from './hero-icons/solid/list-bullet.svg';
+import hs_arrow_trending_up from './hero-icons/solid/arrow-trending-up.svg';
+import hs_arrow_trending_down from './hero-icons/solid/arrow-trending-down.svg';
+import hs_minus from './hero-icons/solid/minus.svg';
 
 export type IconUrl = string | { src: string } | { default: { src: string } };
 
@@ -102,6 +108,9 @@ export const heroOutlineIcons: Record<string, IconUrl> = {
   'arrow-right': ho_arrow_right,
   'chevron-up': ho_chevron_up,
   'list-bullet': ho_list_bullet,
+  'arrow-trending-up': ho_arrow_trending_up,
+  'arrow-trending-down': ho_arrow_trending_down,
+  'minus': ho_minus,
 };
 
 export const heroSolidIcons: Record<string, IconUrl> = {
@@ -124,4 +133,7 @@ export const heroSolidIcons: Record<string, IconUrl> = {
   'arrow-right': hs_arrow_right,
   'chevron-up': hs_chevron_up,
   'list-bullet': hs_list_bullet,
+  'arrow-trending-up': hs_arrow_trending_up,
+  'arrow-trending-down': hs_arrow_trending_down,
+  'minus': hs_minus,
 };
