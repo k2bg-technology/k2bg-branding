@@ -34,7 +34,8 @@
     "overrides": {
       "esbuild": "0.28.1",
       "@floating-ui/utils": "^0.2.11",
-      "tmp": ">=0.2.6"
+      "tmp": ">=0.2.6",
+      "@types/glob>@types/minimatch": "-"
     },
     "onlyBuiltDependencies": [
       "@swc/core",

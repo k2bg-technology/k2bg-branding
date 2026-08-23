@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 import { Button } from '../Button';
 
 import { Popover } from '.';
@@ -45,6 +46,13 @@ const meta = {
     const button = canvas.getByRole('button');
 
     await userEvent.click(button);
+
+    // Assert the popup role, not its copy: this meta play runs for every story,
+    // including ones with different content. Retry the visibility check because
+    // the popup mounts at opacity 0 and fades in.
+    await waitFor(() =>
+      expect(within(document.body).getByRole('dialog')).toBeVisible()
+    );
   },
 } satisfies Meta<typeof Popover>;
 

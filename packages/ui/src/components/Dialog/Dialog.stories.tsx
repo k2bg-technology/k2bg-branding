@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '../Button';
 
@@ -62,6 +63,12 @@ const meta = {
     const button = canvas.getByRole('button');
 
     await userEvent.click(button);
+
+    // Retry the visibility check: the popup mounts at opacity 0 and fades in,
+    // so a one-shot assertion races the enter animation.
+    await waitFor(() =>
+      expect(within(document.body).getByRole('dialog')).toBeVisible()
+    );
   },
 } satisfies Meta<typeof Dialog>;
 
