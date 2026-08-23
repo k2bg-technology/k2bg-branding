@@ -24,6 +24,6 @@
     "@types/node": "^17.0.45",
     "biome-config": "workspace:*",
     "tsconfig": "workspace:*",
-    "vitest": "^3.2.7"
+    "vitest": "^4.1.11"
   }
 }
