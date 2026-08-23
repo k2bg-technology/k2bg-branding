@@ -862,6 +862,122 @@
           "description": "ARIA Authoring Practices Guide for alert and status patterns"
         }
       ]
+    },
+    "timeSeriesChart": {
+      "description": "Plots one or more series of values over time as a line or area chart with a tooltip, legend, and period-aware time axis.",
+      "overview": "TimeSeriesChart answers the question of how a measurement changes over time. Each series is a list of timestamped points; the chart merges them onto a shared time axis, thins the tick labels to fit the selected period, and draws either lines or filled areas. Series colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a series can opt into a status color to signal a threshold or condition. A null value leaves a gap instead of drawing a misleading connection, and the value axis fits the data so that small movements far from zero remain visible.",
+      "usage": "Use TimeSeriesChart when the shape of a value over time matters: temperature across a month, portfolio value across a year, page views across a week. Pass a label that names the chart for assistive technology, a period that matches the span of the data so the axis ticks use a suitable format, and series whose labels are already localized. Use the area variant when the magnitude under the line is meaningful, and the line variant when only the trajectory matters. Provide a valueFormatter to attach units or currency formatting, and keep animation off unless the chart is the focus of an interaction. Pair every chart with a table view of the same numbers for readers who cannot use the visual.",
+      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys step through the data points and update the tooltip, so keyboard users can read every value. Series are distinguished by a palette validated for color vision deficiencies, and the legend repeats each series label in text next to its swatch. Tooltips show the series label and formatted value in text. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
+      "doList": [
+        "Give every chart a label that says what is measured and over which span",
+        "Choose the period that matches the span of the data",
+        "Localize series labels and format values in the consuming app",
+        "Keep the number of series at five or fewer",
+        "Provide a table view of the same data next to the chart",
+        "Use status colors only to mark thresholds or conditions"
+      ],
+      "dontList": [
+        "Plot categories without a time dimension (use BarChart instead)",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Rely on color alone to distinguish series without a legend",
+        "Turn on animation in visual regression tests",
+        "Interpolate across missing values by filling gaps with zero",
+        "Stack unrelated measurements with different units on one axis"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares values across categories instead of over time"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "barChart": {
+      "description": "Compares values across categories as vertical bars, with grouped bars for multiple series, a tooltip, and an optional legend.",
+      "overview": "BarChart answers the question of how categories compare to each other at a point in time. Each series provides one value per category, and categories are drawn in the order given. With several series the bars are grouped side by side within each category so that both the per-category comparison and the per-series comparison stay readable. The value axis always starts at zero so bar lengths are proportional to the values, and series colors follow the same palette order as the time series chart.",
+      "usage": "Use BarChart when the reader needs to compare discrete categories: spending by category, allocation by asset class, energy by day of the week. Pass a label that names the chart for assistive technology, the categories already localized and in the order they should appear, and one series per measurement with one value per category. Provide a valueFormatter to attach units or currency formatting. Keep the number of categories small enough that labels remain readable, and pair the chart with a table view of the same values.",
+      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys move between categories and update the tooltip, so keyboard users can read every value. Category labels are rendered as text on the axis, the legend repeats each series label in text next to its swatch, and the tooltip lists the series label and formatted value for the active category. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
+      "doList": [
+        "Give every chart a label that says what is compared",
+        "Order categories deliberately (by value, time, or a natural sequence)",
+        "Localize category and series labels in the consuming app",
+        "Keep the value axis at zero so bar lengths stay honest",
+        "Provide a table view of the same data next to the chart",
+        "Keep the number of series at five or fewer"
+      ],
+      "dontList": [
+        "Use bars for continuous time series (use TimeSeriesChart instead)",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Crowd the axis with more categories than the labels can fit",
+        "Rely on color alone to distinguish grouped series",
+        "Turn on animation in visual regression tests",
+        "Mix measurements with different units in one chart"
+      ],
+      "relatedComponents": [
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows how a value changes over time instead of across categories"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
