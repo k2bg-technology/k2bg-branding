@@ -16,13 +16,26 @@ type PageProps = {
   params: Promise<{ lang: string }>;
 };
 
-export default async function Page({ params }: PageProps) {
+/**
+ * Stays synchronous so the fallback streams before the dictionary resolves;
+ * a route-level `loading.tsx` would do the same, but it also wraps the
+ * catch-all segment and turns its `notFound()` into a streamed 200.
+ */
+export default function Page({ params }: PageProps) {
+  return (
+    <Suspense fallback={<PortfolioLoading />}>
+      <PortfolioPageContent params={params} />
+    </Suspense>
+  );
+}
+
+async function PortfolioPageContent({ params }: PageProps) {
   const { lang } = await params;
   const language = resolveLanguage(lang);
   const dictionary = await getDictionary(language);
 
   return (
-    <Suspense fallback={<PortfolioLoading />}>
+    <>
       <div className="flex flex-col gap-condensed md:absolute md:top-1/2 md:-translate-y-1/2 md:px-20">
         <main>
           <Slider className="contents md:block">
@@ -39,6 +52,6 @@ export default async function Page({ params }: PageProps) {
       </div>
       <LanguageSelector />
       <ScrollHelper dictionary={dictionary.scrollHelper} />
-    </Suspense>
+    </>
   );
 }
