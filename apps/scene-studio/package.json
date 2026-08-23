@@ -23,7 +23,7 @@
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "remotion": "4.0.509",
-    "tailwind-merge": "^2.6.1",
+    "tailwind-merge": "^3.6.0",
     "three": "^0.185.1",
     "zod": "^3.25.76"
   },
