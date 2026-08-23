@@ -168,7 +168,8 @@ jobs:
 
       - name: Report accessibility violations as a warning
         if: steps.storybook-a11y.outcome == 'failure'
-        run: echo "::warning title=Storybook A11y::axe reported accessibility violations (advisory, see #372); check the 'Run Storybook accessibility tests' step log."
+        run: |
+          echo "::warning title=Storybook A11y::axe reported accessibility violations (advisory, tracked in #372); see the 'Run Storybook accessibility tests' step log."
 
   docs-check:
     name: Agent Docs Check
