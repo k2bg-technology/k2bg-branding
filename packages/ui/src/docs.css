@@ -1,59 +1,64 @@
 @import "./globals.css";
 
-main {
+/*
+ * Element selectors are scoped to the docs page and kept out of inline
+ * story previews, so docs typography never leaks into story canvases.
+ */
+#storybook-docs main:not(.docs-story *) {
   font-family: 'Menlo', 'YuGothic', "Hiragino Kaku Gothic ProN", "Hiragino Sans", 'Meiryo', 'ui-monospace', 'SFMono-Regular', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace';
   color: #474a4d;
 }
 
-h1 {
+#storybook-docs h1:not(.docs-story *) {
   font-family: unset !important;
   font-size: 1.875rem;
   font-weight: bold;
   line-height: 3.1875rem;
 }
 
-h2 {
+#storybook-docs h2:not(.docs-story *) {
   font-size: 1.5rem;
   font-weight: bold;
   border-bottom: solid 1px #eae5e3;
   line-height: 2.3375rem;
 }
 
-h3 {
+#storybook-docs h3:not(.docs-story *) {
   font-size: 1.25rem;
   font-weight: bold;
   line-height: 2.125rem;
 }
 
-ol, ul {
+#storybook-docs ol:not(.docs-story *),
+#storybook-docs ul:not(.docs-story *) {
   list-style: none;
   list-style-position: inside;
 }
 
-
-p, li {
+#storybook-docs p:not(.docs-story *),
+#storybook-docs li:not(.docs-story *) {
   font-size: 0.875rem;
   line-height: 1.4875rem;
 }
 
-img {
+#storybook-docs img:not(.docs-story *) {
   border-radius: 0.75rem;
 }
 
-table {
+#storybook-docs table:not(.docs-story *) {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.875rem;
 }
 
-table thead th {
+#storybook-docs table thead th:not(.docs-story *) {
   background-color: #f7f7f7;
   padding: 0.75rem 1rem;
   border-bottom: 2px solid #ddd;
   text-align: left;
 }
 
-table tbody td {
+#storybook-docs table tbody td:not(.docs-story *) {
   padding: 0.75rem 1rem;
   border-bottom: 1px solid #eee;
 }
