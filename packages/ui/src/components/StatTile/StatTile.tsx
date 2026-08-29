@@ -1,4 +1,8 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  isValidElement,
+  type ReactNode,
+} from 'react';
 import { cn } from '../../utils/cn';
 import { Icon } from '../Icon';
 
@@ -33,6 +37,8 @@ export interface StatTileProps
   value: string;
   delta?: StatTileDelta;
   description?: ReactNode;
+  /** Compact visualization pinned to the bottom edge, e.g. a `Sparkline`. */
+  chart?: ReactNode;
 }
 
 const trendIconNames = {
@@ -91,6 +97,7 @@ export function StatTile({
   value,
   delta,
   description,
+  chart,
   className,
   ...rest
 }: StatTileProps) {
@@ -117,6 +124,11 @@ export function StatTile({
           )}
         </p>
       </div>
+      {isValidElement(chart) && (
+        <div data-slot="stat-tile-chart" className="mt-auto">
+          {chart}
+        </div>
+      )}
     </div>
   );
 }

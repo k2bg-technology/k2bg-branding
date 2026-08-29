@@ -19,6 +19,9 @@ const meta = {
     ],
   },
   argTypes: {
+    stacked: {
+      control: 'boolean',
+    },
     height: {
       control: 'select',
       options: ['sm', 'md', 'lg'],
@@ -87,6 +90,45 @@ export const Grouped: Story = {
         id: 'bedroom',
         label: 'Bedroom',
         values: [3.1, 3.1, 3.1, 3.3, 3.2, 3.5, 3.4],
+      },
+    ],
+  },
+};
+
+export const Stacked: Story = {
+  args: {
+    label: 'Sleep stages per night in August 2026',
+    categories: [
+      'Aug 18',
+      'Aug 19',
+      'Aug 20',
+      'Aug 21',
+      'Aug 22',
+      'Aug 23',
+      'Aug 24',
+    ],
+    stacked: true,
+    valueFormatter: (value: number) => `${value}h`,
+    series: [
+      {
+        id: 'awake',
+        label: 'Awake',
+        values: [0.6, 0.4, 0.9, 0.3, 0.7, 0.2, 0.5],
+      },
+      {
+        id: 'rem',
+        label: 'REM',
+        values: [1.4, 1.7, 1.1, 1.9, 1.3, 2.1, 1.8],
+      },
+      {
+        id: 'core',
+        label: 'Core',
+        values: [4.2, 4.5, 3.8, 4.6, 4.0, 4.9, 4.4],
+      },
+      {
+        id: 'deep',
+        label: 'Deep',
+        values: [1.1, 1.3, 0.8, 1.4, 0.9, 1.6, 1.2],
       },
     ],
   },

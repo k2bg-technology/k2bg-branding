@@ -32,6 +32,28 @@ function valueAxisLabels(container: HTMLElement): string[] {
   );
 }
 
+/** Bars come out series by series, so the first slice is the first series. */
+function barLeftEdges(container: HTMLElement): number[] {
+  return Array.from(
+    container.querySelectorAll('.recharts-bar-rectangle path'),
+    (bar) => Number(bar.getAttribute('x'))
+  );
+}
+
+function barOutlines(container: HTMLElement): string[] {
+  return Array.from(
+    container.querySelectorAll('.recharts-bar-rectangle path'),
+    (bar) => bar.getAttribute('d') ?? ''
+  );
+}
+
+function createTwoSeries(): BarSeries[] {
+  return [
+    createSeries(),
+    createSeries({ id: 'water', label: 'Water', values: [3, 4, 5] }),
+  ];
+}
+
 describe('BarChart', () => {
   it('names the chart surface with the label', () => {
     const label = 'Energy consumption per day of week';
@@ -144,4 +166,71 @@ describe('BarChart', () => {
       expect(screen.queryByRole('list') !== null).toBe(expectLegend);
     }
   );
+
+  it('draws one bar per category for every series when stacked', () => {
+    const series = createTwoSeries();
+
+    const { container } = render(
+      <BarChart
+        label="Usage"
+        categories={weekdayCategories}
+        series={series}
+        stacked
+      />
+    );
+
+    expect(container.querySelectorAll('.recharts-bar-rectangle')).toHaveLength(
+      weekdayCategories.length * series.length
+    );
+  });
+
+  it.each`
+    stacked  | sharesColumn
+    ${true}  | ${true}
+    ${false} | ${false}
+  `(
+    'places the bars of a category on one column: $sharesColumn when stacked=$stacked',
+    ({ stacked, sharesColumn }) => {
+      const { container } = render(
+        <BarChart
+          label="Usage"
+          categories={weekdayCategories}
+          series={createTwoSeries()}
+          stacked={stacked}
+        />
+      );
+
+      const leftEdges = barLeftEdges(container);
+      const secondSeriesEdges = leftEdges.slice(weekdayCategories.length);
+      expect(
+        leftEdges
+          .slice(0, weekdayCategories.length)
+          .every((edge, index) => edge === secondSeriesEdges[index])
+      ).toBe(sharesColumn);
+    }
+  );
+
+  it('rounds only the topmost bar of a stack', () => {
+    const { container } = render(
+      <BarChart
+        label="Usage"
+        categories={weekdayCategories}
+        series={createTwoSeries()}
+        stacked
+      />
+    );
+
+    const arcCommand = 'A';
+    const outlines = barOutlines(container);
+    expect(
+      outlines
+        .slice(0, weekdayCategories.length)
+        .some((outline) => outline.includes(arcCommand))
+    ).toBe(false);
+    expect(
+      outlines
+        .slice(weekdayCategories.length)
+        .every((outline) => outline.includes(arcCommand))
+    ).toBe(true);
+  });
 });

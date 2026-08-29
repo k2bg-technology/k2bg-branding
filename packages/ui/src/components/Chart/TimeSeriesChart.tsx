@@ -3,13 +3,15 @@
 import { useId } from 'react';
 import {
   Area,
-  AreaChart,
   CartesianGrid,
+  ComposedChart,
   type DotItemDotProps,
   Line,
-  LineChart,
+  ReferenceArea,
+  ReferenceLine,
   Tooltip,
   type TooltipContentProps,
+  type TooltipValueType,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -18,28 +20,72 @@ import { ChartContainer } from './ChartContainer';
 import { ChartLegend } from './ChartLegend';
 import { ChartTooltip } from './ChartTooltip';
 import { seriesDataKey } from './chartSeries';
-import { chartAccessibleName, resolveSeriesColor } from './chartTheme';
+import {
+  chartAccessibleName,
+  resolveSeriesColor,
+  seriesColorCss,
+} from './chartTheme';
 import { defaultValueFormatter, getTimeAxisTicks } from './chartTicks';
-import type {
-  ChartHeight,
-  ChartPeriod,
-  ChartTooltipData,
-  TimeSeriesSeries,
+import {
+  ChartColor,
+  type ChartHeight,
+  ChartInterpolation,
+  type ChartPeriod,
+  type ChartReferenceBand,
+  type ChartThreshold,
+  type ChartTooltipData,
+  type TimeSeriesBandPoint,
+  type TimeSeriesBandSeries,
+  type TimeSeriesChartSeries,
 } from './types';
 
-type TimeSeriesRow = { timestamp: number } & Record<string, number | null>;
+type TimeSeriesValue = number | [number, number] | null;
+type TimeSeriesRow = { timestamp: number } & Record<string, TimeSeriesValue>;
 
-function buildRows(series: TimeSeriesSeries[]): TimeSeriesRow[] {
-  const rowsByTimestamp = new Map<number, TimeSeriesRow>();
-  for (const seriesItem of series) {
-    for (const point of seriesItem.points) {
-      const row = rowsByTimestamp.get(point.timestamp) ?? {
+function isBandSeries(
+  series: TimeSeriesChartSeries
+): series is TimeSeriesBandSeries {
+  return series.kind === 'band';
+}
+
+// A half-measured range has no area to fill, so it becomes a gap like a null
+// measurement rather than a band collapsed onto one bound.
+function bandValue(point: TimeSeriesBandPoint): TimeSeriesValue {
+  return point.low === null || point.high === null
+    ? null
+    : [point.low, point.high];
+}
+
+interface RowEntry {
+  timestamp: number;
+  dataKey: string;
+  value: TimeSeriesValue;
+}
+
+function toRowEntries(seriesItem: TimeSeriesChartSeries): RowEntry[] {
+  const dataKey = seriesDataKey(seriesItem.id);
+  return isBandSeries(seriesItem)
+    ? seriesItem.points.map((point) => ({
         timestamp: point.timestamp,
-      };
-      row[seriesDataKey(seriesItem.id)] = point.value;
-      rowsByTimestamp.set(point.timestamp, row);
-    }
-  }
+        dataKey,
+        value: bandValue(point),
+      }))
+    : seriesItem.points.map((point) => ({
+        timestamp: point.timestamp,
+        dataKey,
+        value: point.value,
+      }));
+}
+
+function buildRows(series: TimeSeriesChartSeries[]): TimeSeriesRow[] {
+  const rowsByTimestamp = series
+    .flatMap(toRowEntries)
+    .reduce((rows, { timestamp, dataKey, value }) => {
+      const row = rows.get(timestamp) ?? { timestamp };
+      row[dataKey] = value;
+      return rows.set(timestamp, row);
+    }, new Map<number, TimeSeriesRow>());
+
   return Array.from(rowsByTimestamp.values()).sort(
     (first, second) => first.timestamp - second.timestamp
   );
@@ -62,6 +108,20 @@ function isolatedTimestamps(
   return isolated;
 }
 
+function formatTooltipValue(
+  value: TooltipValueType | undefined,
+  valueFormatter: (value: number) => string
+): string | null {
+  if (Array.isArray(value)) {
+    const [low, high] = value;
+    if (typeof low !== 'number' || typeof high !== 'number') {
+      return null;
+    }
+    return `${valueFormatter(low)}–${valueFormatter(high)}`;
+  }
+  return typeof value === 'number' ? valueFormatter(value) : null;
+}
+
 function renderIsolatedPointDot(timestamps: Set<number>, color: string) {
   return ({ cx, cy, payload, index }: DotItemDotProps) =>
     timestamps.has(payload.timestamp) ? (
@@ -80,9 +140,14 @@ function renderIsolatedPointDot(timestamps: Set<number>, color: string) {
 export interface TimeSeriesChartProps {
   /** Accessible name of the chart, already localized by the consuming app. */
   label: string;
-  series: TimeSeriesSeries[];
+  series: TimeSeriesChartSeries[];
   period: ChartPeriod;
   variant?: 'line' | 'area';
+  thresholds?: ChartThreshold[];
+  bands?: ChartReferenceBand[];
+  /** IANA time zone name, e.g. 'Asia/Tokyo'. */
+  timeZone?: string;
+  interpolation?: ChartInterpolation;
   height?: ChartHeight;
   valueFormatter?: (value: number) => string;
   showLegend?: boolean;
@@ -95,6 +160,10 @@ export function TimeSeriesChart({
   series,
   period,
   variant = 'line',
+  thresholds,
+  bands,
+  timeZone = 'UTC',
+  interpolation = ChartInterpolation.LINEAR,
   height,
   valueFormatter = defaultValueFormatter,
   showLegend,
@@ -109,7 +178,8 @@ export function TimeSeriesChart({
   const rows = buildRows(series);
   const { ticks, formatTick } = getTimeAxisTicks(
     rows.map((row) => row.timestamp),
-    period
+    period,
+    timeZone
   );
   const seriesInfoByDataKey = new Map(
     series.map((seriesItem, index) => [
@@ -128,6 +198,8 @@ export function TimeSeriesChart({
       isolatedTimestamps(rows, seriesDataKey(seriesId)),
       seriesColor(seriesId) ?? 'currentColor'
     );
+  const curveType = (seriesItem: TimeSeriesChartSeries) =>
+    seriesItem.interpolation ?? interpolation;
 
   const toTooltipData = ({
     label: hoveredTimestamp,
@@ -139,125 +211,24 @@ export function TimeSeriesChart({
         : String(hoveredTimestamp ?? ''),
     items: (payload ?? []).flatMap((entry) => {
       const seriesInfo = seriesInfoByDataKey.get(String(entry.dataKey));
-      if (seriesInfo === undefined || typeof entry.value !== 'number') {
+      if (seriesInfo === undefined) {
+        return [];
+      }
+      const displayValue = formatTooltipValue(entry.value, valueFormatter);
+      if (displayValue === null) {
         return [];
       }
       return {
         id: seriesInfo.id,
         label: seriesInfo.label,
         color: seriesInfo.color,
-        value: valueFormatter(entry.value),
+        value: displayValue,
       };
     }),
   });
 
-  const renderTooltipContent = (tooltipProps: TooltipContentProps) => {
-    if (!tooltipProps.active || tooltipProps.payload?.length === 0) {
-      return null;
-    }
-    return <ChartTooltip data={toTooltipData(tooltipProps)} />;
-  };
-
-  const grid = <CartesianGrid vertical={false} />;
-  const timeAxis = (
-    <XAxis
-      dataKey="timestamp"
-      type="number"
-      scale="time"
-      domain={['dataMin', 'dataMax']}
-      ticks={ticks}
-      tickFormatter={formatTick}
-      tickLine={false}
-      axisLine={false}
-      tickMargin={8}
-      minTickGap={16}
-    />
-  );
-  const valueAxis = (
-    // Lines may sit far from zero; fit the domain to the data
-    // (bars keep the mandatory zero baseline in BarChart).
-    <YAxis
-      width={48}
-      domain={['auto', 'auto']}
-      tickLine={false}
-      axisLine={false}
-      tickMargin={8}
-      tickFormatter={valueFormatter}
-    />
-  );
-  const tooltip = (
-    <Tooltip content={renderTooltipContent} isAnimationActive={false} />
-  );
-  const margin = { left: 12, right: 12 };
-  const accessibleName = chartAccessibleName(label);
-
-  const chart =
-    variant === 'area' ? (
-      <AreaChart data={rows} margin={margin} {...accessibleName}>
-        <defs>
-          {series.map((seriesItem) => (
-            <linearGradient
-              key={seriesItem.id}
-              id={gradientId(seriesItem.id)}
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1"
-            >
-              <stop
-                offset="5%"
-                stopColor={seriesColor(seriesItem.id)}
-                stopOpacity={0.8}
-              />
-              <stop
-                offset="95%"
-                stopColor={seriesColor(seriesItem.id)}
-                stopOpacity={0.1}
-              />
-            </linearGradient>
-          ))}
-        </defs>
-        {grid}
-        {timeAxis}
-        {valueAxis}
-        {tooltip}
-        {series.map((seriesItem) => (
-          <Area
-            key={seriesItem.id}
-            dataKey={seriesDataKey(seriesItem.id)}
-            type="natural"
-            fill={`url(#${gradientId(seriesItem.id)})`}
-            fillOpacity={0.4}
-            stroke={seriesColor(seriesItem.id)}
-            strokeWidth={2}
-            dot={isolatedPointDot(seriesItem.id)}
-            activeDot={{ r: 4 }}
-            connectNulls={false}
-            isAnimationActive={animated}
-          />
-        ))}
-      </AreaChart>
-    ) : (
-      <LineChart data={rows} margin={margin} {...accessibleName}>
-        {grid}
-        {timeAxis}
-        {valueAxis}
-        {tooltip}
-        {series.map((seriesItem) => (
-          <Line
-            key={seriesItem.id}
-            dataKey={seriesDataKey(seriesItem.id)}
-            type="natural"
-            stroke={seriesColor(seriesItem.id)}
-            strokeWidth={2}
-            dot={isolatedPointDot(seriesItem.id)}
-            activeDot={{ r: 4 }}
-            connectNulls={false}
-            isAnimationActive={animated}
-          />
-        ))}
-      </LineChart>
-    );
+  const gradientSeries =
+    variant === 'area' ? series.filter((item) => !isBandSeries(item)) : [];
 
   const isLegendVisible = showLegend ?? series.length > 1;
   const legendItems = series.map((seriesItem) => ({
@@ -268,7 +239,149 @@ export function TimeSeriesChart({
 
   return (
     <div data-slot="time-series-chart" className={className}>
-      <ChartContainer height={height}>{chart}</ChartContainer>
+      <ChartContainer height={height}>
+        <ComposedChart
+          data={rows}
+          margin={{ left: 12, right: 12 }}
+          {...chartAccessibleName(label)}
+        >
+          <defs>
+            {gradientSeries.map((seriesItem) => (
+              <linearGradient
+                key={seriesItem.id}
+                id={gradientId(seriesItem.id)}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="5%"
+                  stopColor={seriesColor(seriesItem.id)}
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={seriesColor(seriesItem.id)}
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            ))}
+          </defs>
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="timestamp"
+            type="number"
+            scale="time"
+            domain={['dataMin', 'dataMax']}
+            ticks={ticks}
+            tickFormatter={formatTick}
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            minTickGap={16}
+          />
+          {/* Lines may sit far from zero; fit the domain to the data
+              (bars keep the mandatory zero baseline in BarChart). */}
+          <YAxis
+            width={48}
+            domain={['auto', 'auto']}
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            tickFormatter={valueFormatter}
+          />
+          <Tooltip
+            content={(tooltipProps: TooltipContentProps) => {
+              if (!tooltipProps.active || tooltipProps.payload?.length === 0) {
+                return null;
+              }
+              return <ChartTooltip data={toTooltipData(tooltipProps)} />;
+            }}
+            isAnimationActive={false}
+          />
+          {(bands ?? []).map((band) => (
+            <ReferenceArea
+              key={band.id}
+              y1={band.from}
+              y2={band.to}
+              // Without it a reference that sits outside the measured range
+              // is silently dropped instead of widening the axis.
+              ifOverflow="extendDomain"
+              fill={seriesColorCss(band.color ?? ChartColor.INFO)}
+              fillOpacity={0.08}
+              stroke="none"
+            />
+          ))}
+          {(thresholds ?? []).map((threshold) => (
+            <ReferenceLine
+              key={threshold.id}
+              y={threshold.value}
+              ifOverflow="extendDomain"
+              stroke={seriesColorCss(threshold.color ?? ChartColor.WARNING)}
+              strokeDasharray="4 4"
+              label={
+                threshold.label === undefined
+                  ? undefined
+                  : {
+                      value: threshold.label,
+                      position: 'insideTopRight',
+                      fontSize: 12,
+                      fill: 'var(--color-base-black)',
+                      fillOpacity: 0.8,
+                    }
+              }
+            />
+          ))}
+          {series.map((seriesItem) => {
+            if (isBandSeries(seriesItem)) {
+              return (
+                <Area
+                  key={seriesItem.id}
+                  dataKey={seriesDataKey(seriesItem.id)}
+                  type={curveType(seriesItem)}
+                  fill={seriesColor(seriesItem.id)}
+                  fillOpacity={seriesItem.fillOpacity ?? 0.2}
+                  stroke="none"
+                  activeDot={false}
+                  connectNulls={false}
+                  isAnimationActive={animated}
+                />
+              );
+            }
+            if (variant === 'area') {
+              return (
+                <Area
+                  key={seriesItem.id}
+                  dataKey={seriesDataKey(seriesItem.id)}
+                  type={curveType(seriesItem)}
+                  fill={`url(#${gradientId(seriesItem.id)})`}
+                  fillOpacity={0.4}
+                  stroke={seriesColor(seriesItem.id)}
+                  strokeWidth={2}
+                  dot={isolatedPointDot(seriesItem.id)}
+                  activeDot={{ r: 4 }}
+                  connectNulls={false}
+                  isAnimationActive={animated}
+                />
+              );
+            }
+            return (
+              <Line
+                key={seriesItem.id}
+                dataKey={seriesDataKey(seriesItem.id)}
+                type={curveType(seriesItem)}
+                stroke={seriesColor(seriesItem.id)}
+                strokeWidth={2}
+                dot={isolatedPointDot(seriesItem.id)}
+                activeDot={{ r: 4 }}
+                connectNulls={false}
+                isAnimationActive={animated}
+              />
+            );
+          })}
+        </ComposedChart>
+      </ChartContainer>
       {isLegendVisible && <ChartLegend items={legendItems} />}
     </div>
   );

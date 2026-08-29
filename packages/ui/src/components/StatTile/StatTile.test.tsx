@@ -95,4 +95,36 @@ describe('StatTile', () => {
 
     expect(screen.getByText(description)).toBeInTheDocument();
   });
+
+  it('renders the chart element in the chart slot', () => {
+    const chartText = 'Twelve-month trend';
+
+    const { container } = render(
+      <StatTile
+        label="Portfolio value"
+        value="¥1"
+        chart={<span>{chartText}</span>}
+      />
+    );
+
+    expect(
+      container.querySelector('[data-slot="stat-tile-chart"]')
+    ).toHaveTextContent(chartText);
+  });
+
+  it.each`
+    chartName     | chart
+    ${'omitted'}  | ${undefined}
+    ${'a string'} | ${'Twelve-month trend'}
+    ${'a number'} | ${12}
+    ${'null'}     | ${null}
+  `('omits the chart slot when the chart is $chartName', ({ chart }) => {
+    const { container } = render(
+      <StatTile label="Portfolio value" value="¥1" chart={chart} />
+    );
+
+    expect(
+      container.querySelector('[data-slot="stat-tile-chart"]')
+    ).not.toBeInTheDocument();
+  });
 });

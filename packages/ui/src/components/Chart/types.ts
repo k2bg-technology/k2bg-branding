@@ -22,6 +22,14 @@ export type ChartColor = (typeof ChartColor)[keyof typeof ChartColor];
 
 export type ChartHeight = 'sm' | 'md' | 'lg';
 
+export const ChartInterpolation = {
+  LINEAR: 'linear',
+  STEP: 'step',
+  NATURAL: 'natural',
+} as const;
+export type ChartInterpolation =
+  (typeof ChartInterpolation)[keyof typeof ChartInterpolation];
+
 export interface TimeSeriesPoint {
   timestamp: number;
   /** null renders as a gap in the line/area. */
@@ -29,11 +37,50 @@ export interface TimeSeriesPoint {
 }
 
 export interface TimeSeriesSeries {
+  /** Discriminates plain measurements from band series; defaults to a line. */
+  kind?: 'line';
   id: string;
   /** Display label, already localized by the consuming app. */
   label: string;
   color?: ChartColor;
+  interpolation?: ChartInterpolation;
   points: TimeSeriesPoint[];
+}
+
+export interface TimeSeriesBandPoint {
+  timestamp: number;
+  /** null in either bound renders as a gap in the band. */
+  low: number | null;
+  high: number | null;
+}
+
+export interface TimeSeriesBandSeries {
+  kind: 'band';
+  id: string;
+  label: string;
+  color?: ChartColor;
+  interpolation?: ChartInterpolation;
+  /** Opacity of the band fill; defaults to 0.2. */
+  fillOpacity?: number;
+  points: TimeSeriesBandPoint[];
+}
+
+export type TimeSeriesChartSeries = TimeSeriesSeries | TimeSeriesBandSeries;
+
+export interface ChartThreshold {
+  id: string;
+  value: number;
+  label?: string;
+  /** Defaults to the warning color. */
+  color?: ChartColor;
+}
+
+export interface ChartReferenceBand {
+  id: string;
+  from: number;
+  to: number;
+  /** Defaults to the info color. */
+  color?: ChartColor;
 }
 
 export interface BarSeries {
