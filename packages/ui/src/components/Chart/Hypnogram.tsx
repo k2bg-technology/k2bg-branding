@@ -199,6 +199,7 @@ export function Hypnogram({
             textAnchor="end"
             fontSize={12}
             fill="var(--color-base-black)"
+            fillOpacity={0.8}
           >
             {stageLabels[stage]}
           </text>
@@ -252,6 +253,7 @@ export function Hypnogram({
             textAnchor={tickTextAnchor(plotX(tick))}
             fontSize={tickLabelFontSize}
             fill="var(--color-base-black)"
+            fillOpacity={0.8}
           >
             {formatTimestamp(tick, ChartPeriod.DAY, timeZone)}
           </text>

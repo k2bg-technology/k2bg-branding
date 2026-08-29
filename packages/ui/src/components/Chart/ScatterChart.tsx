@@ -202,6 +202,7 @@ export function ScatterChart({
               }
               return <ChartTooltip data={toTooltipData(tooltipProps)} />;
             }}
+            cursor={false}
             isAnimationActive={false}
           />
           {trendLine !== undefined && extent !== undefined && (
