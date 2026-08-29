@@ -864,14 +864,17 @@
       ]
     },
     "timeSeriesChart": {
-      "description": "Plots one or more series of values over time as a line or area chart with a tooltip, legend, and period-aware time axis.",
-      "overview": "TimeSeriesChart answers the question of how a measurement changes over time. Each series is a list of timestamped points; the chart merges them onto a shared time axis, thins the tick labels to fit the selected period, and draws either lines or filled areas. Series colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a series can opt into a status color to signal a threshold or condition. A null value leaves a gap instead of drawing a misleading connection, and the value axis fits the data so that small movements far from zero remain visible.",
-      "usage": "Use TimeSeriesChart when the shape of a value over time matters: temperature across a month, portfolio value across a year, page views across a week. Pass a label that names the chart for assistive technology, a period that matches the span of the data so the axis ticks use a suitable format, and series whose labels are already localized. Use the area variant when the magnitude under the line is meaningful, and the line variant when only the trajectory matters. Provide a valueFormatter to attach units or currency formatting, and keep animation off unless the chart is the focus of an interaction. Pair every chart with a table view of the same numbers for readers who cannot use the visual.",
-      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys step through the data points and update the tooltip, so keyboard users can read every value. Series are distinguished by a palette validated for color vision deficiencies, and the legend repeats each series label in text next to its swatch. Tooltips show the series label and formatted value in text. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
+      "description": "Plots one or more series of values over time as lines, areas, or filled ranges, with reference lines and bands, a tooltip, a legend, and a period-aware time axis.",
+      "overview": "TimeSeriesChart answers the question of how a measurement changes over time. Each series is a list of timestamped points; the chart merges them onto a shared time axis, thins the tick labels to fit the selected period, and draws either lines or filled areas. Series colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a series can opt into a status color to signal a threshold or condition. A null value leaves a gap instead of drawing a misleading connection, and the value axis fits the data so that small movements far from zero remain visible. Besides plain measurements, a series can be a band that carries a low and a high bound per timestamp and is drawn as a filled range, which is how a confidence interval, a percentile band, or the spread around a baseline is shown; stacking several bands of decreasing width behind one median line produces a fan chart. Separate from the series, thresholds draw a dashed horizontal line at a value with an optional label, and reference bands shade a value range across the full width. Both stretch the value axis when they fall outside the measured range, so a limit that has not been crossed stays visible. The curve between points is linear by default and can be set per chart or per series to a step for values that hold until they change, or to a smooth natural curve. The time axis and the tooltip read timestamps in a given IANA time zone, so a day of readings starts at local midnight rather than at UTC midnight.",
+      "usage": "Use TimeSeriesChart when the shape of a value over time matters: temperature across a month, portfolio value across a year, page views across a week. Pass a label that names the chart for assistive technology, a period that matches the span of the data so the axis ticks use a suitable format, and series whose labels are already localized. Use the area variant when the magnitude under the line is meaningful, and the line variant when only the trajectory matters. Add thresholds for the limits and targets the series is judged against, and bands for the range a value is expected to stay inside, giving each a status color that matches its meaning. Use a band series when the spread around a value is part of the measurement, and give the bounds and their median line the same color so they read as one series. Set timeZone to the IANA name of the zone the data belongs to, since the axis reads UTC otherwise. Keep interpolation linear for measurements, use step for values that hold until they change such as a thermostat setting, and reserve natural for decorative trends, because a smooth curve overshoots the points it passes through and can show a value crossing a limit that no measurement crossed. Provide a valueFormatter to attach units or currency formatting, and keep animation off unless the chart is the focus of an interaction. Pair every chart with a table view of the same numbers for readers who cannot use the visual.",
+      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys step through the data points and update the tooltip, so keyboard users can read every value. Series are distinguished by a palette validated for color vision deficiencies, and the legend repeats each series label in text next to its swatch. Tooltips show the series label and formatted value in text. Threshold lines are dashed and carry an optional text label, so a limit is named rather than identified by its color. A band series repeats its label in the legend and reports both bounds in the tooltip as a range, so the spread is readable as numbers. Reference bands are drawn behind the data at a low opacity, which keeps the series above them at full contrast. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
       "doList": [
         "Give every chart a label that says what is measured and over which span",
         "Choose the period that matches the span of the data",
         "Localize series labels and format values in the consuming app",
+        "Set timeZone to the zone the data belongs to",
+        "Label thresholds so a limit is named as well as drawn",
+        "Give a band series and its median line the same color",
         "Keep the number of series at five or fewer",
         "Provide a table view of the same data next to the chart",
         "Use status colors only to mark thresholds or conditions"
@@ -880,6 +883,8 @@
         "Plot categories without a time dimension (use BarChart instead)",
         "Pass raw colors or CSS values instead of the chart palette",
         "Rely on color alone to distinguish series without a legend",
+        "Use natural interpolation for measurements that are read exactly",
+        "Leave the time zone at UTC for data that belongs to another zone",
         "Turn on animation in visual regression tests",
         "Interpolate across missing values by filling gaps with zero",
         "Stack unrelated measurements with different units on one axis"
@@ -889,6 +894,11 @@
           "name": "BarChart",
           "path": "/?path=/docs/components-chart-barchart--docs",
           "description": "Compares values across categories instead of over time"
+        },
+        {
+          "name": "ScatterChart",
+          "path": "/?path=/docs/components-chart-scatterchart--docs",
+          "description": "Plots two measurements against each other instead of against time"
         }
       ],
       "dependencies": [

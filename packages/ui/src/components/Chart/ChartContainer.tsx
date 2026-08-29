@@ -20,7 +20,8 @@ const chartContainerVariants = cva(
     '[&_.recharts-cartesian-grid_line]:stroke-base-light/50',
     '[&_.recharts-curve.recharts-tooltip-cursor]:stroke-base-light',
     '[&_.recharts-rectangle.recharts-tooltip-cursor]:fill-base-light/50',
-    '[&_.recharts-reference-line_line]:stroke-base-light',
+    // Scoped to Recharts' own default so an explicit reference-line color wins.
+    "[&_.recharts-reference-line_line[stroke='#ccc']]:stroke-base-light",
     "[&_.recharts-dot[stroke='#fff']]:stroke-transparent",
     "[&_.recharts-sector[stroke='#fff']]:stroke-transparent",
     '[&_.recharts-layer]:outline-hidden',
