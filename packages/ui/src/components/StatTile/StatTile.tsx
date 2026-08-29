@@ -111,8 +111,10 @@ export function StatTile({
       {...rest}
     >
       <div className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto] items-start gap-x-normal gap-y-condensed">
-        <span className="text-body-r-sm text-base-black/80">{label}</span>
-        <span className="text-heading-2 font-semibold tabular-nums">
+        <span className="col-start-1 row-start-1 text-body-r-sm text-base-black/80">
+          {label}
+        </span>
+        <span className="col-start-1 row-start-2 text-heading-2 font-semibold tabular-nums">
           {value}
         </span>
         {delta && <DeltaChip delta={delta} />}
