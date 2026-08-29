@@ -79,6 +79,7 @@ export {
   StatTileSentiment,
   StatTileTrend,
 } from './src/components/StatTile';
+export { Table } from './src/components/Table';
 export { Toaster, useToast } from './src/components/Toaster';
 export { cn } from './src/utils/cn';
 export { twMerge } from './src/utils/extendTailwindMerge';

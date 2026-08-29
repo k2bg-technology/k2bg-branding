@@ -1064,6 +1064,62 @@
         }
       ]
     },
+    "table": {
+      "description": "Composable table parts for hand-built tables: header, body, footer, rows, heading cells, data cells, and a caption that share one set of rules and spacing.",
+      "overview": "Table is the primitive under every table in the library. Table itself renders the table element inside a container that scrolls horizontally when columns overflow, and its parts map one to one onto the native elements: Table.Header, Table.Body, and Table.Footer are the row groups, Table.Row is a row, Table.Head is a heading cell, Table.Cell is a data cell, and Table.Caption is the caption. Rows are separated by one pixel rules, the last body row has none, a row highlights while hovered, and a row marked with the selected state keeps a tint. Every part accepts a class name so a consumer can right-align numbers, fix column widths, or wrap the whole table in a bordered frame.",
+      "usage": "Compose the parts directly when the table is written by hand, such as an invoice list with a total row, or when a table needs column widths, spans, or cell content that the data-driven DataTable does not express. Right-align numeric cells with text-right and tabular figures so digits line up, put summary rows in Table.Footer, and wrap the table in a rounded bordered frame when it should read as a card. Reach for DataTable instead when columns and rows come from data and a caption is all the table needs.",
+      "accessibility": "Every part renders its native element, so assistive technology announces the table with its caption as the name, the row and column counts, and each cell with its column heading. Put scope col on heading cells so the association is explicit. A visually hidden caption still names the table, and a table without a caption needs an aria-label. The hover and selected tints convey no state on their own; a consumer that selects rows must also expose the selection through aria-selected or a control inside the row.",
+      "doList": [
+        "Name the table with Table.Caption or an aria-label",
+        "Set scope col on every Table.Head",
+        "Right-align numbers with text-right and tabular figures",
+        "Keep summary rows in Table.Footer",
+        "Use DataTable when the rows come straight from data"
+      ],
+      "dontList": [
+        "Use it for page layout",
+        "Rely on the hover tint to show selection or focus",
+        "Nest interactive controls without accessible names in cells",
+        "Mix column counts between header and body rows",
+        "Skip the caption and the aria-label at the same time"
+      ],
+      "relatedComponents": [
+        {
+          "name": "DataTable",
+          "path": "/?path=/docs/components-datatable--docs",
+          "description": "Data-driven table built on these parts"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Fits a trend column beside the numbers of a row"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Table",
+          "url": "https://ui.shadcn.com/docs/components/table",
+          "description": "Reference table parts whose rules, spacing, and row states this primitive mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Table Pattern",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/table/",
+          "description": "Accessibility pattern for static tables"
+        },
+        {
+          "linkText": "MDN table element",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table",
+          "description": "Native table semantics the parts render"
+        }
+      ]
+    },
     "dataTable": {
       "description": "Renders tabular data as a semantic table with a caption, column headers, and right-aligned numeric columns.",
       "overview": "DataTable is the text view of dashboard data: the same numbers that charts draw, laid out as rows and columns that every reader and assistive technology can traverse. Columns declare their heading and whether they hold numbers, and rows map column ids to cell content. The table always carries a caption that names it, which can be visually hidden when a heading above the table already does that job. Sorting, pagination, and selection are intentionally out of scope.",

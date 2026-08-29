@@ -1064,6 +1064,62 @@
         }
       ]
     },
+    "table": {
+      "description": "手組みのテーブルのための組み合わせ可能な部品です。ヘッダー、ボディ、フッター、行、見出しセル、データセル、キャプションが共通の罫線と余白を持ちます。",
+      "overview": "Tableはライブラリ内のすべてのテーブルの土台となるプリミティブです。Table自体は列があふれたときに横スクロールするコンテナの中にtable要素を描画し、各部品はネイティブ要素と一対一に対応します。Table.Header、Table.Body、Table.Footerは行グループ、Table.Rowは行、Table.Headは見出しセル、Table.Cellはデータセル、Table.Captionはキャプションです。行は1ピクセルの罫線で区切られ、ボディの最終行には罫線がなく、ホバー中の行は強調され、selected状態を付けた行は色が残ります。すべての部品がclassNameを受け取るため、利用側で数値の右寄せ、列幅の固定、テーブル全体を枠で囲むことができます。",
+      "usage": "合計行を持つ請求書一覧のように手で書くテーブルや、データ駆動のDataTableでは表せない列幅、セル結合、セル内容が必要なテーブルでは部品を直接組み合わせてください。数値セルはtext-rightと等幅数字で右寄せして桁を揃え、集計行はTable.Footerに置き、カードとして見せたいときは角丸の枠で囲みます。列と行がデータから来てキャプションだけで足りる場合はDataTableを使ってください。",
+      "accessibility": "すべての部品がネイティブ要素を描画するため、支援技術はキャプションを名前としてテーブルを読み上げ、行数と列数、各セルをその列見出しとともに伝えます。見出しセルにはscope colを付けて対応関係を明示してください。視覚的に隠したキャプションもテーブルの名前になり、キャプションのないテーブルにはaria-labelが必要です。ホバーとselectedの色は単体では状態を伝えません。行を選択する利用側はaria-selectedか行内のコントロールでも選択を公開してください。",
+      "doList": [
+        "Table.Captionかaria-labelでテーブルに名前を付ける",
+        "すべてのTable.Headにscope colを付ける",
+        "数値はtext-rightと等幅数字で右寄せする",
+        "集計行はTable.Footerに置く",
+        "行がデータから来る場合はDataTableを使う"
+      ],
+      "dontList": [
+        "ページレイアウトに使う",
+        "ホバーの色で選択やフォーカスを表す",
+        "アクセシブルネームのないコントロールをセルに置く",
+        "ヘッダー行とボディ行で列数を変える",
+        "キャプションとaria-labelを同時に省く"
+      ],
+      "relatedComponents": [
+        {
+          "name": "DataTable",
+          "path": "/?path=/docs/components-datatable--docs",
+          "description": "この部品で組まれたデータ駆動のテーブル"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "行の数値の隣に置く推移列に収まります"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Table",
+          "url": "https://ui.shadcn.com/docs/components/table",
+          "description": "このプリミティブが罫線、余白、行の状態を参考にしているテーブル部品"
+        },
+        {
+          "linkText": "WAI-ARIA Table Pattern",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/table/",
+          "description": "静的なテーブルのアクセシビリティパターン"
+        },
+        {
+          "linkText": "MDN table要素",
+          "url": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/table",
+          "description": "各部品が描画するネイティブなテーブルのセマンティクス"
+        }
+      ]
+    },
     "dataTable": {
       "description": "表形式のデータをキャプション、列見出し、右寄せの数値列を備えたセマンティックなテーブルとして描画します。",
       "overview": "DataTableはダッシュボードデータのテキストビューです。チャートが描くのと同じ数値を、あらゆる読者と支援技術がたどれる行と列として並べます。列は見出しと数値列かどうかを宣言し、行は列idとセル内容の対応を持ちます。テーブルは常に名前となるキャプションを持ち、上に見出しがある場合は視覚的に隠せます。ソート、ページング、選択は意図的に対象外です。",
