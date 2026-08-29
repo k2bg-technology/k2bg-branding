@@ -1168,6 +1168,195 @@
           "description": "Patterns for accessible composite controls and tables"
         }
       ]
+    },
+    "donutChart": {
+      "description": "Shows how one total divides into parts as a ring, with an optional headline in the hole, a tooltip, and a legend.",
+      "overview": "DonutChart answers the question of how a whole splits into parts at one point in time. Each slice carries an id, a localized label, and a value, and the ring is drawn in the order the slices are given with a thin separator between neighbours. The hole holds an optional headline value and caption, rendered as selectable text rather than as part of the drawing, so the total reads as text while the slices underneath still answer the pointer. Slice colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a slice can opt into a status color. The tooltip reports the formatted value together with its share of the total as a whole percentage.",
+      "usage": "Use DonutChart when the composition of a single total is the point: asset allocation by instrument, spending by category, storage by file type. Pass a label that names the chart for assistive technology and slices whose labels are already localized. Supply centerValue and centerLabel to state the total that the ring divides, and a valueFormatter to attach units or currency formatting. Keep the slice count at five or fewer and group the remainder into one other slice, because thin slices are hard to compare by angle. Choose BarChart when the ranking of the parts matters more than their share, and pair every chart with a table view of the same numbers.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Slices answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a data table with the same values required next to the chart rather than optional. The legend repeats each slice label in text next to its swatch, so slices are identified without relying on color. The center text sits in the reading order as real text, so screen readers announce the headline and its caption. Neighbouring slices are separated by a stroke in the surface color, which keeps their boundary visible when two palette colors sit next to each other.",
+      "doList": [
+        "Give every chart a label that says what the total represents",
+        "State the total in the center so the parts have a reference",
+        "Keep the slice count at five or fewer",
+        "Group small remainders into a single other slice",
+        "Localize slice labels and format values in the consuming app",
+        "Provide a table view of the same data next to the chart"
+      ],
+      "dontList": [
+        "Plot values that are not parts of one total",
+        "Pass negative values, which have no share of a whole",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Compare two rings slice by slice (use BarChart instead)",
+        "Rely on the tooltip alone, which the keyboard cannot reach",
+        "Turn on animation in visual regression tests"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares the same parts as bars when their ranking matters"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows how a value changes over time instead of how a total divides"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "scatterChart": {
+      "description": "Plots pairs of measurements as points on two numeric axes, with an optional fitted trend line, a tooltip, and a legend.",
+      "overview": "ScatterChart answers the question of whether two measurements move together. Each series is a list of x and y pairs, both axes are numeric and fit their domain to the data, and the grid rules run in both directions because both measures carry meaning. An optional trend line is drawn as a dashed line across the measured horizontal range, so it stops where the data stops instead of running to the edge of the axis. Its slope and intercept are supplied by the consuming app, which keeps the drawn line identical to the fit the data source reports. Series colors follow the chart palette order, and the tooltip names the series and lists both measures with their own labels and formatting.",
+      "usage": "Use ScatterChart when the relationship between two measurements matters: carbon dioxide against sleep quality, outdoor temperature against energy use, price against yield. Pass a label for assistive technology, xLabel and yLabel that name the two measures, and one series per group of observations. Provide xValueFormatter and yValueFormatter so each axis carries its own unit. Add a trendLine only when the fit comes from the plotted data, and name the method in the surrounding text. Compare groups with separate series rather than by encoding a third measure, because point size and shape are not configurable.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Points answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a data table with the same pairs required next to the chart rather than optional. Axis ticks are rendered as text in the formatting each axis declares, and the legend repeats each series label next to its swatch. The tooltip labels both numbers with xLabel and yLabel, so a reading is never left to axis position alone. The trend line is dashed rather than solid, so it stays distinct from a series without relying on color.",
+      "doList": [
+        "Give every chart a label that names both measures",
+        "Set xLabel and yLabel to the measures they describe",
+        "Format each axis with its own unit",
+        "Fit the trend line from the plotted data in the consuming app",
+        "Use one series per group being compared",
+        "Provide a table view of the same pairs next to the chart"
+      ],
+      "dontList": [
+        "Plot a measurement against time (use TimeSeriesChart instead)",
+        "Draw a trend line that was fitted to different data",
+        "Describe a correlation as a cause in the surrounding text",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Crowd one chart with more series than the legend can name",
+        "Turn on animation in visual regression tests"
+      ],
+      "relatedComponents": [
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Plots one measure against time instead of against a second measure"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares one measure across named categories"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "sankeyChart": {
+      "description": "Traces how a quantity moves between stages as ribbons whose width is the amount, with a tooltip for every flow and node.",
+      "overview": "SankeyChart answers the question of where a quantity goes as it passes through stages. Nodes name the places a quantity rests, links carry an amount from one node to another, and the layout places nodes in columns and draws each link as a ribbon whose thickness is proportional to its value. Node labels sit beside their column and turn inward on the right-hand side, so the last column stays inside the surface. Node colors follow the chart palette order while the ribbons stay a neutral tint, which keeps the nodes as the emphasis. Hovering a ribbon reports the flow from source to target with its value, and hovering a node reports that node total.",
+      "usage": "Use SankeyChart when the movement of an amount between stages is the point: income divided into spending and savings, energy from source to use, visitors from channel to outcome. Pass a label for assistive technology, nodes whose labels are already localized, and links that address nodes by id. Provide a valueFormatter so every flow carries its unit. Keep the graph shallow, at two or three columns, and keep node counts low so the ribbons stay traceable. A link whose source or target is missing from the node list is dropped rather than drawn, so validate ids in the consuming app instead of relying on that fallback. Give the chart a generous height, because ribbons and their labels need vertical room.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Ribbons and nodes answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a table of flows with their source, target, and value required next to the chart rather than optional. Node labels are rendered as text beside every node, so no node is identified by color alone. The tooltip states the direction of a flow from source to target in text. There is no legend, because the labels sit on the nodes themselves.",
+      "doList": [
+        "Give every chart a label that says which quantity flows",
+        "Address links by node id and localize node labels",
+        "Format flow values with their unit in the consuming app",
+        "Keep the graph to two or three columns",
+        "Give the chart enough height for every ribbon",
+        "Provide a table of flows with source, target, and value"
+      ],
+      "dontList": [
+        "Send a flow back into a node it has already left",
+        "Mix units across the flows of one chart",
+        "Reference node ids that the node list does not declare",
+        "Compare independent totals with it (use BarChart instead)",
+        "Rely on the tooltip alone, which the keyboard cannot reach",
+        "Crowd a column with nodes whose labels overlap"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares independent totals instead of tracing flows between them"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows how one of these totals moves over time"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
