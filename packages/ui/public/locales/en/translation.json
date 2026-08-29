@@ -1002,19 +1002,21 @@
       ]
     },
     "statTile": {
-      "description": "Presents one headline number with its label, an optional change badge with a trend arrow, and a short supporting line.",
-      "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. It stacks a small label, a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat, and an optional description such as the comparison period. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
-      "usage": "Use StatTile for the key figures at the top of a dashboard page, typically in a row of two to four tiles: total portfolio value, period return, dividends received, overall yield. Pass a short label that names the measurement, the formatted value, and a delta whose label includes its sign so the direction is readable as text. The delta chip is tinted by direction, up as positive and down as negative; when a falling number is good news, such as a drop in expenses, set the delta sentiment to positive so the color matches the meaning. Reserve the description for context the reader needs to interpret the number, such as the comparison period. When the question is how a value changed over time or how categories compare, use a chart instead.",
-      "accessibility": "The label, value, delta text, and description are all rendered as plain text in reading order, so screen readers announce the tile as a short sentence. The trend arrow is decorative and hidden from assistive technology; the direction must be carried by the delta text itself, for example with a leading plus or minus sign. The delta chip keeps its text in the default ink color and conveys sentiment only through its tint and icon, so the chip meets contrast requirements while never relying on color alone. The tile has no interactive parts of its own.",
+      "description": "Presents one headline number with its label, an optional change badge with a trend arrow, a short supporting line, and an optional compact chart.",
+      "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. It stacks a small label, a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat, and an optional description such as the comparison period. An optional chart slot holds one compact visualization, such as a Sparkline, pinned to the bottom edge so a row of tiles keeps a common baseline. The slot accepts any element and renders nothing for a value that is not one, so a tile without a chart keeps its layout instead of reserving empty space. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
+      "usage": "Use StatTile for the key figures at the top of a dashboard page, typically in a row of two to four tiles: total portfolio value, period return, dividends received, overall yield. Pass a short label that names the measurement, the formatted value, and a delta whose label includes its sign so the direction is readable as text. The delta chip is tinted by direction, up as positive and down as negative; when a falling number is good news, such as a drop in expenses, set the delta sentiment to positive so the color matches the meaning. Reserve the description for context the reader needs to interpret the number, such as the comparison period. Put a Sparkline in the chart slot when the recent shape of the number helps read it, and give that sparkline its own label, because the tile label does not describe it. When the question is how a value changed over time or how categories compare, use a chart beside the tiles instead.",
+      "accessibility": "The label, value, delta text, and description are all rendered as plain text in reading order, so screen readers announce the tile as a short sentence. The trend arrow is decorative and hidden from assistive technology; the direction must be carried by the delta text itself, for example with a leading plus or minus sign. The delta chip keeps its text in the default ink color and conveys sentiment only through its tint and icon, so the chip meets contrast requirements while never relying on color alone. A visualization placed in the chart slot carries its own accessible name, which the tile neither supplies nor overrides. The tile has no interactive parts of its own.",
       "doList": [
         "Keep the label to a few words that name the measurement",
         "Format the value and the delta in the consuming app, including units and sign",
         "Use the description for the comparison period or data source",
+        "Put one compact visualization such as a Sparkline in the chart slot",
         "Group related tiles in a single row with consistent spacing",
         "Pair the tiles with the charts and tables that explain them"
       ],
       "dontList": [
-        "Put a trend or time series inside the tile (use TimeSeriesChart)",
+        "Put a chart with axes or a legend in the chart slot (use TimeSeriesChart)",
+        "Leave a sparkline in the chart slot without its own label",
         "Rely on the arrow alone to communicate direction without a sign in the text",
         "Use the delta badge for unrelated status text",
         "Stack more than four tiles in one row on wide screens",
@@ -1025,6 +1027,11 @@
           "name": "Icon",
           "path": "/?path=/docs/components-icon--docs",
           "description": "Provides the trend arrow inside the delta chip"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Fits the chart slot as a compact trend under the value"
         },
         {
           "name": "TimeSeriesChart",
