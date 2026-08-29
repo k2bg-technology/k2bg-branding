@@ -932,15 +932,16 @@
       ]
     },
     "barChart": {
-      "description": "Compares values across categories as vertical bars, with grouped bars for multiple series, a tooltip, and an optional legend.",
-      "overview": "BarChart answers the question of how categories compare to each other at a point in time. Each series provides one value per category, and categories are drawn in the order given. With several series the bars are grouped side by side within each category so that both the per-category comparison and the per-series comparison stay readable. The value axis always starts at zero so bar lengths are proportional to the values, and series colors follow the same palette order as the time series chart.",
-      "usage": "Use BarChart when the reader needs to compare discrete categories: spending by category, allocation by asset class, energy by day of the week. Pass a label that names the chart for assistive technology, the categories already localized and in the order they should appear, and one series per measurement with one value per category. Provide a valueFormatter to attach units or currency formatting. Keep the number of categories small enough that labels remain readable, and pair the chart with a table view of the same values.",
-      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys move between categories and update the tooltip, so keyboard users can read every value. Category labels are rendered as text on the axis, the legend repeats each series label in text next to its swatch, and the tooltip lists the series label and formatted value for the active category. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
+      "description": "Compares values across categories as vertical bars, grouped or stacked for multiple series, with a tooltip and an optional legend.",
+      "overview": "BarChart answers the question of how categories compare to each other at a point in time. Each series provides one value per category, and categories are drawn in the order given. With several series the bars are grouped side by side within each category so that both the per-category comparison and the per-series comparison stay readable. Setting stacked places those series on top of each other instead, giving one bar per category whose height is the total and whose segments are its parts; series stack in the order they are given, so the first series sits at the bottom and the legend reads in that same bottom to top order. Only the top segment carries rounded corners, because every other segment meets the one above it. A stack holds together only when every value is zero or greater, since a negative segment would cross the baseline. The value axis always starts at zero so bar lengths are proportional to the values, and series colors follow the same palette order as the time series chart.",
+      "usage": "Use BarChart when the reader needs to compare discrete categories: spending by category, allocation by asset class, energy by day of the week. Pass a label that names the chart for assistive technology, the categories already localized and in the order they should appear, and one series per measurement with one value per category. Set stacked when the category total is meaningful and the series are parts of it, such as sleep stages that add up to one night, and keep the grouped layout when the series are compared against each other rather than summed. Provide a valueFormatter to attach units or currency formatting. Keep the number of categories small enough that labels remain readable, and pair the chart with a table view of the same values.",
+      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys move between categories and update the tooltip, so keyboard users can read every value. Category labels are rendered as text on the axis, the legend repeats each series label in text next to its swatch, and the tooltip lists the series label and formatted value for the active category. In a stacked chart the tooltip lists every segment of the active category in stack order, which matches the order of the legend, so a segment is identified by position as well as by color. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
       "doList": [
         "Give every chart a label that says what is compared",
         "Order categories deliberately (by value, time, or a natural sequence)",
         "Localize category and series labels in the consuming app",
         "Keep the value axis at zero so bar lengths stay honest",
+        "Stack only series whose values are zero or greater",
         "Provide a table view of the same data next to the chart",
         "Keep the number of series at five or fewer"
       ],
@@ -949,6 +950,7 @@
         "Pass raw colors or CSS values instead of the chart palette",
         "Crowd the axis with more categories than the labels can fit",
         "Rely on color alone to distinguish grouped series",
+        "Stack series whose values can turn negative",
         "Turn on animation in visual regression tests",
         "Mix measurements with different units in one chart"
       ],
@@ -957,6 +959,16 @@
           "name": "TimeSeriesChart",
           "path": "/?path=/docs/components-chart-timeserieschart--docs",
           "description": "Shows how a value changes over time instead of across categories"
+        },
+        {
+          "name": "DonutChart",
+          "path": "/?path=/docs/components-chart-donutchart--docs",
+          "description": "Shows the same parts as shares of one total"
+        },
+        {
+          "name": "SankeyChart",
+          "path": "/?path=/docs/components-chart-sankeychart--docs",
+          "description": "Traces how a total splits and moves between stages"
         }
       ],
       "dependencies": [

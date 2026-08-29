@@ -36,6 +36,7 @@ export interface BarChartProps {
   label: string;
   categories: string[];
   series: BarSeries[];
+  stacked?: boolean;
   height?: ChartHeight;
   valueFormatter?: (value: number) => string;
   showLegend?: boolean;
@@ -47,6 +48,7 @@ export function BarChart({
   label,
   categories,
   series,
+  stacked = false,
   height,
   valueFormatter = defaultValueFormatter,
   showLegend,
@@ -93,6 +95,10 @@ export function BarChart({
     return <ChartTooltip data={toTooltipData(tooltipProps)} />;
   };
 
+  // Only the top of a stack has a free edge to round.
+  const barRadius = (index: number): [number, number, number, number] =>
+    !stacked || index === series.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0];
+
   const isLegendVisible = showLegend ?? series.length > 1;
   const legendItems = series.map((seriesItem) => ({
     id: seriesItem.id,
@@ -123,12 +129,13 @@ export function BarChart({
             tickFormatter={valueFormatter}
           />
           <Tooltip content={renderTooltipContent} isAnimationActive={false} />
-          {series.map((seriesItem) => (
+          {series.map((seriesItem, index) => (
             <Bar
               key={seriesItem.id}
               dataKey={seriesDataKey(seriesItem.id)}
               fill={seriesColor(seriesItem.id)}
-              radius={[4, 4, 0, 0]}
+              stackId={stacked ? 'stack' : undefined}
+              radius={barRadius(index)}
               isAnimationActive={animated}
             />
           ))}
