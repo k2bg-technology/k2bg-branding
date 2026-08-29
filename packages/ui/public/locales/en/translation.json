@@ -1122,9 +1122,9 @@
     },
     "dataTable": {
       "description": "Renders tabular data as a semantic table with a caption, column headers, and right-aligned numeric columns.",
-      "overview": "DataTable is the text view of dashboard data: the same numbers that charts draw, laid out as rows and columns that every reader and assistive technology can traverse. Columns declare their heading and whether they hold numbers, and rows map column ids to cell content. The table always carries a caption that names it, which can be visually hidden when a heading above the table already does that job. Sorting, pagination, and selection are intentionally out of scope.",
-      "usage": "Use DataTable next to every chart on a page so that the underlying values are available as text, and on their own for lists that are naturally tabular such as allocation by asset class or transactions in a period. Provide a caption that says what the table contains and for which period, localize headers and cell content in the consuming app, and mark numeric columns with align end so their digits line up. Keep the number of columns small enough to read without horizontal scrolling on common screens; the container scrolls horizontally only as a fallback.",
-      "accessibility": "The component renders a native table with a caption, so assistive technology announces the table name, row and column counts, and each cell with its column header. Column headers are marked with the column scope. The caption remains in the accessibility tree when it is visually hidden. Numeric columns use tabular figures and right alignment for scanning. Rows are separated by rules only and carry no hover or interactive state.",
+      "overview": "DataTable is the text view of dashboard data: the same numbers that charts draw, laid out as rows and columns that every reader and assistive technology can traverse. It composes the Table parts inside a rounded bordered frame. Columns declare their heading and whether they hold numbers, rows map column ids to cell content, and an optional empty message fills one full-width row when there are no rows. The table always carries a caption that names it, which can be visually hidden when a heading above the table already does that job. Sorting, pagination, and selection are intentionally out of scope.",
+      "usage": "Use DataTable next to every chart on a page so that the underlying values are available as text, and on their own for lists that are naturally tabular such as allocation by asset class or transactions in a period. Provide a caption that says what the table contains and for which period, localize headers and cell content in the consuming app, mark numeric columns with align end so their digits line up, and pass an empty message so an empty period explains itself instead of showing a bare header. Keep the number of columns small enough to read without horizontal scrolling on common screens; the container scrolls horizontally only as a fallback.",
+      "accessibility": "The component renders a native table with a caption, so assistive technology announces the table name, row and column counts, and each cell with its column header. Column headers are marked with the column scope. The caption remains in the accessibility tree when it is visually hidden. Numeric columns use tabular figures and right alignment for scanning. Rows highlight while hovered to aid scanning; the highlight conveys no state, and the table has no interactive parts of its own.",
       "doList": [
         "Give every table a caption that names its content and period",
         "Mark numeric columns with align end",
@@ -1140,6 +1140,11 @@
         "Render hundreds of rows without pagination in the consuming app"
       ],
       "relatedComponents": [
+        {
+          "name": "Table",
+          "path": "/?path=/docs/components-table--docs",
+          "description": "Parts this table is composed from"
+        },
         {
           "name": "TimeSeriesChart",
           "path": "/?path=/docs/components-chart-timeserieschart--docs",
@@ -1165,14 +1170,14 @@
       ],
       "references": [
         {
-          "linkText": "HyperUI Tables",
-          "url": "https://hyperui.dev/components/application/tables",
-          "description": "Reference tables whose rules and spacing this component mirrors"
+          "linkText": "shadcn/ui Table",
+          "url": "https://ui.shadcn.com/docs/components/table",
+          "description": "Reference table parts whose rules and spacing this component mirrors"
         },
         {
-          "linkText": "shadcn/ui Dashboard blocks",
-          "url": "https://ui.shadcn.com/blocks",
-          "description": "Reference layouts whose building blocks this component mirrors"
+          "linkText": "shadcn/ui Data Table",
+          "url": "https://ui.shadcn.com/docs/components/data-table",
+          "description": "Reference layout for the bordered frame and the empty row"
         },
         {
           "linkText": "WAI-ARIA Authoring Practices",

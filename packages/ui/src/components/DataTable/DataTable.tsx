@@ -1,6 +1,7 @@
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 import { cn } from '../../utils/cn';
+import { Table } from '../Table';
 
 export interface DataTableColumn {
   id: string;
@@ -24,6 +25,8 @@ export interface DataTableProps
   rows: DataTableRow[];
   /** Keep the caption for assistive technology only. */
   visuallyHiddenCaption?: boolean;
+  /** Shown in one full-width row when there are no rows, already localized. */
+  emptyMessage?: string;
 }
 
 const alignClassNames = {
@@ -36,61 +39,59 @@ export function DataTable({
   columns,
   rows,
   visuallyHiddenCaption = false,
+  emptyMessage,
   className,
   ...rest
 }: DataTableProps) {
   return (
-    <div data-slot="data-table-container" className="overflow-x-auto">
-      <table
-        data-slot="data-table"
-        className={cn(
-          'min-w-full caption-bottom text-body-r-sm text-base-black',
-          className
-        )}
-        {...rest}
-      >
-        <caption
+    <div
+      data-slot="data-table"
+      className="overflow-hidden rounded-lg border border-base-default/20"
+    >
+      <Table className={className} {...rest}>
+        <Table.Caption
           className={cn(
-            'pt-normal text-left text-caption text-base-black/80',
+            'px-2 pb-spacious text-left',
             visuallyHiddenCaption && 'sr-only'
           )}
         >
           {caption}
-        </caption>
-        <thead className="border-b-2 border-base-default/20">
-          <tr>
+        </Table.Caption>
+        <Table.Header>
+          <Table.Row>
             {columns.map((column) => (
-              <th
+              <Table.Head
                 key={column.id}
                 scope="col"
-                className={cn(
-                  'px-3 py-2 font-bold whitespace-nowrap',
-                  alignClassNames[column.align ?? 'start']
-                )}
+                className={alignClassNames[column.align ?? 'start']}
               >
                 {column.header}
-              </th>
+              </Table.Head>
             ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-base-default/20">
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
           {rows.map((row) => (
-            <tr key={row.id}>
+            <Table.Row key={row.id}>
               {columns.map((column) => (
-                <td
+                <Table.Cell
                   key={column.id}
-                  className={cn(
-                    'px-3 py-2 whitespace-nowrap',
-                    alignClassNames[column.align ?? 'start']
-                  )}
+                  className={alignClassNames[column.align ?? 'start']}
                 >
                   {row.cells[column.id]}
-                </td>
+                </Table.Cell>
               ))}
-            </tr>
+            </Table.Row>
           ))}
-        </tbody>
-      </table>
+          {rows.length === 0 && emptyMessage !== undefined && (
+            <Table.Row>
+              <Table.Cell colSpan={columns.length} className="h-24 text-center">
+                {emptyMessage}
+              </Table.Cell>
+            </Table.Row>
+          )}
+        </Table.Body>
+      </Table>
     </div>
   );
 }

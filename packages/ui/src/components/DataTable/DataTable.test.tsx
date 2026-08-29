@@ -79,4 +79,26 @@ describe('DataTable', () => {
     expect(screen.getByRole('table', { name: caption })).toBeInTheDocument();
     expect(screen.getByText(caption)).toHaveClass('sr-only');
   });
+
+  it('renders the empty message in one cell spanning every column', () => {
+    const emptyMessage = 'No allocations recorded for this period';
+
+    render(
+      <DataTable
+        caption="Allocation"
+        columns={columns}
+        rows={[]}
+        emptyMessage={emptyMessage}
+      />
+    );
+
+    const emptyCell = screen.getByRole('cell', { name: emptyMessage });
+    expect(emptyCell).toHaveAttribute('colspan', String(columns.length));
+  });
+
+  it('renders no body cells when rows are empty and no empty message is given', () => {
+    render(<DataTable caption="Allocation" columns={columns} rows={[]} />);
+
+    expect(screen.queryByRole('cell')).not.toBeInTheDocument();
+  });
 });
