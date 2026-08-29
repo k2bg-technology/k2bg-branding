@@ -17,8 +17,8 @@
     "test:watch": "vitest watch"
   },
   "dependencies": {
-    "@next/third-parties": "^16.3.1",
-    "next": "^16.3.1",
+    "@next/third-parties": "^16.3.3",
+    "next": "^16.3.3",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "server-only": "^0.0.1",
@@ -26,18 +26,18 @@
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.20.2",
-    "@storybook/addon-a11y": "^10.5.8",
-    "@storybook/addon-docs": "^10.5.8",
-    "@storybook/addon-onboarding": "^10.5.8",
-    "@storybook/nextjs": "^10.5.8",
+    "@storybook/addon-a11y": "^10.5.10",
+    "@storybook/addon-docs": "^10.5.10",
+    "@storybook/addon-onboarding": "^10.5.10",
+    "@storybook/nextjs": "^10.5.10",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.4",
+    "@testing-library/user-event": "^14.6.6",
     "@types/node": "^17.0.45",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
+    "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.5.4",
     "babel-plugin-react-compiler": "^1.0.0",
@@ -45,13 +45,13 @@
     "jsdom": "^26.1.0",
     "postcss": "^8.5.26",
     "postcss-preset-env": "^9.6.0",
-    "storybook": "^10.5.8",
+    "storybook": "^10.5.10",
     "tailwind-config": "workspace:*",
     "tailwindcss": "^4.3.3",
     "test-utils": "workspace:*",
     "tsconfig": "workspace:*",
     "vite": "^6.4.3",
     "vitest": "^3.2.7",
-    "wrangler": "^4.123.0"
+    "wrangler": "^4.126.0"
   }
 }
