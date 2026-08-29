@@ -1086,6 +1086,11 @@
           "name": "BarChart",
           "path": "/?path=/docs/components-chart-barchart--docs",
           "description": "Chart whose values a table view makes available as text"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Fits a trend column beside the numbers of a row"
         }
       ],
       "dependencies": [
@@ -1355,6 +1360,239 @@
           "linkText": "WAI Tutorials: Complex Images",
           "url": "https://www.w3.org/WAI/tutorials/images/complex/",
           "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "calendarHeatmap": {
+      "description": "Lays out daily values as a grid of small squares, one column per week, shaded on a four-step color scale.",
+      "overview": "CalendarHeatmap answers the question of which days a measurement ran high and how regularly that happened. Days fill a grid of seven rows starting at Monday, one column per week, and the range is padded outward to whole weeks so the grid stays rectangular. A day the data omits and a day whose value is null both render as an outlined empty cell, which stays distinct from a measured zero. Values map to four opaque steps of the chosen palette color, mixed toward the surface color rather than made translucent, so the contrast of every step is fixed and verifiable. The scale runs from zero to the largest value unless max is set, which is what makes two grids comparable. Optional weekday labels sit on every other row so they do not collide at the small cell size, and an optional legend names the low and high ends of the scale.",
+      "usage": "Use CalendarHeatmap for a long run of daily values where the pattern across weeks matters more than the exact number: steps per day, days with a workout, entries per day. Pass a label that names the measurement and its span, and days as ISO calendar dates with their values. Treat each date as an opaque calendar day already resolved in the consuming app, because the grid never shifts a date between time zones. Set max explicitly when several grids are compared, so their scales agree. Pass weekdayLabels and scaleLabels already localized, and a valueFormatter so the per-cell hover text carries units. Choose MatrixHeatmap when the two dimensions are something other than weeks and weekdays.",
+      "accessibility": "The grid is exposed as a single image with the chart label as its accessible name, so assistive technology announces what the grid shows instead of reading hundreds of cells. Each measured cell carries its date and formatted value as native hover text, which the pointer reaches but the keyboard does not, so a table of the same values is required for a complete alternative. The four color steps are opaque, so their contrast against the surface does not depend on what sits behind them. Missing days are drawn as outlined cells rather than as a paler shade, so absence is not read as a low value. The legend names the low and high ends in words instead of leaving the ramp to be inferred.",
+      "doList": [
+        "Give the grid a label that names the measurement and its span",
+        "Pass dates as ISO calendar days resolved in the consuming app",
+        "Set max explicitly when comparing several grids",
+        "Show the legend with localized low and high labels",
+        "Pass null for a day that has no measurement",
+        "Provide a table view of the same daily values"
+      ],
+      "dontList": [
+        "Shift dates between time zones before passing them",
+        "Fill missing days with zero to close the gaps",
+        "Use it for a span shorter than a few weeks (use Sparkline instead)",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Rely on the hover text, which the keyboard cannot reach",
+        "Read exact values off the shading"
+      ],
+      "relatedComponents": [
+        {
+          "name": "MatrixHeatmap",
+          "path": "/?path=/docs/components-chart-matrixheatmap--docs",
+          "description": "Uses the same color scale across two named dimensions"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Shows a short run of the same daily values as a trend line"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
+        }
+      ]
+    },
+    "matrixHeatmap": {
+      "description": "Shades a grid of values across two named dimensions, with row and column headings and an optional scale legend.",
+      "overview": "MatrixHeatmap answers the question of where two dimensions intersect at high values. Rows and columns are named by the consuming app, and values arrive as a grid indexed by row and then by column. Each cell is a square shaded on the same four opaque steps as the calendar grid, mixed toward the surface color so the contrast of every step is fixed. A value at or below min renders as the empty step and a null renders as an outlined cell, which keeps a missing reading distinct from a low one. The scale spans min to max, and both can be set so several grids share one scale. Row headings sit to the left of each row and column headings above the grid, both as plain text.",
+      "usage": "Use MatrixHeatmap when a measurement is indexed by two named dimensions: hour of day against day of week, room against month, channel against campaign. Pass a label that names the measurement and its span, localized row and column headings, and a values grid whose rows align with the row headings. Set min and max when the meaningful range does not start at zero, such as carbon dioxide that never falls below the outdoor level, since without min the empty step marks only an exact zero. Provide a valueFormatter so the per-cell hover text carries units, and keep the grid small enough that headings stay readable. Choose CalendarHeatmap when the two dimensions are weeks and weekdays.",
+      "accessibility": "The grid is exposed as a single image with the chart label as its accessible name, so assistive technology announces what the grid shows instead of reading every cell. Row and column headings are rendered as text, so a cell can be located without reading the shading. Each measured cell carries its headings and formatted value as native hover text, which the pointer reaches but the keyboard does not, so a table of the same values is required for a complete alternative. The four color steps are opaque, so their contrast against the surface does not depend on what sits behind them. Missing readings are drawn as outlined cells rather than as a paler shade, so absence is not read as a low value.",
+      "doList": [
+        "Give the grid a label that names both dimensions and the span",
+        "Localize row and column headings in the consuming app",
+        "Align every values row with its row heading",
+        "Set min and max when the meaningful range does not start at zero",
+        "Pass null for a reading that is missing",
+        "Provide a table view of the same values"
+      ],
+      "dontList": [
+        "Fill missing readings with zero to keep the grid full",
+        "Mix measurements with different units in one grid",
+        "Crowd the grid with more headings than can be read",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Rely on the hover text, which the keyboard cannot reach",
+        "Read exact values off the shading"
+      ],
+      "relatedComponents": [
+        {
+          "name": "CalendarHeatmap",
+          "path": "/?path=/docs/components-chart-calendarheatmap--docs",
+          "description": "Uses the same color scale for daily values laid out as weeks"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares one dimension when the second one is not needed"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
+        }
+      ]
+    },
+    "sparkline": {
+      "description": "Draws a bare trend line for a short run of values, sized to fit inside a tile or a table cell.",
+      "overview": "Sparkline answers the question of which way a number has been moving, in about the space of a line of text. It draws the values as a single stroke with no axes, ticks, grid, or tooltip, scaled so the smallest value sits at the bottom of the box and the largest at the top. Because the scale comes from the values themselves, the line shows shape rather than magnitude, and a run of identical values sits flat in the middle. A null breaks the stroke instead of interpolating across it, so the values are drawn as separate runs, and a lone measurement between gaps renders as a dot. The stroke keeps its weight when the box is stretched, so the same values read consistently in a wide tile and in a narrow cell.",
+      "usage": "Use Sparkline next to a number that already states the magnitude: inside a StatTile, in a trend column of a DataTable, or beside a heading. Pass a label that names the measurement and its span, because the line carries no axis to read it from. Set the size with className, since the drawing stretches to whatever box it is given. Pass null for a gap rather than dropping the point, so the spacing between measurements stays even. Choose a chart palette color that matches the series the line belongs to. Choose TimeSeriesChart when the reader needs to read values, dates, or a scale from the chart.",
+      "accessibility": "The drawing is exposed as a single image with the label as its accessible name, so assistive technology announces what the line shows instead of describing a shape. The component has no interactive parts and no tooltip, so nothing is reachable by pointer alone. The exact values must be available as text nearby, in the tile value, the table cell, or a table view. The stroke is the only carrier of the information, so it stays on a chart palette color against the surface rather than being tinted for decoration. A break in the line is a gap in the data, not a visual style.",
+      "doList": [
+        "Give every sparkline a label that names the measurement and its span",
+        "Place it next to the number it supports",
+        "Set the width and height with className",
+        "Pass null for a missing value to keep the spacing even",
+        "Use a chart palette color that matches the series"
+      ],
+      "dontList": [
+        "Use it as the only view of a value",
+        "Read magnitude from it, since the scale fits the values",
+        "Drop missing points instead of passing null",
+        "Stretch it wide enough that a full chart would fit",
+        "Add axis labels or a legend around it"
+      ],
+      "relatedComponents": [
+        {
+          "name": "StatTile",
+          "path": "/?path=/docs/components-stattile--docs",
+          "description": "Holds a sparkline in its chart slot under the headline value"
+        },
+        {
+          "name": "DataTable",
+          "path": "/?path=/docs/components-datatable--docs",
+          "description": "Holds a sparkline in a trend column beside the numbers"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows the same values with axes, a tooltip, and a legend"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
+        }
+      ]
+    },
+    "hypnogram": {
+      "description": "Shows one sleep session as stage segments on a time axis, with a row per stage from awake at the top to deep at the bottom.",
+      "overview": "Hypnogram answers the question of how a sleep session moved between stages. Each segment carries a start, an end, and one of four stages: awake, REM, core, and deep. Rows run from the lightest stage at the top to the deepest at the bottom, and every segment is drawn as a bar on its own row with a thin connector to the segment before it, so the descent into deep sleep and the return toward waking read as one path. Segments are sorted by start, and the chart spans the first start to the last end. The time axis labels both ends plus the whole hours between them, read on the wall clock of the given time zone. Stage colors come from the palette with one default per stage, and each default can be overridden.",
+      "usage": "Use Hypnogram for a single sleep session, or for another sequence of a few named states across hours. Pass a label that names the session and its span, segments in epoch milliseconds where each end is the next start, and stageLabels already localized. Set timeZone to the IANA name of the zone the session was slept in, so the hour labels read as the local clock, since the labels read in UTC otherwise. Override stageColors only to match a palette the reader already knows. Put the time spent in each stage next to the chart as text or a table, because durations are hard to add up by eye. Choose BarChart to compare stage totals across several nights.",
+      "accessibility": "The drawing is exposed as a single image with the label as its accessible name, so assistive technology announces the session instead of reading every segment. Stage names are rendered as text at the start of each row, so a row is identified without relying on its color. Rows run from the lightest stage to the deepest, so depth is carried by position as well as by color. The chart has no tooltip and no interactive parts, so no information is reachable by pointer alone. Time labels use a 24 hour clock in the given zone, which keeps a session that crosses midnight unambiguous.",
+      "doList": [
+        "Give every chart a label that names the session and its span",
+        "Pass segments whose end is the start of the next segment",
+        "Set timeZone to the zone the session was slept in",
+        "Localize the four stage labels in the consuming app",
+        "Provide the time spent in each stage as text or a table"
+      ],
+      "dontList": [
+        "Plot several sessions on one chart",
+        "Leave gaps between segments that the axis cannot explain",
+        "Label a session in UTC when it was slept in another zone",
+        "Read stage durations off the bar lengths",
+        "Recolor stages so the depth order stops matching the rows"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares stage totals across nights, stacked into one bar per night"
+        },
+        {
+          "name": "CalendarHeatmap",
+          "path": "/?path=/docs/components-chart-calendarheatmap--docs",
+          "description": "Shows one nightly measure across many nights"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
         }
       ]
     }

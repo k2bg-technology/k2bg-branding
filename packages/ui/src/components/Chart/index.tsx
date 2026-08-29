@@ -1,9 +1,22 @@
 export { BarChart, type BarChartProps } from './BarChart';
 export {
+  CalendarHeatmap,
+  type CalendarHeatmapDay,
+  type CalendarHeatmapProps,
+} from './CalendarHeatmap';
+export type { HeatmapScaleLabels } from './chartHeatmapScale';
+export {
   DonutChart,
   type DonutChartProps,
   type DonutChartSlice,
 } from './DonutChart';
+export {
+  Hypnogram,
+  type HypnogramProps,
+  type HypnogramSegment,
+  HypnogramStage,
+} from './Hypnogram';
+export { MatrixHeatmap, type MatrixHeatmapProps } from './MatrixHeatmap';
 export {
   SankeyChart,
   type SankeyChartLink,
@@ -17,6 +30,7 @@ export {
   type ScatterChartSeries,
   type ScatterChartTrendLine,
 } from './ScatterChart';
+export { Sparkline, type SparklineProps } from './Sparkline';
 export { TimeSeriesChart, type TimeSeriesChartProps } from './TimeSeriesChart';
 export {
   type BarSeries,
