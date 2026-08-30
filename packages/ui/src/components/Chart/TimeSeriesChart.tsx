@@ -298,6 +298,7 @@ export function TimeSeriesChart({
               }
               return <ChartTooltip data={toTooltipData(tooltipProps)} />;
             }}
+            cursor={false}
             isAnimationActive={false}
           />
           {(bands ?? []).map((band) => (

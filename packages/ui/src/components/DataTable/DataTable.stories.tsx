@@ -36,6 +36,7 @@ const meta = {
   },
   argTypes: {
     visuallyHiddenCaption: { control: 'boolean' },
+    emptyMessage: { control: 'text' },
   },
   parameters: {
     docs: {
@@ -95,5 +96,6 @@ export const Empty: Story = {
   args: {
     caption: 'Allocation by asset class, September 2026',
     rows: [],
+    emptyMessage: 'No allocations recorded for this period',
   },
 };

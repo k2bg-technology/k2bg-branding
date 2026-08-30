@@ -19,7 +19,7 @@ export function ChartTooltip({ data }: Props) {
             style={{ backgroundColor: item.color }}
           />
           <div className="flex flex-1 items-center justify-between gap-4 leading-none">
-            <span className="text-base-dark">{item.label}</span>
+            <span className="text-base-black/80">{item.label}</span>
             <span className="font-medium text-base-black tabular-nums">
               {item.value}
             </span>

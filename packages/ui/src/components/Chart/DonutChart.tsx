@@ -112,6 +112,7 @@ export function DonutChart({
                 }
                 return <ChartTooltip data={toTooltipData(tooltipProps)} />;
               }}
+              cursor={false}
               isAnimationActive={false}
             />
             <Pie
@@ -120,8 +121,6 @@ export function DonutChart({
               nameKey="label"
               innerRadius="65%"
               outerRadius="90%"
-              stroke="var(--color-base-white)"
-              strokeWidth={2}
               isAnimationActive={animated}
             >
               {slices.map((slice, index) => (

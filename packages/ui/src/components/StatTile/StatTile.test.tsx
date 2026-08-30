@@ -14,6 +14,16 @@ describe('StatTile', () => {
     expect(screen.getByText(value)).toBeInTheDocument();
   });
 
+  it('keeps the value on the row below the label when no delta is given', () => {
+    const label = 'Dividends received';
+    const value = '¥48,200';
+
+    render(<StatTile label={label} value={value} />);
+
+    expect(screen.getByText(label)).toHaveClass('col-start-1', 'row-start-1');
+    expect(screen.getByText(value)).toHaveClass('col-start-1', 'row-start-2');
+  });
+
   it('shows the delta label when a delta is given', () => {
     const delta = { label: '+3.2%', trend: StatTileTrend.UP };
 

@@ -109,6 +109,7 @@ function SankeyNodeShape({ nodes, index, ...rect }: NodeShapeProps) {
         dominantBaseline="middle"
         fontSize={12}
         fill="var(--color-base-black)"
+        fillOpacity={0.8}
       >
         {node.label}
       </text>

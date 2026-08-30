@@ -1003,7 +1003,7 @@
     },
     "statTile": {
       "description": "Presents one headline number with its label, an optional change badge with a trend arrow, a short supporting line, and an optional compact chart.",
-      "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. It stacks a small label, a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat, and an optional description such as the comparison period. An optional chart slot holds one compact visualization, such as a Sparkline, pinned to the bottom edge so a row of tiles keeps a common baseline. The slot accepts any element and renders nothing for a value that is not one, so a tile without a chart keeps its layout instead of reserving empty space. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
+      "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. A small label sits above a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat sits in the top-right corner, and an optional description such as the comparison period follows beneath the value. An optional chart slot holds one compact visualization, such as a Sparkline, pinned to the bottom edge so a row of tiles keeps a common baseline. The slot accepts any element and renders nothing for a value that is not one, so a tile without a chart keeps its layout instead of reserving empty space. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
       "usage": "Use StatTile for the key figures at the top of a dashboard page, typically in a row of two to four tiles: total portfolio value, period return, dividends received, overall yield. Pass a short label that names the measurement, the formatted value, and a delta whose label includes its sign so the direction is readable as text. The delta chip is tinted by direction, up as positive and down as negative; when a falling number is good news, such as a drop in expenses, set the delta sentiment to positive so the color matches the meaning. Reserve the description for context the reader needs to interpret the number, such as the comparison period. Put a Sparkline in the chart slot when the recent shape of the number helps read it, and give that sparkline its own label, because the tile label does not describe it. When the question is how a value changed over time or how categories compare, use a chart beside the tiles instead.",
       "accessibility": "The label, value, delta text, and description are all rendered as plain text in reading order, so screen readers announce the tile as a short sentence. The trend arrow is decorative and hidden from assistive technology; the direction must be carried by the delta text itself, for example with a leading plus or minus sign. The delta chip keeps its text in the default ink color and conveys sentiment only through its tint and icon, so the chip meets contrast requirements while never relying on color alone. A visualization placed in the chart slot carries its own accessible name, which the tile neither supplies nor overrides. The tile has no interactive parts of its own.",
       "doList": [
@@ -1048,9 +1048,9 @@
       ],
       "references": [
         {
-          "linkText": "HyperUI Stats",
-          "url": "https://hyperui.dev/components/application/stats",
-          "description": "Reference stat blocks whose layout and delta chip this component mirrors"
+          "linkText": "shadcn/ui Card",
+          "url": "https://ui.shadcn.com/docs/components/card",
+          "description": "Reference card whose header grid and action slot this component mirrors"
         },
         {
           "linkText": "shadcn/ui Dashboard blocks",
@@ -1064,11 +1064,67 @@
         }
       ]
     },
+    "table": {
+      "description": "Composable table parts for hand-built tables: header, body, footer, rows, heading cells, data cells, and a caption that share one set of rules and spacing.",
+      "overview": "Table is the primitive under every table in the library. Table itself renders the table element inside a container that scrolls horizontally when columns overflow, and its parts map one to one onto the native elements: Table.Header, Table.Body, and Table.Footer are the row groups, Table.Row is a row, Table.Head is a heading cell, Table.Cell is a data cell, and Table.Caption is the caption. Rows are separated by one pixel rules, the last body row has none, a row highlights while hovered, and a row marked with the selected state keeps a tint. Every part accepts a class name so a consumer can right-align numbers, fix column widths, or wrap the whole table in a bordered frame.",
+      "usage": "Compose the parts directly when the table is written by hand, such as an invoice list with a total row, or when a table needs column widths, spans, or cell content that the data-driven DataTable does not express. Right-align numeric cells with text-right and tabular figures so digits line up, put summary rows in Table.Footer, and wrap the table in a rounded bordered frame when it should read as a card. Reach for DataTable instead when columns and rows come from data and a caption is all the table needs.",
+      "accessibility": "Every part renders its native element, so assistive technology announces the table with its caption as the name, the row and column counts, and each cell with its column heading. Put scope col on heading cells so the association is explicit. A visually hidden caption still names the table, and a table without a caption needs an aria-label. The hover and selected tints convey no state on their own; a consumer that selects rows must also expose the selection through aria-selected or a control inside the row.",
+      "doList": [
+        "Name the table with Table.Caption or an aria-label",
+        "Set scope col on every Table.Head",
+        "Right-align numbers with text-right and tabular figures",
+        "Keep summary rows in Table.Footer",
+        "Use DataTable when the rows come straight from data"
+      ],
+      "dontList": [
+        "Use it for page layout",
+        "Rely on the hover tint to show selection or focus",
+        "Nest interactive controls without accessible names in cells",
+        "Mix column counts between header and body rows",
+        "Skip the caption and the aria-label at the same time"
+      ],
+      "relatedComponents": [
+        {
+          "name": "DataTable",
+          "path": "/?path=/docs/components-datatable--docs",
+          "description": "Data-driven table built on these parts"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Fits a trend column beside the numbers of a row"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Table",
+          "url": "https://ui.shadcn.com/docs/components/table",
+          "description": "Reference table parts whose rules, spacing, and row states this primitive mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Table Pattern",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/table/",
+          "description": "Accessibility pattern for static tables"
+        },
+        {
+          "linkText": "MDN table element",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table",
+          "description": "Native table semantics the parts render"
+        }
+      ]
+    },
     "dataTable": {
       "description": "Renders tabular data as a semantic table with a caption, column headers, and right-aligned numeric columns.",
-      "overview": "DataTable is the text view of dashboard data: the same numbers that charts draw, laid out as rows and columns that every reader and assistive technology can traverse. Columns declare their heading and whether they hold numbers, and rows map column ids to cell content. The table always carries a caption that names it, which can be visually hidden when a heading above the table already does that job. Sorting, pagination, and selection are intentionally out of scope.",
-      "usage": "Use DataTable next to every chart on a page so that the underlying values are available as text, and on their own for lists that are naturally tabular such as allocation by asset class or transactions in a period. Provide a caption that says what the table contains and for which period, localize headers and cell content in the consuming app, and mark numeric columns with align end so their digits line up. Keep the number of columns small enough to read without horizontal scrolling on common screens; the container scrolls horizontally only as a fallback.",
-      "accessibility": "The component renders a native table with a caption, so assistive technology announces the table name, row and column counts, and each cell with its column header. Column headers are marked with the column scope. The caption remains in the accessibility tree when it is visually hidden. Numeric columns use tabular figures and right alignment for scanning. Rows are separated by rules only and carry no hover or interactive state.",
+      "overview": "DataTable is the text view of dashboard data: the same numbers that charts draw, laid out as rows and columns that every reader and assistive technology can traverse. It composes the Table parts inside a rounded bordered frame. Columns declare their heading and whether they hold numbers, rows map column ids to cell content, and an optional empty message fills one full-width row when there are no rows. The table always carries a caption that names it, which can be visually hidden when a heading above the table already does that job. Sorting, pagination, and selection are intentionally out of scope.",
+      "usage": "Use DataTable next to every chart on a page so that the underlying values are available as text, and on their own for lists that are naturally tabular such as allocation by asset class or transactions in a period. Provide a caption that says what the table contains and for which period, localize headers and cell content in the consuming app, mark numeric columns with align end so their digits line up, and pass an empty message so an empty period explains itself instead of showing a bare header. Keep the number of columns small enough to read without horizontal scrolling on common screens; the container scrolls horizontally only as a fallback.",
+      "accessibility": "The component renders a native table with a caption, so assistive technology announces the table name, row and column counts, and each cell with its column header. Column headers are marked with the column scope. The caption remains in the accessibility tree when it is visually hidden. Numeric columns use tabular figures and right alignment for scanning. Rows highlight while hovered to aid scanning; the highlight conveys no state, and the table has no interactive parts of its own.",
       "doList": [
         "Give every table a caption that names its content and period",
         "Mark numeric columns with align end",
@@ -1084,6 +1140,11 @@
         "Render hundreds of rows without pagination in the consuming app"
       ],
       "relatedComponents": [
+        {
+          "name": "Table",
+          "path": "/?path=/docs/components-table--docs",
+          "description": "Parts this table is composed from"
+        },
         {
           "name": "TimeSeriesChart",
           "path": "/?path=/docs/components-chart-timeserieschart--docs",
@@ -1109,14 +1170,14 @@
       ],
       "references": [
         {
-          "linkText": "HyperUI Tables",
-          "url": "https://hyperui.dev/components/application/tables",
-          "description": "Reference tables whose rules and spacing this component mirrors"
+          "linkText": "shadcn/ui Table",
+          "url": "https://ui.shadcn.com/docs/components/table",
+          "description": "Reference table parts whose rules and spacing this component mirrors"
         },
         {
-          "linkText": "shadcn/ui Dashboard blocks",
-          "url": "https://ui.shadcn.com/blocks",
-          "description": "Reference layouts whose building blocks this component mirrors"
+          "linkText": "shadcn/ui Data Table",
+          "url": "https://ui.shadcn.com/docs/components/data-table",
+          "description": "Reference layout for the bordered frame and the empty row"
         },
         {
           "linkText": "WAI-ARIA Authoring Practices",
@@ -1183,9 +1244,9 @@
     },
     "donutChart": {
       "description": "Shows how one total divides into parts as a ring, with an optional headline in the hole, a tooltip, and a legend.",
-      "overview": "DonutChart answers the question of how a whole splits into parts at one point in time. Each slice carries an id, a localized label, and a value, and the ring is drawn in the order the slices are given with a thin separator between neighbours. The hole holds an optional headline value and caption, rendered as selectable text rather than as part of the drawing, so the total reads as text while the slices underneath still answer the pointer. Slice colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a slice can opt into a status color. The tooltip reports the formatted value together with its share of the total as a whole percentage.",
+      "overview": "DonutChart answers the question of how a whole splits into parts at one point in time. Each slice carries an id, a localized label, and a value, and the ring is drawn in the order the slices are given, with neighbouring slices touching. The hole holds an optional headline value and caption, rendered as selectable text rather than as part of the drawing, so the total reads as text while the slices underneath still answer the pointer. Slice colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a slice can opt into a status color. The tooltip reports the formatted value together with its share of the total as a whole percentage.",
       "usage": "Use DonutChart when the composition of a single total is the point: asset allocation by instrument, spending by category, storage by file type. Pass a label that names the chart for assistive technology and slices whose labels are already localized. Supply centerValue and centerLabel to state the total that the ring divides, and a valueFormatter to attach units or currency formatting. Keep the slice count at five or fewer and group the remainder into one other slice, because thin slices are hard to compare by angle. Choose BarChart when the ranking of the parts matters more than their share, and pair every chart with a table view of the same numbers.",
-      "accessibility": "The chart surface exposes the chart label as its accessible name. Slices answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a data table with the same values required next to the chart rather than optional. The legend repeats each slice label in text next to its swatch, so slices are identified without relying on color. The center text sits in the reading order as real text, so screen readers announce the headline and its caption. Neighbouring slices are separated by a stroke in the surface color, which keeps their boundary visible when two palette colors sit next to each other.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Slices answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a data table with the same values required next to the chart rather than optional. The legend repeats each slice label in text next to its swatch, so slices are identified without relying on color. The center text sits in the reading order as real text, so screen readers announce the headline and its caption. Neighbouring slices touch; the fixed palette order keeps adjacent colors distinguishable, and the legend names every slice in text.",
       "doList": [
         "Give every chart a label that says what the total represents",
         "State the total in the center so the parts have a reference",
