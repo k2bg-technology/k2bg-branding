@@ -24,7 +24,12 @@ const helperTextVariants = cva('text-caption leading-none', {
   },
 });
 
-export type Props = Omit<React.ComponentPropsWithoutRef<'span'>, 'color'> &
+// `id` is owned by Control (`helperTextId`) so the control's
+// `aria-describedby` and this element agree in server-rendered HTML.
+export type Props = Omit<
+  React.ComponentPropsWithoutRef<'span'>,
+  'color' | 'id'
+> &
   FormProps;
 
 export function HelperText(props: React.PropsWithChildren<Props>) {
@@ -34,12 +39,14 @@ export function HelperText(props: React.PropsWithChildren<Props>) {
     color = 'dark',
     error,
     disabled,
+    helperTextId,
     ...rest
   } = useFormContext(formProps);
 
   return (
     <span
       {...rest}
+      id={helperTextId}
       className={twMerge(
         helperTextVariants({ color, error, disabled }),
         className

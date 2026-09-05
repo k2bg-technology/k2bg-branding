@@ -31,7 +31,7 @@ export function ImageViewer({
       >
         <img
           {...rest}
-          alt={name}
+          alt={name ?? ''}
           src={file || url}
           width={width}
           height={height}
@@ -44,7 +44,7 @@ export function ImageViewer({
   return (
     <img
       {...rest}
-      alt={name}
+      alt={name ?? ''}
       src={file || url}
       width={width}
       height={height}
