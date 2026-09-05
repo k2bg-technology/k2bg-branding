@@ -111,6 +111,7 @@ export function Header() {
                 <Popover.Trigger
                   render={
                     <Button
+                      aria-label="検索を開く"
                       color="dark"
                       variant="ghost"
                       className="pointer-events-auto"
@@ -132,6 +133,7 @@ export function Header() {
                 <DropdownMenu.Trigger
                   render={
                     <Button
+                      aria-label="メニューを開く"
                       color="dark"
                       size="icon"
                       variant="ghost"
@@ -204,6 +206,7 @@ export function Header() {
               <Drawer
                 trigger={
                   <Button
+                    aria-label="サイドバーを開く"
                     color="dark"
                     size="icon"
                     variant="ghost"
