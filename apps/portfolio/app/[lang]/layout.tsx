@@ -1,6 +1,7 @@
 import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
+import { ErrorBoundaryDictionaryProvider } from '../../components/providers/ErrorBoundaryDictionaryProvider';
 import { getDictionary } from '../../i18n/dictionaries';
 import { languages, resolveLanguage } from '../../i18n/settings';
 import { getLocalizedUrl, siteBaseUrl } from '../site';
@@ -19,8 +20,8 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: LayoutProps): Promise<Metadata> {
-  const { lang } = await params;
-  const language = resolveLanguage(lang);
+  const { lang: languageParameter } = await params;
+  const language = resolveLanguage(languageParameter);
   const dictionary = await getDictionary(language);
   const title = 'K2.B.G. Technology';
   const description = dictionary.metadata.description;
@@ -74,12 +75,17 @@ export async function generateMetadata({
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {
-  const { lang } = await params;
-  const language = resolveLanguage(lang);
+  const { lang: languageParameter } = await params;
+  const language = resolveLanguage(languageParameter);
+  const dictionary = await getDictionary(language);
 
   return (
     <html lang={language} dir="ltr">
-      <body>{children}</body>
+      <body>
+        <ErrorBoundaryDictionaryProvider dictionary={dictionary.errorBoundary}>
+          {children}
+        </ErrorBoundaryDictionaryProvider>
+      </body>
       {process.env.NODE_ENV === 'production' && (
         <GoogleTagManager gtmId={process.env.GOOGLE_TAG_MANAGER_ID || ''} />
       )}
