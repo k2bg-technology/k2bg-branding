@@ -328,6 +328,9 @@ See `turbo.json` for the complete env list. Critical variables:
   app-specific secrets in `apps/*/.env.local` and never commit them.
 - Avoid storing tokens in code or stories; prefer `.env` and runtime config.
 - Never log PII; ensure authentication wraps protected Hono routes (`x-api-key`).
+- The blog deploys to AWS Amplify: the root `amplify.yml` is the build spec (it overrides
+  console build settings) and `.github/workflows/deploy-blog.yml` drives deploys on `main`.
+  Details: `apps/blog/README.md` (Deployment section).
 
 ## Documentation Rules (Agent Docs)
 
