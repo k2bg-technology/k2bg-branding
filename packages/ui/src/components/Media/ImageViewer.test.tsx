@@ -41,11 +41,28 @@ describe('ImageViewer', () => {
     );
   });
 
-  it('marks the image as decorative inside a link when no name is given', () => {
-    const { container } = render(
+  it('names the link with the image name', () => {
+    const name = 'Neon skyline at dusk';
+
+    render(
+      <ImageViewer
+        url={imageUrl}
+        linkUrl={linkUrl}
+        name={name}
+        width={500}
+        height={300}
+      />
+    );
+
+    expect(screen.getByRole('link', { name })).toHaveAttribute('href', linkUrl);
+  });
+
+  it('rejects a linked image without a name at the type level', () => {
+    const element = (
+      // @ts-expect-error -- a linked image needs a name for the link's accessible name.
       <ImageViewer url={imageUrl} linkUrl={linkUrl} width={500} height={300} />
     );
 
-    expect(container.querySelector('img')).toHaveAttribute('alt', '');
+    expect(element).toBeDefined();
   });
 });
