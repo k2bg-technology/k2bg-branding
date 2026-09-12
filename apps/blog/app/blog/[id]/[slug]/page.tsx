@@ -13,6 +13,7 @@ import {
   createFetchPostUseCase,
   getDefaultOgImageUrl,
 } from '../../../../infrastructure/di';
+import { BLOG_SITE_NAME } from '../../../siteMetadata';
 import { handlePostFetchError } from './handlePostFetchError';
 
 export const revalidate = 3600;
@@ -54,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: article.excerpt || '',
       type: 'article',
       locale: 'ja_JP',
-      siteName: 'K2.B.G Technology Blog',
+      siteName: BLOG_SITE_NAME,
       images: [{ url: ogImageUrl, width: 1200, height: 630 }],
       publishedTime: article.releaseDate,
       authors: article.author ? [article.author.name] : undefined,

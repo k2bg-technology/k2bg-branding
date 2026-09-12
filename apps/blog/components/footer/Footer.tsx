@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import Link from 'next/link';
 import { buttonVariants, Icon } from 'ui';
 
+import { Category, getCategoryDisplayName } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 
 export function Footer() {
@@ -28,7 +29,7 @@ export function Footer() {
               <ul className="flex flex-wrap items-center gap-4">
                 <li>
                   <Link
-                    href="/category/ENGINEERING"
+                    href={`/category/${Category.ENGINEERING}`}
                     className={buttonVariants({
                       color: 'light',
                       variant: 'ghost',
@@ -36,13 +37,13 @@ export function Footer() {
                     })}
                     data-gtm="footer_click_engineering"
                   >
-                    Engineering
+                    {getCategoryDisplayName(Category.ENGINEERING)}
                   </Link>
                 </li>
 
                 <li>
                   <Link
-                    href="/category/DESIGN"
+                    href={`/category/${Category.DESIGN}`}
                     className={buttonVariants({
                       color: 'light',
                       variant: 'ghost',
@@ -50,13 +51,13 @@ export function Footer() {
                     })}
                     data-gtm="footer_click_design"
                   >
-                    Design
+                    {getCategoryDisplayName(Category.DESIGN)}
                   </Link>
                 </li>
 
                 <li>
                   <Link
-                    href="/category/DATA_SCIENCE"
+                    href={`/category/${Category.DATA_SCIENCE}`}
                     className={buttonVariants({
                       color: 'light',
                       variant: 'ghost',
@@ -64,13 +65,13 @@ export function Footer() {
                     })}
                     data-gtm="footer_click_data_science"
                   >
-                    Data Science
+                    {getCategoryDisplayName(Category.DATA_SCIENCE)}
                   </Link>
                 </li>
 
                 <li>
                   <Link
-                    href="/category/LIFE_STYLE"
+                    href={`/category/${Category.LIFE_STYLE}`}
                     className={buttonVariants({
                       color: 'light',
                       variant: 'ghost',
@@ -78,7 +79,7 @@ export function Footer() {
                     })}
                     data-gtm="footer_click_life_style"
                   >
-                    Life Style
+                    {getCategoryDisplayName(Category.LIFE_STYLE)}
                   </Link>
                 </li>
 

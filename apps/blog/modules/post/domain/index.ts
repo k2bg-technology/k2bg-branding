@@ -22,6 +22,10 @@ export {
   RevisionDateBeforeReleaseDateError,
 } from './errors/errors';
 export type { PostRepository } from './repositories/repository';
+export {
+  CATEGORY_DISPLAY_NAMES,
+  getCategoryDisplayName,
+} from './types/categoryDisplayName';
 export { Category, EmbedType, PostStatus, PostType } from './types/enums';
 export {
   AuthorId,
