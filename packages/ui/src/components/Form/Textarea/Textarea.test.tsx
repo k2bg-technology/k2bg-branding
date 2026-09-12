@@ -109,6 +109,34 @@ describe('Textarea', () => {
     );
   });
 
+  it('keeps describing the textarea with the control id when a helper text id is forced onto it', () => {
+    const strayHelperTextId = 'stray-helper';
+    // `helperTextId` is not part of the Textarea props; the cast mirrors a
+    // consumer smuggling it through an untyped spread.
+    const strayProps = { helperTextId: strayHelperTextId } as TextareaProps;
+
+    renderInControl({
+      controlProps: { error: true },
+      textareaProps: strayProps,
+    });
+
+    expect(getTextarea()).toHaveAttribute(
+      'aria-describedby',
+      getHelperText().id
+    );
+    expect(getTextarea()).not.toHaveAttribute(
+      'aria-describedby',
+      strayHelperTextId
+    );
+  });
+
+  it('rejects a helper text id at the type level', () => {
+    // @ts-expect-error -- only Form.Control can keep both sides in sync.
+    const element = <Form.Textarea helperTextId="custom-helper" />;
+
+    expect(element).toBeDefined();
+  });
+
   it('disables the textarea when the control is disabled', () => {
     renderInControl({ controlProps: { disabled: true } });
 

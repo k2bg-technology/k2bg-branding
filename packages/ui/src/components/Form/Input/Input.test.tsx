@@ -106,6 +106,28 @@ describe('Input', () => {
     expect(getInput()).toHaveAttribute('aria-describedby', customHelperTextId);
   });
 
+  it('keeps describing the input with the control id when a helper text id is forced onto it', () => {
+    const strayHelperTextId = 'stray-helper';
+    // `helperTextId` is not part of the Input props; the cast mirrors a
+    // consumer smuggling it through an untyped spread.
+    const strayProps = { helperTextId: strayHelperTextId } as InputProps;
+
+    renderInControl({ controlProps: { error: true }, inputProps: strayProps });
+
+    expect(getInput()).toHaveAttribute('aria-describedby', getHelperText().id);
+    expect(getInput()).not.toHaveAttribute(
+      'aria-describedby',
+      strayHelperTextId
+    );
+  });
+
+  it('rejects a helper text id at the type level', () => {
+    // @ts-expect-error -- only Form.Control can keep both sides in sync.
+    const element = <Form.Input helperTextId="custom-helper" />;
+
+    expect(element).toBeDefined();
+  });
+
   it('disables the input when the control is disabled', () => {
     renderInControl({ controlProps: { disabled: true } });
 

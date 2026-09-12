@@ -7,15 +7,17 @@ export interface FormProps {
   error?: boolean;
   disabled?: boolean;
   color?: 'dark' | 'light';
-  /**
-   * Id shared by the HelperText and the control's `aria-describedby`.
-   * Control generates one via `useId`; pass your own here (not on HelperText)
-   * so both sides agree during server rendering.
-   */
+}
+
+/**
+ * Only Control can keep the HelperText id and the control's
+ * `aria-describedby` in sync, so the id lives in the context alone.
+ */
+export interface FormContextValue extends FormProps {
   helperTextId?: string;
 }
 
-const FormContext = createContext<FormProps>({
+const FormContext = createContext<FormContextValue>({
   required: false,
   error: false,
   disabled: false,
@@ -24,17 +26,18 @@ const FormContext = createContext<FormProps>({
 
 export function FormProvider({
   children,
-  ...formProps
-}: React.PropsWithChildren<FormProps>) {
-  return <FormContext value={formProps}>{children}</FormContext>;
+  ...formContextValue
+}: React.PropsWithChildren<FormContextValue>) {
+  return <FormContext value={formContextValue}>{children}</FormContext>;
 }
 
-export function useFormContext(formProps?: FormProps): FormProps {
-  const formContext = use(FormContext);
+export function useFormContext(formProps?: FormProps): FormContextValue {
+  const { helperTextId, ...formContext } = use(FormContext);
 
   return {
     ...formContext,
     ...formProps,
+    helperTextId,
   };
 }
 

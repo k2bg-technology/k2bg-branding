@@ -1,14 +1,15 @@
 import { useId } from 'react';
-import { type FormProps, FormProvider } from './Context';
+import { type FormContextValue, FormProvider } from './Context';
 
-type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'color'> & FormProps;
+type Props = Omit<React.ComponentPropsWithoutRef<'div'>, 'color'> &
+  FormContextValue;
 
 export function Control(props: Props) {
-  const { children, ...formProps } = props;
-  const helperTextId = useId();
+  const { children, ...formContextValue } = props;
+  const generatedHelperTextId = useId();
 
   return (
-    <FormProvider helperTextId={helperTextId} {...formProps}>
+    <FormProvider helperTextId={generatedHelperTextId} {...formContextValue}>
       {children}
     </FormProvider>
   );

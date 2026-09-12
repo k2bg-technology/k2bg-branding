@@ -96,6 +96,30 @@ describe('Form.HelperText', () => {
     expect(html).toContain(`id="${customHelperTextId}"`);
   });
 
+  it('keeps the control id when a helper text id is forced onto it', () => {
+    const strayHelperTextId = 'stray-helper';
+    // `helperTextId` is not part of the HelperText props; the cast mirrors a
+    // consumer smuggling it through an untyped spread.
+    const strayProps = { helperTextId: strayHelperTextId } as HelperTextProps;
+
+    render(
+      buildControl({
+        controlProps: { error: true },
+        helperTextProps: strayProps,
+      })
+    );
+
+    expect(getHelperText()).not.toHaveAttribute('id', strayHelperTextId);
+    expect(getInput()).toHaveAttribute('aria-describedby', getHelperText().id);
+  });
+
+  it('rejects a helper text id at the type level', () => {
+    // @ts-expect-error -- only Form.Control can keep both sides in sync.
+    const element = <Form.HelperText helperTextId="custom-helper" />;
+
+    expect(element).toBeDefined();
+  });
+
   it.each(stateClassCases)(
     'styles the helper text with $expectedClass when $state',
     ({ helperTextProps, expectedClass }) => {

@@ -24,7 +24,7 @@ const helperTextVariants = cva('text-caption leading-none', {
   },
 });
 
-// `id` is owned by Control (`helperTextId`) so the control's
+// The id comes from Control (`helperTextId`) so the control's
 // `aria-describedby` and this element agree in server-rendered HTML.
 export type Props = Omit<
   React.ComponentPropsWithoutRef<'span'>,
