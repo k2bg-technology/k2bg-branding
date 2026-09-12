@@ -78,4 +78,5 @@ export interface PaginatedResult<T> {
 export interface SlugOutput {
   id: string;
   slug: string;
+  revisionDate: string;
 }

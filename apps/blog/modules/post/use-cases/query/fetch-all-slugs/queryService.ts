@@ -3,6 +3,7 @@ import type { SortOrder } from '../../shared';
 export interface SlugRecord {
   id: string;
   slug: string;
+  revisionDate: string;
 }
 
 export interface FetchAllSlugsParams {

@@ -14,6 +14,7 @@ describe('FetchAllSlugs', () => {
     Array.from({ length: count }, (_, i) => ({
       id: `550e8400-e29b-41d4-a716-44665544000${i}`,
       slug: `test-post-${i}`,
+      revisionDate: `2024-01-${String(i + 1).padStart(2, '0')}`,
     }));
 
   describe('execute', () => {
@@ -30,6 +31,7 @@ describe('FetchAllSlugs', () => {
       expect(result.slugs[0]).toEqual({
         id: slugRecords[0].id,
         slug: slugRecords[0].slug,
+        revisionDate: slugRecords[0].revisionDate,
       });
     });
 
@@ -66,8 +68,16 @@ describe('FetchAllSlugs', () => {
 
     it('maps slug records to SlugOutput', async () => {
       const slugRecords: SlugRecord[] = [
-        { id: 'id-1', slug: 'first-post' },
-        { id: 'id-2', slug: 'second-post' },
+        {
+          id: 'id-1',
+          slug: 'first-post',
+          revisionDate: '2024-01-15',
+        },
+        {
+          id: 'id-2',
+          slug: 'second-post',
+          revisionDate: '2024-02-20',
+        },
       ];
       const queryService = createMockQueryService({
         fetchAllSlugs: vi.fn().mockResolvedValue(slugRecords),
@@ -77,8 +87,16 @@ describe('FetchAllSlugs', () => {
       const result = await sut.execute();
 
       expect(result.slugs).toEqual([
-        { id: 'id-1', slug: 'first-post' },
-        { id: 'id-2', slug: 'second-post' },
+        {
+          id: 'id-1',
+          slug: 'first-post',
+          revisionDate: '2024-01-15',
+        },
+        {
+          id: 'id-2',
+          slug: 'second-post',
+          revisionDate: '2024-02-20',
+        },
       ]);
     });
   });

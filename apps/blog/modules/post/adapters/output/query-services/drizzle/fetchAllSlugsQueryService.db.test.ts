@@ -3,7 +3,12 @@ import {
   authors,
   posts,
 } from '../../../../../../infrastructure/drizzle/schema';
-import { PostType, ReleaseDate } from '../../../../domain';
+import {
+  PostStatus,
+  PostType,
+  ReleaseDate,
+  RevisionDate,
+} from '../../../../domain';
 import { createPost } from '../../../../use-cases/shared/testing/factories';
 import { createDrizzleAuthorRow } from '../../../shared';
 import {
@@ -33,17 +38,20 @@ describe('DrizzleFetchAllSlugsQueryService', () => {
     await truncateAllTables();
   });
 
-  it('returns id + slug for every ARTICLE in releaseDate order', async () => {
+  it('returns id, slug, and revisionDate for every ARTICLE in releaseDate order', async () => {
     await seedAuthor();
     const db = getTestDb();
     const post1 = createPost({
       releaseDate: ReleaseDate.create('2024-01-10'),
+      revisionDate: RevisionDate.create('2024-01-11'),
     });
     await db.insert(posts).values(toPersistence(post1));
+    const post2 = createPost({
+      releaseDate: ReleaseDate.create('2024-01-15'),
+      revisionDate: RevisionDate.create('2024-01-20'),
+    });
     await db.insert(posts).values({
-      ...toPersistence(
-        createPost({ releaseDate: ReleaseDate.create('2024-01-15') })
-      ),
+      ...toPersistence(post2),
       uuid: '550e8400-e29b-41d4-a716-446655440002',
       slug: 'second-article',
     });
@@ -52,13 +60,29 @@ describe('DrizzleFetchAllSlugsQueryService', () => {
     const ascResult = await sut.fetchAllSlugs({ orderBy: 'asc' });
     const descResult = await sut.fetchAllSlugs({ orderBy: 'desc' });
 
-    expect(ascResult.map((row) => row.slug)).toEqual([
-      post1.slug.getValue(),
-      'second-article',
+    expect(ascResult).toEqual([
+      {
+        id: post1.id.getValue(),
+        slug: post1.slug.getValue(),
+        revisionDate: post1.revisionDate.toISOString(),
+      },
+      {
+        id: '550e8400-e29b-41d4-a716-446655440002',
+        slug: 'second-article',
+        revisionDate: post2.revisionDate.toISOString(),
+      },
     ]);
-    expect(descResult.map((row) => row.slug)).toEqual([
-      'second-article',
-      post1.slug.getValue(),
+    expect(descResult).toEqual([
+      {
+        id: '550e8400-e29b-41d4-a716-446655440002',
+        slug: 'second-article',
+        revisionDate: post2.revisionDate.toISOString(),
+      },
+      {
+        id: post1.id.getValue(),
+        slug: post1.slug.getValue(),
+        revisionDate: post1.revisionDate.toISOString(),
+      },
     ]);
   });
 
@@ -67,6 +91,18 @@ describe('DrizzleFetchAllSlugsQueryService', () => {
     await getTestDb()
       .insert(posts)
       .values(toPersistence(createPost({ type: PostType.PAGE })));
+    const sut = new DrizzleFetchAllSlugsQueryService(getTestDb());
+
+    const result = await sut.fetchAllSlugs({ orderBy: 'desc' });
+
+    expect(result).toEqual([]);
+  });
+
+  it('excludes posts whose status is not PUBLISHED', async () => {
+    await seedAuthor();
+    await getTestDb()
+      .insert(posts)
+      .values(toPersistence(createPost({ status: PostStatus.DRAFT })));
     const sut = new DrizzleFetchAllSlugsQueryService(getTestDb());
 
     const result = await sut.fetchAllSlugs({ orderBy: 'desc' });

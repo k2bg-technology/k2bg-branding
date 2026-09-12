@@ -28,6 +28,7 @@ export class FetchAllSlugs {
       slugs: slugRecords.map((record) => ({
         id: record.id,
         slug: record.slug,
+        revisionDate: record.revisionDate,
       })),
     };
   }
