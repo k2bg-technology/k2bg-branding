@@ -23,7 +23,7 @@ export function Pagination(props: PaginationProps) {
     <nav {...rest} className="flex gap-normal">
       <Button
         {...prevProps}
-        type="button"
+        type={prevProps.render ? undefined : 'button'}
         color="inherit"
         size="icon"
         disabled={currentIndex === 1}
@@ -43,7 +43,7 @@ export function Pagination(props: PaginationProps) {
       </ul>
       <Button
         {...nextProps}
-        type="button"
+        type={nextProps.render ? undefined : 'button'}
         color="inherit"
         size="icon"
         disabled={currentIndex === count}

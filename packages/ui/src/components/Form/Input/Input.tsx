@@ -3,7 +3,12 @@
 import { cva } from 'class-variance-authority';
 import type React from 'react';
 import { twMerge } from '../../../utils/extendTailwindMerge';
-import { type FormProps, useFormContext } from '../Control/Context';
+import {
+  type FormProps,
+  resolveAriaDescribedBy,
+  resolveAriaInvalid,
+  useFormContext,
+} from '../Control/Context';
 
 // `neutral-300` (disabled) is a deliberate exception: no base-* token is a
 // visually reasonable match for this disabled-state gray.
@@ -52,9 +57,12 @@ export function Input(props: Props) {
     className,
     startAdornment,
     endAdornment,
+    'aria-describedby': explicitAriaDescribedBy,
+    'aria-invalid': explicitAriaInvalid,
     ...formProps
   } = props;
-  const { color, error, disabled, ...rest } = useFormContext(formProps);
+  const { color, error, disabled, helperTextId, ...rest } =
+    useFormContext(formProps);
 
   return (
     <div className={twMerge('relative', disabled && '[&_i]:bg-neutral-300')}>
@@ -65,6 +73,11 @@ export function Input(props: Props) {
       )}
       <input
         {...rest}
+        aria-invalid={resolveAriaInvalid(explicitAriaInvalid, error)}
+        aria-describedby={resolveAriaDescribedBy(
+          explicitAriaDescribedBy,
+          error ? helperTextId : undefined
+        )}
         className={twMerge(
           inputVariants({
             color,

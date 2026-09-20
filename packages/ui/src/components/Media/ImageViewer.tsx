@@ -1,14 +1,25 @@
-interface Props
+interface BaseProps
   /** https://developer.mozilla.org/ja/docs/Web/HTML/Element/img */
   extends React.ComponentPropsWithoutRef<'img'> {
-  name?: string;
-  linkUrl?: string;
   url?: string;
   file?: string;
   width?: number;
   height?: number;
   unoptimized?: boolean;
 }
+
+interface LinkedProps extends BaseProps {
+  // A link whose only content is a decorative image has no accessible name.
+  linkUrl: string;
+  name: string;
+}
+
+interface UnlinkedProps extends BaseProps {
+  linkUrl?: undefined;
+  name?: string;
+}
+
+type Props = LinkedProps | UnlinkedProps;
 
 export function ImageViewer({
   id,
@@ -44,7 +55,7 @@ export function ImageViewer({
   return (
     <img
       {...rest}
-      alt={name}
+      alt={name ?? ''}
       src={file || url}
       width={width}
       height={height}
