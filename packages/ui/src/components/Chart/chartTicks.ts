@@ -10,6 +10,30 @@ const tickTargetCount: Record<ChartPeriod, number> = {
 
 const defaultTimeZone = 'UTC';
 
+/** How much of the wall clock a label carries. */
+type TimeGranularity = 'time' | 'day' | 'month' | 'dayTime';
+
+const granularityByPeriod: Record<ChartPeriod, TimeGranularity> = {
+  day: 'time',
+  week: 'day',
+  month: 'day',
+  quarter: 'day',
+  year: 'month',
+};
+
+const localeFormatOptions: Record<TimeGranularity, Intl.DateTimeFormatOptions> =
+  {
+    time: { hour: '2-digit', minute: '2-digit' },
+    day: { month: 'numeric', day: 'numeric' },
+    month: { year: 'numeric', month: 'numeric' },
+    dayTime: {
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    },
+  };
+
 interface WallClock {
   year: number;
   month: number;
@@ -58,23 +82,85 @@ function padTwoDigits(value: number): string {
   return String(value).padStart(2, '0');
 }
 
-/** Locale-neutral numeric formats, read in `timeZone` for determinism. */
+function formatWallClock(
+  timestamp: number,
+  granularity: TimeGranularity,
+  timeZone: string
+): string {
+  const { year, month, day, hour, minute } = wallClock(timestamp, timeZone);
+  const time = `${padTwoDigits(hour)}:${padTwoDigits(minute)}`;
+  switch (granularity) {
+    case 'time':
+      return time;
+    case 'day':
+      return `${month}/${day}`;
+    case 'month':
+      return `${year}/${month}`;
+    case 'dayTime':
+      return `${month}/${day} ${time}`;
+  }
+}
+
+// A locale formatter is cached like the wall-clock one; `null` records a locale
+// the runtime rejected, so a broken locale never crashes a chart.
+const localeFormatterCache = new Map<string, Intl.DateTimeFormat | null>();
+
+function localeFormatter(
+  locale: string,
+  granularity: TimeGranularity,
+  timeZone: string
+): Intl.DateTimeFormat | null {
+  const cacheKey = `${locale}|${granularity}|${timeZone}`;
+  const cached = localeFormatterCache.get(cacheKey);
+  if (cached !== undefined) {
+    return cached;
+  }
+  let formatter: Intl.DateTimeFormat | null = null;
+  try {
+    formatter = new Intl.DateTimeFormat(locale, {
+      timeZone,
+      ...localeFormatOptions[granularity],
+    });
+  } catch {
+    formatter = null;
+  }
+  localeFormatterCache.set(cacheKey, formatter);
+  return formatter;
+}
+
+function formatAtGranularity(
+  timestamp: number,
+  granularity: TimeGranularity,
+  timeZone: string,
+  locale?: string
+): string {
+  if (locale !== undefined) {
+    const formatter = localeFormatter(locale, granularity, timeZone);
+    if (formatter !== null) {
+      return formatter.format(new Date(timestamp));
+    }
+  }
+  return formatWallClock(timestamp, granularity, timeZone);
+}
+
+/** Locale-neutral numeric formats, read in `timeZone` for determinism;
+ *  `locale` switches to that locale's own format at the same granularity. */
 export function formatTimestamp(
   timestamp: number,
   period: ChartPeriod,
-  timeZone: string = defaultTimeZone
+  timeZone: string = defaultTimeZone,
+  locale?: string
 ): string {
-  const { year, month, day, hour, minute } = wallClock(timestamp, timeZone);
-  switch (period) {
-    case ChartPeriod.DAY:
-      return `${padTwoDigits(hour)}:${padTwoDigits(minute)}`;
-    case ChartPeriod.WEEK:
-    case ChartPeriod.MONTH:
-    case ChartPeriod.QUARTER:
-      return `${month}/${day}`;
-    case ChartPeriod.YEAR:
-      return `${year}/${month}`;
-  }
+  return formatAtGranularity(
+    timestamp,
+    granularityByPeriod[period],
+    timeZone,
+    locale
+  );
+}
+
+function dateKey(clock: WallClock): string {
+  return `${clock.year}-${clock.month}-${clock.day}`;
 }
 
 /** Bucketing on the wall clock lands each tick on the local date boundary. */
@@ -83,16 +169,40 @@ function bucketKey(
   period: ChartPeriod,
   timeZone: string
 ): string {
-  const { year, month, day, hour } = wallClock(timestamp, timeZone);
-  const date = `${year}-${month}-${day}`;
-  return period === ChartPeriod.DAY ? `${date}-${hour}` : date;
+  const clock = wallClock(timestamp, timeZone);
+  return period === ChartPeriod.DAY
+    ? `${dateKey(clock)}-${clock.hour}`
+    : dateKey(clock);
+}
+
+/**
+ * Ticks answer where a point sits on the axis and may stay coarse, but a
+ * heading has to identify the one reading under the pointer, so it follows how
+ * often the data was sampled instead of the period. Readings that share a date
+ * are told apart by their time, dated once they spread over several days.
+ */
+function headingGranularity(
+  period: ChartPeriod,
+  dateCount: number,
+  pointCount: number
+): TimeGranularity {
+  const isSubDaily = dateCount < pointCount;
+  if (!isSubDaily) {
+    return granularityByPeriod[period];
+  }
+  return dateCount > 1 ? 'dayTime' : 'time';
 }
 
 export function getTimeAxisTicks(
   timestamps: number[],
   period: ChartPeriod,
-  timeZone: string = defaultTimeZone
-): { ticks: number[]; formatTick: (timestamp: number) => string } {
+  timeZone: string = defaultTimeZone,
+  locale?: string
+): {
+  ticks: number[];
+  formatTick: (timestamp: number) => string;
+  formatHeading: (timestamp: number) => string;
+} {
   const sorted = Array.from(new Set(timestamps)).sort(
     (first, second) => first - second
   );
@@ -108,9 +218,22 @@ export function getTimeAxisTicks(
   const step = Math.max(1, Math.ceil(anchors.length / tickTargetCount[period]));
   const ticks = anchors.filter((_, index) => index % step === 0);
 
+  const tickGranularity = granularityByPeriod[period];
+  const dateCount = new Set(
+    sorted.map((timestamp) => dateKey(wallClock(timestamp, timeZone)))
+  ).size;
+  const tooltipGranularity = headingGranularity(
+    period,
+    dateCount,
+    sorted.length
+  );
+
   return {
     ticks,
-    formatTick: (timestamp) => formatTimestamp(timestamp, period, timeZone),
+    formatTick: (timestamp) =>
+      formatAtGranularity(timestamp, tickGranularity, timeZone, locale),
+    formatHeading: (timestamp) =>
+      formatAtGranularity(timestamp, tooltipGranularity, timeZone, locale),
   };
 }
 
