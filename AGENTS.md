@@ -290,6 +290,9 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
 - Coverage reporters: `text,json,html` (see `apps/blog/vitest.config.mts`).
 - Test behavior over implementation; AAA structure; name the subject `sut`; prefer `it.each`
   over loops. Full standards: `.claude/rules/unit-test-guidelines.md`.
+- Unit tests assert behavior through inputs and outputs; appearance is verified by stories and
+  Chromatic, not by render tests. The boundary is stated under Missing tests in
+  "Codex Review Guidelines".
 - Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` (or scope via `pnpm -F blog test`).
 
 ## Internationalization (Portfolio App)
@@ -373,11 +376,28 @@ rather than guess. (Claude Code: use the `k2bg-design-system` MCP tools — see 
 
 ## Codex Review Guidelines
 
-Codex posts only P0/P1 issues. Apply these rules when reviewing a pull request:
+Codex posts only P0/P1 issues. Review the whole pull request each time and report every
+P0/P1 issue found in one review. A re-review verifies the earlier findings and the changes
+made since, including their effect on unchanged code; a newly found P0/P1 issue is reported
+wherever it is, and a resolved finding is not raised again unless the problem remains.
 
-- **Missing tests (P1):** New or changed logic without co-located `*.test.ts(x)`
-  coverage. Follow `.claude/rules/unit-test-guidelines.md` (behavior-focused tests,
-  AAA structure, `sut` naming, no custom loops — use `it.each`).
+Apply these rules when reviewing a pull request:
+
+- **Missing tests (P1):** New or changed behavior with an observable input → output contract
+  whose outcome no test asserts — running the code in a test is not coverage. This covers
+  domain, use-case, adapter, server, middleware, helper, hook, and script logic;
+  authentication, redirect, and not-found guards; state changes and effects inside components
+  (submission, error, and disabled states); and a change that stops tests from running in CI.
+  The finding names a concrete input or state, the expected outcome, and why the existing
+  tests miss it. The behavior decides, not the file type: a declaration whose correctness
+  is its literal value (static metadata, header lists, dependency wiring, workflow steps) and
+  a file that only composes tested units are not findings, while a pattern or function that
+  decides at runtime (a route matcher, a guard) is logic wherever it lives. Appearance —
+  rendering, styling, static accessibility attributes, composition — is verified by stories,
+  Chromatic, and the Storybook accessibility check, and Scene Studio primitives by their demo
+  compositions; none of these calls for a unit test, and a visual branch alone does not
+  justify extracting a helper. Tests assert at the smallest public boundary that shows the
+  behavior and follow `.claude/rules/unit-test-guidelines.md`.
 - **Clean Architecture violations (P1):** Wrong dependency direction or layer-boundary
   crossings in the blog app's `domain` / `use-cases` / `adapters` slices.
   See the `clean-architecture-guidelines` skill.
