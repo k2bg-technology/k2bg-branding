@@ -158,25 +158,35 @@ describe('DonutChart', () => {
     );
 
     expect(centerValueElement(container)).toHaveClass(
-      'text-[clamp(0.75rem,calc(52cqmin/(var(--donut-center-characters)*0.62)),var(--text-heading-2))]'
+      'text-[clamp(0.75rem,calc(52cqmin/var(--donut-center-advance)),var(--text-heading-2))]'
     );
   });
 
-  it('feeds the character count of the center value into its font size', () => {
-    const { container } = render(
-      <DonutChart
-        label="Spending"
-        slices={spendingSlices}
-        centerValue={longCenterValue}
-      />
-    );
+  // The budget is the advance of the glyphs actually present: a half-width
+  // character counts as 0.62em, a full-width or CJK one as a whole em.
+  it.each`
+    width            | centerValue               | advance
+    ${'half-width'}  | ${'¥1,234,567'}           | ${'6.2'}
+    ${'full-width'}  | ${'１２３４５６７８９円'} | ${'10'}
+    ${'mixed-width'} | ${'1,234万円'}            | ${'5.1'}
+  `(
+    'budgets $advance em of font size for a $width center value',
+    ({ centerValue, advance }) => {
+      const { container } = render(
+        <DonutChart
+          label="Spending"
+          slices={spendingSlices}
+          centerValue={centerValue}
+        />
+      );
 
-    expect(
-      centerValueElement(container)?.style.getPropertyValue(
-        '--donut-center-characters'
-      )
-    ).toBe(String(longCenterValue.length));
-  });
+      expect(
+        centerValueElement(container)?.style.getPropertyValue(
+          '--donut-center-advance'
+        )
+      ).toBe(advance);
+    }
+  );
 
   it.each`
     part       | elementOf

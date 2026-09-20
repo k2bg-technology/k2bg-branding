@@ -35,6 +35,25 @@ function hoveredSliceId(payload: TooltipContentProps['payload']): string {
   return '';
 }
 
+// CJK scripts, CJK punctuation and the full-width forms fall back to a Japanese
+// face and advance about a full em. The half-width kana at U+FF61-U+FFEE sit
+// between the two full-width blocks, so they stay outside the ranges.
+const fullWidthPattern =
+  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\u{3000}-\u{303F}\u{FF01}-\u{FF60}\u{FFE0}-\u{FFE6}]/u;
+
+/** Advance of a half-width character in the brand font stack, as an upper bound. */
+const halfWidthAdvance = 0.62;
+
+/** Advance of the whole text in `em`, counting each character at its own width. */
+function textAdvance(text: string): number {
+  const advance = Array.from(text).reduce(
+    (total, character) =>
+      total + (fullWidthPattern.test(character) ? 1 : halfWidthAdvance),
+    0
+  );
+  return Math.round(advance * 100) / 100;
+}
+
 export interface DonutChartProps {
   label: string;
   slices: DonutChartSlice[];
@@ -131,11 +150,11 @@ export function DonutChart({
         </ChartContainer>
         {hasCenterText && (
           // The hole spans 65% of the chart's smaller side. The value is sized
-          // from its own character count so that a single token, such as a
-          // formatted amount, shrinks to one line inside the hole instead of
-          // being split; 0.62em is a safe upper bound for a tabular character's
-          // advance in the brand font stack. Below the minimum size the normal
-          // line-breaking rules apply: they break at spaces, never inside a word.
+          // from the advance of the glyphs it actually contains, so that a
+          // single token such as a formatted amount shrinks to one line inside
+          // the hole instead of being split. Below the minimum size the normal
+          // line-breaking rules apply: they break at spaces, and between CJK
+          // characters, but never inside a half-width word.
           <div
             data-slot="donut-chart-center"
             className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center [container-type:size]"
@@ -144,9 +163,9 @@ export function DonutChart({
               <span
                 data-slot="donut-chart-center-value"
                 style={{
-                  '--donut-center-characters': centerValue.length,
+                  '--donut-center-advance': textAdvance(centerValue),
                 }}
-                className="max-w-[56cqmin] text-center text-[clamp(0.75rem,calc(52cqmin/(var(--donut-center-characters)*0.62)),var(--text-heading-2))] font-medium text-base-black tabular-nums"
+                className="max-w-[56cqmin] text-center text-[clamp(0.75rem,calc(52cqmin/var(--donut-center-advance)),var(--text-heading-2))] font-medium text-base-black tabular-nums"
               >
                 {centerValue}
               </span>

@@ -111,33 +111,45 @@ export const StatusColors: Story = {
 };
 
 const longCenterValue = '¥1,234,567';
+const fullWidthCenterValue = '１２３４万円';
 
-// The ring's hole spans 65% of the chart's smaller side; the center text must
-// stay inside it however long the value is.
+const narrowColumn: Story['decorators'] = [
+  (Story) => (
+    <div className="w-[180px]">
+      <Story />
+    </div>
+  ),
+];
+
+// The ring's hole spans 65% of the chart's smaller side; the center value must
+// stay inside it on one line, whatever script it is written in. The chart sizes
+// itself asynchronously, so the measurements retry until they settle.
 const expectCenterValueInsideTheRing: Story['play'] = async ({
   args,
   canvas,
 }) => {
-  const centerValue = canvas.getByText(longCenterValue);
-  const chartBounds = canvas
-    .getByRole('application', { name: args.label })
-    .getBoundingClientRect();
-  const valueBounds = centerValue.getBoundingClientRect();
-  const holeDiameter = 0.65 * Math.min(chartBounds.width, chartBounds.height);
-  // A range reports one client rect per line box, so an unbroken single token
-  // reports exactly one.
-  const lines = document.createRange();
-  lines.selectNodeContents(centerValue);
+  const centerValue = canvas.getByText(args.centerValue ?? '');
+  const chart = canvas.getByRole('application', { name: args.label });
 
-  await expect(lines.getClientRects()).toHaveLength(1);
-  await expect(centerValue.scrollWidth).toBeLessThanOrEqual(
-    centerValue.clientWidth
-  );
-  await expect(valueBounds.width).toBeLessThanOrEqual(holeDiameter);
-  await expect(valueBounds.left).toBeGreaterThanOrEqual(chartBounds.left);
-  await expect(valueBounds.right).toBeLessThanOrEqual(chartBounds.right);
-  await expect(valueBounds.top).toBeGreaterThanOrEqual(chartBounds.top);
-  await expect(valueBounds.bottom).toBeLessThanOrEqual(chartBounds.bottom);
+  await waitFor(() => {
+    const chartBounds = chart.getBoundingClientRect();
+    const valueBounds = centerValue.getBoundingClientRect();
+    const holeDiameter = 0.65 * Math.min(chartBounds.width, chartBounds.height);
+    // A range reports one client rect per line box, so a value that stayed
+    // unbroken reports exactly one.
+    const lines = document.createRange();
+    lines.selectNodeContents(centerValue);
+
+    expect(lines.getClientRects()).toHaveLength(1);
+    expect(centerValue.scrollWidth).toBeLessThanOrEqual(
+      centerValue.clientWidth
+    );
+    expect(valueBounds.width).toBeLessThanOrEqual(holeDiameter);
+    expect(valueBounds.left).toBeGreaterThanOrEqual(chartBounds.left);
+    expect(valueBounds.right).toBeLessThanOrEqual(chartBounds.right);
+    expect(valueBounds.top).toBeGreaterThanOrEqual(chartBounds.top);
+    expect(valueBounds.bottom).toBeLessThanOrEqual(chartBounds.bottom);
+  });
 };
 
 export const LongCenterValue: Story = {
@@ -154,12 +166,19 @@ export const LongCenterValueNarrow: Story = {
     centerValue: longCenterValue,
     height: 'sm',
   },
-  decorators: [
-    (Story) => (
-      <div className="w-[180px]">
-        <Story />
-      </div>
-    ),
-  ],
+  decorators: narrowColumn,
+  play: expectCenterValueInsideTheRing,
+};
+
+// Full-width digits and kanji advance a whole em, so these six characters need
+// far more room than six half-width ones.
+export const FullWidthCenterValueNarrow: Story = {
+  args: {
+    label: 'Asset allocation with a full-width total in a narrow column',
+    centerValue: fullWidthCenterValue,
+    centerLabel: '資産の合計',
+    height: 'sm',
+  },
+  decorators: narrowColumn,
   play: expectCenterValueInsideTheRing,
 };
