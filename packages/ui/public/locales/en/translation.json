@@ -1663,6 +1663,69 @@
           "description": "Success criterion on the contrast of graphical objects that carry information"
         }
       ]
+    },
+    "treemapChart": {
+      "description": "Shows how a whole divides into many parts as tiles whose area is the amount, with one optional level of grouping.",
+      "overview": "TreemapChart answers the question of which few parts of a whole dominate the rest. Every node becomes a tile whose area is proportional to its value, so a long tail of small parts stays visible instead of collapsing into slivers a ring cannot separate. Nodes that carry a group are tiled inside the area of that group, and the outline and name of a group are drawn over its tiles rather than reserved out of them, so every tile keeps the area its value earned. A group's name is set on the inverted plate, so it never reads as one more part, and it gives way wherever a part has already claimed that spot with its own label. Color follows the grouping: one palette color per group, or, with colorBy set to value, the sequential scale the heatmaps already use. A tile carries its label only where the label fits inside it, and the tooltip always states the full label, the value, the share of the total, and, for a part that belongs to a group, that group's total. A share that is not zero but rounds down to nothing reads as less than one percent, so a small part is never reported as none.",
+      "usage": "Use TreemapChart when a whole divides into more parts than a ring can carry, especially when a handful of them dominate a long tail: spending by category, storage by folder, visits by source. Pass a label for assistive technology, nodes whose labels are already localized, and a valueFormatter so every tile carries its unit. Values must be finite and at or above zero; a value that is negative, missing, or infinite is left out and reported in development, and a zero takes no area but keeps its row in the table. Keep grouping to the single level the component draws, and leave colorBy at group unless the value itself is the comparison. Give the chart a generous height, because a tile needs room before it can show its label.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Every tile is focusable and named with its group, label, value, and share, so the numbers the tooltip shows reach the keyboard as well as the pointer. The component carries a visually hidden table of the same numbers, captioned with the chart label, so no part depends on being seen: a zero-value part appears there even though it has no tile. Tile labels are omitted where they do not fit rather than clipped, and label text sits on an opaque plate so it keeps at least 4.5:1 against the tile beneath it. Area, not color alone, carries the comparison.",
+      "doList": [
+        "Give every chart a label that says which whole is divided",
+        "Format tile values with their unit in the consuming app",
+        "Keep grouping to the single level the chart draws",
+        "Give the chart enough height for tiles to carry their labels",
+        "Pass values that are finite and at or above zero",
+        "Let the table alternative carry the parts too small to label"
+      ],
+      "dontList": [
+        "Give a part a negative value to mean a reduction",
+        "Mix units across the parts of one chart",
+        "Rely on a tile label for a part too small to hold one",
+        "Compare independent totals with it (use BarChart instead)",
+        "Divide a whole into a handful of parts (use DonutChart instead)",
+        "Nest a second level of grouping inside a group"
+      ],
+      "relatedComponents": [
+        {
+          "name": "DonutChart",
+          "path": "/?path=/docs/components-chart-donutchart--docs",
+          "description": "Divides a whole into a handful of parts instead of dozens"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Ranks independent totals instead of dividing one whole"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, the tiled layout, and the tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
     }
   },
   "concept_description": "B.G. Neo Grid Design System is a design foundation that steadily advances toward the future while retaining the warmth of a sunlit, tranquil room. Within a comfortable retro environment, it establishes a platform that connects the present with what comes next by combining functionality and scalability designed for the coming era. It is a new design framework that blends the refined structure of a near-future metropolis with the lived-in retro vintage charm of the 80s and 90s. Reminiscent of a modest retro apartment room adorned with well-worn tin decor and indoor plant greenery, it conveys a modern outline that looks confidently toward the future.",
