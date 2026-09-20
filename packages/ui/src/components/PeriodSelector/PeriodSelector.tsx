@@ -9,7 +9,9 @@ export interface PeriodSelectorProps
   extends Omit<ComponentPropsWithoutRef<'fieldset'>, 'children'> {
   /** Current period as display text, already localized by the consuming app. */
   label: string;
+  /** Action of the previous step; without it and `previousHref` the step is disabled. */
   onPrevious?: () => void;
+  /** Action of the next step; without it and `nextHref` the step is disabled. */
   onNext?: () => void;
   /** URL of the previous period; renders that control as a link. */
   previousHref?: string;
@@ -36,7 +38,9 @@ interface PeriodStepProps {
   onActivate?: () => void;
 }
 
-// A bound stays a disabled button so it is neither focusable nor followable.
+// A control that cannot act is a disabled button, never a link, so it stays
+// unfocusable and unfollowable: at a bound, while the whole fieldset is
+// disabled, and when the step has neither a URL nor a handler to act with.
 // The link applies `buttonVariants` directly because Base UI's Button replaces
 // link semantics with `role="button"` on a non-button render target.
 function PeriodStep({
@@ -50,8 +54,10 @@ function PeriodStep({
   const icon = (
     <Icon appearance="solid" name={iconName} width={16} height={16} />
   );
+  const isDisabled =
+    disabled || (href === undefined && onActivate === undefined);
 
-  if (href !== undefined && !disabled) {
+  if (href !== undefined && !isDisabled) {
     return (
       <Link
         href={href}
@@ -74,7 +80,7 @@ function PeriodStep({
       color="dark"
       className={stepClassName}
       aria-label={label}
-      disabled={disabled}
+      disabled={isDisabled}
       onClick={onActivate}
     >
       {icon}
@@ -89,6 +95,7 @@ export function PeriodSelector({
   previousHref,
   nextHref,
   linkComponent = 'a',
+  disabled = false,
   previousDisabled = false,
   nextDisabled = false,
   previousLabel,
@@ -97,8 +104,11 @@ export function PeriodSelector({
   ...rest
 }: PeriodSelectorProps) {
   return (
+    // A disabled fieldset disables descendant form controls but not anchors, so
+    // each step is told about it rather than relying on the fieldset alone.
     <fieldset
       data-slot="period-selector"
+      disabled={disabled}
       className={cn(
         'inline-flex items-center gap-3 text-base-black',
         className
@@ -110,7 +120,7 @@ export function PeriodSelector({
         iconName="chevron-left"
         href={previousHref}
         linkComponent={linkComponent}
-        disabled={previousDisabled}
+        disabled={disabled || previousDisabled}
         onActivate={onPrevious}
       />
       <span
@@ -124,7 +134,7 @@ export function PeriodSelector({
         iconName="chevron-right"
         href={nextHref}
         linkComponent={linkComponent}
-        disabled={nextDisabled}
+        disabled={disabled || nextDisabled}
         onActivate={onNext}
       />
     </fieldset>

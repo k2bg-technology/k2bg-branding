@@ -169,4 +169,39 @@ describe('PeriodSelector', () => {
     expect(previousLink).toHaveAttribute('href', previousPeriodHref);
     expect(previousLink).toHaveAttribute('data-router-link');
   });
+
+  it.each`
+    hrefProp          | href                  | controlName
+    ${'previousHref'} | ${previousPeriodHref} | ${'Previous month'}
+    ${'nextHref'}     | ${nextPeriodHref}     | ${'Next month'}
+  `(
+    'keeps the $controlName control a disabled button while the whole selector is disabled',
+    ({ hrefProp, href, controlName }) => {
+      renderPeriodSelector({ disabled: true, [hrefProp]: href });
+
+      expect(screen.getByRole('button', { name: controlName })).toBeDisabled();
+      expect(
+        screen.queryByRole('link', { name: controlName })
+      ).not.toBeInTheDocument();
+    }
+  );
+
+  it.each`
+    controlName
+    ${'Previous month'}
+    ${'Next month'}
+  `(
+    'disables the $controlName control when it has neither a URL nor a handler',
+    ({ controlName }) => {
+      render(
+        <PeriodSelector
+          label="August 2026"
+          previousLabel="Previous month"
+          nextLabel="Next month"
+        />
+      );
+
+      expect(screen.getByRole('button', { name: controlName })).toBeDisabled();
+    }
+  );
 });
