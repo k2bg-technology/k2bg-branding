@@ -11,6 +11,13 @@ const seriesColorVariables: Record<ChartColor, string> = {
   'chart-3': 'var(--color-chart-3)',
   'chart-4': 'var(--color-chart-4)',
   'chart-5': 'var(--color-chart-5)',
+  'chart-6': 'var(--color-chart-6)',
+  'chart-7': 'var(--color-chart-7)',
+  'chart-8': 'var(--color-chart-8)',
+  'chart-9': 'var(--color-chart-9)',
+  'chart-10': 'var(--color-chart-10)',
+  'chart-11': 'var(--color-chart-11)',
+  'chart-12': 'var(--color-chart-12)',
   success: 'var(--color-success)',
   error: 'var(--color-error)',
   warning: 'var(--color-warning)',
@@ -23,7 +30,20 @@ const paletteOrder: ChartColor[] = [
   'chart-3',
   'chart-4',
   'chart-5',
+  'chart-6',
+  'chart-7',
+  'chart-8',
+  'chart-9',
+  'chart-10',
+  'chart-11',
+  'chart-12',
 ];
+
+/** How many series the palette can tell apart before colors run out. */
+export const CHART_PALETTE_SIZE = paletteOrder.length;
+
+/** Series past the palette share this neutral instead of a palette color. */
+const overflowColorCss = 'var(--color-chart-overflow)';
 
 export function seriesColorCss(color: ChartColor): string {
   return seriesColorVariables[color];
@@ -33,8 +53,15 @@ export function resolveSeriesColor(
   series: { color?: ChartColor },
   index: number
 ): string {
-  const color = series.color ?? paletteOrder[index % paletteOrder.length];
-  return seriesColorCss(color);
+  if (series.color) {
+    return seriesColorCss(series.color);
+  }
+  // Cycling the palette would hand two series one color and read as one group.
+  // Folding the excess into a remainder is the caller's decision, so the chart
+  // only declines to claim a thirteenth identity it does not have.
+  return index >= 0 && index < CHART_PALETTE_SIZE
+    ? seriesColorCss(paletteOrder[index])
+    : overflowColorCss;
 }
 
 /**
