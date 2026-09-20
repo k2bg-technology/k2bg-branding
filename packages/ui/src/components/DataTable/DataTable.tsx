@@ -1,3 +1,6 @@
+'use client';
+// `ScrollArea` is client-only, and composing it makes this component the client boundary.
+
 import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 import { cn } from '../../utils/cn';

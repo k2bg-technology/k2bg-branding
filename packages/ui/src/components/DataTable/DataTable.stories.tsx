@@ -1,5 +1,5 @@
 import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import { DataTable, type DataTableColumn, type DataTableRow } from '.';
 
@@ -232,13 +232,11 @@ export const TwelveColumns: Story = {
       scrollRegion.querySelectorAll<HTMLElement>('[data-slot="data-table"]')
     );
 
-    await expect(scrollPort.scrollWidth).toBeGreaterThan(
-      scrollPort.clientWidth
-    );
-    await expect(scrollPort.tabIndex).toBe(0);
-    await expect(frame.offsetWidth).toBeLessThanOrEqual(
-      scrollRegion.clientWidth
-    );
+    await waitFor(() => {
+      expect(scrollPort.scrollWidth).toBeGreaterThan(scrollPort.clientWidth);
+      expect(scrollPort.tabIndex).toBe(0);
+      expect(frame.offsetWidth).toBeLessThanOrEqual(scrollRegion.clientWidth);
+    });
   },
 };
 
@@ -262,18 +260,23 @@ export const PivotLayout: Story = {
     const scrollRegion = canvas.getByRole('region', { name: args.caption });
     const scrollPort = scrollPortOf(scrollRegion);
     const [firstRowHeader] = canvas.getAllByRole('rowheader');
-    const restingLeft = firstRowHeader.getBoundingClientRect().left;
 
+    await waitFor(() => {
+      expect(scrollPort.scrollWidth).toBeGreaterThan(scrollPort.clientWidth);
+    });
+
+    const restingLeft = firstRowHeader.getBoundingClientRect().left;
     scrollPort.scrollLeft = scrollPort.scrollWidth;
 
-    await expect(scrollPort.scrollLeft).toBeGreaterThan(0);
-    await expect(
-      Math.abs(firstRowHeader.getBoundingClientRect().left - restingLeft)
-    ).toBeLessThan(1);
-    const captionOverhang =
-      scrollPort.getBoundingClientRect().left -
-      canvas.getByText(args.caption).getBoundingClientRect().left;
-
-    await expect(captionOverhang).toBeLessThan(1);
+    await waitFor(() => {
+      expect(scrollPort.scrollLeft).toBeGreaterThan(0);
+      expect(
+        Math.abs(firstRowHeader.getBoundingClientRect().left - restingLeft)
+      ).toBeLessThan(1);
+      expect(
+        scrollPort.getBoundingClientRect().left -
+          canvas.getByText(args.caption).getBoundingClientRect().left
+      ).toBeLessThan(1);
+    });
   },
 };

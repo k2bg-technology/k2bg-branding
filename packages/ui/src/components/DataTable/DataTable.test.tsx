@@ -379,4 +379,32 @@ describe('DataTable', () => {
 
     expect(screen.queryByRole('rowheader')).not.toBeInTheDocument();
   });
+
+  it('keeps a right-aligned first column as data cells even when it is sticky', async () => {
+    const numberFirstColumns: DataTableColumn[] = [
+      { id: 'january', header: 'January', align: 'end' },
+      { id: 'category', header: 'Category' },
+    ];
+    const numberFirstRows: DataTableRow[] = [
+      { id: 'housing', cells: { january: '¥120,000', category: 'Housing' } },
+    ];
+
+    await renderDataTable(
+      <DataTable
+        caption="Spending by month"
+        columns={numberFirstColumns}
+        rows={numberFirstRows}
+        footer={{ january: '¥168,000', category: 'Total' }}
+        stickyFirstColumn
+      />
+    );
+
+    expect(screen.queryByRole('rowheader')).not.toBeInTheDocument();
+    const totalsRow = screen.getByRole('row', { name: /¥168,000/ });
+    expect(
+      within(totalsRow)
+        .getAllByRole('cell')
+        .map((cell) => cell.textContent)
+    ).toEqual(['¥168,000', 'Total']);
+  });
 });
