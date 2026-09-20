@@ -18,6 +18,38 @@ const wednesday: WeekStartDay = 3;
 const defaultColumnWidth = 14;
 /** A 4px cell plus the gap, narrow enough for labels to run into each other. */
 const narrowColumnWidth = 6;
+/** Narrower still, so a two-glyph CJK month name spans five columns. */
+const wideGlyphColumnWidth = 4;
+
+/** Locale week information counts Monday as 1 through Sunday as 7. */
+const sundayFirstDay = 7;
+
+/** An engine that exposes week information as a property, not as a method. */
+class LocaleWithWeekInfoProperty {
+  readonly weekInfo = { firstDay: sundayFirstDay };
+}
+
+/** An engine that exposes no week information at all. */
+class LocaleWithoutWeekInfo {
+  readonly baseName = 'en-US';
+}
+
+/** Reads a value with `Intl.Locale` swapped for another engine's. */
+function withLocaleEngine<T>(
+  engine: new (tag: string) => object,
+  read: () => T
+): T {
+  const original = Intl.Locale;
+  Object.defineProperty(Intl, 'Locale', { value: engine, configurable: true });
+  try {
+    return read();
+  } finally {
+    Object.defineProperty(Intl, 'Locale', {
+      value: original,
+      configurable: true,
+    });
+  }
+}
 
 /** Whole weeks of consecutive days, in the column-major order the grid uses. */
 function gridDates(start: string, weeks: number): string[] {
@@ -46,6 +78,23 @@ describe('resolveWeekStart', () => {
 
   it('lets the given week start win over the locale', () => {
     const result = resolveWeekStart({ locale: 'en-US', weekStartsOn: monday });
+
+    expect(result).toBe(monday);
+  });
+
+  it('reads the first day of the week from a weekInfo property', () => {
+    // A locale this runtime starts on Monday, so only the property can answer.
+    const result = withLocaleEngine(LocaleWithWeekInfoProperty, () =>
+      resolveWeekStart({ locale: 'de-DE' })
+    );
+
+    expect(result).toBe(sunday);
+  });
+
+  it('starts the week on Monday when the engine knows no week information', () => {
+    const result = withLocaleEngine(LocaleWithoutWeekInfo, () =>
+      resolveWeekStart({ locale: 'en-US' })
+    );
 
     expect(result).toBe(monday);
   });
@@ -109,6 +158,21 @@ describe('calendarMonthLabels', () => {
     expect(result).toEqual([
       { columnIndex: 1, text: '12' },
       { columnIndex: 5, text: '2026/1' },
+    ]);
+  });
+
+  it('skips a label a wide-glyph month name would run into', () => {
+    // 2025-12-29 is a Monday, and `1月` spans five columns at this width while
+    // February starts only four columns along.
+    const result = calendarMonthLabels({
+      dates: gridDates('2025-12-29', 10),
+      columnWidth: wideGlyphColumnWidth,
+      locale: 'ja-JP',
+    });
+
+    expect(result).toEqual([
+      { columnIndex: 0, text: '1月' },
+      { columnIndex: 8, text: '3月' },
     ]);
   });
 

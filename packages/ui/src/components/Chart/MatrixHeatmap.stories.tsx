@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import { ChartColor, MatrixHeatmap } from '.';
 
@@ -159,10 +159,14 @@ export const TwentyFourColumnsNarrow: Story = {
     const grid = canvas.getByRole('img', { name: args.label });
     const viewport = scrollPort(canvasElement);
 
-    // 24 hour columns outgrow this card.
-    await expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
-    // A scrolling region has to be reachable by keyboard (WCAG 2.1.1).
-    await expect(viewport.tabIndex).toBe(0);
+    // The scroll area derives the focusable state from a measurement it takes
+    // after layout, so it can land a frame later than this play does.
+    await waitFor(() => {
+      // 24 hour columns outgrow this card.
+      expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
+      // A scrolling region has to be reachable by keyboard (WCAG 2.1.1).
+      expect(viewport.tabIndex).toBe(0);
+    });
 
     viewport.scrollLeft = viewport.scrollWidth;
 
@@ -174,34 +178,42 @@ export const TwentyFourColumnsNarrow: Story = {
     const cells = Array.from(
       grid.querySelectorAll<HTMLElement>('[data-slot="matrix-heatmap-cell"]')
     );
-    const centreOffsets = labels.map((label, rowIndex) => {
-      const labelBox = label.getBoundingClientRect();
-      const cellBox =
-        cells[rowIndex * args.columns.length].getBoundingClientRect();
-      return Math.abs(
-        labelBox.top + labelBox.height / 2 - (cellBox.top + cellBox.height / 2)
+
+    // Scrolled to the end, every label still sits on the row it names.
+    await waitFor(() => {
+      const centreOffsets = labels.map((label, rowIndex) => {
+        const labelBox = label.getBoundingClientRect();
+        const cellBox =
+          cells[rowIndex * args.columns.length].getBoundingClientRect();
+        return Math.abs(
+          labelBox.top +
+            labelBox.height / 2 -
+            (cellBox.top + cellBox.height / 2)
+        );
+      });
+
+      expect(Math.max(...centreOffsets)).toBeLessThanOrEqual(
+        alignmentTolerance
       );
     });
 
-    // Scrolled to the end, every label still sits on the row it names.
-    await expect(Math.max(...centreOffsets)).toBeLessThanOrEqual(
-      alignmentTolerance
-    );
-
     // No cell is drawn over a label: the port clips them, and a clipped cell
     // keeps its off-screen bounding box, so compare against the visible part.
-    const portLeft = viewport.getBoundingClientRect().left;
-    const labelRight = Math.max(
-      ...labels.map((label) => label.getBoundingClientRect().right)
-    );
-    const visibleCellLeft = Math.min(
-      ...cells.map((cell) =>
-        Math.max(cell.getBoundingClientRect().left, portLeft)
-      )
-    );
-    await expect(visibleCellLeft).toBeGreaterThanOrEqual(
-      labelRight - subpixelTolerance
-    );
+    await waitFor(() => {
+      const portLeft = viewport.getBoundingClientRect().left;
+      const labelRight = Math.max(
+        ...labels.map((label) => label.getBoundingClientRect().right)
+      );
+      const visibleCellLeft = Math.min(
+        ...cells.map((cell) =>
+          Math.max(cell.getBoundingClientRect().left, portLeft)
+        )
+      );
+
+      expect(visibleCellLeft).toBeGreaterThanOrEqual(
+        labelRight - subpixelTolerance
+      );
+    });
   },
 };
 
@@ -238,15 +250,19 @@ export const ZeroVersusEmpty: Story = {
     await expect(cells[3].title).toBe('Tue Morning: No reading');
 
     // Three capped cells leave this card with width to spare: it stays beside
-    // the grid instead of widening the row-label column.
+    // the grid instead of widening the row-label column. Measured under
+    // `waitFor` so a late font or measurement cannot decide the comparison.
     const rowLabel = canvas.getByText('Tue');
-    const textBounds = document.createRange();
-    textBounds.selectNodeContents(rowLabel);
 
-    await expect(rowLabel.getBoundingClientRect().width).toBeLessThanOrEqual(
-      textBounds.getBoundingClientRect().width +
-        rowLabelPaddingWidth +
-        subpixelTolerance
-    );
+    await waitFor(() => {
+      const textBounds = document.createRange();
+      textBounds.selectNodeContents(rowLabel);
+
+      expect(rowLabel.getBoundingClientRect().width).toBeLessThanOrEqual(
+        textBounds.getBoundingClientRect().width +
+          rowLabelPaddingWidth +
+          subpixelTolerance
+      );
+    });
   },
 };

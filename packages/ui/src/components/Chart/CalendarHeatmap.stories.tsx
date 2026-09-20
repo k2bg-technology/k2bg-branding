@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, waitFor } from 'storybook/test';
 
 import { CalendarHeatmap, type CalendarHeatmapDay, ChartColor } from '.';
 
@@ -170,9 +170,13 @@ export const NarrowContainer: Story = {
     await expect(root?.getBoundingClientRect().width ?? 0).toBeLessThanOrEqual(
       cardWidth + subpixelTolerance
     );
-    await expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
-    // A scrolling region has to be reachable by keyboard (WCAG 2.1.1).
-    await expect(viewport.tabIndex).toBe(0);
+    // The scroll area derives the focusable state from a measurement it takes
+    // after layout, so it can land a frame later than this play does.
+    await waitFor(() => {
+      expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
+      // A scrolling region has to be reachable by keyboard (WCAG 2.1.1).
+      expect(viewport.tabIndex).toBe(0);
+    });
 
     viewport.scrollLeft = viewport.scrollWidth;
 
@@ -185,33 +189,41 @@ export const NarrowContainer: Story = {
     const cells = Array.from(
       grid.querySelectorAll<HTMLElement>('[data-slot="calendar-heatmap-cell"]')
     );
-    const centreOffsets = labels.map((label, rowIndex) => {
-      const labelBox = label.getBoundingClientRect();
-      const cellBox = cells[rowIndex].getBoundingClientRect();
-      return Math.abs(
-        labelBox.top + labelBox.height / 2 - (cellBox.top + cellBox.height / 2)
+
+    // Scrolled to the end, every label still sits on the row it names.
+    await waitFor(() => {
+      const centreOffsets = labels.map((label, rowIndex) => {
+        const labelBox = label.getBoundingClientRect();
+        const cellBox = cells[rowIndex].getBoundingClientRect();
+        return Math.abs(
+          labelBox.top +
+            labelBox.height / 2 -
+            (cellBox.top + cellBox.height / 2)
+        );
+      });
+
+      expect(Math.max(...centreOffsets)).toBeLessThanOrEqual(
+        alignmentTolerance
       );
     });
 
-    // Scrolled to the end, every label still sits on the row it names.
-    await expect(Math.max(...centreOffsets)).toBeLessThanOrEqual(
-      alignmentTolerance
-    );
-
     // No cell is drawn over a label: the port clips them, and a clipped cell
     // keeps its off-screen bounding box, so compare against the visible part.
-    const portLeft = viewport.getBoundingClientRect().left;
-    const labelRight = Math.max(
-      ...labels.map((label) => label.getBoundingClientRect().right)
-    );
-    const visibleCellLeft = Math.min(
-      ...cells.map((cell) =>
-        Math.max(cell.getBoundingClientRect().left, portLeft)
-      )
-    );
-    await expect(visibleCellLeft).toBeGreaterThanOrEqual(
-      labelRight - subpixelTolerance
-    );
+    await waitFor(() => {
+      const portLeft = viewport.getBoundingClientRect().left;
+      const labelRight = Math.max(
+        ...labels.map((label) => label.getBoundingClientRect().right)
+      );
+      const visibleCellLeft = Math.min(
+        ...cells.map((cell) =>
+          Math.max(cell.getBoundingClientRect().left, portLeft)
+        )
+      );
+
+      expect(visibleCellLeft).toBeGreaterThanOrEqual(
+        labelRight - subpixelTolerance
+      );
+    });
   },
 };
 

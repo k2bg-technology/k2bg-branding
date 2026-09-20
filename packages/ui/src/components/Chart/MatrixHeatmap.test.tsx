@@ -362,6 +362,23 @@ describe('MatrixHeatmap', () => {
     ).toHaveAccessibleDescription(`${defaultEmptyLabel}: ${missingCount}`);
   });
 
+  it('counts the cells a short row never reaches', async () => {
+    const label = 'Carbon dioxide';
+
+    await renderHeatmap(
+      <MatrixHeatmap
+        label={label}
+        rows={['00:00']}
+        columns={weekdayColumns}
+        values={[[430]]}
+      />
+    );
+
+    expect(
+      screen.getByRole('img', { name: label })
+    ).toHaveAccessibleDescription(`${defaultEmptyLabel}: 1`);
+  });
+
   it('builds the description from the given empty label', async () => {
     const label = 'Carbon dioxide';
     const emptyLabel = 'データなし';
