@@ -2,12 +2,13 @@ import { describe, expect, it } from 'vitest';
 
 import {
   heatmapCellColor,
-  heatmapFilledLevels,
+  heatmapEmptyCellBackgroundImage,
   heatmapLevel,
+  heatmapScaleLevels,
 } from './chartHeatmapScale';
 import { ChartColor } from './types';
 
-const emptyLevel = 0;
+const lowestLevel = 0;
 const topLevel = 4;
 const scaleMin = 0;
 const scaleMax = 100;
@@ -72,24 +73,19 @@ describe('heatmapLevel', () => {
     expect(result).toBe(topLevel);
   });
 
-  it('returns the empty level when a collapsed range meets the value', () => {
+  it('returns the lowest level when a collapsed range meets the value', () => {
     const collapsedBound = 7;
 
     const result = heatmapLevel(collapsedBound, collapsedBound, collapsedBound);
 
-    expect(result).toBe(emptyLevel);
+    expect(result).toBe(lowestLevel);
   });
 });
 
 describe('heatmapCellColor', () => {
-  it('paints the empty level as the neutral surface', () => {
-    const result = heatmapCellColor(emptyLevel, ChartColor.CHART_1);
-
-    expect(result).toBe('var(--color-base-light)');
-  });
-
   it.each`
     level | percentage
+    ${0}  | ${20}
     ${1}  | ${40}
     ${2}  | ${60}
     ${3}  | ${80}
@@ -114,8 +110,16 @@ describe('heatmapCellColor', () => {
   });
 });
 
-describe('heatmapFilledLevels', () => {
-  it('lists the four filled levels in ascending order', () => {
-    expect(heatmapFilledLevels).toEqual([1, 2, 3, 4]);
+describe('heatmapScaleLevels', () => {
+  it('lists every filled level in ascending order', () => {
+    expect(heatmapScaleLevels).toEqual([0, 1, 2, 3, 4]);
+  });
+});
+
+describe('heatmapEmptyCellBackgroundImage', () => {
+  it('hatches the cell instead of filling it with a color', () => {
+    expect(heatmapEmptyCellBackgroundImage).toContain(
+      'repeating-linear-gradient'
+    );
   });
 });
