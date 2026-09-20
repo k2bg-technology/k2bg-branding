@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Decorator, Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
 
-import { DataTable } from '.';
+import { DataTable, type DataTableColumn, type DataTableRow } from '.';
 
 const allocationColumns = [
   { id: 'assetClass', header: 'Asset class' },
@@ -27,6 +28,121 @@ const allocationRows = [
   },
 ];
 
+const monthLabels = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+];
+
+const spendingCategories = [
+  'Housing',
+  'Food',
+  'Transport',
+  'Utilities',
+  'Leisure',
+];
+
+/** Deterministic stand-in for sampled data, so every render is identical. */
+function monthlyAmount(categoryIndex: number, monthIndex: number): number {
+  return 40000 + categoryIndex * 18000 + monthIndex * 1300;
+}
+
+function formatYen(amount: number): string {
+  return `¥${amount.toLocaleString('en-US')}`;
+}
+
+function rowTotal(categoryIndex: number): number {
+  return monthLabels.reduce(
+    (total, _, monthIndex) => total + monthlyAmount(categoryIndex, monthIndex),
+    0
+  );
+}
+
+function columnTotal(monthIndex: number): number {
+  return spendingCategories.reduce(
+    (total, _, categoryIndex) =>
+      total + monthlyAmount(categoryIndex, monthIndex),
+    0
+  );
+}
+
+/** Cells for every month column, keyed by the month column ids. */
+function monthCells(
+  amountAt: (monthIndex: number) => number
+): DataTableRow['cells'] {
+  return monthLabels.reduce<DataTableRow['cells']>(
+    (cells, month, monthIndex) => {
+      cells[month.toLowerCase()] = formatYen(amountAt(monthIndex));
+      return cells;
+    },
+    {}
+  );
+}
+
+/** One label column plus eleven month columns: wider than any dashboard panel. */
+const spendingColumns: DataTableColumn[] = [
+  { id: 'category', header: 'Category' },
+  ...monthLabels.map((month) => ({
+    id: month.toLowerCase(),
+    header: month,
+    align: 'end' as const,
+  })),
+];
+
+const spendingRows: DataTableRow[] = spendingCategories.map(
+  (category, categoryIndex) => ({
+    id: category.toLowerCase(),
+    cells: {
+      category,
+      ...monthCells((monthIndex) => monthlyAmount(categoryIndex, monthIndex)),
+    },
+  })
+);
+
+const grandTotal = spendingCategories.reduce(
+  (total, _, categoryIndex) => total + rowTotal(categoryIndex),
+  0
+);
+
+const pivotColumns: DataTableColumn[] = [
+  ...spendingColumns,
+  { id: 'total', header: 'Total', align: 'end', emphasis: true },
+];
+
+const pivotRows: DataTableRow[] = spendingRows.map((row, categoryIndex) => ({
+  ...row,
+  cells: { ...row.cells, total: formatYen(rowTotal(categoryIndex)) },
+}));
+
+const pivotFooter: DataTableRow['cells'] = {
+  category: 'Total',
+  ...monthCells(columnTotal),
+  total: formatYen(grandTotal),
+};
+
+/** A fixed-width host, so a wide table overflows at every viewport the tests run in. */
+const narrowHost: Decorator = (Story) => (
+  <div className="w-[640px]">
+    <Story />
+  </div>
+);
+
+/** Base UI's scroll area marks its viewport — the real scroll port — with this data id. */
+function scrollPortOf(scrollRegion: HTMLElement): HTMLElement {
+  const [viewport] = Array.from(
+    scrollRegion.querySelectorAll<HTMLElement>('[data-id$="-viewport"]')
+  );
+  return viewport;
+}
+
 const meta = {
   component: DataTable,
   args: {
@@ -37,6 +153,8 @@ const meta = {
   argTypes: {
     visuallyHiddenCaption: { control: 'boolean' },
     emptyMessage: { control: 'text' },
+    stickyFirstColumn: { control: 'boolean' },
+    footer: { control: 'object' },
   },
   parameters: {
     docs: {
@@ -97,5 +215,68 @@ export const Empty: Story = {
     caption: 'Allocation by asset class, September 2026',
     rows: [],
     emptyMessage: 'No allocations recorded for this period',
+  },
+};
+
+export const TwelveColumns: Story = {
+  args: {
+    caption: 'Spending by category, January to November 2026',
+    columns: spendingColumns,
+    rows: spendingRows,
+  },
+  decorators: [narrowHost],
+  play: async ({ args, canvas }) => {
+    const scrollRegion = canvas.getByRole('region', { name: args.caption });
+    const scrollPort = scrollPortOf(scrollRegion);
+    const [frame] = Array.from(
+      scrollRegion.querySelectorAll<HTMLElement>('[data-slot="data-table"]')
+    );
+
+    await waitFor(() => {
+      expect(scrollPort.scrollWidth).toBeGreaterThan(scrollPort.clientWidth);
+      expect(scrollPort.tabIndex).toBe(0);
+      expect(frame.offsetWidth).toBeLessThanOrEqual(scrollRegion.clientWidth);
+    });
+  },
+};
+
+export const WithFooterTotals: Story = {
+  args: {
+    caption: 'Allocation by asset class with totals, August 2026',
+    footer: { assetClass: 'Total', value: '¥12,480,000', share: '100.0%' },
+  },
+};
+
+export const PivotLayout: Story = {
+  args: {
+    caption: 'Spending by category and month, January to November 2026',
+    columns: pivotColumns,
+    rows: pivotRows,
+    footer: pivotFooter,
+    stickyFirstColumn: true,
+  },
+  decorators: [narrowHost],
+  play: async ({ args, canvas }) => {
+    const scrollRegion = canvas.getByRole('region', { name: args.caption });
+    const scrollPort = scrollPortOf(scrollRegion);
+    const [firstRowHeader] = canvas.getAllByRole('rowheader');
+
+    await waitFor(() => {
+      expect(scrollPort.scrollWidth).toBeGreaterThan(scrollPort.clientWidth);
+    });
+
+    const restingLeft = firstRowHeader.getBoundingClientRect().left;
+    scrollPort.scrollLeft = scrollPort.scrollWidth;
+
+    await waitFor(() => {
+      expect(scrollPort.scrollLeft).toBeGreaterThan(0);
+      expect(
+        Math.abs(firstRowHeader.getBoundingClientRect().left - restingLeft)
+      ).toBeLessThan(1);
+      expect(
+        scrollPort.getBoundingClientRect().left -
+          canvas.getByText(args.caption).getBoundingClientRect().left
+      ).toBeLessThan(1);
+    });
   },
 };
