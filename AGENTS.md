@@ -379,7 +379,18 @@ rather than guess. (Claude Code: use the `k2bg-design-system` MCP tools — see 
 Codex posts only P0/P1 issues. Review the whole pull request each time and report every
 P0/P1 issue found in one review. A re-review verifies the earlier findings and the changes
 made since, including their effect on unchanged code; a newly found P0/P1 issue is reported
-wherever it is, and a resolved finding is not raised again unless the problem remains.
+wherever it is. A finding that was resolved, or dismissed on its thread with a reason, is not
+repeated while the fix or the reason holds; it is raised again only with concrete evidence
+that the defect remains or that the reason is wrong, and the finding states that evidence.
+
+A finding names a scenario the repository can reach. A scenario is reachable when a unit's
+public contract accepts it — a prop combination a component allows, a request a route can
+receive, hostile input at a trust boundary — with values realistic for the domain and on a
+supported runtime. The absence of a current call site does not make a scenario unreachable,
+and being representable in a type does not make it reachable. Judge realism at the
+repository's scale: personal sites and local-only tools with one maintainer. Outside that
+reach (magnitudes near numeric limits, a runtime without an API that every supported runtime
+provides), only a security exposure, data loss, or a crash is a finding.
 
 Apply these rules when reviewing a pull request:
 
@@ -397,7 +408,10 @@ Apply these rules when reviewing a pull request:
   Chromatic, and the Storybook accessibility check, and Scene Studio primitives by their demo
   compositions; none of these calls for a unit test, and a visual branch alone does not
   justify extracting a helper. Tests assert at the smallest public boundary that shows the
-  behavior and follow `.claude/rules/unit-test-guidelines.md`.
+  behavior and follow `.claude/rules/unit-test-guidelines.md`. One behavior needs one
+  asserting test: inputs that the same expression treats alike (a short row and an absent
+  row, both read as missing) are one behavior, and a test for the sibling input is not a
+  finding. Code that only guards an unreachable scenario needs no test.
 - **Clean Architecture violations (P1):** Wrong dependency direction or layer-boundary
   crossings in the blog app's `domain` / `use-cases` / `adapters` slices.
   See the `clean-architecture-guidelines` skill.
@@ -416,3 +430,5 @@ Defer formatting/style nits already enforced by Biome; do not duplicate lint out
   unless asked), and `@codex fix the P1 issue` for small, scoped corrections.
 - **Claude (`@claude` / local Claude Code) = primary implementer** for feature work.
 - Keep the two agents from overlapping: do not ask both to implement the same PR.
+- A reported finding that the reach rule in "Codex Review Guidelines" excludes is dismissed
+  on its thread with the reason instead of being fixed.
