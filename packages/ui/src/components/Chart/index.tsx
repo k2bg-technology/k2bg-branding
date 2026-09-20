@@ -33,6 +33,11 @@ export {
 export { Sparkline, type SparklineProps } from './Sparkline';
 export { TimeSeriesChart, type TimeSeriesChartProps } from './TimeSeriesChart';
 export {
+  TreemapChart,
+  type TreemapChartNode,
+  type TreemapChartProps,
+} from './TreemapChart';
+export {
   type BarSeries,
   ChartColor,
   type ChartHeight,
