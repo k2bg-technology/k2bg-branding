@@ -36,6 +36,8 @@ export interface TimeSeriesPoint {
   value: number | null;
 }
 
+export type ChartLineStyle = 'solid' | 'dashed';
+
 export interface TimeSeriesSeries {
   /** Discriminates plain measurements from band series; defaults to a line. */
   kind?: 'line';
@@ -44,6 +46,12 @@ export interface TimeSeriesSeries {
   label: string;
   color?: ChartColor;
   interpolation?: ChartInterpolation;
+  /** Dashed separates an overlay from its source without color; defaults to solid. */
+  lineStyle?: ChartLineStyle;
+  /** Stroke width in pixels; defaults to 2. */
+  strokeWidth?: number;
+  /** Stroke and fill opacity from 0 to 1; defaults to fully opaque. */
+  opacity?: number;
   points: TimeSeriesPoint[];
 }
 

@@ -212,3 +212,109 @@ describe('TimeSeriesChart', () => {
     ]);
   });
 });
+
+describe('TimeSeriesChart series style', () => {
+  it.each`
+    variant   | curveSelector
+    ${'line'} | ${'.recharts-line-curve'}
+    ${'area'} | ${'.recharts-area-curve'}
+  `(
+    'dashes a dashed series in the $variant variant',
+    ({ variant, curveSelector }) => {
+      const { container } = render(
+        <TimeSeriesChart
+          label="Temperature"
+          period="month"
+          variant={variant}
+          series={[createSeries({ lineStyle: 'dashed' })]}
+        />
+      );
+
+      expect(container.querySelector(curveSelector)).toHaveAttribute(
+        'stroke-dasharray'
+      );
+    }
+  );
+
+  it.each`
+    lineStyle    | expectsDashes
+    ${undefined} | ${false}
+    ${'solid'}   | ${false}
+    ${'dashed'}  | ${true}
+  `(
+    'draws dashes: $expectsDashes for a $lineStyle series',
+    ({ lineStyle, expectsDashes }) => {
+      const { container } = render(
+        <TimeSeriesChart
+          label="Temperature"
+          period="month"
+          series={[createSeries({ lineStyle })]}
+        />
+      );
+
+      expect(
+        container
+          .querySelector('.recharts-line-curve')
+          ?.hasAttribute('stroke-dasharray')
+      ).toBe(expectsDashes);
+    }
+  );
+
+  it('draws the series with its own stroke width', () => {
+    const strokeWidth = 4;
+
+    const { container } = render(
+      <TimeSeriesChart
+        label="Temperature"
+        period="month"
+        series={[createSeries({ strokeWidth })]}
+      />
+    );
+
+    expect(container.querySelector('.recharts-line-curve')).toHaveAttribute(
+      'stroke-width',
+      String(strokeWidth)
+    );
+  });
+
+  it('fades the series to its own opacity', () => {
+    const opacity = 0.5;
+
+    const { container } = render(
+      <TimeSeriesChart
+        label="Temperature"
+        period="month"
+        series={[createSeries({ opacity })]}
+      />
+    );
+
+    expect(container.querySelector('.recharts-line-curve')).toHaveAttribute(
+      'stroke-opacity',
+      String(opacity)
+    );
+  });
+
+  it.each`
+    lineStyle    | expectsDashedMarker
+    ${undefined} | ${false}
+    ${'dashed'}  | ${true}
+  `(
+    'marks a $lineStyle legend entry with a dashed marker: $expectsDashedMarker',
+    ({ lineStyle, expectsDashedMarker }) => {
+      render(
+        <TimeSeriesChart
+          label="Temperature"
+          period="month"
+          showLegend
+          series={[createSeries({ lineStyle })]}
+        />
+      );
+
+      expect(
+        screen
+          .getByRole('listitem')
+          .querySelector('[data-slot="chart-legend-dash"]') !== null
+      ).toBe(expectsDashedMarker);
+    }
+  );
+});
