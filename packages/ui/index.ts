@@ -42,6 +42,9 @@ export {
   type TimeSeriesChartSeries,
   type TimeSeriesPoint,
   type TimeSeriesSeries,
+  TreemapChart,
+  type TreemapChartNode,
+  type TreemapChartProps,
 } from './src/components/Chart';
 export {
   DataTable,
