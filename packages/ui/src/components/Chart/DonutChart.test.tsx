@@ -163,12 +163,14 @@ describe('DonutChart', () => {
   });
 
   // The budget is the advance of the glyphs actually present: a half-width
-  // character counts as 0.62em, a full-width or CJK one as a whole em.
+  // character counts as 0.62em, a full-width or CJK one as a whole em. The
+  // supplementary-plane ideograph is two UTF-16 units but still one wide glyph.
   it.each`
-    width            | centerValue               | advance
-    ${'half-width'}  | ${'¥1,234,567'}           | ${'6.2'}
-    ${'full-width'}  | ${'１２３４５６７８９円'} | ${'10'}
-    ${'mixed-width'} | ${'1,234万円'}            | ${'5.1'}
+    width              | centerValue               | advance
+    ${'half-width'}    | ${'¥1,234,567'}           | ${'6.2'}
+    ${'full-width'}    | ${'１２３４５６７８９円'} | ${'10'}
+    ${'mixed-width'}   | ${'1,234万円'}            | ${'5.1'}
+    ${'supplementary'} | ${'𠮟'}                   | ${'1'}
   `(
     'budgets $advance em of font size for a $width center value',
     ({ centerValue, advance }) => {

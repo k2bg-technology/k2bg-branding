@@ -35,20 +35,43 @@ function hoveredSliceId(payload: TooltipContentProps['payload']): string {
   return '';
 }
 
-// CJK scripts, CJK punctuation and the full-width forms fall back to a Japanese
-// face and advance about a full em. The half-width kana at U+FF61-U+FFEE sit
-// between the two full-width blocks, so they stay outside the ranges.
-const fullWidthPattern =
-  /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Hangul}\u{3000}-\u{303F}\u{FF01}-\u{FF60}\u{FFE0}-\u{FFE6}]/u;
+// Blocks whose glyphs fall back to a Japanese face and advance about a full em.
+// The half-width kana at U+FF61-U+FFEE sit between the two full-width blocks,
+// so they stay outside the ranges. These are code points rather than a regular
+// expression because the apps type-check these sources with their own compiler
+// target and the portfolio targets ES5, which rules out the `u` flag, and the
+// formatter rewrites `\uXXXX` in a pattern into unreadable literal characters.
+const fullWidthRanges = [
+  [0x3000, 0x303f], // CJK symbols and punctuation
+  [0x3040, 0x309f], // Hiragana
+  [0x30a0, 0x30ff], // Katakana
+  [0x3400, 0x4dbf], // CJK unified ideographs extension A
+  [0x4e00, 0x9fff], // CJK unified ideographs
+  [0xac00, 0xd7af], // Hangul syllables
+  [0xff01, 0xff60], // Full-width forms
+  [0xffe0, 0xffe6], // Full-width symbols
+] as const;
 
 /** Advance of a half-width character in the brand font stack, as an upper bound. */
 const halfWidthAdvance = 0.62;
+
+function isFullWidth(character: string): boolean {
+  // Outside the BMP `Array.from` yields a two-unit string, and such a character
+  // in a value is always a wide ideograph or an emoji.
+  if (character.length > 1) {
+    return true;
+  }
+  const codePoint = character.charCodeAt(0);
+  return fullWidthRanges.some(
+    ([start, end]) => codePoint >= start && codePoint <= end
+  );
+}
 
 /** Advance of the whole text in `em`, counting each character at its own width. */
 function textAdvance(text: string): number {
   const advance = Array.from(text).reduce(
     (total, character) =>
-      total + (fullWidthPattern.test(character) ? 1 : halfWidthAdvance),
+      total + (isFullWidth(character) ? 1 : halfWidthAdvance),
     0
   );
   return Math.round(advance * 100) / 100;
