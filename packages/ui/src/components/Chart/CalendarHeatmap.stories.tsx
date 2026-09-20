@@ -11,10 +11,11 @@ function pseudoRandom(seed: number): number {
   return value - Math.floor(value);
 }
 
-/** 2026-02-23 is a Monday, so 182 days fill exactly 26 whole weeks. */
-function buildStepDays(): CalendarHeatmapDay[] {
-  const startTime = Date.UTC(2026, 1, 23);
-  return Array.from({ length: 182 }, (_, index) => {
+function buildStepDays(
+  startTime: number,
+  dayCount: number
+): CalendarHeatmapDay[] {
+  return Array.from({ length: dayCount }, (_, index) => {
     const date = new Date(startTime + index * dayMs).toISOString().slice(0, 10);
     const noise = pseudoRandom(index);
     if (noise > 0.94) {
@@ -31,13 +32,32 @@ function buildStepDays(): CalendarHeatmapDay[] {
   });
 }
 
+/** 2026-02-23 is a Monday, so 182 days fill exactly 26 whole weeks. */
+const halfYearOfSteps = buildStepDays(Date.UTC(2026, 1, 23), 182);
+/** 2025-11-24 is a Monday, and 52 weeks from it run across the turn of the year. */
+const fullYearOfSteps = buildStepDays(Date.UTC(2025, 10, 24), 364);
+
 const weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const scaleLabels = { less: 'Less', more: 'More' };
+const subpixelTolerance = 2;
+const alignmentTolerance = 1;
+
+/** The scroll area marks its scrolling element with a `-viewport` id. */
+function scrollPort(canvasElement: HTMLElement): HTMLElement {
+  const viewport = canvasElement.querySelector<HTMLElement>(
+    '[data-id$="-viewport"]'
+  );
+  if (viewport === null) {
+    throw new Error('the scroll area rendered no viewport');
+  }
+  return viewport;
+}
 
 const meta = {
   component: CalendarHeatmap,
   args: {
     label: 'Daily step count over the last 26 weeks',
-    days: buildStepDays(),
+    days: halfYearOfSteps,
     valueFormatter: (value: number) => value.toLocaleString('en-US'),
   },
   argTypes: {
@@ -46,6 +66,9 @@ const meta = {
       options: Object.values(ChartColor),
     },
     max: { control: 'number' },
+    locale: { control: 'text' },
+    minimumCellSize: { control: 'number' },
+    maximumCellSize: { control: 'number' },
   },
   play: async ({ args, canvas }) => {
     const chart = canvas.getByRole('img', { name: args.label });
@@ -80,7 +103,115 @@ export const Default: Story = {};
 export const WithWeekdayLabelsAndScale: Story = {
   args: {
     weekdayLabels,
-    scaleLabels: { less: 'Less', more: 'More' },
+    scaleLabels,
+  },
+};
+
+export const FullYearWithMonthLabels: Story = {
+  args: {
+    label: 'Daily step count over the last year',
+    days: fullYearOfSteps,
+    weekdayLabels,
+    scaleLabels,
+  },
+  play: async ({ canvas }) => {
+    // The first month of a new year carries the year with it.
+    await expect(canvas.getByText('2026/1')).toBeInTheDocument();
+  },
+};
+
+export const LocalizedJapanese: Story = {
+  args: {
+    label: '直近1年の1日あたりの歩数',
+    days: fullYearOfSteps,
+    locale: 'ja-JP',
+    emptyLabel: 'データなし',
+    scaleLabels: { less: '少ない', more: '多い' },
+    valueFormatter: (value: number) => `${value.toLocaleString('ja-JP')}歩`,
+  },
+  play: async ({ canvas }) => {
+    // Japanese weeks start on Sunday, so the first labelled row is 日.
+    await expect(canvas.getByText('日')).toBeInTheDocument();
+  },
+};
+
+export const SundayFirst: Story = {
+  args: {
+    label: 'Daily step count over the last 26 weeks, weeks starting on Sunday',
+    locale: 'en-US',
+    scaleLabels,
+  },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByText('Sun')).toBeInTheDocument();
+  },
+};
+
+export const NarrowContainer: Story = {
+  args: {
+    label: 'Daily step count over the last 26 weeks, in a narrow card',
+    weekdayLabels,
+    scaleLabels,
+  },
+  decorators: [
+    (Story) => (
+      <div className="max-w-sm">
+        <Story />
+      </div>
+    ),
+  ],
+  play: async ({ args, canvas, canvasElement }) => {
+    const grid = canvas.getByRole('img', { name: args.label });
+    const root = grid.closest('[data-slot="calendar-heatmap"]');
+    const viewport = scrollPort(canvasElement);
+    const cardWidth = root?.parentElement?.getBoundingClientRect().width ?? 0;
+
+    // 26 week columns outgrow this card, so the grid scrolls inside it rather
+    // than pushing the component past the card edge.
+    await expect(root?.getBoundingClientRect().width ?? 0).toBeLessThanOrEqual(
+      cardWidth + subpixelTolerance
+    );
+    await expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
+    // A scrolling region has to be reachable by keyboard (WCAG 2.1.1).
+    await expect(viewport.tabIndex).toBe(0);
+
+    viewport.scrollLeft = viewport.scrollWidth;
+
+    const labels = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>(
+        '[data-slot="calendar-heatmap-weekday-label"]'
+      )
+    );
+    // Cells run down each week column, so the first seven are one week of rows.
+    const cells = Array.from(
+      grid.querySelectorAll<HTMLElement>('[data-slot="calendar-heatmap-cell"]')
+    );
+    const centreOffsets = labels.map((label, rowIndex) => {
+      const labelBox = label.getBoundingClientRect();
+      const cellBox = cells[rowIndex].getBoundingClientRect();
+      return Math.abs(
+        labelBox.top + labelBox.height / 2 - (cellBox.top + cellBox.height / 2)
+      );
+    });
+
+    // Scrolled to the end, every label still sits on the row it names.
+    await expect(Math.max(...centreOffsets)).toBeLessThanOrEqual(
+      alignmentTolerance
+    );
+
+    // No cell is drawn over a label: the port clips them, and a clipped cell
+    // keeps its off-screen bounding box, so compare against the visible part.
+    const portLeft = viewport.getBoundingClientRect().left;
+    const labelRight = Math.max(
+      ...labels.map((label) => label.getBoundingClientRect().right)
+    );
+    const visibleCellLeft = Math.min(
+      ...cells.map((cell) =>
+        Math.max(cell.getBoundingClientRect().left, portLeft)
+      )
+    );
+    await expect(visibleCellLeft).toBeGreaterThanOrEqual(
+      labelRight - subpixelTolerance
+    );
   },
 };
 

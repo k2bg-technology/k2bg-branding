@@ -10,6 +10,11 @@ const hourRows = Array.from(
 
 const weekdayColumns = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+/** Two characters per hour, so 24 of them still read at a small cell size. */
+const hourColumns = Array.from({ length: 24 }, (_, hour) =>
+  String(hour).padStart(2, '0')
+);
+
 /** Deterministic stand-in for sampled data, so every render is identical. */
 function pseudoRandom(seed: number): number {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
@@ -34,6 +39,28 @@ function buildCarbonDioxideValues(): number[][] {
 
 const carbonDioxideValues = buildCarbonDioxideValues();
 
+const carbonDioxideByWeekday = weekdayColumns.map((_, weekday) =>
+  hourColumns.map((__, hour) => carbonDioxideValues[hour][weekday])
+);
+
+const defaultContainerClassName = 'max-w-xs';
+
+/** The `pr-1` that separates a row label from its first cell. */
+const rowLabelPaddingWidth = 4;
+const subpixelTolerance = 2;
+const alignmentTolerance = 1;
+
+/** The scroll area marks its scrolling element with a `-viewport` id. */
+function scrollPort(canvasElement: HTMLElement): HTMLElement {
+  const viewport = canvasElement.querySelector<HTMLElement>(
+    '[data-id$="-viewport"]'
+  );
+  if (viewport === null) {
+    throw new Error('the scroll area rendered no viewport');
+  }
+  return viewport;
+}
+
 const meta = {
   component: MatrixHeatmap,
   args: {
@@ -52,10 +79,18 @@ const meta = {
     },
     min: { control: 'number' },
     max: { control: 'number' },
+    minimumCellSize: { control: 'number' },
+    maximumCellSize: { control: 'number' },
   },
   decorators: [
-    (Story) => (
-      <div className="max-w-xs">
+    (Story, context) => (
+      <div
+        className={
+          typeof context.parameters.containerClassName === 'string'
+            ? context.parameters.containerClassName
+            : defaultContainerClassName
+        }
+      >
         <Story />
       </div>
     ),
@@ -108,5 +143,110 @@ export const CustomRange: Story = {
       'Carbon dioxide concentration by hour of day and day of week, on a fixed 400 to 1600 ppm scale',
     min: 400,
     max: 1600,
+  },
+};
+
+export const TwentyFourColumnsNarrow: Story = {
+  args: {
+    label:
+      'Carbon dioxide concentration by day of week and hour of day, in a narrow card',
+    rows: weekdayColumns,
+    columns: hourColumns,
+    values: carbonDioxideByWeekday,
+    minimumCellSize: 20,
+  },
+  play: async ({ args, canvas, canvasElement }) => {
+    const grid = canvas.getByRole('img', { name: args.label });
+    const viewport = scrollPort(canvasElement);
+
+    // 24 hour columns outgrow this card.
+    await expect(viewport.scrollWidth).toBeGreaterThan(viewport.clientWidth);
+    // A scrolling region has to be reachable by keyboard (WCAG 2.1.1).
+    await expect(viewport.tabIndex).toBe(0);
+
+    viewport.scrollLeft = viewport.scrollWidth;
+
+    const labels = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>(
+        '[data-slot="matrix-heatmap-row-label"]'
+      )
+    );
+    const cells = Array.from(
+      grid.querySelectorAll<HTMLElement>('[data-slot="matrix-heatmap-cell"]')
+    );
+    const centreOffsets = labels.map((label, rowIndex) => {
+      const labelBox = label.getBoundingClientRect();
+      const cellBox =
+        cells[rowIndex * args.columns.length].getBoundingClientRect();
+      return Math.abs(
+        labelBox.top + labelBox.height / 2 - (cellBox.top + cellBox.height / 2)
+      );
+    });
+
+    // Scrolled to the end, every label still sits on the row it names.
+    await expect(Math.max(...centreOffsets)).toBeLessThanOrEqual(
+      alignmentTolerance
+    );
+
+    // No cell is drawn over a label: the port clips them, and a clipped cell
+    // keeps its off-screen bounding box, so compare against the visible part.
+    const portLeft = viewport.getBoundingClientRect().left;
+    const labelRight = Math.max(
+      ...labels.map((label) => label.getBoundingClientRect().right)
+    );
+    const visibleCellLeft = Math.min(
+      ...cells.map((cell) =>
+        Math.max(cell.getBoundingClientRect().left, portLeft)
+      )
+    );
+    await expect(visibleCellLeft).toBeGreaterThanOrEqual(
+      labelRight - subpixelTolerance
+    );
+  },
+};
+
+export const WideContainer: Story = {
+  args: {
+    label:
+      'Carbon dioxide concentration by hour of day and day of week, in a wide card',
+  },
+  parameters: { containerClassName: 'max-w-4xl' },
+};
+
+export const ZeroVersusEmpty: Story = {
+  args: {
+    label: 'Minutes of rainfall by part of day, with one gauge outage',
+    rows: ['Mon', 'Tue', 'Wed'],
+    columns: ['Morning', 'Midday', 'Evening'],
+    values: [
+      [0, 12, 0],
+      [null, 0, 4],
+      [6, null, 0],
+    ],
+    valueFormatter: (value: number) => `${value} min`,
+    emptyLabel: 'No reading',
+    scaleLabels: { less: 'Drier', more: 'Wetter' },
+  },
+  play: async ({ args, canvas }) => {
+    const chart = canvas.getByRole('img', { name: args.label });
+    const cells = chart.querySelectorAll<HTMLElement>(
+      '[data-slot="matrix-heatmap-cell"]'
+    );
+
+    // A measured zero stays filled; only a missing reading is left unpainted.
+    await expect(cells[0].style.backgroundColor).not.toBe('');
+    await expect(cells[3].title).toBe('Tue Morning: No reading');
+
+    // Three capped cells leave this card with width to spare: it stays beside
+    // the grid instead of widening the row-label column.
+    const rowLabel = canvas.getByText('Tue');
+    const textBounds = document.createRange();
+    textBounds.selectNodeContents(rowLabel);
+
+    await expect(rowLabel.getBoundingClientRect().width).toBeLessThanOrEqual(
+      textBounds.getBoundingClientRect().width +
+        rowLabelPaddingWidth +
+        subpixelTolerance
+    );
   },
 };

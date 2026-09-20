@@ -1,7 +1,7 @@
 import { seriesColorCss } from './chartTheme';
 import type { ChartColor } from './types';
 
-/** Level 0 is the empty step; 1–4 are the quartiles of the filled range. */
+/** Level 0 is the bottom of the measured range and 4 its top; absence has no level. */
 export type HeatmapLevel = 0 | 1 | 2 | 3 | 4;
 
 export interface HeatmapScaleLabels {
@@ -9,20 +9,29 @@ export interface HeatmapScaleLabels {
   more: string;
 }
 
-const filledLevels: HeatmapLevel[] = [1, 2, 3, 4];
+const scaleLevels: HeatmapLevel[] = [0, 1, 2, 3, 4];
 
-export const heatmapFilledLevels: readonly HeatmapLevel[] = filledLevels;
+export const heatmapScaleLevels: readonly HeatmapLevel[] = scaleLevels;
 
 /**
  * Opaque steps rather than an opacity ramp: a translucent cell inherits an
- * unknown surface, so its contrast ratio cannot be verified.
+ * unknown surface, so its contrast ratio cannot be verified. The lowest step
+ * keeps enough color to separate a measured zero from the chart surface.
  */
-const levelMixPercentages: Record<Exclude<HeatmapLevel, 0>, number> = {
+const levelMixPercentages: Record<HeatmapLevel, number> = {
+  0: 20,
   1: 40,
   2: 60,
   3: 80,
   4: 100,
 };
+
+/**
+ * A missing measurement reads as a hatch, so it stays apart from the lowest
+ * filled step without relying on color alone.
+ */
+export const heatmapEmptyCellBackgroundImage =
+  'repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-base-black) 30%, transparent) 0 1px, transparent 1px 4px)';
 
 export function heatmapLevel(
   value: number,
@@ -36,15 +45,12 @@ export function heatmapLevel(
     return 4;
   }
   const quartile = Math.ceil(((value - min) / (max - min)) * 4);
-  return filledLevels[Math.min(Math.max(quartile, 1), 4) - 1];
+  return scaleLevels[Math.min(Math.max(quartile, 1), 4)];
 }
 
 export function heatmapCellColor(
   level: HeatmapLevel,
   color: ChartColor
 ): string {
-  if (level === 0) {
-    return 'var(--color-base-light)';
-  }
   return `color-mix(in srgb, ${seriesColorCss(color)} ${levelMixPercentages[level]}%, var(--color-base-white))`;
 }
