@@ -9,6 +9,8 @@ const spendingSlices: DonutChartSlice[] = [
   { id: 'transport', label: 'Transport', value: 10 },
 ];
 
+const longCenterValue = '¥1,234,567';
+
 function createSlices(count: number): DonutChartSlice[] {
   return Array.from({ length: count }, (_, index) => ({
     id: `slice-${index}`,
@@ -26,6 +28,16 @@ function sliceFills(container: HTMLElement): string[] {
 
 function centerElement(container: HTMLElement): Element | null {
   return container.querySelector('[data-slot="donut-chart-center"]');
+}
+
+function centerValueElement(container: HTMLElement): HTMLElement | null {
+  return container.querySelector<HTMLElement>(
+    '[data-slot="donut-chart-center-value"]'
+  );
+}
+
+function centerLabelElement(container: HTMLElement): Element | null {
+  return container.querySelector('[data-slot="donut-chart-center-label"]');
 }
 
 function tooltipText(container: HTMLElement): string {
@@ -122,6 +134,94 @@ describe('DonutChart', () => {
       expect(centerElement(container) !== null).toBe(expectCenter);
     }
   );
+
+  it('sizes the center against the ring rather than the viewport', () => {
+    const { container } = render(
+      <DonutChart
+        label="Spending"
+        slices={spendingSlices}
+        centerValue="¥60,000"
+        centerLabel="per month"
+      />
+    );
+
+    expect(centerElement(container)).toHaveClass('[container-type:size]');
+  });
+
+  it('scales the center value between a legible minimum and the heading size', () => {
+    const { container } = render(
+      <DonutChart
+        label="Spending"
+        slices={spendingSlices}
+        centerValue="¥60,000"
+      />
+    );
+
+    expect(centerValueElement(container)).toHaveClass(
+      'text-[clamp(0.75rem,calc(52cqmin/var(--donut-center-advance)),var(--text-heading-2))]'
+    );
+  });
+
+  // The budget is the advance of the glyphs actually present: a half-width
+  // character counts as 0.62em, a full-width or CJK one as a whole em. The
+  // supplementary-plane ideograph is two UTF-16 units but still one wide glyph.
+  it.each`
+    width              | centerValue               | advance
+    ${'half-width'}    | ${'¥1,234,567'}           | ${'6.2'}
+    ${'full-width'}    | ${'１２３４５６７８９円'} | ${'10'}
+    ${'mixed-width'}   | ${'1,234万円'}            | ${'5.1'}
+    ${'supplementary'} | ${'𠮟'}                   | ${'1'}
+  `(
+    'budgets $advance em of font size for a $width center value',
+    ({ centerValue, advance }) => {
+      const { container } = render(
+        <DonutChart
+          label="Spending"
+          slices={spendingSlices}
+          centerValue={centerValue}
+        />
+      );
+
+      expect(
+        centerValueElement(container)?.style.getPropertyValue(
+          '--donut-center-advance'
+        )
+      ).toBe(advance);
+    }
+  );
+
+  it.each`
+    part       | elementOf
+    ${'value'} | ${centerValueElement}
+    ${'label'} | ${centerLabelElement}
+  `(
+    'bounds the center $part to the ring hole without breaking a word',
+    ({ elementOf }) => {
+      const { container } = render(
+        <DonutChart
+          label="Spending"
+          slices={spendingSlices}
+          centerValue={longCenterValue}
+          centerLabel="total this year"
+        />
+      );
+
+      expect(elementOf(container)).toHaveClass('max-w-[56cqmin]');
+      expect(elementOf(container)).not.toHaveClass('break-words');
+    }
+  );
+
+  it('keeps a long center value complete in the accessible text', () => {
+    render(
+      <DonutChart
+        label="Spending"
+        slices={spendingSlices}
+        centerValue={longCenterValue}
+      />
+    );
+
+    expect(screen.getByText(longCenterValue)).toBeInTheDocument();
+  });
 
   it.each`
     sliceCount | showLegend   | expectLegend

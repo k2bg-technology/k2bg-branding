@@ -69,6 +69,23 @@ export const AtEarliestPeriod: Story = {
   },
 };
 
+// The href form keeps a server-rendered page server-rendered: the controls are
+// ordinary links, so the story only tabs to one rather than following it.
+export const WithLinks: Story = {
+  args: {
+    previousHref: '/insights?period=2026-07',
+    nextHref: '/insights?period=2026-09',
+  },
+  play: async ({ args, canvas, userEvent }) => {
+    await userEvent.tab();
+
+    const previous = canvas.getByRole('link', { name: args.previousLabel });
+
+    await expect(previous).toHaveFocus();
+    await expect(previous).toHaveAttribute('href', args.previousHref);
+  },
+};
+
 const monthLabels = ['June 2026', 'July 2026', 'August 2026'];
 
 function SteppingPeriodSelector() {

@@ -109,3 +109,76 @@ export const StatusColors: Story = {
     centerLabel: 'Spent this year',
   },
 };
+
+const longCenterValue = '¥1,234,567';
+const fullWidthCenterValue = '１２３４万円';
+
+const narrowColumn: Story['decorators'] = [
+  (Story) => (
+    <div className="w-[180px]">
+      <Story />
+    </div>
+  ),
+];
+
+// The ring's hole spans 65% of the chart's smaller side; the center value must
+// stay inside it on one line, whatever script it is written in. The chart sizes
+// itself asynchronously, so the measurements retry until they settle.
+const expectCenterValueInsideTheRing: Story['play'] = async ({
+  args,
+  canvas,
+}) => {
+  const centerValue = canvas.getByText(args.centerValue ?? '');
+  const chart = canvas.getByRole('application', { name: args.label });
+
+  await waitFor(() => {
+    const chartBounds = chart.getBoundingClientRect();
+    const valueBounds = centerValue.getBoundingClientRect();
+    const holeDiameter = 0.65 * Math.min(chartBounds.width, chartBounds.height);
+    // A range reports one client rect per line box, so a value that stayed
+    // unbroken reports exactly one.
+    const lines = document.createRange();
+    lines.selectNodeContents(centerValue);
+
+    expect(lines.getClientRects()).toHaveLength(1);
+    expect(centerValue.scrollWidth).toBeLessThanOrEqual(
+      centerValue.clientWidth
+    );
+    expect(valueBounds.width).toBeLessThanOrEqual(holeDiameter);
+    expect(valueBounds.left).toBeGreaterThanOrEqual(chartBounds.left);
+    expect(valueBounds.right).toBeLessThanOrEqual(chartBounds.right);
+    expect(valueBounds.top).toBeGreaterThanOrEqual(chartBounds.top);
+    expect(valueBounds.bottom).toBeLessThanOrEqual(chartBounds.bottom);
+  });
+};
+
+export const LongCenterValue: Story = {
+  args: {
+    label: 'Asset allocation with a ten-character total',
+    centerValue: longCenterValue,
+  },
+  play: expectCenterValueInsideTheRing,
+};
+
+export const LongCenterValueNarrow: Story = {
+  args: {
+    label: 'Asset allocation with a ten-character total in a narrow column',
+    centerValue: longCenterValue,
+    height: 'sm',
+  },
+  decorators: narrowColumn,
+  play: expectCenterValueInsideTheRing,
+};
+
+// Full-width digits and kanji advance a whole em, so these six characters need
+// far more room than six half-width ones.
+export const FullWidthCenterValueNarrow: Story = {
+  args: {
+    label: 'Asset allocation with a full-width total in a narrow column',
+    centerValue: fullWidthCenterValue,
+    centerLabel: '資産の合計',
+    height: 'sm',
+  },
+  decorators: narrowColumn,
+  play: expectCenterValueInsideTheRing,
+};

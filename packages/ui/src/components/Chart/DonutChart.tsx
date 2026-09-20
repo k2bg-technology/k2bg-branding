@@ -35,6 +35,48 @@ function hoveredSliceId(payload: TooltipContentProps['payload']): string {
   return '';
 }
 
+// Blocks whose glyphs fall back to a Japanese face and advance about a full em.
+// The half-width kana at U+FF61-U+FFEE sit between the two full-width blocks,
+// so they stay outside the ranges. These are code points rather than a regular
+// expression because the apps type-check these sources with their own compiler
+// target and the portfolio targets ES5, which rules out the `u` flag, and the
+// formatter rewrites `\uXXXX` in a pattern into unreadable literal characters.
+const fullWidthRanges = [
+  [0x3000, 0x303f], // CJK symbols and punctuation
+  [0x3040, 0x309f], // Hiragana
+  [0x30a0, 0x30ff], // Katakana
+  [0x3400, 0x4dbf], // CJK unified ideographs extension A
+  [0x4e00, 0x9fff], // CJK unified ideographs
+  [0xac00, 0xd7af], // Hangul syllables
+  [0xff01, 0xff60], // Full-width forms
+  [0xffe0, 0xffe6], // Full-width symbols
+] as const;
+
+/** Advance of a half-width character in the brand font stack, as an upper bound. */
+const halfWidthAdvance = 0.62;
+
+function isFullWidth(character: string): boolean {
+  // Outside the BMP `Array.from` yields a two-unit string, and such a character
+  // in a value is always a wide ideograph or an emoji.
+  if (character.length > 1) {
+    return true;
+  }
+  const codePoint = character.charCodeAt(0);
+  return fullWidthRanges.some(
+    ([start, end]) => codePoint >= start && codePoint <= end
+  );
+}
+
+/** Advance of the whole text in `em`, counting each character at its own width. */
+function textAdvance(text: string): number {
+  const advance = Array.from(text).reduce(
+    (total, character) =>
+      total + (isFullWidth(character) ? 1 : halfWidthAdvance),
+    0
+  );
+  return Math.round(advance * 100) / 100;
+}
+
 export interface DonutChartProps {
   label: string;
   slices: DonutChartSlice[];
@@ -130,17 +172,32 @@ export function DonutChart({
           </PieChart>
         </ChartContainer>
         {hasCenterText && (
+          // The hole spans 65% of the chart's smaller side. The value is sized
+          // from the advance of the glyphs it actually contains, so that a
+          // single token such as a formatted amount shrinks to one line inside
+          // the hole instead of being split. Below the minimum size the normal
+          // line-breaking rules apply: they break at spaces, and between CJK
+          // characters, but never inside a half-width word.
           <div
             data-slot="donut-chart-center"
-            className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
+            className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center [container-type:size]"
           >
             {centerValue !== undefined && (
-              <span className="text-heading-2 font-medium text-base-black tabular-nums">
+              <span
+                data-slot="donut-chart-center-value"
+                style={{
+                  '--donut-center-advance': textAdvance(centerValue),
+                }}
+                className="max-w-[56cqmin] text-center text-[clamp(0.75rem,calc(52cqmin/var(--donut-center-advance)),var(--text-heading-2))] font-medium text-base-black tabular-nums"
+              >
                 {centerValue}
               </span>
             )}
             {centerLabel !== undefined && (
-              <span className="text-caption text-base-black/80">
+              <span
+                data-slot="donut-chart-center-label"
+                className="max-w-[56cqmin] text-center text-caption text-base-black/80"
+              >
                 {centerLabel}
               </span>
             )}
