@@ -4,6 +4,7 @@ import { expect, waitFor } from 'storybook/test';
 import { BarChart, ChartColor } from '.';
 
 const weekdayCategories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const monthCategories = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
 
 const meta = {
   component: BarChart,
@@ -158,5 +159,110 @@ export const FormattedValues: Story = {
   args: {
     label: 'Energy consumption per day of week in kilowatt hours',
     valueFormatter: (value: number) => `${value}kWh`,
+  },
+};
+
+export const MixedSign: Story = {
+  args: {
+    label: 'Net energy balance per month in kilowatt hours',
+    categories: monthCategories,
+    valueFormatter: (value: number) => `${value}kWh`,
+    series: [
+      {
+        id: 'netEnergy',
+        label: 'Net energy',
+        values: [-42.5, -18.3, 24.6, 61.2, 48.7, -6.4],
+      },
+    ],
+  },
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const chart = canvas.getByRole('application', { name: args.label });
+    const tooltip = () =>
+      canvasElement.querySelector('[data-slot="chart-tooltip"]');
+
+    await userEvent.tab();
+    await expect(chart).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    // The first two months are negative, so either landing spot proves the sign.
+    await waitFor(() =>
+      expect(tooltip()?.textContent).toMatch(/-\d+(\.\d+)?kWh/)
+    );
+  },
+};
+
+export const MissingValues: Story = {
+  args: {
+    label: 'Energy consumption per room and day of week',
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        values: [5.2, null, 5.6, 5.3, 6.1, 7.4, 6.8],
+      },
+      {
+        id: 'kitchen',
+        label: 'Kitchen',
+        values: [null, null, 4.5, 4.3, null, 5.9, 5.2],
+      },
+    ],
+  },
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const chart = canvas.getByRole('application', { name: args.label });
+    const tooltip = () =>
+      canvasElement.querySelector('[data-slot="chart-tooltip"]');
+
+    await userEvent.tab();
+    await expect(chart).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    // Tuesday has no measurement in either room and Monday none in the kitchen,
+    // so wherever the reader lands the gap is stated instead of hidden.
+    await waitFor(() => expect(tooltip()?.textContent).toContain('—'));
+  },
+};
+
+export const LongAxisLabels: Story = {
+  args: {
+    label: 'Energy consumption per month in watt hours',
+    categories: monthCategories,
+    valueFormatter: (value: number) => `${value.toLocaleString('en-US')} Wh`,
+    series: [
+      {
+        id: 'energy',
+        label: 'Energy',
+        values: [1284000, 1176500, 1342800, 1408300, 1519600, 1247100],
+      },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const tickLineCounts = () =>
+      Array.from(
+        canvasElement.querySelectorAll(
+          '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+        ),
+        (tick) => tick.querySelectorAll('tspan').length
+      );
+
+    await waitFor(() => expect(tickLineCounts().length).toBeGreaterThan(0));
+
+    // A tick label that does not fit the axis width is wrapped onto a second line.
+    await expect(tickLineCounts().every((lines) => lines === 1)).toBe(true);
+  },
+};
+
+export const CompactAxisLabels: Story = {
+  args: {
+    label: 'Energy consumption per month in watt hours',
+    categories: monthCategories,
+    valueFormatter: (value: number) => `${value.toLocaleString('en-US')} Wh`,
+    axisValueFormatter: (value: number) => `${Math.round(value / 1000)}k`,
+    series: [
+      {
+        id: 'energy',
+        label: 'Energy',
+        values: [1284000, 1176500, 1342800, 1408300, 1519600, 1247100],
+      },
+    ],
   },
 };
