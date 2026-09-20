@@ -9,6 +9,8 @@ const spendingSlices: DonutChartSlice[] = [
   { id: 'transport', label: 'Transport', value: 10 },
 ];
 
+const longCenterValue = '¥1,234,567';
+
 function createSlices(count: number): DonutChartSlice[] {
   return Array.from({ length: count }, (_, index) => ({
     id: `slice-${index}`,
@@ -26,6 +28,16 @@ function sliceFills(container: HTMLElement): string[] {
 
 function centerElement(container: HTMLElement): Element | null {
   return container.querySelector('[data-slot="donut-chart-center"]');
+}
+
+function centerValueElement(container: HTMLElement): HTMLElement | null {
+  return container.querySelector<HTMLElement>(
+    '[data-slot="donut-chart-center-value"]'
+  );
+}
+
+function centerLabelElement(container: HTMLElement): Element | null {
+  return container.querySelector('[data-slot="donut-chart-center-label"]');
 }
 
 function tooltipText(container: HTMLElement): string {
@@ -122,6 +134,82 @@ describe('DonutChart', () => {
       expect(centerElement(container) !== null).toBe(expectCenter);
     }
   );
+
+  it('sizes the center against the ring rather than the viewport', () => {
+    const { container } = render(
+      <DonutChart
+        label="Spending"
+        slices={spendingSlices}
+        centerValue="¥60,000"
+        centerLabel="per month"
+      />
+    );
+
+    expect(centerElement(container)).toHaveClass('[container-type:size]');
+  });
+
+  it('scales the center value between a legible minimum and the heading size', () => {
+    const { container } = render(
+      <DonutChart
+        label="Spending"
+        slices={spendingSlices}
+        centerValue="¥60,000"
+      />
+    );
+
+    expect(centerValueElement(container)).toHaveClass(
+      'text-[clamp(0.75rem,calc(52cqmin/(var(--donut-center-characters)*0.62)),var(--text-heading-2))]'
+    );
+  });
+
+  it('feeds the character count of the center value into its font size', () => {
+    const { container } = render(
+      <DonutChart
+        label="Spending"
+        slices={spendingSlices}
+        centerValue={longCenterValue}
+      />
+    );
+
+    expect(
+      centerValueElement(container)?.style.getPropertyValue(
+        '--donut-center-characters'
+      )
+    ).toBe(String(longCenterValue.length));
+  });
+
+  it.each`
+    part       | elementOf
+    ${'value'} | ${centerValueElement}
+    ${'label'} | ${centerLabelElement}
+  `(
+    'bounds the center $part to the ring hole without breaking a word',
+    ({ elementOf }) => {
+      const { container } = render(
+        <DonutChart
+          label="Spending"
+          slices={spendingSlices}
+          centerValue={longCenterValue}
+          centerLabel="total this year"
+        />
+      );
+
+      expect(elementOf(container)).toHaveClass('max-w-[56cqmin]');
+      expect(elementOf(container)).not.toHaveClass('break-words');
+    }
+  );
+
+  it('keeps a long center value complete in the accessible text', () => {
+    render(
+      <DonutChart
+        label="Spending"
+        slices={spendingSlices}
+        centerValue={longCenterValue}
+      />
+    );
+
+    expect(screen.getByText(longCenterValue)).toBeInTheDocument();
+  });
 
   it.each`
     sliceCount | showLegend   | expectLegend

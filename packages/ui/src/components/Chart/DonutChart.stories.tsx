@@ -109,3 +109,57 @@ export const StatusColors: Story = {
     centerLabel: 'Spent this year',
   },
 };
+
+const longCenterValue = '¥1,234,567';
+
+// The ring's hole spans 65% of the chart's smaller side; the center text must
+// stay inside it however long the value is.
+const expectCenterValueInsideTheRing: Story['play'] = async ({
+  args,
+  canvas,
+}) => {
+  const centerValue = canvas.getByText(longCenterValue);
+  const chartBounds = canvas
+    .getByRole('application', { name: args.label })
+    .getBoundingClientRect();
+  const valueBounds = centerValue.getBoundingClientRect();
+  const holeDiameter = 0.65 * Math.min(chartBounds.width, chartBounds.height);
+  // A range reports one client rect per line box, so an unbroken single token
+  // reports exactly one.
+  const lines = document.createRange();
+  lines.selectNodeContents(centerValue);
+
+  await expect(lines.getClientRects()).toHaveLength(1);
+  await expect(centerValue.scrollWidth).toBeLessThanOrEqual(
+    centerValue.clientWidth
+  );
+  await expect(valueBounds.width).toBeLessThanOrEqual(holeDiameter);
+  await expect(valueBounds.left).toBeGreaterThanOrEqual(chartBounds.left);
+  await expect(valueBounds.right).toBeLessThanOrEqual(chartBounds.right);
+  await expect(valueBounds.top).toBeGreaterThanOrEqual(chartBounds.top);
+  await expect(valueBounds.bottom).toBeLessThanOrEqual(chartBounds.bottom);
+};
+
+export const LongCenterValue: Story = {
+  args: {
+    label: 'Asset allocation with a ten-character total',
+    centerValue: longCenterValue,
+  },
+  play: expectCenterValueInsideTheRing,
+};
+
+export const LongCenterValueNarrow: Story = {
+  args: {
+    label: 'Asset allocation with a ten-character total in a narrow column',
+    centerValue: longCenterValue,
+    height: 'sm',
+  },
+  decorators: [
+    (Story) => (
+      <div className="w-[180px]">
+        <Story />
+      </div>
+    ),
+  ],
+  play: expectCenterValueInsideTheRing,
+};

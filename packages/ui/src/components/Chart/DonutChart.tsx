@@ -130,17 +130,32 @@ export function DonutChart({
           </PieChart>
         </ChartContainer>
         {hasCenterText && (
+          // The hole spans 65% of the chart's smaller side. The value is sized
+          // from its own character count so that a single token, such as a
+          // formatted amount, shrinks to one line inside the hole instead of
+          // being split; 0.62em is a safe upper bound for a tabular character's
+          // advance in the brand font stack. Below the minimum size the normal
+          // line-breaking rules apply: they break at spaces, never inside a word.
           <div
             data-slot="donut-chart-center"
-            className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center"
+            className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center [container-type:size]"
           >
             {centerValue !== undefined && (
-              <span className="text-heading-2 font-medium text-base-black tabular-nums">
+              <span
+                data-slot="donut-chart-center-value"
+                style={{
+                  '--donut-center-characters': centerValue.length,
+                }}
+                className="max-w-[56cqmin] text-center text-[clamp(0.75rem,calc(52cqmin/(var(--donut-center-characters)*0.62)),var(--text-heading-2))] font-medium text-base-black tabular-nums"
+              >
                 {centerValue}
               </span>
             )}
             {centerLabel !== undefined && (
-              <span className="text-caption text-base-black/80">
+              <span
+                data-slot="donut-chart-center-label"
+                className="max-w-[56cqmin] text-center text-caption text-base-black/80"
+              >
                 {centerLabel}
               </span>
             )}
