@@ -37,10 +37,21 @@ import {
   type TimeSeriesBandPoint,
   type TimeSeriesBandSeries,
   type TimeSeriesChartSeries,
+  type TimeSeriesSeries,
 } from './types';
 
 type TimeSeriesValue = number | [number, number] | null;
 type TimeSeriesRow = { timestamp: number } & Record<string, TimeSeriesValue>;
+
+const defaultStrokeWidth = 2;
+const areaFillOpacity = 0.4;
+const dashedStrokePattern = '6 4';
+// One id is enough: a chart stacks all of its measurement series together.
+const seriesStackId = 'series';
+
+function strokeDasharray(seriesItem: TimeSeriesSeries): string | undefined {
+  return seriesItem.lineStyle === 'dashed' ? dashedStrokePattern : undefined;
+}
 
 function isBandSeries(
   series: TimeSeriesChartSeries
@@ -143,10 +154,14 @@ export interface TimeSeriesChartProps {
   series: TimeSeriesChartSeries[];
   period: ChartPeriod;
   variant?: 'line' | 'area';
+  /** Stacks the area variant's series, first series at the bottom; the line variant ignores it. */
+  stacked?: boolean;
   thresholds?: ChartThreshold[];
   bands?: ChartReferenceBand[];
   /** IANA time zone name, e.g. 'Asia/Tokyo'. */
   timeZone?: string;
+  /** BCP 47 locale for axis ticks and tooltip headings; omitted keeps the locale-neutral format. */
+  locale?: string;
   interpolation?: ChartInterpolation;
   height?: ChartHeight;
   valueFormatter?: (value: number) => string;
@@ -160,9 +175,11 @@ export function TimeSeriesChart({
   series,
   period,
   variant = 'line',
+  stacked = false,
   thresholds,
   bands,
   timeZone = 'UTC',
+  locale,
   interpolation = ChartInterpolation.LINEAR,
   height,
   valueFormatter = defaultValueFormatter,
@@ -176,10 +193,11 @@ export function TimeSeriesChart({
     `chart-fill-${gradientIdPrefix}-${seriesId}`;
 
   const rows = buildRows(series);
-  const { ticks, formatTick } = getTimeAxisTicks(
+  const { ticks, formatTick, formatHeading } = getTimeAxisTicks(
     rows.map((row) => row.timestamp),
     period,
-    timeZone
+    timeZone,
+    locale
   );
   const seriesInfoByDataKey = new Map(
     series.map((seriesItem, index) => [
@@ -207,7 +225,7 @@ export function TimeSeriesChart({
   }: TooltipContentProps): ChartTooltipData => ({
     heading:
       typeof hoveredTimestamp === 'number'
-        ? formatTick(hoveredTimestamp)
+        ? formatHeading(hoveredTimestamp)
         : String(hoveredTimestamp ?? ''),
     items: (payload ?? []).flatMap((entry) => {
       const seriesInfo = seriesInfoByDataKey.get(String(entry.dataKey));
@@ -235,6 +253,7 @@ export function TimeSeriesChart({
     id: seriesItem.id,
     label: seriesItem.label,
     color: seriesColor(seriesItem.id) ?? '',
+    lineStyle: isBandSeries(seriesItem) ? undefined : seriesItem.lineStyle,
   }));
 
   return (
@@ -356,10 +375,13 @@ export function TimeSeriesChart({
                   key={seriesItem.id}
                   dataKey={seriesDataKey(seriesItem.id)}
                   type={curveType(seriesItem)}
+                  stackId={stacked ? seriesStackId : undefined}
                   fill={`url(#${gradientId(seriesItem.id)})`}
-                  fillOpacity={0.4}
+                  fillOpacity={areaFillOpacity * (seriesItem.opacity ?? 1)}
                   stroke={seriesColor(seriesItem.id)}
-                  strokeWidth={2}
+                  strokeWidth={seriesItem.strokeWidth ?? defaultStrokeWidth}
+                  strokeDasharray={strokeDasharray(seriesItem)}
+                  strokeOpacity={seriesItem.opacity}
                   dot={isolatedPointDot(seriesItem.id)}
                   activeDot={{ r: 4 }}
                   connectNulls={false}
@@ -373,7 +395,9 @@ export function TimeSeriesChart({
                 dataKey={seriesDataKey(seriesItem.id)}
                 type={curveType(seriesItem)}
                 stroke={seriesColor(seriesItem.id)}
-                strokeWidth={2}
+                strokeWidth={seriesItem.strokeWidth ?? defaultStrokeWidth}
+                strokeDasharray={strokeDasharray(seriesItem)}
+                strokeOpacity={seriesItem.opacity}
                 dot={isolatedPointDot(seriesItem.id)}
                 activeDot={{ r: 4 }}
                 connectNulls={false}

@@ -64,10 +64,42 @@ const oneHour = 60 * 60 * 1000;
 /** 15:00 UTC, so the day of hourly readings starts at midnight in Tokyo. */
 const tokyoMidnight = Date.UTC(2026, 0, 14, 15);
 
+const dailyReadings = [
+  42, 51, 38, 55, 47, 62, 58, 49, 66, 71, 60, 68, 75, 64, 79,
+];
+
+/** Centred three-point mean, the overlay a reader compares with the source. */
+function movingAverage(values: number[]): (number | null)[] {
+  return values.map((value, index) =>
+    index === 0 || index === values.length - 1
+      ? null
+      : Math.round(((values[index - 1] + value + values[index + 1]) / 3) * 10) /
+        10
+  );
+}
+
+function hourlyPoints(start: number, values: number[]): TimeSeriesPoint[] {
+  return values.map((value, index) => ({
+    timestamp: start + index * oneHour,
+    value,
+  }));
+}
+
+/** Two days of hourly readings, where a bare time would not say which day. */
+const twoDayReadings = Array.from(
+  { length: 48 },
+  (_, index) =>
+    Math.round((520 + 140 * Math.sin((index / 24) * 2 * Math.PI)) * 10) / 10
+);
+
 const linearInterpolationLabel =
   'Carbon dioxide against the ventilation limit, linear interpolation';
 const naturalInterpolationLabel =
   'Carbon dioxide against the ventilation limit, natural interpolation';
+const britishHourlyLabel =
+  'Carbon dioxide over two days of hourly readings, British English';
+const britishMonthlyLabel =
+  'Room temperature over January 2026, British English';
 
 const meta = {
   component: TimeSeriesChart,
@@ -81,6 +113,9 @@ const meta = {
       control: 'select',
       options: ['line', 'area'],
     },
+    stacked: {
+      control: 'boolean',
+    },
     period: {
       control: 'select',
       options: ['day', 'week', 'month', 'quarter', 'year'],
@@ -90,6 +125,9 @@ const meta = {
       options: ['linear', 'step', 'natural'],
     },
     timeZone: {
+      control: 'text',
+    },
+    locale: {
       control: 'text',
     },
     height: {
@@ -390,6 +428,183 @@ export const TimeZoneJapan: Story = {
         })),
       },
     ],
+  },
+};
+
+export const StackedAreas: Story = {
+  args: {
+    label: 'Power draw per room over January 2026',
+    variant: 'area',
+    stacked: true,
+    valueFormatter: (value: number) => `${value}W`,
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        color: ChartColor.CHART_1,
+        points: toPoints([
+          120, 128, 124, 136, 142, 138, 148, 155, 151, 162, 168, 164, 172, 180,
+          176,
+        ]),
+      },
+      {
+        id: 'kitchen',
+        label: 'Kitchen',
+        color: ChartColor.CHART_2,
+        points: toPoints([
+          96, 101, 110, 105, 114, 120, 116, 124, 130, 126, 133, 141, 136, 144,
+          150,
+        ]),
+      },
+      {
+        id: 'bedroom',
+        label: 'Bedroom',
+        color: ChartColor.CHART_3,
+        points: toPoints([
+          54, 57, 61, 59, 64, 68, 66, 70, 74, 72, 76, 80, 78, 82, 86,
+        ]),
+      },
+      {
+        id: 'office',
+        label: 'Office',
+        color: ChartColor.CHART_4,
+        points: toPoints([
+          78, 82, 80, 88, 94, 91, 98, 104, 101, 110, 114, 111, 118, 124, 120,
+        ]),
+      },
+      {
+        id: 'garage',
+        label: 'Garage',
+        color: ChartColor.CHART_5,
+        points: toPoints([
+          30, 32, 36, 34, 38, 42, 40, 44, 48, 46, 50, 54, 52, 56, 60,
+        ]),
+      },
+    ],
+  },
+};
+
+export const DashedOverlay: Story = {
+  args: {
+    label: 'Daily readings and their moving average over January 2026',
+    series: [
+      {
+        id: 'readings',
+        label: 'Reading',
+        color: ChartColor.CHART_1,
+        opacity: 0.45,
+        points: toPoints(dailyReadings),
+      },
+      {
+        id: 'movingAverage',
+        label: 'Three-point moving average',
+        color: ChartColor.CHART_1,
+        lineStyle: 'dashed',
+        strokeWidth: 3,
+        points: toPoints(movingAverage(dailyReadings)),
+      },
+    ],
+  },
+};
+
+export const MultiDayHourly: Story = {
+  args: {
+    label: 'Carbon dioxide over two days of hourly readings',
+    period: 'day',
+    valueFormatter: (value: number) => `${value}ppm`,
+    series: [
+      {
+        id: 'carbonDioxide',
+        label: 'Carbon dioxide',
+        points: hourlyPoints(Date.UTC(2026, 0, 15), twoDayReadings),
+      },
+    ],
+  },
+  // The meta play only checks that the read-out moves; this one reads its heading.
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const chart = canvas.getByRole('application', { name: args.label });
+    const heading = () =>
+      canvasElement.querySelector('[data-slot="chart-tooltip"] p');
+
+    await userEvent.tab();
+    await expect(chart).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    await waitFor(() => expect(heading()).toHaveTextContent('1/15 01:00'));
+  },
+};
+
+/**
+ * Japanese numeric date formats are the ones the locale-neutral default was
+ * modelled on, so `locale: 'ja-JP'` reads exactly like leaving `locale` out.
+ */
+export const LocalizedJapanese: Story = {
+  args: {
+    label: 'Carbon dioxide over two Japanese days of hourly readings',
+    period: 'day',
+    timeZone: 'Asia/Tokyo',
+    locale: 'ja-JP',
+    valueFormatter: (value: number) => `${value}ppm`,
+    series: [
+      {
+        id: 'carbonDioxide',
+        label: 'Carbon dioxide',
+        points: hourlyPoints(tokyoMidnight, twoDayReadings),
+      },
+    ],
+  },
+};
+
+/**
+ * `en-GB` puts the day before the month, so both the dated tooltip heading of
+ * the hourly chart and the day ticks of the monthly one differ from the default.
+ */
+export const LocalizedBritish: Story = {
+  args: {
+    label: britishHourlyLabel,
+    period: 'day',
+    locale: 'en-GB',
+    valueFormatter: (value: number) => `${value}ppm`,
+    series: [
+      {
+        id: 'carbonDioxide',
+        label: 'Carbon dioxide',
+        points: hourlyPoints(Date.UTC(2026, 0, 15), twoDayReadings),
+      },
+    ],
+  },
+  render: (args) => (
+    <div className="grid gap-spacious lg:grid-cols-2">
+      <TimeSeriesChart {...args} />
+      <TimeSeriesChart
+        label={britishMonthlyLabel}
+        period="month"
+        locale="en-GB"
+        valueFormatter={(value: number) => `${value}°C`}
+        series={[livingRoomSeries]}
+      />
+    </div>
+  ),
+  // The meta play addresses a single chart; this story renders two.
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const heading = () =>
+      canvasElement.querySelector('[data-slot="chart-tooltip"] p');
+    const timeAxisLabels = Array.from(
+      canvasElement.querySelectorAll(
+        '.recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value'
+      ),
+      (tick) => tick.textContent
+    );
+
+    await expect(timeAxisLabels).toContain('01/01');
+
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole('application', { name: args.label })
+    ).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    await waitFor(() => expect(heading()).toHaveTextContent('15/01'));
   },
 };
 
