@@ -104,6 +104,8 @@ function tooltipText(container: HTMLElement): string {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  vi.unstubAllEnvs();
+  vi.resetModules();
 });
 
 describe('TreemapChart', () => {
@@ -242,6 +244,55 @@ describe('TreemapChart', () => {
     render(<TreemapChart label="Spending" nodes={nodes} />);
 
     expect(reportSpy).toHaveBeenCalledWith(expect.stringContaining('refund'));
+  });
+
+  it('drops a node it cannot give area to without reporting in production', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.resetModules();
+    const reportSpy = vi
+      .spyOn(console, 'error')
+      .mockImplementation(() => undefined);
+    // The flag is read when the module loads, and a fresh copy of the library
+    // has to come with a matching React for the hooks inside it.
+    const { render: renderInProduction } = await import(
+      '@testing-library/react'
+    );
+    const { TreemapChart: ProductionTreemapChart } = await import('.');
+
+    const { container } = renderInProduction(
+      <ProductionTreemapChart
+        label="Spending"
+        nodes={[
+          ...spendingNodes,
+          { id: 'refund', label: 'Refund', value: -20 },
+        ]}
+      />
+    );
+
+    expect(tiles(container)).toHaveLength(spendingNodes.length);
+    expect(reportSpy).not.toHaveBeenCalled();
+  });
+
+  it('splits the share evenly between two values whose sum would overflow', () => {
+    const label = 'Spending';
+    const beyondHalfTheRange = 1e308;
+
+    render(
+      <TreemapChart
+        label={label}
+        nodes={[
+          { id: 'first', label: 'First', value: beyondHalfTheRange },
+          { id: 'second', label: 'Second', value: beyondHalfTheRange },
+        ]}
+        valueFormatter={() => 'immense'}
+      />
+    );
+
+    expect(tableRows(label)).toEqual([
+      ['Label', 'Value', 'Share'],
+      ['First', 'immense', '50%'],
+      ['Second', 'immense', '50%'],
+    ]);
   });
 
   it('lists every node with its value and share in the table alternative', () => {

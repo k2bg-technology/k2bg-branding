@@ -351,14 +351,21 @@ export function TreemapChart({
     regionKeys.map((key, index) => [key, index])
   );
 
-  const total = drawableNodes.reduce((sum, node) => sum + node.value, 0);
   const largestValue = Math.max(0, ...drawableNodes.map((node) => node.value));
+  // Shares and areas are ratios, so they are taken from values measured against
+  // the largest one: a sum of finite values then cannot overflow to Infinity.
+  const scaled = (value: number) =>
+    largestValue === 0 ? 0 : value / largestValue;
+  const total = drawableNodes.reduce(
+    (sum, node) => sum + scaled(node.value),
+    0
+  );
   // A share that rounds down to nothing is still not nothing.
   const shareLabel = (value: number) => {
     if (total === 0 || value === 0) {
       return '0%';
     }
-    const percentage = Math.round((value / total) * 100);
+    const percentage = Math.round((scaled(value) / total) * 100);
     return percentage === 0 ? '<1%' : `${percentage}%`;
   };
   // Without groups the color carries no meaning, so it does not vary either.
@@ -415,10 +422,11 @@ export function TreemapChart({
   const groups = new Map(groupEntries);
 
   // Zero takes no area, so it is left out of the drawing but kept in the table.
+  // The layout reads the measured value for the same reason the shares do.
   const toTileDatum = (node: TreemapChartNode): TileDatum => ({
     tileId: node.id,
     name: node.label,
-    value: node.value,
+    value: scaled(node.value),
   });
   const data: (TileDatum | GroupDatum)[] = isGrouped
     ? regions.flatMap((region) => {
