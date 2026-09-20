@@ -88,8 +88,11 @@ export interface BarSeries {
   /** Display label, already localized by the consuming app. */
   label: string;
   color?: ChartColor;
-  /** One value per category, index-aligned with the chart's categories. */
-  values: number[];
+  /**
+   * One value per category, index-aligned with the chart's categories;
+   * null renders as a gap.
+   */
+  values: (number | null)[];
 }
 
 export interface ChartTooltipItem {
