@@ -1,0 +1,36 @@
+{
+  "id": "sample-dashboard",
+  "title": "Sample dashboard",
+  "description": "A fixture for the dashboard walking skeleton.",
+  "grain": "month",
+  "timeZone": "Asia/Tokyo",
+  "locale": "ja-JP",
+  "currency": "JPY",
+  "revalidate": 86400,
+  "sections": [
+    {
+      "id": "monthly-summary",
+      "title": "Monthly summary",
+      "kind": "stat-tiles",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "monthly_summary",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "tiles": [
+        {
+          "label": "Total",
+          "column": "total_value",
+          "reduction": "sum",
+          "format": { "type": "currency" }
+        },
+        {
+          "label": "Latest rate",
+          "column": "latest_rate",
+          "reduction": "latest",
+          "format": { "type": "percent", "inputScale": "ratio" }
+        }
+      ]
+    }
+  ]
+}
