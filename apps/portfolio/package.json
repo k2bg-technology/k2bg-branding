@@ -42,7 +42,7 @@
     "autoprefixer": "^10.5.4",
     "babel-plugin-react-compiler": "^1.0.0",
     "biome-config": "workspace:*",
-    "jsdom": "^26.1.0",
+    "jsdom": "^30.0.1",
     "postcss": "^8.5.26",
     "postcss-preset-env": "^9.6.0",
     "storybook": "^10.5.8",
