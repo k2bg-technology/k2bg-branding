@@ -4,11 +4,6 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DepthGallery } from './DepthGallery';
-import {
-  getDollyDistance,
-  getPlaneOpacity,
-  getPlanePlacement,
-} from './depthMotion';
 
 const mocks = vi.hoisted(() => ({
   frame: 0,
@@ -59,20 +54,15 @@ describe('DepthGallery', () => {
 
     render(<DepthGallery sources={SOURCES} />);
 
-    const expectedDolly = getDollyDistance({
-      frame: 60,
-      durationInFrames: COMPOSITION_DURATION_IN_FRAMES,
-      planeCount: SOURCES.length,
+    expect(mocks.capturedPlanes[0]).toMatchObject({
+      src: 'first.jpg',
+      opacity: 1,
     });
-    const firstPlane = getPlanePlacement({ planeIndex: 0 });
-    expect(mocks.capturedPlanes[0].opacity).toBeCloseTo(
-      getPlaneOpacity({ planeZ: firstPlane.z, dollyDistance: expectedDolly })
-    );
   });
 
   it('spans the dolly over an explicit duration override', () => {
     mocks.frame = 60;
-    const overrideDurationInFrames = 120;
+    const overrideDurationInFrames = 61;
 
     render(
       <DepthGallery
@@ -81,26 +71,9 @@ describe('DepthGallery', () => {
       />
     );
 
-    const overrideDolly = getDollyDistance({
-      frame: 60,
-      durationInFrames: overrideDurationInFrames,
-      planeCount: SOURCES.length,
+    expect(mocks.capturedPlanes[0]).toMatchObject({
+      src: 'first.jpg',
+      opacity: 0,
     });
-    const fallbackDolly = getDollyDistance({
-      frame: 60,
-      durationInFrames: COMPOSITION_DURATION_IN_FRAMES,
-      planeCount: SOURCES.length,
-    });
-    const firstPlane = getPlanePlacement({ planeIndex: 0 });
-    const overrideOpacity = getPlaneOpacity({
-      planeZ: firstPlane.z,
-      dollyDistance: overrideDolly,
-    });
-    const fallbackOpacity = getPlaneOpacity({
-      planeZ: firstPlane.z,
-      dollyDistance: fallbackDolly,
-    });
-    expect(overrideOpacity).not.toBeCloseTo(fallbackOpacity);
-    expect(mocks.capturedPlanes[0].opacity).toBeCloseTo(overrideOpacity);
   });
 });

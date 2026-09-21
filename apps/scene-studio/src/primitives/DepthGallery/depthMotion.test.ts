@@ -4,8 +4,6 @@ import {
   getDollyDistance,
   getPlaneOpacity,
   getPlanePlacement,
-  LATERAL_OFFSET_IN_WORLD_UNITS,
-  PLANE_SPACING_IN_WORLD_UNITS,
 } from './depthMotion';
 
 describe('getDollyDistance', () => {
@@ -37,7 +35,7 @@ describe('getDollyDistance', () => {
       planeCount,
     });
 
-    const fullCorridorLength = (planeCount - 1) * PLANE_SPACING_IN_WORLD_UNITS;
+    const fullCorridorLength = 7.5;
     expect(distance).toBeCloseTo(fullCorridorLength);
   });
 
@@ -68,7 +66,7 @@ describe('getDollyDistance', () => {
 
   it.each([
     { frame: -5, expectedDistance: 0 },
-    { frame: 200, expectedDistance: 3 * PLANE_SPACING_IN_WORLD_UNITS },
+    { frame: 200, expectedDistance: 7.5 },
   ])(
     'clamps out-of-range frame $frame to $expectedDistance',
     ({ frame, expectedDistance }) => {
@@ -97,9 +95,7 @@ describe('getPlanePlacement', () => {
       const placement = getPlanePlacement({ planeIndex });
       const nextPlacement = getPlanePlacement({ planeIndex: planeIndex + 1 });
 
-      expect(placement.z - nextPlacement.z).toBeCloseTo(
-        PLANE_SPACING_IN_WORLD_UNITS
-      );
+      expect(placement.z - nextPlacement.z).toBeCloseTo(2.5);
     }
   );
 
@@ -115,9 +111,7 @@ describe('getPlanePlacement', () => {
     ({ planeIndex }) => {
       const placement = getPlanePlacement({ planeIndex });
 
-      expect(Math.abs(placement.x)).toBeLessThanOrEqual(
-        LATERAL_OFFSET_IN_WORLD_UNITS
-      );
+      expect(Math.abs(placement.x)).toBeLessThanOrEqual(0.6);
     }
   );
 });

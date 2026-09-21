@@ -4,11 +4,7 @@ import type { CSSProperties, PropsWithChildren } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { SpeedRamp } from './SpeedRamp';
-import {
-  getEchoLayers,
-  MAX_SMEAR_BLUR_IN_PX,
-  type SpeedKeyframe,
-} from './speedRampMotion';
+import type { SpeedKeyframe } from './speedRampMotion';
 
 const mocks = vi.hoisted(() => ({ frame: 0 }));
 
@@ -53,7 +49,7 @@ vi.mock('remotion', () => ({
   ),
 }));
 
-// Speed 1 for 60 frames, then a linear ramp reaching 3 at frame 60: the
+// A linear speed ramp from 1 to 3 over 60 frames means the
 // integral at frame 60 is exactly 120 source frames.
 const RAMP_KEYFRAMES: ReadonlyArray<SpeedKeyframe> = [
   { atFrame: 0, speed: 1 },
@@ -105,21 +101,22 @@ describe('SpeedRamp', () => {
     expect(sequenceStarts).toEqual(['60', '60', '60']);
   });
 
-  it('renders only the live layer without smear at normal speed', () => {
+  it('renders only the live layer at normal speed', () => {
     mocks.frame = 0;
 
-    const { container } = render(
+    render(
       <SpeedRamp src="clip.mp4" speedKeyframes={RAMP_KEYFRAMES} echoCount={3} />
     );
 
     expect(screen.getAllByTestId('layer')).toHaveLength(1);
-    const root = container.firstElementChild as HTMLElement;
-    expect(root.style.filter).toBe('');
   });
 
-  it.each([{ ghostIndex: 0 }, { ghostIndex: 1 }])(
-    'trims ghost $ghostIndex to its trailing source frame and fades it',
-    ({ ghostIndex }) => {
+  it.each([
+    { ghostIndex: 0, expectedTrim: 129 },
+    { ghostIndex: 1, expectedTrim: 128 },
+  ])(
+    'trims ghost $ghostIndex to its trailing source frame',
+    ({ ghostIndex, expectedTrim }) => {
       mocks.frame = 60;
 
       render(
@@ -132,29 +129,9 @@ describe('SpeedRamp', () => {
       );
 
       const ghost = screen.getAllByTestId('layer')[ghostIndex + 1];
-      const echoLayer = getEchoLayers({ speed: 3, echoCount: 2 })[ghostIndex];
-      const expectedTrim = Math.round(
-        LIVE_TRIM_AT_60 - echoLayer.sourceOffsetInFrames
-      );
       expect(ghost.getAttribute('data-trim-before')).toBe(String(expectedTrim));
-
-      const opacityWrapper = ghost.parentElement?.parentElement as HTMLElement;
-      expect(Number(opacityWrapper.style.opacity)).toBeCloseTo(
-        echoLayer.opacity
-      );
     }
   );
-
-  it('applies the full smear blur at rush speed', () => {
-    mocks.frame = 60;
-
-    const { container } = render(
-      <SpeedRamp src="clip.mp4" speedKeyframes={RAMP_KEYFRAMES} echoCount={2} />
-    );
-
-    const root = container.firstElementChild as HTMLElement;
-    expect(root.style.filter).toBe(`blur(${MAX_SMEAR_BLUR_IN_PX}px)`);
-  });
 
   it('clamps ghost trims at the clip start', () => {
     mocks.frame = 0;

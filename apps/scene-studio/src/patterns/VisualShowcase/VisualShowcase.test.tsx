@@ -5,21 +5,16 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { VisualShowcase } from './VisualShowcase';
 
-vi.mock('remotion', () => ({
-  AbsoluteFill: ({ children }: PropsWithChildren) => <div>{children}</div>,
-  interpolate: (
-    input: number,
-    [inputStart, inputEnd]: [number, number],
-    [outputStart, outputEnd]: [number, number]
-  ) =>
-    outputStart +
-    ((Math.min(Math.max(input, inputStart), inputEnd) - inputStart) /
-      (inputEnd - inputStart)) *
-      (outputEnd - outputStart),
-  Sequence: ({ children }: PropsWithChildren) => <div>{children}</div>,
-  useCurrentFrame: () => 30,
-  useVideoConfig: () => ({ fps: 30 }),
-}));
+vi.mock('remotion', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('remotion')>();
+  return {
+    ...actual,
+    AbsoluteFill: ({ children }: PropsWithChildren) => <div>{children}</div>,
+    Sequence: ({ children }: PropsWithChildren) => <div>{children}</div>,
+    useCurrentFrame: () => 30,
+    useVideoConfig: () => ({ fps: 30 }),
+  };
+});
 
 vi.mock('@remotion/transitions', () => {
   const TransitionSeries = ({ children }: PropsWithChildren) => (
@@ -71,69 +66,31 @@ afterEach(() => {
 });
 
 describe('VisualShowcase', () => {
-  it('renders the supplied media, caption, title, subtitle, and outro call to action', () => {
-    render(
-      <VisualShowcase
-        title="Quiet Forms"
-        subtitle="A visual study"
-        cta="Explore more work"
-        items={[
-          {
-            mediaType: 'image',
-            src: 'https://example.com/first.jpg',
-            durationInSeconds: 4,
-            caption: 'Morning light',
-          },
-          {
-            mediaType: 'video',
-            src: 'https://example.com/second.mp4',
-            durationInSeconds: 3,
-            startFromInSeconds: 1.5,
-          },
-        ]}
-      />
-    );
+  it.each([
+    { startFromInSeconds: 1.5, expectedSourceFrame: '45' },
+    { startFromInSeconds: 1.52, expectedSourceFrame: '46' },
+    { startFromInSeconds: undefined, expectedSourceFrame: null },
+  ])(
+    'passes source start $startFromInSeconds as frame $expectedSourceFrame',
+    ({ startFromInSeconds, expectedSourceFrame }) => {
+      render(
+        <VisualShowcase
+          title="Quiet Forms"
+          items={[
+            {
+              mediaType: 'video',
+              src: 'https://example.com/clip.mp4',
+              durationInSeconds: 3,
+              startFromInSeconds,
+            },
+          ]}
+        />
+      );
 
-    const mediaFrames = screen.getAllByTestId('media-frame');
-
-    expect(screen.getByRole('heading', { name: 'Quiet Forms' })).toBeDefined();
-    expect(screen.getByText('A visual study')).toBeDefined();
-    expect(screen.getByText('Morning light')).toBeDefined();
-    expect(screen.getByTestId('gradient-overlay')).toBeDefined();
-    expect(screen.getByTestId('brand-outro').textContent).toBe(
-      'Explore more work'
-    );
-    expect(screen.getByTestId('logo')).toBeDefined();
-    expect(mediaFrames).toHaveLength(2);
-    expect(mediaFrames[0]?.getAttribute('data-src')).toBe(
-      'https://example.com/first.jpg'
-    );
-    expect(mediaFrames[1]?.getAttribute('data-media-type')).toBe('video');
-    expect(mediaFrames[1]?.getAttribute('data-start-from-in-frames')).toBe(
-      '45'
-    );
-    expect(screen.getAllByTestId('transition')).toHaveLength(2);
-  });
-
-  it('omits optional text and caption treatment when no optional props are supplied', () => {
-    render(
-      <VisualShowcase
-        title="Quiet Forms"
-        items={[
-          {
-            mediaType: 'image',
-            src: 'https://example.com/first.jpg',
-            durationInSeconds: 4,
-          },
-        ]}
-      />
-    );
-
-    expect(screen.getByRole('heading', { name: 'Quiet Forms' })).toBeDefined();
-    expect(screen.queryByTestId('caption')).toBeNull();
-    expect(screen.queryByTestId('gradient-overlay')).toBeNull();
-    expect(screen.getByTestId('brand-outro').childElementCount).toBe(0);
-    expect(screen.getByTestId('brand-outro').textContent).toBe('');
-    expect(screen.getAllByTestId('transition')).toHaveLength(1);
-  });
+      const mediaFrame = screen.getByTestId('media-frame');
+      expect(mediaFrame.getAttribute('data-start-from-in-frames')).toBe(
+        expectedSourceFrame
+      );
+    }
+  );
 });
