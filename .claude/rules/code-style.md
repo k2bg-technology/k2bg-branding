@@ -56,7 +56,10 @@ Follow `AGENTS.md` > Coding Style & Naming Conventions > Comments.
 - **Condition Expression Order**: In conditional expressions, place **changing values (investigation target) on the left** and stable values (comparison target) on the right.
 - **Affirmative if/else**: In `if/else` blocks, prefer affirmative conditions over negative conditions (e.g., `if (!url.HasQueryParameter)`).
 - **Avoid do/while**: Avoid `do/while` loops where the condition is unnaturally at the bottom of the block; rewrite using `while` loops.
-- **Ternary Operator Use**: Use ternary operators only when they **significantly simplify** the code.
+- **Ternary Operator Use**: `style/noNestedTernary` rejects nested ternary expressions; a single-level ternary stays allowed, including in JSX.
+  - A value mapping uses a lookup object. A multi-way expression uses a small early-return function.
+  - In JSX, a branch decided by one condition uses a top-level child component written with early returns (`if (condition) return <A />; return <B />;`); the child never returns a ternary. More complex branching uses an immediately invoked function with an `if` chain, as in `apps/blog/components/markdown/AffiliateEmb.tsx` and `apps/blog/components/markdown/MediaEmb.tsx`.
+  - `renderXxx` helpers and components defined inside components stay disallowed.
 
 ## Variables and Scope
 
