@@ -8,12 +8,15 @@ const integerFormat = new Intl.NumberFormat('en-US');
 
 function formatBytes(bytes: number) {
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  let value = bytes;
-  let unitIndex = 0;
-  while (value >= 1024 && unitIndex < units.length - 1) {
-    value /= 1024;
-    unitIndex += 1;
-  }
+  const { value, unitIndex } = Array.from({
+    length: units.length - 1,
+  }).reduce<{ value: number; unitIndex: number }>(
+    (result) =>
+      result.value >= 1024
+        ? { value: result.value / 1024, unitIndex: result.unitIndex + 1 }
+        : result,
+    { value: bytes, unitIndex: 0 }
+  );
   const digits = unitIndex === 0 ? 0 : 1;
   return `${value.toFixed(digits)} ${units[unitIndex]}`;
 }

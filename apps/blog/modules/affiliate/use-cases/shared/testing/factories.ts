@@ -15,6 +15,7 @@ import {
   TargetUrl,
 } from '../../../domain';
 
+// biome-ignore lint/plugin/noLet: The factory sequence counter persists across factory calls.
 let counter = 0;
 
 export const createAffiliateBanner = (

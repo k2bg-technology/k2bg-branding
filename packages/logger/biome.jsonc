@@ -1,9 +1,10 @@
 {
   "root": false,
   "extends": ["biome-config/biome.jsonc"],
+  "plugins": ["../../packages/biome-config/plugins/noLet.grit"],
 
   "files": {
-    "includes": ["*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"]
+    "includes": ["*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}"]
   },
 
   "overrides": [

@@ -8,7 +8,9 @@ export interface InstagramClient {
   fetch(resource: string, params?: Record<string, string>): Promise<Response>;
 }
 
+// biome-ignore lint/plugin/noLet: The lazy Instagram client persists across calls and configuration resets.
 let clientInstance: InstagramClient | null = null;
+// biome-ignore lint/plugin/noLet: The active configuration persists across Instagram client calls.
 let currentConfig: InstagramConfig | null = null;
 
 function createDefaultConfig(): InstagramConfig {

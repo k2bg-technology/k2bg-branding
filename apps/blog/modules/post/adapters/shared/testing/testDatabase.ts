@@ -5,7 +5,9 @@ import * as schema from '../../../../../infrastructure/drizzle/schema';
 
 type TestDb = ReturnType<typeof drizzle<typeof schema>>;
 
+// biome-ignore lint/plugin/noLet: The test database client persists across setup, queries, and teardown.
 let client: ReturnType<typeof postgres> | undefined;
+// biome-ignore lint/plugin/noLet: The test database handle persists across setup, queries, and teardown.
 let db: TestDb | undefined;
 
 export function getTestDb(): TestDb {

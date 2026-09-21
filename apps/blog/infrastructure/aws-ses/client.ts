@@ -9,7 +9,9 @@ export interface AwsSesConfig {
   senderEmail: string;
 }
 
+// biome-ignore lint/plugin/noLet: The lazy email sender persists across calls and configuration resets.
 let emailSenderInstance: AwsSesEmailSender | null = null;
+// biome-ignore lint/plugin/noLet: The active configuration persists across email sender calls.
 let currentConfig: AwsSesConfig | null = null;
 
 function createDefaultConfig(): AwsSesConfig {

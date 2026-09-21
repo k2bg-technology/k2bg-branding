@@ -1,5 +1,5 @@
-import { getInstagramClient, getInstagramUserId } from '../instagram';
 import { FetchFeed, InstagramFeedFetcher } from '../../modules/social-feed';
+import { getInstagramClient, getInstagramUserId } from '../instagram';
 
 /**
  * Creates FetchFeed use case with Instagram adapter

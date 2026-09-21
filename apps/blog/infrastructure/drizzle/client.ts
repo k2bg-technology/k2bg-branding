@@ -20,7 +20,9 @@ export type DrizzleClient = ReturnType<
   typeof drizzle<typeof schema, PostgresClient>
 >;
 
+// biome-ignore lint/plugin/noLet: The lazy PostgreSQL client persists across server requests and test resets.
 let postgresClientInstance: PostgresClient | null = null;
+// biome-ignore lint/plugin/noLet: The lazy Drizzle client persists across server requests and test resets.
 let drizzleClientInstance: DrizzleClient | null = null;
 
 function createPostgresClient() {

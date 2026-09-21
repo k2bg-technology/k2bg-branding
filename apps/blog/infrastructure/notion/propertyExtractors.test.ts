@@ -235,17 +235,26 @@ describe('infrastructure/notion/property-extractors', () => {
     it('extracts URL from file type', () => {
       const props = {
         image: createProperty('files', {
-          files: [{ type: 'file', file: { url: 'https://s3.example.com/a.jpg' } }],
+          files: [
+            { type: 'file', file: { url: 'https://s3.example.com/a.jpg' } },
+          ],
         }),
       } as unknown as NotionProperties;
 
-      expect(getFirstFileUrl(props, 'image')).toBe('https://s3.example.com/a.jpg');
+      expect(getFirstFileUrl(props, 'image')).toBe(
+        'https://s3.example.com/a.jpg'
+      );
     });
 
     it('extracts URL from external type', () => {
       const props = {
         image: createProperty('files', {
-          files: [{ type: 'external', external: { url: 'https://example.com/b.jpg' } }],
+          files: [
+            {
+              type: 'external',
+              external: { url: 'https://example.com/b.jpg' },
+            },
+          ],
         }),
       } as unknown as NotionProperties;
 
@@ -288,7 +297,10 @@ describe('infrastructure/notion/property-extractors', () => {
         images: createProperty('files', {
           files: [
             { type: 'file', file: { url: 'https://s3.example.com/a.jpg' } },
-            { type: 'external', external: { url: 'https://example.com/b.jpg' } },
+            {
+              type: 'external',
+              external: { url: 'https://example.com/b.jpg' },
+            },
           ],
         }),
       } as unknown as NotionProperties;
@@ -382,7 +394,11 @@ describe('infrastructure/notion/property-extractors', () => {
       const props = {
         author: createProperty('people', {
           people: [
-            { id: 'user-1', name: 'John Doe', avatar_url: 'https://avatar.jpg' },
+            {
+              id: 'user-1',
+              name: 'John Doe',
+              avatar_url: 'https://avatar.jpg',
+            },
           ],
         }),
       } as unknown as NotionProperties;

@@ -1,15 +1,19 @@
 {
   "root": false,
   "extends": ["biome-config/biome.jsonc"],
+  "plugins": ["../../packages/biome-config/plugins/noLet.grit"],
 
   "files": {
     "includes": [
+      "@types/**/*.d.ts",
       "app/**/*.{ts,tsx}",
+      "infrastructure/**/*.{ts,tsx}",
       "modules/**/*.{ts,tsx}",
       "server/**/*.ts",
       "lib/**/*.{ts,tsx}",
       "components/**/*.{ts,tsx}",
-      "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
+      "scripts/**/*.{ts,mjs}",
+      "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}",
       ".storybook/**/*.{ts,tsx,js}"
     ]
   },

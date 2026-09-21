@@ -5,6 +5,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "scripts": {
+    "test": "node --test plugins/noLet.test.mjs"
+  },
   "devDependencies": {
     "@biomejs/biome": "^2.5.8"
   }

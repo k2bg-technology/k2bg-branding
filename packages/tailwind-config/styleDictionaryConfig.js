@@ -121,7 +121,7 @@ StyleDictionary.registerFormat({
     return `${StyleDictionary.formatHelpers.fileHeader({
       file,
     })}@theme {\n${dictionary.allProperties
-      .reduce((prev, token) => {
+      .flatMap((token) => {
         const description = token.value.includes?.('rem')
           ? ` /* original -> ${token.original.value}px */`
           : '';
@@ -130,27 +130,22 @@ StyleDictionary.registerFormat({
 
         switch (token.path.slice(-1)[0]) {
           case 'fontSize':
-            return [
-              ...prev,
-              `  --text-${semanticToken}: ${token.value};${description}`,
-            ];
+            return [`  --text-${semanticToken}: ${token.value};${description}`];
 
           case 'lineHeight':
             return [
-              ...prev,
               `  --leading-${semanticToken}: ${token.value};${description}`,
             ];
 
           case 'fontWeight':
             return [
-              ...prev,
               `  --font-weight-${semanticToken}: ${token.value};${description}`,
             ];
 
           default:
-            return prev;
+            return [];
         }
-      }, [])
+      })
       .join('\n')}\n}`;
   },
 });

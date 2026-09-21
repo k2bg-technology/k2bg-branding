@@ -1,4 +1,4 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildImageUrl,
   configureCloudinary,
@@ -10,7 +10,9 @@ vi.mock('cloudinary', () => ({
   v2: {
     config: vi.fn(),
     uploader: {
-      upload: vi.fn().mockResolvedValue({ secure_url: 'https://example.com/image.jpg' }),
+      upload: vi
+        .fn()
+        .mockResolvedValue({ secure_url: 'https://example.com/image.jpg' }),
     },
     api: {
       resource: vi.fn().mockResolvedValue({ version: '12345' }),

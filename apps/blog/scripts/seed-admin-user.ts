@@ -1,5 +1,5 @@
-import { resetDrizzleClient } from '../infrastructure/drizzle/client';
 import { provisionAdminUser } from '../infrastructure/auth/provisionAdminUser';
+import { resetDrizzleClient } from '../infrastructure/drizzle/client';
 
 // One-off operator script: provisions the first administrator from environment
 // variables. No public sign-up exists; see apps/blog/specs/auth.md.

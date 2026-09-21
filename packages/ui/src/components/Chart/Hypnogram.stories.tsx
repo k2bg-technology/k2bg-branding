@@ -16,12 +16,23 @@ function buildSegments(
   startTime: number,
   durations: [HypnogramStage, number][]
 ): HypnogramSegment[] {
-  let cursor = startTime;
-  return durations.map(([stage, minutes]) => {
-    const segment = { start: cursor, end: cursor + minutes * minuteMs, stage };
-    cursor = segment.end;
-    return segment;
-  });
+  return durations.reduce<{
+    cursor: number;
+    segments: HypnogramSegment[];
+  }>(
+    ({ cursor, segments }, [stage, minutes]) => {
+      const segment = {
+        start: cursor,
+        end: cursor + minutes * minuteMs,
+        stage,
+      };
+      return {
+        cursor: segment.end,
+        segments: [...segments, segment],
+      };
+    },
+    { cursor: startTime, segments: [] }
+  ).segments;
 }
 
 /** Roughly ninety-minute cycles, deepening early and shifting to REM by morning. */

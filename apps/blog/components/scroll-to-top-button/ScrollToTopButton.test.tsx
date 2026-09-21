@@ -35,6 +35,7 @@ vi.mock('motion/react', async (importOriginal) => {
   };
 });
 
+// biome-ignore lint/plugin/noLet: The hoisted hook mock reads visibility state across test renders.
 let mockIsVisible = false;
 
 describe('ScrollToTopButton', () => {
