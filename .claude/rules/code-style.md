@@ -67,6 +67,15 @@ Follow `AGENTS.md` > Coding Style & Naming Conventions > Comments.
   - Replace control flow variables used only to control loop execution (e.g., `done`) with `break` or `continue` and remove them.
 - **Use Explanatory Variables**: Introduce **explanatory variables** or **summary variables** to clarify the meaning of complex expressions or large code chunks.
 
+## Type Annotations
+
+- Exported functions, exported hooks, and public methods of exported classes declare an explicit return type.
+- React components are exempt, including PascalCase functions and Next.js pages and layouts.
+- A function that returns an object literal uses a named type defined next to it.
+- Exported constants rely on inference; `as const` objects, schemas, tables, and variant definitions derive other types from the inferred type.
+- Non-exported functions, local variables, and constants carry no annotation when inference yields the same type.
+- An annotation stays where it supplies the type, including a literal checked against a contract, an empty collection, a variable without an initializer, a type guard, recursion, an overload, or deliberate widening.
+
 ## Formatting and Visual Alignment
 
 - **Consistent Style**: Apply consistent style throughout the project.
