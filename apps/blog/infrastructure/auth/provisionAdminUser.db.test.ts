@@ -8,7 +8,9 @@ import { users } from '../drizzle/schema';
 import { auth } from './auth';
 import { provisionAdminUser } from './provisionAdminUser';
 
-function createAdminInput(overrides: Partial<Parameters<typeof provisionAdminUser>[0]> = {}) {
+function createAdminInput(
+  overrides: Partial<Parameters<typeof provisionAdminUser>[0]> = {}
+) {
   return {
     email: 'admin@example.com',
     password: 'changeme123',

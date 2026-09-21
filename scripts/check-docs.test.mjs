@@ -67,7 +67,8 @@ describe('findDocumentationProblems', () => {
     });
 
     it('ignores paths outside the known repo prefixes', () => {
-      const content = 'The handler is `app/api/[[...route]]/route.ts` in the blog app.';
+      const content =
+        'The handler is `app/api/[[...route]]/route.ts` in the blog app.';
 
       const failures = runChecker(content);
 
@@ -115,7 +116,8 @@ describe('findDocumentationProblems', () => {
     }
 
     it('does not flag current tech mentions', () => {
-      const content = 'Use Drizzle ORM and @base-ui/react with the Vite builder.';
+      const content =
+        'Use Drizzle ORM and @base-ui/react with the Vite builder.';
 
       const failures = runChecker(content);
 

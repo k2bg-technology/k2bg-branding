@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-
+import { getDictionary } from './dictionaries';
 import en from './locales/en/translation.json';
 import ja from './locales/ja/translation.json';
-import { getDictionary } from './dictionaries';
 
 // The `server-only` package throws when imported outside a Next.js server
 // build; dictionaries.ts imports it as a guard. Stub it so the module can be

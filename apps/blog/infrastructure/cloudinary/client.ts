@@ -107,7 +107,8 @@ export function buildImageUrl(
 
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const baseUrl = `https://res.cloudinary.com/${cloudName}/image/upload`;
-  const transformation = transformations.length > 0 ? transformations.join(',') : '';
+  const transformation =
+    transformations.length > 0 ? transformations.join(',') : '';
 
   const parts = [baseUrl, transformation, publicId].filter(Boolean);
   return parts.join('/');
@@ -121,5 +122,5 @@ export function resetCloudinaryConfig(): void {
   isConfigured = false;
 }
 
-export { cloudinary };
 export type { UploadApiOptions, UploadApiResponse };
+export { cloudinary };

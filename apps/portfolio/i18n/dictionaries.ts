@@ -1,8 +1,7 @@
-import 'server-only'
-
-import type { Language } from './settings';
+import 'server-only';
 
 import type en from './locales/en/translation.json';
+import type { Language } from './settings';
 
 export type Dictionary = typeof en;
 

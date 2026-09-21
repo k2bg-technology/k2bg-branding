@@ -1,6 +1,6 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
-import { getPlaceholderImageUrl } from './getPlaceholderImageUrl';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { resetCloudinaryConfig } from './client';
+import { getPlaceholderImageUrl } from './getPlaceholderImageUrl';
 
 vi.mock('cloudinary', () => ({
   v2: {

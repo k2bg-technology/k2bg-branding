@@ -12,7 +12,7 @@ if (!databaseUrl) {
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const migrationsFolder = join(
   currentDir,
-  '../infrastructure/drizzle/migrations',
+  '../infrastructure/drizzle/migrations'
 );
 const [initialMigration] = readMigrationFiles({ migrationsFolder });
 
@@ -57,7 +57,7 @@ try {
 
       if (!hasCompleteBaselineSchema) {
         throw new Error(
-          'Existing blog database schema is incomplete; refusing to baseline Drizzle migrations.',
+          'Existing blog database schema is incomplete; refusing to baseline Drizzle migrations.'
         );
       }
 

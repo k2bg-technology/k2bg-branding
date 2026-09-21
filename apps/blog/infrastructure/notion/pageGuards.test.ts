@@ -22,16 +22,13 @@ describe('Notion page guards', () => {
     it.each([
       { result: fullPage, expected: true },
       { result: partialPage, expected: false },
-    ])(
-      'returns $expected when checking $result.id',
-      ({ result, expected }) => {
-        const sut = isFullPageObjectResponse;
+    ])('returns $expected when checking $result.id', ({ result, expected }) => {
+      const sut = isFullPageObjectResponse;
 
-        const isFullPageResult = sut(result);
+      const isFullPageResult = sut(result);
 
-        expect(isFullPageResult).toBe(expected);
-      }
-    );
+      expect(isFullPageResult).toBe(expected);
+    });
   });
 
   describe('filterFullPageObjectResponses', () => {

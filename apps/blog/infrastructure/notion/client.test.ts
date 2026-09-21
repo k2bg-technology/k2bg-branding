@@ -60,13 +60,16 @@ describe('notion/client', () => {
         environmentToken: 'environment-token',
         expectedAuth: '',
       },
-    ])('forwards authentication when $scenario', ({ config, environmentToken, expectedAuth }) => {
-      vi.stubEnv('NOTION_TOKEN', environmentToken);
+    ])(
+      'forwards authentication when $scenario',
+      ({ config, environmentToken, expectedAuth }) => {
+        vi.stubEnv('NOTION_TOKEN', environmentToken);
 
-      createNotionClient(config);
+        createNotionClient(config);
 
-      expect(Client).toHaveBeenCalledWith({ auth: expectedAuth });
-    });
+        expect(Client).toHaveBeenCalledWith({ auth: expectedAuth });
+      }
+    );
 
     it('creates different instances on each call', () => {
       const firstClient = createNotionClient();
