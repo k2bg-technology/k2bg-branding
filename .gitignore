@@ -80,3 +80,6 @@ apps/scene-studio/**/*.mov
 apps/scene-studio/**/*.webm
 apps/scene-studio/**/*.mp3
 apps/scene-studio/**/*.wav
+
+# observatory — private dashboard definitions
+apps/observatory/dashboards/
