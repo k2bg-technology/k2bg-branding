@@ -6,7 +6,9 @@ export interface NotionClientConfig {
   auth?: string;
 }
 
+// biome-ignore lint/plugin/noLet: The lazy Notion client persists across server requests and test resets.
 let notionClientInstance: Client | null = null;
+// biome-ignore lint/plugin/noLet: The lazy converter persists across server requests and test resets.
 let notionToMarkdownInstance: NotionToMarkdown | null = null;
 
 /**

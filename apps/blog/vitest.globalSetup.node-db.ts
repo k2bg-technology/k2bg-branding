@@ -13,6 +13,7 @@ const MIGRATIONS_FOLDER = join(__dirname, 'infrastructure/drizzle/migrations');
 // Pinned to the production image major so test fixtures match Lambda runtime.
 const POSTGRES_IMAGE = 'postgres:15-alpine';
 
+// biome-ignore lint/plugin/noLet: The container handle persists from global setup through teardown.
 let container: StartedPostgreSqlContainer | undefined;
 
 export async function setup(): Promise<void> {

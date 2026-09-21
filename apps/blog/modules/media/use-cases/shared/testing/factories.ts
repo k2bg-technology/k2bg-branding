@@ -12,6 +12,7 @@ import {
   Width,
 } from '../../../domain';
 
+// biome-ignore lint/plugin/noLet: The factory sequence counter persists across factory calls and resets.
 let counter = 0;
 
 export const resetFactoryCounter = (): void => {

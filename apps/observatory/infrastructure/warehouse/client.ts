@@ -34,6 +34,7 @@ const DEFAULT_MAXIMUM_BYTES_BILLED = 1024 ** 3;
 
 const warehouseLogger = logger.child({ module: 'warehouse' });
 
+// biome-ignore lint/plugin/noLet: The lazy warehouse client persists across server requests.
 let warehouseClientInstance: WarehouseClient | null = null;
 
 function requireEnvironmentVariable(name: string): string {

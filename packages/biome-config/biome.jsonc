@@ -3,6 +3,8 @@
   // Set to false for use as shared config in monorepo subdirectories
   "root": false,
 
+  // Biome resolves plugin paths against extending configs, so each config declares its path.
+
   "vcs": {
     "enabled": true,
     "clientKind": "git",

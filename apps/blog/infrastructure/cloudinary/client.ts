@@ -10,6 +10,7 @@ export interface CloudinaryConfig {
   apiSecret?: string;
 }
 
+// biome-ignore lint/plugin/noLet: The SDK configuration state persists across client calls and test resets.
 let isConfigured = false;
 
 /**
