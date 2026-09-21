@@ -59,11 +59,15 @@ export function getSpeedAtFrame(input: {
     return last.speed;
   }
 
-  for (let index = 0; index < speedKeyframes.length - 1; index++) {
-    const segmentEnd = speedKeyframes[index + 1];
-    if (frame <= segmentEnd.atFrame) {
-      return getInterpolatedSpeed(speedKeyframes[index], segmentEnd, frame);
-    }
+  const segmentEndIndex = speedKeyframes.findIndex(
+    (keyframe, index) => index > 0 && frame <= keyframe.atFrame
+  );
+  if (segmentEndIndex !== -1) {
+    return getInterpolatedSpeed(
+      speedKeyframes[segmentEndIndex - 1],
+      speedKeyframes[segmentEndIndex],
+      frame
+    );
   }
 
   return last.speed;
@@ -84,30 +88,33 @@ export function getSourceFrameOffset(input: {
 
   const first = speedKeyframes[0];
   const last = speedKeyframes[speedKeyframes.length - 1];
-  let sourceFrames = 0;
+  const sourceFramesBeforeFirst =
+    first.atFrame > 0 ? Math.min(endFrame, first.atFrame) * first.speed : 0;
+  const segmentPairs = speedKeyframes
+    .slice(0, -1)
+    .map((segmentStart, index) => ({
+      segmentStart,
+      segmentEnd: speedKeyframes[index + 1],
+    }));
+  const sourceFramesThroughSegments = segmentPairs.reduce(
+    (sourceFrames, { segmentStart, segmentEnd }) => {
+      const from = Math.max(segmentStart.atFrame, 0);
+      const to = Math.min(segmentEnd.atFrame, endFrame);
+      if (to <= from) {
+        return sourceFrames;
+      }
+      const speedAtFrom = getInterpolatedSpeed(segmentStart, segmentEnd, from);
+      const speedAtTo = getInterpolatedSpeed(segmentStart, segmentEnd, to);
+      return sourceFrames + ((speedAtFrom + speedAtTo) / 2) * (to - from);
+    },
+    sourceFramesBeforeFirst
+  );
+  const sourceFramesAfterLast =
+    endFrame > last.atFrame
+      ? (endFrame - Math.max(last.atFrame, 0)) * last.speed
+      : 0;
 
-  if (first.atFrame > 0) {
-    sourceFrames += Math.min(endFrame, first.atFrame) * first.speed;
-  }
-
-  for (let index = 0; index < speedKeyframes.length - 1; index++) {
-    const segmentStart = speedKeyframes[index];
-    const segmentEnd = speedKeyframes[index + 1];
-    const from = Math.max(segmentStart.atFrame, 0);
-    const to = Math.min(segmentEnd.atFrame, endFrame);
-    if (to <= from) {
-      continue;
-    }
-    const speedAtFrom = getInterpolatedSpeed(segmentStart, segmentEnd, from);
-    const speedAtTo = getInterpolatedSpeed(segmentStart, segmentEnd, to);
-    sourceFrames += ((speedAtFrom + speedAtTo) / 2) * (to - from);
-  }
-
-  if (endFrame > last.atFrame) {
-    sourceFrames += (endFrame - Math.max(last.atFrame, 0)) * last.speed;
-  }
-
-  return sourceFrames;
+  return sourceFramesThroughSegments + sourceFramesAfterLast;
 }
 
 function getSmearStrength(speed: number): number {

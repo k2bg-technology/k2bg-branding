@@ -33,14 +33,11 @@ try {
       to_regclass('drizzle."__drizzle_migrations"') IS NOT NULL AS has_drizzle_journal
   `;
 
-  let hasAppliedDrizzleMigration = false;
-
-  if (schemaState.has_drizzle_journal) {
-    const [journalState] =
-      await sql`SELECT COUNT(*)::int AS migration_count FROM drizzle.__drizzle_migrations`;
-
-    hasAppliedDrizzleMigration = journalState.migration_count > 0;
-  }
+  const hasAppliedDrizzleMigration = schemaState.has_drizzle_journal
+    ? (
+        await sql`SELECT COUNT(*)::int AS migration_count FROM drizzle.__drizzle_migrations`
+      )[0].migration_count > 0
+    : false;
 
   if (!hasAppliedDrizzleMigration) {
     const hasExistingBlogSchema =

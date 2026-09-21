@@ -25,20 +25,23 @@ export async function GET(): Promise<Response> {
 
 async function fetchAllPublishedPostSummaries(): Promise<PostSummaryOutput[]> {
   const fetchPostSummaries = createFetchPostSummariesUseCase();
-  const posts: PostSummaryOutput[] = [];
-  let page = 1;
-  let hasNextPage = true;
-
-  while (hasNextPage) {
+  const fetchPage = async (
+    page: number,
+    previousPosts: PostSummaryOutput[]
+  ): Promise<PostSummaryOutput[]> => {
     const result = await fetchPostSummaries.execute({
       page,
       pageSize: PAGE_SIZE,
       status: PostStatus.PUBLISHED,
     });
-    posts.push(...result.items);
-    hasNextPage = result.hasNextPage;
-    page += 1;
-  }
+    const posts = previousPosts.concat(result.items);
 
-  return posts;
+    if (!result.hasNextPage) {
+      return posts;
+    }
+
+    return fetchPage(page + 1, posts);
+  };
+
+  return fetchPage(1, []);
 }
