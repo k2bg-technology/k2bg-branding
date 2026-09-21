@@ -105,6 +105,21 @@ function formatWallClock(
 // the runtime rejected, so a broken locale never crashes a chart.
 const localeFormatterCache = new Map<string, Intl.DateTimeFormat | null>();
 
+function createLocaleFormatter(
+  locale: string,
+  granularity: TimeGranularity,
+  timeZone: string
+): Intl.DateTimeFormat | null {
+  try {
+    return new Intl.DateTimeFormat(locale, {
+      timeZone,
+      ...localeFormatOptions[granularity],
+    });
+  } catch {
+    return null;
+  }
+}
+
 function localeFormatter(
   locale: string,
   granularity: TimeGranularity,
@@ -115,15 +130,7 @@ function localeFormatter(
   if (cached !== undefined) {
     return cached;
   }
-  let formatter: Intl.DateTimeFormat | null = null;
-  try {
-    formatter = new Intl.DateTimeFormat(locale, {
-      timeZone,
-      ...localeFormatOptions[granularity],
-    });
-  } catch {
-    formatter = null;
-  }
+  const formatter = createLocaleFormatter(locale, granularity, timeZone);
   localeFormatterCache.set(cacheKey, formatter);
   return formatter;
 }
