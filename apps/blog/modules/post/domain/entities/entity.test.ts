@@ -41,7 +41,7 @@ function createValidDraftParams(
   };
 }
 
-function createDraftPost(overrides: Partial<CreateDraftProps> = {}): Post {
+function createDraftPost(overrides: Partial<CreateDraftProps> = {}) {
   return Post.createDraft(createValidDraftParams(overrides));
 }
 

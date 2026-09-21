@@ -23,7 +23,7 @@ export type DrizzleClient = ReturnType<
 let postgresClientInstance: PostgresClient | null = null;
 let drizzleClientInstance: DrizzleClient | null = null;
 
-function createPostgresClient(): PostgresClient {
+function createPostgresClient() {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     // Fail fast: an empty connection string makes `postgres` silently fall back

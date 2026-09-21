@@ -20,7 +20,7 @@ function parsePolygonPoints(clipPath: string): PolygonPoint[] {
 
 // Sutherland–Hodgman starts the ring at a different corner per angle, so
 // comparisons sort the vertices to stay independent of that rotation.
-function parseSortedPolygonPoints(clipPath: string): PolygonPoint[] {
+function parseSortedPolygonPoints(clipPath: string) {
   return parsePolygonPoints(clipPath).sort(
     ([firstX, firstY], [secondX, secondY]) =>
       firstX - secondX || firstY - secondY

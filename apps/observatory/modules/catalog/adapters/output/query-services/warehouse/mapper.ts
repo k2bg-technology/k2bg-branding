@@ -2,7 +2,7 @@ import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import type { TableSummaryOutput } from '../../../../use-cases';
 import { MappingError } from '../../../shared';
 
-function readString(row: WarehouseRow, key: string): string {
+function readString(row: WarehouseRow, key: string) {
   const value = row[key];
   if (typeof value !== 'string') {
     throw new MappingError(`${key} must be a string, received ${typeof value}`);
@@ -10,7 +10,7 @@ function readString(row: WarehouseRow, key: string): string {
   return value;
 }
 
-function readInteger(row: WarehouseRow, key: string): number {
+function readInteger(row: WarehouseRow, key: string) {
   const value = row[key];
   if (typeof value !== 'number' || !Number.isInteger(value)) {
     throw new MappingError(
@@ -20,7 +20,7 @@ function readInteger(row: WarehouseRow, key: string): number {
   return value;
 }
 
-function readNullableInteger(row: WarehouseRow, key: string): number | null {
+function readNullableInteger(row: WarehouseRow, key: string) {
   return row[key] === null ? null : readInteger(row, key);
 }
 

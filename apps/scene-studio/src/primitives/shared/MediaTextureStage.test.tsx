@@ -48,9 +48,7 @@ vi.mock('./useImageTexture', () => ({
 
 const fakeTexture = (name: string) => ({ name }) as unknown as Texture;
 
-function renderStage(input: {
-  mediaType: 'image' | 'video';
-}): ReturnType<typeof render> {
+function renderStage(input: { mediaType: 'image' | 'video' }) {
   return render(
     <MediaTextureStage src="media.mp4" mediaType={input.mediaType}>
       {(texture) => <span data-testid="scene">{texture.name}</span>}

@@ -24,10 +24,7 @@ import {
 } from '../../../../domain';
 import { MappingError, NOTION_MEDIA_TYPES } from '../../../shared';
 
-function extractSources(props: NotionProperties): {
-  sourceFile: SourceFile | null;
-  sourceUrl: SourceUrl | null;
-} {
+function extractSources(props: NotionProperties) {
   const fileUrl = getAllFileUrls(props, 'sourceFile')?.[0];
   const urlValue = getUrl(props, 'sourceUrl');
 

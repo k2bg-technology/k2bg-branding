@@ -19,7 +19,7 @@ function createMockFetcher(posts: SocialPost[] = []): MockSocialFeedFetcher {
   };
 }
 
-function createSocialPost(id: string): SocialPost {
+function createSocialPost(id: string) {
   return SocialPost.create({
     id: PostId.create(id),
     mediaUrl: MediaUrl.create(`https://example.com/image-${id}.jpg`),

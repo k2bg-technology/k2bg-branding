@@ -14,7 +14,7 @@ const { mockFetchAffiliate, mockFetchAffiliatesByIds, mockLoggerError } =
 
 vi.mock('react', async (importOriginal) => {
   const actual = await importOriginal<typeof import('react')>();
-  return { ...actual, cache: <T,>(fn: T): T => fn };
+  return { ...actual, cache: <T,>(fn: T) => fn };
 });
 
 vi.mock('../../infrastructure/di/affiliate', () => ({

@@ -6,7 +6,7 @@ interface Props {
 
 const integerFormat = new Intl.NumberFormat('en-US');
 
-function formatBytes(bytes: number): string {
+function formatBytes(bytes: number) {
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
   let value = bytes;
   let unitIndex = 0;
@@ -18,11 +18,11 @@ function formatBytes(bytes: number): string {
   return `${value.toFixed(digits)} ${units[unitIndex]}`;
 }
 
-function formatDate(isoTimestamp: string): string {
+function formatDate(isoTimestamp: string) {
   return isoTimestamp.slice(0, 10);
 }
 
-function tableKey(table: TableSummaryOutput): string {
+function tableKey(table: TableSummaryOutput) {
   return `${table.datasetId}.${table.name}`;
 }
 
