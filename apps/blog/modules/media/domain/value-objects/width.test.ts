@@ -51,7 +51,7 @@ describe('Width', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates Width without validation', () => {
+    it('restores Width from a valid persisted value', () => {
       const value = 800;
 
       const sut = Width.reconstitute(value);

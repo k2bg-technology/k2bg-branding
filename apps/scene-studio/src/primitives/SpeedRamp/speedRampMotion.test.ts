@@ -1,16 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  ECHO_FULL_STRENGTH_SPEED,
-  ECHO_SPACING_FACTOR,
   getEchoLayers,
   getPlaybackRate,
   getSmearBlurInPx,
   getSourceFrameOffset,
   getSpeedAtFrame,
-  MAX_PLAYBACK_RATE,
-  MAX_SMEAR_BLUR_IN_PX,
-  MIN_PLAYBACK_RATE,
   type SpeedKeyframe,
 } from './speedRampMotion';
 
@@ -135,11 +130,8 @@ describe('getEchoLayers', () => {
 
     const result = getEchoLayers({ speed: rushSpeed, echoCount: 3 });
 
-    const expectedSpacing = (rushSpeed - 1) * ECHO_SPACING_FACTOR;
     expect(result.map((layer) => layer.sourceOffsetInFrames)).toEqual([
-      expectedSpacing,
-      expectedSpacing * 2,
-      expectedSpacing * 3,
+      2.25, 4.5, 6.75,
     ]);
   });
 
@@ -153,7 +145,7 @@ describe('getEchoLayers', () => {
   it('shows fainter ghosts while the speed is still ramping up', () => {
     const rampingLayers = getEchoLayers({ speed: 2, echoCount: 1 });
     const fullRushLayers = getEchoLayers({
-      speed: ECHO_FULL_STRENGTH_SPEED,
+      speed: 3,
       echoCount: 1,
     });
 
@@ -165,8 +157,8 @@ describe('getSmearBlurInPx', () => {
   it.each([
     { speed: 0.4, expected: 0 },
     { speed: 1, expected: 0 },
-    { speed: ECHO_FULL_STRENGTH_SPEED, expected: MAX_SMEAR_BLUR_IN_PX },
-    { speed: 12, expected: MAX_SMEAR_BLUR_IN_PX },
+    { speed: 3, expected: 8 },
+    { speed: 12, expected: 8 },
   ])('returns $expected px at speed $speed', ({ speed, expected }) => {
     const result = getSmearBlurInPx(speed);
 
@@ -176,9 +168,9 @@ describe('getSmearBlurInPx', () => {
 
 describe('getPlaybackRate', () => {
   it.each([
-    { speed: 0, expected: MIN_PLAYBACK_RATE },
+    { speed: 0, expected: 0.05 },
     { speed: 2, expected: 2 },
-    { speed: 100, expected: MAX_PLAYBACK_RATE },
+    { speed: 100, expected: 16 },
   ])('clamps speed $speed to $expected', ({ speed, expected }) => {
     const result = getPlaybackRate(speed);
 

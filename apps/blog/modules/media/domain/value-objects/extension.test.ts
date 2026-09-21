@@ -69,28 +69,26 @@ describe('Extension', () => {
   });
 
   describe('fromUrl', () => {
-    it('extracts extension from URL', () => {
-      const url = 'https://example.com/images/photo.jpg';
-
+    it.each([
+      {
+        format: 'a simple path',
+        url: 'https://example.com/images/photo.jpg',
+        expected: 'jpg',
+      },
+      {
+        format: 'query parameters',
+        url: 'https://example.com/images/photo.png?width=800',
+        expected: 'png',
+      },
+      {
+        format: 'a nested path',
+        url: 'https://cdn.example.com/v1/uploads/2024/image.webp',
+        expected: 'webp',
+      },
+    ])('extracts $expected from a URL with $format', ({ url, expected }) => {
       const sut = Extension.fromUrl(url);
 
-      expect(sut.getValue()).toBe('jpg');
-    });
-
-    it('extracts extension from URL with query params', () => {
-      const url = 'https://example.com/images/photo.png?width=800';
-
-      const sut = Extension.fromUrl(url);
-
-      expect(sut.getValue()).toBe('png');
-    });
-
-    it('extracts extension from URL with complex path', () => {
-      const url = 'https://cdn.example.com/v1/uploads/2024/image.webp';
-
-      const sut = Extension.fromUrl(url);
-
-      expect(sut.getValue()).toBe('webp');
+      expect(sut.getValue()).toBe(expected);
     });
 
     it('throws InvalidExtensionError when URL is empty', () => {

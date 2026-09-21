@@ -37,7 +37,7 @@ describe('ReleaseDate', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates ReleaseDate without validation', () => {
+    it('restores ReleaseDate from a valid persisted value', () => {
       const dateString = '2024-01-15';
 
       const sut = ReleaseDate.reconstitute(dateString);

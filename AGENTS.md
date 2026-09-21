@@ -288,11 +288,19 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
   (see `apps/blog/vitest.config.mts`); `packages/test-utils/setupTests.ts` loads
   `@testing-library/jest-dom/vitest`.
 - Coverage reporters: `text,json,html` (see `apps/blog/vitest.config.mts`).
-- Test behavior over implementation; AAA structure; name the subject `sut`; prefer `it.each`
-  over loops. Full standards: `.claude/rules/unit-test-guidelines.md`.
-- Unit tests assert behavior through inputs and outputs; appearance is verified by stories and
-  Chromatic, not by render tests. The boundary is stated under Missing tests in
-  "Codex Review Guidelines".
+- Test behavior over implementation; AAA structure; name the subject `sut`; use `it.each`
+  for equivalent Act/Assert cases. Fixture loops and data transformations are not repeated
+  behavior cases. Full standards: `.claude/rules/unit-test-guidelines.md`.
+- Unit tests assert observable inputs, outputs, state changes, and required external effects
+  at the smallest public boundary. Expectations are specified independently of production
+  calculations. Incoming data stubs are checked through outcomes; outgoing interactions
+  require an externally meaningful effect or a documented adapter contract.
+- Database integration tests use the real test database and assert freshly queried persisted
+  state. Diagnostic logs do not need assertions; explicit operational outputs and emitted
+  security redaction remain testable contracts.
+- Appearance is verified by stories, Chromatic, and Scene Studio demo compositions.
+  Semantic chart thresholds, gaps, keyboard behavior, and deterministic calculations remain
+  behavior tests. The boundary is stated under Missing tests in "Codex Review Guidelines".
 - Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` (or scope via `pnpm -F blog test`).
 
 ## Internationalization (Portfolio App)
@@ -408,10 +416,13 @@ Apply these rules when reviewing a pull request:
   Chromatic, and the Storybook accessibility check, and Scene Studio primitives by their demo
   compositions; none of these calls for a unit test, and a visual branch alone does not
   justify extracting a helper. Tests assert at the smallest public boundary that shows the
-  behavior and follow `.claude/rules/unit-test-guidelines.md`. One behavior needs one
-  asserting test: inputs that the same expression treats alike (a short row and an absent
-  row, both read as missing) are one behavior, and a test for the sibling input is not a
-  finding. Code that only guards an unreachable scenario needs no test.
+  behavior and follow `.claude/rules/unit-test-guidelines.md`. Diagnostic logging alone is
+  not an observable behavior requiring assertions; operational output contracts and security
+  properties remain covered. Semantic chart thresholds, gaps, keyboard interaction, and
+  deterministic calculations are behavior even when their results affect appearance. One
+  behavior needs one asserting test: inputs that the same expression treats alike (a short
+  row and an absent row, both read as missing) are one behavior, and a test for the sibling
+  input is not a finding. Code that only guards an unreachable scenario needs no test.
 - **Clean Architecture violations (P1):** Wrong dependency direction or layer-boundary
   crossings in the blog app's `domain` / `use-cases` / `adapters` slices.
   See the `clean-architecture-guidelines` skill.

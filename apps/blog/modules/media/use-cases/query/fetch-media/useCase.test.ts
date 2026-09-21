@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   InvalidMediaIdError,
+  MediaId,
   type MediaRepository,
   SourceUrl,
 } from '../../../domain';
@@ -71,17 +72,24 @@ describe('FetchMedia', () => {
       );
     });
 
-    it('calls repository with correct MediaId', async () => {
-      const media = createMedia();
-      const findById = vi.fn().mockResolvedValue(media);
-      const repository = createMockRepository({ findById });
+    it('returns the media selected by its requested ID', async () => {
+      const selectedId = '660e8400-e29b-41d4-a716-446655440000';
+      const selected = createMedia({ id: MediaId.create(selectedId) });
+      const other = createMedia({
+        id: MediaId.create('550e8400-e29b-41d4-a716-446655440000'),
+      });
+      const records = new Map([
+        [other.id.getValue(), other],
+        [selectedId, selected],
+      ]);
+      const repository = createMockRepository({
+        findById: async (id) => records.get(id.getValue()) ?? null,
+      });
       const sut = new FetchMedia(repository);
 
-      await sut.execute({ id: media.id.getValue() });
+      const result = await sut.execute({ id: selectedId });
 
-      expect(findById).toHaveBeenCalledTimes(1);
-      const calledMediaId = findById.mock.calls[0][0];
-      expect(calledMediaId.getValue()).toBe(media.id.getValue());
+      expect(result.media.id).toBe(selectedId);
     });
 
     it('maps all media properties correctly', async () => {

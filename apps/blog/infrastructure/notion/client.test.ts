@@ -1,4 +1,6 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { Client } from '@notionhq/client';
+import { NotionToMarkdown } from 'notion-to-md';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   createNotionClient,
   createNotionToMarkdown,
@@ -24,84 +26,101 @@ vi.mock('notion-to-md', () => ({
 describe('notion/client', () => {
   beforeEach(() => {
     resetNotionClient();
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
     resetNotionClient();
+    vi.unstubAllEnvs();
   });
 
   describe('createNotionClient', () => {
-    it('creates a new Notion client instance', () => {
-      const client = createNotionClient();
+    it.each([
+      {
+        scenario: 'explicit configuration overrides the environment',
+        config: { auth: 'configured-token' },
+        environmentToken: 'environment-token',
+        expectedAuth: 'configured-token',
+      },
+      {
+        scenario: 'the environment supplies the default token',
+        config: undefined,
+        environmentToken: 'environment-token',
+        expectedAuth: 'environment-token',
+      },
+      {
+        scenario: 'missing configuration and environment use an empty token',
+        config: undefined,
+        environmentToken: undefined,
+        expectedAuth: '',
+      },
+      {
+        scenario: 'an explicit empty token overrides the environment',
+        config: { auth: '' },
+        environmentToken: 'environment-token',
+        expectedAuth: '',
+      },
+    ])('forwards authentication when $scenario', ({ config, environmentToken, expectedAuth }) => {
+      vi.stubEnv('NOTION_TOKEN', environmentToken);
 
-      expect(client).toBeDefined();
+      createNotionClient(config);
+
+      expect(Client).toHaveBeenCalledWith({ auth: expectedAuth });
     });
 
     it('creates different instances on each call', () => {
-      const client1 = createNotionClient();
-      const client2 = createNotionClient();
+      const firstClient = createNotionClient();
+      const secondClient = createNotionClient();
 
-      expect(client1).not.toBe(client2);
-    });
-
-    it('accepts custom auth token', () => {
-      const client = createNotionClient({ auth: 'custom-token' });
-
-      expect(client).toBeDefined();
+      expect(firstClient).not.toBe(secondClient);
     });
   });
 
   describe('getNotionClient', () => {
-    it('returns a Notion client instance', () => {
-      const client = getNotionClient();
-
-      expect(client).toBeDefined();
-    });
-
     it('returns the same instance on multiple calls', () => {
-      const client1 = getNotionClient();
-      const client2 = getNotionClient();
+      const firstClient = getNotionClient();
+      const secondClient = getNotionClient();
 
-      expect(client1).toBe(client2);
+      expect(firstClient).toBe(secondClient);
     });
   });
 
   describe('createNotionToMarkdown', () => {
-    it('creates a NotionToMarkdown instance', () => {
+    it('supplies the given client to the markdown converter', () => {
       const client = createNotionClient();
-      const n2m = createNotionToMarkdown(client);
 
-      expect(n2m).toBeDefined();
+      createNotionToMarkdown(client);
+
+      expect(NotionToMarkdown).toHaveBeenCalledWith({ notionClient: client });
     });
   });
 
   describe('getNotionToMarkdown', () => {
-    it('returns a NotionToMarkdown instance', () => {
-      const n2m = getNotionToMarkdown();
+    it('connects the converter to the shared Notion client', () => {
+      const client = getNotionClient();
 
-      expect(n2m).toBeDefined();
+      getNotionToMarkdown();
+
+      expect(NotionToMarkdown).toHaveBeenCalledWith({ notionClient: client });
     });
 
     it('returns the same instance on multiple calls', () => {
-      const n2m1 = getNotionToMarkdown();
-      const n2m2 = getNotionToMarkdown();
+      const firstConverter = getNotionToMarkdown();
+      const secondConverter = getNotionToMarkdown();
 
-      expect(n2m1).toBe(n2m2);
+      expect(firstConverter).toBe(secondConverter);
     });
   });
 
   describe('resetNotionClient', () => {
-    it('resets the singleton instances', () => {
-      const client1 = getNotionClient();
-      const n2m1 = getNotionToMarkdown();
+    it('replaces both shared instances after a reset', () => {
+      const originalClient = getNotionClient();
+      const originalConverter = getNotionToMarkdown();
 
       resetNotionClient();
 
-      const client2 = getNotionClient();
-      const n2m2 = getNotionToMarkdown();
-
-      expect(client1).not.toBe(client2);
-      expect(n2m1).not.toBe(n2m2);
+      expect(getNotionClient()).not.toBe(originalClient);
+      expect(getNotionToMarkdown()).not.toBe(originalConverter);
     });
   });
 });

@@ -54,7 +54,7 @@ describe('ImageWidth', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates ImageWidth without validation', () => {
+    it('restores ImageWidth from a valid persisted value', () => {
       const value = 300;
 
       const sut = ImageWidth.reconstitute(value);

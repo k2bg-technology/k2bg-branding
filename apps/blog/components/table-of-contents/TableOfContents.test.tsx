@@ -1,9 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { TocHeading } from './extractHeadings';
 import { TableOfContents } from './TableOfContents';
+
+const { scrollTo } = vi.hoisted(() => ({ scrollTo: vi.fn() }));
 
 vi.mock('./useActiveHeading', () => ({
   useActiveHeading: () => 'introduction',
@@ -12,9 +14,9 @@ vi.mock('./useActiveHeading', () => ({
 vi.mock('../page-scroll-area/PageScrollArea', () => ({
   usePageScrollAreaStore: () => ({
     current: {
-      getBoundingClientRect: () => ({ top: 0 }),
-      scrollTop: 0,
-      scrollTo: vi.fn(),
+      getBoundingClientRect: () => ({ top: 100 }),
+      scrollTop: 300,
+      scrollTo,
     },
   }),
 }));
@@ -94,6 +96,10 @@ describe('TableOfContents', () => {
     });
   });
 
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it('returns null when headings array is empty', () => {
     const { container } = render(<TableOfContents headings={[]} />);
 
@@ -150,16 +156,24 @@ describe('TableOfContents', () => {
 
   it('scrolls to the heading when a heading is clicked', async () => {
     const user = userEvent.setup();
-    const mockElement = document.createElement('div');
-    mockElement.getBoundingClientRect = () => ({ top: 200 }) as DOMRect;
-    vi.spyOn(document, 'getElementById').mockReturnValue(mockElement);
-
-    render(<TableOfContents headings={headings} />);
+    render(
+      <>
+        <h2 id="conclusion">Article conclusion</h2>
+        <TableOfContents headings={headings} />
+      </>
+    );
+    vi.spyOn(
+      screen.getByRole('heading', { name: 'Article conclusion' }),
+      'getBoundingClientRect'
+    ).mockReturnValue(new DOMRect(0, 200, 600, 40));
 
     await user.click(screen.getByRole('button', { name: '目次を開く' }));
-    await user.click(screen.getByText('Conclusion'));
+    await user.click(screen.getByRole('button', { name: 'Conclusion' }));
 
-    expect(document.getElementById).toHaveBeenCalledWith('conclusion');
+    expect(scrollTo).toHaveBeenCalledExactlyOnceWith({
+      top: 400,
+      behavior: 'smooth',
+    });
     expect(
       screen.getByRole('navigation', { name: '目次' })
     ).toBeInTheDocument();

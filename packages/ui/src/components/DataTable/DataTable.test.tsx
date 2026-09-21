@@ -51,9 +51,6 @@ const pivotRows: DataTableRow[] = [
 /** Base UI's scroll area marks its viewport — the real scroll port — with this data id. */
 const scrollPortSelector = '[data-id$="-viewport"]';
 
-/** `Table` ships its own scroll container; only the scroll area may own the offset. */
-const tableContainerSelector = '[data-slot="table-container"]';
-
 const pivotFooter: DataTableRow['cells'] = {
   category: 'Total',
   january: '¥168,000',
@@ -106,15 +103,6 @@ describe('DataTable', () => {
     ]);
   });
 
-  it('right-aligns columns with align end', async () => {
-    await renderDataTable(
-      <DataTable caption="Allocation" columns={columns} rows={rows} />
-    );
-
-    const valueHeader = screen.getByRole('columnheader', { name: 'Value' });
-    expect(valueHeader).toHaveClass('text-right');
-  });
-
   it('renders an empty cell for a missing cell value', async () => {
     const sparseRows: DataTableRow[] = [
       { id: 'cash', cells: { assetClass: 'Cash' } },
@@ -142,7 +130,6 @@ describe('DataTable', () => {
     );
 
     expect(screen.getByRole('table', { name: caption })).toBeInTheDocument();
-    expect(screen.getByText(caption)).toHaveClass('sr-only');
   });
 
   it('renders the empty message in one cell spanning every column', async () => {
@@ -182,18 +169,6 @@ describe('DataTable', () => {
     ).toBeInTheDocument();
   });
 
-  it('leaves the horizontal scrolling to the scroll area viewport', async () => {
-    const caption = 'Allocation by asset class';
-
-    const { container } = await renderDataTable(
-      <DataTable caption={caption} columns={columns} rows={rows} />
-    );
-
-    const scrollPort = container.querySelector(scrollPortSelector);
-    expect(scrollPort).toHaveStyle({ overflow: 'scroll' });
-    expect(container.querySelector(tableContainerSelector)).not.toBeNull();
-  });
-
   it('keeps the scroll port out of the tab order while nothing overflows', async () => {
     const caption = 'Allocation by asset class';
 
@@ -207,21 +182,6 @@ describe('DataTable', () => {
     );
   });
 
-  it('pins the visible caption text and bounds it to the visible width', async () => {
-    const caption = 'Allocation by asset class';
-
-    const { container } = await renderDataTable(
-      <DataTable caption={caption} columns={columns} rows={rows} />
-    );
-
-    const captionText = screen.getByText(caption);
-    expect(captionText.closest('caption')).not.toBeNull();
-    expect(captionText).toHaveClass('sticky', 'left-0', 'w-[100cqw]');
-    expect(container.querySelector('[data-slot="data-table"]')).toHaveClass(
-      '@container'
-    );
-  });
-
   it('renders no footer row group when no footer cells are given', async () => {
     await renderDataTable(
       <DataTable caption="Allocation" columns={columns} rows={rows} />
@@ -231,7 +191,7 @@ describe('DataTable', () => {
     expect(screen.getAllByRole('rowgroup')).toHaveLength(headerAndBody);
   });
 
-  it('renders the footer cells in column order inside the table footer', async () => {
+  it('renders the footer cells in column order', async () => {
     await renderDataTable(
       <DataTable
         caption="Spending by category"
@@ -242,7 +202,6 @@ describe('DataTable', () => {
     );
 
     const totalsRow = screen.getByRole('row', { name: /¥340,000/ });
-    expect(totalsRow.closest('tfoot')).not.toBeNull();
     expect(within(totalsRow).getByRole('rowheader')).toHaveTextContent('Total');
     expect(
       within(totalsRow)
@@ -287,19 +246,6 @@ describe('DataTable', () => {
     );
   });
 
-  it('separates the emphasised column by weight and a border, not by colour alone', async () => {
-    await renderDataTable(
-      <DataTable
-        caption="Spending by category"
-        columns={pivotColumns}
-        rows={pivotRows}
-      />
-    );
-
-    const totalHeader = screen.getByRole('columnheader', { name: 'Total' });
-    expect(totalHeader).toHaveClass('font-bold', 'border-l');
-  });
-
   it('pins the first column in the header, the body, and the footer when it is sticky', async () => {
     const { container } = await renderDataTable(
       <DataTable
@@ -318,39 +264,6 @@ describe('DataTable', () => {
       'Food',
       'Total',
     ]);
-  });
-
-  it('gives sticky cells an opaque background at the left edge of the scroll region', async () => {
-    await renderDataTable(
-      <DataTable
-        caption="Spending by category"
-        columns={pivotColumns}
-        rows={pivotRows}
-        stickyFirstColumn
-      />
-    );
-
-    const categoryHeader = screen.getByRole('columnheader', {
-      name: 'Category',
-    });
-    expect(categoryHeader).toHaveClass('sticky', 'left-0', 'bg-base-white');
-  });
-
-  it('keeps the frozen column clear of the cells scrolling underneath it', async () => {
-    await renderDataTable(
-      <DataTable
-        caption="Spending by category"
-        columns={pivotColumns}
-        rows={pivotRows}
-        footer={pivotFooter}
-        stickyFirstColumn
-      />
-    );
-
-    const categoryHeader = screen.getByRole('columnheader', {
-      name: 'Category',
-    });
-    expect(categoryHeader).toHaveClass('pr-spacious');
   });
 
   it('turns the body cells of a sticky first column into row headers', async () => {

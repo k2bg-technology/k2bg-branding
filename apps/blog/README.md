@@ -69,9 +69,17 @@ Opens on [http://localhost:6007](http://localhost:6007).
 ### Testing
 
 ```bash
-pnpm test          # Run once
-pnpm test:watch    # Watch mode
+pnpm test          # Run jsdom tests once
+pnpm test:watch    # Watch jsdom tests
+pnpm test:db       # Run PostgreSQL integration tests (requires Docker)
+pnpm test:all      # Run both projects (requires Docker)
 ```
+
+The commands above run from `apps/blog`; use `pnpm -F blog test` from the
+monorepo root. The jsdom project excludes `*.db.test.ts` and generated `.next`,
+`node_modules`, and `dist` directories at every depth. Database tests use a
+Testcontainers-managed PostgreSQL instance and apply the Drizzle migrations;
+a running Docker daemon is required.
 
 ## Architecture
 

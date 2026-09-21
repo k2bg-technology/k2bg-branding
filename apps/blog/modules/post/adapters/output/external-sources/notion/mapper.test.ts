@@ -115,52 +115,42 @@ describe('notion/mapper', () => {
       expect(notionPageToPost(pagePage, 'content').type).toBe(PostType.PAGE);
     });
 
-    it('maps different statuses correctly', () => {
-      const statuses = [
-        { input: 'IDEA', expected: PostStatus.IDEA },
-        { input: 'DRAFT', expected: PostStatus.DRAFT },
-        { input: 'PREVIEW', expected: PostStatus.PREVIEW },
-        { input: 'PUBLISHED', expected: PostStatus.PUBLISHED },
-        { input: 'ARCHIVED', expected: PostStatus.ARCHIVED },
-      ];
+    it.each([
+      { input: 'IDEA', expected: PostStatus.IDEA },
+      { input: 'DRAFT', expected: PostStatus.DRAFT },
+      { input: 'PREVIEW', expected: PostStatus.PREVIEW },
+      { input: 'PUBLISHED', expected: PostStatus.PUBLISHED },
+      { input: 'ARCHIVED', expected: PostStatus.ARCHIVED },
+    ])('maps status $input to $expected', ({ input, expected }) => {
+      const page = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          status: { type: 'status', status: { name: input } },
+        },
+      }) as unknown as PageObjectResponse;
 
-      for (const { input, expected } of statuses) {
-        const page = createNotionPageResponse({
-          properties: {
-            ...(createNotionPageResponse().properties as Record<
-              string,
-              unknown
-            >),
-            status: { type: 'status', status: { name: input } },
-          },
-        }) as unknown as PageObjectResponse;
+      const result = notionPageToPost(page, 'content');
 
-        expect(notionPageToPost(page, 'content').status).toBe(expected);
-      }
+      expect(result.status).toBe(expected);
     });
 
-    it('maps different categories correctly', () => {
-      const categories = [
-        { input: 'ENGINEERING', expected: Category.ENGINEERING },
-        { input: 'DESIGN', expected: Category.DESIGN },
-        { input: 'DATA_SCIENCE', expected: Category.DATA_SCIENCE },
-        { input: 'LIFE_STYLE', expected: Category.LIFE_STYLE },
-        { input: 'OTHER', expected: Category.OTHER },
-      ];
+    it.each([
+      { input: 'ENGINEERING', expected: Category.ENGINEERING },
+      { input: 'DESIGN', expected: Category.DESIGN },
+      { input: 'DATA_SCIENCE', expected: Category.DATA_SCIENCE },
+      { input: 'LIFE_STYLE', expected: Category.LIFE_STYLE },
+      { input: 'OTHER', expected: Category.OTHER },
+    ])('maps category $input to $expected', ({ input, expected }) => {
+      const page = createNotionPageResponse({
+        properties: {
+          ...(createNotionPageResponse().properties as Record<string, unknown>),
+          category: { type: 'select', select: { name: input } },
+        },
+      }) as unknown as PageObjectResponse;
 
-      for (const { input, expected } of categories) {
-        const page = createNotionPageResponse({
-          properties: {
-            ...(createNotionPageResponse().properties as Record<
-              string,
-              unknown
-            >),
-            category: { type: 'select', select: { name: input } },
-          },
-        }) as unknown as PageObjectResponse;
+      const result = notionPageToPost(page, 'content');
 
-        expect(notionPageToPost(page, 'content').category).toBe(expected);
-      }
+      expect(result.category).toBe(expected);
     });
   });
 

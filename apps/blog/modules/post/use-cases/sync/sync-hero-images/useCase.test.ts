@@ -155,22 +155,5 @@ describe('SyncHeroImages', () => {
       expect(result.failedCount).toBe(2);
       expect(result.uploadedImages).toEqual([]);
     });
-
-    it('logs the caught cause when an individual upload fails', async () => {
-      const images = createImageRecords(1);
-      const source = createMockImageSource(images);
-      const uploadError = new Error('Upload failed');
-      const uploadImage = vi.fn().mockRejectedValue(uploadError);
-      const imageRepository = createMockImageRepository({ uploadImage });
-      const logger = createMockLogger();
-      const sut = new SyncHeroImages([source], imageRepository, logger);
-
-      await sut.execute();
-
-      expect(logger.error).toHaveBeenCalledWith(
-        { err: uploadError, imageId: images[0].id },
-        'Failed to upload hero image'
-      );
-    });
   });
 });

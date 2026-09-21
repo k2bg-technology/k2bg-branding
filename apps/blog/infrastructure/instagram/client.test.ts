@@ -17,6 +17,7 @@ describe('Instagram Client', () => {
   afterEach(() => {
     resetInstagramConfig();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   describe('configureInstagram', () => {
@@ -33,19 +34,13 @@ describe('Instagram Client', () => {
     });
 
     it('uses environment variables when config not provided', () => {
-      const originalEnv = process.env;
-      process.env = {
-        ...originalEnv,
-        INSTAGRAM_GRAPH_API_BASE_URL: 'https://env.api.com',
-        INSTAGRAM_LONG_ACCESS_TOKEN: 'env-token',
-        INSTAGRAM_USER_ID: 'env-user-id',
-      };
+      vi.stubEnv('INSTAGRAM_GRAPH_API_BASE_URL', 'https://env.api.com');
+      vi.stubEnv('INSTAGRAM_LONG_ACCESS_TOKEN', 'env-token');
+      vi.stubEnv('INSTAGRAM_USER_ID', 'env-user-id');
 
       configureInstagram();
 
       expect(getInstagramUserId()).toBe('env-user-id');
-
-      process.env = originalEnv;
     });
   });
 
@@ -90,7 +85,9 @@ describe('Instagram Client', () => {
 
       expect(fetch).toHaveBeenCalledWith(
         expect.objectContaining({
-          href: expect.stringContaining('https://graph.instagram.com/test-user/media'),
+          href: expect.stringContaining(
+            'https://graph.instagram.com/test-user/media'
+          ),
         })
       );
       expect(fetch).toHaveBeenCalledWith(

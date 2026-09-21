@@ -32,7 +32,12 @@ export default defineConfig({
           setupFiles: [jsdomSetupPath],
           css: false,
           include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-          exclude: ['**/*.db.test.ts', 'node_modules/**', 'dist/**'],
+          exclude: [
+            '**/*.db.test.ts',
+            '**/.next/**',
+            '**/node_modules/**',
+            '**/dist/**',
+          ],
           ...(process.env.CI && { minThreads: 4, maxThreads: 4 }),
         },
       },

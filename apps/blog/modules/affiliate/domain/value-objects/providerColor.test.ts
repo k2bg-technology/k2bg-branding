@@ -6,28 +6,22 @@ import { ProviderColor } from './providerColor';
 
 describe('ProviderColor', () => {
   describe('create', () => {
-    it('creates ProviderColor when given valid 6-digit hex color', () => {
-      const color = '#FF5733';
+    it.each([
+      {
+        format: '6-digit hex with numbers',
+        value: '#FF5733',
+        expected: '#ff5733',
+      },
+      { format: '3-digit hex', value: '#F00', expected: '#f00' },
+      {
+        format: '6-digit alphabetic hex',
+        value: '#AABBCC',
+        expected: '#aabbcc',
+      },
+    ])('normalizes valid $format to lowercase', ({ value, expected }) => {
+      const sut = ProviderColor.create(value);
 
-      const sut = ProviderColor.create(color);
-
-      expect(sut.getValue()).toBe('#ff5733');
-    });
-
-    it('creates ProviderColor when given valid 3-digit hex color', () => {
-      const color = '#F00';
-
-      const sut = ProviderColor.create(color);
-
-      expect(sut.getValue()).toBe('#f00');
-    });
-
-    it('normalizes hex color to lowercase', () => {
-      const color = '#AABBCC';
-
-      const sut = ProviderColor.create(color);
-
-      expect(sut.getValue()).toBe('#aabbcc');
+      expect(sut.getValue()).toBe(expected);
     });
 
     it('throws InvalidProviderColorError when value is empty string', () => {

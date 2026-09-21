@@ -73,8 +73,8 @@ describe('AffiliateEmb', () => {
     expect(mockLoggerError).not.toHaveBeenCalled();
   });
 
-  it('renders the sub-provider link with its configured provider color', async () => {
-    const subProviderColor = '#BF0000';
+  it('renders the fetched sub-provider link with its provider name and destination', async () => {
+    const subProviderUrl = 'https://example.com/subprovider';
     mockFetchAffiliate.mockResolvedValue({
       affiliate: {
         id: 'product-1',
@@ -98,9 +98,9 @@ describe('AffiliateEmb', () => {
             id: 'sub-1',
             name: 'Test SubProvider',
             type: AffiliateType.SUB_PROVIDER,
-            targetUrl: 'https://example.com/subprovider',
+            targetUrl: subProviderUrl,
             provider: 'Rakuten',
-            providerColor: subProviderColor,
+            providerColor: '#BF0000',
           },
         ],
       ]),
@@ -109,6 +109,6 @@ describe('AffiliateEmb', () => {
     render(await AffiliateEmb({ id: 'product-1' }));
 
     const subProviderLink = screen.getByRole('link', { name: 'Rakuten' });
-    expect(subProviderLink).toHaveStyle({ backgroundColor: subProviderColor });
+    expect(subProviderLink).toHaveAttribute('href', subProviderUrl);
   });
 });
