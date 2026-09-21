@@ -10,7 +10,7 @@
       "components/**/*.{ts,tsx}",
       "infrastructure/**/*.{ts,tsx}",
       "modules/**/*.{ts,tsx}",
-      "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"
+      "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}"
     ]
   },
 

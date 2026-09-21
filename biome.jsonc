@@ -5,9 +5,10 @@
 
   "files": {
     "includes": [
-      "**/apps/**/*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
-      "**/packages/**/*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
-      "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"
+      "**/apps/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}",
+      "**/packages/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}",
+      "scripts/**/*.{ts,mts,cts,mjs,cjs,js}",
+      "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}"
     ]
   }
 }

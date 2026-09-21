@@ -4,7 +4,10 @@
   "plugins": ["../../packages/biome-config/plugins/noLet.grit"],
 
   "files": {
-    "includes": ["src/**/*.{ts,tsx}", "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"]
+    "includes": [
+      "src/**/*.{ts,tsx}",
+      "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}"
+    ]
   },
 
   "overrides": [

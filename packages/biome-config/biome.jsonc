@@ -82,5 +82,17 @@
       "enabled": true,
       "indentWidth": 2
     }
-  }
+  },
+
+  "overrides": [
+    {
+      // An ambient module augmentation needs this import to apply.
+      "includes": ["**/@types/**/*.d.ts"],
+      "linter": {
+        "rules": {
+          "correctness": { "noUnusedImports": "off" }
+        }
+      }
+    }
+  ]
 }
