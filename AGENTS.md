@@ -185,6 +185,17 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Prefer full, descriptive identifiers — avoid abbreviations (`dictionary` not `dict`,
   `language` not `lang`).
 
+### Comments
+
+- Keep comments only for rationale, constraints, or facts that a reader cannot infer from
+  the code. Prefer clear names and structure when the code can express the same information.
+- Never copy prompt instructions, task narration, implementation steps, or an obvious
+  description of what the next line does into a comment.
+- In tests, put observable behavior in the test name and assertions instead of restating it
+  in comments.
+- Use TSDoc/JSDoc when it gives consumers a useful contract for shared design-system or
+  public logic. App-local one-off functions do not need exhaustive documentation comments.
+
 ### File & Directory Naming
 
 - React components: **PascalCase** (`Header.tsx`, `ArticleHeading.tsx`).

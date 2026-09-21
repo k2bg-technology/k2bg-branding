@@ -39,11 +39,7 @@ paths: apps/**/*.{ts,tsx}, packages/**/*.{ts,tsx}
 
 ## Comment Guidelines
 
-- **Improve the Code Itself**: Don't try to compensate with comments; **fix the code itself to make it self-documenting**. In most cases, improve the code rather than adding comments.
-- **Explain Only "Why"**: Record only **information that cannot be read from the code**, such as design decision rationale, trade-offs, and background information.
-- **Mark Problem Areas**: Tag places that need improvement with `NOTE:`, `TODO:`, `FIXME:`, `HACK:`, `XXX:`, etc. (use sparingly).
-- **Write in English**: When writing comments, write them in English.
-- **No Documentation Comments Required**: Do not include TSDoc/JSDoc unless specifically instructed.
+Follow `AGENTS.md` > Coding Style & Naming Conventions > Comments.
 
 ## Structure and Modularization
 
