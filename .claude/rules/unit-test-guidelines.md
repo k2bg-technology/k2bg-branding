@@ -18,7 +18,10 @@ Comprehensive coding standards for writing high-quality unit tests. These guidel
 ### Test Behavior, Not Implementation
 
 - Tests must verify "units of behavior" rather than "units of code" (classes or methods)
-- Validate observable results (return values, state changes, external calls) through public APIs, not internal implementation details
+- Validate observable results (return values, state changes, required external effects) at the smallest public boundary that shows the behavior
+- Specify expected results from the public contract, independently of the implementation; do not reproduce production calculations or import production constants to calculate the expectation
+- Keep semantic chart behavior (thresholds, data gaps, keyboard interaction), deterministic calculations, persistence outcomes, and security outputs covered
+- Verify appearance, styling, static accessibility attributes, and composition through stories, Chromatic, and Scene Studio demo compositions. CSS classes and styles are not component unit-test oracles unless they expose a functional state at the public boundary
 - Avoid testing private methods or internal state
 - **Rationale**: Tests coupled to implementation details hinder refactoring and reduce resistance to change
 
@@ -103,7 +106,7 @@ describe('OrderService', () => {
 
     describe('when balance is insufficient', () => {
       it('returns false', () => {});
-      it('logs error message', () => {});
+      it('preserves the account balance', () => {});
     });
   });
 });
@@ -112,8 +115,8 @@ describe('OrderService', () => {
 ### Variable Names
 
 - Name the system under test instance variable as `sut` (System Under Test) to clearly distinguish it from dependencies
-- Store literal values in named variables that convey intent before using in assertions
-- **Avoid** magic numbers or raw strings in assertions
+- Use named expected values when they clarify the domain meaning of a number or string
+- Literal expected values are appropriate when their meaning is clear from the assertion and test name; avoid unexplained magic values
 
 **Examples:**
 
@@ -125,9 +128,8 @@ expect(person.age).toBe(expectedAge);
 const minimumPasswordLength = 8;
 expect(password.length).toBeGreaterThanOrEqual(minimumPasswordLength);
 
-// Bad
-expect(person.age).toBe(21); // What does 21 represent?
-expect(password.length).toBeGreaterThanOrEqual(8); // Why 8?
+// Also appropriate when the test describes the expected status
+expect(response.status).toBe(404);
 ```
 
 ## Test Structure
@@ -178,12 +180,12 @@ describe('PricingService', () => {
 - Example: Filling a form and submitting is one intent, even if it requires multiple `userEvent` calls
 - Keep the intent focused and atomic
 
-### Avoid Custom Loops - Use Parameterized Tests
+### Parameterize Equivalent Behavior Cases
 
-- **Never** write custom control flow (`if`, `while`, `switch`, `for`) in test bodies
-- **Instead**, use Vitest's `it.each()` or `describe.each()` for parameterized tests
-- Cyclomatic complexity of individual test bodies should be 1
-- **Exception**: Minimal data transformation (e.g., `.map()` for test data generation) is acceptable when it improves clarity
+- Use Vitest's `it.each()` or `describe.each()` for repeated Act/Assert cases with the same behavioral oracle; name the scenario in each row
+- Keep distinct behaviors and boundary expectations explicit instead of branching inside a test
+- Fixture construction may use clear loops, data transformations, or bulk inserts in Arrange. These do not represent parameterized behavior cases unless they repeat actions and assertions
+- Test doubles may select incoming data by input; keep that selection simple and separate from the expected result
 
 **Examples:**
 
@@ -254,7 +256,8 @@ describe('Calculator', () => {
 - Always use `async`/`await` syntax for asynchronous tests (avoid `.then()` chaining)
 - Mark test functions with `async` when testing promises or async operations
 - Use `await` to ensure asynchronous operations complete before assertions
-- For component tests, use Testing Library's async utilities (`waitFor`, `findBy*` queries)
+- For an element that appears asynchronously, use the matching `findBy*` query
+- Use `waitFor` for callback effects or state conditions that a single async element query cannot express, including disappearance
 - Set appropriate timeouts for long-running operations if needed
 
 **Examples:**
@@ -423,17 +426,16 @@ describe('Validator', () => {
 
 **Communication-Based Verification (Use Sparingly):**
 
-- Verify interactions **only** for side-effect boundaries:
-  - **External APIs**: Email services, payment gateways, third-party APIs
-  - **Observability**: Loggers, metrics, event emitters
-  - **Message buses**: Event publishers, queue producers
-- **Do not verify** calls to pure data providers (collaborators that only return values without side effects)
-- **Guideline**: If the dependency's purpose is to provide data for computation, verify the computation result, not the call
+- Assert outgoing interactions only when they are required externally observable effects (such as sending email or publishing a message) or a documented adapter request contract
+- Configure incoming data stubs to produce the scenario and assert the resulting output or state, not the stub's calls. An input-keyed fake can prove correct selection without exposing invocation details
+- A third-party API or vendor name alone does not justify interaction assertions
+- Do not assert diagnostic log calls or payloads. Assert the return value, error, or state that exposes the failure
+- Retain logging assertions for an explicit operational output contract or security property, such as a required audit event or redaction in emitted output
 
 ### Use Vitest's Expressive Matchers
 
 - Use Vitest's built-in matchers that read like English sentences
-- For component tests, use Testing Library's semantic queries (`getByRole`, `getByLabelText`, etc.)
+- Prefer role and accessible name queries for interactive elements. Use label queries for form controls and text queries for static user-visible content when no stronger semantic query expresses the contract
 - Choose matchers that clearly express intent
 
 **Examples:**
@@ -466,16 +468,15 @@ expect(button?.textContent).toBe('Submit');
 
 ### When to Use Mocks
 
-**Unmanaged Dependencies (Mock these):**
+**Unmanaged Dependencies:**
 
-- Out-of-process dependencies you don't control: email servers, message buses, third-party APIs, payment gateways
-- Dependencies with side effects that cross system boundaries
-- Replace with mocks to verify interactions
+- Replace out-of-process dependencies you do not control, such as email servers, message buses, third-party APIs, and payment gateways, with test doubles
+- Use stubs for incoming data and assert outputs. Use mocks to verify outgoing effects only under the communication-based verification rules above
 
 **Managed Dependencies (Context-dependent):**
 
-- **In Unit Tests**: Mock at the repository/data access boundary (e.g., mock `UserRepository`, not the database)
-- **In Integration Tests**: Use real implementations with test infrastructure (in-memory database, Testcontainers)
+- **In Unit Tests**: Stub or fake the repository/data access boundary and assert the use case's observable behavior
+- **In Database Integration Tests**: Use the real managed test database and assert persisted state freshly queried after the operation. Exercise transactions and concurrency where they are part of the behavior; ORM call assertions do not establish persistence correctness
 
 **Domain Logic (Never mock):**
 
@@ -485,9 +486,9 @@ expect(button?.textContent).toBe('Submit');
 
 ### Avoid Mock Overuse
 
-- Limit the number of mocks per test (ideally 1-2, maximum 3)
-- Excessive mock setup indicates design problems
-- Consider refactoring if test setup becomes complex
+- Use each test double to supply scenario inputs or observe an externally meaningful boundary; there is no numerical mock limit
+- Reconsider the test boundary when dependency setup obscures the behavior
+- Keep real domain objects and avoid replacing internal computation with mocks
 
 ## Setup and Sharing
 
