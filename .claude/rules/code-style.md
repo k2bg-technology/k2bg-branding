@@ -61,6 +61,10 @@ Follow `AGENTS.md` > Coding Style & Naming Conventions > Comments.
 ## Variables and Scope
 
 - **Prefer Single Assignment**: Set variable values only once and **minimize reassignment (value changes)** (recommend immutable design). As the number of places manipulating variables increases, tracking values becomes difficult.
+- **No `let`**: The `noLet` Biome plugin (`packages/biome-config/plugins/noLet.grit`) rejects every `let` declaration; write `const`.
+  - Restructure function-local reassignment with recursion, `reduce`, `findIndex`, or a function that returns the value. A rewrite of an accumulation keeps the original order of operations.
+  - Suppress with `// biome-ignore lint/plugin/noLet: <reason>` only for module-level state that must survive across calls: lazy singletons and dependency caches, test-infrastructure handles, factory sequence counters, mock state read by `vi.mock`. A mutable holder object is not a substitute.
+  - Each workspace `biome.jsonc` declares the plugin path itself, because Biome resolves plugin paths against every config that extends the shared one.
 - **Minimize Scope**: Move variable definitions to **just before they are used**, keeping variable scope (visible range) as small as possible.
 - **Remove Intermediate Results and Control Flow Variables**:
   - Remove variables used only to hold intermediate calculation results (e.g., `index_to_remove`) by using results immediately, simplifying code.
