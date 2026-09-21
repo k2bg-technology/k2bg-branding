@@ -38,18 +38,15 @@ const tickCharacterWidth = 7.5;
 /** Recharts' own gap between a tick label and the plot area (tickSize + tickMargin). */
 const tickLabelGap = 14;
 
-function seriesValue(
-  seriesItem: BarSeries,
-  categoryIndex: number
-): number | null {
+function seriesValue(seriesItem: BarSeries, categoryIndex: number) {
   return seriesItem.values[categoryIndex] ?? null;
 }
 
-function sumValues(values: number[]): number {
+function sumValues(values: number[]) {
   return values.reduce((total, value) => total + value, 0);
 }
 
-function buildRows(categories: string[], series: BarSeries[]): BarRow[] {
+function buildRows(categories: string[], series: BarSeries[]) {
   return categories.map((category, categoryIndex) => {
     const row: BarRow = { category };
     for (const seriesItem of series) {
@@ -67,7 +64,7 @@ function valueExtent(
   categories: string[],
   series: BarSeries[],
   stacked: boolean
-): ValueExtent {
+) {
   return categories.reduce<ValueExtent>(
     (extent, _category, categoryIndex) => {
       const values = series.flatMap((seriesItem) => {
@@ -99,7 +96,7 @@ function valueExtent(
 function valueAxisWidth(
   extent: ValueExtent,
   formatValue: (value: number) => string
-): number {
+) {
   const longestLabelLength = Math.max(
     formatValue(extent.minimum).length,
     formatValue(extent.maximum).length

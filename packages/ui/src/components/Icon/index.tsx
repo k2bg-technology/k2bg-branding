@@ -14,7 +14,7 @@ import styles from './index.module.css';
 // An imported SVG resolves to different shapes per bundler: a URL string
 // (webpack asset/resource, esbuild dataurl), a StaticImageData `{ src }`
 // (Next.js / Turbopack), or a module namespace `{ default: { src } }`.
-function resolveIconSrc(value: IconUrl | undefined): string | undefined {
+function resolveIconSrc(value: IconUrl | undefined) {
   if (typeof value === 'string') return value;
   if (value && 'src' in value) return value.src;
   return value?.default?.src;

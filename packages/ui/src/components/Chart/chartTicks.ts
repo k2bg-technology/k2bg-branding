@@ -45,7 +45,7 @@ interface WallClock {
 // Formatters are expensive to construct and every tick of a chart shares one.
 const formatterCache = new Map<string, Intl.DateTimeFormat>();
 
-function wallClockFormatter(timeZone: string): Intl.DateTimeFormat {
+function wallClockFormatter(timeZone: string) {
   const cached = formatterCache.get(timeZone);
   if (cached !== undefined) {
     return cached;
@@ -78,7 +78,7 @@ function wallClock(timestamp: number, timeZone: string): WallClock {
   };
 }
 
-function padTwoDigits(value: number): string {
+function padTwoDigits(value: number) {
   return String(value).padStart(2, '0');
 }
 
@@ -86,7 +86,7 @@ function formatWallClock(
   timestamp: number,
   granularity: TimeGranularity,
   timeZone: string
-): string {
+) {
   const { year, month, day, hour, minute } = wallClock(timestamp, timeZone);
   const time = `${padTwoDigits(hour)}:${padTwoDigits(minute)}`;
   switch (granularity) {
@@ -109,7 +109,7 @@ function localeFormatter(
   locale: string,
   granularity: TimeGranularity,
   timeZone: string
-): Intl.DateTimeFormat | null {
+) {
   const cacheKey = `${locale}|${granularity}|${timeZone}`;
   const cached = localeFormatterCache.get(cacheKey);
   if (cached !== undefined) {
@@ -133,7 +133,7 @@ function formatAtGranularity(
   granularity: TimeGranularity,
   timeZone: string,
   locale?: string
-): string {
+) {
   if (locale !== undefined) {
     const formatter = localeFormatter(locale, granularity, timeZone);
     if (formatter !== null) {
@@ -159,16 +159,12 @@ export function formatTimestamp(
   );
 }
 
-function dateKey(clock: WallClock): string {
+function dateKey(clock: WallClock) {
   return `${clock.year}-${clock.month}-${clock.day}`;
 }
 
 /** Bucketing on the wall clock lands each tick on the local date boundary. */
-function bucketKey(
-  timestamp: number,
-  period: ChartPeriod,
-  timeZone: string
-): string {
+function bucketKey(timestamp: number, period: ChartPeriod, timeZone: string) {
   const clock = wallClock(timestamp, timeZone);
   return period === ChartPeriod.DAY
     ? `${dateKey(clock)}-${clock.hour}`
@@ -185,7 +181,7 @@ function headingGranularity(
   period: ChartPeriod,
   dateCount: number,
   pointCount: number
-): TimeGranularity {
+) {
   const isSubDaily = dateCount < pointCount;
   if (!isSubDaily) {
     return granularityByPeriod[period];

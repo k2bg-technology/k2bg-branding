@@ -39,26 +39,26 @@ const bothInputOrders = [
   },
 ];
 
-function tiles(container: HTMLElement): Element[] {
+function tiles(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('[data-slot="treemap-chart-tile"]')
   );
 }
 
-function tileShowing(container: HTMLElement, label: string): Element {
+function tileShowing(container: HTMLElement, label: string) {
   const [tile] = tiles(container).filter((candidate) =>
     (candidate.getAttribute('aria-label') ?? '').includes(`${label},`)
   );
   return tile;
 }
 
-function tileFills(container: HTMLElement): string[] {
+function tileFills(container: HTMLElement) {
   return tiles(container).map(
     (tile) => tile.querySelector('rect')?.getAttribute('fill') ?? ''
   );
 }
 
-function tileAreas(container: HTMLElement): number[] {
+function tileAreas(container: HTMLElement) {
   return tiles(container).map((tile) => {
     const rect = tile.querySelector('rect');
     return (
@@ -67,24 +67,24 @@ function tileAreas(container: HTMLElement): number[] {
   });
 }
 
-function tileLabels(container: HTMLElement): string[] {
+function tileLabels(container: HTMLElement) {
   return tiles(container).flatMap((tile) =>
     Array.from(tile.querySelectorAll('text'), (text) => text.textContent ?? '')
   );
 }
 
-function groupLabels(container: HTMLElement): string[] {
+function groupLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('[data-slot="treemap-chart-group"] text'),
     (text) => text.textContent ?? ''
   );
 }
 
-function tileNames(container: HTMLElement): string[] {
+function tileNames(container: HTMLElement) {
   return tiles(container).map((tile) => tile.getAttribute('aria-label') ?? '');
 }
 
-function tableRows(label: string): string[][] {
+function tableRows(label: string) {
   const table = screen.getByRole('table', { name: label });
   return within(table)
     .getAllByRole('row')
@@ -96,7 +96,7 @@ function tableRows(label: string): string[][] {
     );
 }
 
-function tooltipText(container: HTMLElement): string {
+function tooltipText(container: HTMLElement) {
   return (
     container.querySelector('[data-slot="chart-tooltip"]')?.textContent ?? ''
   );

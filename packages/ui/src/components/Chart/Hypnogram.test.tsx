@@ -34,7 +34,7 @@ const hourLabelPattern = /^\d{2}:\d{2}$/;
 function buildSegments(
   startTime: number,
   durations: [HypnogramStage, number][]
-): HypnogramSegment[] {
+) {
   return durations.reduce<HypnogramSegment[]>((segments, [stage, minutes]) => {
     const start = segments[segments.length - 1]?.end ?? startTime;
     segments.push({ start, end: start + minutes * minuteMs, stage });
@@ -43,7 +43,7 @@ function buildSegments(
 }
 
 /** 23:30 to 06:30 in Tokyo, returning to core between the deep and REM phases. */
-function createNight(): HypnogramSegment[] {
+function createNight() {
   return buildSegments(nightStart, [
     [HypnogramStage.AWAKE, 30],
     [HypnogramStage.CORE, 90],
@@ -53,28 +53,28 @@ function createNight(): HypnogramSegment[] {
   ]);
 }
 
-function createStageTour(): HypnogramSegment[] {
+function createStageTour() {
   return buildSegments(
     nightStart,
-    stageOrder.map((stage): [HypnogramStage, number] => [stage, 60])
+    stageOrder.map((stage) => [stage, 60])
   );
 }
 
-function segmentRowYs(container: HTMLElement): number[] {
+function segmentRowYs(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('[data-slot="hypnogram-segment"]'),
     (segment) => Number(segment.getAttribute('y1'))
   );
 }
 
-function segmentStrokes(container: HTMLElement): string[] {
+function segmentStrokes(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('[data-slot="hypnogram-segment"]'),
     (segment) => segment.getAttribute('stroke') ?? ''
   );
 }
 
-function hourTickLabels(container: HTMLElement): string[] {
+function hourTickLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('text'),
     (text) => text.textContent ?? ''

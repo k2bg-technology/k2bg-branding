@@ -11,7 +11,7 @@ import {
 
 const oneHour = 60 * 60 * 1000;
 
-function januaryDay(index: number): number {
+function januaryDay(index: number) {
   return Date.UTC(2026, 0, 1 + index);
 }
 
@@ -78,44 +78,43 @@ const completeBandPoints: TimeSeriesBandPoint[] = [
 ];
 
 const halfMeasuredIndex = 2;
-const halfMeasuredBandPoints: TimeSeriesBandPoint[] = completeBandPoints.map(
-  (point, index) =>
-    index === halfMeasuredIndex ? { ...point, low: null } : point
+const halfMeasuredBandPoints = completeBandPoints.map((point, index) =>
+  index === halfMeasuredIndex ? { ...point, low: null } : point
 );
 
 function bandSeries(points: TimeSeriesBandPoint[]): TimeSeriesChartSeries {
   return { kind: 'band', id: 'spread', label: 'Spread', points };
 }
 
-function referenceLineY(container: HTMLElement): number {
+function referenceLineY(container: HTMLElement) {
   return Number(
     container.querySelector('.recharts-reference-line line')?.getAttribute('y1')
   );
 }
 
-function seriesPathData(container: HTMLElement): string {
+function seriesPathData(container: HTMLElement) {
   return (
     container.querySelector('.recharts-line-curve')?.getAttribute('d') ?? ''
   );
 }
 
-function bandPathData(container: HTMLElement): string {
+function bandPathData(container: HTMLElement) {
   return (
     container.querySelector('path.recharts-area-area')?.getAttribute('d') ?? ''
   );
 }
 
-function pathPointYs(pathData: string): number[] {
+function pathPointYs(pathData: string) {
   return Array.from(pathData.matchAll(/[-\d.]+,(-?[\d.]+)/g), (match) =>
     Number(match[1])
   );
 }
 
-function subPathCount(pathData: string): number {
+function subPathCount(pathData: string) {
   return (pathData.match(/M/g) ?? []).length;
 }
 
-function valueAxisValues(container: HTMLElement): number[] {
+function valueAxisValues(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -124,7 +123,7 @@ function valueAxisValues(container: HTMLElement): number[] {
   );
 }
 
-function timeAxisLabels(container: HTMLElement): string[] {
+function timeAxisLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -136,7 +135,7 @@ function timeAxisLabels(container: HTMLElement): string[] {
 const areaCurve = 'path.recharts-area-curve';
 const lineCurve = 'path.recharts-line-curve';
 
-function curvePathData(container: HTMLElement, selector: string): string[] {
+function curvePathData(container: HTMLElement, selector: string) {
   return Array.from(
     container.querySelectorAll(selector),
     (curve) => curve.getAttribute('d') ?? ''
@@ -144,7 +143,7 @@ function curvePathData(container: HTMLElement, selector: string): string[] {
 }
 
 /** Recharts draws in pixels; the value axis reads those pixels back as values. */
-function curveValues(container: HTMLElement, pathData: string): number[] {
+function curveValues(container: HTMLElement, pathData: string) {
   const ticks = Array.from(
     container.querySelectorAll(
       '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -163,7 +162,7 @@ function curveValues(container: HTMLElement, pathData: string): number[] {
   );
 }
 
-function tooltipHeading(container: HTMLElement): string {
+function tooltipHeading(container: HTMLElement) {
   return (
     container.querySelector('[data-slot="chart-tooltip"] p')?.textContent ?? ''
   );

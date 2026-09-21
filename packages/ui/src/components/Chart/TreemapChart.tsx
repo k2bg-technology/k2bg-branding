@@ -74,12 +74,12 @@ const scaleColor = ChartColor.CHART_1;
 declare const process: { env: { NODE_ENV?: string } };
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
-function isDrawableValue(value: number): boolean {
+function isDrawableValue(value: number) {
   return Number.isFinite(value) && value >= 0;
 }
 
 /** Rough advance width: a full-width glyph fills the em, a Latin one ~0.6em. */
-function estimateTextWidth(text: string): number {
+function estimateTextWidth(text: string) {
   return Array.from(text).reduce((width, character) => {
     const codePoint = character.codePointAt(0) ?? 0;
     return width + (codePoint >= 0x1100 ? labelFontSize : labelFontSize * 0.6);
@@ -123,7 +123,7 @@ function labelPlate(
   };
 }
 
-function overlaps(one: Rect, other: Rect): boolean {
+function overlaps(one: Rect, other: Rect) {
   return (
     one.x < other.x + other.width &&
     other.x < one.x + one.width &&
@@ -136,7 +136,7 @@ function readRect(node: TreemapNode): Rect {
   return { x: node.x, y: node.y, width: node.width, height: node.height };
 }
 
-function readTileId(candidate: unknown): string | undefined {
+function readTileId(candidate: unknown) {
   if (
     typeof candidate === 'object' &&
     candidate !== null &&
@@ -148,7 +148,7 @@ function readTileId(candidate: unknown): string | undefined {
   return undefined;
 }
 
-function readGroupKey(candidate: unknown): string | undefined {
+function readGroupKey(candidate: unknown) {
   if (
     typeof candidate === 'object' &&
     candidate !== null &&

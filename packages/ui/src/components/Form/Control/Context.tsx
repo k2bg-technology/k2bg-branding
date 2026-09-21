@@ -23,7 +23,7 @@ export function FormProvider({
   return <FormContext value={formProps}>{children}</FormContext>;
 }
 
-export function useFormContext(formProps?: FormProps) {
+export function useFormContext(formProps?: FormProps): FormProps {
   const formContext = use(FormContext);
 
   return {

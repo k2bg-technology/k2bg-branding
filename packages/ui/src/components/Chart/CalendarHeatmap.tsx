@@ -65,12 +65,12 @@ export interface CalendarHeatmapProps {
 }
 
 /** Calendar days are pinned to UTC midnight so day arithmetic never meets a DST shift. */
-function toUtcMidnight(date: string): number {
+function toUtcMidnight(date: string) {
   const [year, month, day] = date.split('-').map(Number);
   return Date.UTC(year, month - 1, day);
 }
 
-function toIsoDate(timestamp: number): string {
+function toIsoDate(timestamp: number) {
   return new Date(timestamp).toISOString().slice(0, 10);
 }
 

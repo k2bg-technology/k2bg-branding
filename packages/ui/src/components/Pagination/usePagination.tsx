@@ -8,12 +8,14 @@ export interface UsePaginationProps {
   siblingCount?: number;
 }
 
+export type PaginationItem = string | number;
+
 /**
  * @see {@link https://github.com/mui/material-ui/blob/master/packages/mui-material/src/usePagination/usePagination.js}
  *
  * @returns example [1, 'ellipsis', 4, 5, 6, 'ellipsis', 10]
  */
-export function usePagination(props: UsePaginationProps) {
+export function usePagination(props: UsePaginationProps): PaginationItem[] {
   const {
     count,
     currentIndex,

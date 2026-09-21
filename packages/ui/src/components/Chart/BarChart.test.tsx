@@ -20,7 +20,7 @@ function createSeries(overrides: Partial<BarSeries> = {}): BarSeries {
   };
 }
 
-function categoryAxisLabels(container: HTMLElement): string[] {
+function categoryAxisLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -29,7 +29,7 @@ function categoryAxisLabels(container: HTMLElement): string[] {
   );
 }
 
-function valueAxisLabels(container: HTMLElement): string[] {
+function valueAxisLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -39,7 +39,7 @@ function valueAxisLabels(container: HTMLElement): string[] {
 }
 
 /** Tick labels end at the axis width, so their anchor measures the room they get. */
-function valueAxisLabelRoom(container: HTMLElement): number {
+function valueAxisLabelRoom(container: HTMLElement) {
   const anchor = container.querySelector(
     '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
   );
@@ -47,14 +47,14 @@ function valueAxisLabelRoom(container: HTMLElement): number {
 }
 
 /** Bars come out series by series, so the first slice is the first series. */
-function barLeftEdges(container: HTMLElement): number[] {
+function barLeftEdges(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('.recharts-bar-rectangle path'),
     (bar) => Number(bar.getAttribute('x'))
   );
 }
 
-function barOutlines(container: HTMLElement): string[] {
+function barOutlines(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('.recharts-bar-rectangle path'),
     (bar) => bar.getAttribute('d') ?? ''
@@ -62,9 +62,7 @@ function barOutlines(container: HTMLElement): string[] {
 }
 
 /** A bar below the baseline grows downwards, so its edges come back ordered. */
-function barEdges(
-  container: HTMLElement
-): Array<{ top: number; bottom: number }> {
+function barEdges(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('.recharts-bar-rectangle path'),
     (bar) => {
@@ -75,24 +73,24 @@ function barEdges(
   );
 }
 
-function baselinePosition(container: HTMLElement): number {
+function baselinePosition(container: HTMLElement) {
   return Number(
     container.querySelector('.recharts-reference-line line')?.getAttribute('y1')
   );
 }
 
-function tooltipText(container: HTMLElement): string {
+function tooltipText(container: HTMLElement) {
   return (
     container.querySelector('[data-slot="chart-tooltip"]')?.textContent ?? ''
   );
 }
 
-function firstBarLeftEdge(chart: ReactElement): number {
+function firstBarLeftEdge(chart: ReactElement) {
   const { container } = render(chart);
   return barLeftEdges(container)[0] ?? 0;
 }
 
-function createTwoSeries(): BarSeries[] {
+function createTwoSeries() {
   return [
     createSeries(),
     createSeries({ id: 'water', label: 'Water', values: [3, 4, 5] }),

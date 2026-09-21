@@ -38,7 +38,7 @@ interface LocaleWithWeekInfo extends Intl.Locale {
   weekInfo?: WeekInfo;
 }
 
-function localeWeekStart(locale: string): WeekStartDay | undefined {
+function localeWeekStart(locale: string) {
   const source: LocaleWithWeekInfo = new Intl.Locale(locale);
   const firstDay = (source.getWeekInfo?.() ?? source.weekInfo)?.firstDay;
   if (firstDay === undefined) {
@@ -100,7 +100,7 @@ function glyphWidth(character: string): number {
 }
 
 /** Week columns a label needs before the next one may start. */
-function textColumns(text: string, columnWidth: number): number {
+function textColumns(text: string, columnWidth: number) {
   const width = Array.from(text).reduce(
     (total, character) => total + glyphWidth(character),
     0

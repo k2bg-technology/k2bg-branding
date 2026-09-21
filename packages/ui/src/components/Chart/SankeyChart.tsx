@@ -31,7 +31,7 @@ export interface SankeyChartLink {
 const nodeColumnGutter = 16;
 const nodeLabelGap = 8;
 
-function readNodeName(candidate: unknown): string | undefined {
+function readNodeName(candidate: unknown) {
   if (
     typeof candidate === 'object' &&
     candidate !== null &&

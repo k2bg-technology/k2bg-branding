@@ -62,7 +62,7 @@ const tickLabelHalfWidth = 15;
 const tickLabelFontSize = 10;
 const tickLabelGap = 4;
 
-function stageRowY(stage: HypnogramStage): number {
+function stageRowY(stage: HypnogramStage) {
   return firstRowY + stageOrder.indexOf(stage) * rowGap;
 }
 
@@ -77,7 +77,7 @@ function tickTextAnchor(x: number): 'start' | 'middle' | 'end' {
   return 'middle';
 }
 
-function tickLabelExtent(x: number): { left: number; right: number } {
+function tickLabelExtent(x: number) {
   switch (tickTextAnchor(x)) {
     case 'start':
       return { left: x, right: x + tickLabelHalfWidth * 2 };
@@ -93,7 +93,7 @@ function tickLabelExtent(x: number): { left: number; right: number } {
 function withoutCollidingLabels(
   ticks: number[],
   plotX: (timestamp: number) => number
-): number[] {
+) {
   if (ticks.length <= 2) {
     return ticks;
   }
@@ -116,7 +116,7 @@ function withoutCollidingLabels(
  * Hour boundaries are wall-clock rather than UTC, so zones offset by 30 or 45
  * minutes do not land every tick mid-hour.
  */
-function wallClockMinute(timestamp: number, timeZone: string): number {
+function wallClockMinute(timestamp: number, timeZone: string) {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone,
     hourCycle: 'h23',
@@ -127,17 +127,13 @@ function wallClockMinute(timestamp: number, timeZone: string): number {
   return Number(minute);
 }
 
-function nextWholeHour(timestamp: number, timeZone: string): number {
+function nextWholeHour(timestamp: number, timeZone: string) {
   const startOfMinute = Math.ceil(timestamp / minuteMs) * minuteMs;
   const minute = wallClockMinute(startOfMinute, timeZone);
   return startOfMinute + ((60 - minute) % 60) * minuteMs;
 }
 
-function buildTimeTicks(
-  startTime: number,
-  endTime: number,
-  timeZone: string
-): number[] {
+function buildTimeTicks(startTime: number, endTime: number, timeZone: string) {
   const wholeHour = nextWholeHour(startTime, timeZone);
   const firstTick = wholeHour === startTime ? wholeHour + hourMs : wholeHour;
   const hourTickCount = Math.max(0, Math.ceil((endTime - firstTick) / hourMs));

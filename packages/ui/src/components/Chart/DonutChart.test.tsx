@@ -19,34 +19,34 @@ function createSlices(count: number): DonutChartSlice[] {
   }));
 }
 
-function sliceFills(container: HTMLElement): string[] {
+function sliceFills(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('.recharts-sector'),
     (sector) => sector.getAttribute('fill') ?? ''
   );
 }
 
-function centerElement(container: HTMLElement): Element | null {
+function centerElement(container: HTMLElement) {
   return container.querySelector('[data-slot="donut-chart-center"]');
 }
 
-function centerValueElement(container: HTMLElement): HTMLElement | null {
+function centerValueElement(container: HTMLElement) {
   return container.querySelector<HTMLElement>(
     '[data-slot="donut-chart-center-value"]'
   );
 }
 
-function centerLabelElement(container: HTMLElement): Element | null {
+function centerLabelElement(container: HTMLElement) {
   return container.querySelector('[data-slot="donut-chart-center-label"]');
 }
 
-function tooltipText(container: HTMLElement): string {
+function tooltipText(container: HTMLElement) {
   return (
     container.querySelector('[data-slot="chart-tooltip"]')?.textContent ?? ''
   );
 }
 
-function hoverFirstSlice(container: HTMLElement): void {
+function hoverFirstSlice(container: HTMLElement) {
   fireEvent.mouseOver(container.querySelectorAll('.recharts-sector')[0]);
 }
 
