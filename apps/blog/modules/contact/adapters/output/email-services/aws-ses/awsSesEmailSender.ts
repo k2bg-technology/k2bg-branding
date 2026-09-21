@@ -9,11 +9,6 @@ import type { Contact, EmailSender } from '../../../../domain';
 import { EmailSendFailedError } from '../../../../domain';
 import { contactLogger } from '../../../shared';
 
-/**
- * AWS SES Email Sender Adapter
- *
- * Implements EmailSender interface using AWS SES as the email service provider.
- */
 export class AwsSesEmailSender implements EmailSender {
   constructor(
     private readonly sesClient: SESClient,

@@ -1,11 +1,5 @@
 import { InvalidProviderColorError } from '../errors/errors';
 
-/**
- * ProviderColor Value Object
- *
- * Represents the display color for a provider.
- * Must be a valid hex color format (#RGB or #RRGGBB).
- */
 export class ProviderColor {
   private static readonly HEX_COLOR_PATTERN =
     /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;

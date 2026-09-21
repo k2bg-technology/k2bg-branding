@@ -1,8 +1,5 @@
 import type { AffiliateType } from '../../domain';
 
-/**
- * Base output type for all affiliates
- */
 interface AffiliateBaseOutput {
   id: string;
   name: string;
@@ -11,9 +8,6 @@ interface AffiliateBaseOutput {
   provider: string;
 }
 
-/**
- * Output type for Banner affiliate
- */
 export interface AffiliateBannerOutput extends AffiliateBaseOutput {
   type: typeof AffiliateType.BANNER;
   imageSourceUrl: string;
@@ -21,9 +15,6 @@ export interface AffiliateBannerOutput extends AffiliateBaseOutput {
   imageHeight: number;
 }
 
-/**
- * Output type for Product affiliate
- */
 export interface AffiliateProductOutput extends AffiliateBaseOutput {
   type: typeof AffiliateType.PRODUCT;
   providerColor: string;
@@ -34,24 +25,15 @@ export interface AffiliateProductOutput extends AffiliateBaseOutput {
   imageHeight: number;
 }
 
-/**
- * Output type for Text affiliate
- */
 export interface AffiliateTextOutput extends AffiliateBaseOutput {
   type: typeof AffiliateType.TEXT;
 }
 
-/**
- * Output type for SubProvider affiliate
- */
 export interface AffiliateSubProviderOutput extends AffiliateBaseOutput {
   type: typeof AffiliateType.SUB_PROVIDER;
   providerColor: string;
 }
 
-/**
- * Union type for all affiliate outputs
- */
 export type AffiliateOutput =
   | AffiliateBannerOutput
   | AffiliateProductOutput

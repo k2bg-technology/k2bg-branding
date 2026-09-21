@@ -1,11 +1,5 @@
 import { InvalidWidthError } from '../errors/errors';
 
-/**
- * Width Value Object
- *
- * Represents the width of a media item in pixels.
- * Must be a positive integer.
- */
 export class Width {
   private readonly value: number;
 

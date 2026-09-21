@@ -1,11 +1,5 @@
 import { InvalidEmailError } from '../errors/errors';
 
-/**
- * Email Value Object
- *
- * Represents an email address.
- * Validates that the email follows a valid format.
- */
 export class Email {
   private static readonly EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

@@ -1,11 +1,5 @@
 import { InvalidTagsError } from '../errors/errors';
 
-/**
- * Tags Value Object
- *
- * Represents a collection of tags for a Post.
- * Validates maximum 20 tags, each with maximum 10 characters.
- */
 export class Tags {
   private static readonly MAX_TAGS = 20;
   private static readonly MAX_TAG_LENGTH = 10;

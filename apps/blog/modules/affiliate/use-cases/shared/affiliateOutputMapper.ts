@@ -60,9 +60,6 @@ const toSubProviderOutput = (
   providerColor: affiliate.providerColor.getValue(),
 });
 
-/**
- * Maps domain Affiliate entity to AffiliateOutput DTO
- */
 export const toAffiliateOutput = (affiliate: Affiliate): AffiliateOutput => {
   if (affiliate instanceof AffiliateBanner) {
     return toBannerOutput(affiliate);

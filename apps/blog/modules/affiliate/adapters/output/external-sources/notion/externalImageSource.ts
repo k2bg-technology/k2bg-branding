@@ -10,10 +10,6 @@ import { notionPageToImageSource } from './mapper';
 
 const DATABASE_ID = process.env.NOTION_AFFILIATE_DATABASE_ID ?? '';
 
-/**
- * Notion implementation of ExternalImageSource for Affiliate.
- * Fetches image sources from Notion Affiliate database (Banner and Product types).
- */
 export class NotionAffiliateExternalImageSource implements ExternalImageSource {
   constructor(
     private readonly notionClient: Client,

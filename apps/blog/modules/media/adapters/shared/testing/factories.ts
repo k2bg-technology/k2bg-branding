@@ -98,9 +98,6 @@ function createRichTextProperty(text: string) {
   };
 }
 
-/**
- * Creates a mock Notion Page Response for media testing.
- */
 export function createNotionMediaPageResponse(
   overrides: NotionMediaPageOverrides = {}
 ): PageObjectResponse {
@@ -137,9 +134,6 @@ export function createNotionMediaPageResponse(
   } as unknown as PageObjectResponse;
 }
 
-/**
- * Creates multiple Notion Page Responses for testing.
- */
 export function createNotionMediaPageResponses(
   count: number,
   overrides: NotionMediaPageOverrides = {}

@@ -15,11 +15,6 @@ export interface FetchPostOutput {
   post: PostOutput;
 }
 
-/**
- * FetchPost Use Case
- *
- * Fetches a single post by its ID.
- */
 export class FetchPost {
   constructor(
     private readonly queryService: FetchPostQueryService,

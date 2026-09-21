@@ -1,11 +1,5 @@
 import { InvalidNameError } from '../errors/errors';
 
-/**
- * Name Value Object
- *
- * Represents the display name of an affiliate.
- * Max 200 characters, non-empty, trimmed.
- */
 export class Name {
   private static readonly MAX_LENGTH = 200;
 

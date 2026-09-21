@@ -19,9 +19,6 @@ import type { Slug } from '../value-objects/slug';
 import { Tags } from '../value-objects/tags';
 import type { Title } from '../value-objects/title';
 
-/**
- * Props for reconstituting a Post from persistence
- */
 export interface PostProps {
   id: PostId;
   title: Title;
@@ -41,9 +38,6 @@ export interface PostProps {
   deletedAt: Date | null;
 }
 
-/**
- * Props for creating a new draft Post
- */
 export interface CreateDraftProps {
   title: Title;
   content: Content;
@@ -57,12 +51,6 @@ export interface CreateDraftProps {
   tags?: Tags;
 }
 
-/**
- * Post Entity
- *
- * Aggregate root for the Post domain.
- * Contains business logic and invariant enforcement.
- */
 export class Post {
   private constructor(
     private readonly _id: PostId,
@@ -82,10 +70,6 @@ export class Post {
     private _updatedAt: Date,
     private _deletedAt: Date | null
   ) {}
-
-  // ==========================================================================
-  // Getters
-  // ==========================================================================
 
   get id(): PostId {
     return this._id;
@@ -150,10 +134,6 @@ export class Post {
   get deletedAt(): Date | null {
     return this._deletedAt ? new Date(this._deletedAt) : null;
   }
-
-  // ==========================================================================
-  // Commands (State Changes)
-  // ==========================================================================
 
   publish(): void {
     if (this._status === PostStatus.PUBLISHED) {
@@ -243,10 +223,6 @@ export class Post {
     this._updatedAt = new Date();
   }
 
-  // ==========================================================================
-  // Query Methods
-  // ==========================================================================
-
   isPublished(): boolean {
     return this._status === PostStatus.PUBLISHED;
   }
@@ -267,19 +243,11 @@ export class Post {
     return this._id.equals(other._id);
   }
 
-  // ==========================================================================
-  // Private Helper Methods
-  // ==========================================================================
-
   private ensureNotArchived(): void {
     if (this._status === PostStatus.ARCHIVED) {
       throw new CannotModifyArchivedPostError(this._id.getValue());
     }
   }
-
-  // ==========================================================================
-  // Factory Methods
-  // ==========================================================================
 
   static createDraft(params: CreateDraftProps): Post {
     const now = new Date();
@@ -306,14 +274,12 @@ export class Post {
   }
 
   static reconstitute(props: PostProps): Post {
-    // Validate invariant: revisionDate >= releaseDate
     if (!props.revisionDate.isOnOrAfter(props.releaseDate)) {
       throw new PostInvariantViolationError(
         `Invariant violation: revisionDate must be on or after releaseDate for post ${props.id.getValue()}`
       );
     }
 
-    // Validate invariant: published posts cannot have future release date
     if (
       props.status === PostStatus.PUBLISHED &&
       props.releaseDate.isFutureDate()

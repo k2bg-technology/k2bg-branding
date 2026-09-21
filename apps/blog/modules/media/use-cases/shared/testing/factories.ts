@@ -14,16 +14,10 @@ import {
 
 let counter = 0;
 
-/**
- * Resets the counter for test isolation
- */
 export const resetFactoryCounter = (): void => {
   counter = 0;
 };
 
-/**
- * Creates valid MediaProps for testing
- */
 export const createMediaProps = (
   overrides: Partial<MediaProps> = {}
 ): MediaProps => {
@@ -46,16 +40,10 @@ export const createMediaProps = (
   };
 };
 
-/**
- * Creates a Media entity for testing (with sourceUrl)
- */
 export const createMedia = (overrides: Partial<MediaProps> = {}): Media => {
   return Media.reconstitute(createMediaProps(overrides));
 };
 
-/**
- * Creates a Media entity with sourceFile for testing
- */
 export const createMediaWithFile = (
   overrides: Partial<MediaProps> = {}
 ): Media => {
@@ -76,9 +64,6 @@ export const createMediaWithFile = (
   });
 };
 
-/**
- * Creates multiple Media entities for testing
- */
 export const createMediaList = (
   count: number,
   overrides: Partial<MediaProps> = {}

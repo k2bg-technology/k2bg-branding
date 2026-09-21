@@ -1,14 +1,3 @@
-/**
- * Affiliate Domain Errors
- *
- * Defines errors that occur in the domain layer.
- * These are clearly separated from infrastructure layer errors.
- */
-
-// =============================================================================
-// Base Error
-// =============================================================================
-
 export class DomainError extends Error {
   constructor(message: string) {
     super(message);
@@ -16,10 +5,6 @@ export class DomainError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
-
-// =============================================================================
-// Value Object Errors
-// =============================================================================
 
 export class InvalidAffiliateIdError extends DomainError {}
 

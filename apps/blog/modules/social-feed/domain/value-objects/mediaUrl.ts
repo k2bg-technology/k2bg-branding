@@ -1,11 +1,5 @@
 import { InvalidMediaUrlError } from '../errors/errors';
 
-/**
- * MediaUrl Value Object
- *
- * Represents the URL of a media file in a social post.
- * Immutable and compared by value equality.
- */
 export class MediaUrl {
   private constructor(private readonly value: string) {}
 

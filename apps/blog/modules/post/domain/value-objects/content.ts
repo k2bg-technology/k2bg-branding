@@ -1,11 +1,5 @@
 import { InvalidContentError } from '../errors/errors';
 
-/**
- * Content Value Object
- *
- * Represents the body content of a Post.
- * Validates that the content is not empty and does not exceed 100,000 characters.
- */
 export class Content {
   private static readonly MAX_LENGTH = 100_000;
 

@@ -1,10 +1,3 @@
-/**
- * ContactSubmissionRepository Interface
- *
- * Defines the contract for contact form submission tracking.
- * This interface is part of the domain layer and should be
- * implemented by adapters in the infrastructure layer.
- */
 export interface ContactSubmissionRepository {
   /**
    * Atomically record a submission for an IP hash unless it already has

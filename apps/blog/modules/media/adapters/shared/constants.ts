@@ -1,6 +1,3 @@
-/**
- * Default values used across adapters when source data is missing.
- */
 export const DEFAULT_VALUES = {
   PLACEHOLDER_IMAGE_URL: 'https://placeholder.com/media.jpg',
   DEFAULT_WIDTH: 800,
@@ -8,9 +5,6 @@ export const DEFAULT_VALUES = {
   DEFAULT_EXTENSION: 'jpg',
 } as const;
 
-/**
- * Notion property names for Media database.
- */
 export const NOTION_PROPERTY_NAMES = {
   NAME: 'name',
   TYPE: 'type',
@@ -22,9 +16,6 @@ export const NOTION_PROPERTY_NAMES = {
   EXTENSION: 'extension',
 } as const;
 
-/**
- * Notion media type values.
- */
 export const NOTION_MEDIA_TYPES = {
   IMAGE: 'MEDIA_IMAGE',
   VIDEO: 'MEDIA_VIDEO',

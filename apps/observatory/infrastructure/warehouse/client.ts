@@ -76,7 +76,6 @@ function buildCacheKey(
   ];
 }
 
-/** Create a new warehouse client. Use this for testing or when you need a fresh instance. */
 export function createWarehouseClient(
   config: WarehouseClientConfig = readConfigFromEnvironment()
 ): WarehouseClient {
@@ -109,7 +108,6 @@ export function createWarehouseClient(
   };
 }
 
-/** Get the singleton warehouse client. Creates a new instance if one doesn't exist. */
 export function getWarehouseClient(): WarehouseClient {
   if (!warehouseClientInstance) {
     warehouseClientInstance = createWarehouseClient();
@@ -117,12 +115,10 @@ export function getWarehouseClient(): WarehouseClient {
   return warehouseClientInstance;
 }
 
-/** Region of the warehouse datasets; qualifies region-scoped metadata views. */
 export function getWarehouseLocation(): string {
   return requireEnvironmentVariable('WAREHOUSE_LOCATION');
 }
 
-/** Reset the singleton warehouse client. Primarily used for testing cleanup. */
 export function resetWarehouseClient(): void {
   warehouseClientInstance = null;
 }

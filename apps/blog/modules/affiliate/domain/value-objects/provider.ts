@@ -1,11 +1,5 @@
 import { InvalidProviderError } from '../errors/errors';
 
-/**
- * Provider Value Object
- *
- * Represents the affiliate service provider (e.g., Amazon, Rakuten).
- * Max 50 characters, non-empty.
- */
 export class Provider {
   private static readonly MAX_LENGTH = 50;
 

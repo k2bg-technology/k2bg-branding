@@ -1,11 +1,5 @@
 import { InvalidSourceFileError } from '../errors/errors';
 
-/**
- * SourceFile Value Object
- *
- * Represents the uploaded file path or reference for a media item.
- * Non-empty string when provided.
- */
 export class SourceFile {
   private readonly value: string;
 

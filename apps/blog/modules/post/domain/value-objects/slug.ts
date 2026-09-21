@@ -1,13 +1,5 @@
 import { InvalidSlugError } from '../errors/errors';
 
-/**
- * Slug Value Object
- *
- * Represents the URL-friendly identifier of a Post.
- * Contains only the human-readable kebab-case slug text.
- *
- * Pattern: lowercase letters, numbers, and hyphens (kebab-case)
- */
 export class Slug {
   private static readonly PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
   private static readonly MAX_LENGTH = 100;

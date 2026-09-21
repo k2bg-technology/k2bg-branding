@@ -12,9 +12,6 @@ export interface SearchPostSummariesResult {
   totalCount: number;
 }
 
-/**
- * Query service interface for searching post summaries
- */
 export interface SearchPostSummariesQueryService {
   searchPostSummaries(
     params: SearchPostSummariesParams

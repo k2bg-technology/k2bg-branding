@@ -24,10 +24,6 @@ import {
 } from '../../../../domain';
 import { MappingError, NOTION_MEDIA_TYPES } from '../../../shared';
 
-/**
- * Extracts source with file priority over URL (business rule).
- * Returns both sourceFile and sourceUrl separately for domain entity.
- */
 function extractSources(props: NotionProperties): {
   sourceFile: SourceFile | null;
   sourceUrl: SourceUrl | null;
@@ -41,9 +37,6 @@ function extractSources(props: NotionProperties): {
   };
 }
 
-/**
- * Determines the MediaType from Notion select property.
- */
 export function determineMediaType(page: PageObjectResponse): MediaType | null {
   const typeString = getSelect(page.properties, 'type');
 
@@ -57,9 +50,6 @@ export function determineMediaType(page: PageObjectResponse): MediaType | null {
   }
 }
 
-/**
- * Maps a Notion page to a Media domain entity.
- */
 export function notionPageToMedia(page: PageObjectResponse): Media {
   const mediaType = determineMediaType(page);
   if (!mediaType) {
@@ -93,11 +83,7 @@ export function notionPageToMedia(page: PageObjectResponse): Media {
   });
 }
 
-/**
- * Maps a Notion page to an ImageSource for batch processing.
- * Returns null for VIDEO types or when no source exists.
- * Business rule: file takes priority over URL.
- */
+/** Returns null for non-images or missing sources; a file source wins over a URL. */
 export function notionPageToImageSource(
   page: PageObjectResponse
 ): ImageSource | null {
@@ -109,7 +95,6 @@ export function notionPageToImageSource(
 
   const { sourceFile, sourceUrl } = extractSources(page.properties);
 
-  // Business rule: file takes priority over URL
   const effectiveUrl = sourceFile?.getValue() ?? sourceUrl?.getValue();
   if (!effectiveUrl) {
     return null;
