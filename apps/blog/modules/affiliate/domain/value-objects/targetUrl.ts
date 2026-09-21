@@ -1,11 +1,5 @@
 import { InvalidTargetUrlError } from '../errors/errors';
 
-/**
- * TargetUrl Value Object
- *
- * Represents the destination URL for an affiliate link.
- * Must be a valid URL format.
- */
 export class TargetUrl {
   private readonly value: string;
 

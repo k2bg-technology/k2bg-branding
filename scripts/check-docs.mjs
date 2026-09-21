@@ -3,8 +3,7 @@
  * Verify that agent documentation (AGENTS.md, CLAUDE.md, .claude/**) does not rot:
  * 1. Backtick-quoted repo paths must exist on disk.
  * 2. Exact product version pins must not appear (package.json is the source of truth).
- * 3. Legacy-tech guard: tech that was migrated away from this repo must not re-enter
- *    the docs (AI agents tend to reproduce legacy examples from training data).
+ * 3. Legacy-tech guard: retired dependencies must not re-enter the docs.
  *
  * Append `docs-check-ignore` (e.g. in an HTML comment) to a line to exempt it.
  *

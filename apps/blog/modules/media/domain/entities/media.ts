@@ -11,9 +11,6 @@ import type {
   Width,
 } from '../value-objects';
 
-/**
- * Props for creating a Media entity
- */
 export interface MediaProps {
   id: MediaId;
   name: MediaName;
@@ -26,12 +23,6 @@ export interface MediaProps {
   extension: Extension | null;
 }
 
-/**
- * Media Entity
- *
- * Represents a media item (image or video) used throughout the blog.
- * Implements the business rule: file over URL priority.
- */
 export class Media {
   private constructor(
     private readonly _id: MediaId,
@@ -81,10 +72,7 @@ export class Media {
     return this._extension;
   }
 
-  /**
-   * Returns the effective source (file takes priority over URL).
-   * Business Rule: When both file and URL are provided, file takes priority.
-   */
+  /** A file source takes priority when both source forms are present. */
   getEffectiveSource(): string | null {
     if (this._sourceFile) {
       return this._sourceFile.getValue();
@@ -95,9 +83,6 @@ export class Media {
     return null;
   }
 
-  /**
-   * Checks if this media has a valid source (either file or URL).
-   */
   hasSource(): boolean {
     return this._sourceFile !== null || this._sourceUrl !== null;
   }
@@ -106,9 +91,6 @@ export class Media {
     return this._id.equals(other._id);
   }
 
-  /**
-   * Creates a new Media entity with validation.
-   */
   static create(props: MediaProps): Media {
     if (!props.sourceFile && !props.sourceUrl) {
       throw new InvalidMediaError(
@@ -129,9 +111,6 @@ export class Media {
     );
   }
 
-  /**
-   * Reconstitutes a Media entity from persistence without validation.
-   */
   static reconstitute(props: MediaProps): Media {
     return new Media(
       props.id,

@@ -34,42 +34,28 @@ export function usePagination(props: UsePaginationProps) {
 
   const siblingsStart = Math.max(
     Math.min(
-      // Natural start
       currentIndex - siblingCount,
-      // Lower boundary when page is high
       count - boundaryCount - siblingCount * 2 - 1
     ),
-    // Greater than startPages
     boundaryCount + 2
   );
 
   const siblingsEnd = Math.min(
-    Math.max(
-      // Natural end
-      currentIndex + siblingCount,
-      // Upper boundary when page is low
-      boundaryCount + siblingCount * 2 + 2
-    ),
-    // Less than endPages
+    Math.max(currentIndex + siblingCount, boundaryCount + siblingCount * 2 + 2),
     endPages.length > 0 ? endPages[0] - 2 : count - 1
   );
 
-  // Basic list of items to render
-  // for example itemList = [1, 'ellipsis', 4, 5, 6, 'ellipsis', 10]
   const itemList = [
     ...startPages,
 
-    // Start ellipsis
     ...(siblingsStart > boundaryCount + 2
       ? ['start-ellipsis']
       : boundaryCount + 1 < count - boundaryCount
         ? [boundaryCount + 1]
         : []),
 
-    // Sibling pages
     ...range(siblingsStart, siblingsEnd),
 
-    // End ellipsis
     ...(siblingsEnd < count - boundaryCount - 1
       ? ['end-ellipsis']
       : count - boundaryCount > boundaryCount

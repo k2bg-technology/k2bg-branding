@@ -1,8 +1,5 @@
 import type { MediaType } from '../../domain';
 
-/**
- * Output type for Media entity
- */
 export interface MediaOutput {
   id: string;
   name: string;

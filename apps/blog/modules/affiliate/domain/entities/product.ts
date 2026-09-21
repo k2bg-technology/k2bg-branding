@@ -14,9 +14,6 @@ import type {
 
 import { AffiliateCore, type CoreProps } from './core';
 
-/**
- * Props for creating an AffiliateProduct entity
- */
 export interface AffiliateProductProps extends CoreProps {
   providerColor: ProviderColor;
   subProviderIds: SubProviderIds;
@@ -26,12 +23,6 @@ export interface AffiliateProductProps extends CoreProps {
   imageHeight: ImageHeight;
 }
 
-/**
- * AffiliateProduct Entity
- *
- * Represents a product promotion with image and multiple provider links.
- * The most feature-rich affiliate type with support for sub-providers.
- */
 export class AffiliateProduct extends AffiliateCore {
   private constructor(
     _id: AffiliateId,

@@ -9,10 +9,6 @@ import { notionPageToImageSource } from './mapper';
 
 const DATABASE_ID = process.env.NOTION_POST_DATABASE_ID ?? '';
 
-/**
- * Notion implementation of ExternalImageSource.
- * Fetches image sources from Notion database.
- */
 export class NotionExternalImageSource implements ExternalImageSource {
   constructor(
     private readonly notionClient: Client,

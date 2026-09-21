@@ -2,10 +2,6 @@ import type { v2 as cloudinary } from 'cloudinary';
 import type { ImageRepository } from '../../../../use-cases';
 import { ImageUploadError, postLogger } from '../../../shared';
 
-/**
- * Cloudinary implementation of ImageRepository.
- * Handles image upload operations using Cloudinary SDK.
- */
 export class CloudinaryImageRepository implements ImageRepository {
   constructor(private readonly cloudinaryInstance: typeof cloudinary) {}
 

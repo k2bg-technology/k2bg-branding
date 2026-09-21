@@ -1,9 +1,6 @@
 import type { AffiliateType } from '../types/enums';
 import type { AffiliateId, Name, Provider, TargetUrl } from '../value-objects';
 
-/**
- * Core props shared by all affiliate types
- */
 export interface CoreProps {
   id: AffiliateId;
   name: Name;
@@ -11,12 +8,6 @@ export interface CoreProps {
   provider: Provider;
 }
 
-/**
- * AffiliateCore Abstract Base Class
- *
- * Provides common properties and behavior for all affiliate entity types.
- * Each concrete affiliate type extends this class.
- */
 export abstract class AffiliateCore {
   protected constructor(
     protected readonly _id: AffiliateId,

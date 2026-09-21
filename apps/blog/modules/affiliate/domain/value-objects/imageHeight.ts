@@ -1,11 +1,5 @@
 import { InvalidImageHeightError } from '../errors/errors';
 
-/**
- * ImageHeight Value Object
- *
- * Represents the height of an affiliate image in pixels.
- * Must be a positive integer.
- */
 export class ImageHeight {
   private readonly value: number;
 

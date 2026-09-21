@@ -1,11 +1,5 @@
 import { InvalidImageUrlError } from '../errors/errors';
 
-/**
- * ImageUrl Value Object
- *
- * Represents the featured image URL of a Post.
- * Validates that the URL starts with https:// and does not exceed 2,000 characters.
- */
 export class ImageUrl {
   private static readonly MAX_LENGTH = 2_000;
   private static readonly HTTPS_PREFIX = 'https://';

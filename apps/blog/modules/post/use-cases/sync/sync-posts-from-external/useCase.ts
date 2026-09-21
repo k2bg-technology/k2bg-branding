@@ -7,11 +7,6 @@ export interface SyncPostsFromExternalOutput {
   count: number;
 }
 
-/**
- * SyncPostsFromExternal Use Case
- *
- * Syncs posts from an external source to the local database.
- */
 export class SyncPostsFromExternal {
   constructor(
     private readonly externalSource: ExternalPostSource,

@@ -1,11 +1,5 @@
 import { InvalidImageWidthError } from '../errors/errors';
 
-/**
- * ImageWidth Value Object
- *
- * Represents the width of an affiliate image in pixels.
- * Must be a positive integer.
- */
 export class ImageWidth {
   private readonly value: number;
 

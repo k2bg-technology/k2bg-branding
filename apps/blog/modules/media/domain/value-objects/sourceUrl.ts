@@ -1,11 +1,5 @@
 import { InvalidSourceUrlError } from '../errors/errors';
 
-/**
- * SourceUrl Value Object
- *
- * Represents the external URL of a media item.
- * Must be a valid URL format.
- */
 export class SourceUrl {
   private readonly value: string;
 

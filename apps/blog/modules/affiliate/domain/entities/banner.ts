@@ -11,21 +11,12 @@ import type {
 
 import { AffiliateCore, type CoreProps } from './core';
 
-/**
- * Props for creating an AffiliateBanner entity
- */
 export interface AffiliateBannerProps extends CoreProps {
   imageSourceUrl: ImageSourceUrl;
   imageWidth: ImageWidth;
   imageHeight: ImageHeight;
 }
 
-/**
- * AffiliateBanner Entity
- *
- * Represents an image-based advertisement with a clickable banner.
- * Contains image properties in addition to core affiliate properties.
- */
 export class AffiliateBanner extends AffiliateCore {
   private constructor(
     _id: AffiliateId,

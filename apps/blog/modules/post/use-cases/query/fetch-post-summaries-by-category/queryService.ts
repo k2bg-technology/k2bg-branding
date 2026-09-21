@@ -13,9 +13,6 @@ export interface FetchPostSummariesByCategoryResult {
   totalCount: number;
 }
 
-/**
- * Query service interface for fetching post summaries by category
- */
 export interface FetchPostSummariesByCategoryQueryService {
   fetchPostSummariesByCategory(
     params: FetchPostSummariesByCategoryParams

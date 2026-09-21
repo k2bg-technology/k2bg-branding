@@ -17,10 +17,6 @@ import {
 
 const DATABASE_ID = process.env.NOTION_POST_DATABASE_ID ?? '';
 
-/**
- * Notion implementation of ExternalPostSource.
- * Fetches posts from Notion database.
- */
 export class NotionExternalPostSource implements ExternalPostSource {
   constructor(
     private readonly notionClient: Client,

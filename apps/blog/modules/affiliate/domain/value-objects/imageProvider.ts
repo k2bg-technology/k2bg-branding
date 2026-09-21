@@ -1,11 +1,5 @@
 import { InvalidImageProviderError } from '../errors/errors';
 
-/**
- * ImageProvider Value Object
- *
- * Represents the source providing the product image.
- * Max 50 characters, non-empty.
- */
 export class ImageProvider {
   private static readonly MAX_LENGTH = 50;
 

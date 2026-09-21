@@ -1,12 +1,5 @@
 import { InvalidExtensionError } from '../errors/errors';
 
-/**
- * Extension Value Object
- *
- * Represents the file extension of a media item.
- * Derived from the source URL or file.
- * Normalized to lowercase without leading dot.
- */
 export class Extension {
   private static readonly VALID_EXTENSIONS = [
     'jpg',
@@ -43,10 +36,6 @@ export class Extension {
     return this.value;
   }
 
-  /**
-   * Creates an Extension from a raw extension string.
-   * Normalizes the extension to lowercase without leading dot.
-   */
   static create(value: string): Extension {
     if (!value || value.trim() === '') {
       throw new InvalidExtensionError('Extension cannot be empty');
@@ -60,10 +49,6 @@ export class Extension {
     return new Extension(normalized);
   }
 
-  /**
-   * Derives an Extension from a URL or file path.
-   * Extracts the extension from the path component.
-   */
   static fromUrl(url: string): Extension {
     if (!url || url.trim() === '') {
       throw new InvalidExtensionError('URL cannot be empty');

@@ -10,9 +10,6 @@ export interface FetchAllSlugsParams {
   orderBy: SortOrder;
 }
 
-/**
- * Query service interface for fetching all post slugs
- */
 export interface FetchAllSlugsQueryService {
   fetchAllSlugs(params: FetchAllSlugsParams): Promise<SlugRecord[]>;
 }

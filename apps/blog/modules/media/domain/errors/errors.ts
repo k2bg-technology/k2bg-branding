@@ -1,14 +1,3 @@
-/**
- * Media Domain Errors
- *
- * Defines errors that occur in the domain layer.
- * These are clearly separated from infrastructure layer errors.
- */
-
-// =============================================================================
-// Base Error
-// =============================================================================
-
 export class DomainError extends Error {
   constructor(message: string) {
     super(message);
@@ -16,10 +5,6 @@ export class DomainError extends Error {
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
-
-// =============================================================================
-// Value Object Errors
-// =============================================================================
 
 export class InvalidMediaIdError extends DomainError {}
 
@@ -36,9 +21,5 @@ export class InvalidWidthError extends DomainError {}
 export class InvalidHeightError extends DomainError {}
 
 export class InvalidExtensionError extends DomainError {}
-
-// =============================================================================
-// Entity Errors
-// =============================================================================
 
 export class InvalidMediaError extends DomainError {}

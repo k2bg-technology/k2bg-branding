@@ -2,9 +2,6 @@ import type { Post } from '../../domain';
 import type { OgImageUrlGenerator } from './ogImageUrlGenerator';
 import type { AuthorOutput, PostOutput } from './types';
 
-/**
- * Maps Post entity to PostOutput DTO
- */
 export function toPostOutput(
   post: Post,
   author: AuthorOutput | null = null,

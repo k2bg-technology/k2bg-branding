@@ -20,11 +20,6 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_ORDER: SortOrder = 'desc';
 
-/**
- * FetchPostSummaries Use Case
- *
- * Fetches paginated list of post summaries (excludes content).
- */
 export class FetchPostSummaries {
   constructor(private readonly queryService: FetchPostSummariesQueryService) {}
 

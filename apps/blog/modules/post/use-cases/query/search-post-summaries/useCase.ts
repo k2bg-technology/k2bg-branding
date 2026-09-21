@@ -22,11 +22,6 @@ const DEFAULT_ORDER: SortOrder = 'desc';
 const MIN_QUERY_LENGTH = 0;
 const MAX_QUERY_LENGTH = 100;
 
-/**
- * SearchPostSummaries Use Case
- *
- * Searches post summaries by query string with pagination.
- */
 export class SearchPostSummaries {
   constructor(private readonly queryService: SearchPostSummariesQueryService) {}
 

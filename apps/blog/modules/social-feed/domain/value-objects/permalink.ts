@@ -1,11 +1,5 @@
 import { InvalidPermalinkError } from '../errors/errors';
 
-/**
- * Permalink Value Object
- *
- * Represents the permanent URL to a social post.
- * Immutable and compared by value equality.
- */
 export class Permalink {
   private constructor(private readonly value: string) {}
 

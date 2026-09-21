@@ -1,11 +1,5 @@
 import { InvalidSubProviderIdsError } from '../errors/errors';
 
-/**
- * SubProviderIds Value Object
- *
- * Represents an array of sub-provider identifiers.
- * Each ID must be a valid UUID format.
- */
 export class SubProviderIds {
   private static readonly UUID_PATTERN =
     /^[a-f0-9]{8}-[a-f0-9]{4}-[478][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;

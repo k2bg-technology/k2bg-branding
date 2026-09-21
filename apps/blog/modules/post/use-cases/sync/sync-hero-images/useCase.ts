@@ -11,11 +11,6 @@ export interface SyncHeroImagesOutput {
   failedCount: number;
 }
 
-/**
- * SyncHeroImages Use Case
- *
- * Syncs hero images from multiple external sources to image storage
- */
 export class SyncHeroImages {
   constructor(
     private readonly imageSources: ExternalImageSource[],
@@ -25,10 +20,8 @@ export class SyncHeroImages {
 
   async execute(): Promise<SyncHeroImagesOutput> {
     try {
-      // Collect images from all sources
       const allImages = await this.collectImagesFromAllSources();
 
-      // Upload all images in parallel
       const results = await this.uploadImages(allImages);
 
       const uploaded = results.filter((r) => r.success);

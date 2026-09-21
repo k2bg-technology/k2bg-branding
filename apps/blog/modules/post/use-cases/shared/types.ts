@@ -1,30 +1,18 @@
 import type { Category } from '../../domain';
 
-/**
- * Pagination input parameters
- */
 export interface PaginationInput {
   page: number;
   pageSize: number;
 }
 
-/**
- * Sorting order
- */
 export type SortOrder = 'asc' | 'desc';
 
-/**
- * Author output type
- */
 export interface AuthorOutput {
   id: string;
   name: string;
   avatarUrl: string | null;
 }
 
-/**
- * Common output type for post data
- */
 export interface PostOutput {
   id: string;
   title: string;
@@ -46,9 +34,6 @@ export interface PostOutput {
   deletedAt: Date | null;
 }
 
-/**
- * Lightweight output type for post listings (excludes content)
- */
 export interface PostSummaryOutput {
   id: string;
   title: string;
@@ -60,9 +45,6 @@ export interface PostSummaryOutput {
   releaseDate: string;
 }
 
-/**
- * Paginated result wrapper
- */
 export interface PaginatedResult<T> {
   items: T[];
   totalCount: number;
@@ -72,9 +54,6 @@ export interface PaginatedResult<T> {
   hasPreviousPage: boolean;
 }
 
-/**
- * Slug output for SSG
- */
 export interface SlugOutput {
   id: string;
   slug: string;

@@ -6,9 +6,6 @@ export interface PostWithAuthor {
   author: AuthorOutput | null;
 }
 
-/**
- * Query service interface for fetching a single post with author
- */
 export interface FetchPostQueryService {
   fetchPost(id: PostId): Promise<PostWithAuthor | null>;
 }
