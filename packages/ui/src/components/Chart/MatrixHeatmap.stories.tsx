@@ -16,13 +16,13 @@ const hourColumns = Array.from({ length: 24 }, (_, hour) =>
 );
 
 /** Deterministic stand-in for sampled data, so every render is identical. */
-function pseudoRandom(seed: number): number {
+function pseudoRandom(seed: number) {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
   return value - Math.floor(value);
 }
 
 /** A closed bedroom builds up overnight, and more so on weekends spent indoors. */
-function buildCarbonDioxideValues(): number[][] {
+function buildCarbonDioxideValues() {
   return hourRows.map((_, hour) =>
     weekdayColumns.map((__, weekday) => {
       const isNight = hour >= 23 || hour < 7;
@@ -51,7 +51,7 @@ const subpixelTolerance = 2;
 const alignmentTolerance = 1;
 
 /** The scroll area marks its scrolling element with a `-viewport` id. */
-function scrollPort(canvasElement: HTMLElement): HTMLElement {
+function scrollPort(canvasElement: HTMLElement) {
   const viewport = canvasElement.querySelector<HTMLElement>(
     '[data-id$="-viewport"]'
   );

@@ -29,7 +29,7 @@ function getInterpolatedSpeed(
   segmentStart: SpeedKeyframe,
   segmentEnd: SpeedKeyframe,
   frame: number
-): number {
+) {
   const spanInFrames = segmentEnd.atFrame - segmentStart.atFrame;
   if (spanInFrames <= 0) {
     return segmentEnd.speed;
@@ -110,7 +110,7 @@ export function getSourceFrameOffset(input: {
   return sourceFrames;
 }
 
-function getSmearStrength(speed: number): number {
+function getSmearStrength(speed: number) {
   return clampUnit(
     (speed - ECHO_MIN_SPEED) / (ECHO_FULL_STRENGTH_SPEED - ECHO_MIN_SPEED)
   );

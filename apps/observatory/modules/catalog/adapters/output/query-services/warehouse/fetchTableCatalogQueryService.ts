@@ -12,7 +12,7 @@ const TABLE_CATALOG_REVALIDATE_SECONDS = 60 * 60 * 24;
 /** The location is interpolated into a region qualifier, so only allow region characters. */
 const LOCATION_PATTERN = /^[a-z0-9-]+$/i;
 
-function assertLocation(location: string): void {
+function assertLocation(location: string) {
   if (!LOCATION_PATTERN.test(location)) {
     throw new RepositoryError(
       `Invalid warehouse location: ${JSON.stringify(location)}`
@@ -25,7 +25,7 @@ function assertLocation(location: string): void {
  * `storage_last_modified_time` is projected as epoch milliseconds so the
  * row stays plain JSON through the cache.
  */
-function buildTableCatalogSql(location: string): string {
+function buildTableCatalogSql(location: string) {
   return [
     'SELECT table_schema AS dataset_id, table_name,',
     'total_rows AS row_count, total_logical_bytes AS size_bytes,',

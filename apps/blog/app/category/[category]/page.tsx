@@ -17,6 +17,7 @@ import {
   BLOG_SITE_NAME,
   isListedCategory,
   LISTED_CATEGORIES,
+  type ListedCategory,
 } from '../../siteMetadata';
 
 const PAGE_SIZE = 6;
@@ -33,7 +34,13 @@ interface Props {
   searchParams: SearchParams;
 }
 
-export async function generateStaticParams() {
+export interface CategoryStaticParameter {
+  category: ListedCategory;
+}
+
+export async function generateStaticParams(): Promise<
+  CategoryStaticParameter[]
+> {
   return LISTED_CATEGORIES.map((category) => ({
     category,
   }));

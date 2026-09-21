@@ -12,7 +12,7 @@ const prefetchHeaderVariants: Record<string, string>[] = [
 
 // Compiles config.matcher the same way the Next.js build does, so the tests
 // exercise the exclusions the framework actually applies.
-function matchesMiddlewareMatcher(pathname: string): boolean {
+function matchesMiddlewareMatcher(pathname: string) {
   return config.matcher.some((matcherPattern) => {
     const { regexStr } = tryToParsePath(matcherPattern);
     return regexStr !== undefined && new RegExp(regexStr).test(pathname);

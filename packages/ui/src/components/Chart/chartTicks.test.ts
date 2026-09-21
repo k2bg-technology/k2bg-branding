@@ -7,7 +7,7 @@ import {
 } from './chartTicks';
 import { ChartPeriod } from './types';
 
-function dailyTimestamps(count: number): number[] {
+function dailyTimestamps(count: number) {
   return Array.from({ length: count }, (_, index) =>
     Date.UTC(2026, 0, 1 + index)
   );

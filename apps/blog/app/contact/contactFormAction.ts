@@ -17,11 +17,11 @@ const UNKNOWN_CLIENT_IP = 'unknown';
 const RATE_LIMIT_EXCEEDED_MESSAGE =
   '送信回数の上限に達しました。しばらくしてからお試しください。';
 
-function hashClientIp(clientIp: string): string {
+function hashClientIp(clientIp: string) {
   return createHash('sha256').update(clientIp).digest('hex');
 }
 
-async function getClientIpHash(): Promise<string> {
+async function getClientIpHash() {
   const forwardedFor = (await headers()).get('x-forwarded-for');
   const proxyObservedClientIp =
     forwardedFor?.split(',').at(-1)?.trim() || UNKNOWN_CLIENT_IP;
@@ -33,7 +33,7 @@ export async function contactFormAction(
   data: Contact & {
     token: string;
   }
-) {
+): Promise<null> {
   const { token, ...visitor } = data;
 
   const validatedFields = contactSchema.safeParse(visitor);

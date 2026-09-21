@@ -22,7 +22,7 @@ export interface DonutChartSlice {
   color?: ChartColor;
 }
 
-function hoveredSliceId(payload: TooltipContentProps['payload']): string {
+function hoveredSliceId(payload: TooltipContentProps['payload']) {
   const slice: unknown = payload?.[0]?.payload;
   if (
     typeof slice === 'object' &&
@@ -55,7 +55,7 @@ const fullWidthRanges = [
 /** Advance of a half-width character in the brand font stack, as an upper bound. */
 const halfWidthAdvance = 0.62;
 
-function isFullWidth(character: string): boolean {
+function isFullWidth(character: string) {
   // Outside the BMP `Array.from` yields a two-unit string, and such a character
   // in a value is always a wide ideograph or an emoji.
   if (character.length > 1) {
@@ -68,7 +68,7 @@ function isFullWidth(character: string): boolean {
 }
 
 /** Advance of the whole text in `em`, counting each character at its own width. */
-function textAdvance(text: string): number {
+function textAdvance(text: string) {
   const advance = Array.from(text).reduce(
     (total, character) =>
       total + (isFullWidth(character) ? 1 : halfWidthAdvance),

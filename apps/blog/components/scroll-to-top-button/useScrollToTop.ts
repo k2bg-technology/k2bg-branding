@@ -7,7 +7,12 @@ import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 
 const SCROLL_THRESHOLD = 300;
 
-export function useScrollToTop() {
+export interface ScrollToTopState {
+  isVisible: boolean;
+  scrollToTop: () => void;
+}
+
+export function useScrollToTop(): ScrollToTopState {
   const ref = usePageScrollAreaStore((state) => state.ref);
 
   const [isVisible, setIsVisible] = useState(false);

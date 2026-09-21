@@ -6,7 +6,7 @@ import { CalendarHeatmap, type CalendarHeatmapDay, ChartColor } from '.';
 const dayMs = 86_400_000;
 
 /** Deterministic stand-in for sampled data, so every render is identical. */
-function pseudoRandom(seed: number): number {
+function pseudoRandom(seed: number) {
   const value = Math.sin(seed * 12.9898) * 43758.5453;
   return value - Math.floor(value);
 }
@@ -43,7 +43,7 @@ const subpixelTolerance = 2;
 const alignmentTolerance = 1;
 
 /** The scroll area marks its scrolling element with a `-viewport` id. */
-function scrollPort(canvasElement: HTMLElement): HTMLElement {
+function scrollPort(canvasElement: HTMLElement) {
   const viewport = canvasElement.querySelector<HTMLElement>(
     '[data-id$="-viewport"]'
   );

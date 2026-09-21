@@ -88,7 +88,7 @@ function toRowEntries(seriesItem: TimeSeriesChartSeries): RowEntry[] {
       }));
 }
 
-function buildRows(series: TimeSeriesChartSeries[]): TimeSeriesRow[] {
+function buildRows(series: TimeSeriesChartSeries[]) {
   const rowsByTimestamp = series
     .flatMap(toRowEntries)
     .reduce((rows, { timestamp, dataKey, value }) => {
@@ -104,10 +104,7 @@ function buildRows(series: TimeSeriesChartSeries[]): TimeSeriesRow[] {
 
 // A measurement whose neighbours are gaps never gets a line segment, so it
 // needs its own marker or it silently vanishes from the chart.
-function isolatedTimestamps(
-  rows: TimeSeriesRow[],
-  dataKey: string
-): Set<number> {
+function isolatedTimestamps(rows: TimeSeriesRow[], dataKey: string) {
   const hasValue = (index: number) =>
     typeof rows[index]?.[dataKey] === 'number';
   const isolated = new Set<number>();
@@ -122,7 +119,7 @@ function isolatedTimestamps(
 function formatTooltipValue(
   value: TooltipValueType | undefined,
   valueFormatter: (value: number) => string
-): string | null {
+) {
   if (Array.isArray(value)) {
     const [low, high] = value;
     if (typeof low !== 'number' || typeof high !== 'number') {

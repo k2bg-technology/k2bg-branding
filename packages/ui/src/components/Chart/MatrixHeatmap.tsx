@@ -41,7 +41,7 @@ export interface MatrixHeatmapProps {
   className?: string;
 }
 
-function measuredValues(values: (number | null)[][]): number[] {
+function measuredValues(values: (number | null)[][]) {
   return values
     .flat()
     .filter((value): value is number => value !== null && value !== undefined);
@@ -52,7 +52,7 @@ function missingCellCount(
   rows: string[],
   columns: string[],
   values: (number | null)[][]
-): number {
+) {
   return rows
     .flatMap((_, rowIndex) =>
       columns.map((__, columnIndex) => values[rowIndex]?.[columnIndex] ?? null)

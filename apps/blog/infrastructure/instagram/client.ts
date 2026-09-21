@@ -36,7 +36,7 @@ export function configureInstagram(config?: Partial<InstagramConfig>): void {
 /**
  * Ensure Instagram is configured and return the config.
  */
-function getConfig(): InstagramConfig {
+function getConfig() {
   if (currentConfig === null) {
     configureInstagram();
   }

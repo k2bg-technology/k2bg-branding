@@ -7,11 +7,11 @@ const viewBoxSize = 100;
 
 const temperatures = [19.8, 20.1, 20.4];
 
-function polylines(container: HTMLElement): SVGPolylineElement[] {
+function polylines(container: HTMLElement) {
   return Array.from(container.querySelectorAll('polyline'));
 }
 
-function pointCoordinates(polyline: Element): { x: number; y: number }[] {
+function pointCoordinates(polyline: Element) {
   return (polyline.getAttribute('points') ?? '').split(' ').map((pair) => {
     const [x, y] = pair.split(',').map(Number);
     return { x, y };

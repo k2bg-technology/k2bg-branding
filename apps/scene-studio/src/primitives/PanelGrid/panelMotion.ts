@@ -35,6 +35,11 @@ interface PanelMotionInput {
   exitAtFrame?: number;
 }
 
+export interface PanelMotion {
+  translateXInPercent: number;
+  opacity: number;
+}
+
 export function getPanelMotion({
   panelIndex,
   frame,
@@ -42,7 +47,7 @@ export function getPanelMotion({
   staggerInFrames,
   enterFrom,
   exitAtFrame,
-}: PanelMotionInput) {
+}: PanelMotionInput): PanelMotion {
   const direction = getPanelEnterDirection({ panelIndex, enterFrom });
   const enterStartFrame = enterDelayInFrames + panelIndex * staggerInFrames;
 

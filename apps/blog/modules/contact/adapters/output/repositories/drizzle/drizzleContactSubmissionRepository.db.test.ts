@@ -14,7 +14,7 @@ const TWENTY_FIVE_HOURS_IN_MS = 25 * ONE_HOUR_IN_MS;
 const TWENTY_THREE_HOURS_IN_MS = 23 * ONE_HOUR_IN_MS;
 const MAX_SUBMISSIONS = 5;
 
-async function countSubmissionsFor(ipHash: string): Promise<number> {
+async function countSubmissionsFor(ipHash: string) {
   const [result] = await getTestDb()
     .select({ value: count() })
     .from(contactSubmissions)
@@ -23,11 +23,7 @@ async function countSubmissionsFor(ipHash: string): Promise<number> {
   return result.value;
 }
 
-function createSubmissionRows(
-  ipHash: string,
-  amount: number,
-  createdAt: Date
-): { ipHash: string; createdAt: Date }[] {
+function createSubmissionRows(ipHash: string, amount: number, createdAt: Date) {
   return Array.from({ length: amount }, () => ({ ipHash, createdAt }));
 }
 

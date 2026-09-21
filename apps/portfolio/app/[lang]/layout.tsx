@@ -2,7 +2,7 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { getDictionary } from '../../i18n/dictionaries';
-import { languages, resolveLanguage } from '../../i18n/settings';
+import { type Language, languages, resolveLanguage } from '../../i18n/settings';
 import { getLocalizedUrl, siteBaseUrl } from '../site';
 
 import '../globals.css';
@@ -12,7 +12,13 @@ type LayoutProps = {
   params: Promise<{ lang: string }>;
 };
 
-export async function generateStaticParams() {
+export interface PortfolioStaticParameter {
+  lang: Language;
+}
+
+export async function generateStaticParams(): Promise<
+  PortfolioStaticParameter[]
+> {
   return languages.map((lang) => ({ lang }));
 }
 

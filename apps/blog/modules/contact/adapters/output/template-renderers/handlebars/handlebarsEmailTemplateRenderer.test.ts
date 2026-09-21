@@ -18,7 +18,7 @@ vi.mock('../../../shared', async (importOriginal) => {
   };
 });
 
-function createContact(): Contact {
+function createContact() {
   return Contact.create({
     name: 'John Doe',
     email: 'john@example.com',

@@ -95,9 +95,7 @@ async function loadAffiliateEmbData(id: string) {
  * Fetches sub-providers in a single batch operation.
  * Uses request-level caching to avoid duplicate API calls.
  */
-async function fetchSubProviders(
-  subProviderIds: readonly string[]
-): Promise<SubProvider[]> {
+async function fetchSubProviders(subProviderIds: readonly string[]) {
   if (subProviderIds.length === 0) {
     return [];
   }

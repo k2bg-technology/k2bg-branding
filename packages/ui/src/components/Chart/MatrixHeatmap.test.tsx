@@ -23,23 +23,23 @@ async function renderHeatmap(ui: ReactElement): Promise<RenderResult> {
   return result;
 }
 
-function heatmapCells(container: HTMLElement): HTMLElement[] {
+function heatmapCells(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll<HTMLElement>('[data-slot="matrix-heatmap-cell"]')
   );
 }
 
-function heatmapGrid(container: HTMLElement): HTMLElement | null {
+function heatmapGrid(container: HTMLElement) {
   return container.querySelector<HTMLElement>(
     '[data-slot="matrix-heatmap-grid"]'
   );
 }
 
-function cellBackgrounds(container: HTMLElement): string[] {
+function cellBackgrounds(container: HTMLElement) {
   return heatmapCells(container).map((cell) => cell.style.backgroundColor);
 }
 
-function levelBackgrounds(levels: HeatmapLevel[]): string[] {
+function levelBackgrounds(levels: HeatmapLevel[]) {
   return levels.map((level) => heatmapCellColor(level, ChartColor.CHART_1));
 }
 

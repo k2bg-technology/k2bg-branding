@@ -44,7 +44,7 @@ vi.mock('@aws-sdk/client-ses', () => ({
   SESServiceException: MockSESServiceException,
 }));
 
-function createContact(): Contact {
+function createContact() {
   return Contact.create({
     name: 'John Doe',
     email: 'john@example.com',

@@ -7,7 +7,7 @@ import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 
 const OFFSET_THRESHOLD = 100;
 
-export function useActiveHeading(headingIds: string[]) {
+export function useActiveHeading(headingIds: string[]): string {
   const ref = usePageScrollAreaStore((state) => state.ref);
   const [activeId, setActiveId] = useState('');
   const { scrollY } = useScroll({ container: ref ?? undefined });

@@ -8,7 +8,7 @@ export type TocHeading = {
 
 const HEADING_REGEX = /^(#{2,3})\s+(.+)$/gm;
 
-function stripMarkdownFormatting(text: string): string {
+function stripMarkdownFormatting(text: string) {
   return text
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/\*(.+?)\*/g, '$1')

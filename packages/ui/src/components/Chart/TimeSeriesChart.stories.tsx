@@ -9,7 +9,7 @@ import {
   type TimeSeriesPoint,
 } from '.';
 
-function storyTimestamp(index: number): number {
+function storyTimestamp(index: number) {
   return Date.UTC(2026, 0, 1 + index * 2);
 }
 
@@ -56,7 +56,7 @@ const projectionMedian = [
 ];
 
 /** A Monte Carlo cone widens with the square root of the elapsed horizon. */
-function projectionSpread(index: number): number {
+function projectionSpread(index: number) {
   return Math.round(3.2 * Math.sqrt(index) * 10) / 10;
 }
 
@@ -69,7 +69,7 @@ const dailyReadings = [
 ];
 
 /** Centred three-point mean, the overlay a reader compares with the source. */
-function movingAverage(values: number[]): (number | null)[] {
+function movingAverage(values: number[]) {
   return values.map((value, index) =>
     index === 0 || index === values.length - 1
       ? null
@@ -323,7 +323,7 @@ export const WithBandSeries: Story = {
         label: 'Typical spread',
         color: ChartColor.CHART_1,
         points: toBandPoints(
-          restingHeartRate.map((value): [number, number] => [
+          restingHeartRate.map((value) => [
             value - medianAbsoluteDeviation,
             value + medianAbsoluteDeviation,
           ])
@@ -372,7 +372,7 @@ export const FanChart: Story = {
         color: ChartColor.CHART_1,
         fillOpacity: 0.15,
         points: toBandPoints(
-          projectionMedian.map((value, index): [number, number] => [
+          projectionMedian.map((value, index) => [
             value - projectionSpread(index) * 2,
             value + projectionSpread(index) * 2,
           ])
@@ -385,7 +385,7 @@ export const FanChart: Story = {
         color: ChartColor.CHART_1,
         fillOpacity: 0.3,
         points: toBandPoints(
-          projectionMedian.map((value, index): [number, number] => [
+          projectionMedian.map((value, index) => [
             value - projectionSpread(index),
             value + projectionSpread(index),
           ])

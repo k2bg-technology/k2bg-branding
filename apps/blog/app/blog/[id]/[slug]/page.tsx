@@ -24,7 +24,14 @@ interface Props {
   params: Params;
 }
 
-export async function generateStaticParams() {
+export interface BlogPostStaticParameter {
+  id: string;
+  slug: string;
+}
+
+export async function generateStaticParams(): Promise<
+  BlogPostStaticParameter[]
+> {
   const fetchAllSlugs = createFetchAllSlugsUseCase();
   const { slugs } = await fetchAllSlugs.execute();
 

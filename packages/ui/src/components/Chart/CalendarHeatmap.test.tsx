@@ -36,7 +36,7 @@ function createDay(
 }
 
 /** Monday and Wednesday measured, so the Tuesday between them is a real gap. */
-function createWeekWithGap(): CalendarHeatmapDay[] {
+function createWeekWithGap() {
   return [
     createDay({ date: mondayDate, value: 0 }),
     createDay({ date: wednesdayDate, value: 5 }),
@@ -52,7 +52,7 @@ function createFullWeek(): CalendarHeatmapDay[] {
   }));
 }
 
-function heatmapCells(container: HTMLElement): HTMLElement[] {
+function heatmapCells(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll<HTMLElement>(
       '[data-slot="calendar-heatmap-cell"]'
@@ -60,13 +60,13 @@ function heatmapCells(container: HTMLElement): HTMLElement[] {
   );
 }
 
-function heatmapGrid(container: HTMLElement): HTMLElement | null {
+function heatmapGrid(container: HTMLElement) {
   return container.querySelector<HTMLElement>(
     '[data-slot="calendar-heatmap-grid"]'
   );
 }
 
-function measuredCellIndex(container: HTMLElement): number {
+function measuredCellIndex(container: HTMLElement) {
   return heatmapCells(container).findIndex(
     (cell) =>
       !cell.hasAttribute('data-empty') && !cell.hasAttribute('data-padding')

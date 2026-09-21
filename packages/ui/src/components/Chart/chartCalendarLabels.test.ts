@@ -38,7 +38,7 @@ class LocaleWithoutWeekInfo {
 function withLocaleEngine<T>(
   engine: new (tag: string) => object,
   read: () => T
-): T {
+) {
   const original = Intl.Locale;
   Object.defineProperty(Intl, 'Locale', { value: engine, configurable: true });
   try {
@@ -52,7 +52,7 @@ function withLocaleEngine<T>(
 }
 
 /** Whole weeks of consecutive days, in the column-major order the grid uses. */
-function gridDates(start: string, weeks: number): string[] {
+function gridDates(start: string, weeks: number) {
   const [year, month, day] = start.split('-').map(Number);
   const startTime = Date.UTC(year, month - 1, day);
   return Array.from({ length: weeks * daysPerWeek }, (_, index) =>

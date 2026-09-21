@@ -21,7 +21,7 @@ interface SparklinePoint {
   y: number;
 }
 
-function buildRuns(values: (number | null)[]): SparklinePoint[][] {
+function buildRuns(values: (number | null)[]) {
   const measured = values.filter((value): value is number => value !== null);
   if (measured.length === 0) {
     return [];
@@ -55,7 +55,7 @@ function buildRuns(values: (number | null)[]): SparklinePoint[][] {
 }
 
 /** A lone measurement repeats its point so the round cap renders it as a dot. */
-function toPointsAttribute(run: SparklinePoint[]): string {
+function toPointsAttribute(run: SparklinePoint[]) {
   const points = run.length === 1 ? [run[0], run[0]] : run;
   return points.map((point) => `${point.x},${point.y}`).join(' ');
 }

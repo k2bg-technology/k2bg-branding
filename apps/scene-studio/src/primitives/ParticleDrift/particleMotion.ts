@@ -5,7 +5,7 @@ const PSEUDO_RANDOM_MAGNITUDE = 43758.5453;
 const VERTICAL_WRAP_RANGE_IN_PERCENT = 110;
 const VERTICAL_WRAP_OFFSET_IN_PERCENT = 5;
 
-function getPseudoRandom(value: number): number {
+function getPseudoRandom(value: number) {
   const scaled =
     Math.sin(value * PSEUDO_RANDOM_SINE_MULTIPLIER) * PSEUDO_RANDOM_MAGNITUDE;
 
@@ -18,11 +18,18 @@ interface ParticleStateInput {
   seed?: number;
 }
 
+export interface ParticleState {
+  xInPercent: number;
+  yInPercent: number;
+  sizeInPx: number;
+  opacity: number;
+}
+
 export function getParticleState({
   particleIndex,
   frame,
   seed = 0,
-}: ParticleStateInput) {
+}: ParticleStateInput): ParticleState {
   const particleKey = particleIndex + seed * 101;
   const baseXInPercent = getPseudoRandom(3 * particleKey + 1) * 100;
   const baseYInPercent = getPseudoRandom(3 * particleKey + 2) * 100;
