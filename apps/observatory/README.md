@@ -82,6 +82,10 @@ apps/observatory/
 
 Every warehouse read goes through `WarehouseClient.query()`, which caches the rows in the Next.js data cache for the `revalidate` window declared by the query (the table catalog — read from the region-scoped `INFORMATION_SCHEMA.TABLE_STORAGE` view — uses one day). Adapters wrap driver failures in `RepositoryError`; the page renders an inline "Warehouse data unavailable" state instead of crashing.
 
+## Dashboard Definitions
+
+Dashboard routes read strict JSON definitions from `OBSERVATORY_DASHBOARDS_DIR`. The [sample dashboard](modules/dashboard/fixtures/sample-dashboard.json) documents the PR1 `stat-tiles` shape, including currency, percent, and reduction bindings. Files with definition issues are skipped and logged without hiding valid dashboards.
+
 ## Environment Variables
 
 Create `apps/observatory/.env.local` (see `.env.example`):
@@ -90,11 +94,13 @@ Create `apps/observatory/.env.local` (see `.env.example`):
 LOG_LEVEL=info
 WAREHOUSE_PROJECT_ID=
 WAREHOUSE_LOCATION=
+OBSERVATORY_DASHBOARDS_DIR=
 GOOGLE_APPLICATION_CREDENTIALS=
 ```
 
 - `WAREHOUSE_PROJECT_ID` — Google Cloud project that owns the warehouse (required).
 - `WAREHOUSE_LOCATION` — region of the warehouse datasets, e.g. `asia-northeast1` (required; qualifies the region-scoped metadata views).
+- `OBSERVATORY_DASHBOARDS_DIR` — directory containing dashboard definition JSON files (optional; defaults to `dashboards/` under the Observatory app directory).
 - `GOOGLE_APPLICATION_CREDENTIALS` — path to a service-account key for Application Default Credentials (optional; leave unset after `gcloud auth application-default login`).
 
 Datasets are organised per data source. Each domain module declares its own `WAREHOUSE_<DOMAIN>_DATASET_ID` variable (for example `WAREHOUSE_FINANCE_DATASET_ID`); the variable name is the role, the value is the dataset id, so data-source product names stay out of the code.
