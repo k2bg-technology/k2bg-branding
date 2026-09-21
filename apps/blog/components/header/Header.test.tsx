@@ -23,7 +23,7 @@ vi.mock('../sidebar/Sidebar', () => ({
 
 // The desktop navigation and the mobile menu repeat every label, so a lookup by
 // name yields one element per navigation that is currently mounted.
-function getDistinctHrefsByLinkName(name: string): (string | null)[] {
+function getDistinctHrefsByLinkName(name: string) {
   const hrefs = screen
     .getAllByRole('link', { name })
     .map((link) => link.getAttribute('href'));

@@ -37,7 +37,7 @@ const warehouseLogger = logger.child({ module: 'warehouse' });
 // biome-ignore lint/plugin/noLet: The lazy warehouse client persists across server requests.
 let warehouseClientInstance: WarehouseClient | null = null;
 
-function requireEnvironmentVariable(name: string): string {
+function requireEnvironmentVariable(name: string) {
   const value = process.env[name];
   if (!value) {
     throw new Error(
@@ -65,7 +65,7 @@ function toPlainRows(rows: unknown[]): WarehouseRow[] {
 function buildCacheKey(
   config: WarehouseClientConfig,
   request: WarehouseQueryRequest
-): string[] {
+) {
   return [
     JSON.stringify({
       scope: WAREHOUSE_CACHE_TAG,

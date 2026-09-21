@@ -44,7 +44,7 @@ export function escapeXml(value: string): string {
   });
 }
 
-function buildRssItem(post: PostSummaryOutput, baseUrl: string): string {
+function buildRssItem(post: PostSummaryOutput, baseUrl: string) {
   const postUrl = `${baseUrl}/blog/${post.slug}`;
   const description = post.excerpt ?? '';
 

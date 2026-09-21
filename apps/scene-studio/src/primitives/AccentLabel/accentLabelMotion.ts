@@ -17,10 +17,16 @@ interface AccentLabelMotionInput {
   enterDelayInFrames: number;
 }
 
+export interface AccentLabelMotion {
+  barScale: number;
+  textOpacity: number;
+  textTranslateXInPx: number;
+}
+
 export function getAccentLabelMotion({
   frame,
   enterDelayInFrames,
-}: AccentLabelMotionInput) {
+}: AccentLabelMotionInput): AccentLabelMotion {
   const easing = Easing.bezier(...easings.emphasized);
 
   const barScale = interpolate(

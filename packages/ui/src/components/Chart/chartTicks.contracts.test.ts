@@ -7,17 +7,17 @@ const tokyo = 'Asia/Tokyo';
 /** 15:00 UTC is midnight in Tokyo, the sharpest edge for a zone offset. */
 const tokyoMidnight = Date.UTC(2026, 0, 14, 15);
 
-function hourlyTimestamps(start: number, count: number): number[] {
+function hourlyTimestamps(start: number, count: number) {
   const oneHour = 60 * 60 * 1000;
   return Array.from({ length: count }, (_, index) => start + index * oneHour);
 }
 
-function dailyTimestamps(start: number, count: number): number[] {
+function dailyTimestamps(start: number, count: number) {
   const oneDay = 24 * 60 * 60 * 1000;
   return Array.from({ length: count }, (_, index) => start + index * oneDay);
 }
 
-function tokyoHour(timestamp: number): number {
+function tokyoHour(timestamp: number) {
   return Number(
     new Intl.DateTimeFormat('en-US', {
       timeZone: tokyo,

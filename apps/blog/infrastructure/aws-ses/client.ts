@@ -36,7 +36,7 @@ export function configureAwsSes(config?: Partial<AwsSesConfig>): void {
 /**
  * Ensure AWS SES is configured and return the config.
  */
-function getConfig(): AwsSesConfig {
+function getConfig() {
   if (currentConfig === null) {
     configureAwsSes();
   }

@@ -17,7 +17,7 @@ function createSeries(
   };
 }
 
-function timeAxisLabels(container: HTMLElement): string[] {
+function timeAxisLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -26,7 +26,7 @@ function timeAxisLabels(container: HTMLElement): string[] {
   );
 }
 
-function valueAxisLabels(container: HTMLElement): string[] {
+function valueAxisLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'

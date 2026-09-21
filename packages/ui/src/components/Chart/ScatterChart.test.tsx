@@ -18,7 +18,7 @@ function createSeries(
   };
 }
 
-function horizontalAxisLabels(container: HTMLElement): string[] {
+function horizontalAxisLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-xAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -27,7 +27,7 @@ function horizontalAxisLabels(container: HTMLElement): string[] {
   );
 }
 
-function verticalAxisLabels(container: HTMLElement): string[] {
+function verticalAxisLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll(
       '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
@@ -36,15 +36,13 @@ function verticalAxisLabels(container: HTMLElement): string[] {
   );
 }
 
-function pointCenterXs(container: HTMLElement): number[] {
+function pointCenterXs(container: HTMLElement) {
   return Array.from(container.querySelectorAll('.recharts-symbols'), (symbol) =>
     Number(symbol.getAttribute('cx'))
   );
 }
 
-function trendLineEnds(
-  container: HTMLElement
-): { start: number; end: number } | undefined {
+function trendLineEnds(container: HTMLElement) {
   const line = container.querySelector('.recharts-reference-line-line');
   return line === null
     ? undefined
@@ -54,7 +52,7 @@ function trendLineEnds(
       };
 }
 
-function tooltipText(container: HTMLElement): string {
+function tooltipText(container: HTMLElement) {
   return (
     container.querySelector('[data-slot="chart-tooltip"]')?.textContent ?? ''
   );

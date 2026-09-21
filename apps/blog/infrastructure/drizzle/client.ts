@@ -25,7 +25,7 @@ let postgresClientInstance: PostgresClient | null = null;
 // biome-ignore lint/plugin/noLet: The lazy Drizzle client persists across server requests and test resets.
 let drizzleClientInstance: DrizzleClient | null = null;
 
-function createPostgresClient(): PostgresClient {
+function createPostgresClient() {
   const databaseUrl = process.env.DATABASE_URL;
   if (!databaseUrl) {
     // Fail fast: an empty connection string makes `postgres` silently fall back

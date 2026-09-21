@@ -19,27 +19,27 @@ const budgetLinks: SankeyChartLink[] = [
   { source: 'income', target: 'spending', value: 7 },
 ];
 
-function nodeLabels(container: HTMLElement): string[] {
+function nodeLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('.recharts-sankey-nodes text'),
     (label) => label.textContent ?? ''
   );
 }
 
-function nodeFills(container: HTMLElement): string[] {
+function nodeFills(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('.recharts-sankey-node'),
     (node) => node.getAttribute('fill') ?? ''
   );
 }
 
-function tooltipText(container: HTMLElement): string {
+function tooltipText(container: HTMLElement) {
   return (
     container.querySelector('[data-slot="chart-tooltip"]')?.textContent ?? ''
   );
 }
 
-function hoverFirstLink(container: HTMLElement): void {
+function hoverFirstLink(container: HTMLElement) {
   fireEvent.mouseOver(container.querySelectorAll('.recharts-sankey-link')[0]);
 }
 

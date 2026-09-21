@@ -60,14 +60,14 @@ export function MediaTextureStage({
           <ImageTextureScene src={src} colorSpace={imageColorSpace}>
             {children}
           </ImageTextureScene>
-        ) : isRendering ? (
-          <OffthreadVideoTextureScene src={src}>
-            {children}
-          </OffthreadVideoTextureScene>
         ) : (
-          <PreviewVideoTextureScene videoRef={videoRef}>
+          <VideoTextureScene
+            src={src}
+            videoRef={videoRef}
+            isRendering={isRendering}
+          >
             {children}
-          </PreviewVideoTextureScene>
+          </VideoTextureScene>
         )}
       </ThreeCanvas>
     </>
@@ -76,6 +76,33 @@ export function MediaTextureStage({
 
 interface SceneChildren {
   children: (texture: Texture) => ReactNode;
+}
+
+interface VideoTextureSceneProps extends SceneChildren {
+  src: string;
+  videoRef: React.RefObject<HTMLVideoElement | null>;
+  isRendering: boolean;
+}
+
+function VideoTextureScene({
+  src,
+  videoRef,
+  isRendering,
+  children,
+}: VideoTextureSceneProps) {
+  if (isRendering) {
+    return (
+      <OffthreadVideoTextureScene src={src}>
+        {children}
+      </OffthreadVideoTextureScene>
+    );
+  }
+
+  return (
+    <PreviewVideoTextureScene videoRef={videoRef}>
+      {children}
+    </PreviewVideoTextureScene>
+  );
 }
 
 function ImageTextureScene({

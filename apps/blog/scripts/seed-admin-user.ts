@@ -4,7 +4,7 @@ import { resetDrizzleClient } from '../infrastructure/drizzle/client';
 // One-off operator script: provisions the first administrator from environment
 // variables. No public sign-up exists; see apps/blog/specs/auth.md.
 // Usage: ADMIN_EMAIL=… ADMIN_PASSWORD=… DATABASE_URL=… pnpm -F blog db:seed:admin
-async function main(): Promise<void> {
+async function main() {
   const email = process.env.ADMIN_EMAIL;
   const password = process.env.ADMIN_PASSWORD;
   const name = process.env.ADMIN_NAME ?? 'Administrator';

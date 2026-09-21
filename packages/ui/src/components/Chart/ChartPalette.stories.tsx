@@ -11,13 +11,13 @@ const paletteTokens = Array.from(
 
 const swatchTokens = [...paletteTokens, 'chart-overflow'];
 
-function tokenHex(token: string): string {
+function tokenHex(token: string) {
   return getComputedStyle(document.documentElement)
     .getPropertyValue(`--color-${token}`)
     .trim();
 }
 
-function relativeLuminance(hex: string): number | null {
+function relativeLuminance(hex: string) {
   if (!/^#[0-9a-f]{6}$/i.test(hex)) {
     return null;
   }
@@ -31,7 +31,7 @@ function relativeLuminance(hex: string): number | null {
 }
 
 /** Measured against the base-white token the charts sit on, not pure white. */
-function contrastOnBaseWhite(hex: string): string {
+function contrastOnBaseWhite(hex: string) {
   const foreground = relativeLuminance(hex);
   const background = relativeLuminance(tokenHex('base-white'));
   if (foreground === null || background === null) {

@@ -11,7 +11,7 @@ import { ChartColor } from './types';
 
 // Read from the package root rather than `import.meta.url`: Vite serves test
 // modules over a non-file URL, so a relative URL cannot be opened.
-function readStyles(packageRelativePath: string): string {
+function readStyles(packageRelativePath: string) {
   return readFileSync(resolve(process.cwd(), packageRelativePath), 'utf8');
 }
 
@@ -22,7 +22,7 @@ const designTokenStyles = readStyles(
   'node_modules/tailwind-config/design-token/tailwind-theme-color.css'
 );
 
-function tokenValue(styles: string, token: string): string {
+function tokenValue(styles: string, token: string) {
   const declaration = styles.match(
     new RegExp(`--color-${token}:\\s*(#[0-9a-f]{6})`)
   );
@@ -32,7 +32,7 @@ function tokenValue(styles: string, token: string): string {
   return declaration[1];
 }
 
-function relativeLuminance(hex: string): number {
+function relativeLuminance(hex: string) {
   const [red, green, blue] = [1, 3, 5].map((offset) => {
     const channel = Number.parseInt(hex.slice(offset, offset + 2), 16) / 255;
     return channel <= 0.04045
@@ -46,7 +46,7 @@ const backgroundLuminance = relativeLuminance(
   tokenValue(designTokenStyles, 'base-white')
 );
 
-function contrastAgainstBaseWhite(hex: string): number {
+function contrastAgainstBaseWhite(hex: string) {
   const foregroundLuminance = relativeLuminance(hex);
   const lighter = Math.max(foregroundLuminance, backgroundLuminance);
   const darker = Math.min(foregroundLuminance, backgroundLuminance);

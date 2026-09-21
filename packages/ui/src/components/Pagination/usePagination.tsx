@@ -1,6 +1,34 @@
 const BOUNDARY_COUNT = 1;
 const SIBLING_COUNT = 1;
 
+function getStartTransitionItems(
+  siblingsStart: number,
+  boundaryCount: number,
+  count: number
+) {
+  if (siblingsStart > boundaryCount + 2) {
+    return ['start-ellipsis'];
+  }
+  if (boundaryCount + 1 < count - boundaryCount) {
+    return [boundaryCount + 1];
+  }
+  return [];
+}
+
+function getEndTransitionItems(
+  siblingsEnd: number,
+  boundaryCount: number,
+  count: number
+) {
+  if (siblingsEnd < count - boundaryCount - 1) {
+    return ['end-ellipsis'];
+  }
+  if (count - boundaryCount > boundaryCount) {
+    return [count - boundaryCount];
+  }
+  return [];
+}
+
 export interface UsePaginationProps {
   count: number;
   currentIndex: number;
@@ -8,12 +36,14 @@ export interface UsePaginationProps {
   siblingCount?: number;
 }
 
+export type PaginationItem = string | number;
+
 /**
  * @see {@link https://github.com/mui/material-ui/blob/master/packages/mui-material/src/usePagination/usePagination.js}
  *
  * @returns example [1, 'ellipsis', 4, 5, 6, 'ellipsis', 10]
  */
-export function usePagination(props: UsePaginationProps) {
+export function usePagination(props: UsePaginationProps): PaginationItem[] {
   const {
     count,
     currentIndex,
@@ -48,19 +78,11 @@ export function usePagination(props: UsePaginationProps) {
   const itemList = [
     ...startPages,
 
-    ...(siblingsStart > boundaryCount + 2
-      ? ['start-ellipsis']
-      : boundaryCount + 1 < count - boundaryCount
-        ? [boundaryCount + 1]
-        : []),
+    ...getStartTransitionItems(siblingsStart, boundaryCount, count),
 
     ...range(siblingsStart, siblingsEnd),
 
-    ...(siblingsEnd < count - boundaryCount - 1
-      ? ['end-ellipsis']
-      : count - boundaryCount > boundaryCount
-        ? [count - boundaryCount]
-        : []),
+    ...getEndTransitionItems(siblingsEnd, boundaryCount, count),
 
     ...endPages,
   ];

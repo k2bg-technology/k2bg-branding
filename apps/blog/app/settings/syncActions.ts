@@ -6,6 +6,10 @@ import {
   createSyncHeroImagesUseCase,
   createSyncPostsFromExternalUseCase,
 } from '../../infrastructure/di';
+import type {
+  SyncHeroImagesOutput,
+  SyncPostsFromExternalOutput,
+} from '../../modules/post/use-cases';
 import { revalidateBlogPages } from '../../server/lib/revalidation';
 
 const syncLogger = logger.child({ module: 'settings-sync' });
@@ -20,7 +24,7 @@ async function requireSession() {
   }
 }
 
-export async function syncPostsAction() {
+export async function syncPostsAction(): Promise<SyncPostsFromExternalOutput> {
   await requireSession();
 
   try {
@@ -40,7 +44,7 @@ export async function syncPostsAction() {
   }
 }
 
-export async function syncHeroImagesAction() {
+export async function syncHeroImagesAction(): Promise<SyncHeroImagesOutput> {
   await requireSession();
 
   try {

@@ -51,22 +51,22 @@ const spendingCategories = [
 ];
 
 /** Deterministic stand-in for sampled data, so every render is identical. */
-function monthlyAmount(categoryIndex: number, monthIndex: number): number {
+function monthlyAmount(categoryIndex: number, monthIndex: number) {
   return 40000 + categoryIndex * 18000 + monthIndex * 1300;
 }
 
-function formatYen(amount: number): string {
+function formatYen(amount: number) {
   return `¥${amount.toLocaleString('en-US')}`;
 }
 
-function rowTotal(categoryIndex: number): number {
+function rowTotal(categoryIndex: number) {
   return monthLabels.reduce(
     (total, _, monthIndex) => total + monthlyAmount(categoryIndex, monthIndex),
     0
   );
 }
 
-function columnTotal(monthIndex: number): number {
+function columnTotal(monthIndex: number) {
   return spendingCategories.reduce(
     (total, _, categoryIndex) =>
       total + monthlyAmount(categoryIndex, monthIndex),
@@ -75,9 +75,7 @@ function columnTotal(monthIndex: number): number {
 }
 
 /** Cells for every month column, keyed by the month column ids. */
-function monthCells(
-  amountAt: (monthIndex: number) => number
-): DataTableRow['cells'] {
+function monthCells(amountAt: (monthIndex: number) => number) {
   return monthLabels.reduce<DataTableRow['cells']>(
     (cells, month, monthIndex) => {
       cells[month.toLowerCase()] = formatYen(amountAt(monthIndex));
@@ -136,7 +134,7 @@ const narrowHost: Decorator = (Story) => (
 );
 
 /** Base UI's scroll area marks its viewport — the real scroll port — with this data id. */
-function scrollPortOf(scrollRegion: HTMLElement): HTMLElement {
+function scrollPortOf(scrollRegion: HTMLElement) {
   const [viewport] = Array.from(
     scrollRegion.querySelectorAll<HTMLElement>('[data-id$="-viewport"]')
   );

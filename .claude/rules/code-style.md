@@ -39,7 +39,10 @@ paths: apps/**/*.{ts,tsx}, packages/**/*.{ts,tsx}
 
 ## Comment Guidelines
 
-Follow `AGENTS.md` > Coding Style & Naming Conventions > Comments.
+- Keep comments only for rationale, constraints, or facts that a reader cannot infer from the code. Prefer clear names and structure when the code can express the same information.
+- Never copy prompt instructions, task narration, implementation steps, or an obvious description of what the next line does into a comment.
+- In tests, put observable behavior in the test name and assertions instead of restating it in comments.
+- Use TSDoc/JSDoc when it gives consumers a useful contract for shared design-system or public logic. App-local one-off functions do not need exhaustive documentation comments.
 
 ## Structure and Modularization
 
@@ -56,7 +59,10 @@ Follow `AGENTS.md` > Coding Style & Naming Conventions > Comments.
 - **Condition Expression Order**: In conditional expressions, place **changing values (investigation target) on the left** and stable values (comparison target) on the right.
 - **Affirmative if/else**: In `if/else` blocks, prefer affirmative conditions over negative conditions (e.g., `if (!url.HasQueryParameter)`).
 - **Avoid do/while**: Avoid `do/while` loops where the condition is unnaturally at the bottom of the block; rewrite using `while` loops.
-- **Ternary Operator Use**: Use ternary operators only when they **significantly simplify** the code.
+- **Ternary Operator Use**: `style/noNestedTernary` rejects nested ternary expressions; a single-level ternary stays allowed, including in JSX.
+  - A value mapping uses a lookup object. A multi-way expression uses a small early-return function.
+  - In JSX, a branch decided by one condition uses a top-level child component written with early returns (`if (condition) return <A />; return <B />;`); the child never returns a ternary. More complex branching uses an immediately invoked function with an `if` chain, as in `apps/blog/components/markdown/AffiliateEmb.tsx` and `apps/blog/components/markdown/MediaEmb.tsx`.
+  - `renderXxx` helpers and components defined inside components stay disallowed.
 
 ## Variables and Scope
 
@@ -70,6 +76,15 @@ Follow `AGENTS.md` > Coding Style & Naming Conventions > Comments.
   - Remove variables used only to hold intermediate calculation results (e.g., `index_to_remove`) by using results immediately, simplifying code.
   - Replace control flow variables used only to control loop execution (e.g., `done`) with `break` or `continue` and remove them.
 - **Use Explanatory Variables**: Introduce **explanatory variables** or **summary variables** to clarify the meaning of complex expressions or large code chunks.
+
+## Type Annotations
+
+- Exported functions, exported hooks, and public methods of exported classes declare an explicit return type.
+- React components are exempt, including PascalCase functions and Next.js pages and layouts.
+- A function that returns an object literal uses a named type defined next to it.
+- Exported constants rely on inference; `as const` objects, schemas, tables, and variant definitions derive other types from the inferred type.
+- Non-exported functions, local variables, and constants carry no annotation when inference yields the same type.
+- An annotation stays where it supplies the type, including a literal checked against a contract, an empty collection, a variable without an initializer, a type guard, recursion, an overload, or deliberate widening.
 
 ## Formatting and Visual Alignment
 

@@ -29,7 +29,7 @@ export function configureCloudinary(config?: CloudinaryConfig): void {
 /**
  * Ensure Cloudinary is configured before use.
  */
-function ensureConfigured(): void {
+function ensureConfigured() {
   if (!isConfigured) {
     configureCloudinary();
   }
@@ -71,7 +71,9 @@ export async function uploadImage(
 /**
  * Get resource information from Cloudinary.
  */
-export async function getResource(publicId: string) {
+export async function getResource(
+  publicId: string
+): Promise<Awaited<ReturnType<typeof cloudinary.api.resource>>> {
   ensureConfigured();
   return cloudinary.api.resource(publicId);
 }

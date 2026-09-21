@@ -23,7 +23,7 @@ export async function GET(): Promise<Response> {
   });
 }
 
-async function fetchAllPublishedPostSummaries(): Promise<PostSummaryOutput[]> {
+async function fetchAllPublishedPostSummaries() {
   const fetchPostSummaries = createFetchPostSummariesUseCase();
   const fetchPage = async (
     page: number,

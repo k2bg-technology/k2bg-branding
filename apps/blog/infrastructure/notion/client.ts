@@ -1,5 +1,9 @@
 import { Client } from '@notionhq/client';
-import type { QueryDatabaseParameters } from '@notionhq/client/build/src/api-endpoints';
+import type {
+  GetPageResponse,
+  QueryDatabaseParameters,
+  QueryDatabaseResponse,
+} from '@notionhq/client/build/src/api-endpoints';
 import { NotionToMarkdown } from 'notion-to-md';
 
 export interface NotionClientConfig {
@@ -62,14 +66,17 @@ export function resetNotionClient(): void {
 export async function queryDatabase(
   client: Client,
   params: QueryDatabaseParameters
-) {
+): Promise<QueryDatabaseResponse> {
   return client.databases.query(params);
 }
 
 /**
  * Retrieve a Notion page.
  */
-export async function retrievePage(client: Client, pageId: string) {
+export async function retrievePage(
+  client: Client,
+  pageId: string
+): Promise<GetPageResponse> {
   return client.pages.retrieve({ page_id: pageId });
 }
 
