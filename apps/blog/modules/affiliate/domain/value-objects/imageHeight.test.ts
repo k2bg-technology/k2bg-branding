@@ -54,7 +54,7 @@ describe('ImageHeight', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates ImageHeight without validation', () => {
+    it('restores ImageHeight from a valid persisted value', () => {
       const value = 200;
 
       const sut = ImageHeight.reconstitute(value);

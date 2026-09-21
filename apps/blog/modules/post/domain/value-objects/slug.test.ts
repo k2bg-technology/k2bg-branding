@@ -4,36 +4,15 @@ import { Slug } from './slug';
 
 describe('Slug', () => {
   describe('create', () => {
-    it('creates Slug when given valid kebab-case value', () => {
-      const validSlug = 'my-blog-post';
+    it.each([
+      { format: 'kebab-case words', value: 'my-blog-post' },
+      { format: 'a single word', value: 'hello' },
+      { format: 'words with numbers', value: 'my-blog-post-2024' },
+      { format: 'a leading number', value: '2024-year-in-review' },
+    ])('accepts $format', ({ value }) => {
+      const sut = Slug.create(value);
 
-      const sut = Slug.create(validSlug);
-
-      expect(sut.getValue()).toBe(validSlug);
-    });
-
-    it('creates Slug when given single word', () => {
-      const singleWord = 'hello';
-
-      const sut = Slug.create(singleWord);
-
-      expect(sut.getValue()).toBe(singleWord);
-    });
-
-    it('creates Slug when given value with numbers', () => {
-      const slugWithNumbers = 'my-blog-post-2024';
-
-      const sut = Slug.create(slugWithNumbers);
-
-      expect(sut.getValue()).toBe(slugWithNumbers);
-    });
-
-    it('creates Slug when given value starting with number', () => {
-      const startWithNumber = '2024-year-in-review';
-
-      const sut = Slug.create(startWithNumber);
-
-      expect(sut.getValue()).toBe(startWithNumber);
+      expect(sut.getValue()).toBe(value);
     });
 
     it('trims whitespace from value', () => {
@@ -44,60 +23,24 @@ describe('Slug', () => {
       expect(sut.getValue()).toBe('my-blog-post');
     });
 
-    it('throws InvalidSlugError when value is empty string', () => {
-      const emptyValue = '';
-
-      expect(() => Slug.create(emptyValue)).toThrow(InvalidSlugError);
-      expect(() => Slug.create(emptyValue)).toThrow('Slug cannot be empty');
+    it.each([
+      { format: 'an empty string', value: '' },
+      { format: 'only whitespace', value: '   ' },
+    ])('rejects $format as empty', ({ value }) => {
+      expect(() => Slug.create(value)).toThrow(InvalidSlugError);
+      expect(() => Slug.create(value)).toThrow('Slug cannot be empty');
     });
 
-    it('throws InvalidSlugError when value is only whitespace', () => {
-      const whitespaceOnly = '   ';
-
-      expect(() => Slug.create(whitespaceOnly)).toThrow(InvalidSlugError);
-      expect(() => Slug.create(whitespaceOnly)).toThrow('Slug cannot be empty');
-    });
-
-    it('throws InvalidSlugError when value contains uppercase', () => {
-      const uppercaseSlug = 'My-Blog-Post';
-
-      expect(() => Slug.create(uppercaseSlug)).toThrow(InvalidSlugError);
-      expect(() => Slug.create(uppercaseSlug)).toThrow(
-        'Slug must be kebab-case'
-      );
-    });
-
-    it('throws InvalidSlugError when value contains underscores', () => {
-      const underscoreSlug = 'my_blog_post';
-
-      expect(() => Slug.create(underscoreSlug)).toThrow(InvalidSlugError);
-      expect(() => Slug.create(underscoreSlug)).toThrow(
-        'Slug must be kebab-case'
-      );
-    });
-
-    it('throws InvalidSlugError when value contains spaces', () => {
-      const spacedSlug = 'my blog post';
-
-      expect(() => Slug.create(spacedSlug)).toThrow(InvalidSlugError);
-    });
-
-    it('throws InvalidSlugError when value starts with hyphen', () => {
-      const startsWithHyphen = '-my-blog-post';
-
-      expect(() => Slug.create(startsWithHyphen)).toThrow(InvalidSlugError);
-    });
-
-    it('throws InvalidSlugError when value ends with hyphen', () => {
-      const endsWithHyphen = 'my-blog-post-';
-
-      expect(() => Slug.create(endsWithHyphen)).toThrow(InvalidSlugError);
-    });
-
-    it('throws InvalidSlugError when value contains consecutive hyphens', () => {
-      const consecutiveHyphens = 'my--blog--post';
-
-      expect(() => Slug.create(consecutiveHyphens)).toThrow(InvalidSlugError);
+    it.each([
+      { format: 'uppercase letters', value: 'My-Blog-Post' },
+      { format: 'underscores', value: 'my_blog_post' },
+      { format: 'spaces', value: 'my blog post' },
+      { format: 'a leading hyphen', value: '-my-blog-post' },
+      { format: 'a trailing hyphen', value: 'my-blog-post-' },
+      { format: 'consecutive hyphens', value: 'my--blog--post' },
+    ])('rejects $format as invalid kebab-case', ({ value }) => {
+      expect(() => Slug.create(value)).toThrow(InvalidSlugError);
+      expect(() => Slug.create(value)).toThrow('Slug must be kebab-case');
     });
 
     it('throws InvalidSlugError when value exceeds max length', () => {

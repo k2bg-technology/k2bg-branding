@@ -51,7 +51,7 @@ describe('Height', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates Height without validation', () => {
+    it('restores Height from a valid persisted value', () => {
       const value = 600;
 
       const sut = Height.reconstitute(value);

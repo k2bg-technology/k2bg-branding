@@ -34,7 +34,7 @@ describe('RevisionDate', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates RevisionDate without validation', () => {
+    it('restores RevisionDate from a valid persisted value', () => {
       const dateString = '2024-01-15';
 
       const sut = RevisionDate.reconstitute(dateString);

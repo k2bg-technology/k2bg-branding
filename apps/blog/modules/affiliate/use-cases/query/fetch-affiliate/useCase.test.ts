@@ -1,5 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { type AffiliateRepository, AffiliateType } from '../../../domain';
+import {
+  AffiliateId,
+  type AffiliateRepository,
+  AffiliateType,
+} from '../../../domain';
 import { AffiliateNotFoundError } from '../../shared';
 import {
   createAffiliateBanner,
@@ -88,17 +92,26 @@ describe('FetchAffiliate', () => {
       ).rejects.toThrow(AffiliateNotFoundError);
     });
 
-    it('calls repository with correct AffiliateId', async () => {
-      const banner = createAffiliateBanner();
-      const findById = vi.fn().mockResolvedValue(banner);
-      const repository = createMockRepository({ findById });
+    it('returns the affiliate selected by its requested ID', async () => {
+      const selectedId = '660e8400-e29b-41d4-a716-446655440000';
+      const selected = createAffiliateBanner({
+        id: AffiliateId.create(selectedId),
+      });
+      const other = createAffiliateBanner({
+        id: AffiliateId.create('550e8400-e29b-41d4-a716-446655440000'),
+      });
+      const records = new Map([
+        [other.id.getValue(), other],
+        [selectedId, selected],
+      ]);
+      const repository = createMockRepository({
+        findById: async (id) => records.get(id.getValue()) ?? null,
+      });
       const sut = new FetchAffiliate(repository);
 
-      await sut.execute({ id: banner.id.getValue() });
+      const result = await sut.execute({ id: selectedId });
 
-      expect(findById).toHaveBeenCalledTimes(1);
-      const calledId = findById.mock.calls[0][0];
-      expect(calledId.getValue()).toBe(banner.id.getValue());
+      expect(result.affiliate.id).toBe(selectedId);
     });
 
     it('maps banner affiliate output correctly', async () => {
