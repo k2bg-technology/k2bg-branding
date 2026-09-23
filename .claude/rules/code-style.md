@@ -49,7 +49,14 @@ paths: apps/**/*.{ts,tsx}, packages/**/*.{ts,tsx}
 - **Separation of Concerns**: Separate code by concerns (business logic, data access, UI, etc.) that have low correlation, and modularize them.
 - **Single Responsibility Principle**: Design modules to have only one reason to change.
 - **Divide and Conquer**: Divide "large problems" that are difficult to solve into "several small problems" that can be solved independently.
-- **Extract Unrelated Subproblems**: Actively find **unrelated subproblems** (utility processing, data formatting, etc.) from the program's main purpose and extract them as separate general-purpose functions.
+- **Extract Unrelated Subproblems**: Move a subproblem unrelated to the main purpose (utility processing, data formatting, etc.) into its own function only when that function meets a keep condition under "Inline Needless Functions"; otherwise write it at its call site.
+- **Inline Needless Functions**: Write an expression at its call site when a function would only forward to one call or would be a local helper with a single caller. Keep a function only when:
+  - it has two or more callers;
+  - it is a tested public unit (domain rule, use case, adapter mapper, DI factory);
+  - the Control Flow rules require it (an early-return function for a multi-way expression, a child component for JSX branching);
+  - it changes behavior at a boundary, such as an `async` wrapper that turns a synchronous throw into a rejected promise, or a `'use client'` or Suspense boundary. Such a function carries a one-line why-comment.
+- **Component Placement**: A Next.js page or layout file defines no component other than its default export; route configuration exports such as `dynamic` and `metadata` stay. A component that a page or layout needs lives in `apps/<app>/components/<kebab-case-directory>/<PascalCase>.tsx`. Each component file holds one component.
+- **No Derived Props**: A component does not receive a prop that it already derives from another prop.
 - **One Thing at a Time**: Design functions and code blocks to perform **one task at a time**.
 - **Single Level of Abstraction Principle (SLAP)**: Maintain all processing within a function at the **same level of abstraction**.
 
