@@ -1,10 +1,10 @@
 import type {
   DashboardDefinition,
-  DateBounds,
   Section,
 } from '../../modules/dashboard/domain';
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
+  DashboardPeriodResolution,
   FetchSectionDataInput,
   SectionData,
 } from '../../modules/dashboard/use-cases';
@@ -16,7 +16,7 @@ import { StatTilesSection } from './sections/StatTilesSection';
 interface Props {
   dashboard: DashboardDefinition;
   section: Section;
-  periodBounds: Promise<DateBounds | null>;
+  periodResolution: Promise<DashboardPeriodResolution | null>;
   fetchSectionData: (
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
@@ -29,13 +29,13 @@ function assertNever(value: never): never {
 export async function DashboardSection({
   dashboard,
   section,
-  periodBounds,
+  periodResolution,
   fetchSectionData,
 }: Props) {
   const state = await loadSectionState({
     dashboard,
     section,
-    periodBounds,
+    periodResolution,
     fetchSectionData,
   });
 
@@ -50,6 +50,7 @@ export async function DashboardSection({
                 dashboard={dashboard}
                 section={section}
                 data={state.data}
+                period={state.resolution.period}
               />
             );
           }

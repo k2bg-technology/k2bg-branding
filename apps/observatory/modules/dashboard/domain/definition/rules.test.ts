@@ -12,6 +12,7 @@ function createDefinition(): DashboardDefinition {
     locale: 'en-US',
     currency: 'USD',
     revalidate: 86_400,
+    defaultPeriod: 'latest-with-data',
     sections: [
       {
         id: 'headline',

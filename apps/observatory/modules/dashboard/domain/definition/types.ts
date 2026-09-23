@@ -45,6 +45,9 @@ export interface StatTileDefinition {
   reduction: Reduction;
   format: ValueFormat;
   unit?: string;
+  comparison?: {
+    direction: 'higher-is-better' | 'lower-is-better' | 'neutral';
+  };
 }
 
 export interface StatTilesSection {
@@ -67,6 +70,13 @@ export interface DashboardDefinition {
   locale: string;
   currency?: string;
   revalidate: number;
+  periodSource?: SourceDefinition;
+  defaultPeriod: 'latest-with-data' | 'last-complete';
+  labels?: {
+    period?: string;
+    previousPeriod?: string;
+    nextPeriod?: string;
+  };
   sections: Section[];
 }
 

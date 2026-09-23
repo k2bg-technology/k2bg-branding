@@ -1,13 +1,14 @@
 import {
   DEFINITION_DIRECTORY_VARIABLE,
   FileSystemDefinitionSource,
+  systemClock,
   WarehouseFetchPeriodBoundsQueryService,
   WarehouseFetchSectionDataQueryService,
 } from '../../modules/dashboard/adapters';
 import {
-  FetchPeriodBounds,
   FetchSectionData,
   LoadDashboards,
+  ResolveDashboardPeriod,
 } from '../../modules/dashboard/use-cases';
 import { getWarehouseClient } from '../warehouse';
 
@@ -17,9 +18,10 @@ export function createLoadDashboardsUseCase(): LoadDashboards {
   );
 }
 
-export function createFetchPeriodBoundsUseCase(): FetchPeriodBounds {
-  return new FetchPeriodBounds(
-    new WarehouseFetchPeriodBoundsQueryService(getWarehouseClient())
+export function createResolveDashboardPeriodUseCase(): ResolveDashboardPeriod {
+  return new ResolveDashboardPeriod(
+    new WarehouseFetchPeriodBoundsQueryService(getWarehouseClient()),
+    systemClock
   );
 }
 

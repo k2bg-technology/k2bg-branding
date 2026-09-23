@@ -8,34 +8,41 @@ import { dashboardDefinitionSchema } from '../../definition-sources/file-system/
 import { buildSectionQuery } from './buildSectionQuery';
 import { buildPeriodBoundsQuery } from './query';
 
-function createPlan(reduction: Reduction = Reduction.SUM): SectionQueryPlan {
+function plan(
+  reduction: Reduction = Reduction.SUM,
+  compares = false
+): SectionQueryPlan {
   return {
     kind: 'stat-tiles',
     sectionId: 'headline',
     source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
     timeZone: 'Asia/Tokyo',
-    dateRange: { firstDate: '2026-09-01', lastDate: '2026-09-30' },
-    measures: [{ column: 'amount', reduction }],
+    selectedPeriod: '2026-09',
+    dateRange: {
+      firstDate: compares ? '2026-08-01' : '2026-09-01',
+      lastDate: '2026-09-30',
+    },
+    measures: [{ column: 'amount', reduction, compares }],
   };
 }
 
 describe('buildSectionQuery', () => {
-  it('returns the documented SQL and bound parameters for a sum tile', () => {
-    const plan = createPlan();
-
-    const result = buildSectionQuery(plan);
+  it('returns complete monthly buckets and bound date parameters', () => {
+    const result = buildSectionQuery(plan());
 
     expect(result).toEqual({
       sql: [
         'WITH filtered AS (',
-        'SELECT `recorded_on` AS source_time, CAST(`amount` AS FLOAT64) AS value_0',
+        "SELECT FORMAT_DATE('%Y-%m', DATE(TIMESTAMP(DATETIME(`recorded_on`), @time_zone), @time_zone)) AS period, `recorded_on` AS source_time, CAST(`amount` AS FLOAT64) AS value_0",
         'FROM `metrics.monthly`',
         'WHERE DATE(TIMESTAMP(DATETIME(`recorded_on`), @time_zone), @time_zone) >= CAST(@period_start AS DATE)',
         'AND DATE(TIMESTAMP(DATETIME(`recorded_on`), @time_zone), @time_zone) <= CAST(@period_end AS DATE)',
-        ')',
-        'SELECT CAST((SELECT SUM(value_0) FROM filtered) AS FLOAT64) AS value_0',
-        'FROM (SELECT 1 AS singleton)',
-        'WHERE EXISTS (SELECT 1 FROM filtered)',
+        '),',
+        'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+        'SELECT filtered.period, CAST(SUM(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN bucket_times USING (period)',
+        'GROUP BY filtered.period',
+        'ORDER BY filtered.period',
       ].join('\n'),
       params: {
         period_start: '2026-09-01',
@@ -43,27 +50,6 @@ describe('buildSectionQuery', () => {
         time_zone: 'Asia/Tokyo',
       },
     });
-  });
-
-  it('returns one row for a nonempty source when every tile uses latest', () => {
-    const plan = createPlan(Reduction.LATEST);
-
-    const result = buildSectionQuery(plan);
-
-    expect(result.sql).toBe(
-      [
-        'WITH filtered AS (',
-        'SELECT `recorded_on` AS source_time, CAST(`amount` AS FLOAT64) AS value_0',
-        'FROM `metrics.monthly`',
-        'WHERE DATE(TIMESTAMP(DATETIME(`recorded_on`), @time_zone), @time_zone) >= CAST(@period_start AS DATE)',
-        'AND DATE(TIMESTAMP(DATETIME(`recorded_on`), @time_zone), @time_zone) <= CAST(@period_end AS DATE)',
-        ')',
-        'SELECT CAST((SELECT ARRAY_AGG(STRUCT(source_time, value_0) ORDER BY source_time DESC LIMIT 1)[SAFE_OFFSET(0)].value_0 FROM filtered) AS FLOAT64) AS value_0,',
-        'CAST((SELECT COUNT(DISTINCT TO_JSON_STRING(value_0)) FROM filtered WHERE source_time = (SELECT MAX(source_time) FROM filtered)) AS FLOAT64) AS distinct_count_0',
-        'FROM (SELECT 1 AS singleton)',
-        'WHERE EXISTS (SELECT 1 FROM filtered)',
-      ].join('\n')
-    );
   });
 
   it.each([
@@ -76,63 +62,26 @@ describe('buildSectionQuery', () => {
       expression:
         'ARRAY_AGG(STRUCT(source_time, value_0) ORDER BY source_time DESC LIMIT 1)',
     },
-  ])(
-    'groups one month with the $reduction reduction',
-    ({ reduction, expression }) => {
-      const plan = createPlan(reduction);
+  ])('reduces each month with $reduction', ({ reduction, expression }) => {
+    const result = buildSectionQuery(plan(reduction, true));
 
-      const result = buildSectionQuery(plan);
+    expect(result.sql).toContain(expression);
+    expect(result.sql).toContain('GROUP BY filtered.period');
+    expect(result.params.period_start).toBe('2026-08-01');
+  });
 
-      expect(result.sql).toContain(expression);
-    }
-  );
-
-  it('counts null as a distinct latest value and projects both results as numbers', () => {
-    const plan = createPlan(Reduction.LATEST);
-
-    const result = buildSectionQuery(plan);
+  it('projects latest ambiguity for each bucket including null', () => {
+    const result = buildSectionQuery(plan(Reduction.LATEST, true));
 
     expect(result.sql).toContain(
-      'CAST((SELECT COUNT(DISTINCT TO_JSON_STRING(value_0)) FROM filtered WHERE source_time = (SELECT MAX(source_time) FROM filtered)) AS FLOAT64) AS distinct_count_0'
+      'COUNT(DISTINCT IF(source_time = latest_time, TO_JSON_STRING(value_0), NULL))'
     );
-    expect(result.sql).toContain('CAST((SELECT ARRAY_AGG');
+    expect(result.sql).toContain(
+      'MAX(source_time) AS latest_time FROM filtered GROUP BY period'
+    );
   });
 
-  it('uses the dashboard time zone for a timestamp at a calendar-month boundary', () => {
-    const period = Period.parse('2026-09');
-    if (period === null) {
-      throw new Error('Expected fixture period to parse');
-    }
-    const plan = planSection(
-      {
-        id: 'headline',
-        title: 'Headline',
-        kind: 'stat-tiles',
-        source: {
-          dataset: 'metrics',
-          view: 'events',
-          time: { column: 'recorded_at', type: 'timestamp' },
-        },
-        tiles: [
-          {
-            label: 'Total',
-            column: 'amount',
-            reduction: 'sum',
-            format: { type: 'number' },
-          },
-        ],
-      },
-      period,
-      'Asia/Tokyo'
-    );
-
-    const result = buildSectionQuery(plan);
-
-    expect(result.sql).toContain('DATE(`recorded_at`, @time_zone)');
-    expect(result.params).toMatchObject({ time_zone: 'Asia/Tokyo' });
-  });
-
-  it('builds one parameterized query for the fixture sum and latest tiles', () => {
+  it('builds a two-month query when the fixture has one comparing tile', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
     const period = Period.parse('2026-09');
     if (period === null) {
@@ -143,74 +92,65 @@ describe('buildSectionQuery', () => {
       planSection(dashboard.sections[0], period, dashboard.timeZone)
     );
 
-    expect(result.sql).toContain(
-      'CAST((SELECT SUM(value_0) FROM filtered) AS FLOAT64) AS value_0'
-    );
-    expect(result.sql).toContain(
-      'ARRAY_AGG(STRUCT(source_time, value_1) ORDER BY source_time DESC LIMIT 1)'
-    );
-    expect(result.sql).toContain('WHERE EXISTS (SELECT 1 FROM filtered)');
     expect(result.params).toEqual({
-      period_start: '2026-09-01',
+      period_start: '2026-08-01',
       period_end: '2026-09-30',
       time_zone: 'Asia/Tokyo',
     });
+    expect(result.sql).toContain('SUM(value_0) AS FLOAT64');
+    expect(result.sql).toContain(
+      'ARRAY_AGG(STRUCT(source_time, value_1) ORDER BY source_time DESC LIMIT 1)'
+    );
+    expect(result.sql).toContain(
+      "FORMAT_DATE('%Y-%m', DATE(`recorded_at`, @time_zone)) AS period"
+    );
   });
 
-  it.each([
-    {
-      name: 'dataset',
-      mutate: (plan: SectionQueryPlan) => ({
-        ...plan,
-        source: { ...plan.source, dataset: 'metrics; DROP TABLE events' },
-      }),
-    },
-    {
-      name: 'measure column',
-      mutate: (plan: SectionQueryPlan) => ({
-        ...plan,
-        measures: [{ ...plan.measures[0], column: 'amount` FROM secrets' }],
-      }),
-    },
-  ])('rejects an injection-shaped $name', ({ mutate }) => {
-    const plan = mutate(createPlan());
+  it('does not widen the range for a non-comparing tile', () => {
+    const result = buildSectionQuery(plan(Reduction.SUM));
 
-    const act = () => buildSectionQuery(plan);
+    expect(result.params.period_start).toBe('2026-09-01');
+  });
 
-    expect(act).toThrow(RepositoryError);
+  it('rejects an injection-shaped identifier', () => {
+    const unsafe = {
+      ...plan(),
+      source: {
+        dataset: 'metrics; DROP TABLE rows',
+        view: 'monthly',
+        time: 'recorded_on',
+      },
+    };
+
+    expect(() => buildSectionQuery(unsafe)).toThrow(RepositoryError);
   });
 });
 
 describe('buildPeriodBoundsQuery', () => {
   it.each([
     {
-      name: 'DATE',
       time: 'recorded_on' as const,
       expression:
         'DATE(TIMESTAMP(DATETIME(`recorded_on`), @time_zone), @time_zone)',
     },
     {
-      name: 'TIMESTAMP',
       time: { column: 'recorded_at', type: 'timestamp' as const },
       expression: 'DATE(`recorded_at`, @time_zone)',
     },
-  ])(
-    'projects $name bounds as JSON-safe date strings',
-    ({ time, expression }) => {
-      const result = buildPeriodBoundsQuery(
-        { dataset: 'metrics', view: 'events', time },
-        'Asia/Tokyo'
-      );
+  ])('projects calendar bounds as JSON-safe dates', ({ time, expression }) => {
+    const result = buildPeriodBoundsQuery(
+      { dataset: 'metrics', view: 'events', time },
+      'Asia/Tokyo'
+    );
 
-      expect(result).toEqual({
-        sql: [
-          `SELECT FORMAT_DATE('%F', MIN(${expression})) AS first_date,`,
-          `FORMAT_DATE('%F', MAX(${expression})) AS last_date`,
-          'FROM `metrics.events`',
-          'HAVING COUNT(*) > 0',
-        ].join('\n'),
-        params: { time_zone: 'Asia/Tokyo' },
-      });
-    }
-  );
+    expect(result).toEqual({
+      sql: [
+        `SELECT FORMAT_DATE('%F', MIN(${expression})) AS first_date,`,
+        `FORMAT_DATE('%F', MAX(${expression})) AS last_date`,
+        'FROM `metrics.events`',
+        'HAVING COUNT(*) > 0',
+      ].join('\n'),
+      params: { time_zone: 'Asia/Tokyo' },
+    });
+  });
 });

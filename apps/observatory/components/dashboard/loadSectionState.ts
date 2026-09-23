@@ -1,11 +1,10 @@
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
   DashboardDefinition,
-  DateBounds,
   Section,
 } from '../../modules/dashboard/domain';
-import { Period } from '../../modules/dashboard/domain';
 import type {
+  DashboardPeriodResolution,
   FetchSectionDataInput,
   SectionData,
 } from '../../modules/dashboard/use-cases';
@@ -13,36 +12,46 @@ import type {
 interface Input {
   dashboard: DashboardDefinition;
   section: Section;
-  periodBounds: Promise<DateBounds | null>;
+  periodResolution: Promise<DashboardPeriodResolution | null>;
   fetchSectionData: (
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
 }
 
 export type SectionState =
-  | { status: 'ready'; data: SectionData }
+  | {
+      status: 'ready';
+      data: SectionData;
+      resolution: DashboardPeriodResolution;
+    }
   | { status: 'empty' }
   | { status: 'unavailable' };
 
 export async function loadSectionState({
   dashboard,
   section,
-  periodBounds,
+  periodResolution,
   fetchSectionData,
 }: Input): Promise<SectionState> {
   try {
-    const bounds = await periodBounds;
-    if (bounds === null) {
+    const resolution = await periodResolution;
+    if (resolution === null) {
       return { status: 'empty' };
     }
-
-    const period = Period.fromCalendarDate(bounds.lastDate);
-    if (period === null) {
-      throw new Error(`Invalid latest warehouse date: ${bounds.lastDate}`);
+    const data = await fetchSectionData({
+      dashboard,
+      section,
+      period: resolution.period,
+    });
+    if (
+      data === null ||
+      !data.buckets.some(
+        (bucket) => bucket.period === resolution.period.toString()
+      )
+    ) {
+      return { status: 'empty' };
     }
-
-    const data = await fetchSectionData({ dashboard, section, period });
-    return data === null ? { status: 'empty' } : { status: 'ready', data };
+    return { status: 'ready', data, resolution };
   } catch (error) {
     dashboardLogger.error(
       { err: error, dashboardId: dashboard.id, sectionId: section.id },

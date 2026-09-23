@@ -5,7 +5,7 @@ import {
   type Section,
   SectionKind,
 } from '../../../../../domain';
-import { statTilesSectionSchema } from './statTiles';
+import { sourceSchema, statTilesSectionSchema } from './statTiles';
 
 function supportsLocale(locale: string): boolean {
   try {
@@ -23,13 +23,6 @@ function supportsTimeZone(timeZone: string): boolean {
   } catch {
     return false;
   }
-}
-
-function supportsCurrency(currency: string): boolean {
-  return (
-    /^[A-Z]{3}$/.test(currency) &&
-    Intl.supportedValuesOf('currency').includes(currency)
-  );
 }
 
 const sectionSchemaBase = z.unknown().transform((value, context): Section => {
@@ -88,9 +81,25 @@ const dashboardDefinitionSchemaBase = z.strictObject({
     .default('en-US'),
   currency: z
     .string()
-    .refine(supportsCurrency, 'must be an ISO 4217 currency code')
+    .refine(
+      (currency) =>
+        /^[A-Z]{3}$/.test(currency) &&
+        Intl.supportedValuesOf('currency').includes(currency),
+      'must be an ISO 4217 currency code'
+    )
     .optional(),
   revalidate: z.number().int().positive().default(86_400),
+  periodSource: sourceSchema.optional(),
+  defaultPeriod: z
+    .enum(['latest-with-data', 'last-complete'])
+    .default('latest-with-data'),
+  labels: z
+    .strictObject({
+      period: z.string().min(1).optional(),
+      previousPeriod: z.string().min(1).optional(),
+      nextPeriod: z.string().min(1).optional(),
+    })
+    .optional(),
   sections: z.array(sectionSchema).min(1),
 });
 export const dashboardDefinitionSchema =

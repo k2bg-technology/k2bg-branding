@@ -21,9 +21,10 @@ function numberFormatOptions(
 export function formatValue(
   value: number,
   tile: StatTileDefinition,
-  dashboard: Pick<DashboardDefinition, 'locale' | 'currency'>
+  dashboard: Pick<DashboardDefinition, 'locale' | 'currency'>,
+  signDisplay: Intl.NumberFormatOptions['signDisplay'] = 'auto'
 ): string {
-  const options = numberFormatOptions(tile, dashboard);
+  const options = { ...numberFormatOptions(tile, dashboard), signDisplay };
   const scaledValue =
     tile.format.type === 'percent' && tile.format.inputScale === 'percent'
       ? value / 100

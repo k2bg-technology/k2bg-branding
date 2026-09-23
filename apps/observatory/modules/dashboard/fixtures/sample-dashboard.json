@@ -5,6 +5,12 @@
   "grain": "month",
   "timeZone": "Asia/Tokyo",
   "locale": "ja-JP",
+  "defaultPeriod": "last-complete",
+  "labels": {
+    "period": "Review month",
+    "previousPeriod": "Earlier month",
+    "nextPeriod": "Later month"
+  },
   "currency": "JPY",
   "revalidate": 86400,
   "sections": [
@@ -22,6 +28,7 @@
           "label": "Total",
           "column": "total_value",
           "reduction": "sum",
+          "comparison": { "direction": "higher-is-better" },
           "format": { "type": "currency" }
         },
         {

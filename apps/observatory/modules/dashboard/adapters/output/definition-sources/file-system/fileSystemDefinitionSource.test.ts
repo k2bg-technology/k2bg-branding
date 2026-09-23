@@ -110,6 +110,7 @@ describe('FileSystemDefinitionSource', () => {
         expect(result.definitions).toHaveLength(1);
         expect(result.definitions[0]).toMatchObject({
           locale: 'en-US',
+          defaultPeriod: 'latest-with-data',
           revalidate: 86_400,
           sections: [{ tiles: [{ reduction: 'sum' }] }],
         });
@@ -142,7 +143,7 @@ describe('FileSystemDefinitionSource', () => {
     {
       name: 'an unknown field',
       definition: createDefinition({ labels: { empty: 'Nothing here' } }),
-      path: '',
+      path: 'labels',
     },
     {
       name: 'an invalid locale',
@@ -288,4 +289,63 @@ describe('FileSystemDefinitionSource', () => {
       }
     );
   });
+
+  it.each([
+    {
+      name: 'period source',
+      definition: createDefinition({
+        periodSource: {
+          dataset: 'bad name',
+          view: 'monthly',
+          time: 'recorded_on',
+        },
+      }),
+      path: 'periodSource.dataset',
+    },
+    {
+      name: 'default period',
+      definition: createDefinition({ defaultPeriod: 'next-month' }),
+      path: 'defaultPeriod',
+    },
+    {
+      name: 'empty label',
+      definition: createDefinition({ labels: { period: '' } }),
+      path: 'labels.period',
+    },
+    {
+      name: 'comparison direction',
+      definition: createDefinition({
+        sections: [
+          createSection({
+            tiles: [
+              {
+                label: 'Total',
+                column: 'total',
+                format: { type: 'number' },
+                comparison: { direction: 'sideways' },
+              },
+            ],
+          }),
+        ],
+      }),
+      path: 'sections[0].tiles[0].comparison.direction',
+    },
+  ])(
+    'reports an invalid $name with its file and JSON path',
+    async ({ definition, path }) => {
+      await withDefinitionDirectory(
+        { 'invalid.json': definition },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions).toHaveLength(0);
+          expect(result.issues).toContainEqual(
+            expect.objectContaining({ fileName: 'invalid.json', path })
+          );
+        }
+      );
+    }
+  );
 });

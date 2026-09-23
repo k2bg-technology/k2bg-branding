@@ -57,24 +57,37 @@ export function toSectionData(
   rows: WarehouseRow[],
   plan: SectionQueryPlan
 ): SectionData | null {
-  const row = rows[0];
-  if (row === undefined) {
+  if (rows.length === 0) {
     return null;
   }
 
   return {
-    values: plan.measures.map((measure, index) => {
-      const value = readNullableNumber(row, valueColumnAlias(index));
-      return measure.reduction === Reduction.LATEST
-        ? resolveLatest(
-            value,
-            readDistinctCount(row, distinctCountAlias(index)),
-            {
-              sectionId: plan.sectionId,
-              column: measure.column,
-            }
-          )
-        : value;
+    buckets: rows.map((row) => {
+      const period = row.period;
+      if (typeof period !== 'string' || Period.parse(period) === null) {
+        throw new MappingError(
+          `period must be YYYY-MM, received ${JSON.stringify(period)}`
+        );
+      }
+      return {
+        period,
+        values: plan.measures.map((measure, index) => {
+          if (period !== plan.selectedPeriod && !measure.compares) {
+            return null;
+          }
+          const value = readNullableNumber(row, valueColumnAlias(index));
+          return measure.reduction === Reduction.LATEST
+            ? resolveLatest(
+                value,
+                readDistinctCount(row, distinctCountAlias(index)),
+                {
+                  sectionId: plan.sectionId,
+                  column: measure.column,
+                }
+              )
+            : value;
+        }),
+      };
     }),
   };
 }
