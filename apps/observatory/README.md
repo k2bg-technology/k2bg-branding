@@ -84,7 +84,9 @@ Every warehouse read goes through `WarehouseClient.query()`, which caches the ro
 
 ## Dashboard Definitions
 
-Dashboard routes read strict JSON definitions from `OBSERVATORY_DASHBOARDS_DIR`. The [sample dashboard](modules/dashboard/fixtures/sample-dashboard.json) documents the PR1 `stat-tiles` shape, including currency, percent, and reduction bindings. Files with definition issues are skipped and logged without hiding valid dashboards.
+Dashboard routes read strict JSON definitions from `OBSERVATORY_DASHBOARDS_DIR`. The [sample dashboard](modules/dashboard/fixtures/sample-dashboard.json) documents `stat-tiles`, currency and percent formats, reduction bindings, `defaultPeriod`, labels, and a previous-month comparison. Files with definition issues are skipped and logged without hiding valid dashboards.
+
+Open `/dashboards/<id>?period=YYYY-MM` to select a month. Without `period`, the dashboard opens on `latest-with-data` by default; `last-complete` selects the prior month in the dashboard time zone and clamps it to the available range. The optional `periodSource` supplies navigation bounds; otherwise the first section's source does. Each section reads its own source for the selected month, including months outside the navigation bounds. A tile with `comparison.direction` (`higher-is-better`, `lower-is-better`, or `neutral`) displays a change from its own source's previous month. `labels.period`, `labels.previousPeriod`, and `labels.nextPeriod` override navigation text.
 
 ## Environment Variables
 
