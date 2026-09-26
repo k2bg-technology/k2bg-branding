@@ -124,6 +124,57 @@ describe('FileSystemDefinitionSource', () => {
     );
   });
 
+  it.each(['higher-is-better', 'lower-is-better', 'neutral'])(
+    'loads a %s comparison direction',
+    async (direction) => {
+      await withDefinitionDirectory(
+        {
+          'valid.json': createDefinition({
+            sections: [
+              createSection({
+                tiles: [
+                  {
+                    label: 'Total',
+                    column: 'total',
+                    format: { type: 'number' },
+                    comparison: { direction },
+                  },
+                ],
+              }),
+            ],
+          }),
+        },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions[0]?.sections[0]).toMatchObject({
+            tiles: [{ comparison: { direction } }],
+          });
+        }
+      );
+    }
+  );
+
+  it('keeps a valid period source that differs from the section sources', async () => {
+    const periodSource = {
+      dataset: 'calendar',
+      view: 'months',
+      time: 'recorded_on',
+    };
+    await withDefinitionDirectory(
+      { 'valid.json': createDefinition({ periodSource }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions[0]?.periodSource).toEqual(periodSource);
+      }
+    );
+  });
+
   it.each([
     {
       name: 'an injection-shaped identifier',
@@ -307,10 +358,28 @@ describe('FileSystemDefinitionSource', () => {
       definition: createDefinition({ defaultPeriod: 'next-month' }),
       path: 'defaultPeriod',
     },
+    ...['period', 'previousPeriod', 'nextPeriod'].map((label) => ({
+      name: `empty ${label} label`,
+      definition: createDefinition({ labels: { [label]: '' } }),
+      path: `labels.${label}`,
+    })),
     {
-      name: 'empty label',
-      definition: createDefinition({ labels: { period: '' } }),
-      path: 'labels.period',
+      name: 'comparison field',
+      definition: createDefinition({
+        sections: [
+          createSection({
+            tiles: [
+              {
+                label: 'Total',
+                column: 'total',
+                format: { type: 'number' },
+                comparison: { direction: 'neutral', baseline: 'year' },
+              },
+            ],
+          }),
+        ],
+      }),
+      path: 'sections[0].tiles[0].comparison',
     },
     {
       name: 'comparison direction',

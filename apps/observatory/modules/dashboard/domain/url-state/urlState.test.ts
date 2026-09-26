@@ -63,6 +63,21 @@ describe('parseUrlState', () => {
       key: 'page.headline',
     },
     {
+      parameters: { 'page.headline': '1e3' },
+      problem: 'invalid-page',
+      key: 'page.headline',
+    },
+    {
+      parameters: { 'page.headline': '1.0' },
+      problem: 'invalid-page',
+      key: 'page.headline',
+    },
+    {
+      parameters: { 'control.any': 'x', period: '2026-08' },
+      problem: 'unknown-control',
+      key: 'control.any',
+    },
+    {
       parameters: { period: ['2026-08', '2026-09'] },
       problem: 'repeated-key',
       key: 'period',
@@ -73,14 +88,25 @@ describe('parseUrlState', () => {
     expect(result).toEqual({ valid: false, problem, key });
   });
 
-  it('reads a valid period and section page into the state', () => {
+  it('reads a valid period and every section page into the state', () => {
+    const twoSections = {
+      ...dashboard,
+      sections: [
+        dashboard.sections[0],
+        { ...dashboard.sections[0], id: 'detail' },
+      ],
+    };
+
     const result = parseUrlState(
-      { period: '2026-08', 'page.headline': '2' },
-      dashboard
+      { period: '2026-08', 'page.headline': '2', 'page.detail': '3' },
+      twoSections
     );
 
     expect(result.valid && result.state.period?.toString()).toBe('2026-08');
-    expect(result.valid && result.state.pages).toEqual({ headline: 2 });
+    expect(result.valid && result.state.pages).toEqual({
+      headline: 2,
+      detail: 3,
+    });
   });
 
   it('keeps foreign keys in their original order', () => {
@@ -142,7 +168,7 @@ describe('URL period transition', () => {
     const state = {
       period,
       controls: { zeta: 'last', alpha: 'first' },
-      pages: { zeta: 2, alpha: 1 },
+      pages: { zeta: 2, alpha: 3 },
       foreign: [
         { key: 'second', value: 'two' },
         { key: 'first', value: 'one' },
@@ -150,7 +176,7 @@ describe('URL period transition', () => {
     };
 
     expect(serializeUrlState(state)).toBe(
-      'period=2026-08&control.alpha=first&control.zeta=last&page.zeta=2&second=two&first=one'
+      'period=2026-08&control.alpha=first&control.zeta=last&page.alpha=3&page.zeta=2&second=two&first=one'
     );
   });
 });

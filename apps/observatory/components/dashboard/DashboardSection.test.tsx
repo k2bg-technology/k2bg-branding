@@ -182,6 +182,39 @@ describe('DashboardSection', () => {
     expect(fetchSectionData).not.toHaveBeenCalled();
   });
 
+  it('shows empty when the section has no rows', async () => {
+    const definition = dashboard();
+
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => null,
+      })
+    );
+
+    expect(screen.getByText('No data available.')).toBeInTheDocument();
+  });
+
+  it('shows no delta when the previous month has no bucket', async () => {
+    const definition = dashboard();
+
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => ({
+          buckets: [{ period: '2026-08', values: [120, 9] }],
+        }),
+      })
+    );
+
+    expect(screen.getByText('120')).toBeInTheDocument();
+    expect(screen.queryByText(/^[+-]/)).not.toBeInTheDocument();
+  });
+
   it('shows unavailable when period resolution rejects', async () => {
     const definition = dashboard();
 

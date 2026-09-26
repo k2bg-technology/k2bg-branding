@@ -38,7 +38,7 @@ describe('DashboardPeriodNavigation', () => {
       nextTarget: null,
       linkName: 'Previous period',
       missingLinkName: 'Next period',
-      expectedHref: '?period=2026-07',
+      expectedHref: '?period=2026-07&note=kept',
     },
     {
       direction: 'next',
@@ -46,7 +46,7 @@ describe('DashboardPeriodNavigation', () => {
       nextTarget: '2026-09',
       linkName: 'Next period',
       missingLinkName: 'Previous period',
-      expectedHref: '?period=2026-09',
+      expectedHref: '?period=2026-09&note=kept',
     },
   ])(
     'links only the $direction target month from the resolved period',
@@ -60,7 +60,12 @@ describe('DashboardPeriodNavigation', () => {
       render(
         await DashboardPeriodNavigation({
           dashboard: dashboard(),
-          state: { period: null, controls: {}, pages: {}, foreign: [] },
+          state: {
+            period: null,
+            controls: {},
+            pages: {},
+            foreign: [{ key: 'note', value: 'kept' }],
+          },
           periodResolution: Promise.resolve({
             period: month('2026-08'),
             bounds: { firstDate: '2026-07-01', lastDate: '2026-09-30' },
@@ -82,6 +87,16 @@ describe('DashboardPeriodNavigation', () => {
     }
   );
 
+  it('renders nothing when no period resolves', async () => {
+    const result = await DashboardPeriodNavigation({
+      dashboard: dashboard(),
+      state: { period: null, controls: {}, pages: {}, foreign: [] },
+      periodResolution: Promise.resolve(null),
+    });
+
+    expect(result).toBeNull();
+  });
+
   it('keeps the requested month as a disabled label when period resolution rejects', async () => {
     const period = month('2026-08');
 
@@ -96,4 +111,31 @@ describe('DashboardPeriodNavigation', () => {
     expect(screen.getByText('August 2026')).toBeInTheDocument();
     expect(screen.queryByRole('link')).not.toBeInTheDocument();
   });
+
+  it.each([
+    { period: '2026-08', expectedLabel: '2026年8月' },
+    { period: null, expectedLabel: '対象月' },
+  ])(
+    'shows $expectedLabel with the dashboard locale and labels when resolution rejects',
+    async ({ period, expectedLabel }) => {
+      render(
+        await DashboardPeriodNavigation({
+          dashboard: {
+            ...dashboard(),
+            locale: 'ja-JP',
+            labels: { period: '対象月' },
+          },
+          state: {
+            period: period === null ? null : month(period),
+            controls: {},
+            pages: {},
+            foreign: [],
+          },
+          periodResolution: Promise.reject(new Error('warehouse failed')),
+        })
+      );
+
+      expect(screen.getByText(expectedLabel)).toBeInTheDocument();
+    }
+  );
 });

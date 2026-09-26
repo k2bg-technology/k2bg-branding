@@ -153,9 +153,10 @@ describe('dashboard page', () => {
     ).toBeInTheDocument();
   });
 
-  it('queries every section for the requested month', async () => {
+  it('resolves the period once and queries every section for the requested month', async () => {
     await renderPage({ period: '2026-08' });
 
+    expect(mocks.resolvePeriod).toHaveBeenCalledTimes(1);
     expect(mocks.fetchSectionData).toHaveBeenCalledTimes(2);
     expect(
       mocks.fetchSectionData.mock.calls.map(([input]) =>

@@ -71,18 +71,71 @@ describe('ResolveDashboardPeriod', () => {
     expect(result?.previousTarget?.toString()).toBe('2026-08');
   });
 
-  it('uses the first section when periodSource is absent', async () => {
-    const sut = createSut('section_months', {
-      firstDate: '2026-07-01',
-      lastDate: '2026-08-31',
-    });
+  it.each([
+    { defaultPeriod: 'latest-with-data', expected: '2026-10' },
+    { defaultPeriod: 'last-complete', expected: '2026-09' },
+  ] as const)(
+    'selects $expected for the $defaultPeriod default period',
+    async ({ defaultPeriod, expected }) => {
+      const definition = dashboard();
+      definition.defaultPeriod = defaultPeriod;
+      const sut = createSut('section_months', {
+        firstDate: '2026-08-01',
+        lastDate: '2026-10-10',
+      });
+
+      const result = await sut.execute({
+        dashboard: definition,
+        requestedPeriod: null,
+      });
+
+      expect(result?.period.toString()).toBe(expected);
+    }
+  );
+
+  it('finds the last complete month in the dashboard time zone', async () => {
+    const definition = dashboard();
+    definition.defaultPeriod = 'last-complete';
+    definition.timeZone = 'Asia/Tokyo';
+    const sut = new ResolveDashboardPeriod(
+      {
+        fetchPeriodBounds: async () => ({
+          firstDate: '2026-07-01',
+          lastDate: '2026-10-01',
+        }),
+      },
+      { now: () => Date.parse('2026-09-30T20:00:00Z') }
+    );
 
     const result = await sut.execute({
-      dashboard: dashboard(),
+      dashboard: definition,
+      requestedPeriod: null,
+    });
+
+    expect(result?.period.toString()).toBe('2026-09');
+  });
+
+  it('reads bounds from the first section when periodSource is absent', async () => {
+    const definition = dashboard();
+    definition.sections.push({
+      ...definition.sections[0],
+      id: 'detail',
+      source: {
+        dataset: 'metrics',
+        view: 'detail_months',
+        time: 'recorded_on',
+      },
+    });
+    const bounds = { firstDate: '2026-07-01', lastDate: '2026-08-31' };
+    const sut = createSut('section_months', bounds);
+
+    const result = await sut.execute({
+      dashboard: definition,
       requestedPeriod: null,
     });
 
     expect(result?.period.toString()).toBe('2026-08');
+    expect(result?.bounds).toEqual(bounds);
   });
 
   it('keeps the requested period even outside the bounds', async () => {
