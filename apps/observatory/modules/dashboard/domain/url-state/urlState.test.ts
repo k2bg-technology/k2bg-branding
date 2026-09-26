@@ -73,6 +73,16 @@ describe('parseUrlState', () => {
     expect(result).toEqual({ valid: false, problem, key });
   });
 
+  it('reads a valid period and section page into the state', () => {
+    const result = parseUrlState(
+      { period: '2026-08', 'page.headline': '2' },
+      dashboard
+    );
+
+    expect(result.valid && result.state.period?.toString()).toBe('2026-08');
+    expect(result.valid && result.state.pages).toEqual({ headline: 2 });
+  });
+
   it('keeps foreign keys in their original order', () => {
     const result = parseUrlState(
       { first: 'one', period: '2026-08', second: 'two' },
