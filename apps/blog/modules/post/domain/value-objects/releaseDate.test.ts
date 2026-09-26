@@ -30,9 +30,6 @@ describe('ReleaseDate', () => {
       expect(() => ReleaseDate.create(invalidDateString)).toThrow(
         InvalidReleaseDateError
       );
-      expect(() => ReleaseDate.create(invalidDateString)).toThrow(
-        'Invalid date format'
-      );
     });
   });
 

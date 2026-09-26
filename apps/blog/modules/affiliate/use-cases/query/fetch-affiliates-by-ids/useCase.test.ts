@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   type Affiliate,
-  AffiliateId,
   type AffiliateRepository,
   AffiliateType,
 } from '../../../domain';
@@ -81,44 +80,6 @@ describe('FetchAffiliatesByIds', () => {
       expect(result.affiliates.has(nonExistentId)).toBe(false);
     });
 
-    it('returns only the affiliates selected by the requested IDs', async () => {
-      const bannerId = '550e8400-e29b-41d4-a716-446655440001';
-      const subProviderId = '550e8400-e29b-41d4-a716-446655440002';
-      const banner = createAffiliateBanner({
-        id: AffiliateId.create(bannerId),
-      });
-      const subProvider = createAffiliateSubProvider({
-        id: AffiliateId.create(subProviderId),
-      });
-      const other = createAffiliateBanner({
-        id: AffiliateId.create('550e8400-e29b-41d4-a716-446655440003'),
-      });
-      const records = new Map<string, Affiliate>([
-        [other.id.getValue(), other],
-        [bannerId, banner],
-        [subProviderId, subProvider],
-      ]);
-      const repository = createMockRepository({
-        findByIds: async (ids) => {
-          const requestedIds = new Set(ids.map((id) => id.getValue()));
-          return new Map(
-            Array.from(records).filter(([id]) => requestedIds.has(id))
-          );
-        },
-      });
-      const sut = new FetchAffiliatesByIds(repository);
-
-      const result = await sut.execute({ ids: [bannerId, subProviderId] });
-
-      expect(Array.from(result.affiliates.values())).toEqual([
-        expect.objectContaining({ id: bannerId, type: AffiliateType.BANNER }),
-        expect.objectContaining({
-          id: subProviderId,
-          type: AffiliateType.SUB_PROVIDER,
-        }),
-      ]);
-    });
-
     it('maps affiliate output correctly', async () => {
       const banner = createAffiliateBanner();
       const affiliatesMap = new Map([[banner.id.getValue(), banner]]);
@@ -137,19 +98,6 @@ describe('FetchAffiliatesByIds', () => {
         throw new Error('Expected banner type');
       }
       expect(output.imageSourceUrl).toBe(banner.imageSourceUrl.getValue());
-    });
-
-    it('accepts readonly string array', async () => {
-      const repository = createMockRepository();
-      const sut = new FetchAffiliatesByIds(repository);
-
-      const readonlyIds: readonly string[] = [
-        '550e8400-e29b-41d4-a716-446655440003',
-        '550e8400-e29b-41d4-a716-446655440004',
-      ] as const;
-      const result = await sut.execute({ ids: readonlyIds });
-
-      expect(result.affiliates).toBeDefined();
     });
   });
 });

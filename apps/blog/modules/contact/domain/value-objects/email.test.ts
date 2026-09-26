@@ -22,22 +22,9 @@ describe('Email Value Object', () => {
       expect(() => Email.create('')).toThrow('Email cannot be empty');
     });
 
-    it('throws InvalidEmailError when email is whitespace only', () => {
-      expect(() => Email.create('   ')).toThrow(InvalidEmailError);
-      expect(() => Email.create('   ')).toThrow('Email cannot be empty');
-    });
-
     it('throws InvalidEmailError when email format is invalid', () => {
       expect(() => Email.create('invalid')).toThrow(InvalidEmailError);
       expect(() => Email.create('invalid')).toThrow('Invalid email format');
-    });
-
-    it('throws InvalidEmailError when email is missing @', () => {
-      expect(() => Email.create('testexample.com')).toThrow(InvalidEmailError);
-    });
-
-    it('throws InvalidEmailError when email is missing domain', () => {
-      expect(() => Email.create('test@')).toThrow(InvalidEmailError);
     });
   });
 

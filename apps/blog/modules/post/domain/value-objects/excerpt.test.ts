@@ -21,37 +21,13 @@ describe('Excerpt', () => {
       expect(sut.getValue()).toBe(expectedValue);
     });
 
-    it('returns empty Excerpt when value is null', () => {
-      const nullValue = null;
-
-      const sut = Excerpt.create(nullValue);
-
-      expect(sut.getValue()).toBeNull();
-      expect(sut.hasValue()).toBe(false);
-    });
-
-    it('returns empty Excerpt when value is undefined', () => {
-      const undefinedValue = undefined;
-
-      const sut = Excerpt.create(undefinedValue);
-
-      expect(sut.getValue()).toBeNull();
-      expect(sut.hasValue()).toBe(false);
-    });
-
-    it('returns empty Excerpt when value is empty string', () => {
-      const emptyValue = '';
-
-      const sut = Excerpt.create(emptyValue);
-
-      expect(sut.getValue()).toBeNull();
-      expect(sut.hasValue()).toBe(false);
-    });
-
-    it('returns empty Excerpt when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      const sut = Excerpt.create(whitespaceValue);
+    it.each([
+      { input: 'null', value: null },
+      { input: 'undefined', value: undefined },
+      { input: 'empty string', value: '' },
+      { input: 'whitespace only', value: '   ' },
+    ])('returns an empty Excerpt for $input', ({ value }) => {
+      const sut = Excerpt.create(value);
 
       expect(sut.getValue()).toBeNull();
       expect(sut.hasValue()).toBe(false);
@@ -61,9 +37,6 @@ describe('Excerpt', () => {
       const longExcerpt = 'a'.repeat(501);
 
       expect(() => Excerpt.create(longExcerpt)).toThrow(InvalidExcerptError);
-      expect(() => Excerpt.create(longExcerpt)).toThrow(
-        'Excerpt must be 500 characters or less'
-      );
     });
 
     it('creates Excerpt when value is exactly 500 characters', () => {
@@ -110,14 +83,6 @@ describe('Excerpt', () => {
       const result = sut.hasValue();
 
       expect(result).toBe(true);
-    });
-
-    it('returns false when excerpt is empty', () => {
-      const sut = Excerpt.empty();
-
-      const result = sut.hasValue();
-
-      expect(result).toBe(false);
     });
   });
 

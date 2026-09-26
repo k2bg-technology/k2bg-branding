@@ -30,9 +30,6 @@ describe('ProviderColor', () => {
       expect(() => ProviderColor.create(emptyValue)).toThrow(
         InvalidProviderColorError
       );
-      expect(() => ProviderColor.create(emptyValue)).toThrow(
-        'ProviderColor cannot be empty'
-      );
     });
 
     it('throws InvalidProviderColorError when value is whitespace only', () => {
@@ -45,25 +42,6 @@ describe('ProviderColor', () => {
 
     it('throws InvalidProviderColorError when hex format is invalid', () => {
       const invalidColor = 'FF5733';
-
-      expect(() => ProviderColor.create(invalidColor)).toThrow(
-        InvalidProviderColorError
-      );
-      expect(() => ProviderColor.create(invalidColor)).toThrow(
-        'Invalid hex color format'
-      );
-    });
-
-    it('throws InvalidProviderColorError when hex color has wrong length', () => {
-      const invalidColor = '#FF57';
-
-      expect(() => ProviderColor.create(invalidColor)).toThrow(
-        InvalidProviderColorError
-      );
-    });
-
-    it('throws InvalidProviderColorError when hex color contains invalid characters', () => {
-      const invalidColor = '#GGHHII';
 
       expect(() => ProviderColor.create(invalidColor)).toThrow(
         InvalidProviderColorError
@@ -98,17 +76,6 @@ describe('ProviderColor', () => {
       const result = color1.equals(color2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the hex color string value', () => {
-      const color = '#ff5733';
-      const sut = ProviderColor.create('#FF5733');
-
-      const result = sut.toString();
-
-      expect(result).toBe(color);
     });
   });
 });

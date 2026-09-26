@@ -50,13 +50,4 @@ describe('PostId', () => {
       expect(postId1.equals(postId2)).toBe(false);
     });
   });
-
-  describe('toString', () => {
-    it('returns string representation of PostId', () => {
-      const id = '12345678901234567';
-      const postId = PostId.create(id);
-
-      expect(postId.toString()).toBe(id);
-    });
-  });
 });

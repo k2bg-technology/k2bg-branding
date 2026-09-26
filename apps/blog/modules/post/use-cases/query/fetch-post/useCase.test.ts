@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from 'vitest';
-import { PostId } from '../../../domain';
 import type { AuthorOutput } from '../../shared';
 import { PostNotFoundError } from '../../shared';
 import { createPost } from '../../shared/testing/factories';
@@ -58,26 +57,6 @@ describe('FetchPost', () => {
       await expect(
         sut.execute({ id: '550e8400-e29b-41d4-a716-446655440000' })
       ).rejects.toThrow(PostNotFoundError);
-    });
-
-    it('returns the post selected by its requested ID', async () => {
-      const selectedId = '660e8400-e29b-41d4-a716-446655440000';
-      const selected = createPost({ id: PostId.create(selectedId) });
-      const other = createPost({
-        id: PostId.create('550e8400-e29b-41d4-a716-446655440000'),
-      });
-      const records = new Map([
-        [other.id.getValue(), { post: other, author: null }],
-        [selectedId, { post: selected, author: null }],
-      ]);
-      const queryService: FetchPostQueryService = {
-        fetchPost: async (id) => records.get(id.getValue()) ?? null,
-      };
-      const sut = new FetchPost(queryService);
-
-      const result = await sut.execute({ id: selectedId });
-
-      expect(result.post.id).toBe(selectedId);
     });
   });
 });

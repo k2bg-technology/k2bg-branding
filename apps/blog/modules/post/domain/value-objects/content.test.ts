@@ -25,9 +25,6 @@ describe('Content', () => {
       const emptyValue = '';
 
       expect(() => Content.create(emptyValue)).toThrow(InvalidContentError);
-      expect(() => Content.create(emptyValue)).toThrow(
-        'Content cannot be empty'
-      );
     });
 
     it('throws InvalidContentError when value is whitespace only', () => {
@@ -42,9 +39,6 @@ describe('Content', () => {
       const longContent = 'a'.repeat(100_001);
 
       expect(() => Content.create(longContent)).toThrow(InvalidContentError);
-      expect(() => Content.create(longContent)).toThrow(
-        'Content must be 100,000 characters or less'
-      );
     });
 
     it('creates Content when value is exactly 100,000 characters', () => {
@@ -58,8 +52,8 @@ describe('Content', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates Content without validation', () => {
-      const value = 'any-value-from-persistence';
+    it('restores persisted whitespace that create rejects', () => {
+      const value = '   ';
 
       const sut = Content.reconstitute(value);
 

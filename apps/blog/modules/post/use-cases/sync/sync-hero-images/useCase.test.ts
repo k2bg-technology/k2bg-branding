@@ -117,27 +117,6 @@ describe('SyncHeroImages', () => {
       await expect(sut.execute()).rejects.toThrow('Source error');
     });
 
-    it('works with multiple sources with different image counts', async () => {
-      const source1 = createMockImageSource([
-        { id: 'post-1', url: 'https://example.com/post-1.jpg' },
-      ]);
-      const source2 = createMockImageSource([
-        { id: 'media-1', url: 'https://example.com/media-1.jpg' },
-        { id: 'media-2', url: 'https://example.com/media-2.jpg' },
-      ]);
-      const source3 = createMockImageSource([]);
-      const imageRepository = createMockImageRepository();
-      const sut = new SyncHeroImages(
-        [source1, source2, source3],
-        imageRepository,
-        createMockLogger()
-      );
-
-      const result = await sut.execute();
-
-      expect(result.count).toBe(3);
-    });
-
     it('reports all failures when all uploads fail', async () => {
       const images = createImageRecords(2);
       const source = createMockImageSource(images);

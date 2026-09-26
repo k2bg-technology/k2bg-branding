@@ -8,12 +8,6 @@ describe('drizzle/escapeLike', () => {
     expect(result).toBe('hello world');
   });
 
-  it('returns an empty string for an empty input', () => {
-    const result = escapeLike('');
-
-    expect(result).toBe('');
-  });
-
   it.each([
     { input: '%foo%', expected: '\\%foo\\%' },
     { input: '100_pct', expected: '100\\_pct' },

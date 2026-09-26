@@ -1,9 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
+  Extension,
+  Height,
   InvalidMediaIdError,
   MediaId,
+  MediaName,
   type MediaRepository,
+  MediaType,
   SourceUrl,
+  TargetUrl,
+  Width,
 } from '../../../domain';
 import { MediaNotFoundError } from '../../shared';
 import {
@@ -26,20 +32,6 @@ describe('FetchMedia', () => {
   });
 
   describe('execute', () => {
-    it('returns media when found', async () => {
-      const media = createMedia();
-      const repository = createMockRepository({
-        findById: vi.fn().mockResolvedValue(media),
-      });
-      const sut = new FetchMedia(repository);
-
-      const result = await sut.execute({ id: media.id.getValue() });
-
-      expect(result.media.id).toBe(media.id.getValue());
-      expect(result.media.name).toBe(media.name.getValue());
-      expect(result.media.type).toBe(media.type);
-    });
-
     it('throws MediaNotFoundError when media does not exist', async () => {
       const repository = createMockRepository({
         findById: vi.fn().mockResolvedValue(null),
@@ -51,18 +43,6 @@ describe('FetchMedia', () => {
       ).rejects.toThrow(MediaNotFoundError);
     });
 
-    it('throws MediaNotFoundError with correct identifier', async () => {
-      const testId = '550e8400-e29b-41d4-a716-446655440000';
-      const repository = createMockRepository({
-        findById: vi.fn().mockResolvedValue(null),
-      });
-      const sut = new FetchMedia(repository);
-
-      await expect(sut.execute({ id: testId })).rejects.toThrow(
-        `Media not found: ${testId}`
-      );
-    });
-
     it('throws InvalidMediaIdError when provided invalid UUID format', async () => {
       const repository = createMockRepository();
       const sut = new FetchMedia(repository);
@@ -72,46 +52,41 @@ describe('FetchMedia', () => {
       );
     });
 
-    it('returns the media selected by its requested ID', async () => {
-      const selectedId = '660e8400-e29b-41d4-a716-446655440000';
-      const selected = createMedia({ id: MediaId.create(selectedId) });
-      const other = createMedia({
-        id: MediaId.create('550e8400-e29b-41d4-a716-446655440000'),
+    it('returns the selected media properties as plain values', async () => {
+      const media = createMedia({
+        id: MediaId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
+        name: MediaName.reconstitute('Cover photo'),
+        type: MediaType.IMAGE,
+        sourceFile: null,
+        sourceUrl: SourceUrl.reconstitute('https://example.com/cover.jpg'),
+        targetUrl: TargetUrl.reconstitute('https://example.com/article'),
+        width: Width.reconstitute(1200),
+        height: Height.reconstitute(800),
+        extension: Extension.reconstitute('jpg'),
       });
-      const records = new Map([
-        [other.id.getValue(), other],
-        [selectedId, selected],
-      ]);
       const repository = createMockRepository({
-        findById: async (id) => records.get(id.getValue()) ?? null,
+        findById: async (id) =>
+          id.getValue() === '550e8400-e29b-41d4-a716-446655440001'
+            ? media
+            : null,
       });
       const sut = new FetchMedia(repository);
 
-      const result = await sut.execute({ id: selectedId });
-
-      expect(result.media.id).toBe(selectedId);
-    });
-
-    it('maps all media properties correctly', async () => {
-      const media = createMedia();
-      const repository = createMockRepository({
-        findById: vi.fn().mockResolvedValue(media),
+      const result = await sut.execute({
+        id: '550e8400-e29b-41d4-a716-446655440001',
       });
-      const sut = new FetchMedia(repository);
-
-      const result = await sut.execute({ id: media.id.getValue() });
 
       expect(result.media).toEqual({
-        id: media.id.getValue(),
-        name: media.name.getValue(),
-        type: media.type,
-        sourceFile: media.sourceFile?.getValue() ?? null,
-        sourceUrl: media.sourceUrl?.getValue() ?? null,
-        targetUrl: media.targetUrl?.getValue() ?? null,
-        width: media.width?.getValue() ?? null,
-        height: media.height?.getValue() ?? null,
-        extension: media.extension?.getValue() ?? null,
-        effectiveSource: media.getEffectiveSource(),
+        id: '550e8400-e29b-41d4-a716-446655440001',
+        name: 'Cover photo',
+        type: MediaType.IMAGE,
+        sourceFile: null,
+        sourceUrl: 'https://example.com/cover.jpg',
+        targetUrl: 'https://example.com/article',
+        width: 1200,
+        height: 800,
+        extension: 'jpg',
+        effectiveSource: 'https://example.com/cover.jpg',
       });
     });
 

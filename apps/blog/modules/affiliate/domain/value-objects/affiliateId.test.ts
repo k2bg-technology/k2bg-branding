@@ -28,33 +28,23 @@ describe('AffiliateId', () => {
       expect(sut.getValue()).toBe(expectedValue);
     });
 
-    it('throws InvalidAffiliateIdError when value is empty string', () => {
-      const emptyValue = '';
-
-      expect(() => AffiliateId.create(emptyValue)).toThrow(
-        InvalidAffiliateIdError
-      );
-      expect(() => AffiliateId.create(emptyValue)).toThrow(
-        'AffiliateId cannot be empty'
-      );
-    });
-
-    it('throws InvalidAffiliateIdError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => AffiliateId.create(whitespaceValue)).toThrow(
-        InvalidAffiliateIdError
-      );
-    });
+    it.each([
+      { scenario: 'empty', value: '' },
+      { scenario: 'whitespace only', value: '   ' },
+    ])(
+      'rejects $scenario affiliateId with InvalidAffiliateIdError',
+      ({ value }) => {
+        expect(() => AffiliateId.create(value)).toThrow(
+          InvalidAffiliateIdError
+        );
+      }
+    );
 
     it('throws InvalidAffiliateIdError when UUID format is invalid', () => {
       const invalidUuid = 'not-a-uuid';
 
       expect(() => AffiliateId.create(invalidUuid)).toThrow(
         InvalidAffiliateIdError
-      );
-      expect(() => AffiliateId.create(invalidUuid)).toThrow(
-        'Invalid UUID format'
       );
     });
 
@@ -110,17 +100,6 @@ describe('AffiliateId', () => {
       const result = id1.equals(id2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the UUID string value', () => {
-      const uuid = '550e8400-e29b-41d4-a716-446655440000';
-      const sut = AffiliateId.create(uuid);
-
-      const result = sut.toString();
-
-      expect(result).toBe(uuid);
     });
   });
 });

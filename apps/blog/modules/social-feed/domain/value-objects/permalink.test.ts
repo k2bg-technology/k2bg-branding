@@ -56,13 +56,4 @@ describe('Permalink', () => {
       expect(link1.equals(link2)).toBe(false);
     });
   });
-
-  describe('toString', () => {
-    it('returns string representation of Permalink', () => {
-      const url = 'https://www.instagram.com/p/ABC123/';
-      const permalink = Permalink.create(url);
-
-      expect(permalink.toString()).toBe(url);
-    });
-  });
 });

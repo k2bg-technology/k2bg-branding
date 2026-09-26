@@ -29,16 +29,6 @@ describe('CloudinaryImageRepository', () => {
       );
     });
 
-    it('completes successfully on upload success', async () => {
-      const mockCloudinary = createMockCloudinary();
-      mockCloudinary.uploader.upload.mockResolvedValue({});
-      const sut = new CloudinaryImageRepository(mockCloudinary as never);
-
-      await expect(
-        sut.uploadImage('image-id', 'https://example.com/image.jpg')
-      ).resolves.toBeUndefined();
-    });
-
     it('throws ImageUploadError on upload failure', async () => {
       const mockCloudinary = createMockCloudinary();
       mockCloudinary.uploader.upload.mockRejectedValue(

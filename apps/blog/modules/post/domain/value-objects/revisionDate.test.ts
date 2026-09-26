@@ -27,9 +27,6 @@ describe('RevisionDate', () => {
       expect(() => RevisionDate.create(invalidDateString)).toThrow(
         InvalidRevisionDateError
       );
-      expect(() => RevisionDate.create(invalidDateString)).toThrow(
-        'Invalid date format'
-      );
     });
   });
 

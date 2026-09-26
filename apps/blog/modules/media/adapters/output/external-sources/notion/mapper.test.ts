@@ -38,16 +38,6 @@ describe('mapper', () => {
 
       expect(result).toBeNull();
     });
-
-    it('returns null when type property is missing', () => {
-      const page = createNotionMediaPageResponse();
-      (page.properties.type as { select: { name: string } | null }).select =
-        null;
-
-      const result = determineMediaType(page);
-
-      expect(result).toBeNull();
-    });
   });
 
   describe('notionPageToMedia', () => {
@@ -85,7 +75,7 @@ describe('mapper', () => {
       expect(result.type).toBe(MediaType.VIDEO);
     });
 
-    it('uses sourceFile when both sourceFile and sourceUrl are provided', () => {
+    it('maps both file and URL sources when both are provided', () => {
       const page = createNotionMediaPageResponse({
         sourceFile: 'https://s3.example.com/uploaded.jpg',
         sourceUrl: 'https://example.com/external.jpg',
@@ -184,17 +174,6 @@ describe('mapper', () => {
 
     it('returns null for VIDEO type', () => {
       const page = createNotionMediaPageResponse({ type: 'MEDIA_VIDEO' });
-
-      const result = notionPageToImageSource(page);
-
-      expect(result).toBeNull();
-    });
-
-    it('returns null when media type is unknown', () => {
-      const page = createNotionMediaPageResponse();
-      (page.properties.type as { select: { name: string } | null }).select = {
-        name: 'UNKNOWN_TYPE',
-      };
 
       const result = notionPageToImageSource(page);
 

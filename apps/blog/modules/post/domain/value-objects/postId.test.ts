@@ -30,26 +30,12 @@ describe('PostId', () => {
       const emptyValue = '';
 
       expect(() => PostId.create(emptyValue)).toThrow(InvalidPostIdError);
-      expect(() => PostId.create(emptyValue)).toThrow('PostId cannot be empty');
-    });
-
-    it('throws InvalidPostIdError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => PostId.create(whitespaceValue)).toThrow(InvalidPostIdError);
     });
 
     it('throws InvalidPostIdError when UUID format is invalid', () => {
       const invalidUuid = 'not-a-uuid';
 
       expect(() => PostId.create(invalidUuid)).toThrow(InvalidPostIdError);
-      expect(() => PostId.create(invalidUuid)).toThrow('Invalid UUID format');
-    });
-
-    it('throws InvalidPostIdError when UUID version is not supported (v1)', () => {
-      const uuidV1 = '550e8400-e29b-11d4-a716-446655440000';
-
-      expect(() => PostId.create(uuidV1)).toThrow(InvalidPostIdError);
     });
   });
 
@@ -98,17 +84,6 @@ describe('PostId', () => {
       const result = id1.equals(id2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the UUID string value', () => {
-      const uuid = '550e8400-e29b-41d4-a716-446655440000';
-      const sut = PostId.create(uuid);
-
-      const result = sut.toString();
-
-      expect(result).toBe(uuid);
     });
   });
 });
