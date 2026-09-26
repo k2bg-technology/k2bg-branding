@@ -295,13 +295,15 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
 - Unit tests assert observable inputs, outputs, state changes, and required external effects
   at the smallest public boundary. Expectations are specified independently of production
   calculations. Incoming data stubs are checked through outcomes; outgoing interactions
-  require an externally meaningful effect or a documented adapter contract.
+  require an externally meaningful effect, a documented adapter contract, or an ordering,
+  guard, or single-flight rule.
 - Database integration tests use the real test database and assert freshly queried persisted
   state. Diagnostic logs do not need assertions; explicit operational outputs and emitted
   security redaction remain testable contracts.
-- Appearance is verified by stories, Chromatic, and Scene Studio demo compositions.
-  Semantic chart thresholds, gaps, keyboard behavior, and deterministic calculations remain
-  behavior tests. The boundary is stated under Missing tests in "Codex Review Guidelines".
+- What needs a test, what does not (decorative appearance, wiring, forwarding, efficiency-only
+  interactions, sibling constraints, unreachable scenarios), and whether an existing test is
+  kept, improved, moved, or deleted are stated in `.claude/rules/unit-test-guidelines.md`
+  ("What Needs a Test" and "Retaining, Improving, Moving, and Deleting Tests").
 - Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` (or scope via `pnpm -F blog test`).
 
 ## Internationalization (Portfolio App)
@@ -398,34 +400,32 @@ A finding names a scenario the repository can reach. A scenario is reachable whe
 public contract accepts it — a prop combination a component allows, a request a route can
 receive, hostile input at a trust boundary — with values realistic for the domain and on a
 supported runtime. The absence of a current call site does not make a scenario unreachable,
-and being representable in a type does not make it reachable. Judge realism at the
+being representable in a type does not make it reachable, and a hypothetical edit to the code
+(a transform added, a clock returning seconds) is not a scenario: a finding names an input the
+current code accepts. Judge realism at the
 repository's scale: personal sites and local-only tools with one maintainer. Outside that
 reach (magnitudes near numeric limits, a runtime without an API that every supported runtime
 provides), only a security exposure, data loss, or a crash is a finding.
 
 Apply these rules when reviewing a pull request:
 
-- **Missing tests (P1):** New or changed behavior with an observable input → output contract
-  whose outcome no test asserts — running the code in a test is not coverage. This covers
-  domain, use-case, adapter, server, middleware, helper, hook, and script logic;
-  authentication, redirect, and not-found guards; state changes and effects inside components
-  (submission, error, and disabled states); and a change that stops tests from running in CI.
-  The finding names a concrete input or state, the expected outcome, and why the existing
-  tests miss it. The behavior decides, not the file type: a declaration whose correctness
-  is its literal value (static metadata, header lists, dependency wiring, workflow steps) and
-  a file that only composes tested units are not findings, while a pattern or function that
-  decides at runtime (a route matcher, a guard) is logic wherever it lives. Appearance —
-  rendering, styling, static accessibility attributes, composition — is verified by stories,
-  Chromatic, and the Storybook accessibility check, and Scene Studio primitives by their demo
-  compositions; none of these calls for a unit test, and a visual branch alone does not
-  justify extracting a helper. Tests assert at the smallest public boundary that shows the
-  behavior and follow `.claude/rules/unit-test-guidelines.md`. Diagnostic logging alone is
-  not an observable behavior requiring assertions; operational output contracts and security
-  properties remain covered. Semantic chart thresholds, gaps, keyboard interaction, and
-  deterministic calculations are behavior even when their results affect appearance. One
-  behavior needs one asserting test: inputs that the same expression treats alike (a short
-  row and an absent row, both read as missing) are one behavior, and a test for the sibling
-  input is not a finding. Code that only guards an unreachable scenario needs no test.
+- **Missing tests (P1):** New or changed behavior whose regression would silently yield a wrong
+  user-visible result, accept invalid input at a trust boundary, reject valid configuration, or
+  lose a stated security, persistence, operational-output, or external-effect guarantee, and
+  whose outcome no test asserts for a reachable input to the current code — running the code
+  in a test is not coverage; and a change that stops tests from running in CI. Mutation-level
+  coverage (a line that can change without a test failing, an edit that no test would catch)
+  is not the goal and is not a finding. The finding names a concrete input or state, the
+  expected outcome, and why the existing tests miss it, and asserts the behavior where the
+  decision is made. What needs a test and what does not — decorative appearance, wiring and
+  forwarding between tested units, efficiency-only interaction assertions, unread output
+  fields, sibling constraints of one tested pattern, schema pass-through of valid values,
+  diagnostic logging, and scenarios the reach rule excludes — is stated in
+  `.claude/rules/unit-test-guidelines.md` ("What Needs a Test"); an accessible role or name and
+  what assistive technology announces are behavior there, decorative styling is not. Tests
+  assert at the smallest public boundary that shows the behavior and follow that file; a
+  branch is not extracted into a helper to be tested (`.claude/rules/code-style.md`, "Inline
+  Needless Functions").
 - **Clean Architecture violations (P1):** Wrong dependency direction or layer-boundary
   crossings in the blog app's `domain` / `use-cases` / `adapters` slices.
   See the `clean-architecture-guidelines` skill.
@@ -444,5 +444,7 @@ Defer formatting/style nits already enforced by Biome; do not duplicate lint out
   unless asked), and `@codex fix the P1 issue` for small, scoped corrections.
 - **Claude (`@claude` / local Claude Code) = primary implementer** for feature work.
 - Keep the two agents from overlapping: do not ask both to implement the same PR.
-- A reported finding that the reach rule in "Codex Review Guidelines" excludes is dismissed
-  on its thread with the reason instead of being fixed.
+- A reported finding that the reach rule in "Codex Review Guidelines" or the test bar in
+  `.claude/rules/unit-test-guidelines.md` ("What Needs a Test") excludes is dismissed on its
+  thread with the rule cited instead of being fixed. Authors adjudicate each Missing-tests
+  finding against that bar before writing a test; a mutation sweep is not a pre-PR requirement.
