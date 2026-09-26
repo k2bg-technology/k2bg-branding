@@ -157,6 +157,32 @@ describe('FileSystemDefinitionSource', () => {
     }
   );
 
+  it('keeps an explicit default period and label overrides', async () => {
+    const labels = {
+      period: 'Review month',
+      previousPeriod: 'Earlier month',
+      nextPeriod: 'Later month',
+    };
+    await withDefinitionDirectory(
+      {
+        'valid.json': createDefinition({
+          defaultPeriod: 'last-complete',
+          labels,
+        }),
+      },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions[0]).toMatchObject({
+          defaultPeriod: 'last-complete',
+          labels,
+        });
+      }
+    );
+  });
+
   it('keeps a valid period source that differs from the section sources', async () => {
     const periodSource = {
       dataset: 'calendar',
