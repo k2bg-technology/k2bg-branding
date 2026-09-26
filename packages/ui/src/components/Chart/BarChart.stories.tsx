@@ -155,6 +155,57 @@ export const StatusColors: Story = {
   },
 };
 
+export const AllSemanticColors: Story = {
+  args: {
+    label: 'Four semantic chart colors',
+    categories: ['Sample A', 'Sample B', 'Sample C'],
+    series: [
+      {
+        id: 'success',
+        label: 'Success',
+        color: ChartColor.SUCCESS,
+        values: [4, 5, 6],
+      },
+      {
+        id: 'error',
+        label: 'Error',
+        color: ChartColor.ERROR,
+        values: [3, 4, 5],
+      },
+      {
+        id: 'warning',
+        label: 'Warning',
+        color: ChartColor.WARNING,
+        values: [2, 3, 4],
+      },
+      { id: 'info', label: 'Info', color: ChartColor.INFO, values: [1, 2, 3] },
+    ],
+    showLegend: true,
+  },
+};
+
+export const ExplicitColorBeyondPalette: Story = {
+  args: {
+    label: 'Explicit color after twelve default series',
+    categories: ['Sample A', 'Sample B', 'Sample C'],
+    series: [
+      ...Array.from({ length: 12 }, (_, index) => ({
+        id: `series-${index + 1}`,
+        label: `Series ${index + 1}`,
+        values: [index + 1, index + 2, index + 3],
+      })),
+      {
+        id: 'highlight',
+        label: 'Highlight',
+        color: ChartColor.ERROR,
+        values: [14, 15, 16],
+      },
+    ],
+    showLegend: true,
+    height: 'lg',
+  },
+};
+
 export const FormattedValues: Story = {
   args: {
     label: 'Energy consumption per day of week in kilowatt hours',

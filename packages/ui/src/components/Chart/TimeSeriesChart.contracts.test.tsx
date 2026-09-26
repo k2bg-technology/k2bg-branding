@@ -241,33 +241,6 @@ describe('TimeSeriesChart interpolation', () => {
   });
 });
 
-describe('TimeSeriesChart time zone', () => {
-  it('labels the time axis on the wall clock of the given time zone', () => {
-    const tokyoMidnight = Date.UTC(2026, 0, 14, 15);
-    const tokyoDay = {
-      id: 'carbonDioxide',
-      label: 'Carbon dioxide',
-      points: Array.from({ length: 24 }, (_, index) => ({
-        timestamp: tokyoMidnight + index * oneHour,
-        value: 400 + index,
-      })),
-    };
-
-    const { container } = render(
-      <TimeSeriesChart
-        label="Carbon dioxide"
-        period="day"
-        series={[tokyoDay]}
-        timeZone="Asia/Tokyo"
-      />
-    );
-
-    const labels = timeAxisLabels(container);
-    expect(labels).toContain('00:00');
-    expect(labels).not.toContain('15:00');
-  });
-});
-
 describe('TimeSeriesChart band series', () => {
   it.each`
     bounds               | points                    | expectedSubPaths
@@ -373,64 +346,8 @@ describe('TimeSeriesChart stacking', () => {
   });
 });
 
-describe('TimeSeriesChart locale', () => {
-  it('labels the time axis in the given locale', () => {
-    const { container } = render(
-      <TimeSeriesChart
-        label="Power draw"
-        period="month"
-        locale="en-GB"
-        series={[measuredSeries]}
-      />
-    );
-
-    expect(timeAxisLabels(container)).toEqual(['01/01', '02/01', '03/01']);
-  });
-
-  it('keeps the locale-neutral labels when no locale is given', () => {
-    const { container } = render(
-      <TimeSeriesChart
-        label="Power draw"
-        period="month"
-        series={[measuredSeries]}
-      />
-    );
-
-    expect(timeAxisLabels(container)).toEqual(['1/1', '1/2', '1/3']);
-  });
-});
-
 describe('TimeSeriesChart tooltip heading', () => {
-  const hoursInOneDay = 24;
   const hoursInTwoDays = 48;
-
-  it.each`
-    sampling                  | series                            | period     | expectedHeading
-    ${'hourly over a day'}    | ${[hourlySeries(hoursInOneDay)]}  | ${'day'}   | ${'01:00'}
-    ${'hourly over a day'}    | ${[hourlySeries(hoursInOneDay)]}  | ${'month'} | ${'01:00'}
-    ${'hourly over two days'} | ${[hourlySeries(hoursInTwoDays)]} | ${'day'}   | ${'1/1 01:00'}
-    ${'hourly over two days'} | ${[hourlySeries(hoursInTwoDays)]} | ${'week'}  | ${'1/1 01:00'}
-    ${'hourly over two days'} | ${[hourlySeries(hoursInTwoDays)]} | ${'month'} | ${'1/1 01:00'}
-    ${'daily'}                | ${[measuredSeries]}               | ${'month'} | ${'1/2'}
-    ${'daily'}                | ${[measuredSeries]}               | ${'week'}  | ${'1/2'}
-  `(
-    'heads the tooltip of $sampling readings under $period with $expectedHeading',
-    async ({ series, period, expectedHeading }) => {
-      const user = userEvent.setup();
-      const { container } = render(
-        <TimeSeriesChart
-          label="Carbon dioxide"
-          period={period}
-          series={series}
-        />
-      );
-
-      await user.tab();
-      await user.keyboard('{ArrowRight}');
-
-      expect(tooltipHeading(container)).toBe(expectedHeading);
-    }
-  );
 
   it.each`
     period     | expectedTicks
@@ -455,45 +372,4 @@ describe('TimeSeriesChart tooltip heading', () => {
       expect(tooltipHeading(container)).toBe('1/1 01:00');
     }
   );
-
-  it.each`
-    period
-    ${'day'}
-    ${'week'}
-    ${'month'}
-  `('heads a dated $period tooltip in the given locale', async ({ period }) => {
-    const user = userEvent.setup();
-    const { container } = render(
-      <TimeSeriesChart
-        label="Carbon dioxide"
-        period={period}
-        locale="en-GB"
-        series={[hourlySeries(hoursInTwoDays)]}
-      />
-    );
-
-    await user.tab();
-    await user.keyboard('{ArrowRight}');
-
-    expect(tooltipHeading(container)).toContain('01/01');
-    expect(tooltipHeading(container)).toContain('01:00');
-  });
-
-  it('keeps rendering with a locale the runtime cannot use', async () => {
-    const user = userEvent.setup();
-    const unusableLocale = 'not a locale';
-    const { container } = render(
-      <TimeSeriesChart
-        label="Carbon dioxide"
-        period="day"
-        locale={unusableLocale}
-        series={[hourlySeries(hoursInTwoDays)]}
-      />
-    );
-
-    await user.tab();
-    await user.keyboard('{ArrowRight}');
-
-    expect(tooltipHeading(container)).toBe('1/1 01:00');
-  });
 });

@@ -87,6 +87,12 @@ export const WithGaps: Story = {
   },
 };
 
+export const ErrorColor: Story = {
+  args: {
+    color: ChartColor.ERROR,
+  },
+};
+
 export const InDataTableCell: Story = {
   args: {
     label: 'Living room temperature trend',

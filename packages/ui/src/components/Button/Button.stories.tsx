@@ -56,6 +56,32 @@ export const Default: Story = {
   },
 };
 
+export const AccentOutline: Story = {
+  args: {
+    children: 'Accent outline',
+    variant: 'outline',
+    color: 'accent',
+  },
+};
+
+export const SmallDarkGhost: Story = {
+  args: {
+    children: 'Small dark ghost',
+    variant: 'ghost',
+    color: 'dark',
+    size: 'sm',
+  },
+};
+
+export const SuccessIcon: Story = {
+  args: {
+    'aria-label': 'Confirm',
+    children: <Icon name="check-circle" />,
+    color: 'success',
+    size: 'icon',
+  },
+};
+
 export const IconButton: Story = {
   args: {
     children: <Icon name="bars-3" />,

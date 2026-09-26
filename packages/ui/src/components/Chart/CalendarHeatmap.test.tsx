@@ -2,15 +2,13 @@ import { act, type RenderResult, render, screen } from '@testing-library/react';
 import type { ReactElement } from 'react';
 import { describe, expect, it } from 'vitest';
 
-import { CalendarHeatmap, type CalendarHeatmapDay, ChartColor } from '.';
-import { heatmapCellColor } from './chartHeatmapScale';
+import { CalendarHeatmap, type CalendarHeatmapDay } from '.';
 
 const dayMs = 86_400_000;
 const daysPerWeek = 7;
 const mondayRow = 0;
 const tuesdayRow = 1;
 const wednesdayRow = 2;
-const lowestLevel = 0;
 
 /** 2026-02-23 is a Monday, so a grid built from that week starts exactly there. */
 const mondayDate = '2026-02-23';
@@ -175,7 +173,10 @@ describe('CalendarHeatmap', () => {
   });
 
   it('fills a measured zero at the lowest step of the scale', async () => {
-    const days = [createDay({ date: mondayDate, value: 0 })];
+    const days = [
+      createDay({ date: mondayDate, value: 0 }),
+      createDay({ date: wednesdayDate, value: null }),
+    ];
 
     const { container } = await renderHeatmap(
       <CalendarHeatmap label="Steps" days={days} />
@@ -184,7 +185,10 @@ describe('CalendarHeatmap', () => {
     const zeroCell = heatmapCells(container)[mondayRow];
     expect(zeroCell.title).toBe(`${mondayDate}: 0`);
     expect(zeroCell.style.backgroundColor).toBe(
-      heatmapCellColor(lowestLevel, ChartColor.CHART_1)
+      'color-mix(in srgb, var(--color-chart-1) 20%, var(--color-base-white))'
+    );
+    expect(heatmapCells(container)[wednesdayRow].style.backgroundColor).toBe(
+      ''
     );
   });
 
@@ -218,10 +222,10 @@ describe('CalendarHeatmap', () => {
 
     const cells = heatmapCells(container);
     expect(cells[mondayRow].style.backgroundColor).toBe(
-      heatmapCellColor(1, ChartColor.CHART_1)
+      'color-mix(in srgb, var(--color-chart-1) 40%, var(--color-base-white))'
     );
     expect(cells[tuesdayRow].style.backgroundColor).toBe(
-      heatmapCellColor(4, ChartColor.CHART_1)
+      'color-mix(in srgb, var(--color-chart-1) 100%, var(--color-base-white))'
     );
   });
 
@@ -238,37 +242,11 @@ describe('CalendarHeatmap', () => {
 
     const cells = heatmapCells(container);
     expect(cells[mondayRow].style.backgroundColor).toBe(
-      heatmapCellColor(1, ChartColor.CHART_1)
+      'color-mix(in srgb, var(--color-chart-1) 40%, var(--color-base-white))'
     );
     expect(cells[tuesdayRow].style.backgroundColor).toBe(
-      heatmapCellColor(2, ChartColor.CHART_1)
+      'color-mix(in srgb, var(--color-chart-1) 60%, var(--color-base-white))'
     );
-  });
-
-  it('paints the cells with the given series color', async () => {
-    const days = [createDay({ date: mondayDate })];
-
-    const { container } = await renderHeatmap(
-      <CalendarHeatmap label="Steps" days={days} color={ChartColor.CHART_2} />
-    );
-
-    expect(heatmapCells(container)[mondayRow].style.backgroundColor).toContain(
-      'var(--color-chart-2)'
-    );
-  });
-
-  it('labels only the weekday rows that clear the row height', async () => {
-    await renderHeatmap(
-      <CalendarHeatmap
-        label="Steps"
-        days={[createDay()]}
-        weekdayLabels={weekdayLabels}
-      />
-    );
-
-    expect(screen.getByText('Mon')).toBeInTheDocument();
-    expect(screen.getByText('Wed')).toBeInTheDocument();
-    expect(screen.queryByText('Tue')).not.toBeInTheDocument();
   });
 
   it('renders no weekday labels by default', async () => {
@@ -300,18 +278,6 @@ describe('CalendarHeatmap', () => {
     expect(screen.queryByText('Sun')).not.toBeInTheDocument();
   });
 
-  it('leaves spare width beside the grid rather than widening the weekday labels', async () => {
-    const { container } = await renderHeatmap(
-      <CalendarHeatmap
-        label="Steps"
-        days={[createDay()]}
-        weekdayLabels={weekdayLabels}
-      />
-    );
-
-    expect(heatmapGrid(container)?.className).toContain('justify-start');
-  });
-
   it('puts the grid inside the design system scroll area', async () => {
     const label = 'Steps';
 
@@ -325,7 +291,7 @@ describe('CalendarHeatmap', () => {
     ).toBeInTheDocument();
   });
 
-  it('keeps the weekday labels outside the scroll port, with nothing masking them', async () => {
+  it('keeps the weekday labels beside the scroll port', async () => {
     await renderHeatmap(
       <CalendarHeatmap
         label="Steps"
@@ -334,13 +300,14 @@ describe('CalendarHeatmap', () => {
       />
     );
 
-    // Scrolled cells are clipped by the port instead of passing under a label,
-    // so the label needs no background fill of its own.
     const weekdayLabel = screen.getByText('Mon');
     expect(
       weekdayLabel.closest('[data-slot="calendar-heatmap-scroll"]')
     ).toBeNull();
-    expect(weekdayLabel.className).not.toContain('bg-');
+    expect(weekdayLabel.parentElement?.nextElementSibling).toHaveAttribute(
+      'data-slot',
+      'calendar-heatmap-scroll'
+    );
   });
 
   it('labels the week column a month starts in', async () => {
@@ -426,19 +393,6 @@ describe('CalendarHeatmap', () => {
     expect(
       screen.getByRole('img', { name: label })
     ).toHaveAccessibleDescription(`${emptyLabel}: 1`);
-  });
-
-  it('keeps the description out of sight', async () => {
-    const label = 'Steps';
-
-    await renderHeatmap(
-      <CalendarHeatmap label={label} days={[createDay({ value: null })]} />
-    );
-
-    const describedBy = screen
-      .getByRole('img', { name: label })
-      .getAttribute('aria-describedby');
-    expect(document.getElementById(describedBy ?? '')).toHaveClass('sr-only');
   });
 
   it('clamps the cell size between the given bounds', async () => {

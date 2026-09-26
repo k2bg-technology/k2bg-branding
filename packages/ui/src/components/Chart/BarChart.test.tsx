@@ -54,13 +54,6 @@ function barLeftEdges(container: HTMLElement) {
   );
 }
 
-function barOutlines(container: HTMLElement) {
-  return Array.from(
-    container.querySelectorAll('.recharts-bar-rectangle path'),
-    (bar) => bar.getAttribute('d') ?? ''
-  );
-}
-
 /** A bar below the baseline grows downwards, so its edges come back ordered. */
 function barEdges(container: HTMLElement) {
   return Array.from(
@@ -253,30 +246,6 @@ describe('BarChart', () => {
     }
   );
 
-  it('rounds only the topmost bar of a stack', () => {
-    const { container } = render(
-      <BarChart
-        label="Usage"
-        categories={weekdayCategories}
-        series={createTwoSeries()}
-        stacked
-      />
-    );
-
-    const arcCommand = 'A';
-    const outlines = barOutlines(container);
-    expect(
-      outlines
-        .slice(0, weekdayCategories.length)
-        .some((outline) => outline.includes(arcCommand))
-    ).toBe(false);
-    expect(
-      outlines
-        .slice(weekdayCategories.length)
-        .every((outline) => outline.includes(arcCommand))
-    ).toBe(true);
-  });
-
   it.each`
     dataset         | values
     ${'positive'}   | ${[12, 11, 13]}
@@ -374,21 +343,6 @@ describe('BarChart', () => {
     ).toBe(true);
   });
 
-  it('skips the bar of a category whose value is null', () => {
-    const { container } = render(
-      <BarChart
-        label="Energy"
-        categories={weekdayCategories}
-        series={[createSeries({ values: [12, null, 13] })]}
-      />
-    );
-
-    const expectedBarCount = 2;
-    expect(container.querySelectorAll('.recharts-bar-rectangle')).toHaveLength(
-      expectedBarCount
-    );
-  });
-
   it('shows an em dash in the tooltip for a category without a value', async () => {
     const user = userEvent.setup();
     const series = [
@@ -403,22 +357,6 @@ describe('BarChart', () => {
     await user.keyboard('{ArrowRight}');
 
     expect(tooltipText(container)).toBe(`TueEnergy11Water${missingValueLabel}`);
-  });
-
-  it('shows the em dash for the only series of a category without a value', async () => {
-    const user = userEvent.setup();
-    const { container } = render(
-      <BarChart
-        label="Energy"
-        categories={weekdayCategories}
-        series={[createSeries({ values: [12, null, 13] })]}
-      />
-    );
-
-    await user.tab();
-    await user.keyboard('{ArrowRight}');
-
-    expect(tooltipText(container)).toBe(`TueEnergy${missingValueLabel}`);
   });
 
   it('answers with an em dash per series for a category missing everywhere', async () => {

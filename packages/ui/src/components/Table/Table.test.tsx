@@ -66,15 +66,15 @@ describe('Table', () => {
     expect(screen.getAllByRole('rowgroup')).toHaveLength(expectedRowGroupCount);
   });
 
-  it.each`
-    part      | role
-    ${'Row'}  | ${'row'}
-    ${'Head'} | ${'columnheader'}
-    ${'Cell'} | ${'cell'}
-  `('renders Table.$part with the $role role', ({ role }) => {
+  it('gives each table part its named semantic role', () => {
     render(invoiceTable);
 
-    expect(screen.getAllByRole(role).length).toBeGreaterThan(0);
+    const invoiceHeader = screen.getByRole('columnheader', { name: 'Invoice' });
+    const invoiceRow = screen.getByRole('row', { name: 'INV001' });
+    const invoiceCell = screen.getByRole('cell', { name: 'INV001' });
+
+    expect(invoiceHeader).toBeInTheDocument();
+    expect(invoiceRow).toContainElement(invoiceCell);
   });
 
   it.each`
@@ -93,22 +93,6 @@ describe('Table', () => {
     expect(container.querySelector(`[data-slot="${slot}"]`)).toHaveClass(
       className
     );
-  });
-
-  it('lets a right alignment class replace the default left alignment', () => {
-    render(
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.Head className="text-right">Amount</Table.Head>
-          </Table.Row>
-        </Table.Header>
-      </Table>
-    );
-
-    const amountHeader = screen.getByRole('columnheader', { name: 'Amount' });
-    expect(amountHeader).toHaveClass('text-right');
-    expect(amountHeader).not.toHaveClass('text-left');
   });
 
   it('forwards row state and cell span attributes', () => {

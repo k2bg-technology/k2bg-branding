@@ -107,6 +107,22 @@ export const WithWeekdayLabelsAndScale: Story = {
   },
 };
 
+export const AlternateSeriesColor: Story = {
+  args: {
+    label: 'Recorded steps in the alternate series color',
+    days: [{ date: '2026-02-23', value: 5 }],
+    color: ChartColor.CHART_2,
+  },
+};
+
+export const SmallGridWithWeekdayLabels: Story = {
+  args: {
+    label: 'One day with weekday labels in a wide card',
+    days: [{ date: '2026-02-25', value: 5 }],
+    weekdayLabels,
+  },
+};
+
 export const FullYearWithMonthLabels: Story = {
   args: {
     label: 'Daily step count over the last year',

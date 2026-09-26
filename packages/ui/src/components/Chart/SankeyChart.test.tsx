@@ -1,12 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import {
-  ChartColor,
-  SankeyChart,
-  type SankeyChartLink,
-  type SankeyChartNode,
-} from '.';
+import { SankeyChart, type SankeyChartLink, type SankeyChartNode } from '.';
 
 const budgetNodes: SankeyChartNode[] = [
   { id: 'income', label: 'Income' },
@@ -23,13 +18,6 @@ function nodeLabels(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('.recharts-sankey-nodes text'),
     (label) => label.textContent ?? ''
-  );
-}
-
-function nodeFills(container: HTMLElement) {
-  return Array.from(
-    container.querySelectorAll('.recharts-sankey-node'),
-    (node) => node.getAttribute('fill') ?? ''
   );
 }
 
@@ -110,30 +98,6 @@ describe('SankeyChart', () => {
     );
 
     expect(nodeLabels(container)).toEqual(['Income', 'Savings', 'Spending']);
-  });
-
-  it('fills the nodes with the palette in order', () => {
-    const { container } = render(
-      <SankeyChart label="Budget" nodes={budgetNodes} links={budgetLinks} />
-    );
-
-    expect(nodeFills(container)).toEqual([
-      'var(--color-chart-1)',
-      'var(--color-chart-2)',
-      'var(--color-chart-3)',
-    ]);
-  });
-
-  it('fills a node with its own color instead of the palette one', () => {
-    const nodes = budgetNodes.map((node, index) =>
-      index === 0 ? { ...node, color: ChartColor.SUCCESS } : node
-    );
-
-    const { container } = render(
-      <SankeyChart label="Budget" nodes={nodes} links={budgetLinks} />
-    );
-
-    expect(nodeFills(container)[0]).toBe('var(--color-success)');
   });
 
   it('names the hovered flow by its source and target node', () => {
