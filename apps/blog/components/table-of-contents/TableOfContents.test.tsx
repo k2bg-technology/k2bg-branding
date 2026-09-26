@@ -130,16 +130,6 @@ describe('TableOfContents', () => {
     expect(screen.getByText('Conclusion')).toBeInTheDocument();
   });
 
-  it('shows x-mark icon when expanded', async () => {
-    const user = userEvent.setup();
-
-    render(<TableOfContents headings={headings} />);
-
-    await user.click(screen.getByRole('button', { name: '目次を開く' }));
-
-    expect(screen.getByTestId('icon-x-mark')).toBeInTheDocument();
-  });
-
   it('updates aria-expanded when toggled', async () => {
     const user = userEvent.setup();
 

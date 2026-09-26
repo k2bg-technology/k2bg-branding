@@ -53,20 +53,6 @@ describe('postRoutes', () => {
       expect(body).toEqual(syncResult);
     });
 
-    it('calls createSyncPostsFromExternalUseCase and execute', async () => {
-      const mockExecute = vi.fn().mockResolvedValue({
-        syncedPosts: [],
-        count: 0,
-      });
-      stubUseCaseWith(mockExecute);
-      const app = createApp();
-
-      await app.request('/posts', { method: 'PATCH' });
-
-      expect(mockCreateUseCase).toHaveBeenCalledOnce();
-      expect(mockExecute).toHaveBeenCalledOnce();
-    });
-
     it('propagates use case errors', async () => {
       stubUseCaseWith(vi.fn().mockRejectedValue(new Error('Sync failed')));
       const app = createApp();

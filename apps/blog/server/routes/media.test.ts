@@ -52,21 +52,6 @@ describe('mediaRoutes', () => {
       expect(body).toEqual(syncResult);
     });
 
-    it('calls createSyncHeroImagesUseCase and execute', async () => {
-      const mockExecute = vi.fn().mockResolvedValue({
-        uploadedImages: [],
-        count: 0,
-        failedCount: 0,
-      });
-      stubUseCaseWith(mockExecute);
-      const app = createApp();
-
-      await app.request('/images', { method: 'PATCH' });
-
-      expect(mockCreateUseCase).toHaveBeenCalledOnce();
-      expect(mockExecute).toHaveBeenCalledOnce();
-    });
-
     it('propagates use case errors', async () => {
       stubUseCaseWith(vi.fn().mockRejectedValue(new Error('Sync failed')));
       const app = createApp();

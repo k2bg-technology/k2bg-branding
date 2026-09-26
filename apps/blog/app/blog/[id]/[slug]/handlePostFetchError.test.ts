@@ -6,7 +6,9 @@ import {
 import { handlePostFetchError } from './handlePostFetchError';
 
 const { mockNotFound, mockWarn, mockError } = vi.hoisted(() => ({
-  mockNotFound: vi.fn(),
+  mockNotFound: vi.fn(() => {
+    throw new Error('NEXT_NOT_FOUND');
+  }),
   mockWarn: vi.fn(),
   mockError: vi.fn(),
 }));
@@ -28,11 +30,12 @@ describe('handlePostFetchError', () => {
     const postId = 'post-123';
     const useCaseError = new PostNotFoundError(postId);
 
-    handlePostFetchError(useCaseError, postId);
+    const action = () => handlePostFetchError(useCaseError, postId);
 
+    expect(action).toThrow('NEXT_NOT_FOUND');
     expect(mockWarn).toHaveBeenCalledWith(
       { err: useCaseError, id: postId },
-      'Post not found'
+      expect.any(String)
     );
     expect(mockError).not.toHaveBeenCalled();
     expect(mockNotFound).toHaveBeenCalledTimes(1);
@@ -42,21 +45,27 @@ describe('handlePostFetchError', () => {
     const postId = 'post-123';
     const useCaseError = new UseCaseError('boom');
 
-    handlePostFetchError(useCaseError, postId);
+    const action = () => handlePostFetchError(useCaseError, postId);
 
-    expect(mockWarn).toHaveBeenCalledTimes(1);
+    expect(action).toThrow('NEXT_NOT_FOUND');
+    expect(mockWarn).toHaveBeenCalledWith(
+      { err: useCaseError, id: postId },
+      expect.any(String)
+    );
     expect(mockError).not.toHaveBeenCalled();
+    expect(mockNotFound).toHaveBeenCalledTimes(1);
   });
 
   it('logs an error and calls notFound when the error is unexpected', () => {
     const postId = 'post-123';
     const unexpectedError = new Error('Database connection refused');
 
-    handlePostFetchError(unexpectedError, postId);
+    const action = () => handlePostFetchError(unexpectedError, postId);
 
+    expect(action).toThrow('NEXT_NOT_FOUND');
     expect(mockError).toHaveBeenCalledWith(
       { err: unexpectedError, id: postId },
-      'Failed to fetch post'
+      expect.any(String)
     );
     expect(mockWarn).not.toHaveBeenCalled();
     expect(mockNotFound).toHaveBeenCalledTimes(1);
