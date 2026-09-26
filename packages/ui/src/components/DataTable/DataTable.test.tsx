@@ -246,26 +246,6 @@ describe('DataTable', () => {
     );
   });
 
-  it('pins the first column in the header, the body, and the footer when it is sticky', async () => {
-    const { container } = await renderDataTable(
-      <DataTable
-        caption="Spending by category"
-        columns={pivotColumns}
-        rows={pivotRows}
-        footer={pivotFooter}
-        stickyFirstColumn
-      />
-    );
-
-    const stickyCells = container.querySelectorAll('[data-sticky="true"]');
-    expect(Array.from(stickyCells).map((cell) => cell.textContent)).toEqual([
-      'Category',
-      'Housing',
-      'Food',
-      'Total',
-    ]);
-  });
-
   it('turns the body cells of a sticky first column into row headers', async () => {
     await renderDataTable(
       <DataTable

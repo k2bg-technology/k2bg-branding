@@ -74,6 +74,65 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+const spendingSlices = [
+  { id: 'housing', label: 'Housing', value: 30 },
+  { id: 'food', label: 'Food', value: 20 },
+  { id: 'transport', label: 'Transport', value: 10 },
+];
+
+export const SpendingPalette: Story = {
+  args: {
+    label: 'Spending',
+    slices: spendingSlices,
+    centerValue: undefined,
+    centerLabel: undefined,
+    valueFormatter: undefined,
+  },
+};
+
+export const SpendingWithCustomSliceColor: Story = {
+  args: {
+    label: 'Spending',
+    slices: [
+      { ...spendingSlices[0], color: ChartColor.ERROR },
+      ...spendingSlices.slice(1),
+    ],
+    centerValue: undefined,
+    centerLabel: undefined,
+    valueFormatter: undefined,
+  },
+};
+
+export const SpendingWithCenter: Story = {
+  args: {
+    label: 'Spending',
+    slices: spendingSlices,
+    centerValue: '¥60,000',
+    centerLabel: 'per month',
+    valueFormatter: undefined,
+  },
+};
+
+export const SpendingWithCenterValueOnly: Story = {
+  args: {
+    label: 'Spending',
+    slices: spendingSlices,
+    centerValue: '¥60,000',
+    centerLabel: undefined,
+    valueFormatter: undefined,
+  },
+};
+
+export const SpendingWithLongCenterText: Story = {
+  args: {
+    label: 'Spending',
+    slices: spendingSlices,
+    centerValue: '¥1,234,567',
+    centerLabel: 'total this year',
+    valueFormatter: undefined,
+  },
+};
+
 export const WithoutCenterText: Story = {
   args: {
     label: 'Asset allocation by instrument without a headline',

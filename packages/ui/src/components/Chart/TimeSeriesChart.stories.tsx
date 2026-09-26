@@ -507,6 +507,59 @@ export const DashedOverlay: Story = {
   },
 };
 
+export const DashedArea: Story = {
+  args: {
+    variant: 'area',
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        lineStyle: 'dashed',
+        points: toPoints([19.8, 20.4, 21.1, 21.9]),
+      },
+    ],
+  },
+};
+
+export const SolidLine: Story = {
+  args: {
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        lineStyle: 'solid',
+        points: toPoints([19.8, 20.4, 21.1, 21.9]),
+      },
+    ],
+  },
+};
+
+export const CustomStroke: Story = {
+  args: {
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        strokeWidth: 4,
+        points: toPoints([19.8, 20.4, 21.1, 21.9]),
+      },
+    ],
+  },
+};
+
+export const FadedSeries: Story = {
+  args: {
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        opacity: 0.5,
+        points: toPoints([19.8, 20.4, 21.1, 21.9]),
+      },
+    ],
+  },
+};
+
 export const MultiDayHourly: Story = {
   args: {
     label: 'Carbon dioxide over two days of hourly readings',

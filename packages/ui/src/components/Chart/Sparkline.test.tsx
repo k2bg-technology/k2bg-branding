@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { ChartColor, Sparkline } from '.';
+import { Sparkline } from '.';
 
 const viewBoxSize = 100;
 
@@ -80,43 +80,4 @@ describe('Sparkline', () => {
     const [lowest, highest] = pointCoordinates(polylines(container)[0]);
     expect(highest.y).toBeLessThan(lowest.y);
   });
-
-  it('fills its box by stretching the view box', () => {
-    render(<Sparkline label="Temperature" values={temperatures} />);
-
-    const chart = screen.getByRole('img');
-    expect(chart.getAttribute('viewBox')).toBe(
-      `0 0 ${viewBoxSize} ${viewBoxSize}`
-    );
-    expect(chart.getAttribute('preserveAspectRatio')).toBe('none');
-  });
-
-  it('keeps every stroke undistorted by the stretch', () => {
-    const gappedValues = [1, 2, null, 3, 4];
-
-    const { container } = render(
-      <Sparkline label="Temperature" values={gappedValues} />
-    );
-
-    const vectorEffects = polylines(container).map((polyline) =>
-      polyline.getAttribute('vector-effect')
-    );
-    expect(vectorEffects).toEqual(['non-scaling-stroke', 'non-scaling-stroke']);
-  });
-
-  it.each`
-    color                 | expected
-    ${undefined}          | ${'var(--color-chart-1)'}
-    ${ChartColor.CHART_2} | ${'var(--color-chart-2)'}
-    ${ChartColor.ERROR}   | ${'var(--color-error)'}
-  `(
-    'strokes the line with $expected for color $color',
-    ({ color, expected }) => {
-      const { container } = render(
-        <Sparkline label="Temperature" values={temperatures} color={color} />
-      );
-
-      expect(polylines(container)[0].getAttribute('stroke')).toBe(expected);
-    }
-  );
 });

@@ -124,6 +124,54 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
 
+export const MissingCellHatch: Story = {
+  args: {
+    label: 'Carbon dioxide',
+    rows: ['00:00'],
+    columns: ['Mon', 'Tue'],
+    values: [[0, null]],
+    scaleLabels: undefined,
+    valueFormatter: undefined,
+  },
+};
+
+export const CustomSeriesColor: Story = {
+  args: {
+    label: 'Carbon dioxide',
+    rows: ['00:00'],
+    columns: ['Mon'],
+    values: [[480]],
+    color: ChartColor.CHART_2,
+    scaleLabels: undefined,
+    valueFormatter: undefined,
+  },
+};
+
+export const SpareGridWidth: Story = {
+  args: {
+    label: 'Carbon dioxide',
+    rows: ['00:00', '12:00'],
+    columns: ['Mon', 'Tue'],
+    values: [
+      [430, 480],
+      [520, 610],
+    ],
+    scaleLabels: undefined,
+    valueFormatter: undefined,
+  },
+};
+
+export const HiddenMissingDescription: Story = {
+  args: {
+    label: 'Carbon dioxide',
+    rows: ['00:00'],
+    columns: ['Mon'],
+    values: [[null]],
+    scaleLabels: undefined,
+    valueFormatter: undefined,
+  },
+};
+
 export const WithMissingValues: Story = {
   args: {
     label:

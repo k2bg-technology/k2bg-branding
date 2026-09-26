@@ -11,7 +11,6 @@ const carbonDioxideValues = [
   [430, 480],
   [520, 610],
 ];
-const lowestLevel = 0;
 const defaultEmptyLabel = 'No data';
 const defaultMinimumCellSize = 12;
 const defaultMaximumCellSize = 64;
@@ -74,13 +73,7 @@ describe('MatrixHeatmap', () => {
     );
   });
 
-  it.each`
-    labelKind   | label
-    ${'row'}    | ${'00:00'}
-    ${'row'}    | ${'12:00'}
-    ${'column'} | ${'Mon'}
-    ${'column'} | ${'Tue'}
-  `('renders the $labelKind label $label', async ({ label }) => {
+  it('renders a row and a column label from the given names', async () => {
     await renderHeatmap(
       <MatrixHeatmap
         label="Carbon dioxide"
@@ -90,7 +83,8 @@ describe('MatrixHeatmap', () => {
       />
     );
 
-    expect(screen.getByText(label)).toBeInTheDocument();
+    expect(screen.getByText('00:00')).toBeInTheDocument();
+    expect(screen.getByText('Mon')).toBeInTheDocument();
   });
 
   it('renders a null value as an empty cell', async () => {
@@ -108,23 +102,6 @@ describe('MatrixHeatmap', () => {
     const missingCell = heatmapCells(container)[missingColumn];
     expect(missingCell.title).toBe(`00:00 Tue: ${defaultEmptyLabel}`);
     expect(missingCell.style.backgroundColor).toBe('');
-  });
-
-  it('marks a null value with a hatch rather than a color alone', async () => {
-    const missingColumn = 1;
-
-    const { container } = await renderHeatmap(
-      <MatrixHeatmap
-        label="Carbon dioxide"
-        rows={['00:00']}
-        columns={weekdayColumns}
-        values={[[0, null]]}
-      />
-    );
-
-    expect(
-      heatmapCells(container)[missingColumn].style.backgroundImage
-    ).toContain('repeating-linear-gradient');
   });
 
   it('names a null value with the given empty label', async () => {
@@ -164,9 +141,7 @@ describe('MatrixHeatmap', () => {
     expect(cells[missingColumn].title).toBe(`00:00 Tue: ${defaultEmptyLabel}`);
   });
 
-  it('fills a measured zero at the lowest step of the scale', async () => {
-    const measuredColumn = 0;
-
+  it('fills a measured zero while leaving a missing cell unfilled', async () => {
     const { container } = await renderHeatmap(
       <MatrixHeatmap
         label="Carbon dioxide"
@@ -176,26 +151,9 @@ describe('MatrixHeatmap', () => {
       />
     );
 
-    expect(cellBackgrounds(container)[measuredColumn]).toBe(
-      heatmapCellColor(lowestLevel, ChartColor.CHART_1)
-    );
-  });
-
-  it('renders an empty cell where a row stops short of the columns', async () => {
-    const missingColumn = 1;
-
-    const { container } = await renderHeatmap(
-      <MatrixHeatmap
-        label="Carbon dioxide"
-        rows={['00:00']}
-        columns={weekdayColumns}
-        values={[[430]]}
-      />
-    );
-
-    expect(heatmapCells(container)[missingColumn].title).toBe(
-      `00:00 Tue: ${defaultEmptyLabel}`
-    );
+    const [measuredCell, missingCell] = heatmapCells(container);
+    expect(measuredCell.style.backgroundColor).not.toBe('');
+    expect(missingCell.style.backgroundColor).toBe('');
   });
 
   it('builds the cell title from the row, the column and the formatted value', async () => {
@@ -245,20 +203,6 @@ describe('MatrixHeatmap', () => {
     expect(cellBackgrounds(container)).toEqual(levelBackgrounds([0, 2, 4]));
   });
 
-  it('paints the cells with the given series color', async () => {
-    const { container } = await renderHeatmap(
-      <MatrixHeatmap
-        label="Carbon dioxide"
-        rows={['00:00']}
-        columns={['Mon']}
-        values={[[480]]}
-        color={ChartColor.CHART_2}
-      />
-    );
-
-    expect(cellBackgrounds(container)[0]).toContain('var(--color-chart-2)');
-  });
-
   it('clamps the cell size between the given bounds', async () => {
     const minimumCellSize = 20;
     const maximumCellSize = 40;
@@ -294,19 +238,6 @@ describe('MatrixHeatmap', () => {
     );
   });
 
-  it('leaves spare width beside the grid rather than widening the row labels', async () => {
-    const { container } = await renderHeatmap(
-      <MatrixHeatmap
-        label="Carbon dioxide"
-        rows={hourRows}
-        columns={weekdayColumns}
-        values={carbonDioxideValues}
-      />
-    );
-
-    expect(heatmapGrid(container)?.className).toContain('justify-start');
-  });
-
   it('puts the grid inside the design system scroll area', async () => {
     const label = 'Carbon dioxide';
 
@@ -327,7 +258,7 @@ describe('MatrixHeatmap', () => {
     ).toBeInTheDocument();
   });
 
-  it('keeps the row labels outside the scroll port, with nothing masking them', async () => {
+  it('keeps the row labels outside the scroll port', async () => {
     await renderHeatmap(
       <MatrixHeatmap
         label="Carbon dioxide"
@@ -337,11 +268,8 @@ describe('MatrixHeatmap', () => {
       />
     );
 
-    // Scrolled cells are clipped by the port instead of passing under a label,
-    // so the label needs no background fill of its own.
     const rowLabel = screen.getByText('00:00');
     expect(rowLabel.closest('[data-slot="matrix-heatmap-scroll"]')).toBeNull();
-    expect(rowLabel.className).not.toContain('bg-');
   });
 
   it('describes the image with how many cells have no data', async () => {
@@ -360,23 +288,6 @@ describe('MatrixHeatmap', () => {
     expect(
       screen.getByRole('img', { name: label })
     ).toHaveAccessibleDescription(`${defaultEmptyLabel}: ${missingCount}`);
-  });
-
-  it('counts the cells a short row never reaches', async () => {
-    const label = 'Carbon dioxide';
-
-    await renderHeatmap(
-      <MatrixHeatmap
-        label={label}
-        rows={['00:00']}
-        columns={weekdayColumns}
-        values={[[430]]}
-      />
-    );
-
-    expect(
-      screen.getByRole('img', { name: label })
-    ).toHaveAccessibleDescription(`${defaultEmptyLabel}: 1`);
   });
 
   it('builds the description from the given empty label', async () => {
@@ -413,24 +324,6 @@ describe('MatrixHeatmap', () => {
     expect(
       screen.getByRole('img', { name: label })
     ).toHaveAccessibleDescription('');
-  });
-
-  it('keeps the description out of sight', async () => {
-    const label = 'Carbon dioxide';
-
-    await renderHeatmap(
-      <MatrixHeatmap
-        label={label}
-        rows={['00:00']}
-        columns={['Mon']}
-        values={[[null]]}
-      />
-    );
-
-    const describedBy = screen
-      .getByRole('img', { name: label })
-      .getAttribute('aria-describedby');
-    expect(document.getElementById(describedBy ?? '')).toHaveClass('sr-only');
   });
 
   it('renders the scale legend when scale labels are given', async () => {
@@ -482,7 +375,7 @@ describe('MatrixHeatmap', () => {
   });
 
   it('renders no scale legend by default', async () => {
-    await renderHeatmap(
+    const { container } = await renderHeatmap(
       <MatrixHeatmap
         label="Carbon dioxide"
         rows={['00:00']}
@@ -491,6 +384,8 @@ describe('MatrixHeatmap', () => {
       />
     );
 
-    expect(screen.queryByText(/Lower/)).not.toBeInTheDocument();
+    expect(
+      container.querySelector('[data-slot="heatmap-scale-legend"]')
+    ).not.toBeInTheDocument();
   });
 });

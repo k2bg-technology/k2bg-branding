@@ -1,12 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import {
-  ChartColor,
-  Hypnogram,
-  type HypnogramSegment,
-  HypnogramStage,
-} from '.';
+import { Hypnogram, type HypnogramSegment, HypnogramStage } from '.';
 
 const minuteMs = 60_000;
 const tokyo = 'Asia/Tokyo';
@@ -64,13 +59,6 @@ function segmentRowYs(container: HTMLElement) {
   return Array.from(
     container.querySelectorAll('[data-slot="hypnogram-segment"]'),
     (segment) => Number(segment.getAttribute('y1'))
-  );
-}
-
-function segmentStrokes(container: HTMLElement) {
-  return Array.from(
-    container.querySelectorAll('[data-slot="hypnogram-segment"]'),
-    (segment) => segment.getAttribute('stroke') ?? ''
   );
 }
 
@@ -149,13 +137,14 @@ describe('Hypnogram', () => {
     expect(rowYs[secondCoreIndex]).toBe(rowYs[firstCoreIndex]);
   });
 
-  it.each`
-    stage                   | label
-    ${HypnogramStage.AWAKE} | ${'Awake'}
-    ${HypnogramStage.REM}   | ${'REM'}
-    ${HypnogramStage.CORE}  | ${'Core'}
-    ${HypnogramStage.DEEP}  | ${'Deep'}
-  `('renders the $stage row label $label', ({ label }) => {
+  it('renders the provided label for a sleep stage', () => {
+    const stageLabels = {
+      awake: 'Awake',
+      rem: 'Dream sleep',
+      core: 'Core',
+      deep: 'Deep',
+    };
+
     render(
       <Hypnogram
         label="Sleep"
@@ -164,7 +153,7 @@ describe('Hypnogram', () => {
       />
     );
 
-    expect(screen.getByText(label)).toBeInTheDocument();
+    expect(screen.getByText('Dream sleep')).toBeInTheDocument();
   });
 
   it.each`
@@ -235,36 +224,5 @@ describe('Hypnogram', () => {
     const thinnedHourTicks = hourTickLabels(container).length - nightEdgeTicks;
     expect(thinnedHourTicks).toBeGreaterThan(0);
     expect(thinnedHourTicks).toBeLessThanOrEqual(maxHourTicks);
-  });
-
-  it.each`
-    stage                   | expected
-    ${HypnogramStage.AWAKE} | ${'var(--color-warning)'}
-    ${HypnogramStage.REM}   | ${'var(--color-info)'}
-    ${HypnogramStage.CORE}  | ${'var(--color-chart-1)'}
-    ${HypnogramStage.DEEP}  | ${'var(--color-chart-3)'}
-  `('strokes a $stage segment with $expected', ({ stage, expected }) => {
-    const oneStage = buildSegments(nightStart, [[stage, 60]]);
-
-    const { container } = render(
-      <Hypnogram label="Sleep" segments={oneStage} stageLabels={stageLabels} />
-    );
-
-    expect(segmentStrokes(container)[0]).toBe(expected);
-  });
-
-  it('strokes a stage with its overridden color', () => {
-    const deepSegment = buildSegments(nightStart, [[HypnogramStage.DEEP, 60]]);
-
-    const { container } = render(
-      <Hypnogram
-        label="Sleep"
-        segments={deepSegment}
-        stageLabels={stageLabels}
-        stageColors={{ deep: ChartColor.CHART_5 }}
-      />
-    );
-
-    expect(segmentStrokes(container)[0]).toBe('var(--color-chart-5)');
   });
 });

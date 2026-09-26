@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, waitFor } from 'storybook/test';
 
-import { SankeyChart } from '.';
+import { ChartColor, SankeyChart } from '.';
 
 const thousandYen = (value: number) => `¥${value.toLocaleString('en-US')}k`;
 
@@ -89,6 +89,19 @@ export const TwoLevels: Story = {
     links: [
       { source: 'takeHome', target: 'spent', value: 410 },
       { source: 'takeHome', target: 'kept', value: 320 },
+    ],
+  },
+};
+
+export const NodeWithOwnColor: Story = {
+  args: {
+    nodes: [
+      { id: 'income', label: 'Income', color: ChartColor.SUCCESS },
+      { id: 'living', label: 'Living' },
+      { id: 'investment', label: 'Investment' },
+      { id: 'business', label: 'Business' },
+      { id: 'savings', label: 'Savings' },
+      { id: 'emergencyFund', label: 'Emergency fund' },
     ],
   },
 };

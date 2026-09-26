@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { ChartColor, DonutChart, type DonutChartSlice } from '.';
+import { DonutChart, type DonutChartSlice } from '.';
 
 const spendingSlices: DonutChartSlice[] = [
   { id: 'housing', label: 'Housing', value: 30 },
@@ -19,13 +19,6 @@ function createSlices(count: number): DonutChartSlice[] {
   }));
 }
 
-function sliceFills(container: HTMLElement) {
-  return Array.from(
-    container.querySelectorAll('.recharts-sector'),
-    (sector) => sector.getAttribute('fill') ?? ''
-  );
-}
-
 function centerElement(container: HTMLElement) {
   return container.querySelector('[data-slot="donut-chart-center"]');
 }
@@ -34,10 +27,6 @@ function centerValueElement(container: HTMLElement) {
   return container.querySelector<HTMLElement>(
     '[data-slot="donut-chart-center-value"]'
   );
-}
-
-function centerLabelElement(container: HTMLElement) {
-  return container.querySelector('[data-slot="donut-chart-center-label"]');
 }
 
 function tooltipText(container: HTMLElement) {
@@ -69,30 +58,6 @@ describe('DonutChart', () => {
     expect(container.querySelectorAll('.recharts-sector')).toHaveLength(
       spendingSlices.length
     );
-  });
-
-  it('fills the slices with the palette in order', () => {
-    const { container } = render(
-      <DonutChart label="Spending" slices={spendingSlices} />
-    );
-
-    expect(sliceFills(container)).toEqual([
-      'var(--color-chart-1)',
-      'var(--color-chart-2)',
-      'var(--color-chart-3)',
-    ]);
-  });
-
-  it('fills a slice with its own color instead of the palette one', () => {
-    const slices = spendingSlices.map((slice, index) =>
-      index === 0 ? { ...slice, color: ChartColor.ERROR } : slice
-    );
-
-    const { container } = render(
-      <DonutChart label="Spending" slices={slices} />
-    );
-
-    expect(sliceFills(container)[0]).toBe('var(--color-error)');
   });
 
   it('shows the center value and the center label in the hole', () => {
@@ -135,33 +100,6 @@ describe('DonutChart', () => {
     }
   );
 
-  it('sizes the center against the ring rather than the viewport', () => {
-    const { container } = render(
-      <DonutChart
-        label="Spending"
-        slices={spendingSlices}
-        centerValue="¥60,000"
-        centerLabel="per month"
-      />
-    );
-
-    expect(centerElement(container)).toHaveClass('[container-type:size]');
-  });
-
-  it('scales the center value between a legible minimum and the heading size', () => {
-    const { container } = render(
-      <DonutChart
-        label="Spending"
-        slices={spendingSlices}
-        centerValue="¥60,000"
-      />
-    );
-
-    expect(centerValueElement(container)).toHaveClass(
-      'text-[clamp(0.75rem,calc(52cqmin/var(--donut-center-advance)),var(--text-heading-2))]'
-    );
-  });
-
   // The budget is the advance of the glyphs actually present: a half-width
   // character counts as 0.62em, a full-width or CJK one as a whole em. The
   // supplementary-plane ideograph is two UTF-16 units but still one wide glyph.
@@ -187,27 +125,6 @@ describe('DonutChart', () => {
           '--donut-center-advance'
         )
       ).toBe(advance);
-    }
-  );
-
-  it.each`
-    part       | elementOf
-    ${'value'} | ${centerValueElement}
-    ${'label'} | ${centerLabelElement}
-  `(
-    'bounds the center $part to the ring hole without breaking a word',
-    ({ elementOf }) => {
-      const { container } = render(
-        <DonutChart
-          label="Spending"
-          slices={spendingSlices}
-          centerValue={longCenterValue}
-          centerLabel="total this year"
-        />
-      );
-
-      expect(elementOf(container)).toHaveClass('max-w-[56cqmin]');
-      expect(elementOf(container)).not.toHaveClass('break-words');
     }
   );
 

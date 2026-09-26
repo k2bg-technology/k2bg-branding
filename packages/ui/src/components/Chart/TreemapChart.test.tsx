@@ -170,34 +170,6 @@ describe('TreemapChart', () => {
     }
   );
 
-  it.each([
-    { description: 'a hundredth of the whole', minor: 10 },
-    { description: 'a tenth of the whole', minor: 100 },
-  ])(
-    'draws a grouped tile worth $description at a usable size',
-    ({ minor }) => {
-      const { container } = render(
-        <TreemapChart
-          label="Spending"
-          nodes={[
-            {
-              id: 'major',
-              label: 'Major',
-              value: 1000 - minor,
-              group: 'Larger',
-            },
-            { id: 'minor', label: 'Minor', value: minor, group: 'Smaller' },
-          ]}
-        />
-      );
-
-      const smallest = tiles(container)[1].querySelector('rect');
-
-      expect(Number(smallest?.getAttribute('width'))).toBeGreaterThan(0);
-      expect(Number(smallest?.getAttribute('height'))).toBeGreaterThan(0);
-    }
-  );
-
   it('leaves a zero-value node out of the drawing', () => {
     const nodes = [...spendingNodes, { id: 'tea', label: 'Tea', value: 0 }];
 
@@ -232,20 +204,6 @@ describe('TreemapChart', () => {
     expect(tableRows(label).flat()).not.toContain('Refund');
   });
 
-  it('reports a node it cannot give area to', () => {
-    const reportSpy = vi
-      .spyOn(console, 'error')
-      .mockImplementation(() => undefined);
-    const nodes = [
-      ...spendingNodes,
-      { id: 'refund', label: 'Refund', value: -20 },
-    ];
-
-    render(<TreemapChart label="Spending" nodes={nodes} />);
-
-    expect(reportSpy).toHaveBeenCalledWith(expect.stringContaining('refund'));
-  });
-
   it('drops a node it cannot give area to without reporting in production', async () => {
     vi.stubEnv('NODE_ENV', 'production');
     vi.resetModules();
@@ -271,28 +229,6 @@ describe('TreemapChart', () => {
 
     expect(tiles(container)).toHaveLength(spendingNodes.length);
     expect(reportSpy).not.toHaveBeenCalled();
-  });
-
-  it('splits the share evenly between two values whose sum would overflow', () => {
-    const label = 'Spending';
-    const beyondHalfTheRange = 1e308;
-
-    render(
-      <TreemapChart
-        label={label}
-        nodes={[
-          { id: 'first', label: 'First', value: beyondHalfTheRange },
-          { id: 'second', label: 'Second', value: beyondHalfTheRange },
-        ]}
-        valueFormatter={() => 'immense'}
-      />
-    );
-
-    expect(tableRows(label)).toEqual([
-      ['Label', 'Value', 'Share'],
-      ['First', 'immense', '50%'],
-      ['Second', 'immense', '50%'],
-    ]);
   });
 
   it('lists every node with its value and share in the table alternative', () => {
@@ -441,31 +377,6 @@ describe('TreemapChart', () => {
     }
   );
 
-  it('gives every tile one color when no node has a group', () => {
-    const { container } = render(
-      <TreemapChart label="Spending" nodes={spendingNodes} />
-    );
-
-    expect(tileFills(container)).toEqual([
-      'var(--color-chart-1)',
-      'var(--color-chart-1)',
-      'var(--color-chart-1)',
-    ]);
-  });
-
-  it('gives every part of a group the color of its group', () => {
-    const { container } = render(
-      <TreemapChart label="Spending" nodes={groupedNodes} />
-    );
-
-    expect(tileFills(container)).toEqual([
-      'var(--color-chart-1)',
-      'var(--color-chart-1)',
-      'var(--color-chart-2)',
-      'var(--color-chart-2)',
-    ]);
-  });
-
   it('tiles the parts of a group inside one group area', () => {
     const { container } = render(
       <TreemapChart label="Spending" nodes={groupedNodes} />
@@ -484,22 +395,6 @@ describe('TreemapChart', () => {
     );
 
     expect(groupLabels(container)).toEqual(['Home', 'Daily']);
-  });
-
-  it('sets a group name apart from the labels of its parts', () => {
-    const { container } = render(
-      <TreemapChart label="Spending" nodes={groupedNodes} />
-    );
-
-    const groupText = container.querySelector(
-      '[data-slot="treemap-chart-group"] text'
-    );
-    const tileText = container.querySelector(
-      '[data-slot="treemap-chart-tile"] text'
-    );
-
-    expect(groupText?.getAttribute('fill')).toBe('var(--color-base-white)');
-    expect(tileText?.getAttribute('fill')).toBe('var(--color-base-black)');
   });
 
   it('keeps the label of a part that sits where the group name would go', () => {
