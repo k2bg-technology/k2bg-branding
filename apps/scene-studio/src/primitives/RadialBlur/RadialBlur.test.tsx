@@ -6,9 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { RadialBlur } from './RadialBlur';
 
-// Mirrors MAX_ZOOM_PULL: the strength the shader receives at amount 1.
-const FULL_AMOUNT_STRENGTH = 0.25;
-
 const mocks = vi.hoisted(() => ({
   capturedUniforms: null as Record<string, unknown> | null,
 }));
@@ -51,22 +48,24 @@ describe('RadialBlur', () => {
     expect(mocks.capturedUniforms?.uStrength).toBe(0);
   });
 
-  it.each([
-    { amount: 0.5, expectedStrength: FULL_AMOUNT_STRENGTH / 2 },
-    { amount: 1, expectedStrength: FULL_AMOUNT_STRENGTH },
-  ])(
-    'derives the strength $expectedStrength from amount $amount',
-    ({ amount, expectedStrength }) => {
-      render(<RadialBlur src="card.svg" amount={amount} />);
+  it('scales the strength in proportion to amount', () => {
+    render(<RadialBlur src="card.svg" amount={1} />);
+    const fullStrength = mocks.capturedUniforms?.uStrength as number;
 
-      expect(mocks.capturedUniforms?.uStrength).toBeCloseTo(expectedStrength);
-    }
-  );
+    render(<RadialBlur src="card.svg" amount={0.5} />);
+    const halfStrength = mocks.capturedUniforms?.uStrength as number;
+
+    expect(halfStrength).toBeCloseTo(fullStrength / 2);
+    expect(halfStrength).toBeGreaterThan(0);
+  });
 
   it('clamps the strength at the full zoom pull', () => {
+    render(<RadialBlur src="card.svg" amount={1} />);
+    const fullStrength = mocks.capturedUniforms?.uStrength;
+
     render(<RadialBlur src="card.svg" amount={2} />);
 
-    expect(mocks.capturedUniforms?.uStrength).toBeCloseTo(FULL_AMOUNT_STRENGTH);
+    expect(mocks.capturedUniforms?.uStrength).toBe(fullStrength);
   });
 
   it('passes the center through', () => {

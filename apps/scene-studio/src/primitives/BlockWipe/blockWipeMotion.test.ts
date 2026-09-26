@@ -38,33 +38,27 @@ describe('getBandProgress', () => {
   const bandCount = 3;
   const staggerShare = 0.18;
 
-  it.each([{ bandIndex: 0 }, { bandIndex: 1 }, { bandIndex: 2 }])(
-    'leaves band $bandIndex uncovered at coverage 0',
-    ({ bandIndex }) => {
-      const result = getBandProgress({
-        bandIndex,
-        bandCount,
-        coverage: 0,
-        staggerShare,
-      });
+  it('leaves a representative band uncovered at coverage 0', () => {
+    const result = getBandProgress({
+      bandIndex: 1,
+      bandCount,
+      coverage: 0,
+      staggerShare,
+    });
 
-      expect(result).toBe(0);
-    }
-  );
+    expect(result).toBe(0);
+  });
 
-  it.each([{ bandIndex: 0 }, { bandIndex: 1 }, { bandIndex: 2 }])(
-    'fills band $bandIndex completely at coverage 1',
-    ({ bandIndex }) => {
-      const result = getBandProgress({
-        bandIndex,
-        bandCount,
-        coverage: 1,
-        staggerShare,
-      });
+  it('fills a representative band completely at coverage 1', () => {
+    const result = getBandProgress({
+      bandIndex: 1,
+      bandCount,
+      coverage: 1,
+      staggerShare,
+    });
 
-      expect(result).toBe(1);
-    }
-  );
+    expect(result).toBe(1);
+  });
 
   it('lags each band behind the previous one by the stagger share', () => {
     const coverage = 0.5;

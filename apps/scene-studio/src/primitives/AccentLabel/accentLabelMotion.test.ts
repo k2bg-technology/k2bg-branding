@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { durationsInFrames } from '../../tokens/motion';
-import { getAccentLabelMotion, TEXT_LAG_IN_FRAMES } from './accentLabelMotion';
+import { getAccentLabelMotion } from './accentLabelMotion';
 
 const restingTextOffsetInPx = 24;
 
@@ -25,13 +24,11 @@ describe('getAccentLabelMotion', () => {
     expect(result.textTranslateXInPx).toBeCloseTo(restingTextOffsetInPx);
   });
 
-  it('settles bar and text once the enter duration and the text lag have passed', () => {
+  it('settles bar and text by frame 38 after a 12-frame enter delay', () => {
     const enterDelayInFrames = 12;
-    const settledFrame =
-      enterDelayInFrames + durationsInFrames.enter + TEXT_LAG_IN_FRAMES;
 
     const result = getAccentLabelMotion({
-      frame: settledFrame,
+      frame: 38,
       enterDelayInFrames,
     });
 
