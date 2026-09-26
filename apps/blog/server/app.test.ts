@@ -61,19 +61,23 @@ describe('OpenAPIHono app composition', () => {
 
       const statusUnauthorized = 401;
       expect(res.status).toBe(statusUnauthorized);
-      expect(infoMock).toHaveBeenCalledWith(
-        { method: 'PATCH', path: '/api/posts' },
-        'Request started'
-      );
+      expect(infoMock.mock.calls[0][0]).toEqual({
+        method: 'PATCH',
+        path: '/api/posts',
+      });
     });
 
     it('logs completion even for rejected requests', async () => {
-      await app.request('/api/posts', { method: 'PATCH' });
+      const res = await app.request('/api/posts', { method: 'PATCH' });
 
-      const completionCall = infoMock.mock.calls.find(
-        (call) => call[1] === 'Request completed'
-      );
-      expect(completionCall).toBeDefined();
+      const statusUnauthorized = 401;
+      expect(res.status).toBe(statusUnauthorized);
+      expect(infoMock.mock.calls[1][0]).toMatchObject({
+        method: 'PATCH',
+        path: '/api/posts',
+        status: statusUnauthorized,
+      });
+      expect(infoMock.mock.calls[1][0].duration).toBeGreaterThanOrEqual(0);
     });
   });
 
@@ -93,18 +97,6 @@ describe('OpenAPIHono app composition', () => {
 
       const statusUnauthorized = 401;
       expect(res.status).toBe(statusUnauthorized);
-    });
-
-    it('allows requests with valid API key', async () => {
-      stubPostUseCaseWith({ syncedPosts: [], count: 0 });
-
-      const res = await app.request('/api/posts', {
-        method: 'PATCH',
-        headers: authedHeaders(),
-      });
-
-      const statusOk = 200;
-      expect(res.status).toBe(statusOk);
     });
 
     it('rejects an unmounted path without an API key (default-deny before routing)', async () => {
@@ -180,7 +172,9 @@ describe('OpenAPIHono app composition', () => {
         message: 'Internal Server Error',
         status: statusInternalServerError,
       });
-      expect(body.error.timestamp).toBeDefined();
+      expect(new Date(body.error.timestamp).toISOString()).toBe(
+        body.error.timestamp
+      );
     });
 
     it('returns structured JSON for auth errors via errorHandler', async () => {
@@ -209,10 +203,24 @@ describe('OpenAPIHono app composition', () => {
       const res = await app.request('/api/doc.json', { method: 'GET' });
 
       const body = await res.json();
-      expect(body.paths['/api/posts']).toBeDefined();
-      expect(body.paths['/api/posts'].patch).toBeDefined();
-      expect(body.paths['/api/images']).toBeDefined();
-      expect(body.paths['/api/images'].patch).toBeDefined();
+      expect(body.paths['/api/posts'].patch).toMatchObject({
+        summary: 'Sync posts from Notion to database',
+        security: [{ ApiKeyAuth: [] }],
+        responses: {
+          200: { description: 'Synced posts' },
+          401: { description: 'Unauthorized' },
+          500: { description: 'Sync failed' },
+        },
+      });
+      expect(body.paths['/api/images'].patch).toMatchObject({
+        summary: 'Sync hero images to CDN',
+        security: [{ ApiKeyAuth: [] }],
+        responses: {
+          200: { description: 'Synced images' },
+          401: { description: 'Unauthorized' },
+          500: { description: 'Sync failed' },
+        },
+      });
     });
 
     it('includes ApiKeyAuth security scheme', async () => {

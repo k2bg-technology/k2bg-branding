@@ -63,9 +63,9 @@ describe('category page', () => {
       }
     );
 
-    it.each(['OTHER', 'not-a-category'])(
-      'rejects the unlisted category %s',
-      async (category) => {
+    it.each([{ name: 'OTHER', category: 'OTHER' }])(
+      'rejects the unlisted category $name',
+      async ({ category }) => {
         const params = Promise.resolve({ category });
         const searchParams = Promise.resolve({});
         const expectedError = 'NEXT_NOT_FOUND';

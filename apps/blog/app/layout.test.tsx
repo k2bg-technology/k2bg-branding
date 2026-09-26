@@ -1,10 +1,6 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { metadata } from './layout';
-import {
-  BLOG_SITE_DESCRIPTION,
-  BLOG_SITE_NAME,
-  getBlogSiteBaseUrl,
-} from './siteMetadata';
+import { BLOG_SITE_DESCRIPTION, BLOG_SITE_NAME } from './siteMetadata';
 
 const { defaultOgImageUrl } = vi.hoisted(() => ({
   defaultOgImageUrl: 'https://example.com/og.png',
@@ -15,6 +11,10 @@ vi.mock('../infrastructure/di', () => ({
 }));
 
 describe('root layout metadata', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it('uses the site name as the default title and as the title template', () => {
     const expectedTitle = {
       default: BLOG_SITE_NAME,
@@ -34,13 +34,15 @@ describe('root layout metadata', () => {
     expect(result).toBe(expectedDescription);
   });
 
-  it('resolves relative metadata URLs against the configured base URL', () => {
-    const expectedBaseUrl = new URL(getBlogSiteBaseUrl()).href;
+  it('uses BLOG_SITE_BASE_URL as the public metadata base URL', async () => {
+    vi.stubEnv('BLOG_SITE_BASE_URL', 'https://blog.example.test/');
+    vi.resetModules();
 
-    const result = metadata.metadataBase;
+    const { metadata: configuredMetadata } = await import('./layout');
 
-    expect(result).toBeInstanceOf(URL);
-    expect(String(result)).toBe(expectedBaseUrl);
+    expect(String(configuredMetadata.metadataBase)).toBe(
+      'https://blog.example.test/'
+    );
   });
 
   it('shares the site name, description and default image over Open Graph', () => {
