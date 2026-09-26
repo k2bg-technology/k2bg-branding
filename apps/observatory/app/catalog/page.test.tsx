@@ -32,7 +32,39 @@ describe('table catalog page', () => {
     fetchCatalogMock.mockResolvedValue([]);
   });
 
-  it('queries only the datasets referenced by loaded definitions', async () => {
+  it('shows catalog rows only for datasets referenced by definitions', async () => {
+    const tablesByDataset: Record<string, object[]> = {
+      alpha: [
+        {
+          datasetId: 'alpha',
+          name: 'alpha_table',
+          type: 'table',
+          rowCount: 1,
+          sizeInBytes: 1,
+          lastModifiedAt: null,
+        },
+      ],
+      zeta: [
+        {
+          datasetId: 'zeta',
+          name: 'zeta_table',
+          type: 'table',
+          rowCount: 2,
+          sizeInBytes: 2,
+          lastModifiedAt: null,
+        },
+      ],
+      unrelated: [
+        {
+          datasetId: 'unrelated',
+          name: 'unrelated_table',
+          type: 'table',
+          rowCount: 3,
+          sizeInBytes: 3,
+          lastModifiedAt: null,
+        },
+      ],
+    };
     loadDashboardsMock.mockResolvedValue({
       definitions: [
         {
@@ -45,15 +77,24 @@ describe('table catalog page', () => {
       ],
       issues: [],
     });
+    fetchCatalogMock.mockImplementation(async ({ datasetIds }) =>
+      datasetIds.flatMap(
+        (datasetId: string) => tablesByDataset[datasetId] ?? []
+      )
+    );
 
     await renderPage();
 
-    expect(fetchCatalogMock).toHaveBeenCalledWith({
-      datasetIds: ['alpha', 'zeta'],
-    });
     expect(
-      screen.getByRole('heading', { name: 'Table catalog' })
+      screen.getByRole('rowheader', { name: 'alpha_table' })
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('rowheader', { name: 'zeta_table' })
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('rowheader', { name: 'unrelated_table' })
+    ).toBeNull();
+    expect(screen.getAllByRole('rowheader')).toHaveLength(2);
   });
 
   it.each([

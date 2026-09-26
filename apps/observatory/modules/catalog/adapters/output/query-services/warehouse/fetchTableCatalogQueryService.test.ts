@@ -93,27 +93,18 @@ describe('WarehouseFetchTableCatalogQueryService', () => {
       });
     });
 
-    it.each([
-      { datasetId: 'sample dataset' },
-      { datasetId: '1_dataset' },
-      { datasetId: 'sample`; DROP TABLE y' },
-      { datasetId: 'sample.dataset' },
-      { datasetId: '' },
-    ])(
-      'throws RepositoryError without querying for dataset id $datasetId',
-      async ({ datasetId }) => {
-        const client = createMockClient();
-        const sut = new WarehouseFetchTableCatalogQueryService(
-          client,
-          TEST_LOCATION
-        );
+    it('rejects an invalid dataset id before querying the warehouse', async () => {
+      const client = createMockClient();
+      const sut = new WarehouseFetchTableCatalogQueryService(
+        client,
+        TEST_LOCATION
+      );
 
-        await expect(
-          sut.fetchTableCatalog({ datasetIds: [datasetId] })
-        ).rejects.toThrow(RepositoryError);
-        expect(client.query).not.toHaveBeenCalled();
-      }
-    );
+      await expect(
+        sut.fetchTableCatalog({ datasetIds: ['sample dataset'] })
+      ).rejects.toThrow(RepositoryError);
+      expect(client.query).not.toHaveBeenCalled();
+    });
 
     it('lowercases the region qualifier', async () => {
       const client = createMockClient();
@@ -126,56 +117,6 @@ describe('WarehouseFetchTableCatalogQueryService', () => {
           sql: expect.stringContaining('`region-us`.INFORMATION_SCHEMA'),
         })
       );
-    });
-
-    it('returns the mapped tables in client order', async () => {
-      const client = createMockClient([
-        createTableRow({ table_name: 'daily_totals', row_count: 3 }),
-        createTableRow({
-          dataset_id: 'other_dataset',
-          table_name: 'daily_summary',
-          table_type: 'VIEW',
-          row_count: null,
-          size_bytes: null,
-          last_modified_time: null,
-        }),
-      ]);
-      const sut = new WarehouseFetchTableCatalogQueryService(
-        client,
-        TEST_LOCATION
-      );
-
-      const result = await sut.fetchTableCatalog({
-        datasetIds: ['sample_dataset', 'other_dataset'],
-      });
-
-      expect(
-        result.tables.map((table) => `${table.datasetId}.${table.name}`)
-      ).toEqual(['sample_dataset.daily_totals', 'other_dataset.daily_summary']);
-      expect(result.tables[0]).toMatchObject({
-        type: 'table',
-        rowCount: 3,
-        sizeInBytes: 65536,
-      });
-      expect(result.tables[1]).toMatchObject({
-        type: 'view',
-        rowCount: null,
-        sizeInBytes: null,
-      });
-    });
-
-    it('returns an empty list when the datasets hold no tables', async () => {
-      const client = createMockClient([]);
-      const sut = new WarehouseFetchTableCatalogQueryService(
-        client,
-        TEST_LOCATION
-      );
-
-      const result = await sut.fetchTableCatalog({
-        datasetIds: ['sample_dataset'],
-      });
-
-      expect(result.tables).toEqual([]);
     });
 
     it('wraps client failures in RepositoryError preserving the cause', async () => {

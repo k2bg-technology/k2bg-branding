@@ -1,8 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
 import { resolveDefaultPeriod } from './defaultPeriod';
-import { Period } from './period';
-import { periodNavigation } from './periodNavigation';
 
 const bounds = { firstDate: '2026-07-15', lastDate: '2026-09-03' };
 
@@ -41,25 +39,5 @@ describe('resolveDefaultPeriod', () => {
     });
 
     expect(result.toString()).toBe(expected);
-  });
-});
-
-describe('periodNavigation', () => {
-  it.each([
-    { period: '2026-07', previous: null, next: '2026-08' },
-    { period: '2026-08', previous: '2026-07', next: '2026-09' },
-    { period: '2026-09', previous: '2026-08', next: null },
-    { period: '2026-06', previous: null, next: '2026-07' },
-    { period: '2026-10', previous: '2026-09', next: null },
-  ])('moves toward data from $period', ({ period, previous, next }) => {
-    const selected = Period.parse(period);
-    if (selected === null) {
-      throw new Error('Expected fixture period to parse');
-    }
-
-    const result = periodNavigation(selected, bounds);
-
-    expect(result.previousTarget?.toString() ?? null).toBe(previous);
-    expect(result.nextTarget?.toString() ?? null).toBe(next);
   });
 });

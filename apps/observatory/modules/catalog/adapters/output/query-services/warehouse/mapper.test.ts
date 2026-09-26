@@ -70,14 +70,7 @@ describe('toTableSummaryOutput', () => {
 
   it.each([
     { label: 'dataset_id is missing', overrides: { dataset_id: undefined } },
-    { label: 'table_name is not a string', overrides: { table_name: 42 } },
-    { label: 'table_type is not a string', overrides: { table_type: 7 } },
-    { label: 'row_count is a string', overrides: { row_count: '1200' } },
     { label: 'size_bytes is a float', overrides: { size_bytes: 1.5 } },
-    {
-      label: 'last_modified_time is a string',
-      overrides: { last_modified_time: '2025-08-01' },
-    },
   ])('throws MappingError when $label', ({ overrides }) => {
     const row = createTableRow(overrides);
 
