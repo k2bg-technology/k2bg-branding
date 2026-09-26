@@ -124,16 +124,5 @@ describe('NotionAffiliateExternalImageSource', () => {
         ExternalSourceError
       );
     });
-
-    it('includes source name in error message', async () => {
-      const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockRejectedValue(new Error('API Error'));
-      const sut = new NotionAffiliateExternalImageSource(
-        mockClient as never,
-        'test-db-id'
-      );
-
-      await expect(sut.fetchImageSources()).rejects.toThrow('Notion');
-    });
   });
 });

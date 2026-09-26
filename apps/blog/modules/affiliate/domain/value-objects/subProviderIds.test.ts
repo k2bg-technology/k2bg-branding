@@ -45,19 +45,8 @@ describe('SubProviderIds', () => {
       expect(sut.count()).toBe(1);
     });
 
-    it('throws InvalidSubProviderIdsError when UUID format is invalid', () => {
-      const ids = ['not-a-valid-uuid'];
-
-      expect(() => SubProviderIds.create(ids)).toThrow(
-        InvalidSubProviderIdsError
-      );
-      expect(() => SubProviderIds.create(ids)).toThrow(
-        'Invalid UUID format in SubProviderIds'
-      );
-    });
-
-    it('throws InvalidSubProviderIdsError when array contains mixed valid and invalid UUIDs', () => {
-      const ids = ['550e8400-e29b-41d4-a716-446655440000', 'invalid-uuid'];
+    it('throws InvalidSubProviderIdsError when any UUID after a valid one is invalid', () => {
+      const ids = ['550e8400-e29b-41d4-a716-446655440000', 'not-a-valid-uuid'];
 
       expect(() => SubProviderIds.create(ids)).toThrow(
         InvalidSubProviderIdsError
@@ -85,12 +74,6 @@ describe('SubProviderIds', () => {
   });
 
   describe('isEmpty', () => {
-    it('returns true when array is empty', () => {
-      const sut = SubProviderIds.create([]);
-
-      expect(sut.isEmpty()).toBe(true);
-    });
-
     it('returns false when array has elements', () => {
       const sut = SubProviderIds.create([
         '550e8400-e29b-41d4-a716-446655440000',

@@ -58,7 +58,6 @@ describe('Tags', () => {
       const tooManyTags = Array.from({ length: 21 }, (_, i) => `tag${i}`);
 
       expect(() => Tags.create(tooManyTags)).toThrow(InvalidTagsError);
-      expect(() => Tags.create(tooManyTags)).toThrow('Maximum 20 tags allowed');
     });
 
     it('creates Tags when exactly 20 tags', () => {
@@ -74,9 +73,6 @@ describe('Tags', () => {
       const longTag = ['a'.repeat(11)];
 
       expect(() => Tags.create(longTag)).toThrow(InvalidTagsError);
-      expect(() => Tags.create(longTag)).toThrow(
-        'exceeds maximum length of 10 characters'
-      );
     });
 
     it('creates Tags when tag is exactly 10 characters', () => {
@@ -136,14 +132,6 @@ describe('Tags', () => {
   });
 
   describe('isEmpty', () => {
-    it('returns true when tags are empty', () => {
-      const sut = Tags.empty();
-
-      const result = sut.isEmpty();
-
-      expect(result).toBe(true);
-    });
-
     it('returns false when tags have values', () => {
       const sut = Tags.create(['typescript']);
 

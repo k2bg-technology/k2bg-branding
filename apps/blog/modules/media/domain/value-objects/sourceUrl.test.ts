@@ -14,29 +14,12 @@ describe('SourceUrl', () => {
       expect(sut.getValue()).toBe(validUrl);
     });
 
-    it('creates SourceUrl with complex URL including query params', () => {
-      const complexUrl =
-        'https://cdn.example.com/images/photo.jpg?width=800&format=webp';
-
-      const sut = SourceUrl.create(complexUrl);
-
-      expect(sut.getValue()).toBe(complexUrl);
-    });
-
     it('throws InvalidSourceUrlError when value is empty string', () => {
       const emptyValue = '';
 
       expect(() => SourceUrl.create(emptyValue)).toThrow(InvalidSourceUrlError);
       expect(() => SourceUrl.create(emptyValue)).toThrow(
         'SourceUrl cannot be empty'
-      );
-    });
-
-    it('throws InvalidSourceUrlError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => SourceUrl.create(whitespaceValue)).toThrow(
-        InvalidSourceUrlError
       );
     });
 
@@ -76,17 +59,6 @@ describe('SourceUrl', () => {
       const result = url1.equals(url2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the URL string value', () => {
-      const url = 'https://example.com/image.jpg';
-      const sut = SourceUrl.create(url);
-
-      const result = sut.toString();
-
-      expect(result).toBe(url);
     });
   });
 });

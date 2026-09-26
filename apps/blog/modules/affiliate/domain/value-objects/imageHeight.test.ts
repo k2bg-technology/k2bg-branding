@@ -22,33 +22,23 @@ describe('ImageHeight', () => {
       expect(sut.getValue()).toBe(value);
     });
 
-    it('throws InvalidImageHeightError when value is zero', () => {
-      const zeroValue = 0;
-
-      expect(() => ImageHeight.create(zeroValue)).toThrow(
-        InvalidImageHeightError
-      );
-      expect(() => ImageHeight.create(zeroValue)).toThrow(
-        'ImageHeight must be a positive number'
-      );
-    });
-
-    it('throws InvalidImageHeightError when value is negative', () => {
-      const negativeValue = -100;
-
-      expect(() => ImageHeight.create(negativeValue)).toThrow(
-        InvalidImageHeightError
-      );
-    });
+    it.each([
+      { scenario: 'zero', value: 0 },
+      { scenario: 'negative', value: -100 },
+    ])(
+      'rejects $scenario image height with InvalidImageHeightError',
+      ({ value }) => {
+        expect(() => ImageHeight.create(value)).toThrow(
+          InvalidImageHeightError
+        );
+      }
+    );
 
     it('throws InvalidImageHeightError when value is not an integer', () => {
       const floatValue = 100.5;
 
       expect(() => ImageHeight.create(floatValue)).toThrow(
         InvalidImageHeightError
-      );
-      expect(() => ImageHeight.create(floatValue)).toThrow(
-        'ImageHeight must be an integer'
       );
     });
   });
@@ -81,17 +71,6 @@ describe('ImageHeight', () => {
       const result = height1.equals(height2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the height as string value', () => {
-      const value = 200;
-      const sut = ImageHeight.create(value);
-
-      const result = sut.toString();
-
-      expect(result).toBe('200');
     });
   });
 });

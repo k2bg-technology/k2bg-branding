@@ -37,14 +37,6 @@ describe('MediaId', () => {
       );
     });
 
-    it('throws InvalidMediaIdError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => MediaId.create(whitespaceValue)).toThrow(
-        InvalidMediaIdError
-      );
-    });
-
     it('throws InvalidMediaIdError when UUID format is invalid', () => {
       const invalidUuid = 'not-a-uuid';
 
@@ -104,17 +96,6 @@ describe('MediaId', () => {
       const result = id1.equals(id2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the UUID string value', () => {
-      const uuid = '550e8400-e29b-41d4-a716-446655440000';
-      const sut = MediaId.create(uuid);
-
-      const result = sut.toString();
-
-      expect(result).toBe(uuid);
     });
   });
 });

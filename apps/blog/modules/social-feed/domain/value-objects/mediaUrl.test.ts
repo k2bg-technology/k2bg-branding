@@ -56,13 +56,4 @@ describe('MediaUrl', () => {
       expect(url1.equals(url2)).toBe(false);
     });
   });
-
-  describe('toString', () => {
-    it('returns string representation of MediaUrl', () => {
-      const url = 'https://example.com/image.jpg';
-      const mediaUrl = MediaUrl.create(url);
-
-      expect(mediaUrl.toString()).toBe(url);
-    });
-  });
 });

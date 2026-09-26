@@ -10,49 +10,57 @@ describe('FetchAllSlugs', () => {
     ...overrides,
   });
 
-  const createSlugRecords = (count: number): SlugRecord[] =>
-    Array.from({ length: count }, (_, i) => ({
-      id: `550e8400-e29b-41d4-a716-44665544000${i}`,
-      slug: `test-post-${i}`,
-      revisionDate: `2024-01-${String(i + 1).padStart(2, '0')}`,
-    }));
-
   describe('execute', () => {
-    it('returns all slugs', async () => {
-      const slugRecords = createSlugRecords(5);
+    it('selects descending slugs by default', async () => {
       const queryService = createMockQueryService({
-        fetchAllSlugs: vi.fn().mockResolvedValue(slugRecords),
+        fetchAllSlugs: async ({ orderBy }) =>
+          orderBy === 'desc'
+            ? [
+                {
+                  id: 'descending-id',
+                  slug: 'descending',
+                  revisionDate: '2024-01-02',
+                },
+              ]
+            : [
+                {
+                  id: 'ascending-id',
+                  slug: 'ascending',
+                  revisionDate: '2024-01-01',
+                },
+              ],
       });
       const sut = new FetchAllSlugs(queryService);
 
       const result = await sut.execute();
 
-      expect(result.slugs).toHaveLength(5);
-      expect(result.slugs[0]).toEqual({
-        id: slugRecords[0].id,
-        slug: slugRecords[0].slug,
-        revisionDate: slugRecords[0].revisionDate,
+      expect(result.slugs.map((slug) => slug.id)).toEqual(['descending-id']);
+    });
+
+    it('selects ascending slugs when requested', async () => {
+      const queryService = createMockQueryService({
+        fetchAllSlugs: async ({ orderBy }) =>
+          orderBy === 'asc'
+            ? [
+                {
+                  id: 'ascending-id',
+                  slug: 'ascending',
+                  revisionDate: '2024-01-01',
+                },
+              ]
+            : [
+                {
+                  id: 'descending-id',
+                  slug: 'descending',
+                  revisionDate: '2024-01-02',
+                },
+              ],
       });
-    });
-
-    it('uses default order when not specified', async () => {
-      const fetchAllSlugs = vi.fn().mockResolvedValue([]);
-      const queryService = createMockQueryService({ fetchAllSlugs });
       const sut = new FetchAllSlugs(queryService);
 
-      await sut.execute();
+      const result = await sut.execute({ orderBy: 'asc' });
 
-      expect(fetchAllSlugs).toHaveBeenCalledWith({ orderBy: 'desc' });
-    });
-
-    it('passes orderBy to query service', async () => {
-      const fetchAllSlugs = vi.fn().mockResolvedValue([]);
-      const queryService = createMockQueryService({ fetchAllSlugs });
-      const sut = new FetchAllSlugs(queryService);
-
-      await sut.execute({ orderBy: 'asc' });
-
-      expect(fetchAllSlugs).toHaveBeenCalledWith({ orderBy: 'asc' });
+      expect(result.slugs.map((slug) => slug.id)).toEqual(['ascending-id']);
     });
 
     it('returns empty array when no posts exist', async () => {

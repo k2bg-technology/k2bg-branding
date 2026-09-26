@@ -72,7 +72,7 @@ describe('DrizzleSearchPostSummariesQueryService', () => {
     expect(result.posts[0].title).toBe('TypeScript Tips');
   });
 
-  it('treats % and _ in the query as literal characters via escapeLike', async () => {
+  it('treats % in the query as a literal character', async () => {
     await seedAuthor();
     await insertArticle(
       '550e8400-e29b-41d4-a716-446655440020',
@@ -80,7 +80,7 @@ describe('DrizzleSearchPostSummariesQueryService', () => {
     );
     await insertArticle(
       '550e8400-e29b-41d4-a716-446655440021',
-      'Plain headline with no special chars'
+      'Profit jumped 500 in Q2'
     );
     const sut = new DrizzleSearchPostSummariesQueryService(getTestDb());
 
@@ -146,12 +146,14 @@ describe('DrizzleSearchPostSummariesQueryService', () => {
       orderBy: 'desc',
     });
 
-    const expectedDescIds = articles
-      .map((post) => post.id.getValue())
-      .sort()
-      .reverse();
-    expect(page1.posts.map((p) => p.id)).toEqual(expectedDescIds.slice(0, 2));
-    expect(page2.posts.map((p) => p.id)).toEqual(expectedDescIds.slice(2, 4));
+    expect(page1.posts.map((post) => post.id)).toEqual([
+      '550e8400-e29b-41d4-a716-446655440003',
+      '550e8400-e29b-41d4-a716-446655440002',
+    ]);
+    expect(page2.posts.map((post) => post.id)).toEqual([
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440000',
+    ]);
     const combinedIds = [...page1.posts, ...page2.posts].map((p) => p.id);
     expect(new Set(combinedIds).size).toBe(4);
   });

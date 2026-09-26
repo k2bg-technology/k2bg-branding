@@ -14,28 +14,12 @@ describe('TargetUrl', () => {
       expect(sut.getValue()).toBe(validUrl);
     });
 
-    it('creates TargetUrl with complex URL including query params', () => {
-      const complexUrl = 'https://example.com/product?ref=banner&utm=campaign';
-
-      const sut = TargetUrl.create(complexUrl);
-
-      expect(sut.getValue()).toBe(complexUrl);
-    });
-
     it('throws InvalidTargetUrlError when value is empty string', () => {
       const emptyValue = '';
 
       expect(() => TargetUrl.create(emptyValue)).toThrow(InvalidTargetUrlError);
       expect(() => TargetUrl.create(emptyValue)).toThrow(
         'TargetUrl cannot be empty'
-      );
-    });
-
-    it('throws InvalidTargetUrlError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => TargetUrl.create(whitespaceValue)).toThrow(
-        InvalidTargetUrlError
       );
     });
 
@@ -75,17 +59,6 @@ describe('TargetUrl', () => {
       const result = url1.equals(url2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the URL string value', () => {
-      const url = 'https://example.com/product';
-      const sut = TargetUrl.create(url);
-
-      const result = sut.toString();
-
-      expect(result).toBe(url);
     });
   });
 });

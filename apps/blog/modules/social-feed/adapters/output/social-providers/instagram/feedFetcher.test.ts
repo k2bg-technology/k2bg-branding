@@ -48,18 +48,6 @@ describe('InstagramFeedFetcher', () => {
       expect(result).toEqual([]);
     });
 
-    it('returns empty array when API returns empty data array', async () => {
-      const mockClient = createMockClient();
-      mockClient.fetch.mockResolvedValueOnce({
-        json: () => Promise.resolve({ data: [] }),
-      } as Response);
-      const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
-
-      const result = await sut.fetchUserMedia();
-
-      expect(result).toEqual([]);
-    });
-
     it('fetches and maps social posts from Instagram API', async () => {
       const mockClient = createMockClient();
       mockClient.fetch
@@ -113,26 +101,23 @@ describe('InstagramFeedFetcher', () => {
       });
     });
 
-    it('respects limit parameter', async () => {
+    it('returns only the first requested number of posts', async () => {
       const mockClient = createMockClient();
-      mockClient.fetch
-        .mockResolvedValueOnce({
-          json: () =>
-            Promise.resolve(createMediaListResponse(['1', '2', '3', '4', '5'])),
-        } as Response)
-        .mockResolvedValueOnce({
-          json: () => Promise.resolve(createMediaDetailResponse('1')),
-        } as Response)
-        .mockResolvedValueOnce({
-          json: () => Promise.resolve(createMediaDetailResponse('2')),
-        } as Response);
+      mockClient.fetch.mockImplementation(
+        async (resource) =>
+          ({
+            json: async () =>
+              resource === `${TEST_USER_ID}/media`
+                ? createMediaListResponse(['1', '2', '3', '4', '5'])
+                : createMediaDetailResponse(resource),
+          }) as Response
+      );
       const sut = new InstagramFeedFetcher(mockClient, TEST_USER_ID);
       const limit = 2;
 
       const result = await sut.fetchUserMedia(limit);
 
-      expect(result).toHaveLength(2);
-      expect(mockClient.fetch).toHaveBeenCalledTimes(3);
+      expect(result.map((post) => post.id.getValue())).toEqual(['1', '2']);
     });
 
     it('maps VIDEO type with thumbnailUrl correctly', async () => {

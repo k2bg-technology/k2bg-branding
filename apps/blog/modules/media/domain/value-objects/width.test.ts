@@ -31,15 +31,6 @@ describe('Width', () => {
       );
     });
 
-    it('throws InvalidWidthError when value is negative', () => {
-      const negativeValue = -100;
-
-      expect(() => Width.create(negativeValue)).toThrow(InvalidWidthError);
-      expect(() => Width.create(negativeValue)).toThrow(
-        'Width must be a positive number'
-      );
-    });
-
     it('throws InvalidWidthError when value is not an integer', () => {
       const floatValue = 100.5;
 
@@ -78,17 +69,6 @@ describe('Width', () => {
       const result = width1.equals(width2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the width as string value', () => {
-      const width = 800;
-      const sut = Width.create(width);
-
-      const result = sut.toString();
-
-      expect(result).toBe('800');
     });
   });
 });

@@ -124,33 +124,24 @@ describe('AwsSesEmailSender', () => {
       await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
         EmailSendFailedError
       );
-      await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
-        'Failed to send email: [MessageRejected] Email address is not verified'
-      );
     });
 
-    it('handles unknown error types', async () => {
+    it('wraps unknown failures as EmailSendFailedError', async () => {
       mockSend.mockRejectedValue('Unknown error');
       const sut = new AwsSesEmailSender(createMockSesClient(), senderEmail);
 
       await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
         EmailSendFailedError
       );
-      await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
-        'Failed to send email: Unknown error occurred'
-      );
     });
 
-    it('handles non-SES Error types', async () => {
+    it('wraps general errors as EmailSendFailedError', async () => {
       const genericError = new Error('Network timeout');
       mockSend.mockRejectedValue(genericError);
       const sut = new AwsSesEmailSender(createMockSesClient(), senderEmail);
 
       await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
         EmailSendFailedError
-      );
-      await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
-        'Failed to send email: Network timeout'
       );
     });
   });

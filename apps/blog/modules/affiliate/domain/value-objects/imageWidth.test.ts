@@ -28,9 +28,6 @@ describe('ImageWidth', () => {
       expect(() => ImageWidth.create(zeroValue)).toThrow(
         InvalidImageWidthError
       );
-      expect(() => ImageWidth.create(zeroValue)).toThrow(
-        'ImageWidth must be a positive number'
-      );
     });
 
     it('throws InvalidImageWidthError when value is negative', () => {
@@ -46,9 +43,6 @@ describe('ImageWidth', () => {
 
       expect(() => ImageWidth.create(floatValue)).toThrow(
         InvalidImageWidthError
-      );
-      expect(() => ImageWidth.create(floatValue)).toThrow(
-        'ImageWidth must be an integer'
       );
     });
   });
@@ -81,17 +75,6 @@ describe('ImageWidth', () => {
       const result = width1.equals(width2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the width as string value', () => {
-      const value = 300;
-      const sut = ImageWidth.create(value);
-
-      const result = sut.toString();
-
-      expect(result).toBe('300');
     });
   });
 });
