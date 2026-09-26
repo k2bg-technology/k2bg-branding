@@ -87,6 +87,19 @@ describe('SankeyChart', () => {
     );
   });
 
+  it('keeps every node when a link is dropped', () => {
+    const links = [
+      ...budgetLinks,
+      { source: 'unknown', target: 'savings', value: 5 },
+    ];
+
+    const { container } = render(
+      <SankeyChart label="Budget" nodes={budgetNodes} links={links} />
+    );
+
+    expect(nodeLabels(container)).toEqual(['Income', 'Savings', 'Spending']);
+  });
+
   it('names the hovered flow by its source and target node', () => {
     const { container } = render(
       <SankeyChart label="Budget" nodes={budgetNodes} links={budgetLinks} />
