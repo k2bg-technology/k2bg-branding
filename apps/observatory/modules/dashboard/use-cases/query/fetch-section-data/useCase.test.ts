@@ -12,6 +12,7 @@ function createDashboard(): DashboardDefinition {
     timeZone: 'Asia/Tokyo',
     locale: 'en-US',
     revalidate: 3_600,
+    defaultPeriod: 'latest-with-data',
     sections: [
       {
         id: 'headline',
@@ -47,7 +48,7 @@ describe('FetchSectionData', () => {
         plan.dateRange.lastDate === '2026-09-30' &&
         plan.measures[0]?.reduction === 'maximum' &&
         options.revalidate === 3_600
-          ? { values: [42] }
+          ? { buckets: [{ period: '2026-09', values: [42] }] }
           : null,
     };
     const sut = new FetchSectionData(queryService);
@@ -58,6 +59,6 @@ describe('FetchSectionData', () => {
       period,
     });
 
-    expect(result).toEqual({ values: [42] });
+    expect(result).toEqual({ buckets: [{ period: '2026-09', values: [42] }] });
   });
 });

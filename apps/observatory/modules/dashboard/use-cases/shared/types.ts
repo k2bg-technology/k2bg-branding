@@ -1,5 +1,3 @@
-import type { DateBounds } from '../../domain';
-
 export interface DefinitionIssue {
   fileName: string;
   path: string;
@@ -11,10 +9,6 @@ export interface QueryOptions {
   revalidate: number;
 }
 
-export interface PeriodBoundsResult {
-  bounds: DateBounds | null;
-}
-
 export interface SectionData {
-  values: (number | null)[];
+  buckets: { period: string; values: (number | null)[] }[];
 }

@@ -12,13 +12,17 @@ export function planStatTilesSection(
     sectionId: section.id,
     source: section.source,
     timeZone,
+    selectedPeriod: period.toString(),
     dateRange: {
-      firstDate: period.firstDate,
+      firstDate: section.tiles.some((tile) => tile.comparison !== undefined)
+        ? period.shift(-1).firstDate
+        : period.firstDate,
       lastDate: period.lastDate,
     },
     measures: section.tiles.map((tile) => ({
       column: tile.column,
       reduction: tile.reduction,
+      compares: tile.comparison !== undefined,
     })),
   };
 }

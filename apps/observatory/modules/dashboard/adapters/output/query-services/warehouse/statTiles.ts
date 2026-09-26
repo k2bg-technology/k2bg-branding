@@ -20,30 +20,15 @@ const aggregateNames = {
 
 function latestValueProjection(alias: string): string {
   return [
-    'CAST((SELECT',
+    'CAST(',
     `ARRAY_AGG(STRUCT(source_time, ${alias}) ORDER BY source_time DESC LIMIT 1)[SAFE_OFFSET(0)].${alias}`,
-    'FROM filtered) AS FLOAT64)',
+    'AS FLOAT64)',
     `AS ${alias}`,
   ].join(' ');
 }
 
 function latestDistinctCountProjection(alias: string, index: number): string {
-  return `CAST((SELECT COUNT(DISTINCT TO_JSON_STRING(${alias})) FROM filtered WHERE source_time = (SELECT MAX(source_time) FROM filtered)) AS FLOAT64) AS ${distinctCountAlias(index)}`;
-}
-
-function measureProjections(plan: SectionQueryPlan): string[] {
-  return plan.measures.flatMap((measure, index) => {
-    const alias = valueColumnAlias(index);
-    if (measure.reduction === Reduction.LATEST) {
-      return [
-        latestValueProjection(alias),
-        latestDistinctCountProjection(alias, index),
-      ];
-    }
-    return [
-      `CAST((SELECT ${aggregateNames[measure.reduction]}(${alias}) FROM filtered) AS FLOAT64) AS ${alias}`,
-    ];
-  });
+  return `CAST(COUNT(DISTINCT IF(source_time = latest_time, TO_JSON_STRING(${alias}), NULL)) AS FLOAT64) AS ${distinctCountAlias(index)}`;
 }
 
 export function buildStatTilesQuery(plan: SectionQueryPlan): BuiltQuery {
@@ -53,10 +38,22 @@ export function buildStatTilesQuery(plan: SectionQueryPlan): BuiltQuery {
     (measure, index) =>
       `CAST(${quoteIdentifier(measure.column)} AS FLOAT64) AS ${valueColumnAlias(index)}`
   );
-  const filteredSelections = [`${sourceTime} AS source_time`].concat(
-    valueSelections
-  );
-  const projections = measureProjections(plan);
+  const filteredSelections = [
+    `FORMAT_DATE('%Y-%m', ${calendarDate}) AS period`,
+    `${sourceTime} AS source_time`,
+  ].concat(valueSelections);
+  const projections = plan.measures.flatMap((measure, index) => {
+    const alias = valueColumnAlias(index);
+    if (measure.reduction === Reduction.LATEST) {
+      return [
+        latestValueProjection(alias),
+        latestDistinctCountProjection(alias, index),
+      ];
+    }
+    return [
+      `CAST(${aggregateNames[measure.reduction]}(${alias}) AS FLOAT64) AS ${alias}`,
+    ];
+  });
 
   const sql = [
     'WITH filtered AS (',
@@ -64,10 +61,12 @@ export function buildStatTilesQuery(plan: SectionQueryPlan): BuiltQuery {
     `FROM ${qualifiedView(plan.source.dataset, plan.source.view)}`,
     `WHERE ${calendarDate} >= CAST(@${PERIOD_START_PARAMETER} AS DATE)`,
     `AND ${calendarDate} <= CAST(@${PERIOD_END_PARAMETER} AS DATE)`,
-    ')',
-    `SELECT ${projections.join(',\n')}`,
-    'FROM (SELECT 1 AS singleton)',
-    'WHERE EXISTS (SELECT 1 FROM filtered)',
+    '),',
+    'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+    `SELECT filtered.period, ${projections.join(',\n')}`,
+    'FROM filtered JOIN bucket_times USING (period)',
+    'GROUP BY filtered.period',
+    'ORDER BY filtered.period',
   ].join('\n');
 
   const params: WarehouseQueryParams = {

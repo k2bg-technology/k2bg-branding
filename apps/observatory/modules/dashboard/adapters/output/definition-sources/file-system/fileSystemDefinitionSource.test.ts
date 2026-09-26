@@ -110,6 +110,7 @@ describe('FileSystemDefinitionSource', () => {
         expect(result.definitions).toHaveLength(1);
         expect(result.definitions[0]).toMatchObject({
           locale: 'en-US',
+          defaultPeriod: 'latest-with-data',
           revalidate: 86_400,
           sections: [{ tiles: [{ reduction: 'sum' }] }],
         });
@@ -119,6 +120,83 @@ describe('FileSystemDefinitionSource', () => {
             path: 'sections[0].kind',
           })
         );
+      }
+    );
+  });
+
+  it.each(['higher-is-better', 'lower-is-better', 'neutral'])(
+    'loads a %s comparison direction',
+    async (direction) => {
+      await withDefinitionDirectory(
+        {
+          'valid.json': createDefinition({
+            sections: [
+              createSection({
+                tiles: [
+                  {
+                    label: 'Total',
+                    column: 'total',
+                    format: { type: 'number' },
+                    comparison: { direction },
+                  },
+                ],
+              }),
+            ],
+          }),
+        },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions[0]?.sections[0]).toMatchObject({
+            tiles: [{ comparison: { direction } }],
+          });
+        }
+      );
+    }
+  );
+
+  it('keeps an explicit default period and label overrides', async () => {
+    const labels = {
+      period: 'Review month',
+      previousPeriod: 'Earlier month',
+      nextPeriod: 'Later month',
+    };
+    await withDefinitionDirectory(
+      {
+        'valid.json': createDefinition({
+          defaultPeriod: 'last-complete',
+          labels,
+        }),
+      },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions[0]).toMatchObject({
+          defaultPeriod: 'last-complete',
+          labels,
+        });
+      }
+    );
+  });
+
+  it('keeps a valid period source that differs from the section sources', async () => {
+    const periodSource = {
+      dataset: 'calendar',
+      view: 'months',
+      time: 'recorded_on',
+    };
+    await withDefinitionDirectory(
+      { 'valid.json': createDefinition({ periodSource }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions[0]?.periodSource).toEqual(periodSource);
       }
     );
   });
@@ -142,7 +220,7 @@ describe('FileSystemDefinitionSource', () => {
     {
       name: 'an unknown field',
       definition: createDefinition({ labels: { empty: 'Nothing here' } }),
-      path: '',
+      path: 'labels',
     },
     {
       name: 'an invalid locale',
@@ -288,4 +366,81 @@ describe('FileSystemDefinitionSource', () => {
       }
     );
   });
+
+  it.each([
+    {
+      name: 'period source',
+      definition: createDefinition({
+        periodSource: {
+          dataset: 'bad name',
+          view: 'monthly',
+          time: 'recorded_on',
+        },
+      }),
+      path: 'periodSource.dataset',
+    },
+    {
+      name: 'default period',
+      definition: createDefinition({ defaultPeriod: 'next-month' }),
+      path: 'defaultPeriod',
+    },
+    ...['period', 'previousPeriod', 'nextPeriod'].map((label) => ({
+      name: `empty ${label} label`,
+      definition: createDefinition({ labels: { [label]: '' } }),
+      path: `labels.${label}`,
+    })),
+    {
+      name: 'comparison field',
+      definition: createDefinition({
+        sections: [
+          createSection({
+            tiles: [
+              {
+                label: 'Total',
+                column: 'total',
+                format: { type: 'number' },
+                comparison: { direction: 'neutral', baseline: 'year' },
+              },
+            ],
+          }),
+        ],
+      }),
+      path: 'sections[0].tiles[0].comparison',
+    },
+    {
+      name: 'comparison direction',
+      definition: createDefinition({
+        sections: [
+          createSection({
+            tiles: [
+              {
+                label: 'Total',
+                column: 'total',
+                format: { type: 'number' },
+                comparison: { direction: 'sideways' },
+              },
+            ],
+          }),
+        ],
+      }),
+      path: 'sections[0].tiles[0].comparison.direction',
+    },
+  ])(
+    'reports an invalid $name with its file and JSON path',
+    async ({ definition, path }) => {
+      await withDefinitionDirectory(
+        { 'invalid.json': definition },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions).toHaveLength(0);
+          expect(result.issues).toContainEqual(
+            expect.objectContaining({ fileName: 'invalid.json', path })
+          );
+        }
+      );
+    }
+  );
 });

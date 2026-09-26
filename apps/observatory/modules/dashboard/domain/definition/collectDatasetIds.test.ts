@@ -10,6 +10,7 @@ function createDefinition(datasets: string[]): DashboardDefinition {
     timeZone: 'UTC',
     locale: 'en-US',
     revalidate: 86_400,
+    defaultPeriod: 'latest-with-data',
     sections: datasets.map((dataset, index) => ({
       id: `section_${index}`,
       title: 'Section',
@@ -37,5 +38,18 @@ describe('collectDatasetIds', () => {
     const result = collectDatasetIds(definitions);
 
     expect(result).toEqual(['alpha', 'beta', 'zeta']);
+  });
+
+  it('includes the period source dataset', () => {
+    const definition = createDefinition(['metrics']);
+    definition.periodSource = {
+      dataset: 'calendar',
+      view: 'months',
+      time: 'recorded_on',
+    };
+
+    const result = collectDatasetIds([definition]);
+
+    expect(result).toEqual(['calendar', 'metrics']);
   });
 });

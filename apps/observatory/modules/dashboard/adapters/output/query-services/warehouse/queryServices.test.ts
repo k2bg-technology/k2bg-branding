@@ -17,8 +17,9 @@ function createPlan(
     sectionId: 'headline',
     source: { dataset: 'metrics', view: 'events', time: 'recorded_on' },
     timeZone: 'UTC',
+    selectedPeriod: '2026-09',
     dateRange: { firstDate: '2026-09-01', lastDate: '2026-09-30' },
-    measures: [{ column: 'amount', reduction }],
+    measures: [{ column: 'amount', reduction, compares: false }],
   } satisfies SectionQueryPlan;
 }
 
@@ -48,6 +49,7 @@ describe('WarehouseFetchSectionDataQueryService', () => {
           return expectsReduction
             ? [
                 {
+                  period: '2026-09',
                   value_0: warehouseValue,
                   ...(reduction === 'latest' ? { distinct_count_0: 1 } : {}),
                 },
@@ -62,7 +64,9 @@ describe('WarehouseFetchSectionDataQueryService', () => {
         revalidate: 86_400,
       });
 
-      expect(result).toEqual({ values: [warehouseValue] });
+      expect(result).toEqual({
+        buckets: [{ period: '2026-09', values: [warehouseValue] }],
+      });
     }
   );
 
@@ -83,7 +87,7 @@ describe('WarehouseFetchSectionDataQueryService', () => {
 
   it('does not wrap a mapping failure as a repository failure', async () => {
     const client: WarehouseClient = {
-      query: async () => [{ value_0: 'not-a-number' }],
+      query: async () => [{ period: '2026-09', value_0: 'not-a-number' }],
     };
     const sut = new WarehouseFetchSectionDataQueryService(client);
 

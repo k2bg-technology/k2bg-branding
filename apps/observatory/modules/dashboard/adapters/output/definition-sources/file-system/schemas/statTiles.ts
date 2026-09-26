@@ -5,6 +5,7 @@ import {
   Reduction,
   SectionKind,
   SectionWidth,
+  type SourceDefinition,
   type StatTileDefinition,
   type StatTilesSection,
   type TimeBinding,
@@ -27,11 +28,11 @@ const timeBindingSchema = z.union([
   }),
 ]) satisfies z.ZodType<TimeBinding>;
 
-const sourceSchema = z.strictObject({
+export const sourceSchema = z.strictObject({
   dataset: identifierSchema,
   view: identifierSchema,
   time: timeBindingSchema,
-});
+}) satisfies z.ZodType<SourceDefinition>;
 
 const valueFormatSchema = z.discriminatedUnion('type', [
   z.strictObject({ type: z.literal('number') }),
@@ -56,6 +57,11 @@ const tileSchemaBase = z.strictObject({
     .default(Reduction.SUM),
   format: valueFormatSchema,
   unit: z.string().min(1).optional(),
+  comparison: z
+    .strictObject({
+      direction: z.enum(['higher-is-better', 'lower-is-better', 'neutral']),
+    })
+    .optional(),
 });
 const tileSchema = tileSchemaBase satisfies z.ZodType<
   StatTileDefinition,

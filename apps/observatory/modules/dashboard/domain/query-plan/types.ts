@@ -8,6 +8,7 @@ export interface DateRange {
 export interface MeasureQueryPlan {
   column: string;
   reduction: Reduction;
+  compares: boolean;
 }
 
 export interface SectionQueryPlan {
@@ -16,5 +17,6 @@ export interface SectionQueryPlan {
   source: SourceDefinition;
   timeZone: string;
   dateRange: DateRange;
+  selectedPeriod: string;
   measures: MeasureQueryPlan[];
 }

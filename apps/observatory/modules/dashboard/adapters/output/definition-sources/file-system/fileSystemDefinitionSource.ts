@@ -118,7 +118,10 @@ export class FileSystemDefinitionSource implements DefinitionSource {
   constructor(configuredDirectory?: string) {
     this.directory = configuredDirectory
       ? resolve(configuredDirectory)
-      : resolve(process.cwd(), DEFAULT_DEFINITION_DIRECTORY);
+      : resolve(
+          /* turbopackIgnore: true */ process.cwd(),
+          DEFAULT_DEFINITION_DIRECTORY
+        );
   }
 
   async load(): Promise<DefinitionSourceResult> {
