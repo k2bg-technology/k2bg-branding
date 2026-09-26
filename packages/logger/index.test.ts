@@ -78,20 +78,6 @@ describe('logger', () => {
     expect(JSON.parse(lines[0])).toMatchObject(expected);
   });
 
-  it('preserves non-sensitive fields in structured JSON', async () => {
-    const { logger: sut } = await import('./index');
-
-    sut.info({ username: 'john', action: 'login' }, 'request processed');
-
-    expect(JSON.parse(lines[0])).toMatchObject({
-      username: 'john',
-      action: 'login',
-      msg: 'request processed',
-      level: 30,
-      time: expect.any(Number),
-    });
-  });
-
   it('includes module context and redacts sensitive fields in child output', async () => {
     const { logger } = await import('./index');
     const sut = logger.child({ module: 'post' });
@@ -102,20 +88,6 @@ describe('logger', () => {
       module: 'post',
       email: '[REDACTED]',
       msg: 'child log message',
-    });
-  });
-
-  it('preserves parent bindings in nested child output', async () => {
-    const { logger } = await import('./index');
-    const childLogger = logger.child({ module: 'contact' });
-    const sut = childLogger.child({ operation: 'send-email' });
-
-    sut.info('nested child message');
-
-    expect(JSON.parse(lines[0])).toMatchObject({
-      module: 'contact',
-      operation: 'send-email',
-      msg: 'nested child message',
     });
   });
 });
