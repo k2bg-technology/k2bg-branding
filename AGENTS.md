@@ -146,9 +146,8 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   dashboards never `notFound()` on data failures.
 - Env vars: `WAREHOUSE_PROJECT_ID` and `WAREHOUSE_LOCATION` (required),
   `GOOGLE_APPLICATION_CREDENTIALS` and `OBSERVATORY_DASHBOARDS_DIR` (optional) — see
-  `apps/observatory/.env.example`. Datasets are per data source: each domain module
-  declares `WAREHOUSE_<DOMAIN>_DATASET_ID` (role-named variable, dataset id as the
-  value) so data-source product names never appear in code.
+  `apps/observatory/.env.example`. Each dashboard definition names its dataset.
+  `/` lists dashboards and `/catalog` lists the referenced datasets' tables and views.
 - Visualization components belong in `packages/ui`, not in the app.
 
 ### Key Integrations
@@ -332,7 +331,7 @@ See `turbo.json` for the complete env list. Critical variables:
 - `API_KEY` — Hono server authentication (`x-api-key` header).
 - Database connection strings for Drizzle/PostgreSQL.
 - `WAREHOUSE_PROJECT_ID` / `WAREHOUSE_LOCATION` — Observatory warehouse reads;
-  `WAREHOUSE_<DOMAIN>_DATASET_ID` per domain module; `OBSERVATORY_DASHBOARDS_DIR`
+  `OBSERVATORY_DASHBOARDS_DIR`
   (optional) names the directory holding dashboard definition JSON files;
   `GOOGLE_APPLICATION_CREDENTIALS` (optional) points Application Default Credentials
   at a service-account key.

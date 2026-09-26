@@ -1,1 +1,1 @@
-export type { TableSummaryOutput } from './types';
+export { type TableSummaryOutput, TableType } from './types';

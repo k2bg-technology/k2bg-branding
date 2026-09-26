@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { FetchTableCatalog } from '../../modules/catalog/use-cases';
+import { FetchTableCatalog, TableType } from '../../modules/catalog/use-cases';
 import type { WarehouseClient, WarehouseRow } from '../warehouse';
 import { createFetchTableCatalogUseCase } from './catalog';
 
@@ -18,8 +18,9 @@ const TEST_LOCATION = 'asia-northeast1';
 
 function createTableRow(): WarehouseRow {
   return {
-    dataset_id: 'finance',
-    table_name: 'transactions',
+    dataset_id: 'sample_dataset',
+    table_name: 'daily_totals',
+    table_type: 'BASE TABLE',
     row_count: 1200,
     size_bytes: 65536,
     last_modified_time: 1_754_006_400_000,
@@ -40,11 +41,12 @@ describe('createFetchTableCatalogUseCase', () => {
     queryMock.mockResolvedValue([createTableRow()]);
     const sut = createFetchTableCatalogUseCase();
 
-    const tables = await sut.execute();
+    const tables = await sut.execute({ datasetIds: ['sample_dataset'] });
 
     expect(queryMock).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'table-catalog',
+        params: { dataset_0: 'sample_dataset' },
         sql: expect.stringContaining(
           `\`region-${TEST_LOCATION}\`.INFORMATION_SCHEMA.TABLE_STORAGE`
         ),
@@ -52,8 +54,9 @@ describe('createFetchTableCatalogUseCase', () => {
     );
     expect(tables).toEqual([
       {
-        datasetId: 'finance',
-        name: 'transactions',
+        datasetId: 'sample_dataset',
+        name: 'daily_totals',
+        type: TableType.TABLE,
         rowCount: 1200,
         sizeInBytes: 65536,
         lastModifiedAt: '2025-08-01T00:00:00.000Z',

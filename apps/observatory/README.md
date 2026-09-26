@@ -2,7 +2,7 @@
 
 ![An observatory on a hilltop at night, watching over a city skyline that dissolves into glowing charts and constellation graphs](public/images/hero.jpg)
 
-A **Next.js** application that visualizes accumulated personal data — finances, health, home environment, and web analytics — in one place. It runs locally only and is the web surface of the Observatory concept. Part of the [K2BG Branding monorepo](../../README.md).
+A **Next.js** application that renders dashboards from JSON definitions of warehouse views, columns, and sections. The dashboard index at `/` lists loaded definitions, and `/catalog` lists the tables and views in their referenced datasets. It runs locally only and is part of the [K2BG Branding monorepo](../../README.md).
 
 ## Technology Stack
 
@@ -40,7 +40,7 @@ pnpm -F observatory dev
 pnpm dev
 ```
 
-Open [http://localhost:3003](http://localhost:3003). The dashboard reads from the warehouse, so configure the [environment variables](#environment-variables) and authenticate first:
+Open [http://localhost:3003](http://localhost:3003). Dashboard sections and the table catalog read from the warehouse, so configure the [environment variables](#environment-variables) and authenticate first:
 
 ```bash
 gcloud auth application-default login
@@ -62,17 +62,20 @@ pnpm -F observatory typecheck  # Run TypeScript checks
 apps/observatory/
 ├── app/
 │   ├── globals.css            # Design-token and shared UI style imports
-│   ├── layout.tsx             # Root layout and metadata
-│   └── page.tsx               # Dashboard entry page (rendered per request)
+│   ├── layout.tsx             # Root layout and dashboard navigation
+│   ├── page.tsx               # Dashboard index
+│   ├── dashboards/[id]/       # Definition-driven dashboard route
+│   └── catalog/               # Referenced-dataset table catalog route
 ├── components/
-│   └── table-catalog/         # Table catalog section and its unavailable state
+│   ├── dashboard/             # Dashboard sections and states
+│   ├── site-header/           # Site navigation
+│   └── table-catalog/         # Table catalog and its unavailable state
 ├── infrastructure/
 │   ├── di/                    # Use-case factories (constructor injection)
 │   └── warehouse/             # Warehouse client (BigQuery) + data-cache wrapper
 ├── modules/
-│   └── catalog/               # Domain module: every table across the project's datasets
-│       ├── use-cases/         # Use cases, query-service ports, read models
-│       └── adapters/          # Warehouse query services, mappers, errors, logger
+│   ├── dashboard/             # Definition model, loader, and section queries
+│   └── catalog/               # Referenced-dataset table and view metadata
 ├── public/
 │   └── images/                # Static assets (hero image)
 ├── .env.example               # Environment variable template
@@ -80,7 +83,7 @@ apps/observatory/
 └── vitest.config.mts          # Test configuration
 ```
 
-Every warehouse read goes through `WarehouseClient.query()`, which caches the rows in the Next.js data cache for the `revalidate` window declared by the query (the table catalog — read from the region-scoped `INFORMATION_SCHEMA.TABLE_STORAGE` view — uses one day). Adapters wrap driver failures in `RepositoryError`; the page renders an inline "Warehouse data unavailable" state instead of crashing.
+Every warehouse read goes through `WarehouseClient.query()`, which caches rows in the Next.js data cache for the query's `revalidate` window. The table catalog joins region-scoped `INFORMATION_SCHEMA.TABLES` and `INFORMATION_SCHEMA.TABLE_STORAGE` metadata and caches the result for one day. Adapters wrap driver failures in `RepositoryError`; data failures render inline unavailable states.
 
 ## Dashboard Definitions
 
@@ -104,8 +107,6 @@ GOOGLE_APPLICATION_CREDENTIALS=
 - `WAREHOUSE_LOCATION` — region of the warehouse datasets, e.g. `asia-northeast1` (required; qualifies the region-scoped metadata views).
 - `OBSERVATORY_DASHBOARDS_DIR` — directory containing dashboard definition JSON files (optional; defaults to `dashboards/` under the Observatory app directory).
 - `GOOGLE_APPLICATION_CREDENTIALS` — path to a service-account key for Application Default Credentials (optional; leave unset after `gcloud auth application-default login`).
-
-Datasets are organised per data source. Each domain module declares its own `WAREHOUSE_<DOMAIN>_DATASET_ID` variable (for example `WAREHOUSE_FINANCE_DATASET_ID`); the variable name is the role, the value is the dataset id, so data-source product names stay out of the code.
 
 The warehouse SDK runs only in Node.js: all query code lives in server components and `server-only` modules.
 
