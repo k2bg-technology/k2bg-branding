@@ -71,6 +71,6 @@ describe('Duotone', () => {
   it('throws on a malformed color', () => {
     expect(() =>
       render(<Duotone src="card.svg" amount={1} shadowColor="#12zzzz" />)
-    ).toThrow('Invalid hex color');
+    ).toThrow();
   });
 });

@@ -1,15 +1,27 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render } from '@testing-library/react';
 import type { PropsWithChildren } from 'react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { VisualShowcase } from './VisualShowcase';
+
+const mocks = vi.hoisted(() => ({ offthreadVideo: vi.fn() }));
 
 vi.mock('remotion', async (importOriginal) => {
   const actual = await importOriginal<typeof import('remotion')>();
   return {
     ...actual,
     AbsoluteFill: ({ children }: PropsWithChildren) => <div>{children}</div>,
+    OffthreadVideo: ({
+      src,
+      startFrom,
+    }: {
+      src: string;
+      startFrom?: number;
+    }) => {
+      mocks.offthreadVideo({ src, startFrom });
+      return null;
+    },
     Sequence: ({ children }: PropsWithChildren) => <div>{children}</div>,
     useCurrentFrame: () => 30,
     useVideoConfig: () => ({ fps: 30 }),
@@ -34,32 +46,22 @@ vi.mock('@remotion/transitions', () => {
 
 vi.mock('@remotion/transitions/fade', () => ({ fade: vi.fn() }));
 
-vi.mock('../../primitives', () => ({
+vi.mock('../../primitives', async () => ({
+  MediaFrame: (await import('../../primitives/MediaFrame/MediaFrame'))
+    .MediaFrame,
   BrandOutro: ({ cta }: { cta?: string }) => (
     <div data-testid="brand-outro">{cta}</div>
   ),
   Caption: ({ text }: { text: string }) => <p data-testid="caption">{text}</p>,
   GradientOverlay: () => <div data-testid="gradient-overlay" />,
   Logo: () => <div data-testid="logo" />,
-  MediaFrame: ({
-    mediaType,
-    src,
-    startFromInFrames,
-  }: {
-    mediaType: string;
-    src: string;
-    startFromInFrames?: number;
-  }) => (
-    <div
-      data-testid="media-frame"
-      data-media-type={mediaType}
-      data-src={src}
-      data-start-from-in-frames={startFromInFrames}
-    />
-  ),
   SafeArea: ({ children }: PropsWithChildren) => <div>{children}</div>,
   VideoTitle: ({ title }: { title: string }) => <h1>{title}</h1>,
 }));
+
+beforeEach(() => {
+  mocks.offthreadVideo.mockClear();
+});
 
 afterEach(() => {
   cleanup();
@@ -67,11 +69,11 @@ afterEach(() => {
 
 describe('VisualShowcase', () => {
   it.each([
-    { startFromInSeconds: 1.5, expectedSourceFrame: '45' },
-    { startFromInSeconds: 1.52, expectedSourceFrame: '46' },
-    { startFromInSeconds: undefined, expectedSourceFrame: null },
+    { startFromInSeconds: 1.5, expectedSourceFrame: 45 },
+    { startFromInSeconds: 1.52, expectedSourceFrame: 46 },
+    { startFromInSeconds: undefined, expectedSourceFrame: undefined },
   ])(
-    'passes source start $startFromInSeconds as frame $expectedSourceFrame',
+    'starts the video at source frame $expectedSourceFrame for $startFromInSeconds seconds',
     ({ startFromInSeconds, expectedSourceFrame }) => {
       render(
         <VisualShowcase
@@ -87,10 +89,10 @@ describe('VisualShowcase', () => {
         />
       );
 
-      const mediaFrame = screen.getByTestId('media-frame');
-      expect(mediaFrame.getAttribute('data-start-from-in-frames')).toBe(
-        expectedSourceFrame
-      );
+      expect(mocks.offthreadVideo).toHaveBeenCalledWith({
+        src: 'https://example.com/clip.mp4',
+        startFrom: expectedSourceFrame,
+      });
     }
   );
 });

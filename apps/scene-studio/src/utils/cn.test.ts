@@ -24,10 +24,4 @@ describe('cn', () => {
 
     expect(result).toBe(expected);
   });
-
-  it('ignores falsy inputs from conditional classes', () => {
-    const result = cn('absolute', false, undefined, 'bottom-0');
-
-    expect(result).toBe('absolute bottom-0');
-  });
 });

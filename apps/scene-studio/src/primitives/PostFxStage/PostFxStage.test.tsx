@@ -94,13 +94,23 @@ describe('PostFxStage', () => {
 
   it('stacks both effects when both are requested', () => {
     render(
-      <PostFxStage bloom={{}} depthOfField={{}}>
+      <PostFxStage
+        bloom={{ intensity: 1.5, luminanceThreshold: 0.4 }}
+        depthOfField={{ focusDistance: 0.3, focalLength: 0.1, bokehScale: 2 }}
+      >
         <span data-testid="scene" />
       </PostFxStage>
     );
 
-    expect(mocks.bloomProps).not.toBeNull();
-    expect(mocks.depthOfFieldProps).not.toBeNull();
+    expect(mocks.bloomProps).toMatchObject({
+      intensity: 1.5,
+      luminanceThreshold: 0.4,
+    });
+    expect(mocks.depthOfFieldProps).toMatchObject({
+      focusDistance: 0.3,
+      focalLength: 0.1,
+      bokehScale: 2,
+    });
   });
 
   it('restores the default tone mapping whenever the composer mounts', () => {

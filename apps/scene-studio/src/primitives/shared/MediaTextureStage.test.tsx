@@ -13,7 +13,6 @@ const mocks = vi.hoisted(() => ({
   imageTexture: null as Texture | null,
   previewTexture: null as Texture | null,
   offthreadTexture: null as Texture | null,
-  useOffthreadVideoTexture: vi.fn(() => mocks.offthreadTexture),
 }));
 
 vi.mock('remotion', () => ({
@@ -34,7 +33,13 @@ vi.mock('@remotion/three', () => ({
     <div data-testid="three-canvas">{children}</div>
   ),
   useVideoTexture: () => mocks.previewTexture,
-  useOffthreadVideoTexture: mocks.useOffthreadVideoTexture,
+  // Mirrors Remotion: the offthread hook throws outside of rendering.
+  useOffthreadVideoTexture: () => {
+    if (!mocks.environment.isRendering) {
+      throw new Error('useOffthreadVideoTexture called outside of rendering');
+    }
+    return mocks.offthreadTexture;
+  },
 }));
 
 vi.mock('@react-three/fiber', () => ({
@@ -91,7 +96,6 @@ describe('MediaTextureStage', () => {
 
     expect(screen.getByTestId('preview-video')).toBeTruthy();
     expect(screen.getByTestId('scene').textContent).toBe('preview');
-    expect(mocks.useOffthreadVideoTexture).not.toHaveBeenCalled();
   });
 
   it('uses the offthread texture without a video element while rendering', () => {

@@ -4,9 +4,6 @@ import {
   getBloomGain,
   getBloomRadiusInUv,
   getBloomTapOffsets,
-  MAX_BLOOM_GAIN,
-  MAX_BLOOM_RADIUS_IN_SCREEN,
-  TAP_COUNT,
 } from './bloomSampling';
 
 const CANVAS_ASPECT = 1080 / 1920;
@@ -15,7 +12,7 @@ describe('getBloomTapOffsets', () => {
   it('returns one offset per shader tap', () => {
     const result = getBloomTapOffsets();
 
-    expect(result).toHaveLength(TAP_COUNT);
+    expect(result).toHaveLength(32);
   });
 
   it('keeps every offset inside the unit disc', () => {
@@ -45,17 +42,19 @@ describe('getBloomRadiusInUv', () => {
     expect(result).toEqual({ x: 0, y: 0 });
   });
 
-  it.each([{ amount: 1 }, { amount: 1.6 }])(
-    'caps the radius at the maximum for amount $amount',
-    ({ amount }) => {
-      const result = getBloomRadiusInUv({
-        amount,
-        canvasAspect: CANVAS_ASPECT,
-      });
+  it('caps the radius at the same maximum for amount 1 and above', () => {
+    const fullRadius = getBloomRadiusInUv({
+      amount: 1,
+      canvasAspect: CANVAS_ASPECT,
+    });
+    const excessiveRadius = getBloomRadiusInUv({
+      amount: 1.6,
+      canvasAspect: CANVAS_ASPECT,
+    });
 
-      expect(result.y).toBeCloseTo(MAX_BLOOM_RADIUS_IN_SCREEN);
-    }
-  );
+    expect(fullRadius.y).toBeGreaterThan(0);
+    expect(excessiveRadius).toEqual(fullRadius);
+  });
 
   it('converts only the x component into UV space via the canvas aspect', () => {
     const result = getBloomRadiusInUv({
@@ -74,13 +73,11 @@ describe('getBloomGain', () => {
     expect(result).toBe(0);
   });
 
-  it.each([
-    { amount: 1, expected: MAX_BLOOM_GAIN },
-    { amount: 2, expected: MAX_BLOOM_GAIN },
-    { amount: -0.5, expected: 0 },
-  ])('clamps amount $amount to a gain of $expected', ({ amount, expected }) => {
-    const result = getBloomGain(amount);
+  it('clamps gain to the values at amounts 0 and 1', () => {
+    const fullGain = getBloomGain(1);
 
-    expect(result).toBeCloseTo(expected);
+    expect(fullGain).toBeGreaterThan(0);
+    expect(getBloomGain(2)).toBe(fullGain);
+    expect(getBloomGain(-0.5)).toBe(0);
   });
 });

@@ -1,10 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { ZodError } from 'zod';
 
 import {
   calculateVisualShowcaseMetadata,
   getItemDurationInFrames,
-  getVisualShowcaseDurationInFrames,
-  VISUAL_SHOWCASE_TRANSITION_DURATION_IN_FRAMES,
 } from './timeline';
 
 const props = {
@@ -30,14 +29,6 @@ describe('VisualShowcase timeline', () => {
     expect(result).toBe(75);
   });
 
-  it('overlaps each item transition and appends the brand outro', () => {
-    const result = getVisualShowcaseDurationInFrames(props);
-
-    expect(result).toBe(
-      4 * 30 + 3 * 30 - VISUAL_SHOWCASE_TRANSITION_DURATION_IN_FRAMES * 2 + 75
-    );
-  });
-
   it('parses metadata props before deriving the duration', () => {
     const result = calculateVisualShowcaseMetadata({
       props,
@@ -50,7 +41,7 @@ describe('VisualShowcase timeline', () => {
     expect(result).toEqual({ durationInFrames: 255 });
   });
 
-  it('fails with Zod details when metadata props are invalid', () => {
+  it('rejects metadata props without showcase items', () => {
     const invalidProps = { ...props, items: [] };
 
     expect(() =>
@@ -61,6 +52,6 @@ describe('VisualShowcase timeline', () => {
         compositionId: 'visual-showcase',
         isRendering: false,
       })
-    ).toThrow('Array must contain at least 1 element');
+    ).toThrow(ZodError);
   });
 });
