@@ -39,4 +39,17 @@ describe('collectDatasetIds', () => {
 
     expect(result).toEqual(['alpha', 'beta', 'zeta']);
   });
+
+  it('includes the period source dataset', () => {
+    const definition = createDefinition(['metrics']);
+    definition.periodSource = {
+      dataset: 'calendar',
+      view: 'months',
+      time: 'recorded_on',
+    };
+
+    const result = collectDatasetIds([definition]);
+
+    expect(result).toEqual(['calendar', 'metrics']);
+  });
 });
