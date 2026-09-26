@@ -17,56 +17,70 @@ describe('comparePreviousPeriod', () => {
 
   it.each([
     {
+      scenario: 'a rising higher-is-better value',
       current: 120,
       previous: 100,
       direction: 'higher-is-better' as const,
       trend: 'up',
       sentiment: 'positive',
+      absoluteChange: 20,
     },
     {
+      scenario: 'a falling higher-is-better value',
       current: 80,
       previous: 100,
       direction: 'higher-is-better' as const,
       trend: 'down',
       sentiment: 'negative',
+      absoluteChange: -20,
     },
     {
+      scenario: 'a falling lower-is-better value',
       current: 80,
       previous: 100,
       direction: 'lower-is-better' as const,
       trend: 'down',
       sentiment: 'positive',
+      absoluteChange: -20,
     },
     {
+      scenario: 'a rising lower-is-better value',
       current: 120,
       previous: 100,
       direction: 'lower-is-better' as const,
       trend: 'up',
       sentiment: 'negative',
+      absoluteChange: 20,
     },
     {
+      scenario: 'an unchanged value',
       current: 100,
       previous: 100,
       direction: 'higher-is-better' as const,
       trend: 'flat',
       sentiment: null,
+      absoluteChange: 0,
     },
     {
+      scenario: 'a rising neutral value',
       current: 120,
       previous: 100,
       direction: 'neutral' as const,
       trend: 'up',
       sentiment: null,
+      absoluteChange: 20,
     },
   ])(
-    'returns $trend with $sentiment sentiment',
-    ({ current, previous, direction, trend, sentiment }) => {
-      const result = comparePreviousPeriod(current, previous, direction);
+    'reports the trend, sentiment, and absolute change for $scenario',
+    ({ current, previous, direction, trend, sentiment, absoluteChange }) => {
+      const sut = comparePreviousPeriod;
+
+      const result = sut(current, previous, direction);
 
       expect(result).toMatchObject({
         trend,
         sentiment,
-        absoluteChange: current - previous,
+        absoluteChange,
       });
     }
   );

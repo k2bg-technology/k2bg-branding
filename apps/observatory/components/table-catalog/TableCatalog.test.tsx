@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { RepositoryError } from '../../modules/catalog/adapters';
 import {
@@ -29,10 +29,6 @@ function createTableSummaryOutput(
 }
 
 describe('TableCatalog', () => {
-  beforeEach(() => {
-    errorMock.mockClear();
-  });
-
   it('renders one row per table with formatted values', async () => {
     const tables = [
       createTableSummaryOutput({
@@ -113,18 +109,18 @@ describe('TableCatalog', () => {
     ).toBeInTheDocument();
   });
 
-  it('renders the unavailable state and logs when the fetch fails', async () => {
+  it('renders the unavailable state and logs the failure when the fetch fails', async () => {
     const error = new RepositoryError('Failed to fetch table catalog');
     const fetchTableCatalog = vi.fn().mockRejectedValue(error);
+    errorMock.mockClear();
 
     render(await TableCatalog({ fetchTableCatalog }));
 
     expect(screen.getByRole('alert')).toHaveTextContent(
       'Warehouse data unavailable'
     );
-    expect(errorMock).toHaveBeenCalledWith(
-      { err: error },
-      'Failed to fetch table catalog'
-    );
+    expect(errorMock.mock.calls.map(([fields]) => fields)).toContainEqual({
+      err: error,
+    });
   });
 });

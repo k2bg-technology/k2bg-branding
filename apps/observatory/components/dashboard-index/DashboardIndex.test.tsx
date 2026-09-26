@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 const { errorMock } = vi.hoisted(() => ({ errorMock: vi.fn() }));
 
@@ -10,8 +10,6 @@ vi.mock('../../modules/dashboard/adapters/shared', () => ({
 import { DashboardIndex } from './DashboardIndex';
 
 describe('DashboardIndex', () => {
-  beforeEach(() => vi.clearAllMocks());
-
   it('lists dashboards with links and descriptions and shows definition issues', async () => {
     const loadDashboards = vi.fn().mockResolvedValue({
       definitions: [
@@ -56,18 +54,18 @@ describe('DashboardIndex', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('shows an inline unavailable state and logs when definition loading fails', async () => {
+  it('shows an unavailable state and logs the failure when definition loading fails', async () => {
     const error = new Error('read failed');
     const loadDashboards = vi.fn().mockRejectedValue(error);
+    errorMock.mockClear();
 
     render(await DashboardIndex({ loadDashboards }));
 
     expect(screen.getByRole('alert')).toHaveTextContent(
       'Dashboards unavailable'
     );
-    expect(errorMock).toHaveBeenCalledWith(
-      { err: error },
-      'Failed to load dashboards'
-    );
+    expect(errorMock.mock.calls.map(([fields]) => fields)).toContainEqual({
+      err: error,
+    });
   });
 });

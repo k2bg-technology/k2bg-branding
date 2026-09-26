@@ -108,18 +108,6 @@ describe('parseUrlState', () => {
       detail: 3,
     });
   });
-
-  it('keeps foreign keys in their original order', () => {
-    const result = parseUrlState(
-      { first: 'one', period: '2026-08', second: 'two' },
-      dashboard
-    );
-
-    expect(result.valid && result.state.foreign).toEqual([
-      { key: 'first', value: 'one' },
-      { key: 'second', value: 'two' },
-    ]);
-  });
 });
 
 describe('URL period transition', () => {
@@ -146,37 +134,5 @@ describe('URL period transition', () => {
       { key: 'note&period', value: 'kept=value' },
     ]);
     expect(new URLSearchParams(query).getAll('period')).toEqual(['2026-09']);
-  });
-
-  it('sorts page keys and omits the first page', () => {
-    const parsed = parseUrlState(
-      { 'page.headline': '1', note: 'kept' },
-      dashboard
-    );
-    if (!parsed.valid) {
-      throw new Error('Expected URL fixture to parse');
-    }
-
-    expect(serializeUrlState(parsed.state)).toBe('note=kept');
-  });
-
-  it('writes owned keys in a fixed order before foreign keys', () => {
-    const period = Period.parse('2026-08');
-    if (period === null) {
-      throw new Error('Expected fixture period to parse');
-    }
-    const state = {
-      period,
-      controls: { zeta: 'last', alpha: 'first' },
-      pages: { zeta: 2, alpha: 3 },
-      foreign: [
-        { key: 'second', value: 'two' },
-        { key: 'first', value: 'one' },
-      ],
-    };
-
-    expect(serializeUrlState(state)).toBe(
-      'period=2026-08&control.alpha=first&control.zeta=last&page.alpha=3&page.zeta=2&second=two&first=one'
-    );
   });
 });

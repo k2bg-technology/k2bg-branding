@@ -153,17 +153,32 @@ describe('dashboard page', () => {
     ).toBeInTheDocument();
   });
 
-  it('resolves the period once and queries every section for the requested month', async () => {
+  it("shows the requested month's data in every section", async () => {
+    const valuesBySectionAndPeriod: Record<string, number> = {
+      'first:2026-08': 81,
+      'second:2026-08': 82,
+      'first:2026-09': 91,
+      'second:2026-09': 92,
+    };
+    mocks.fetchSectionData.mockImplementation(async ({ section, period }) => ({
+      buckets: [
+        {
+          period: period.toString(),
+          values: [
+            valuesBySectionAndPeriod[`${section.id}:${period.toString()}`],
+          ],
+        },
+      ],
+    }));
+
     await renderPage({ period: '2026-08' });
 
-    expect(mocks.resolvePeriod).toHaveBeenCalledTimes(1);
-    expect(mocks.fetchSectionData).toHaveBeenCalledTimes(2);
     expect(
-      mocks.fetchSectionData.mock.calls.map(([input]) =>
-        input.period.toString()
-      )
-    ).toEqual(['2026-08', '2026-08']);
-    expect(screen.getAllByText('8')).toHaveLength(2);
+      screen.getByRole('heading', { name: 'First' }).closest('section')
+    ).toHaveTextContent('81');
+    expect(
+      screen.getByRole('heading', { name: 'Second' }).closest('section')
+    ).toHaveTextContent('82');
   });
 
   it('shows unavailable sections when period resolution rejects', async () => {

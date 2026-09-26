@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { readThroughDataCache, WAREHOUSE_CACHE_TAG } from './dataCache';
 
@@ -14,6 +14,11 @@ vi.mock('next/cache', () => ({
 }));
 
 describe('readThroughDataCache', () => {
+  beforeEach(() => {
+    unstableCacheMock.mockReset();
+    unstableCacheMock.mockImplementation((load) => load);
+  });
+
   it('registers the loader under the key parts with the revalidate window and warehouse tag', async () => {
     const keyParts = ['warehouse', 'sample'];
     const revalidateSeconds = 3600;
@@ -27,12 +32,28 @@ describe('readThroughDataCache', () => {
     });
   });
 
-  it('returns the loader result', async () => {
-    const rows = [{ id: 1 }];
-    const load = vi.fn().mockResolvedValue(rows);
+  it('reuses results for the same key and loads distinct keys separately', async () => {
+    const cachedResults = new Map<string, Promise<unknown>>();
+    unstableCacheMock.mockImplementation((load, keyParts) => () => {
+      const key = JSON.stringify(keyParts);
+      const cachedResult = cachedResults.get(key);
+      if (cachedResult) {
+        return cachedResult;
+      }
+      const result = load();
+      cachedResults.set(key, result);
+      return result;
+    });
+    const firstLoad = vi.fn().mockResolvedValue([{ id: 1 }]);
+    const repeatLoad = vi.fn().mockResolvedValue([{ id: 99 }]);
+    const otherLoad = vi.fn().mockResolvedValue([{ id: 2 }]);
 
-    const result = await readThroughDataCache(['key'], 60, load);
+    const firstRead = await readThroughDataCache(['first'], 60, firstLoad);
+    const repeatRead = await readThroughDataCache(['first'], 60, repeatLoad);
+    const otherRead = await readThroughDataCache(['other'], 60, otherLoad);
 
-    expect(result).toEqual(rows);
+    expect(firstRead).toEqual([{ id: 1 }]);
+    expect(repeatRead).toEqual([{ id: 1 }]);
+    expect(otherRead).toEqual([{ id: 2 }]);
   });
 });
