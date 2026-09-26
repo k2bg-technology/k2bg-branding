@@ -104,6 +104,28 @@ describe('ResolveDashboardPeriod', () => {
     expect(result?.nextTarget?.toString()).toBe('2026-08');
   });
 
+  it('reads bounds in the dashboard time zone and revalidation window', async () => {
+    const definition = dashboard();
+    definition.timeZone = 'Asia/Tokyo';
+    definition.revalidate = 3_600;
+    const sut = new ResolveDashboardPeriod(
+      {
+        fetchPeriodBounds: async (_source, timeZone, options) =>
+          timeZone === 'Asia/Tokyo' && options.revalidate === 3_600
+            ? { firstDate: '2026-08-01', lastDate: '2026-09-30' }
+            : null,
+      },
+      { now: () => Date.parse('2026-10-15T00:00:00Z') }
+    );
+
+    const result = await sut.execute({
+      dashboard: definition,
+      requestedPeriod: null,
+    });
+
+    expect(result?.period.toString()).toBe('2026-09');
+  });
+
   it('returns null for an empty source without a requested period', async () => {
     const sut = createSut('section_months', null);
 

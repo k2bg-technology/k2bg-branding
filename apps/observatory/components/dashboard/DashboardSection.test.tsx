@@ -165,19 +165,21 @@ describe('DashboardSection', () => {
     expect(screen.getByText('No data available.')).toBeInTheDocument();
   });
 
-  it('shows empty when there is no default period', async () => {
+  it('shows empty without reading the section when there is no default period', async () => {
     const definition = dashboard();
+    const fetchSectionData = vi.fn(async () => data());
 
     render(
       await DashboardSection({
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(null),
-        fetchSectionData: async () => data(),
+        fetchSectionData,
       })
     );
 
     expect(screen.getByText('No data available.')).toBeInTheDocument();
+    expect(fetchSectionData).not.toHaveBeenCalled();
   });
 
   it('shows unavailable when period resolution rejects', async () => {
