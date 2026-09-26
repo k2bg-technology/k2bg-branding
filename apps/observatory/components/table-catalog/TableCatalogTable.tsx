@@ -6,11 +6,12 @@ interface Props {
 
 const integerFormat = new Intl.NumberFormat('en-US');
 
-function formatBytes(bytes: number) {
+function formatBytes(bytes: number): string {
   const units = ['B', 'KB', 'MB', 'GB', 'TB'];
-  const { value, unitIndex } = Array.from({
-    length: units.length - 1,
-  }).reduce<{ value: number; unitIndex: number }>(
+  const { value, unitIndex } = Array.from({ length: units.length - 1 }).reduce<{
+    value: number;
+    unitIndex: number;
+  }>(
     (result) =>
       result.value >= 1024
         ? { value: result.value / 1024, unitIndex: result.unitIndex + 1 }
@@ -21,17 +22,14 @@ function formatBytes(bytes: number) {
   return `${value.toFixed(digits)} ${units[unitIndex]}`;
 }
 
-function formatDate(isoTimestamp: string) {
-  return isoTimestamp.slice(0, 10);
-}
-
-function tableKey(table: TableSummaryOutput) {
-  return `${table.datasetId}.${table.name}`;
-}
-
 export function TableCatalogTable({ tables }: Props) {
   if (tables.length === 0) {
-    return <p className="text-body-r-md">The warehouse has no tables yet.</p>;
+    return (
+      <p className="text-body-r-md">
+        No tables to show. The catalog lists the datasets that dashboard
+        definitions reference.
+      </p>
+    );
   }
 
   return (
@@ -43,6 +41,9 @@ export function TableCatalogTable({ tables }: Props) {
           </th>
           <th scope="col" className="py-condensed pr-normal">
             Table
+          </th>
+          <th scope="col" className="py-condensed pr-normal">
+            Type
           </th>
           <th scope="col" className="py-condensed pr-normal text-right">
             Rows
@@ -57,7 +58,10 @@ export function TableCatalogTable({ tables }: Props) {
       </thead>
       <tbody>
         {tables.map((table) => (
-          <tr key={tableKey(table)} className="border-b border-base-light">
+          <tr
+            key={`${table.datasetId}.${table.name}`}
+            className="border-b border-base-light"
+          >
             <td className="py-condensed pr-normal">{table.datasetId}</td>
             <th
               scope="row"
@@ -65,18 +69,23 @@ export function TableCatalogTable({ tables }: Props) {
             >
               {table.name}
             </th>
+            <td className="py-condensed pr-normal">{table.type}</td>
             <td className="py-condensed pr-normal text-right tabular-nums">
-              {integerFormat.format(table.rowCount)}
+              {table.rowCount === null
+                ? '—'
+                : integerFormat.format(table.rowCount)}
             </td>
             <td className="py-condensed pr-normal text-right tabular-nums">
-              {formatBytes(table.sizeInBytes)}
+              {table.sizeInBytes === null
+                ? '—'
+                : formatBytes(table.sizeInBytes)}
             </td>
             <td className="py-condensed tabular-nums">
               {table.lastModifiedAt === null ? (
                 '—'
               ) : (
                 <time dateTime={table.lastModifiedAt}>
-                  {formatDate(table.lastModifiedAt)}
+                  {table.lastModifiedAt.slice(0, 10)}
                 </time>
               )}
             </td>
