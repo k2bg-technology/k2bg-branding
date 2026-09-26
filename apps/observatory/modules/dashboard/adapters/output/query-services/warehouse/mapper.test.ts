@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { SectionQueryPlan } from '../../../../domain';
 import { AmbiguousLatestValueError } from '../../../../domain';
+import { MappingError } from '../../../shared';
 import { toDateBounds, toSectionData } from './mapper';
 
 function plan(): SectionQueryPlan {
@@ -92,6 +93,23 @@ describe('warehouse dashboard mapper', () => {
       );
 
     expect(action).toThrow(AmbiguousLatestValueError);
+  });
+
+  it('throws MappingError when a bucket period is not a calendar month', () => {
+    const action = () =>
+      toSectionData(
+        [
+          {
+            period: '2026-13',
+            value_0: 120,
+            value_1: 9,
+            distinct_count_1: 1,
+          },
+        ],
+        plan()
+      );
+
+    expect(action).toThrow(MappingError);
   });
 
   it('maps formatted bounds while preserving calendar dates', () => {
