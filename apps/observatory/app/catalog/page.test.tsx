@@ -14,6 +14,9 @@ vi.mock('../../infrastructure', () => ({
 vi.mock('../../modules/catalog/adapters/shared/logger', () => ({
   catalogLogger: { error: vi.fn() },
 }));
+vi.mock('../../modules/dashboard/adapters/shared', () => ({
+  dashboardLogger: { warn: vi.fn() },
+}));
 
 import Page from './page';
 
@@ -53,8 +56,28 @@ describe('table catalog page', () => {
     ).toBeInTheDocument();
   });
 
-  it('shows the unavailable state when definitions cannot be loaded', async () => {
-    loadDashboardsMock.mockRejectedValue(new Error('read failed'));
+  it.each([
+    {
+      scenario: 'the definition source rejects',
+      arrange: () =>
+        loadDashboardsMock.mockRejectedValue(new Error('read failed')),
+    },
+    {
+      scenario: 'the definition source reports an issue',
+      arrange: () =>
+        loadDashboardsMock.mockResolvedValue({
+          definitions: [],
+          issues: [
+            {
+              fileName: '/missing',
+              path: '',
+              message: 'Could not read dashboard definitions: ENOENT',
+            },
+          ],
+        }),
+    },
+  ])('shows the unavailable state when $scenario', async ({ arrange }) => {
+    arrange();
 
     await renderPage();
 

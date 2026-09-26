@@ -5,13 +5,22 @@ import {
   createFetchTableCatalogUseCase,
   createLoadDashboardsUseCase,
 } from '../../infrastructure';
+import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import { collectDatasetIds } from '../../modules/dashboard/domain/definition';
 
 export const dynamic = 'force-dynamic';
 
 export default function Page() {
   const fetchTableCatalog = async () => {
-    const { definitions } = await createLoadDashboardsUseCase().execute();
+    const { definitions, issues } =
+      await createLoadDashboardsUseCase().execute();
+    issues.forEach((issue) => {
+      dashboardLogger.warn({ issue }, 'Dashboard definition issue');
+    });
+    // A partially loaded definition set would silently list too few datasets.
+    if (issues.length > 0) {
+      throw new Error('Dashboard definitions could not be fully loaded');
+    }
     return createFetchTableCatalogUseCase().execute({
       datasetIds: collectDatasetIds(definitions),
     });
