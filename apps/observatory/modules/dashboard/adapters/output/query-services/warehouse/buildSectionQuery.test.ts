@@ -27,6 +27,53 @@ function plan(
 }
 
 describe('buildSectionQuery', () => {
+  it('builds the fixture time series with a trailing window, two reductions, and one extra bucket', () => {
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const period = Period.parse('2026-08');
+    if (period === null) {
+      throw new Error('Expected fixture period to parse');
+    }
+
+    const result = buildSectionQuery(
+      planSection(dashboard.sections[1], period, dashboard.timeZone)
+    );
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%Y-%m', DATE(`recorded_at`, @time_zone)) AS period, `recorded_at` AS source_time, CAST(`first_value` AS FLOAT64) AS value_0, CAST(`second_value` AS FLOAT64) AS value_1",
+        'FROM `sample_dataset.monthly_summary`',
+        'WHERE DATE(`recorded_at`, @time_zone) >= CAST(@period_start AS DATE)',
+        'AND DATE(`recorded_at`, @time_zone) <= CAST(@period_end AS DATE)',
+        '),',
+        'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+        'SELECT filtered.period, CAST(SUM(value_0) AS FLOAT64) AS value_0,',
+        'CAST(SUM(value_1) AS FLOAT64) AS value_1',
+        'FROM filtered JOIN bucket_times USING (period)',
+        'GROUP BY filtered.period',
+        'ORDER BY filtered.period DESC',
+        'LIMIT @bucket_limit',
+      ].join('\n'),
+      params: {
+        period_start: '2025-09-01',
+        period_end: '2026-08-31',
+        time_zone: 'Asia/Tokyo',
+        bucket_limit: 121,
+      },
+    });
+  });
+
+  it('rejects an unsafe time-series measure identifier', () => {
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const period = Period.parse('2026-08');
+    if (period === null) {
+      throw new Error('Expected fixture period to parse');
+    }
+    const plan = planSection(dashboard.sections[1], period, dashboard.timeZone);
+    plan.measures[0].column = 'value; DROP TABLE rows';
+
+    expect(() => buildSectionQuery(plan)).toThrow(RepositoryError);
+  });
   it('returns complete monthly buckets and bound date parameters', () => {
     const result = buildSectionQuery(plan());
 

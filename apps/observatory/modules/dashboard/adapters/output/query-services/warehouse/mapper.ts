@@ -61,8 +61,13 @@ export function toSectionData(
     return null;
   }
 
+  const includedRows =
+    plan.kind === 'time-series'
+      ? rows.slice(0, plan.bucketLimit).reverse()
+      : rows;
   return {
-    buckets: rows.map((row) => {
+    truncated: plan.kind === 'time-series' && rows.length > plan.bucketLimit,
+    buckets: includedRows.map((row) => {
       const period = row.period;
       if (typeof period !== 'string' || Period.parse(period) === null) {
         throw new MappingError(
@@ -72,7 +77,11 @@ export function toSectionData(
       return {
         period,
         values: plan.measures.map((measure, index) => {
-          if (period !== plan.selectedPeriod && !measure.compares) {
+          if (
+            plan.kind === 'stat-tiles' &&
+            period !== plan.selectedPeriod &&
+            !('compares' in measure && measure.compares)
+          ) {
             return null;
           }
           const value = readNullableNumber(row, valueColumnAlias(index));

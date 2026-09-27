@@ -65,6 +65,7 @@ describe('WarehouseFetchSectionDataQueryService', () => {
       });
 
       expect(result).toEqual({
+        truncated: false,
         buckets: [{ period: '2026-09', values: [warehouseValue] }],
       });
     }
