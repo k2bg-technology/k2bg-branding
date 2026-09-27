@@ -8,15 +8,23 @@ export interface DateRange {
 export interface MeasureQueryPlan {
   column: string;
   reduction: Reduction;
-  compares: boolean;
 }
 
-export interface SectionQueryPlan {
-  kind: SectionKind;
+interface BaseSectionQueryPlan {
   sectionId: string;
   source: SourceDefinition;
   timeZone: string;
   dateRange: DateRange;
   selectedPeriod: string;
-  measures: MeasureQueryPlan[];
 }
+
+export type SectionQueryPlan =
+  | (BaseSectionQueryPlan & {
+      kind: typeof SectionKind.STAT_TILES;
+      measures: (MeasureQueryPlan & { compares: boolean })[];
+    })
+  | (BaseSectionQueryPlan & {
+      kind: typeof SectionKind.TIME_SERIES;
+      measures: MeasureQueryPlan[];
+      bucketLimit: number;
+    });
