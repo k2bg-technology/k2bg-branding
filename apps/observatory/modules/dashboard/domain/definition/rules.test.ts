@@ -33,6 +33,76 @@ function createDefinition(): DashboardDefinition {
 }
 
 describe('validateDefinitionRules', () => {
+  it('rejects stacking with an average series at its reduction path', () => {
+    const definition = createDefinition();
+    definition.sections = [
+      {
+        id: 'trend',
+        title: 'Trend',
+        kind: 'time-series',
+        source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+        window: 12,
+        variant: 'area',
+        stacked: true,
+        format: { type: 'number' },
+        series: [{ label: 'Average', column: 'value', reduction: 'average' }],
+      },
+    ];
+
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'series', 0, 'reduction'],
+      message: 'Stacking adds values up and requires the sum reduction',
+    });
+  });
+
+  it('rejects stacking on a line chart', () => {
+    const definition = createDefinition();
+    definition.sections = [
+      {
+        id: 'trend',
+        title: 'Trend',
+        kind: 'time-series',
+        source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+        window: 12,
+        variant: 'line',
+        stacked: true,
+        format: { type: 'number' },
+        series: [{ label: 'Total', column: 'value', reduction: 'sum' }],
+      },
+    ];
+
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'stacked'],
+      message: 'Stacking requires the area variant',
+    });
+  });
+
+  it('accepts stacked sum areas and rejects a currency section without currency', () => {
+    const definition = createDefinition();
+    definition.sections = [
+      {
+        id: 'trend',
+        title: 'Trend',
+        kind: 'time-series',
+        source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+        window: 12,
+        variant: 'area',
+        stacked: true,
+        format: { type: 'currency' },
+        series: [
+          { label: 'First', column: 'first', reduction: 'sum' },
+          { label: 'Second', column: 'second', reduction: 'sum' },
+        ],
+      },
+    ];
+
+    expect(validateDefinitionRules(definition)).toEqual([]);
+    delete definition.currency;
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'format'],
+      message: 'A currency section requires dashboard currency',
+    });
+  });
   it('reports the later path when section ids are duplicated', () => {
     const definition = createDefinition();
     definition.sections.push({ ...definition.sections[0] });

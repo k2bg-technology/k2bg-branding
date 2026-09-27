@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import type { SectionQueryPlan } from '../../../../domain';
-import { AmbiguousLatestValueError } from '../../../../domain';
+import { AmbiguousLatestValueError, Period } from '../../../../domain';
 import { MappingError } from '../../../shared';
 import { toDateBounds, toSectionData } from './mapper';
 
@@ -35,6 +35,7 @@ describe('warehouse dashboard mapper', () => {
     );
 
     expect(result).toEqual({
+      truncated: false,
       buckets: [
         { period: '2026-07', values: [100, null] },
         { period: '2026-08', values: [120, 9] },
@@ -77,7 +78,9 @@ describe('warehouse dashboard mapper', () => {
 
   it('checks a comparing latest value in the previous bucket', () => {
     const comparing = plan();
-    comparing.measures[1].compares = true;
+    if (comparing.kind === 'stat-tiles') {
+      comparing.measures[1].compares = true;
+    }
 
     const action = () =>
       toSectionData(
@@ -118,5 +121,57 @@ describe('warehouse dashboard mapper', () => {
     ]);
 
     expect(result).toEqual({ firstDate: '2026-08-01', lastDate: '2026-09-30' });
+  });
+
+  it('drops the oldest bucket beyond the cap and keeps the newest complete bucket', () => {
+    const timeSeriesPlan: SectionQueryPlan = {
+      ...plan(),
+      kind: 'time-series',
+      measures: [{ column: 'total', reduction: 'sum' }],
+      bucketLimit: 120,
+    };
+    const selected = Period.parse('2026-08');
+    if (selected === null) {
+      throw new Error('Expected selected period to parse');
+    }
+    const rows = Array.from({ length: 121 }, (_, index) => ({
+      period: selected.shift(-index).toString(),
+      value_0: 121 - index,
+    }));
+
+    const result = toSectionData(rows, timeSeriesPlan);
+
+    expect(result?.truncated).toBe(true);
+    expect(result?.buckets).toHaveLength(120);
+    expect(result?.buckets[0]).toEqual({
+      period: selected.shift(-119).toString(),
+      values: [2],
+    });
+    expect(result?.buckets.at(-1)).toEqual({
+      period: '2026-08',
+      values: [121],
+    });
+    expect(toSectionData(rows.slice(0, 120), timeSeriesPlan)?.truncated).toBe(
+      false
+    );
+  });
+
+  it('rejects an ambiguous latest value in any displayed time-series bucket', () => {
+    const timeSeriesPlan: SectionQueryPlan = {
+      ...plan(),
+      kind: 'time-series',
+      measures: [{ column: 'status', reduction: 'latest' }],
+      bucketLimit: 120,
+    };
+
+    expect(() =>
+      toSectionData(
+        [
+          { period: '2026-08', value_0: 9, distinct_count_0: 1 },
+          { period: '2026-07', value_0: 7, distinct_count_0: 2 },
+        ],
+        timeSeriesPlan
+      )
+    ).toThrow(AmbiguousLatestValueError);
   });
 });

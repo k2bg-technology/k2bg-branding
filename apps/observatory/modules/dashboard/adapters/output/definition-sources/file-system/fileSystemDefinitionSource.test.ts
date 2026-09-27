@@ -24,6 +24,19 @@ function createSection(overrides: Record<string, unknown> = {}) {
   };
 }
 
+function createTimeSeries(overrides: Record<string, unknown> = {}) {
+  return {
+    id: 'trend',
+    title: 'Trend',
+    kind: 'time-series',
+    source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+    window: 12,
+    format: { type: 'duration', inputUnit: 'seconds' },
+    series: [{ label: 'Elapsed', column: 'elapsed' }],
+    ...overrides,
+  };
+}
+
 function createDefinition(overrides: Record<string, unknown> = {}) {
   return {
     id: 'summary',
@@ -59,6 +72,95 @@ async function withDefinitionDirectory(
 }
 
 describe('FileSystemDefinitionSource', () => {
+  it('loads a time series with defaults while keeping another definition available', async () => {
+    await withDefinitionDirectory(
+      {
+        'series.json': createDefinition({
+          id: 'series',
+          sections: [createTimeSeries()],
+        }),
+        'tiles.json': createDefinition({ id: 'tiles' }),
+      },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        expect(result.definitions).toHaveLength(2);
+        expect(
+          result.definitions.find((definition) => definition.id === 'series')
+            ?.sections[0]
+        ).toMatchObject({
+          variant: 'line',
+          stacked: false,
+          series: [{ reduction: 'sum' }],
+        });
+      }
+    );
+  });
+
+  it.each([
+    {
+      name: 'zero window',
+      section: createTimeSeries({ window: 0 }),
+      path: 'sections[0].window',
+    },
+    {
+      name: 'empty series',
+      section: createTimeSeries({ series: [] }),
+      path: 'sections[0].series',
+    },
+    {
+      name: 'thirteen series',
+      section: createTimeSeries({
+        series: Array.from({ length: 13 }, (_, index) => ({
+          label: `Series ${index}`,
+          column: 'value',
+        })),
+      }),
+      path: 'sections[0].series',
+    },
+    {
+      name: 'unknown field',
+      section: createTimeSeries({ extra: true }),
+      path: 'sections[0]',
+    },
+    {
+      name: 'invalid duration unit',
+      section: createTimeSeries({
+        format: { type: 'duration', inputUnit: 'days' },
+      }),
+      path: 'sections[0].format.inputUnit',
+    },
+    {
+      name: 'invalid series column',
+      section: createTimeSeries({
+        series: [{ label: 'Value', column: 'bad;drop' }],
+      }),
+      path: 'sections[0].series[0].column',
+    },
+  ])(
+    'reports a time-series $name with file name and path',
+    async ({ section, path }) => {
+      await withDefinitionDirectory(
+        {
+          'invalid.json': createDefinition({ sections: [section] }),
+          'valid.json': createDefinition({ id: 'valid' }),
+        },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions).toHaveLength(1);
+          expect(result.issues).toContainEqual(
+            expect.objectContaining({ fileName: 'invalid.json', path })
+          );
+        }
+      );
+    }
+  );
   it('loads a valid definition while reporting a malformed JSON file', async () => {
     await withDefinitionDirectory(
       {
@@ -99,7 +201,7 @@ describe('FileSystemDefinitionSource', () => {
         'valid.json': createDefinition(),
         'invalid.json': createDefinition({
           id: 'invalid',
-          sections: [createSection({ kind: 'time-series' })],
+          sections: [createSection({ kind: 'unknown-section' })],
         }),
       },
       async (directory) => {
@@ -270,7 +372,7 @@ describe('FileSystemDefinitionSource', () => {
           }),
         ],
       }),
-      path: 'sections[0].tiles[0].format.type',
+      path: 'sections[0].tiles[0].format.inputUnit',
     },
   ])(
     'reports $name with its file name and JSON path',
@@ -384,7 +486,7 @@ describe('FileSystemDefinitionSource', () => {
       definition: createDefinition({ defaultPeriod: 'next-month' }),
       path: 'defaultPeriod',
     },
-    ...['period', 'previousPeriod', 'nextPeriod'].map((label) => ({
+    ...['period', 'previousPeriod', 'nextPeriod', 'truncated'].map((label) => ({
       name: `empty ${label} label`,
       definition: createDefinition({ labels: { [label]: '' } }),
       path: `labels.${label}`,

@@ -31,7 +31,11 @@ function latestDistinctCountProjection(alias: string, index: number): string {
   return `CAST(COUNT(DISTINCT IF(source_time = latest_time, TO_JSON_STRING(${alias}), NULL)) AS FLOAT64) AS ${distinctCountAlias(index)}`;
 }
 
-export function buildStatTilesQuery(plan: SectionQueryPlan): BuiltQuery {
+export function buildGroupedSectionQuery(
+  plan: SectionQueryPlan,
+  order: 'ASC' | 'DESC',
+  bucketLimit?: number
+): BuiltQuery {
   const calendarDate = calendarDateExpression(plan.source.time);
   const sourceTime = quoteIdentifier(timeColumn(plan.source.time));
   const valueSelections = plan.measures.map(
@@ -66,13 +70,21 @@ export function buildStatTilesQuery(plan: SectionQueryPlan): BuiltQuery {
     `SELECT filtered.period, ${projections.join(',\n')}`,
     'FROM filtered JOIN bucket_times USING (period)',
     'GROUP BY filtered.period',
-    'ORDER BY filtered.period',
+    `ORDER BY filtered.period ${order === 'DESC' ? 'DESC' : ''}`.trimEnd(),
+    ...(bucketLimit === undefined ? [] : ['LIMIT @bucket_limit']),
   ].join('\n');
 
   const params: WarehouseQueryParams = {
     [PERIOD_START_PARAMETER]: plan.dateRange.firstDate,
     [PERIOD_END_PARAMETER]: plan.dateRange.lastDate,
     [TIME_ZONE_PARAMETER]: plan.timeZone,
+    ...(bucketLimit === undefined ? {} : { bucket_limit: bucketLimit + 1 }),
   };
   return { sql, params };
+}
+
+export function buildStatTilesQuery(
+  plan: Extract<SectionQueryPlan, { kind: 'stat-tiles' }>
+): BuiltQuery {
+  return buildGroupedSectionQuery(plan, 'ASC');
 }

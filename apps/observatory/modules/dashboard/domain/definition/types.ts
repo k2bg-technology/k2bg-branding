@@ -1,5 +1,6 @@
 export const SectionKind = {
   STAT_TILES: 'stat-tiles',
+  TIME_SERIES: 'time-series',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
 
@@ -29,7 +30,8 @@ export type PercentInputScale =
 export type ValueFormat =
   | { type: 'number' }
   | { type: 'currency' }
-  | { type: 'percent'; inputScale: PercentInputScale };
+  | { type: 'percent'; inputScale: PercentInputScale }
+  | { type: 'duration'; inputUnit: 'seconds' | 'minutes' | 'hours' };
 
 export type TimeBinding = string | { column: string; type: 'timestamp' };
 
@@ -59,7 +61,21 @@ export interface StatTilesSection {
   tiles: StatTileDefinition[];
 }
 
-export type Section = StatTilesSection;
+export interface TimeSeriesSection {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.TIME_SERIES;
+  width?: SectionWidth;
+  window: number;
+  variant: 'line' | 'area';
+  stacked: boolean;
+  format: ValueFormat;
+  unit?: string;
+  series: { label: string; column: string; reduction: Reduction }[];
+}
+
+export type Section = StatTilesSection | TimeSeriesSection;
 
 export interface DashboardDefinition {
   id: string;
@@ -76,6 +92,7 @@ export interface DashboardDefinition {
     period?: string;
     previousPeriod?: string;
     nextPeriod?: string;
+    truncated?: string;
   };
   sections: Section[];
 }

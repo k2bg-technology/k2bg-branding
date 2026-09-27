@@ -6,7 +6,7 @@ export function planStatTilesSection(
   section: StatTilesSection,
   period: Period,
   timeZone: string
-): SectionQueryPlan {
+): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
   return {
     kind: section.kind,
     sectionId: section.id,

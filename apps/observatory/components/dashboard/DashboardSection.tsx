@@ -12,6 +12,7 @@ import { loadSectionState } from './loadSectionState';
 import { SectionEmpty } from './SectionEmpty';
 import { SectionUnavailable } from './SectionUnavailable';
 import { StatTilesSection } from './sections/StatTilesSection';
+import { TimeSeriesSection } from './sections/TimeSeriesSection';
 
 interface Props {
   dashboard: DashboardDefinition;
@@ -54,7 +55,17 @@ export async function DashboardSection({
               />
             );
           }
-          return assertNever(section.kind);
+          if (section.kind === SectionKind.TIME_SERIES) {
+            return (
+              <TimeSeriesSection
+                dashboard={dashboard}
+                section={section}
+                data={state.data}
+                period={state.resolution.period}
+              />
+            );
+          }
+          return assertNever(section);
         }
         if (state.status === 'empty') {
           return <SectionEmpty />;

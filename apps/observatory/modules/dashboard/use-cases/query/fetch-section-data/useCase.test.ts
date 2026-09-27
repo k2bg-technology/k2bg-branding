@@ -48,7 +48,7 @@ describe('FetchSectionData', () => {
         plan.dateRange.lastDate === '2026-09-30' &&
         plan.measures[0]?.reduction === 'maximum' &&
         options.revalidate === 3_600
-          ? { buckets: [{ period: '2026-09', values: [42] }] }
+          ? { buckets: [{ period: '2026-09', values: [42] }], truncated: false }
           : null,
     };
     const sut = new FetchSectionData(queryService);
@@ -59,6 +59,9 @@ describe('FetchSectionData', () => {
       period,
     });
 
-    expect(result).toEqual({ buckets: [{ period: '2026-09', values: [42] }] });
+    expect(result).toEqual({
+      buckets: [{ period: '2026-09', values: [42] }],
+      truncated: false,
+    });
   });
 });

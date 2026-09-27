@@ -11,4 +11,5 @@ export interface QueryOptions {
 
 export interface SectionData {
   buckets: { period: string; values: (number | null)[] }[];
+  truncated: boolean;
 }

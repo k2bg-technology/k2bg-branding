@@ -6,6 +6,7 @@ import {
   SectionKind,
 } from '../../../../../domain';
 import { sourceSchema, statTilesSectionSchema } from './statTiles';
+import { timeSeriesSectionSchema } from './timeSeries';
 
 function supportsLocale(locale: string): boolean {
   try {
@@ -42,6 +43,20 @@ const sectionSchemaBase = z.unknown().transform((value, context): Section => {
   switch (kindResult.data.kind) {
     case SectionKind.STAT_TILES: {
       const result = statTilesSectionSchema.safeParse(value);
+      if (result.success) {
+        return result.data;
+      }
+      result.error.issues.forEach((issue) => {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: issue.path,
+          message: issue.message,
+        });
+      });
+      return z.NEVER;
+    }
+    case SectionKind.TIME_SERIES: {
+      const result = timeSeriesSectionSchema.safeParse(value);
       if (result.success) {
         return result.data;
       }
@@ -98,6 +113,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       period: z.string().min(1).optional(),
       previousPeriod: z.string().min(1).optional(),
       nextPeriod: z.string().min(1).optional(),
+      truncated: z.string().min(1).optional(),
     })
     .optional(),
   sections: z.array(sectionSchema).min(1),

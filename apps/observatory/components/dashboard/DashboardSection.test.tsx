@@ -54,6 +54,24 @@ function dashboard(locale = 'en-US'): DashboardDefinition {
   };
 }
 
+function timeSeriesDashboard(locale = 'en-US'): DashboardDefinition {
+  const definition = dashboard(locale);
+  definition.sections = [
+    {
+      id: 'trend',
+      title: 'Monthly trend',
+      kind: 'time-series',
+      source: { dataset: 'metrics', view: 'values', time: 'recorded_on' },
+      window: 3,
+      variant: 'line',
+      stacked: false,
+      format: { type: 'number' },
+      series: [{ label: 'Average', column: 'value', reduction: 'average' }],
+    },
+  ];
+  return definition;
+}
+
 function resolution(month: string): DashboardPeriodResolution {
   const period = Period.parse(month);
   if (period === null) {
@@ -69,6 +87,7 @@ function resolution(month: string): DashboardPeriodResolution {
 
 function data(): SectionData {
   return {
+    truncated: false,
     buckets: [
       { period: '2026-07', values: [100, null] },
       { period: '2026-08', values: [120, 9] },
@@ -77,6 +96,124 @@ function data(): SectionData {
 }
 
 describe('DashboardSection', () => {
+  it('names a time-series chart, fills missing months as gaps, and states its window', async () => {
+    const definition = timeSeriesDashboard();
+
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-03')),
+        fetchSectionData: async () => ({
+          truncated: false,
+          buckets: [
+            { period: '2026-01', values: [15] },
+            { period: '2026-03', values: [30] },
+          ],
+        }),
+      })
+    );
+
+    expect(
+      screen.getByRole('application', { name: 'Monthly trend' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('Jan – Mar 2026')).toBeInTheDocument();
+    expect(
+      screen.queryByText(/Older months are not shown/)
+    ).not.toBeInTheDocument();
+  });
+
+  it('states the full twelve-month window across a year boundary', async () => {
+    const definition = timeSeriesDashboard();
+    const section = definition.sections[0];
+    if (section.kind !== 'time-series') {
+      throw new Error('Expected a time-series section');
+    }
+    section.window = 12;
+
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => ({
+          truncated: false,
+          buckets: [{ period: '2026-08', values: [30] }],
+        }),
+      })
+    );
+
+    expect(screen.getByText('Sep 2025 – Aug 2026')).toBeInTheDocument();
+  });
+
+  it('keeps a time series ready with no bucket in the selected month and moves its window with the period', async () => {
+    const definition = timeSeriesDashboard();
+    const fetchSectionData = async ({ period }: { period: Period }) => ({
+      truncated: false,
+      buckets: [{ period: period.shift(-1).toString(), values: [15] }],
+    });
+
+    const first = render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-03')),
+        fetchSectionData,
+      })
+    );
+    expect(screen.getByText('Jan – Mar 2026')).toBeInTheDocument();
+    expect(screen.queryByText('No data available.')).not.toBeInTheDocument();
+
+    first.unmount();
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-04')),
+        fetchSectionData,
+      })
+    );
+    expect(screen.getByText('Feb – Apr 2026')).toBeInTheDocument();
+  });
+
+  it('shows the shortened range and a localized truncation label', async () => {
+    const definition = timeSeriesDashboard('ja-JP');
+    definition.labels = { truncated: '古い月を省略' };
+
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-03')),
+        fetchSectionData: async () => ({
+          truncated: true,
+          buckets: [
+            { period: '2026-02', values: [20] },
+            { period: '2026-03', values: [30] },
+          ],
+        }),
+      })
+    );
+
+    expect(
+      screen.getByText('2026/02～2026/03 · 古い月を省略')
+    ).toBeInTheDocument();
+  });
+
+  it('shows empty for a time series with no buckets', async () => {
+    const definition = timeSeriesDashboard();
+
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-03')),
+        fetchSectionData: async () => null,
+      })
+    );
+
+    expect(screen.getByText('No data available.')).toBeInTheDocument();
+  });
   it('shows an own-source previous-month delta even when period bounds start later', async () => {
     const definition = dashboard();
 
@@ -206,6 +343,7 @@ describe('DashboardSection', () => {
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
         fetchSectionData: async () => ({
+          truncated: false,
           buckets: [{ period: '2026-08', values: [120, 9] }],
         }),
       })
@@ -257,6 +395,7 @@ describe('DashboardSection', () => {
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
         fetchSectionData: async () => ({
+          truncated: false,
           buckets: [{ period: '2026-08', values: [null, 9] }],
         }),
       })
@@ -275,6 +414,7 @@ describe('DashboardSection', () => {
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
         fetchSectionData: async () => ({
+          truncated: false,
           buckets: [
             { period: '2026-07', values: [0, null] },
             { period: '2026-08', values: [5, 9] },
@@ -284,5 +424,31 @@ describe('DashboardSection', () => {
     );
 
     expect(screen.getByText('+5')).toBeInTheDocument();
+  });
+
+  it('formats a duration tile delta as an absolute change when the prior value is zero', async () => {
+    const definition = dashboard();
+    const section = definition.sections[0];
+    if (section.kind !== 'stat-tiles') {
+      throw new Error('Expected a stat-tiles section');
+    }
+    section.tiles[0].format = { type: 'duration', inputUnit: 'seconds' };
+
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => ({
+          truncated: false,
+          buckets: [
+            { period: '2026-07', values: [0, null] },
+            { period: '2026-08', values: [-600, 9] },
+          ],
+        }),
+      })
+    );
+
+    expect(screen.getAllByText('-10 min')).toHaveLength(2);
   });
 });

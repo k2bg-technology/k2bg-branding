@@ -38,6 +38,24 @@
           "format": { "type": "percent", "inputScale": "ratio" }
         }
       ]
+    },
+    {
+      "id": "monthly-trend",
+      "title": "Monthly trend",
+      "kind": "time-series",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "monthly_summary",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "window": 12,
+      "variant": "area",
+      "stacked": true,
+      "format": { "type": "number" },
+      "series": [
+        { "label": "First measure", "column": "first_value", "reduction": "sum" },
+        { "label": "Second measure", "column": "second_value", "reduction": "sum" }
+      ]
     }
   ]
 }
