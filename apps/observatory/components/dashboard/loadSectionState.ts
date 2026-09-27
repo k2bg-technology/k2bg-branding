@@ -3,6 +3,7 @@ import type {
   DashboardDefinition,
   Section,
 } from '../../modules/dashboard/domain';
+import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchSectionDataInput,
@@ -43,13 +44,26 @@ export async function loadSectionState({
       section,
       period: resolution.period,
     });
-    if (
-      data === null ||
-      !data.buckets.some(
-        (bucket) => bucket.period === resolution.period.toString()
-      )
-    ) {
+    if (data === null) {
       return { status: 'empty' };
+    }
+    switch (section.kind) {
+      case SectionKind.STAT_TILES:
+        if (
+          !data.buckets.some(
+            (bucket) => bucket.period === resolution.period.toString()
+          )
+        ) {
+          return { status: 'empty' };
+        }
+        break;
+      case SectionKind.TIME_SERIES:
+        if (data.buckets.length === 0) {
+          return { status: 'empty' };
+        }
+        break;
+      default:
+        return assertNever(section);
     }
     return { status: 'ready', data, resolution };
   } catch (error) {
@@ -59,4 +73,8 @@ export async function loadSectionState({
     );
     return { status: 'unavailable' };
   }
+}
+
+function assertNever(value: never): never {
+  throw new Error(`Unsupported dashboard section: ${JSON.stringify(value)}`);
 }
