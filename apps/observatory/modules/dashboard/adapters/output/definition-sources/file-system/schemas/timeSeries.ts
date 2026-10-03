@@ -11,6 +11,7 @@ import {
   sectionIdSchema,
   sectionWidthSchema,
   sourceSchema,
+  transformSchema,
   valueFormatSchema,
 } from './statTiles';
 
@@ -18,6 +19,7 @@ const seriesSchema = z.strictObject({
   label: z.string().min(1),
   column: identifierSchema,
   reduction: reductionSchema.default(Reduction.SUM),
+  transform: transformSchema.optional(),
 });
 
 const timeSeriesSectionSchemaBase = z.strictObject({
