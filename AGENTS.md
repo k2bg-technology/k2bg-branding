@@ -26,7 +26,7 @@ selection, engineering trade-offs, writing tone).
 
 ## Build, Test, and Development Commands
 
-- Install: `pnpm install` (pnpm 10+, Node 22.12+).
+- Install: `pnpm install` (pnpm 10+, Node 22.22+ or 24.15+; exact range in `package.json` `engines`).
 - Develop all: `pnpm dev` (runs `turbo run dev`); filter with `pnpm -F blog dev`,
   `pnpm -F portfolio dev`, `pnpm -F scene-studio dev`, or `pnpm -F observatory dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
