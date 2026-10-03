@@ -64,11 +64,10 @@ describe('provisionAdminUser', () => {
     const sut = provisionAdminUser;
     const input = createAdminInput();
     const context = await auth.$context;
-    await context.internalAdapter.createUser({
-      email: input.email,
-      name: input.name,
-      emailVerified: false,
-    });
+    await context.internalAdapter.createUser(
+      { email: input.email, name: input.name, emailVerified: false },
+      { method: 'admin' }
+    );
 
     const result = await sut(input);
 
