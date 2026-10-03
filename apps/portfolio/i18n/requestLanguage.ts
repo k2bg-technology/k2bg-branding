@@ -35,7 +35,9 @@ export async function getRequestLanguage(): Promise<Language> {
   return getLanguageFromAcceptLanguage(headerStore.get('Accept-Language'));
 }
 
-function getLanguageFromAcceptLanguage(acceptLanguage: string | null): Language {
+function getLanguageFromAcceptLanguage(
+  acceptLanguage: string | null
+): Language {
   if (!acceptLanguage) {
     return fallbackLanguage;
   }

@@ -29,10 +29,8 @@ const localizedPages = [
 ] satisfies { language: Language; slogan: string }[];
 
 function createDeferredParams() {
-  let resolveParams: (params: RouteParams) => void = () => undefined;
-  const params = new Promise<RouteParams>((resolve) => {
-    resolveParams = resolve;
-  });
+  const { promise: params, resolve: resolveParams } =
+    Promise.withResolvers<RouteParams>();
 
   return { params, resolveParams };
 }
@@ -69,15 +67,9 @@ async function readChunk(
 async function readRemainingHtml(
   reader: ReadableStreamDefaultReader<Uint8Array>
 ): Promise<string> {
-  let html = '';
-  let chunk = await readChunk(reader);
+  const chunk = await readChunk(reader);
 
-  while (chunk !== null) {
-    html += chunk;
-    chunk = await readChunk(reader);
-  }
-
-  return html;
+  return chunk === null ? '' : chunk + (await readRemainingHtml(reader));
 }
 
 describe('Page', () => {

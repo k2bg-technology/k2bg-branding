@@ -107,7 +107,6 @@ export function ContactForm({ dictionary, actionUrl }: Props) {
           />
         </div>
       </Form.Control>
-      {/* biome-ignore lint/a11y/useSemanticElements: role=status is required for the contact submission live region. */}
       <div
         role="status"
         aria-live="polite"
