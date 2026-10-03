@@ -8,13 +8,18 @@ import { ContactForm } from './ContactForm';
 
 const dictionary = en.contact.form;
 const actionUrl = 'https://formspree.example/f/contact';
+const submittedFields = {
+  name: 'John Smith',
+  email: 'john@example.com',
+  message: 'Hello from the contact form.',
+};
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
 function stubFetch(implementation: () => Promise<Response>) {
-  const fetchMock = vi.fn(implementation);
+  const fetchMock = vi.fn<typeof fetch>(implementation);
   vi.stubGlobal('fetch', fetchMock);
   return fetchMock;
 }
@@ -25,29 +30,54 @@ function createFetchResponse(ok: boolean): Response {
 }
 
 async function fillAndSubmitForm(user: ReturnType<typeof userEvent.setup>) {
-  await user.type(screen.getByLabelText(dictionary.nameLabel), 'John Smith');
+  await user.type(
+    screen.getByLabelText(dictionary.nameLabel),
+    submittedFields.name
+  );
   await user.type(
     screen.getByLabelText(dictionary.emailLabel),
-    'john@example.com'
+    submittedFields.email
   );
   await user.type(
     screen.getByLabelText(dictionary.messageLabel),
-    'Hello from the contact form.'
+    submittedFields.message
   );
   await user.click(screen.getByRole('button', { name: dictionary.submit }));
 }
 
 describe('ContactForm', () => {
-  it('shows the success message when the submission succeeds', async () => {
+  it('posts the filled fields to the action URL as JSON-accepting form data', async () => {
+    const fetchMock = stubFetch(() =>
+      Promise.resolve(createFetchResponse(true))
+    );
+    const user = userEvent.setup();
+    render(<ContactForm dictionary={dictionary} actionUrl={actionUrl} />);
+
+    await fillAndSubmitForm(user);
+
+    await screen.findByText(dictionary.successMessage);
+    const [requestUrl, requestInit] = fetchMock.mock.calls[0];
+    expect(requestUrl).toBe(actionUrl);
+    expect(requestInit).toMatchObject({
+      method: 'POST',
+      headers: { Accept: 'application/json' },
+    });
+    expect(Object.fromEntries(requestInit?.body as FormData)).toEqual(
+      submittedFields
+    );
+  });
+
+  it('announces the success message in the status live region', async () => {
     stubFetch(() => Promise.resolve(createFetchResponse(true)));
     const user = userEvent.setup();
     render(<ContactForm dictionary={dictionary} actionUrl={actionUrl} />);
 
     await fillAndSubmitForm(user);
 
-    expect(
-      await screen.findByText(dictionary.successMessage)
-    ).toBeInTheDocument();
+    await screen.findByText(dictionary.successMessage);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      dictionary.successMessage
+    );
   });
 
   it('clears the form fields when the submission succeeds', async () => {
@@ -63,16 +93,17 @@ describe('ContactForm', () => {
     expect(screen.getByLabelText(dictionary.messageLabel)).toHaveValue('');
   });
 
-  it('shows the error message when the server responds with a non-OK status', async () => {
+  it('announces the error message in the status live region when the server responds with a non-OK status', async () => {
     stubFetch(() => Promise.resolve(createFetchResponse(false)));
     const user = userEvent.setup();
     render(<ContactForm dictionary={dictionary} actionUrl={actionUrl} />);
 
     await fillAndSubmitForm(user);
 
-    expect(
-      await screen.findByText(dictionary.errorMessage)
-    ).toBeInTheDocument();
+    await screen.findByText(dictionary.errorMessage);
+    expect(screen.getByRole('status')).toHaveTextContent(
+      dictionary.errorMessage
+    );
   });
 
   it('shows the error message when the request throws', async () => {
