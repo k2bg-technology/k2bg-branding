@@ -9,6 +9,8 @@ type PrevNextProps = PaginationProps['prevProps'];
 const ellipsisLabel = '…';
 const previousHref = '/prev';
 const nextHref = '/next';
+const previousControlName = 'Previous page';
+const nextControlName = 'Next page';
 
 interface RenderOptions {
   count: number;
@@ -35,28 +37,14 @@ function renderPagination(options: RenderOptions) {
   );
 }
 
-// The previous/next controls are icon-only and therefore have no accessible
-// name, so they are located by their fixed position inside the pagination nav.
-function getControlAt(position: 'first' | 'last') {
-  const navigation = screen.getByRole('navigation');
-  const control =
-    position === 'first'
-      ? navigation.firstElementChild
-      : navigation.lastElementChild;
-
-  if (control === null) {
-    throw new Error(`The pagination navigation has no ${position} control.`);
-  }
-
-  return control;
-}
-
+// The previous/next controls are icon-only, so their aria-label is the only
+// accessible name; looking them up by it asserts the name in every test.
 function getPreviousControl() {
-  return getControlAt('first');
+  return screen.getByLabelText(previousControlName);
 }
 
 function getNextControl() {
-  return getControlAt('last');
+  return screen.getByLabelText(nextControlName);
 }
 
 // Drops the icon-only previous/next controls, which carry no text content.

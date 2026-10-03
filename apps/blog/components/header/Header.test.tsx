@@ -32,6 +32,15 @@ function getDistinctHrefsByLinkName(name: string) {
 }
 
 describe('Header', () => {
+  it.each(['検索を開く', 'メニューを開く', 'サイドバーを開く'])(
+    'exposes a button named %s',
+    (name) => {
+      render(<Header />);
+
+      expect(screen.getByRole('button', { name })).toBeInTheDocument();
+    }
+  );
+
   it.each(LISTED_CATEGORIES)('links to the %s category', (category) => {
     const expectedHrefs = [`/category/${category}`];
     render(<Header />);
