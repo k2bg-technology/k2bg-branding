@@ -93,6 +93,10 @@ paths: apps/**/*.{ts,tsx}, packages/**/*.{ts,tsx}
 - Non-exported functions, local variables, and constants carry no annotation when inference yields the same type.
 - An annotation stays where it supplies the type, including a literal checked against a contract, an empty collection, a variable without an initializer, a type guard, recursion, an overload, or deliberate widening.
 
+## Accessibility
+
+- Icon-only buttons carry an accessible name (`aria-label` or `aria-labelledby`) in the surrounding UI language; text children also name a button, so the rule is a convention rather than a type constraint.
+
 ## Formatting and Visual Alignment
 
 - **Consistent Style**: Apply consistent style throughout the project.
