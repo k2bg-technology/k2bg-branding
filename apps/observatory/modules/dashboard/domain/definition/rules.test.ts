@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { validateDefinitionRules } from './rules';
-import type { DashboardDefinition } from './types';
+import type { DashboardDefinition, TableSection } from './types';
 
 function createDefinition(): DashboardDefinition {
   return {
@@ -124,6 +124,80 @@ describe('validateDefinitionRules', () => {
     expect(result).toContainEqual({
       path: ['sections', 0, 'tiles', 0, 'format'],
       message: 'A currency tile requires dashboard currency',
+    });
+  });
+});
+
+function createTable(): TableSection {
+  return {
+    id: 'detail',
+    title: 'Detail',
+    kind: 'table',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    columns: [
+      { header: 'Date', column: 'occurred_on', type: 'date' },
+      { header: 'Description', column: 'description', type: 'text' },
+      {
+        header: 'Amount',
+        column: 'amount',
+        type: 'number',
+        format: { type: 'currency' },
+      },
+    ],
+    paging: { pageSize: 20 },
+  };
+}
+
+describe('table definition rules', () => {
+  it.each([
+    { name: 'both bounds', limit: 10, paging: { pageSize: 20 } },
+    { name: 'neither bound', limit: undefined, paging: undefined },
+  ])('rejects $name', ({ limit, paging }) => {
+    const definition = createDefinition();
+    definition.sections = [{ ...createTable(), limit, paging }];
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'limit'],
+      message: 'A table declares exactly one of limit and paging',
+    });
+  });
+
+  it.each([
+    {
+      name: 'undeclared',
+      column: 'missing',
+      message: 'Sort column "missing" is not a declared column',
+    },
+    {
+      name: 'duplicated',
+      column: 'amount',
+      message: 'Sort column "amount" matches several declared columns',
+    },
+  ])('rejects a $name sort column', ({ column, message }) => {
+    const definition = createDefinition();
+    const table = createTable();
+    table.sort = { column, direction: 'descending' };
+    if (column === 'amount') {
+      table.columns.push({
+        header: 'Other amount',
+        column: 'amount',
+        type: 'number',
+        format: { type: 'number' },
+      });
+    }
+    definition.sections = [table];
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'sort', 'column'],
+      message,
+    });
+  });
+
+  it('requires dashboard currency for a currency column', () => {
+    const definition = createDefinition();
+    delete definition.currency;
+    definition.sections = [createTable()];
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'columns', 2, 'format'],
+      message: 'A currency column requires dashboard currency',
     });
   });
 });

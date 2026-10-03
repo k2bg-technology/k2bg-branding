@@ -51,11 +51,15 @@ describe('FetchSectionData', () => {
           ? { buckets: [{ period: '2026-09', values: [42] }], truncated: false }
           : null,
     };
+    const section = dashboard.sections[0];
+    if (section.kind !== 'stat-tiles') {
+      throw new Error('Expected stat-tiles fixture');
+    }
     const sut = new FetchSectionData(queryService);
 
     const result = await sut.execute({
       dashboard,
-      section: dashboard.sections[0],
+      section,
       period,
     });
 

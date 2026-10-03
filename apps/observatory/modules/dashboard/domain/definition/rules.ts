@@ -31,26 +31,94 @@ function currencyViolations(
   }
 
   return definition.sections.flatMap((section, sectionIndex) => {
-    if (section.kind === SectionKind.TIME_SERIES) {
-      return section.format.type === 'currency'
-        ? [
-            {
-              path: ['sections', sectionIndex, 'format'],
-              message: 'A currency section requires dashboard currency',
-            },
-          ]
-        : [];
+    switch (section.kind) {
+      case SectionKind.TIME_SERIES:
+        return section.format.type === 'currency'
+          ? [
+              {
+                path: ['sections', sectionIndex, 'format'],
+                message: 'A currency section requires dashboard currency',
+              },
+            ]
+          : [];
+      case SectionKind.TABLE:
+        return section.columns.flatMap((column, columnIndex) =>
+          column.type === 'number' && column.format.type === 'currency'
+            ? [
+                {
+                  path: [
+                    'sections',
+                    sectionIndex,
+                    'columns',
+                    columnIndex,
+                    'format',
+                  ],
+                  message: 'A currency column requires dashboard currency',
+                },
+              ]
+            : []
+        );
+      case SectionKind.STAT_TILES:
+        return section.tiles.flatMap((tile, tileIndex) =>
+          tile.format.type === 'currency'
+            ? [
+                {
+                  path: [
+                    'sections',
+                    sectionIndex,
+                    'tiles',
+                    tileIndex,
+                    'format',
+                  ],
+                  message: 'A currency tile requires dashboard currency',
+                },
+              ]
+            : []
+        );
+      default:
+        throw new Error(`Unsupported section kind: ${JSON.stringify(section)}`);
     }
-    return section.tiles.flatMap((tile, tileIndex) =>
-      tile.format.type === 'currency'
-        ? [
-            {
-              path: ['sections', sectionIndex, 'tiles', tileIndex, 'format'],
-              message: 'A currency tile requires dashboard currency',
-            },
-          ]
-        : []
+  });
+}
+
+function tableRowBoundViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.TABLE &&
+    (section.limit === undefined) === (section.paging === undefined)
+      ? [
+          {
+            path: ['sections', index, 'limit'],
+            message: 'A table declares exactly one of limit and paging',
+          },
+        ]
+      : []
+  );
+}
+
+function tableSortViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) => {
+    if (section.kind !== SectionKind.TABLE || section.sort === undefined) {
+      return [];
+    }
+    const matches = section.columns.filter(
+      (column) => column.column === section.sort?.column
     );
+    if (matches.length === 1) {
+      return [];
+    }
+    return [
+      {
+        path: ['sections', index, 'sort', 'column'],
+        message:
+          matches.length === 0
+            ? `Sort column "${section.sort.column}" is not a declared column`
+            : `Sort column "${section.sort.column}" matches several declared columns`,
+      },
+    ];
   });
 }
 
@@ -96,6 +164,8 @@ export function validateDefinitionRules(
 ): DefinitionViolation[] {
   return duplicateSectionViolations(definition).concat(
     currencyViolations(definition),
-    stackingViolations(definition)
+    stackingViolations(definition),
+    tableRowBoundViolations(definition),
+    tableSortViolations(definition)
   );
 }

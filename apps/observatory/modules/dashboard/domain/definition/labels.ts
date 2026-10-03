@@ -3,6 +3,9 @@ export interface DashboardLabels {
   previousPeriod: string;
   nextPeriod: string;
   truncated: string;
+  previousPage: string;
+  nextPage: string;
+  pagination: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -10,4 +13,7 @@ export const DEFAULT_DASHBOARD_LABELS = {
   previousPeriod: 'Previous period',
   nextPeriod: 'Next period',
   truncated: 'Older periods are not shown',
+  previousPage: 'Previous page',
+  nextPage: 'Next page',
+  pagination: 'Pagination',
 };
