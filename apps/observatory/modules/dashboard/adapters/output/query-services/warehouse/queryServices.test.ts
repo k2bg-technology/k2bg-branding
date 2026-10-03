@@ -4,10 +4,11 @@ import type {
   WarehouseClient,
   WarehouseQueryRequest,
 } from '../../../../../../infrastructure/warehouse';
-import type { SectionQueryPlan } from '../../../../domain';
+import type { SectionQueryPlan, TableQueryPlan } from '../../../../domain';
 import { MappingError, RepositoryError } from '../../../shared';
 import { WarehouseFetchPeriodBoundsQueryService } from './fetchPeriodBoundsQueryService';
 import { WarehouseFetchSectionDataQueryService } from './fetchSectionDataQueryService';
+import { WarehouseFetchTableRowsQueryService } from './fetchTableRowsQueryService';
 
 function createPlan(
   reduction: SectionQueryPlan['measures'][number]['reduction']
@@ -102,6 +103,67 @@ describe('WarehouseFetchSectionDataQueryService', () => {
 
     expect(error).toBeInstanceOf(MappingError);
     expect(error).toMatchObject({ cause: undefined });
+  });
+});
+
+describe('WarehouseFetchTableRowsQueryService', () => {
+  const plan: TableQueryPlan = {
+    sectionId: 'detail',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+    columns: [{ column: 'description', type: 'text' }],
+    sort: null,
+    rows: { pageSize: 20, page: 7 },
+  };
+
+  it('returns the clamped page from the warehouse row', async () => {
+    const client: WarehouseClient = {
+      query: async ({ sql, params }) =>
+        params?.page === 7 && params.page_size === 20 && sql.includes('LEAST(')
+          ? [{ cell_0: 'Rent', page_number: 3, page_count: 3 }]
+          : [],
+    };
+    const sut = new WarehouseFetchTableRowsQueryService(client);
+    expect(
+      await sut.fetchTableRows(plan, { name: 'detail', revalidate: 86_400 })
+    ).toEqual({
+      rows: [['Rent']],
+      page: { number: 3, count: 3 },
+    });
+  });
+
+  it('returns limit rows without page metadata', async () => {
+    const client: WarehouseClient = {
+      query: async ({ params }) =>
+        params?.row_limit === 10 && !('page' in params)
+          ? [{ cell_0: 'Rent' }]
+          : [],
+    };
+    const sut = new WarehouseFetchTableRowsQueryService(client);
+    expect(
+      await sut.fetchTableRows(
+        { ...plan, rows: { limit: 10 } },
+        { name: 'topn', revalidate: 86_400 }
+      )
+    ).toEqual({
+      rows: [['Rent']],
+      page: null,
+    });
+  });
+
+  it('wraps driver failure with cause', async () => {
+    const cause = new Error('driver failed');
+    const client: WarehouseClient = {
+      query: async () => Promise.reject(cause),
+    };
+    const sut = new WarehouseFetchTableRowsQueryService(client);
+    const result = sut.fetchTableRows(plan, {
+      name: 'detail',
+      revalidate: 86_400,
+    });
+    await expect(result).rejects.toBeInstanceOf(RepositoryError);
+    await expect(result).rejects.toMatchObject({ cause });
   });
 });
 
