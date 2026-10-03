@@ -1,5 +1,5 @@
 import type { TimeSeriesSection } from '../definition';
-import type { Period } from '../period';
+import { type Period, resolveSectionRange } from '../period';
 import type { SectionQueryPlan } from './types';
 
 export const MAXIMUM_SECTION_BUCKETS = 120;
@@ -9,17 +9,14 @@ export function planTimeSeriesSection(
   period: Period,
   timeZone: string
 ): Extract<SectionQueryPlan, { kind: 'time-series' }> {
-  return {
+  const range = resolveSectionRange(section, period);
+  const common = {
     kind: section.kind,
     sectionId: section.id,
-    grain: period.grain,
     source: section.source,
     timeZone,
     selectedPeriod: period.toString(),
-    dateRange: {
-      firstDate: period.shift(-(section.window - 1)).firstDate,
-      lastDate: period.lastDate,
-    },
+    dateRange: range.dateRange,
     measures: section.series.map((series) => ({
       column: series.column,
       reduction: series.reduction,
@@ -27,4 +24,7 @@ export function planTimeSeriesSection(
     })),
     bucketLimit: MAXIMUM_SECTION_BUCKETS,
   };
+  return range.grain === 'hour'
+    ? { ...common, grain: range.grain, firstHour: range.firstHour }
+    : { ...common, grain: range.grain };
 }

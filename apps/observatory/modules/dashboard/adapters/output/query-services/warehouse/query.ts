@@ -80,11 +80,17 @@ export function buildSourceFilters(source: SourceDefinition): {
 }
 
 export function timeColumn(time: TimeBinding): string {
-  return typeof time === 'string' ? time : time.column;
+  if (typeof time === 'string') {
+    return time;
+  }
+  return 'date' in time ? time.date : time.column;
 }
 
 export function calendarDateExpression(time: TimeBinding): string {
   const quoted = quoteIdentifier(timeColumn(time));
+  if (typeof time !== 'string' && 'date' in time) {
+    return quoted;
+  }
   return typeof time === 'string'
     ? `DATE(TIMESTAMP(DATETIME(${quoted}), @${TIME_ZONE_PARAMETER}), @${TIME_ZONE_PARAMETER})`
     : `DATE(${quoted}, @${TIME_ZONE_PARAMETER})`;

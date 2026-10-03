@@ -2,25 +2,17 @@ import { ChartPeriod } from 'ui';
 
 import type {
   DashboardDefinition,
-  Period,
-  PeriodGrain,
   TimeSeriesSection as TimeSeriesSectionDefinition,
 } from '../../../modules/dashboard/domain';
 import {
   DEFAULT_DASHBOARD_LABELS,
   formatPeriodRange,
+  Period,
+  resolveSectionRange,
   timeSeriesSpine,
-  toEpochMilliseconds,
 } from '../../../modules/dashboard/domain';
 import type { SectionData } from '../../../modules/dashboard/use-cases';
 import { TimeSeriesSectionChart } from './TimeSeriesSectionChart';
-
-// ChartPeriod describes the displayed span, so date buckets use date ticks.
-const chartPeriodByGrain: Record<PeriodGrain, ChartPeriod> = {
-  month: ChartPeriod.MONTH,
-  week: ChartPeriod.QUARTER,
-  day: ChartPeriod.MONTH,
-};
 
 interface Props {
   dashboard: DashboardDefinition;
@@ -29,24 +21,54 @@ interface Props {
   period: Period;
 }
 
+function chartPeriod(
+  grain: 'month' | 'week' | 'day' | 'hour',
+  firstDate: string,
+  lastDate: string
+): ChartPeriod {
+  if (grain === 'hour') {
+    return ChartPeriod.DAY;
+  }
+  if (grain === 'month') {
+    return ChartPeriod.MONTH;
+  }
+  if (grain === 'week') {
+    return ChartPeriod.QUARTER;
+  }
+  const span =
+    (Date.parse(`${lastDate}T00:00:00Z`) -
+      Date.parse(`${firstDate}T00:00:00Z`)) /
+      86_400_000 +
+    1;
+  if (span <= 7) {
+    return ChartPeriod.WEEK;
+  }
+  return span <= 31 ? ChartPeriod.MONTH : ChartPeriod.QUARTER;
+}
+
 export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
+  const range = resolveSectionRange(section, period, {
+    truncated: data.truncated,
+    firstBucket: data.buckets[0]?.period,
+  });
   const spine = timeSeriesSpine(
-    period,
-    section.window,
+    range,
     data.buckets,
-    data.truncated
+    section.series.length,
+    dashboard.timeZone
   );
   const series = section.series.map((definition, index) => ({
     id: `series-${index}`,
     label: definition.label,
-    points: spine.map(({ period: bucketPeriod, values }) => ({
-      timestamp: toEpochMilliseconds(bucketPeriod.firstDate),
+    points: spine.map(({ timestamp, values }) => ({
+      timestamp,
       value: values[index] ?? null,
     })),
   }));
-  const first = spine[0]?.period;
-  const last = spine.at(-1)?.period;
-  if (first === undefined || last === undefined) {
+  const labelGrain = range.grain === 'hour' ? 'day' : range.grain;
+  const first = Period.containing(labelGrain, range.display.first.date);
+  const last = Period.containing(labelGrain, range.display.last.date);
+  if (first === null || last === null) {
     return null;
   }
   const windowLabel = formatPeriodRange(first, last, dashboard.locale);
@@ -60,11 +82,16 @@ export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
       </p>
       <TimeSeriesSectionChart
         label={section.title}
-        chartPeriod={chartPeriodByGrain[dashboard.grain]}
+        chartPeriod={chartPeriod(
+          range.grain,
+          range.display.first.date,
+          range.display.last.date
+        )}
         series={series}
         variant={section.variant}
         stacked={section.stacked}
         locale={dashboard.locale}
+        timeZone={dashboard.timeZone}
         currency={dashboard.currency}
         format={section.format}
         unit={section.unit}

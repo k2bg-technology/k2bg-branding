@@ -27,6 +27,10 @@ const timeBindingSchema = z.union([
     column: identifierSchema,
     type: z.literal('timestamp'),
   }),
+  z.strictObject({
+    date: identifierSchema,
+    hour: identifierSchema,
+  }),
 ]) satisfies z.ZodType<TimeBinding>;
 
 const filterValueSchema = z.union([

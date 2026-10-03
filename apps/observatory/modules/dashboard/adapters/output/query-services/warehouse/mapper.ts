@@ -1,6 +1,6 @@
 import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import {
-  Period,
+  parseBucketKey,
   parseCalendarDate,
   Reduction,
   resolveLatest,
@@ -72,7 +72,7 @@ export function toSectionData(
       const period = row.period;
       if (
         typeof period !== 'string' ||
-        Period.parse(plan.grain, period) === null
+        parseBucketKey(plan.grain, period) === null
       ) {
         throw new MappingError(
           `period must match ${plan.grain} grain, received ${JSON.stringify(period)}`
