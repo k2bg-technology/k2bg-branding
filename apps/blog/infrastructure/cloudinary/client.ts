@@ -10,6 +10,7 @@ export interface CloudinaryConfig {
   apiSecret?: string;
 }
 
+// biome-ignore lint/plugin/noLet: The SDK configuration state persists across client calls and test resets.
 let isConfigured = false;
 
 /**
@@ -28,7 +29,7 @@ export function configureCloudinary(config?: CloudinaryConfig): void {
 /**
  * Ensure Cloudinary is configured before use.
  */
-function ensureConfigured(): void {
+function ensureConfigured() {
   if (!isConfigured) {
     configureCloudinary();
   }
@@ -70,7 +71,9 @@ export async function uploadImage(
 /**
  * Get resource information from Cloudinary.
  */
-export async function getResource(publicId: string) {
+export async function getResource(
+  publicId: string
+): Promise<Awaited<ReturnType<typeof cloudinary.api.resource>>> {
   ensureConfigured();
   return cloudinary.api.resource(publicId);
 }
@@ -106,7 +109,8 @@ export function buildImageUrl(
 
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const baseUrl = `https://res.cloudinary.com/${cloudName}/image/upload`;
-  const transformation = transformations.length > 0 ? transformations.join(',') : '';
+  const transformation =
+    transformations.length > 0 ? transformations.join(',') : '';
 
   const parts = [baseUrl, transformation, publicId].filter(Boolean);
   return parts.join('/');
@@ -120,5 +124,5 @@ export function resetCloudinaryConfig(): void {
   isConfigured = false;
 }
 
-export { cloudinary };
 export type { UploadApiOptions, UploadApiResponse };
+export { cloudinary };

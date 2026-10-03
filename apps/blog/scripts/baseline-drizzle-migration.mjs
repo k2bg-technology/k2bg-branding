@@ -12,7 +12,7 @@ if (!databaseUrl) {
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const migrationsFolder = join(
   currentDir,
-  '../infrastructure/drizzle/migrations',
+  '../infrastructure/drizzle/migrations'
 );
 const [initialMigration] = readMigrationFiles({ migrationsFolder });
 
@@ -33,14 +33,11 @@ try {
       to_regclass('drizzle."__drizzle_migrations"') IS NOT NULL AS has_drizzle_journal
   `;
 
-  let hasAppliedDrizzleMigration = false;
-
-  if (schemaState.has_drizzle_journal) {
-    const [journalState] =
-      await sql`SELECT COUNT(*)::int AS migration_count FROM drizzle.__drizzle_migrations`;
-
-    hasAppliedDrizzleMigration = journalState.migration_count > 0;
-  }
+  const hasAppliedDrizzleMigration = schemaState.has_drizzle_journal
+    ? (
+        await sql`SELECT COUNT(*)::int AS migration_count FROM drizzle.__drizzle_migrations`
+      )[0].migration_count > 0
+    : false;
 
   if (!hasAppliedDrizzleMigration) {
     const hasExistingBlogSchema =
@@ -60,7 +57,7 @@ try {
 
       if (!hasCompleteBaselineSchema) {
         throw new Error(
-          'Existing blog database schema is incomplete; refusing to baseline Drizzle migrations.',
+          'Existing blog database schema is incomplete; refusing to baseline Drizzle migrations.'
         );
       }
 

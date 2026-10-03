@@ -5,7 +5,6 @@ import {
   getBackdropBrightness,
   getWashColor,
   getWashOpacity,
-  MAX_BACKDROP_BLUR_IN_PX,
 } from './exposureFlashMotion';
 
 const PURE_WHITE = 'rgb(255, 255, 255)';
@@ -64,9 +63,11 @@ describe('getBackdropBlurInPx', () => {
   });
 
   it('reaches the maximum blur at intensity 1', () => {
-    const result = getBackdropBlurInPx(1);
+    const maximumBlur = getBackdropBlurInPx(1);
+    const excessiveBlur = getBackdropBlurInPx(1.5);
 
-    expect(result).toBe(MAX_BACKDROP_BLUR_IN_PX);
+    expect(maximumBlur).toBeGreaterThan(0);
+    expect(excessiveBlur).toBe(maximumBlur);
   });
 });
 

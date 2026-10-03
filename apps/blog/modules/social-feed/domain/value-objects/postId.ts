@@ -1,11 +1,5 @@
 import { InvalidPostIdError } from '../errors/errors';
 
-/**
- * PostId Value Object
- *
- * Represents the unique identifier of a social post.
- * Immutable and compared by value equality.
- */
 export class PostId {
   private constructor(private readonly value: string) {}
 

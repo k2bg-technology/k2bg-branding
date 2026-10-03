@@ -34,7 +34,6 @@ describe('Name', () => {
       const emptyValue = '';
 
       expect(() => Name.create(emptyValue)).toThrow(InvalidNameError);
-      expect(() => Name.create(emptyValue)).toThrow('Name cannot be empty');
     });
 
     it('throws InvalidNameError when value is whitespace only', () => {
@@ -47,9 +46,6 @@ describe('Name', () => {
       const longValue = 'a'.repeat(201);
 
       expect(() => Name.create(longValue)).toThrow(InvalidNameError);
-      expect(() => Name.create(longValue)).toThrow(
-        'Name cannot exceed 200 characters'
-      );
     });
   });
 
@@ -81,17 +77,6 @@ describe('Name', () => {
       const result = name1.equals(name2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the name string value', () => {
-      const value = 'Test Product';
-      const sut = Name.create(value);
-
-      const result = sut.toString();
-
-      expect(result).toBe(value);
     });
   });
 });

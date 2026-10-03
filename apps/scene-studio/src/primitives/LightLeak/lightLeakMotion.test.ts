@@ -4,7 +4,7 @@ import { getLightLeakMotion } from './lightLeakMotion';
 
 const PULSE_PERIOD_IN_FRAMES = 180;
 
-function getFirstWashOpacities(): number[] {
+function getFirstWashOpacities() {
   return Array.from(
     { length: PULSE_PERIOD_IN_FRAMES },
     (_, frame) => getLightLeakMotion(frame)[0]?.opacity ?? 0

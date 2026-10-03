@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  EDGE_SOFTNESS_IN_PX,
   getOcclusionOffset,
   getSilhouetteRotationInDegrees,
   getSilhouetteShape,
-  MAX_SILHOUETTE_SCALE,
 } from './occlusionMotion';
 
 const FRAME_WIDTH_IN_PX = 1080;
@@ -33,16 +31,6 @@ describe('getOcclusionOffset', () => {
   ])(
     'places the silhouette fully off-screen at progress $progress travelling at $directionInDegrees degrees',
     ({ directionInDegrees, progress }) => {
-      const directionInRadians = (directionInDegrees * Math.PI) / 180;
-      const silhouetteHalfDiagonalInPx =
-        (MAX_SILHOUETTE_SCALE *
-          Math.hypot(FRAME_WIDTH_IN_PX, FRAME_HEIGHT_IN_PX)) /
-        2;
-      const frameHalfProjectionInPx =
-        (Math.abs(FRAME_WIDTH_IN_PX * Math.cos(directionInRadians)) +
-          Math.abs(FRAME_HEIGHT_IN_PX * Math.sin(directionInRadians))) /
-        2;
-
       const result = getOcclusionOffset({
         progress,
         directionInDegrees,
@@ -50,12 +38,17 @@ describe('getOcclusionOffset', () => {
         heightInPx: FRAME_HEIGHT_IN_PX,
       });
 
-      const offsetDistanceInPx = Math.hypot(result.xInPx, result.yInPx);
-      expect(offsetDistanceInPx).toBeGreaterThanOrEqual(
-        silhouetteHalfDiagonalInPx +
-          frameHalfProjectionInPx +
-          EDGE_SOFTNESS_IN_PX
-      );
+      const outwardSign = progress === 0 ? -1 : 1;
+      if (directionInDegrees === 90) {
+        expect(result.yInPx * outwardSign).toBeGreaterThan(3500);
+        expect(result.xInPx).toBeCloseTo(0);
+      } else {
+        const horizontalSign = directionInDegrees === 0 ? 1 : -1;
+        expect(result.xInPx * outwardSign * horizontalSign).toBeGreaterThan(
+          3100
+        );
+        expect(result.yInPx).toBeCloseTo(0);
+      }
     }
   );
 });

@@ -34,9 +34,7 @@ function getScrambledCharacters(input: {
   );
 }
 
-function joinCharacters(
-  characters: ReturnType<typeof getScrambledCharacters>
-): string {
+function joinCharacters(characters: ReturnType<typeof getScrambledCharacters>) {
   return characters.map((character) => character.character).join('');
 }
 

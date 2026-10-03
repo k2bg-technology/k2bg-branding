@@ -1,5 +1,5 @@
 import type { PostSummaryOutput } from '../../modules/post/use-cases';
-import { blogSiteDescription, blogSiteName } from '../siteMetadata';
+import { BLOG_SITE_DESCRIPTION, BLOG_SITE_NAME } from '../siteMetadata';
 
 interface RssFeedOptions {
   baseUrl: string;
@@ -14,9 +14,9 @@ export function buildRssFeed({ baseUrl, posts }: RssFeedOptions): string {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0">',
     '<channel>',
-    `<title>${escapeXml(blogSiteName)}</title>`,
+    `<title>${escapeXml(BLOG_SITE_NAME)}</title>`,
     `<link>${escapeXml(`${normalizedBaseUrl}/blog`)}</link>`,
-    `<description>${escapeXml(blogSiteDescription)}</description>`,
+    `<description>${escapeXml(BLOG_SITE_DESCRIPTION)}</description>`,
     '<language>ja</language>',
     `<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
     ...items,
@@ -44,7 +44,7 @@ export function escapeXml(value: string): string {
   });
 }
 
-function buildRssItem(post: PostSummaryOutput, baseUrl: string): string {
+function buildRssItem(post: PostSummaryOutput, baseUrl: string) {
   const postUrl = `${baseUrl}/blog/${post.slug}`;
   const description = post.excerpt ?? '';
 

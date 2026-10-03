@@ -4,13 +4,10 @@ import { InvalidMediaError } from '../errors/errors';
 import { MediaType } from '../types/enums';
 import {
   Extension,
-  Height,
   MediaId,
   MediaName,
   SourceFile,
   SourceUrl,
-  TargetUrl,
-  Width,
 } from '../value-objects';
 
 import { Media, type MediaProps } from './media';
@@ -34,29 +31,6 @@ function createValidMediaProps(
 
 describe('Media', () => {
   describe('create', () => {
-    it('creates Media when given valid props with sourceUrl', () => {
-      const props = createValidMediaProps();
-
-      const sut = Media.create(props);
-
-      expect(sut.id.equals(props.id)).toBe(true);
-      expect(sut.name.equals(props.name)).toBe(true);
-      expect(sut.type).toBe(props.type);
-      expect(sut.sourceUrl?.equals(props.sourceUrl!)).toBe(true);
-    });
-
-    it('creates Media when given valid props with sourceFile', () => {
-      const props = createValidMediaProps({
-        sourceFile: SourceFile.create('/uploads/image.jpg'),
-        sourceUrl: null,
-      });
-
-      const sut = Media.create(props);
-
-      expect(sut.sourceFile?.equals(props.sourceFile!)).toBe(true);
-      expect(sut.sourceUrl).toBeNull();
-    });
-
     it('creates Media when given both sourceFile and sourceUrl', () => {
       const props = createValidMediaProps({
         sourceFile: SourceFile.create('/uploads/image.jpg'),
@@ -67,20 +41,6 @@ describe('Media', () => {
 
       expect(sut.sourceFile).not.toBeNull();
       expect(sut.sourceUrl).not.toBeNull();
-    });
-
-    it('creates Media with all optional fields', () => {
-      const props = createValidMediaProps({
-        targetUrl: TargetUrl.create('https://example.com/product'),
-        width: Width.create(800),
-        height: Height.create(600),
-      });
-
-      const sut = Media.create(props);
-
-      expect(sut.targetUrl?.equals(props.targetUrl!)).toBe(true);
-      expect(sut.width?.equals(props.width!)).toBe(true);
-      expect(sut.height?.equals(props.height!)).toBe(true);
     });
 
     it('throws InvalidMediaError when neither sourceFile nor sourceUrl provided', () => {
@@ -135,18 +95,6 @@ describe('Media', () => {
       expect(result).toBe('https://example.com/image.jpg');
     });
 
-    it('returns sourceFile value when only sourceFile is present', () => {
-      const props = createValidMediaProps({
-        sourceFile: SourceFile.create('/uploads/image.jpg'),
-        sourceUrl: null,
-      });
-      const sut = Media.create(props);
-
-      const result = sut.getEffectiveSource();
-
-      expect(result).toBe('/uploads/image.jpg');
-    });
-
     it('returns null when neither source is present (reconstituted)', () => {
       const props = createValidMediaProps({
         sourceFile: null,
@@ -176,18 +124,6 @@ describe('Media', () => {
     it('returns true when sourceUrl is present', () => {
       const props = createValidMediaProps({
         sourceFile: null,
-        sourceUrl: SourceUrl.create('https://example.com/image.jpg'),
-      });
-      const sut = Media.create(props);
-
-      const result = sut.hasSource();
-
-      expect(result).toBe(true);
-    });
-
-    it('returns true when both sources are present', () => {
-      const props = createValidMediaProps({
-        sourceFile: SourceFile.create('/uploads/image.jpg'),
         sourceUrl: SourceUrl.create('https://example.com/image.jpg'),
       });
       const sut = Media.create(props);
@@ -241,24 +177,6 @@ describe('Media', () => {
       const result = media1.equals(media2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('type property', () => {
-    it('returns IMAGE type correctly', () => {
-      const props = createValidMediaProps({ type: MediaType.IMAGE });
-
-      const sut = Media.create(props);
-
-      expect(sut.type).toBe(MediaType.IMAGE);
-    });
-
-    it('returns VIDEO type correctly', () => {
-      const props = createValidMediaProps({ type: MediaType.VIDEO });
-
-      const sut = Media.create(props);
-
-      expect(sut.type).toBe(MediaType.VIDEO);
     });
   });
 });

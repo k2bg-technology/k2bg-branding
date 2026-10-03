@@ -2,7 +2,7 @@ export {
   configureInstagram,
   getInstagramClient,
   getInstagramUserId,
-  resetInstagramConfig,
   type InstagramClient,
   type InstagramConfig,
+  resetInstagramConfig,
 } from './client';

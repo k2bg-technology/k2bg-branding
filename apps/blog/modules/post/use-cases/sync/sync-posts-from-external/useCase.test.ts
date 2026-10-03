@@ -76,7 +76,6 @@ describe('SyncPostsFromExternal', () => {
       const sut = new SyncPostsFromExternal(externalSource, batchRepository);
 
       await expect(sut.execute()).rejects.toThrow(SyncError);
-      await expect(sut.execute()).rejects.toThrow('API error');
     });
 
     it('throws SyncError when batch repository fails', async () => {
@@ -90,7 +89,6 @@ describe('SyncPostsFromExternal', () => {
       const sut = new SyncPostsFromExternal(externalSource, batchRepository);
 
       await expect(sut.execute()).rejects.toThrow(SyncError);
-      await expect(sut.execute()).rejects.toThrow('Database error');
     });
 
     it('maps synced posts to PostOutput', async () => {

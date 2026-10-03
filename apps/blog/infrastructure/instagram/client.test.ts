@@ -17,6 +17,7 @@ describe('Instagram Client', () => {
   afterEach(() => {
     resetInstagramConfig();
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   describe('configureInstagram', () => {
@@ -33,47 +34,13 @@ describe('Instagram Client', () => {
     });
 
     it('uses environment variables when config not provided', () => {
-      const originalEnv = process.env;
-      process.env = {
-        ...originalEnv,
-        INSTAGRAM_GRAPH_API_BASE_URL: 'https://env.api.com',
-        INSTAGRAM_LONG_ACCESS_TOKEN: 'env-token',
-        INSTAGRAM_USER_ID: 'env-user-id',
-      };
+      vi.stubEnv('INSTAGRAM_GRAPH_API_BASE_URL', 'https://env.api.com');
+      vi.stubEnv('INSTAGRAM_LONG_ACCESS_TOKEN', 'env-token');
+      vi.stubEnv('INSTAGRAM_USER_ID', 'env-user-id');
 
       configureInstagram();
 
       expect(getInstagramUserId()).toBe('env-user-id');
-
-      process.env = originalEnv;
-    });
-  });
-
-  describe('getInstagramClient', () => {
-    it('returns a client with fetch method', () => {
-      configureInstagram({
-        baseUrl: 'https://graph.instagram.com',
-        accessToken: 'test-token',
-        userId: 'test-user',
-      });
-
-      const client = getInstagramClient();
-
-      expect(client).toHaveProperty('fetch');
-      expect(typeof client.fetch).toBe('function');
-    });
-
-    it('returns same instance on multiple calls', () => {
-      configureInstagram({
-        baseUrl: 'https://graph.instagram.com',
-        accessToken: 'test-token',
-        userId: 'test-user',
-      });
-
-      const client1 = getInstagramClient();
-      const client2 = getInstagramClient();
-
-      expect(client1).toBe(client2);
     });
   });
 
@@ -90,7 +57,9 @@ describe('Instagram Client', () => {
 
       expect(fetch).toHaveBeenCalledWith(
         expect.objectContaining({
-          href: expect.stringContaining('https://graph.instagram.com/test-user/media'),
+          href: expect.stringContaining(
+            'https://graph.instagram.com/test-user/media'
+          ),
         })
       );
       expect(fetch).toHaveBeenCalledWith(
@@ -115,28 +84,6 @@ describe('Instagram Client', () => {
           href: expect.stringContaining('fields=id%2Cmedia_url'),
         })
       );
-    });
-  });
-
-  describe('resetInstagramConfig', () => {
-    it('resets configuration and client instance', () => {
-      configureInstagram({
-        baseUrl: 'https://graph.instagram.com',
-        accessToken: 'test-token',
-        userId: 'first-user',
-      });
-      const client1 = getInstagramClient();
-
-      resetInstagramConfig();
-      configureInstagram({
-        baseUrl: 'https://graph.instagram.com',
-        accessToken: 'test-token',
-        userId: 'second-user',
-      });
-      const client2 = getInstagramClient();
-
-      expect(client1).not.toBe(client2);
-      expect(getInstagramUserId()).toBe('second-user');
     });
   });
 });

@@ -8,11 +8,16 @@ interface CaptionMotionInput {
   exitAtFrame?: number;
 }
 
+export interface CaptionMotion {
+  opacity: number;
+  translateYInPx: number;
+}
+
 export function getCaptionMotion({
   frame,
   enterDelayInFrames,
   exitAtFrame,
-}: CaptionMotionInput) {
+}: CaptionMotionInput): CaptionMotion {
   const enter = interpolate(
     frame - enterDelayInFrames,
     [0, durationsInFrames.enter],

@@ -4,12 +4,11 @@ import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
 import { getDefaultOgImageUrl } from '../../infrastructure/di';
-import { blogSiteName } from '../siteMetadata';
+import { BLOG_SITE_NAME } from '../siteMetadata';
 
 import { ContactForm } from './ContactForm';
 
-const contactDescription =
-  'K2.B.G Technology Blog へのお問い合わせはこちらからお送りください。';
+const contactDescription = `${BLOG_SITE_NAME} へのお問い合わせはこちらからお送りください。`;
 const defaultOgImageUrl = getDefaultOgImageUrl();
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ja_JP',
     url: '/contact',
-    siteName: blogSiteName,
+    siteName: BLOG_SITE_NAME,
     images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
   },
   twitter: {

@@ -87,8 +87,18 @@ describe('DepthParallax', () => {
     expect(mocks.capturedUniforms?.uFocus).toBe(1);
   });
 
-  it('scales the blur radius from the blur amount', () => {
-    render(
+  it('halves the blur radius when the blur amount is halved', () => {
+    const { rerender } = render(
+      <DepthParallax
+        src="photo.jpg"
+        depthSrc="depth.png"
+        parallaxAmount={0}
+        blurAmount={1}
+      />
+    );
+    const fullBlurRadius = mocks.capturedUniforms?.uMaxBlurInUv as number;
+
+    rerender(
       <DepthParallax
         src="photo.jpg"
         depthSrc="depth.png"
@@ -97,8 +107,11 @@ describe('DepthParallax', () => {
       />
     );
 
-    const maxBlurInUv = 0.012;
-    expect(mocks.capturedUniforms?.uMaxBlurInUv).toBeCloseTo(maxBlurInUv * 0.5);
+    expect(fullBlurRadius).toBeGreaterThan(0);
+    expect(mocks.capturedUniforms?.uMaxBlurInUv).toBeCloseTo(
+      fullBlurRadius / 2,
+      6
+    );
   });
 
   it('rests as the untouched photo with zero amounts', () => {

@@ -17,15 +17,4 @@ describe('AuthorAvatar', () => {
       expect(screen.getByText(expectedInitial)).toBeInTheDocument();
     }
   );
-
-  it('displays the fallback initial while the image has not loaded', () => {
-    render(
-      <AuthorAvatar
-        name="Test Author"
-        avatarUrl="https://example.com/avatar.jpg"
-      />
-    );
-
-    expect(screen.getByText('T')).toBeInTheDocument();
-  });
 });

@@ -1,11 +1,5 @@
 import { InvalidReleaseDateError } from '../errors/errors';
 
-/**
- * ReleaseDate Value Object
- *
- * Represents the publication date of a Post.
- * Provides methods to check if the date is in the future.
- */
 export class ReleaseDate {
   private readonly value: Date;
 

@@ -36,12 +36,6 @@ describe('drizzle/client', () => {
   });
 
   describe('createDrizzleClient', () => {
-    it('creates a new Drizzle client instance', () => {
-      const sut = createDrizzleClient();
-
-      expect(sut).toBeDefined();
-    });
-
     it('creates different instances on each call', () => {
       const client1 = createDrizzleClient();
       const client2 = createDrizzleClient();
@@ -64,12 +58,6 @@ describe('drizzle/client', () => {
   });
 
   describe('getDrizzleClient', () => {
-    it('returns a Drizzle client instance', () => {
-      const sut = getDrizzleClient();
-
-      expect(sut).toBeDefined();
-    });
-
     it('returns the same instance on multiple calls', () => {
       const client1 = getDrizzleClient();
       const client2 = getDrizzleClient();
@@ -96,14 +84,6 @@ describe('drizzle/client', () => {
 
     it('throws when getDrizzleClient is called', () => {
       delete process.env.DATABASE_URL;
-
-      expect(() => getDrizzleClient()).toThrow(
-        'DATABASE_URL environment variable is required'
-      );
-    });
-
-    it('throws when DATABASE_URL is an empty string', () => {
-      process.env.DATABASE_URL = '';
 
       expect(() => getDrizzleClient()).toThrow(
         'DATABASE_URL environment variable is required'

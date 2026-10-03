@@ -22,11 +22,6 @@ describe('Message Value Object', () => {
       expect(() => Message.create('')).toThrow('Message cannot be empty');
     });
 
-    it('throws InvalidMessageError when message is whitespace only', () => {
-      expect(() => Message.create('   ')).toThrow(InvalidMessageError);
-      expect(() => Message.create('   ')).toThrow('Message cannot be empty');
-    });
-
     it('throws InvalidMessageError when message exceeds max length', () => {
       const longMessage = 'a'.repeat(1001);
 

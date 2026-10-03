@@ -26,7 +26,7 @@ selection, engineering trade-offs, writing tone).
 
 ## Build, Test, and Development Commands
 
-- Install: `pnpm install` (pnpm 10+, Node 20.9+).
+- Install: `pnpm install` (pnpm 10+, Node 22.22+ or 24.15+; exact range in `package.json` `engines`).
 - Develop all: `pnpm dev` (runs `turbo run dev`); filter with `pnpm -F blog dev`,
   `pnpm -F portfolio dev`, `pnpm -F scene-studio dev`, or `pnpm -F observatory dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
@@ -145,10 +145,9 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   `apps/observatory/components/table-catalog/TableCatalog.tsx`) after `logger.error`;
   dashboards never `notFound()` on data failures.
 - Env vars: `WAREHOUSE_PROJECT_ID` and `WAREHOUSE_LOCATION` (required),
-  `GOOGLE_APPLICATION_CREDENTIALS` (optional) — see `apps/observatory/.env.example`.
-  Datasets are per data source: each domain module declares
-  `WAREHOUSE_<DOMAIN>_DATASET_ID` (role-named variable, dataset id as the value) so
-  data-source product names never appear in code.
+  `GOOGLE_APPLICATION_CREDENTIALS` and `OBSERVATORY_DASHBOARDS_DIR` (optional) — see
+  `apps/observatory/.env.example`. Each dashboard definition names its dataset.
+  `/` lists dashboards and `/catalog` lists the referenced datasets' tables and views.
 - Visualization components belong in `packages/ui`, not in the app.
 
 ### Key Integrations
@@ -184,6 +183,8 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Biome enforced (`biome.jsonc`); TypeScript strict across the repo (shared `packages/tsconfig`).
 - Prefer full, descriptive identifiers — avoid abbreviations (`dictionary` not `dict`,
   `language` not `lang`).
+- Detailed coding standards: `.claude/rules/code-style.md` (Claude Code auto-loads it for
+  TypeScript sources; other agents can read it directly).
 
 ### File & Directory Naming
 
@@ -288,8 +289,21 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
   (see `apps/blog/vitest.config.mts`); `packages/test-utils/setupTests.ts` loads
   `@testing-library/jest-dom/vitest`.
 - Coverage reporters: `text,json,html` (see `apps/blog/vitest.config.mts`).
-- Test behavior over implementation; AAA structure; name the subject `sut`; prefer `it.each`
-  over loops. Full standards: `.claude/rules/unit-test-guidelines.md`.
+- Test behavior over implementation; AAA structure; name the subject `sut`; use `it.each`
+  for equivalent Act/Assert cases. Fixture loops and data transformations are not repeated
+  behavior cases. Full standards: `.claude/rules/unit-test-guidelines.md`.
+- Unit tests assert observable inputs, outputs, state changes, and required external effects
+  at the smallest public boundary. Expectations are specified independently of production
+  calculations. Incoming data stubs are checked through outcomes; outgoing interactions
+  require an externally meaningful effect, a documented adapter contract, or an ordering,
+  guard, or single-flight rule.
+- Database integration tests use the real test database and assert freshly queried persisted
+  state. Diagnostic logs do not need assertions; explicit operational outputs and emitted
+  security redaction remain testable contracts.
+- What needs a test, what does not (decorative appearance, wiring, forwarding, efficiency-only
+  interactions, sibling constraints, unreachable scenarios), and whether an existing test is
+  kept, improved, moved, or deleted are stated in `.claude/rules/unit-test-guidelines.md`
+  ("What Needs a Test" and "Retaining, Improving, Moving, and Deleting Tests").
 - Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` (or scope via `pnpm -F blog test`).
 
 ## Internationalization (Portfolio App)
@@ -319,8 +333,10 @@ See `turbo.json` for the complete env list. Critical variables:
 - `API_KEY` — Hono server authentication (`x-api-key` header).
 - Database connection strings for Drizzle/PostgreSQL.
 - `WAREHOUSE_PROJECT_ID` / `WAREHOUSE_LOCATION` — Observatory warehouse reads;
-  `WAREHOUSE_<DOMAIN>_DATASET_ID` per domain module; `GOOGLE_APPLICATION_CREDENTIALS`
-  (optional) points Application Default Credentials at a service-account key.
+  `OBSERVATORY_DASHBOARDS_DIR`
+  (optional) names the directory holding dashboard definition JSON files;
+  `GOOGLE_APPLICATION_CREDENTIALS` (optional) points Application Default Credentials
+  at a service-account key.
 
 ## Security & Configuration
 
@@ -328,6 +344,9 @@ See `turbo.json` for the complete env list. Critical variables:
   app-specific secrets in `apps/*/.env.local` and never commit them.
 - Avoid storing tokens in code or stories; prefer `.env` and runtime config.
 - Never log PII; ensure authentication wraps protected Hono routes (`x-api-key`).
+- The blog deploys to AWS Amplify: the root `amplify.yml` is the build spec (it overrides
+  console build settings) and `.github/workflows/deploy-blog.yml` drives deploys on `main`.
+  Details: `apps/blog/README.md` (Deployment section).
 
 ## Documentation Rules (Agent Docs)
 
@@ -370,11 +389,43 @@ rather than guess. (Claude Code: use the `k2bg-design-system` MCP tools — see 
 
 ## Codex Review Guidelines
 
-Codex posts only P0/P1 issues. Apply these rules when reviewing a pull request:
+Codex posts only P0/P1 issues. Review the whole pull request each time and report every
+P0/P1 issue found in one review. A re-review verifies the earlier findings and the changes
+made since, including their effect on unchanged code; a newly found P0/P1 issue is reported
+wherever it is. A finding that was resolved, or dismissed on its thread with a reason, is not
+repeated while the fix or the reason holds; it is raised again only with concrete evidence
+that the defect remains or that the reason is wrong, and the finding states that evidence.
 
-- **Missing tests (P1):** New or changed logic without co-located `*.test.ts(x)`
-  coverage. Follow `.claude/rules/unit-test-guidelines.md` (behavior-focused tests,
-  AAA structure, `sut` naming, no custom loops — use `it.each`).
+A finding names a scenario the repository can reach. A scenario is reachable when a unit's
+public contract accepts it — a prop combination a component allows, a request a route can
+receive, hostile input at a trust boundary — with values realistic for the domain and on a
+supported runtime. The absence of a current call site does not make a scenario unreachable,
+being representable in a type does not make it reachable, and a hypothetical edit to the code
+(a transform added, a clock returning seconds) is not a scenario: a finding names an input the
+current code accepts. Judge realism at the
+repository's scale: personal sites and local-only tools with one maintainer. Outside that
+reach (magnitudes near numeric limits, a runtime without an API that every supported runtime
+provides), only a security exposure, data loss, or a crash is a finding.
+
+Apply these rules when reviewing a pull request:
+
+- **Missing tests (P1):** New or changed behavior whose regression would silently yield a wrong
+  user-visible result, accept invalid input at a trust boundary, reject valid configuration, or
+  lose a stated security, persistence, operational-output, or external-effect guarantee, and
+  whose outcome no test asserts for a reachable input to the current code — running the code
+  in a test is not coverage; and a change that stops tests from running in CI. Mutation-level
+  coverage (a line that can change without a test failing, an edit that no test would catch)
+  is not the goal and is not a finding. The finding names a concrete input or state, the
+  expected outcome, and why the existing tests miss it, and asserts the behavior where the
+  decision is made. What needs a test and what does not — decorative appearance, wiring and
+  forwarding between tested units, efficiency-only interaction assertions, unread output
+  fields, sibling constraints of one tested pattern, schema pass-through of valid values,
+  diagnostic logging, and scenarios the reach rule excludes — is stated in
+  `.claude/rules/unit-test-guidelines.md` ("What Needs a Test"); an accessible role or name and
+  what assistive technology announces are behavior there, decorative styling is not. Tests
+  assert at the smallest public boundary that shows the behavior and follow that file; a
+  branch is not extracted into a helper to be tested (`.claude/rules/code-style.md`, "Inline
+  Needless Functions").
 - **Clean Architecture violations (P1):** Wrong dependency direction or layer-boundary
   crossings in the blog app's `domain` / `use-cases` / `adapters` slices.
   See the `clean-architecture-guidelines` skill.
@@ -393,3 +444,7 @@ Defer formatting/style nits already enforced by Biome; do not duplicate lint out
   unless asked), and `@codex fix the P1 issue` for small, scoped corrections.
 - **Claude (`@claude` / local Claude Code) = primary implementer** for feature work.
 - Keep the two agents from overlapping: do not ask both to implement the same PR.
+- A reported finding that the reach rule in "Codex Review Guidelines" or the test bar in
+  `.claude/rules/unit-test-guidelines.md` ("What Needs a Test") excludes is dismissed on its
+  thread with the rule cited instead of being fixed. Authors adjudicate each Missing-tests
+  finding against that bar before writing a test; a mutation sweep is not a pre-PR requirement.

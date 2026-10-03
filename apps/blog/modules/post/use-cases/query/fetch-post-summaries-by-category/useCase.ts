@@ -21,11 +21,6 @@ const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const DEFAULT_ORDER: SortOrder = 'desc';
 
-/**
- * FetchPostSummariesByCategory Use Case
- *
- * Fetches paginated list of post summaries filtered by category.
- */
 export class FetchPostSummariesByCategory {
   constructor(
     private readonly queryService: FetchPostSummariesByCategoryQueryService

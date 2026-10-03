@@ -2,7 +2,7 @@
   "extends": "tsconfig/nextjs.json",
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
-    "types": ["@testing-library/jest-dom"]
+    "types": ["test-utils/jestDomMatchers"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"]

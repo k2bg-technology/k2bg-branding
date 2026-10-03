@@ -8,7 +8,9 @@ import { users } from '../drizzle/schema';
 import { auth } from './auth';
 import { provisionAdminUser } from './provisionAdminUser';
 
-function createAdminInput(overrides: Partial<Parameters<typeof provisionAdminUser>[0]> = {}) {
+function createAdminInput(
+  overrides: Partial<Parameters<typeof provisionAdminUser>[0]> = {}
+) {
   return {
     email: 'admin@example.com',
     password: 'changeme123',
@@ -62,11 +64,10 @@ describe('provisionAdminUser', () => {
     const sut = provisionAdminUser;
     const input = createAdminInput();
     const context = await auth.$context;
-    await context.internalAdapter.createUser({
-      email: input.email,
-      name: input.name,
-      emailVerified: false,
-    });
+    await context.internalAdapter.createUser(
+      { email: input.email, name: input.name, emailVerified: false },
+      { method: 'admin' }
+    );
 
     const result = await sut(input);
 

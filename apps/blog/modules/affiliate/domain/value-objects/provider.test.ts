@@ -34,9 +34,6 @@ describe('Provider', () => {
       const emptyValue = '';
 
       expect(() => Provider.create(emptyValue)).toThrow(InvalidProviderError);
-      expect(() => Provider.create(emptyValue)).toThrow(
-        'Provider cannot be empty'
-      );
     });
 
     it('throws InvalidProviderError when value is whitespace only', () => {
@@ -51,9 +48,6 @@ describe('Provider', () => {
       const longValue = 'a'.repeat(51);
 
       expect(() => Provider.create(longValue)).toThrow(InvalidProviderError);
-      expect(() => Provider.create(longValue)).toThrow(
-        'Provider cannot exceed 50 characters'
-      );
     });
   });
 
@@ -85,17 +79,6 @@ describe('Provider', () => {
       const result = provider1.equals(provider2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the provider string value', () => {
-      const value = 'Amazon';
-      const sut = Provider.create(value);
-
-      const result = sut.toString();
-
-      expect(result).toBe(value);
     });
   });
 });

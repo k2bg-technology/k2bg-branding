@@ -38,39 +38,37 @@ describe('FetchPostSummariesByCategory', () => {
       expect(result.totalCount).toBe(3);
     });
 
-    it('passes category to query service', async () => {
-      const fetchPostSummariesByCategory = vi
-        .fn()
-        .mockResolvedValue({ posts: [], totalCount: 0 });
+    it('selects summaries for the requested category', async () => {
+      const lifeStyleSummary = createPostSummaryOutput({
+        id: 'life-style-id',
+        category: Category.LIFE_STYLE,
+      });
       const queryService = createMockQueryService({
-        fetchPostSummariesByCategory,
+        fetchPostSummariesByCategory: async ({ category }) =>
+          category === Category.LIFE_STYLE
+            ? { posts: [lifeStyleSummary], totalCount: 1 }
+            : { posts: [], totalCount: 0 },
       });
       const sut = new FetchPostSummariesByCategory(queryService);
 
-      await sut.execute({ category: Category.LIFE_STYLE });
+      const result = await sut.execute({ category: Category.LIFE_STYLE });
 
-      expect(fetchPostSummariesByCategory).toHaveBeenCalledWith(
-        expect.objectContaining({ category: Category.LIFE_STYLE })
-      );
+      expect(result.items.map((post) => post.id)).toEqual(['life-style-id']);
     });
 
-    it('uses default pagination values', async () => {
-      const fetchPostSummariesByCategory = vi
-        .fn()
-        .mockResolvedValue({ posts: [], totalCount: 0 });
+    it('selects the first ten descending summaries by default', async () => {
+      const firstPageSummary = createPostSummaryOutput({ id: 'first-page-id' });
       const queryService = createMockQueryService({
-        fetchPostSummariesByCategory,
+        fetchPostSummariesByCategory: async ({ page, pageSize, orderBy }) =>
+          page === 1 && pageSize === 10 && orderBy === 'desc'
+            ? { posts: [firstPageSummary], totalCount: 1 }
+            : { posts: [], totalCount: 0 },
       });
       const sut = new FetchPostSummariesByCategory(queryService);
 
-      await sut.execute({ category: Category.ENGINEERING });
+      const result = await sut.execute({ category: Category.ENGINEERING });
 
-      expect(fetchPostSummariesByCategory).toHaveBeenCalledWith({
-        category: Category.ENGINEERING,
-        page: 1,
-        pageSize: 10,
-        orderBy: 'desc',
-      });
+      expect(result.items.map((post) => post.id)).toEqual(['first-page-id']);
     });
 
     it('calculates pagination correctly', async () => {
@@ -108,24 +106,6 @@ describe('FetchPostSummariesByCategory', () => {
       await expect(
         sut.execute({ category: Category.ENGINEERING, pageSize: 101 })
       ).rejects.toThrow(InvalidPaginationError);
-    });
-
-    it('passes through PostSummaryOutput from query service', async () => {
-      const summary = createPostSummaryOutput({
-        id: 'test-uuid',
-        category: Category.ENGINEERING,
-      });
-      const queryService = createMockQueryService({
-        fetchPostSummariesByCategory: vi
-          .fn()
-          .mockResolvedValue({ posts: [summary], totalCount: 1 }),
-      });
-      const sut = new FetchPostSummariesByCategory(queryService);
-
-      const result = await sut.execute({ category: Category.ENGINEERING });
-
-      expect(result.items[0].id).toBe('test-uuid');
-      expect(result.items[0].category).toBe(Category.ENGINEERING);
     });
   });
 });

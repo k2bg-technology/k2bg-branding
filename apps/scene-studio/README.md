@@ -21,7 +21,7 @@ deterministically derived from frame numbers. Part of the
 
 ### Prerequisites
 
-- Node.js 20.9+
+- Node.js 22.22+ or 24.15+ (exact range in `package.json` `engines`)
 - pnpm 10+
 - macOS for local MP4 rendering (the brand system fonts are required)
 

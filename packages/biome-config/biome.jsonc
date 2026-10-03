@@ -3,6 +3,8 @@
   // Set to false for use as shared config in monorepo subdirectories
   "root": false,
 
+  // Biome resolves plugin paths against extending configs, so each config declares its path.
+
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -40,6 +42,7 @@
         "useImportType": "error",
         "useNodejsImportProtocol": "off",
         "noNonNullAssertion": "warn",
+        "noNestedTernary": "error",
         // Charting stays encapsulated in packages/ui (which opts out of this
         // rule); apps compose charts through the ui barrel only.
         "noRestrictedImports": {
@@ -80,5 +83,17 @@
       "enabled": true,
       "indentWidth": 2
     }
-  }
+  },
+
+  "overrides": [
+    {
+      // An ambient module augmentation needs this import to apply.
+      "includes": ["**/@types/**/*.d.ts"],
+      "linter": {
+        "rules": {
+          "correctness": { "noUnusedImports": "off" }
+        }
+      }
+    }
+  ]
 }

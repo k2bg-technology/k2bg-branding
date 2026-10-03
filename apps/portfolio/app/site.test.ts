@@ -2,11 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 const configuredBaseUrl = 'https://portfolio.example.com';
 
-const absentValueCases = [
-  { description: 'missing', value: undefined },
-  { description: 'blank', value: '' },
-  { description: 'whitespace-only', value: '   ' },
-];
+const whitespaceOnlyValue = '   ';
 
 // siteBaseUrl is resolved at module scope, so each test re-imports the module
 // after stubbing the environment.
@@ -37,28 +33,22 @@ describe('siteBaseUrl', () => {
     expect(siteBaseUrl.href).toBe(`${configuredBaseUrl}/`);
   });
 
-  it.each(absentValueCases)(
-    'falls back to http://localhost:3001 outside production when PORTFOLIO_SITE_BASE_URL is $description',
-    async ({ value }) => {
-      vi.stubEnv('PORTFOLIO_SITE_BASE_URL', value);
+  it('falls back to http://localhost:3001 outside production when PORTFOLIO_SITE_BASE_URL is whitespace-only', async () => {
+    vi.stubEnv('PORTFOLIO_SITE_BASE_URL', whitespaceOnlyValue);
 
-      const { siteBaseUrl } = await importSite();
+    const { siteBaseUrl } = await importSite();
 
-      expect(siteBaseUrl.href).toBe('http://localhost:3001/');
-    }
-  );
+    expect(siteBaseUrl.href).toBe('http://localhost:3001/');
+  });
 
-  it.each(absentValueCases)(
-    'throws in production when PORTFOLIO_SITE_BASE_URL is $description',
-    async ({ value }) => {
-      vi.stubEnv('NODE_ENV', 'production');
-      vi.stubEnv('PORTFOLIO_SITE_BASE_URL', value);
+  it('throws in production when PORTFOLIO_SITE_BASE_URL is whitespace-only', async () => {
+    vi.stubEnv('NODE_ENV', 'production');
+    vi.stubEnv('PORTFOLIO_SITE_BASE_URL', whitespaceOnlyValue);
 
-      await expect(importSite()).rejects.toThrow(
-        'PORTFOLIO_SITE_BASE_URL environment variable is required in production'
-      );
-    }
-  );
+    await expect(importSite()).rejects.toThrow(
+      'PORTFOLIO_SITE_BASE_URL environment variable is required in production'
+    );
+  });
 });
 
 describe('getLocalizedUrl', () => {

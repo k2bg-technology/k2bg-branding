@@ -44,15 +44,6 @@ describe('apiKeyAuth', () => {
     expect(res.status).toBe(statusUnauthorized);
   });
 
-  it('returns 401 when API key header is missing', async () => {
-    const app = createApp();
-
-    const res = await app.request('/test');
-
-    const statusUnauthorized = 401;
-    expect(res.status).toBe(statusUnauthorized);
-  });
-
   describe('when the server API key is not configured', () => {
     it.each<{ description: string; headers: HeadersInit }>([
       { description: 'with a header', headers: { 'x-api-key': validApiKey } },

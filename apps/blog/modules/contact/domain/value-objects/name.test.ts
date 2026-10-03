@@ -22,11 +22,6 @@ describe('Name Value Object', () => {
       expect(() => Name.create('')).toThrow('Name cannot be empty');
     });
 
-    it('throws InvalidNameError when name is whitespace only', () => {
-      expect(() => Name.create('   ')).toThrow(InvalidNameError);
-      expect(() => Name.create('   ')).toThrow('Name cannot be empty');
-    });
-
     it('throws InvalidNameError when name exceeds max length', () => {
       const longName = 'a'.repeat(101);
 

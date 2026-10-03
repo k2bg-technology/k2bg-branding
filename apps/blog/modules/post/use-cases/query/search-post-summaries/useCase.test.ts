@@ -33,44 +33,36 @@ describe('SearchPostSummaries', () => {
       expect(result.totalCount).toBe(3);
     });
 
-    it('trims and passes query to service', async () => {
-      const searchPostSummaries = vi
-        .fn()
-        .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ searchPostSummaries });
-      const sut = new SearchPostSummaries(queryService);
-
-      await sut.execute({ query: '  typescript  ' });
-
-      expect(searchPostSummaries).toHaveBeenCalledWith(
-        expect.objectContaining({ query: 'typescript' })
-      );
-    });
-
-    it('uses default pagination values', async () => {
-      const searchPostSummaries = vi
-        .fn()
-        .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ searchPostSummaries });
-      const sut = new SearchPostSummaries(queryService);
-
-      await sut.execute({ query: 'test' });
-
-      expect(searchPostSummaries).toHaveBeenCalledWith({
-        query: 'test',
-        page: 1,
-        pageSize: 10,
-        orderBy: 'desc',
+    it('selects results using the trimmed query', async () => {
+      const matchingSummary = createPostSummaryOutput({
+        id: 'trimmed-query-id',
       });
-    });
-
-    it('allows short queries when MIN_QUERY_LENGTH is 0', async () => {
-      const queryService = createMockQueryService();
+      const queryService = createMockQueryService({
+        searchPostSummaries: async ({ query }) =>
+          query === 'typescript'
+            ? { posts: [matchingSummary], totalCount: 1 }
+            : { posts: [], totalCount: 0 },
+      });
       const sut = new SearchPostSummaries(queryService);
 
-      const result = await sut.execute({ query: 'a' });
+      const result = await sut.execute({ query: '  typescript  ' });
 
-      expect(result.items).toEqual([]);
+      expect(result.items.map((post) => post.id)).toEqual(['trimmed-query-id']);
+    });
+
+    it('selects the first ten descending search results by default', async () => {
+      const firstPageSummary = createPostSummaryOutput({ id: 'first-page-id' });
+      const queryService = createMockQueryService({
+        searchPostSummaries: async ({ page, pageSize, orderBy }) =>
+          page === 1 && pageSize === 10 && orderBy === 'desc'
+            ? { posts: [firstPageSummary], totalCount: 1 }
+            : { posts: [], totalCount: 0 },
+      });
+      const sut = new SearchPostSummaries(queryService);
+
+      const result = await sut.execute({ query: 'test' });
+
+      expect(result.items.map((post) => post.id)).toEqual(['first-page-id']);
     });
 
     it('throws InvalidSearchQueryError when query is too long', async () => {
@@ -118,20 +110,6 @@ describe('SearchPostSummaries', () => {
       expect(result.totalPages).toBe(5);
       expect(result.hasNextPage).toBe(true);
       expect(result.hasPreviousPage).toBe(true);
-    });
-
-    it('passes through PostSummaryOutput from query service', async () => {
-      const summary = createPostSummaryOutput({ id: 'test-uuid' });
-      const queryService = createMockQueryService({
-        searchPostSummaries: vi
-          .fn()
-          .mockResolvedValue({ posts: [summary], totalCount: 1 }),
-      });
-      const sut = new SearchPostSummaries(queryService);
-
-      const result = await sut.execute({ query: 'test' });
-
-      expect(result.items[0].id).toBe('test-uuid');
     });
   });
 });

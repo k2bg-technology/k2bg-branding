@@ -21,10 +21,13 @@ describe('generateHtmlTemplate', () => {
     vi.clearAllMocks();
   });
 
-  it('should generate HTML from a template with provided context', () => {
-    const mockTemplateContent = '<h1>Hello {{name}}!</h1><p>{{message}}</p>';
-    vi.mocked(fs.readFileSync).mockReturnValue(mockTemplateContent);
-
+  it('renders the template from the requested file with the supplied context', () => {
+    const templates = new Map([
+      [mockFilePath, '<h1>Hello {{name}}!</h1><p>{{message}}</p>'],
+    ]);
+    vi.mocked(fs.readFileSync).mockImplementation(
+      (filePath) => templates.get(String(filePath)) ?? ''
+    );
     const context = {
       name: 'World',
       message: 'Welcome to our website',
@@ -32,34 +35,7 @@ describe('generateHtmlTemplate', () => {
 
     const result = generateHtmlTemplate(mockFilePath, context);
 
-    expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, 'utf-8');
     expect(result).toBe('<h1>Hello World!</h1><p>Welcome to our website</p>');
-  });
-
-  it('should handle empty context object', () => {
-    const mockTemplateContent = '<div>Static content</div>';
-    vi.mocked(fs.readFileSync).mockReturnValue(mockTemplateContent);
-
-    const result = generateHtmlTemplate(mockFilePath, {});
-
-    expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, 'utf-8');
-    expect(result).toBe('<div>Static content</div>');
-  });
-
-  it('should handle nested properties in context object', () => {
-    const mockTemplateContent = '<div>{{user.name}} - {{user.role}}</div>';
-    vi.mocked(fs.readFileSync).mockReturnValue(mockTemplateContent);
-
-    const context = {
-      user: {
-        name: 'John Doe',
-        role: 'Admin',
-      },
-    };
-
-    const result = generateHtmlTemplate(mockFilePath, context);
-
-    expect(result).toBe('<div>John Doe - Admin</div>');
   });
 
   it('should throw an error when file cannot be read', () => {

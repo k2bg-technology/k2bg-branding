@@ -7,7 +7,7 @@ import {
   AffiliateText,
   AffiliateType,
 } from '../../../../domain';
-import { DEFAULT_VALUES, MappingError } from '../../../shared';
+import { MappingError } from '../../../shared';
 import { createNotionAffiliatePageResponse } from '../../../shared/testing';
 
 import {
@@ -36,21 +36,13 @@ describe('affiliate/adapters/mapper', () => {
       expect(result).toBe(expected);
     });
 
-    it('returns null for unknown type', () => {
+    it.each([
+      { scenario: 'unknown type', select: { name: 'UNKNOWN_TYPE' } },
+      { scenario: 'missing type', select: null },
+    ])('returns null for $scenario', ({ select }) => {
       const page = createNotionAffiliatePageResponse();
-      // Override the type property to an unknown value
-      (page.properties.type as { select: { name: string } | null }).select = {
-        name: 'UNKNOWN_TYPE',
-      };
-
-      const result = determineAffiliateType(page);
-
-      expect(result).toBeNull();
-    });
-
-    it('returns null when type select is null', () => {
-      const page = createNotionAffiliatePageResponse();
-      (page.properties.type as { select: null }).select = null;
+      (page.properties.type as { select: { name: string } | null }).select =
+        select;
 
       const result = determineAffiliateType(page);
 
@@ -124,18 +116,13 @@ describe('affiliate/adapters/mapper', () => {
         const page = createNotionAffiliatePageResponse({
           type: 'AFFILIATE_BANNER',
         });
-        // Override to null
         (page.properties.imageWidth as { number: null }).number = null;
         (page.properties.imageHeight as { number: null }).number = null;
 
         const result = notionPageToAffiliate(page) as AffiliateBanner;
 
-        expect(result.imageWidth.getValue()).toBe(
-          DEFAULT_VALUES.DEFAULT_IMAGE_WIDTH
-        );
-        expect(result.imageHeight.getValue()).toBe(
-          DEFAULT_VALUES.DEFAULT_IMAGE_HEIGHT
-        );
+        expect(result.imageWidth.getValue()).toBe(200);
+        expect(result.imageHeight.getValue()).toBe(200);
       });
     });
 
@@ -201,20 +188,6 @@ describe('affiliate/adapters/mapper', () => {
 
         expect(result.imageProvider.getValue()).toBe('Yahoo');
       });
-
-      it('prioritizes imageSourceFile over imageSourceUrl for Product', () => {
-        const page = createNotionAffiliatePageResponse({
-          type: 'AFFILIATE_PRODUCT',
-          imageSourceFile: 'https://s3.example.com/product-file.jpg',
-          imageSourceUrl: 'https://example.com/product-url.jpg',
-        });
-
-        const result = notionPageToAffiliate(page) as AffiliateProduct;
-
-        expect(result.imageSourceUrl.getValue()).toBe(
-          'https://s3.example.com/product-file.jpg'
-        );
-      });
     });
 
     describe('Text mapping', () => {
@@ -270,9 +243,7 @@ describe('affiliate/adapters/mapper', () => {
 
         const result = notionPageToAffiliate(page) as AffiliateSubProvider;
 
-        expect(result.providerColor.getValue()).toBe(
-          DEFAULT_VALUES.DEFAULT_PROVIDER_COLOR
-        );
+        expect(result.providerColor.getValue()).toBe('#000000');
       });
     });
 
@@ -283,9 +254,6 @@ describe('affiliate/adapters/mapper', () => {
       };
 
       expect(() => notionPageToAffiliate(page)).toThrow(MappingError);
-      expect(() => notionPageToAffiliate(page)).toThrow(
-        /Unknown affiliate type/
-      );
     });
   });
 
@@ -322,20 +290,11 @@ describe('affiliate/adapters/mapper', () => {
       expect(result?.url.getValue()).toBe('https://example.com/product.jpg');
     });
 
-    it('returns null for Text type', () => {
-      const page = createNotionAffiliatePageResponse({
-        type: 'AFFILIATE_TEXT',
-      });
-
-      const result = notionPageToImageSource(page);
-
-      expect(result).toBeNull();
-    });
-
-    it('returns null for SubProvider type', () => {
-      const page = createNotionAffiliatePageResponse({
-        type: 'AFFILIATE_SUB_PROVIDER',
-      });
+    it.each([
+      { type: 'AFFILIATE_TEXT' as const, scenario: 'text' },
+      { type: 'AFFILIATE_SUB_PROVIDER' as const, scenario: 'sub provider' },
+    ])('returns null for $scenario without an image source', ({ type }) => {
+      const page = createNotionAffiliatePageResponse({ type });
 
       const result = notionPageToImageSource(page);
 

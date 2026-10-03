@@ -40,14 +40,6 @@ describe('infrastructure/notion/property-extractors', () => {
       expect(getTitle(props, 'name')).toBeNull();
     });
 
-    it('returns null for non-title property type', () => {
-      const props = {
-        name: createProperty('rich_text', { rich_text: [] }),
-      } as unknown as NotionProperties;
-
-      expect(getTitle(props, 'name')).toBeNull();
-    });
-
     it('returns null for missing property', () => {
       const props = {} as NotionProperties;
 
@@ -73,14 +65,6 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getRichText(props, 'excerpt')).toBeNull();
     });
-
-    it('returns null for non-rich_text property type', () => {
-      const props = {
-        excerpt: createProperty('title', { title: [] }),
-      } as unknown as NotionProperties;
-
-      expect(getRichText(props, 'excerpt')).toBeNull();
-    });
   });
 
   describe('getUrl', () => {
@@ -95,14 +79,6 @@ describe('infrastructure/notion/property-extractors', () => {
     it('returns null for null URL', () => {
       const props = {
         link: createProperty('url', { url: null }),
-      } as unknown as NotionProperties;
-
-      expect(getUrl(props, 'link')).toBeNull();
-    });
-
-    it('returns null for non-url property type', () => {
-      const props = {
-        link: createProperty('rich_text', { rich_text: [] }),
       } as unknown as NotionProperties;
 
       expect(getUrl(props, 'link')).toBeNull();
@@ -125,14 +101,6 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getSelect(props, 'type')).toBeNull();
     });
-
-    it('returns null for non-select property type', () => {
-      const props = {
-        type: createProperty('rich_text', { rich_text: [] }),
-      } as unknown as NotionProperties;
-
-      expect(getSelect(props, 'type')).toBeNull();
-    });
   });
 
   describe('getStatus', () => {
@@ -147,14 +115,6 @@ describe('infrastructure/notion/property-extractors', () => {
     it('returns null for null status', () => {
       const props = {
         status: createProperty('status', { status: null }),
-      } as unknown as NotionProperties;
-
-      expect(getStatus(props, 'status')).toBeNull();
-    });
-
-    it('returns null for non-status property type', () => {
-      const props = {
-        status: createProperty('select', { select: null }),
       } as unknown as NotionProperties;
 
       expect(getStatus(props, 'status')).toBeNull();
@@ -185,14 +145,6 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getNumber(props, 'count')).toBe(0);
     });
-
-    it('returns null for non-number property type', () => {
-      const props = {
-        count: createProperty('rich_text', { rich_text: [] }),
-      } as unknown as NotionProperties;
-
-      expect(getNumber(props, 'count')).toBeNull();
-    });
   });
 
   describe('getDate', () => {
@@ -221,31 +173,32 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getDate(props, 'releaseDate')).toBeNull();
     });
-
-    it('returns null for non-date property type', () => {
-      const props = {
-        releaseDate: createProperty('rich_text', { rich_text: [] }),
-      } as unknown as NotionProperties;
-
-      expect(getDate(props, 'releaseDate')).toBeNull();
-    });
   });
 
   describe('getFirstFileUrl', () => {
     it('extracts URL from file type', () => {
       const props = {
         image: createProperty('files', {
-          files: [{ type: 'file', file: { url: 'https://s3.example.com/a.jpg' } }],
+          files: [
+            { type: 'file', file: { url: 'https://s3.example.com/a.jpg' } },
+          ],
         }),
       } as unknown as NotionProperties;
 
-      expect(getFirstFileUrl(props, 'image')).toBe('https://s3.example.com/a.jpg');
+      expect(getFirstFileUrl(props, 'image')).toBe(
+        'https://s3.example.com/a.jpg'
+      );
     });
 
     it('extracts URL from external type', () => {
       const props = {
         image: createProperty('files', {
-          files: [{ type: 'external', external: { url: 'https://example.com/b.jpg' } }],
+          files: [
+            {
+              type: 'external',
+              external: { url: 'https://example.com/b.jpg' },
+            },
+          ],
         }),
       } as unknown as NotionProperties;
 
@@ -272,14 +225,6 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getFirstFileUrl(props, 'image')).toBeNull();
     });
-
-    it('returns null for non-files property type', () => {
-      const props = {
-        image: createProperty('url', { url: 'https://example.com' }),
-      } as unknown as NotionProperties;
-
-      expect(getFirstFileUrl(props, 'image')).toBeNull();
-    });
   });
 
   describe('getAllFileUrls', () => {
@@ -288,7 +233,10 @@ describe('infrastructure/notion/property-extractors', () => {
         images: createProperty('files', {
           files: [
             { type: 'file', file: { url: 'https://s3.example.com/a.jpg' } },
-            { type: 'external', external: { url: 'https://example.com/b.jpg' } },
+            {
+              type: 'external',
+              external: { url: 'https://example.com/b.jpg' },
+            },
           ],
         }),
       } as unknown as NotionProperties;
@@ -339,14 +287,6 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getRelations(props, 'links')).toEqual([]);
     });
-
-    it('returns empty array for non-relation property type', () => {
-      const props = {
-        links: createProperty('url', { url: 'https://example.com' }),
-      } as unknown as NotionProperties;
-
-      expect(getRelations(props, 'links')).toEqual([]);
-    });
   });
 
   describe('getMultiSelect', () => {
@@ -367,14 +307,6 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getMultiSelect(props, 'tags')).toEqual([]);
     });
-
-    it('returns empty array for non-multi_select property type', () => {
-      const props = {
-        tags: createProperty('select', { select: null }),
-      } as unknown as NotionProperties;
-
-      expect(getMultiSelect(props, 'tags')).toEqual([]);
-    });
   });
 
   describe('getPerson', () => {
@@ -382,7 +314,11 @@ describe('infrastructure/notion/property-extractors', () => {
       const props = {
         author: createProperty('people', {
           people: [
-            { id: 'user-1', name: 'John Doe', avatar_url: 'https://avatar.jpg' },
+            {
+              id: 'user-1',
+              name: 'John Doe',
+              avatar_url: 'https://avatar.jpg',
+            },
           ],
         }),
       } as unknown as NotionProperties;
@@ -442,13 +378,101 @@ describe('infrastructure/notion/property-extractors', () => {
 
       expect(getPerson(props, 'author')).toBeNull();
     });
+  });
 
-    it('returns null for non-people property type', () => {
-      const props = {
-        author: createProperty('rich_text', { rich_text: [] }),
-      } as unknown as NotionProperties;
+  describe('mismatched property types', () => {
+    it.each([
+      {
+        name: 'title',
+        extractor: getTitle,
+        propertyName: 'name',
+        property: createProperty('rich_text', { rich_text: [] }),
+      },
+      {
+        name: 'rich_text',
+        extractor: getRichText,
+        propertyName: 'excerpt',
+        property: createProperty('title', { title: [] }),
+      },
+      {
+        name: 'url',
+        extractor: getUrl,
+        propertyName: 'link',
+        property: createProperty('rich_text', { rich_text: [] }),
+      },
+      {
+        name: 'select',
+        extractor: getSelect,
+        propertyName: 'type',
+        property: createProperty('rich_text', { rich_text: [] }),
+      },
+      {
+        name: 'status',
+        extractor: getStatus,
+        propertyName: 'status',
+        property: createProperty('select', { select: null }),
+      },
+      {
+        name: 'number',
+        extractor: getNumber,
+        propertyName: 'count',
+        property: createProperty('rich_text', { rich_text: [] }),
+      },
+      {
+        name: 'date',
+        extractor: getDate,
+        propertyName: 'releaseDate',
+        property: createProperty('rich_text', { rich_text: [] }),
+      },
+      {
+        name: 'files',
+        extractor: getFirstFileUrl,
+        propertyName: 'image',
+        property: createProperty('url', { url: 'https://example.com' }),
+      },
+      {
+        name: 'people',
+        extractor: getPerson,
+        propertyName: 'author',
+        property: createProperty('rich_text', { rich_text: [] }),
+      },
+    ])(
+      'returns null when $name receives a mismatched property type',
+      ({ extractor, propertyName, property }) => {
+        const props = {
+          [propertyName]: property,
+        } as unknown as NotionProperties;
 
-      expect(getPerson(props, 'author')).toBeNull();
-    });
+        const result = extractor(props, propertyName);
+
+        expect(result).toBeNull();
+      }
+    );
+
+    it.each([
+      {
+        name: 'relation',
+        extractor: getRelations,
+        propertyName: 'links',
+        property: createProperty('url', { url: 'https://example.com' }),
+      },
+      {
+        name: 'multi_select',
+        extractor: getMultiSelect,
+        propertyName: 'tags',
+        property: createProperty('select', { select: null }),
+      },
+    ])(
+      'returns an empty array when $name receives a mismatched property type',
+      ({ extractor, propertyName, property }) => {
+        const props = {
+          [propertyName]: property,
+        } as unknown as NotionProperties;
+
+        const result = extractor(props, propertyName);
+
+        expect(result).toEqual([]);
+      }
+    );
   });
 });

@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 
-export function useSnsShareInfo() {
+export interface SnsShareInfo {
+  title: string;
+  fullUrl: string;
+}
+
+export function useSnsShareInfo(): SnsShareInfo {
   const [title, setTitle] = useState('');
   const [fullUrl, setFullUrl] = useState('');
 

@@ -1,4 +1,4 @@
-import 'server-only'
+import 'server-only';
 
 import type { Language } from './settings';
 import type { Dictionary } from './types';

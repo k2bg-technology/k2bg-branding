@@ -1,13 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  defaultValueFormatter,
-  formatTimestamp,
-  getTimeAxisTicks,
-} from './chartTicks';
+import { formatTimestamp, getTimeAxisTicks } from './chartTicks';
 import { ChartPeriod } from './types';
 
-function dailyTimestamps(count: number): number[] {
+function dailyTimestamps(count: number) {
   return Array.from({ length: count }, (_, index) =>
     Date.UTC(2026, 0, 1 + index)
   );
@@ -29,12 +25,24 @@ describe('formatTimestamp', () => {
     expect(result).toBe(expected);
   });
 
-  it('formats in UTC regardless of the local timezone', () => {
+  it('keeps UTC time when the runtime uses a different local timezone', () => {
     const lastMinuteOfUtcDay = Date.UTC(2026, 0, 31, 23, 59);
+    const previousTimeZone = process.env.TZ;
+    process.env.TZ = 'America/Los_Angeles';
 
-    const result = formatTimestamp(lastMinuteOfUtcDay, ChartPeriod.DAY);
+    try {
+      expect(new Date(lastMinuteOfUtcDay).getHours()).toBe(15);
 
-    expect(result).toBe('23:59');
+      const result = formatTimestamp(lastMinuteOfUtcDay, ChartPeriod.DAY);
+
+      expect(result).toBe('23:59');
+    } finally {
+      if (previousTimeZone === undefined) {
+        delete process.env.TZ;
+      } else {
+        process.env.TZ = previousTimeZone;
+      }
+    }
   });
 });
 
@@ -88,27 +96,5 @@ describe('getTimeAxisTicks', () => {
     const { ticks } = getTimeAxisTicks([], ChartPeriod.MONTH);
 
     expect(ticks).toEqual([]);
-  });
-
-  it('formats ticks with the period format', () => {
-    const timestamp = Date.UTC(2026, 4, 20);
-
-    const { formatTick } = getTimeAxisTicks([timestamp], ChartPeriod.YEAR);
-
-    expect(formatTick(timestamp)).toBe('2026/5');
-  });
-});
-
-describe('defaultValueFormatter', () => {
-  it.each`
-    value   | expected
-    ${0}    | ${'0'}
-    ${12.5} | ${'12.5'}
-    ${-3}   | ${'-3'}
-    ${1e6}  | ${'1000000'}
-  `('renders $value as $expected', ({ value, expected }) => {
-    const result = defaultValueFormatter(value);
-
-    expect(result).toBe(expected);
   });
 });

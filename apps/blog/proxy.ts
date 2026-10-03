@@ -5,7 +5,7 @@ import { type NextRequest, NextResponse } from 'next/server';
 // redirect based on session-cookie presence only — this is an optimization, not
 // the security boundary. app/settings/layout.tsx performs the authoritative
 // getSession check that rejects forged or expired cookies.
-export function proxy(request: NextRequest) {
+export function proxy(request: NextRequest): NextResponse {
   if (!getSessionCookie(request)) {
     return NextResponse.redirect(new URL('/login', request.url));
   }

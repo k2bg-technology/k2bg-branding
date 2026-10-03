@@ -1,32 +1,42 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { screen } from '@testing-library/react';
+import { renderToReadableStream } from 'react-dom/server';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+const { loadDashboardsMock } = vi.hoisted(() => ({
+  loadDashboardsMock: vi.fn(),
+}));
+
+vi.mock('../infrastructure', () => ({
+  createLoadDashboardsUseCase: () => ({ execute: loadDashboardsMock }),
+}));
 
 import Page from './page';
 
-vi.mock('../infrastructure', () => ({
-  createFetchTableCatalogUseCase: vi.fn(),
-}));
+describe('dashboard index page', () => {
+  beforeEach(() => vi.clearAllMocks());
 
-vi.mock('../components/table-catalog/TableCatalog', () => ({
-  TableCatalog: () => <div>TableCatalog</div>,
-}));
+  it('renders the dashboard index inside the page shell', async () => {
+    loadDashboardsMock.mockResolvedValue({
+      definitions: [
+        { id: 'summary', title: 'Summary', description: 'Monthly totals' },
+      ],
+      issues: [],
+    });
 
-describe('Page', () => {
-  it('renders the app name as the heading', () => {
-    const expectedHeading = 'Observatory';
-
-    render(<Page />);
-
-    expect(
-      screen.getByRole('heading', { name: expectedHeading })
-    ).toBeInTheDocument();
-  });
-
-  it('renders the table catalog section', () => {
-    render(<Page />);
+    const stream = await renderToReadableStream(Page());
+    await stream.allReady;
+    document.body.innerHTML = await new Response(stream).text();
 
     expect(
-      screen.getByRole('heading', { name: 'Table catalog' })
+      screen.getByRole('heading', { name: 'Dashboards' })
     ).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Summary' })).toHaveAttribute(
+      'href',
+      '/dashboards/summary'
+    );
+    expect(screen.getByRole('link', { name: 'Table catalog' })).toHaveAttribute(
+      'href',
+      '/catalog'
+    );
   });
 });

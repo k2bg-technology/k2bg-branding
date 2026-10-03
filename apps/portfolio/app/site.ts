@@ -1,6 +1,6 @@
 import type { Language } from '../i18n/settings';
 
-function resolveSiteBaseUrl(): URL {
+function resolveSiteBaseUrl() {
   const configuredBaseUrl = process.env.PORTFOLIO_SITE_BASE_URL?.trim();
 
   if (configuredBaseUrl) {
@@ -18,6 +18,6 @@ function resolveSiteBaseUrl(): URL {
 
 export const siteBaseUrl = resolveSiteBaseUrl();
 
-export function getLocalizedUrl(language: Language) {
+export function getLocalizedUrl(language: Language): string {
   return new URL(`/${language}`, siteBaseUrl).toString();
 }

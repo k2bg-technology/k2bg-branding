@@ -1,9 +1,5 @@
 import type { Email, Message, Name } from '../value-objects';
 
-/**
- * Contact domain types
- */
-
 export interface ContactProps {
   name: Name;
   email: Email;

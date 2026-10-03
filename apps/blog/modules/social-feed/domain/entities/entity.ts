@@ -4,9 +4,6 @@ import type { MediaUrl } from '../value-objects/mediaUrl';
 import type { Permalink } from '../value-objects/permalink';
 import type { PostId } from '../value-objects/postId';
 
-/**
- * Props for reconstituting a SocialPost from external data
- */
 export interface SocialPostProps {
   id: PostId;
   mediaUrl: MediaUrl;
@@ -17,12 +14,6 @@ export interface SocialPostProps {
   thumbnailUrl?: MediaUrl;
 }
 
-/**
- * SocialPost Entity
- *
- * Represents a post from a social media platform.
- * This is an abstracted entity that can be created from various social providers.
- */
 export class SocialPost {
   private constructor(
     private readonly _id: PostId,
@@ -33,10 +24,6 @@ export class SocialPost {
     private readonly _timestamp: Date,
     private readonly _thumbnailUrl: MediaUrl | undefined
   ) {}
-
-  // ==========================================================================
-  // Getters
-  // ==========================================================================
 
   get id(): PostId {
     return this._id;
@@ -66,15 +53,7 @@ export class SocialPost {
     return this._thumbnailUrl;
   }
 
-  // ==========================================================================
-  // Query Methods
-  // ==========================================================================
-
-  /**
-   * Returns the display URL for the post.
-   * For videos, returns thumbnail URL if available, otherwise media URL.
-   * For images, returns the media URL.
-   */
+  /** Videos prefer their thumbnail; every other case uses the media URL. */
   getDisplayUrl(): string {
     if (this._mediaType === 'VIDEO' && this._thumbnailUrl) {
       return this._thumbnailUrl.getValue();
@@ -85,10 +64,6 @@ export class SocialPost {
   equals(other: SocialPost): boolean {
     return this._id.equals(other._id);
   }
-
-  // ==========================================================================
-  // Factory Methods
-  // ==========================================================================
 
   static create(props: SocialPostProps): SocialPost {
     if (!props.id) {

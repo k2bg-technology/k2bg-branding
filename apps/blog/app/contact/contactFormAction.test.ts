@@ -63,6 +63,7 @@ describe('contactFormAction', () => {
       email: 'john@example.com',
       message: 'Test message',
       token: 'valid-token',
+      additionalField: 'Excluded from the validated contact',
     };
 
     await contactFormAction(data);
@@ -76,6 +77,44 @@ describe('contactFormAction', () => {
       mockEnforceContactRateLimitExecute.mock.invocationCallOrder;
     const [hCaptchaCallOrder] = mockVerify.mock.invocationCallOrder;
     expect(rateLimitCallOrder).toBeLessThan(hCaptchaCallOrder);
+    expect(mockSendEmailExecute).toHaveBeenCalledExactlyOnceWith({
+      name: data.name,
+      email: data.email,
+      message: data.message,
+    });
+  });
+
+  it('rejects invalid contact data before rate limiting, captcha verification, or email delivery', async () => {
+    const data = {
+      name: 'John Doe',
+      email: 'invalid-email',
+      message: 'Test message',
+      token: 'valid-token',
+    };
+
+    await expect(contactFormAction(data)).rejects.toThrow(
+      JSON.stringify({ email: ['有効なEメールアドレスを入力してください'] })
+    );
+
+    expect(mockEnforceContactRateLimitExecute).not.toHaveBeenCalled();
+    expect(mockVerify).not.toHaveBeenCalled();
+    expect(mockSendEmailExecute).not.toHaveBeenCalled();
+  });
+
+  it('rejects failed captcha verification without sending an email', async () => {
+    mockVerify.mockResolvedValue({ success: false });
+    const data = {
+      name: 'John Doe',
+      email: 'john@example.com',
+      message: 'Test message',
+      token: 'invalid-token',
+    };
+
+    await expect(contactFormAction(data)).rejects.toThrow(
+      'captcha verification failed'
+    );
+
+    expect(mockSendEmailExecute).not.toHaveBeenCalled();
   });
 
   it('returns the user-facing message when the rate limit is exceeded', async () => {
