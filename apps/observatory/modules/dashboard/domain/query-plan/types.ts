@@ -1,4 +1,9 @@
-import type { Reduction, SectionKind, SourceDefinition } from '../definition';
+import type {
+  Reduction,
+  SectionKind,
+  SourceDefinition,
+  ValueTransform,
+} from '../definition';
 
 export interface DateRange {
   firstDate: string;
@@ -8,6 +13,7 @@ export interface DateRange {
 export interface MeasureQueryPlan {
   column: string;
   reduction: Reduction;
+  transform?: ValueTransform;
 }
 
 interface BaseSectionQueryPlan {
