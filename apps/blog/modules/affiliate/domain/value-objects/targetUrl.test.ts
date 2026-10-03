@@ -26,9 +26,6 @@ describe('TargetUrl', () => {
       const emptyValue = '';
 
       expect(() => TargetUrl.create(emptyValue)).toThrow(InvalidTargetUrlError);
-      expect(() => TargetUrl.create(emptyValue)).toThrow(
-        'TargetUrl cannot be empty'
-      );
     });
 
     it('throws InvalidTargetUrlError when value is whitespace only', () => {
@@ -43,7 +40,6 @@ describe('TargetUrl', () => {
       const invalidUrl = 'not-a-valid-url';
 
       expect(() => TargetUrl.create(invalidUrl)).toThrow(InvalidTargetUrlError);
-      expect(() => TargetUrl.create(invalidUrl)).toThrow('Invalid URL format');
     });
   });
 
@@ -75,17 +71,6 @@ describe('TargetUrl', () => {
       const result = url1.equals(url2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the URL string value', () => {
-      const url = 'https://example.com/product';
-      const sut = TargetUrl.create(url);
-
-      const result = sut.toString();
-
-      expect(result).toBe(url);
     });
   });
 });

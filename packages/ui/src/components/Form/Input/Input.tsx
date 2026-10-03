@@ -3,8 +3,15 @@
 import { cva } from 'class-variance-authority';
 import type React from 'react';
 import { twMerge } from '../../../utils/extendTailwindMerge';
-import { type FormProps, useFormContext } from '../Control/Context';
+import {
+  type FormProps,
+  resolveAriaDescribedBy,
+  resolveAriaInvalid,
+  useFormContext,
+} from '../Control/Context';
 
+// `neutral-300` (disabled) is a deliberate exception: no base-* token is a
+// visually reasonable match for this disabled-state gray.
 const inputVariants = cva(
   'appearance-none focus-visible:border-ring focus-visible:ring-[3px] border rounded-md px-2 py-3 w-full text-body-r-sm leading-none',
   {
@@ -12,7 +19,7 @@ const inputVariants = cva(
       color: {
         dark: 'focus-visible:ring-base-default/30 border-base-default/50 text-base-default placeholder-base-default/50',
         light:
-          'focus-visible:ring-white/30 border-white/50 text-white placeholder-white/50',
+          'focus-visible:ring-base-white/30 border-base-white/50 text-base-white placeholder-base-white/50',
       },
       error: {
         true: ['border-error focus-visible:ring-error/30'],
@@ -50,9 +57,12 @@ export function Input(props: Props) {
     className,
     startAdornment,
     endAdornment,
+    'aria-describedby': explicitAriaDescribedBy,
+    'aria-invalid': explicitAriaInvalid,
     ...formProps
   } = props;
-  const { color, error, disabled, ...rest } = useFormContext(formProps);
+  const { color, error, disabled, helperTextId, ...rest } =
+    useFormContext(formProps);
 
   return (
     <div className={twMerge('relative', disabled && '[&_i]:bg-neutral-300')}>
@@ -63,6 +73,11 @@ export function Input(props: Props) {
       )}
       <input
         {...rest}
+        aria-invalid={resolveAriaInvalid(explicitAriaInvalid, error)}
+        aria-describedby={resolveAriaDescribedBy(
+          explicitAriaDescribedBy,
+          error ? helperTextId : undefined
+        )}
         className={twMerge(
           inputVariants({
             color,

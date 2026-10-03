@@ -1,32 +1,31 @@
-import { getDrizzleClient } from '../drizzle';
-import { getNotionClient, getNotionToMarkdown } from '../notion';
-import { CloudinaryOgImageUrlGenerator, getCloudinary } from '../cloudinary';
+import { NotionAffiliateExternalImageSource } from '../../modules/affiliate/adapters/output';
+import { NotionMediaExternalImageSource } from '../../modules/media/adapters/output';
 import {
   CloudinaryImageRepository,
-  NotionExternalImageSource,
-  NotionExternalPostSource,
   DrizzleFetchAllSlugsQueryService,
   DrizzleFetchPostQueryService,
   DrizzleFetchPostSummariesByCategoryQueryService,
   DrizzleFetchPostSummariesQueryService,
   DrizzlePostBatchRepository,
   DrizzleSearchPostSummariesQueryService,
+  NotionExternalImageSource,
+  NotionExternalPostSource,
 } from '../../modules/post/adapters/output';
-import { NotionMediaExternalImageSource } from '../../modules/media/adapters/output';
-import { NotionAffiliateExternalImageSource } from '../../modules/affiliate/adapters/output';
+import { postLogger } from '../../modules/post/adapters/shared';
 import { FetchAllSlugs } from '../../modules/post/use-cases/query/fetch-all-slugs';
 import { FetchPost } from '../../modules/post/use-cases/query/fetch-post';
 import { FetchPostSummaries } from '../../modules/post/use-cases/query/fetch-post-summaries';
 import { FetchPostSummariesByCategory } from '../../modules/post/use-cases/query/fetch-post-summaries-by-category';
 import { SearchPostSummaries } from '../../modules/post/use-cases/query/search-post-summaries';
-import { SyncPostsFromExternal } from '../../modules/post/use-cases/sync/sync-posts-from-external';
 import { SyncHeroImages } from '../../modules/post/use-cases/sync/sync-hero-images';
+import { SyncPostsFromExternal } from '../../modules/post/use-cases/sync/sync-posts-from-external';
+import { CloudinaryOgImageUrlGenerator, getCloudinary } from '../cloudinary';
+import { getDrizzleClient } from '../drizzle';
+import { getNotionClient, getNotionToMarkdown } from '../notion';
 
 export function createFetchPostSummariesUseCase(): FetchPostSummaries {
   const db = getDrizzleClient();
-  return new FetchPostSummaries(
-    new DrizzleFetchPostSummariesQueryService(db)
-  );
+  return new FetchPostSummaries(new DrizzleFetchPostSummariesQueryService(db));
 }
 
 export function createFetchPostUseCase(): FetchPost {
@@ -82,6 +81,7 @@ export function createSyncHeroImagesUseCase(): SyncHeroImages {
       new NotionMediaExternalImageSource(notionClient),
       new NotionAffiliateExternalImageSource(notionClient),
     ],
-    new CloudinaryImageRepository(cloudinary)
+    new CloudinaryImageRepository(cloudinary),
+    postLogger
   );
 }

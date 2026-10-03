@@ -3,8 +3,11 @@ import {
   authors,
   posts,
 } from '../../../../../../infrastructure/drizzle/schema';
-import { PostType, Title } from '../../../../domain';
-import { createPost } from '../../../../use-cases/shared/testing/factories';
+import { PostType, ReleaseDate, Title } from '../../../../domain';
+import {
+  createPost,
+  createPosts,
+} from '../../../../use-cases/shared/testing/factories';
 import { createDrizzleAuthorRow } from '../../../shared';
 import {
   getTestDb,
@@ -69,7 +72,7 @@ describe('DrizzleSearchPostSummariesQueryService', () => {
     expect(result.posts[0].title).toBe('TypeScript Tips');
   });
 
-  it('treats % and _ in the query as literal characters via escapeLike', async () => {
+  it('treats % in the query as a literal character', async () => {
     await seedAuthor();
     await insertArticle(
       '550e8400-e29b-41d4-a716-446655440020',
@@ -77,7 +80,7 @@ describe('DrizzleSearchPostSummariesQueryService', () => {
     );
     await insertArticle(
       '550e8400-e29b-41d4-a716-446655440021',
-      'Plain headline with no special chars'
+      'Profit jumped 500 in Q2'
     );
     const sut = new DrizzleSearchPostSummariesQueryService(getTestDb());
 
@@ -117,6 +120,42 @@ describe('DrizzleSearchPostSummariesQueryService', () => {
     });
 
     expect(result).toEqual({ posts: [], totalCount: 0 });
+  });
+
+  it('orders by uuid as a stable tiebreaker when releaseDate ties', async () => {
+    await seedAuthor();
+    const db = getTestDb();
+    const sharedDate = ReleaseDate.create('2024-01-10');
+    const articles = createPosts(4, {
+      title: Title.create('Tiebreaker Match'),
+      releaseDate: sharedDate,
+    });
+    await db.insert(posts).values(articles.map((post) => toPersistence(post)));
+    const sut = new DrizzleSearchPostSummariesQueryService(db);
+
+    const page1 = await sut.searchPostSummaries({
+      query: 'Tiebreaker',
+      page: 1,
+      pageSize: 2,
+      orderBy: 'desc',
+    });
+    const page2 = await sut.searchPostSummaries({
+      query: 'Tiebreaker',
+      page: 2,
+      pageSize: 2,
+      orderBy: 'desc',
+    });
+
+    expect(page1.posts.map((post) => post.id)).toEqual([
+      '550e8400-e29b-41d4-a716-446655440003',
+      '550e8400-e29b-41d4-a716-446655440002',
+    ]);
+    expect(page2.posts.map((post) => post.id)).toEqual([
+      '550e8400-e29b-41d4-a716-446655440001',
+      '550e8400-e29b-41d4-a716-446655440000',
+    ]);
+    const combinedIds = [...page1.posts, ...page2.posts].map((p) => p.id);
+    expect(new Set(combinedIds).size).toBe(4);
   });
 
   it('returns an empty page when nothing matches', async () => {

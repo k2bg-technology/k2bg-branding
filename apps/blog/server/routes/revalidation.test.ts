@@ -9,7 +9,7 @@ vi.mock('next/cache', () => ({
   revalidateTag: vi.fn(),
 }));
 
-vi.mock('../../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ error: vi.fn(), info: vi.fn() }),
   },
@@ -45,6 +45,12 @@ describe('revalidationRoutes', () => {
       expect(res.status).toBe(statusOk);
       const body = await res.json();
       expect(body.revalidated).toBe(true);
+      expect(mockRevalidatePath.mock.calls).toEqual([
+        ['/blog', 'page'],
+        ['/blog/[id]/[slug]', 'page'],
+        ['/category/[category]', 'page'],
+        ['/concept', 'page'],
+      ]);
     });
 
     it('returns 500 with the shared error shape when revalidation fails', async () => {

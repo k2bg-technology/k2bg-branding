@@ -1,11 +1,5 @@
 import { InvalidImageSourceUrlError } from '../errors/errors';
 
-/**
- * ImageSourceUrl Value Object
- *
- * Represents the URL of an affiliate image.
- * Must be a valid URL format.
- */
 export class ImageSourceUrl {
   private readonly value: string;
 

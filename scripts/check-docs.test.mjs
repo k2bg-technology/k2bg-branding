@@ -1,11 +1,23 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { findDocumentationProblems } from './check-docs.mjs';
+import {
+  findDocumentationProblems,
+  PORTFOLIO_CONTENT_DRIFT_GUARDS,
+} from './check-docs.mjs';
 
 function runChecker(content, { existingPaths = [] } = {}) {
   return findDocumentationProblems(content, {
     fileLabel: 'DOC.md',
     pathExists: (referencedPath) => existingPaths.includes(referencedPath),
+  });
+}
+
+function runPortfolioContentDriftChecker(content) {
+  return findDocumentationProblems(content, {
+    fileLabel: 'apps/portfolio/README.md',
+    pathExists: () => true,
+    denylist: PORTFOLIO_CONTENT_DRIFT_GUARDS,
+    checkPaths: false,
   });
 }
 
@@ -55,7 +67,8 @@ describe('findDocumentationProblems', () => {
     });
 
     it('ignores paths outside the known repo prefixes', () => {
-      const content = 'The handler is `app/api/[[...route]]/route.ts` in the blog app.';
+      const content =
+        'The handler is `app/api/[[...route]]/route.ts` in the blog app.';
 
       const failures = runChecker(content);
 
@@ -103,9 +116,35 @@ describe('findDocumentationProblems', () => {
     }
 
     it('does not flag current tech mentions', () => {
-      const content = 'Use Drizzle ORM and @base-ui/react with the Vite builder.';
+      const content =
+        'Use Drizzle ORM and @base-ui/react with the Vite builder.';
 
       const failures = runChecker(content);
+
+      assert.deepEqual(failures, []);
+    });
+  });
+
+  describe('portfolio content drift guard', () => {
+    const driftCases = [
+      { name: 'Prisma', line: 'Uses Prisma for persistence.' },
+      { name: 'react-i18next', line: 'Uses react-i18next for translations.' },
+    ];
+
+    for (const { name, line } of driftCases) {
+      it(`flags portfolio content drift: ${name}`, () => {
+        const failures = runPortfolioContentDriftChecker(line);
+
+        assert.equal(failures.length, 1);
+        assert.match(failures[0], /Portfolio content drift/);
+      });
+    }
+
+    it('allows current portfolio i18n and persistence wording', () => {
+      const content =
+        'Uses server-only dictionaries and Drizzle ORM + PostgreSQL.';
+
+      const failures = runPortfolioContentDriftChecker(content);
 
       assert.deepEqual(failures, []);
     });

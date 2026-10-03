@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
 import { ArticleHeading } from '../../../../components/article-heading/ArticleHeading';
 import { Markdown } from '../../../../components/markdown';
 import { PageLayout } from '../../../../components/page-layout';
@@ -14,6 +13,8 @@ import {
   createFetchPostUseCase,
   getDefaultOgImageUrl,
 } from '../../../../infrastructure/di';
+import { BLOG_SITE_NAME } from '../../../siteMetadata';
+import { handlePostFetchError } from './handlePostFetchError';
 
 export const revalidate = 3600;
 
@@ -23,7 +24,14 @@ interface Props {
   params: Params;
 }
 
-export async function generateStaticParams() {
+export interface BlogPostStaticParameter {
+  id: string;
+  slug: string;
+}
+
+export async function generateStaticParams(): Promise<
+  BlogPostStaticParameter[]
+> {
   const fetchAllSlugs = createFetchAllSlugsUseCase();
   const { slugs } = await fetchAllSlugs.execute();
 
@@ -37,7 +45,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
 
   const fetchPost = createFetchPostUseCase();
-  const { post: article } = await fetchPost.execute({ id });
+  const { post: article } = await fetchPost
+    .execute({ id })
+    .catch((error) => handlePostFetchError(error, id));
 
   const ogImageUrl = article.ogImageUrl ?? getDefaultOgImageUrl();
 
@@ -52,7 +62,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: article.excerpt || '',
       type: 'article',
       locale: 'ja_JP',
-      siteName: 'K2.B.G Technology Blog',
+      siteName: BLOG_SITE_NAME,
       images: [{ url: ogImageUrl, width: 1200, height: 630 }],
       publishedTime: article.releaseDate,
       authors: article.author ? [article.author.name] : undefined,
@@ -72,9 +82,9 @@ export default async function Page({ params }: Props) {
 
   const fetchPost = createFetchPostUseCase();
 
-  const { post: article } = await fetchPost.execute({ id }).catch(() => {
-    notFound();
-  });
+  const { post: article } = await fetchPost
+    .execute({ id })
+    .catch((error) => handlePostFetchError(error, id));
 
   return (
     <PageLayout

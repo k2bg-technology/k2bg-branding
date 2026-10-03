@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Avatar } from 'ui';
 
+import { AuthorAvatar } from '../../components/author-avatar/AuthorAvatar';
 import { BlogCard } from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import { PageLayout } from '../../components/page-layout';
@@ -11,6 +11,7 @@ import {
   createFetchPostSummariesUseCase,
   getDefaultOgImageUrl,
 } from '../../infrastructure/di';
+import { BLOG_SITE_DESCRIPTION, BLOG_SITE_NAME } from '../siteMetadata';
 
 const PAGE_SIZE = 8;
 
@@ -18,12 +19,9 @@ export const revalidate = 3600;
 
 const defaultOgImageUrl = getDefaultOgImageUrl();
 
-const blogDescription =
-  'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。';
-
 export const metadata: Metadata = {
-  title: 'K2.B.G Technology Blog',
-  description: blogDescription,
+  title: { absolute: BLOG_SITE_NAME },
+  description: BLOG_SITE_DESCRIPTION,
   robots: {
     index: true,
     follow: true,
@@ -36,17 +34,17 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'K2.B.G Technology Blog',
-    description: blogDescription,
+    title: BLOG_SITE_NAME,
+    description: BLOG_SITE_DESCRIPTION,
     type: 'website',
     locale: 'ja_JP',
-    siteName: 'K2.B.G Technology Blog',
+    siteName: BLOG_SITE_NAME,
     images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'K2.B.G Technology Blog',
-    description: blogDescription,
+    title: BLOG_SITE_NAME,
+    description: BLOG_SITE_DESCRIPTION,
     images: [defaultOgImageUrl],
   },
   alternates: {
@@ -119,12 +117,10 @@ export default async function Page() {
                 excerpt={featureLatest.excerpt ?? undefined}
                 avatar={
                   featureLatest.author && (
-                    <Avatar>
-                      <Avatar.Image
-                        alt="author"
-                        src={featureLatest.author.avatarUrl ?? undefined}
-                      />
-                    </Avatar>
+                    <AuthorAvatar
+                      name={featureLatest.author.name}
+                      avatarUrl={featureLatest.author.avatarUrl}
+                    />
                   )
                 }
                 date={featureLatest.releaseDate}
@@ -179,12 +175,10 @@ export default async function Page() {
                 excerpt={article.excerpt ?? undefined}
                 avatar={
                   article.author && (
-                    <Avatar>
-                      <Avatar.Image
-                        alt="author"
-                        src={article.author?.avatarUrl ?? undefined}
-                      />
-                    </Avatar>
+                    <AuthorAvatar
+                      name={article.author.name}
+                      avatarUrl={article.author.avatarUrl}
+                    />
                   )
                 }
                 date={article.releaseDate}
@@ -243,12 +237,10 @@ export default async function Page() {
                     excerpt={article.excerpt ?? undefined}
                     avatar={
                       article.author && (
-                        <Avatar>
-                          <Avatar.Image
-                            alt="author"
-                            src={article.author.avatarUrl ?? undefined}
-                          />
-                        </Avatar>
+                        <AuthorAvatar
+                          name={article.author.name}
+                          avatarUrl={article.author.avatarUrl}
+                        />
                       )
                     }
                     date={article.releaseDate}
@@ -301,12 +293,10 @@ export default async function Page() {
                   excerpt={article.excerpt ?? undefined}
                   avatar={
                     article.author && (
-                      <Avatar>
-                        <Avatar.Image
-                          alt="author"
-                          src={article.author.avatarUrl ?? undefined}
-                        />
-                      </Avatar>
+                      <AuthorAvatar
+                        name={article.author.name}
+                        avatarUrl={article.author.avatarUrl}
+                      />
                     )
                   }
                   date={article.releaseDate}

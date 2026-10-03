@@ -90,10 +90,10 @@ export const Hero: Story = {
   ),
 };
 
-export const Skelton: Story = {
+export const Skeleton: Story = {
   render: (args) => (
     <BlogCard className="flex-col gap-spacious" {...args}>
-      <BlogCard.Skelton />
+      <BlogCard.Skeleton />
     </BlogCard>
   ),
 };

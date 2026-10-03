@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 
 import { Button } from '../Button';
 
 import { Dialog } from '.';
 
+// `bg-gray-500` below is a decorative video-placeholder box (not real
+// component styling) and has no reasonable base-* token match; kept as-is.
 const meta = {
   component: Dialog,
   argTypes: {
@@ -60,6 +63,12 @@ const meta = {
     const button = canvas.getByRole('button');
 
     await userEvent.click(button);
+
+    // Retry the visibility check: the popup mounts at opacity 0 and fades in,
+    // so a one-shot assertion races the enter animation.
+    await waitFor(() =>
+      expect(within(document.body).getByRole('dialog')).toBeVisible()
+    );
   },
 } satisfies Meta<typeof Dialog>;
 

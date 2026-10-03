@@ -27,7 +27,7 @@ export function ScrollBar({
         className
       )}
     >
-      <ScrollAreaPrimitive.Thumb className="relative flex-1 rounded-full bg-neutral-500/40" />
+      <ScrollAreaPrimitive.Thumb className="relative flex-1 rounded-full bg-base-default/40" />
     </ScrollAreaPrimitive.Scrollbar>
   );
 }

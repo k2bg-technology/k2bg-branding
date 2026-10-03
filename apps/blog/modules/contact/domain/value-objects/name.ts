@@ -1,11 +1,5 @@
 import { InvalidNameError } from '../errors/errors';
 
-/**
- * Name Value Object
- *
- * Represents a contact name.
- * Validates that the name is not empty and does not exceed maximum length.
- */
 export class Name {
   private static readonly MAX_LENGTH = 100;
 

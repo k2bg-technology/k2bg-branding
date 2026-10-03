@@ -1,0 +1,1 @@
+export { AccentLabel } from './AccentLabel';

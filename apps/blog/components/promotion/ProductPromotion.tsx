@@ -30,6 +30,7 @@ export function ProductPromotion(props: ProductPromotionProps) {
           <a
             href={linkUrl}
             target="_blank"
+            rel="noopener nofollow"
             className="text-body-r-md leading-body-r-md text-base-black/80 text-justify underline hover:opacity-80"
           >
             {linkText}

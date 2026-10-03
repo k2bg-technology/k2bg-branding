@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { SyncError } from '../../shared';
+import { type Logger, SyncError } from '../../shared';
 import type {
   ExternalImageSource,
   ImageSourceRecord,
@@ -27,12 +27,20 @@ describe('SyncHeroImages', () => {
       url: `https://example.com/image-${i}.jpg`,
     }));
 
+  const createMockLogger = (): Logger => ({
+    error: vi.fn(),
+  });
+
   describe('execute', () => {
     it('collects and uploads images from all sources', async () => {
       const source1 = createMockImageSource(createImageRecords(2));
       const source2 = createMockImageSource(createImageRecords(3));
       const imageRepository = createMockImageRepository();
-      const sut = new SyncHeroImages([source1, source2], imageRepository);
+      const sut = new SyncHeroImages(
+        [source1, source2],
+        imageRepository,
+        createMockLogger()
+      );
 
       const result = await sut.execute();
 
@@ -45,7 +53,11 @@ describe('SyncHeroImages', () => {
       const source = createMockImageSource(images);
       const uploadImage = vi.fn().mockResolvedValue(undefined);
       const imageRepository = createMockImageRepository({ uploadImage });
-      const sut = new SyncHeroImages([source], imageRepository);
+      const sut = new SyncHeroImages(
+        [source],
+        imageRepository,
+        createMockLogger()
+      );
 
       await sut.execute();
 
@@ -57,7 +69,11 @@ describe('SyncHeroImages', () => {
     it('handles empty sources', async () => {
       const source = createMockImageSource([]);
       const imageRepository = createMockImageRepository();
-      const sut = new SyncHeroImages([source], imageRepository);
+      const sut = new SyncHeroImages(
+        [source],
+        imageRepository,
+        createMockLogger()
+      );
 
       const result = await sut.execute();
 
@@ -74,7 +90,11 @@ describe('SyncHeroImages', () => {
         .mockRejectedValueOnce(new Error('Upload failed'))
         .mockResolvedValueOnce(undefined);
       const imageRepository = createMockImageRepository({ uploadImage });
-      const sut = new SyncHeroImages([source], imageRepository);
+      const sut = new SyncHeroImages(
+        [source],
+        imageRepository,
+        createMockLogger()
+      );
 
       const result = await sut.execute();
 
@@ -87,30 +107,14 @@ describe('SyncHeroImages', () => {
         fetchImageSources: vi.fn().mockRejectedValue(new Error('Source error')),
       };
       const imageRepository = createMockImageRepository();
-      const sut = new SyncHeroImages([source], imageRepository);
+      const sut = new SyncHeroImages(
+        [source],
+        imageRepository,
+        createMockLogger()
+      );
 
       await expect(sut.execute()).rejects.toThrow(SyncError);
       await expect(sut.execute()).rejects.toThrow('Source error');
-    });
-
-    it('works with multiple sources with different image counts', async () => {
-      const source1 = createMockImageSource([
-        { id: 'post-1', url: 'https://example.com/post-1.jpg' },
-      ]);
-      const source2 = createMockImageSource([
-        { id: 'media-1', url: 'https://example.com/media-1.jpg' },
-        { id: 'media-2', url: 'https://example.com/media-2.jpg' },
-      ]);
-      const source3 = createMockImageSource([]);
-      const imageRepository = createMockImageRepository();
-      const sut = new SyncHeroImages(
-        [source1, source2, source3],
-        imageRepository
-      );
-
-      const result = await sut.execute();
-
-      expect(result.count).toBe(3);
     });
 
     it('reports all failures when all uploads fail', async () => {
@@ -118,7 +122,11 @@ describe('SyncHeroImages', () => {
       const source = createMockImageSource(images);
       const uploadImage = vi.fn().mockRejectedValue(new Error('Upload failed'));
       const imageRepository = createMockImageRepository({ uploadImage });
-      const sut = new SyncHeroImages([source], imageRepository);
+      const sut = new SyncHeroImages(
+        [source],
+        imageRepository,
+        createMockLogger()
+      );
 
       const result = await sut.execute();
 

@@ -1,3 +1,3 @@
-import { logger } from '../../../shared/logger';
+import { logger } from 'logger';
 
 export const postLogger = logger.child({ module: 'post' });

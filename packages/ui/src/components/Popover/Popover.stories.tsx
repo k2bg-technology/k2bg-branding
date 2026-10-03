@@ -1,7 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor, within } from 'storybook/test';
 import { Button } from '../Button';
 
 import { Popover } from '.';
+
+// `text-slate-500` below is decorative demo copy only (not real component
+// styling) and has no reasonable base-* token match; kept as-is.
 
 const meta = {
   component: Popover,
@@ -42,6 +46,13 @@ const meta = {
     const button = canvas.getByRole('button');
 
     await userEvent.click(button);
+
+    // Assert the popup role, not its copy: this meta play runs for every story,
+    // including ones with different content. Retry the visibility check because
+    // the popup mounts at opacity 0 and fades in.
+    await waitFor(() =>
+      expect(within(document.body).getByRole('dialog')).toBeVisible()
+    );
   },
 } satisfies Meta<typeof Popover>;
 
@@ -152,7 +163,7 @@ export const Dark: Story = {
             <div className="grid gap-4">
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Dimensions</h4>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-base-white/60">
                   Set the dimensions for the layer.
                 </p>
               </div>
@@ -180,7 +191,7 @@ export const DarkWithForm: Story = {
             <div className="grid gap-4">
               <div className="space-y-2">
                 <h4 className="font-medium leading-none">Dimensions</h4>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-base-white/60">
                   Set the dimensions for the layer.
                 </p>
               </div>
@@ -192,7 +203,7 @@ export const DarkWithForm: Story = {
                   <input
                     id="darkWidth"
                     defaultValue="100%"
-                    className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
+                    className="col-span-2 h-8 rounded-md border border-base-white/30 bg-transparent px-3 text-sm text-base-white placeholder-base-white/50"
                   />
                 </div>
                 <div className="grid grid-cols-3 items-center gap-4">
@@ -202,7 +213,7 @@ export const DarkWithForm: Story = {
                   <input
                     id="darkMaxWidth"
                     defaultValue="300px"
-                    className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
+                    className="col-span-2 h-8 rounded-md border border-base-white/30 bg-transparent px-3 text-sm text-base-white placeholder-base-white/50"
                   />
                 </div>
                 <div className="grid grid-cols-3 items-center gap-4">
@@ -212,7 +223,7 @@ export const DarkWithForm: Story = {
                   <input
                     id="darkHeight"
                     defaultValue="25px"
-                    className="col-span-2 h-8 rounded-md border border-white/30 bg-transparent px-3 text-sm text-white placeholder-white/50"
+                    className="col-span-2 h-8 rounded-md border border-base-white/30 bg-transparent px-3 text-sm text-base-white placeholder-base-white/50"
                   />
                 </div>
               </div>

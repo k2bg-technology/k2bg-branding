@@ -1,0 +1,18 @@
+@theme {
+  /* Video-scale typography for 1080×1920 compositions. The web scale in
+     tailwind-config tops out at 72px, which is too small for phone-viewed
+     video frames. Sub-variables make each text-scene-* class apply size,
+     line-height, and weight together. */
+  --text-scene-title: 7rem;
+  --text-scene-title--line-height: 8.5rem;
+  --text-scene-title--font-weight: 700;
+  --text-scene-subtitle: 4rem;
+  --text-scene-subtitle--line-height: 5.25rem;
+  --text-scene-subtitle--font-weight: 700;
+  --text-scene-cta: 3.5rem;
+  --text-scene-cta--line-height: 4.5rem;
+  --text-scene-cta--font-weight: 700;
+  --text-scene-caption: 3rem;
+  --text-scene-caption--line-height: 4rem;
+  --text-scene-caption--font-weight: 500;
+}

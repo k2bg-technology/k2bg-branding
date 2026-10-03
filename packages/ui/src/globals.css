@@ -23,6 +23,36 @@
   --color-success: var(--color-green-500);
   --color-success-light: var(--color-green-400);
   --color-success-dark: var(--color-green-600);
+  /*
+   * Chart series palette: fixed order validated for color-vision-deficiency
+   * separation, lightness, and chroma on base-white. Interim values until
+   * the design file defines the official chart tokens.
+   */
+  --color-chart-1: #2a78d6;
+  --color-chart-2: #eb6834;
+  --color-chart-3: #1baf7a;
+  --color-chart-4: #eda100;
+  --color-chart-5: #e87ba4;
+  /*
+   * A composition chart routinely carries 6-15 groups, so the palette runs to
+   * twelve. Each of these seven clears 3:1 against the base-white token the
+   * charts sit on (WCAG 1.4.11; 3.76:1 at the tightest, chart-9), takes a hue
+   * family the first five leave free, and steps lightness away from its
+   * neighbour, so consecutive series stay apart under protanopia,
+   * deuteranopia, and tritanopia. Each also keeps a wider margin to
+   * success / error / warning / info than the first five already do.
+   * chart-1 clears the floor at 3.98:1; chart-2 through chart-5 predate it
+   * and sit at 2.88:1, 2.54:1, 1.95:1, and 2.42:1.
+   */
+  --color-chart-6: #531f8c;
+  --color-chart-7: #036a65;
+  --color-chart-8: #5d3400;
+  --color-chart-9: #c24db6;
+  --color-chart-10: #6a6600;
+  --color-chart-11: #004168;
+  --color-chart-12: #b6003a;
+  /* Series past the palette: a neutral that reads as "not a group of its own". */
+  --color-chart-overflow: #6f6f6f;
 }
 
 @layer base {
@@ -44,6 +74,11 @@
     cursor: pointer;
   }
 
+  /*
+   * `--color-gray-200` here is Tailwind's own v4 upgrade-guide recipe for
+   * restoring the v3 default border color, not a component color choice —
+   * deliberately left as-is (no base-* token substitution).
+   */
   *,
   ::after,
   ::before,

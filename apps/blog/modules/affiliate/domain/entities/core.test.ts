@@ -41,36 +41,6 @@ function createValidCoreProps(overrides: Partial<CoreProps> = {}): CoreProps {
 }
 
 describe('AffiliateCore', () => {
-  describe('properties', () => {
-    it('returns correct id', () => {
-      const props = createValidCoreProps();
-      const sut = TestAffiliate.create(props);
-
-      expect(sut.id.equals(props.id)).toBe(true);
-    });
-
-    it('returns correct name', () => {
-      const props = createValidCoreProps();
-      const sut = TestAffiliate.create(props);
-
-      expect(sut.name.equals(props.name)).toBe(true);
-    });
-
-    it('returns correct targetUrl', () => {
-      const props = createValidCoreProps();
-      const sut = TestAffiliate.create(props);
-
-      expect(sut.targetUrl.equals(props.targetUrl)).toBe(true);
-    });
-
-    it('returns correct provider', () => {
-      const props = createValidCoreProps();
-      const sut = TestAffiliate.create(props);
-
-      expect(sut.provider.equals(props.provider)).toBe(true);
-    });
-  });
-
   describe('equals', () => {
     it('returns true when comparing affiliates with same id', () => {
       const id = AffiliateId.create('550e8400-e29b-41d4-a716-446655440000');

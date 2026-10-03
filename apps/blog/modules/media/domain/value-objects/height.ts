@@ -1,11 +1,5 @@
 import { InvalidHeightError } from '../errors/errors';
 
-/**
- * Height Value Object
- *
- * Represents the height of a media item in pixels.
- * Must be a positive integer.
- */
 export class Height {
   private readonly value: number;
 

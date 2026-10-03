@@ -2,7 +2,8 @@ import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { getDictionary } from '../../i18n/dictionaries';
-import { languages, resolveLanguage } from '../../i18n/settings';
+import { type Language, languages, resolveLanguage } from '../../i18n/settings';
+import { getLocalizedUrl, siteBaseUrl } from '../site';
 
 import '../globals.css';
 
@@ -11,7 +12,13 @@ type LayoutProps = {
   params: Promise<{ lang: string }>;
 };
 
-export async function generateStaticParams() {
+export interface PortfolioStaticParameter {
+  lang: Language;
+}
+
+export async function generateStaticParams(): Promise<
+  PortfolioStaticParameter[]
+> {
   return languages.map((lang) => ({ lang }));
 }
 
@@ -21,30 +28,23 @@ export async function generateMetadata({
   const { lang } = await params;
   const language = resolveLanguage(lang);
   const dictionary = await getDictionary(language);
-  const siteBaseUrl = process.env.PORTFOLIO_SITE_BASE_URL;
   const title = 'K2.B.G. Technology';
   const description = dictionary.metadata.description;
-  const minimalMetadata: Metadata = {
-    metadataBase: siteBaseUrl ? new URL(siteBaseUrl) : undefined,
+  const url = getLocalizedUrl(language);
+  const ogImage = new URL('/images/hero-og.jpg', siteBaseUrl).toString();
+
+  return {
+    metadataBase: siteBaseUrl,
     title,
     description,
     robots: { index: true, follow: true },
-  };
-
-  if (!siteBaseUrl) {
-    return minimalMetadata;
-  }
-
-  const baseUrl = new URL(siteBaseUrl);
-  const url = `${baseUrl.origin}/${language}`;
-  const ogImage = `${baseUrl.origin}/images/hero-og.jpg`;
-
-  return {
-    ...minimalMetadata,
     alternates: {
       canonical: url,
       languages: Object.fromEntries(
-        languages.map((l) => [l, `${baseUrl.origin}/${l}`])
+        languages.map((alternateLanguage) => [
+          alternateLanguage,
+          getLocalizedUrl(alternateLanguage),
+        ])
       ),
     },
     openGraph: {
@@ -76,7 +76,7 @@ export async function generateMetadata({
         },
       ],
     },
-  };
+  } satisfies Metadata;
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {

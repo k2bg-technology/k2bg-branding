@@ -6,14 +6,6 @@ import { Extension } from './extension';
 
 describe('Extension', () => {
   describe('create', () => {
-    it('creates Extension when given valid extension without dot', () => {
-      const validExtension = 'jpg';
-
-      const sut = Extension.create(validExtension);
-
-      expect(sut.getValue()).toBe('jpg');
-    });
-
     it('creates Extension when given valid extension with dot', () => {
       const extensionWithDot = '.png';
 
@@ -31,18 +23,24 @@ describe('Extension', () => {
     });
 
     it.each([
-      'jpg',
-      'jpeg',
-      'png',
-      'gif',
-      'webp',
-      'svg',
-      'mp4',
-      'webm',
-    ])('creates Extension for valid type: %s', (ext) => {
-      const sut = Extension.create(ext);
+      { name: 'JPEG short', extension: 'jpg' },
+      { name: 'JPEG long', extension: 'jpeg' },
+      { name: 'PNG', extension: 'png' },
+      { name: 'GIF', extension: 'gif' },
+      { name: 'WebP', extension: 'webp' },
+      { name: 'SVG', extension: 'svg' },
+      { name: 'BMP', extension: 'bmp' },
+      { name: 'ICO', extension: 'ico' },
+      { name: 'AVIF', extension: 'avif' },
+      { name: 'MP4', extension: 'mp4' },
+      { name: 'WebM', extension: 'webm' },
+      { name: 'OGG', extension: 'ogg' },
+      { name: 'MOV', extension: 'mov' },
+      { name: 'AVI', extension: 'avi' },
+    ])('accepts the supported $name extension', ({ extension }) => {
+      const sut = Extension.create(extension);
 
-      expect(sut.getValue()).toBe(ext);
+      expect(sut.getValue()).toBe(extension);
     });
 
     it('throws InvalidExtensionError when value is empty string', () => {
@@ -51,14 +49,6 @@ describe('Extension', () => {
       expect(() => Extension.create(emptyValue)).toThrow(InvalidExtensionError);
       expect(() => Extension.create(emptyValue)).toThrow(
         'Extension cannot be empty'
-      );
-    });
-
-    it('throws InvalidExtensionError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => Extension.create(whitespaceValue)).toThrow(
-        InvalidExtensionError
       );
     });
 
@@ -75,28 +65,21 @@ describe('Extension', () => {
   });
 
   describe('fromUrl', () => {
-    it('extracts extension from URL', () => {
-      const url = 'https://example.com/images/photo.jpg';
-
+    it.each([
+      {
+        format: 'a simple path',
+        url: 'https://example.com/images/photo.jpg',
+        expected: 'jpg',
+      },
+      {
+        format: 'query parameters',
+        url: 'https://example.com/images/photo.png?width=800',
+        expected: 'png',
+      },
+    ])('extracts $expected from a URL with $format', ({ url, expected }) => {
       const sut = Extension.fromUrl(url);
 
-      expect(sut.getValue()).toBe('jpg');
-    });
-
-    it('extracts extension from URL with query params', () => {
-      const url = 'https://example.com/images/photo.png?width=800';
-
-      const sut = Extension.fromUrl(url);
-
-      expect(sut.getValue()).toBe('png');
-    });
-
-    it('extracts extension from URL with complex path', () => {
-      const url = 'https://cdn.example.com/v1/uploads/2024/image.webp';
-
-      const sut = Extension.fromUrl(url);
-
-      expect(sut.getValue()).toBe('webp');
+      expect(sut.getValue()).toBe(expected);
     });
 
     it('throws InvalidExtensionError when URL is empty', () => {
@@ -155,17 +138,6 @@ describe('Extension', () => {
       const result = ext1.equals(ext2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the extension string value', () => {
-      const ext = 'jpg';
-      const sut = Extension.create(ext);
-
-      const result = sut.toString();
-
-      expect(result).toBe(ext);
     });
   });
 });

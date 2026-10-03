@@ -17,6 +17,7 @@ export default defineConfig({
     'Session',
     'Account',
     'Verification',
+    'contact_submissions',
   ],
   strict: true,
   verbose: true,

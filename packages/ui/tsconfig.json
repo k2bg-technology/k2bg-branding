@@ -1,5 +1,8 @@
 {
   "extends": "tsconfig/react-library.json",
+  "compilerOptions": {
+    "types": ["css-modules", "test-utils/jestDomMatchers"]
+  },
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
 }

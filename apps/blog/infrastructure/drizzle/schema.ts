@@ -14,6 +14,7 @@ import {
   text,
   timestamp,
   uniqueIndex,
+  uuid,
 } from 'drizzle-orm/pg-core';
 
 export const typeEnum = pgEnum('Type', ['ARTICLE', 'PAGE']);
@@ -203,3 +204,23 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const contactSubmissions = pgTable(
+  'contact_submissions',
+  {
+    id: uuid('id').defaultRandom().primaryKey(),
+    ipHash: text('ip_hash').notNull(),
+    createdAt: timestamp('created_at', {
+      withTimezone: true,
+      mode: 'date',
+    })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    index('contact_submissions_ip_hash_created_at_idx').on(
+      table.ipHash,
+      table.createdAt
+    ),
+  ]
+);

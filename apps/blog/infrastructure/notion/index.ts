@@ -1,17 +1,22 @@
 export {
+  type Client,
   createNotionClient,
   createNotionToMarkdown,
   getNotionClient,
   getNotionToMarkdown,
+  type NotionClientConfig,
+  type NotionToMarkdown,
   pageToMarkdownString,
+  type QueryDatabaseParameters,
   queryDatabase,
   resetNotionClient,
   retrievePage,
-  type Client,
-  type NotionClientConfig,
-  type NotionToMarkdown,
-  type QueryDatabaseParameters,
 } from './client';
+
+export {
+  filterFullPageObjectResponses,
+  isFullPageObjectResponse,
+} from './pageGuards';
 
 export {
   getAllFileUrls,

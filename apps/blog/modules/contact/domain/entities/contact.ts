@@ -1,11 +1,6 @@
 import type { ContactPrimitives, ContactProps } from '../types';
 import { Email, Message, Name } from '../value-objects';
 
-/**
- * Contact Entity
- *
- * Represents a contact form submission with visitor information.
- */
 export class Contact {
   private constructor(
     private readonly _name: Name,

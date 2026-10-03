@@ -12,7 +12,7 @@ export function Skill({ dictionary }: { dictionary: SkillDictionary }) {
           <Image
             src="/images/skill-pattern.jpg"
             fill
-            alt="Skill Pattern Image"
+            alt={dictionary.imageAlt}
             sizes="(min-width: 768px) 68rem, 100vw"
           />
         </div>

@@ -1,0 +1,1 @@
+export { PaintSmear } from './PaintSmear';

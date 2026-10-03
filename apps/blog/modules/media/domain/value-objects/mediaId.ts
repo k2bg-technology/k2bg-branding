@@ -1,11 +1,5 @@
 import { InvalidMediaIdError } from '../errors/errors';
 
-/**
- * MediaId Value Object
- *
- * Represents a unique identifier for a Media entity.
- * Validates UUID v4/v7/v8 format.
- */
 export class MediaId {
   private static readonly UUID_PATTERN =
     /^[a-f0-9]{8}-[a-f0-9]{4}-[478][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;

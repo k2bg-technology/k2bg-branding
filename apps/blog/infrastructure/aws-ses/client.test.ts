@@ -1,4 +1,7 @@
+import { SESClient } from '@aws-sdk/client-ses';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { AwsSesEmailSender } from '../../modules/contact/adapters';
 
 import {
   configureAwsSes,
@@ -7,18 +10,24 @@ import {
 } from './client';
 
 vi.mock('@aws-sdk/client-ses', () => ({
-  SESClient: vi.fn().mockImplementation((config) => ({
-    config,
-    send: vi.fn().mockResolvedValue({}),
-  })),
+  SESClient: vi.fn(
+    class {
+      send = vi.fn().mockResolvedValue({});
+      constructor(readonly config: unknown) {}
+    }
+  ),
 }));
 
 vi.mock('../../modules/contact/adapters', () => ({
-  AwsSesEmailSender: vi.fn().mockImplementation((sesClient, senderEmail) => ({
-    sesClient,
-    senderEmail,
-    send: vi.fn().mockResolvedValue(undefined),
-  })),
+  AwsSesEmailSender: vi.fn(
+    class {
+      send = vi.fn().mockResolvedValue(undefined);
+      constructor(
+        readonly sesClient: unknown,
+        readonly senderEmail: unknown
+      ) {}
+    }
+  ),
 }));
 
 describe('aws-ses/client', () => {
@@ -42,9 +51,19 @@ describe('aws-ses/client', () => {
 
   describe('configureAwsSes', () => {
     it('configures AWS SES with environment variables', () => {
-      const emailSender = getAwsSesEmailSender();
+      getAwsSesEmailSender();
 
-      expect(emailSender).toBeDefined();
+      expect(SESClient).toHaveBeenCalledWith({
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: 'test-access-key',
+          secretAccessKey: 'test-secret-key',
+        },
+      });
+      expect(AwsSesEmailSender).toHaveBeenCalledWith(
+        expect.anything(),
+        'test@example.com'
+      );
     });
 
     it('accepts custom configuration', () => {
@@ -55,34 +74,33 @@ describe('aws-ses/client', () => {
         senderEmail: 'custom@example.com',
       });
 
-      const emailSender = getAwsSesEmailSender();
+      getAwsSesEmailSender();
 
-      expect(emailSender).toBeDefined();
+      expect(SESClient).toHaveBeenCalledWith({
+        region: 'eu-west-1',
+        credentials: {
+          accessKeyId: 'custom-access-key',
+          secretAccessKey: 'custom-secret-key',
+        },
+      });
+      expect(AwsSesEmailSender).toHaveBeenCalledWith(
+        expect.anything(),
+        'custom@example.com'
+      );
     });
 
     it('uses default region when not specified', () => {
-      process.env.AMAZON_REGION = '';
+      delete process.env.AMAZON_REGION;
 
-      resetAwsSesConfig();
-      const emailSender = getAwsSesEmailSender();
+      getAwsSesEmailSender();
 
-      expect(emailSender).toBeDefined();
+      expect(SESClient).toHaveBeenCalledWith(
+        expect.objectContaining({ region: 'ap-northeast-1' })
+      );
     });
   });
 
   describe('getAwsSesEmailSender', () => {
-    it('returns an AwsSesEmailSender instance', () => {
-      const emailSender = getAwsSesEmailSender();
-
-      expect(emailSender).toBeDefined();
-    });
-
-    it('auto-configures on first call', () => {
-      const emailSender = getAwsSesEmailSender();
-
-      expect(emailSender).toBeDefined();
-    });
-
     it('returns the same instance on subsequent calls', () => {
       const firstInstance = getAwsSesEmailSender();
       const secondInstance = getAwsSesEmailSender();
@@ -96,16 +114,6 @@ describe('aws-ses/client', () => {
       const secondInstance = getAwsSesEmailSender();
 
       expect(firstInstance).not.toBe(secondInstance);
-    });
-  });
-
-  describe('resetAwsSesConfig', () => {
-    it('clears the current configuration', () => {
-      getAwsSesEmailSender();
-      resetAwsSesConfig();
-      const newInstance = getAwsSesEmailSender();
-
-      expect(newInstance).toBeDefined();
     });
   });
 });

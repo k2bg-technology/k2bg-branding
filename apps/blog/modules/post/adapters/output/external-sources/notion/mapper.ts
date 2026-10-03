@@ -30,6 +30,7 @@ import {
   Tags,
   Title,
 } from '../../../../domain';
+import type { AuthorRecord } from '../../../../use-cases';
 import { DEFAULT_VALUES, MappingError } from '../../../shared';
 
 /**
@@ -106,6 +107,25 @@ export function notionPageToImageSource(
   return {
     id: page.id,
     url: imageUrl,
+  };
+}
+
+/**
+ * Maps a Notion Page Response to an AuthorRecord.
+ * Returns null when the person is absent or partial (id-only), so existing
+ * author rows are never overwritten with incomplete data.
+ */
+export function notionPageToAuthorRecord(
+  page: PageObjectResponse
+): AuthorRecord | null {
+  const person = getPerson(page.properties, 'author');
+  if (!person?.name) {
+    return null;
+  }
+  return {
+    id: person.id,
+    name: person.name,
+    avatarUrl: person.avatarUrl ?? null,
   };
 }
 
@@ -197,7 +217,7 @@ function mapCategory(category: string): Category {
  * Converts a UUID or string to kebab-case slug format.
  * Removes non-alphanumeric characters except hyphens and converts to lowercase.
  */
-function toKebabCase(value: string): string {
+function toKebabCase(value: string) {
   return value
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, '-')

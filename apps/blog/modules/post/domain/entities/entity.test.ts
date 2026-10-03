@@ -41,7 +41,7 @@ function createValidDraftParams(
   };
 }
 
-function createDraftPost(overrides: Partial<CreateDraftProps> = {}): Post {
+function createDraftPost(overrides: Partial<CreateDraftProps> = {}) {
   return Post.createDraft(createValidDraftParams(overrides));
 }
 
@@ -158,9 +158,6 @@ describe('Post', () => {
       expect(() => Post.reconstitute(props)).toThrow(
         PostInvariantViolationError
       );
-      expect(() => Post.reconstitute(props)).toThrow(
-        'revisionDate must be on or after releaseDate'
-      );
     });
 
     it('throws PostInvariantViolationError when published post has future releaseDate', () => {
@@ -175,9 +172,6 @@ describe('Post', () => {
 
       expect(() => Post.reconstitute(props)).toThrow(
         PostInvariantViolationError
-      );
-      expect(() => Post.reconstitute(props)).toThrow(
-        'cannot have future release date'
       );
     });
   });
@@ -339,7 +333,7 @@ describe('Post', () => {
       expect(sut.status).toBe(PostStatus.PREVIEW);
     });
 
-    it('calls publish when changing to PUBLISHED', () => {
+    it('changes a draft to PUBLISHED status', () => {
       vi.useFakeTimers();
       vi.setSystemTime(new Date('2024-01-20'));
       const sut = createDraftPost({
@@ -351,7 +345,7 @@ describe('Post', () => {
       expect(sut.status).toBe(PostStatus.PUBLISHED);
     });
 
-    it('calls archive when changing to ARCHIVED', () => {
+    it('changes a draft to ARCHIVED status', () => {
       const sut = createDraftPost();
 
       sut.updateStatus(PostStatus.ARCHIVED);

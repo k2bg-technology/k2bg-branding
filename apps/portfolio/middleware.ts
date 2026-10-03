@@ -4,11 +4,11 @@ import { cookieName, fallbackLanguage, languages } from './i18n/settings';
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|images|videos|assets|favicon.ico|sw.js).*)',
+    '/((?!api|_next/static|_next/image|images|videos|assets|favicon.ico|sw.js|robots.txt|sitemap.xml|.*\\..*).*)',
   ],
 };
 
-function getLocaleFromAcceptLanguage(request: NextRequest): string {
+function getLocaleFromAcceptLanguage(request: NextRequest) {
   const acceptLanguage = request.headers.get('Accept-Language');
   if (!acceptLanguage) return fallbackLanguage;
 
@@ -32,7 +32,7 @@ function getLocaleFromAcceptLanguage(request: NextRequest): string {
   return fallbackLanguage;
 }
 
-function getLocale(request: NextRequest): string {
+function getLocale(request: NextRequest) {
   const cookieLocale = request.cookies.get(cookieName)?.value;
   if (cookieLocale && (languages as readonly string[]).includes(cookieLocale)) {
     return cookieLocale;
@@ -41,7 +41,7 @@ function getLocale(request: NextRequest): string {
   return getLocaleFromAcceptLanguage(request);
 }
 
-export function middleware(request: NextRequest) {
+export function middleware(request: NextRequest): NextResponse {
   if (
     request.nextUrl.pathname.includes('icon') ||
     request.nextUrl.pathname.includes('chrome')

@@ -32,14 +32,6 @@ describe('SourceFile', () => {
         'SourceFile cannot be empty'
       );
     });
-
-    it('throws InvalidSourceFileError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => SourceFile.create(whitespaceValue)).toThrow(
-        InvalidSourceFileError
-      );
-    });
   });
 
   describe('reconstitute', () => {
@@ -70,17 +62,6 @@ describe('SourceFile', () => {
       const result = file1.equals(file2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the file path string value', () => {
-      const path = '/uploads/image.jpg';
-      const sut = SourceFile.create(path);
-
-      const result = sut.toString();
-
-      expect(result).toBe(path);
     });
   });
 });

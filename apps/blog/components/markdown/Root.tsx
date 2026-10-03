@@ -163,7 +163,8 @@ export async function Root(props: Props) {
           </blockquote>
         ),
         img: ({ className, src, alt, width, height, node }) => {
-          if (!(src && alt && width && height)) return null;
+          if (!(typeof src === 'string' && src && alt && width && height))
+            return null;
 
           const id = String(node?.properties?.dataId) || '';
           const unoptimized = Boolean(node?.properties?.dataUnoptimized);

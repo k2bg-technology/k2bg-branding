@@ -1,0 +1,1 @@
+export { PaintReveal } from './PaintReveal';

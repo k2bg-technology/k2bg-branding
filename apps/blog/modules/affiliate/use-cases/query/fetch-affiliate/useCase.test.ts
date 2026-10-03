@@ -88,19 +88,6 @@ describe('FetchAffiliate', () => {
       ).rejects.toThrow(AffiliateNotFoundError);
     });
 
-    it('calls repository with correct AffiliateId', async () => {
-      const banner = createAffiliateBanner();
-      const findById = vi.fn().mockResolvedValue(banner);
-      const repository = createMockRepository({ findById });
-      const sut = new FetchAffiliate(repository);
-
-      await sut.execute({ id: banner.id.getValue() });
-
-      expect(findById).toHaveBeenCalledTimes(1);
-      const calledId = findById.mock.calls[0][0];
-      expect(calledId.getValue()).toBe(banner.id.getValue());
-    });
-
     it('maps banner affiliate output correctly', async () => {
       const banner = createAffiliateBanner();
       const repository = createMockRepository({

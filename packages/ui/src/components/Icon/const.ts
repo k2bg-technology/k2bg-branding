@@ -40,6 +40,9 @@ export const HERO_ICON_NAMES = [
   'arrow-right',
   'chevron-up',
   'list-bullet',
+  'arrow-trending-up',
+  'arrow-trending-down',
+  'minus',
 ] as const;
 
 export const ICON_NAMES = [...MULTI_COLOR_ICON_NAMES, ...HERO_ICON_NAMES];

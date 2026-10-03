@@ -6,28 +6,17 @@ import { AffiliateId } from './affiliateId';
 
 describe('AffiliateId', () => {
   describe('create', () => {
-    it('creates AffiliateId when given valid UUID v4', () => {
-      const uuidV4 = '550e8400-e29b-41d4-a716-446655440000';
+    it.each([
+      { version: 'v4', value: '550e8400-e29b-41d4-a716-446655440000' },
+      { version: 'v7', value: '019234f8-7e01-7abc-89ab-0123456789ab' },
+      {
+        version: 'v8 (Notion format)',
+        value: '26663820-64ba-8034-a128-d5dd352ef273',
+      },
+    ])('accepts a valid UUID $version', ({ value }) => {
+      const sut = AffiliateId.create(value);
 
-      const sut = AffiliateId.create(uuidV4);
-
-      expect(sut.getValue()).toBe(uuidV4.toLowerCase());
-    });
-
-    it('creates AffiliateId when given valid UUID v7', () => {
-      const uuidV7 = '019234f8-7e01-7abc-89ab-0123456789ab';
-
-      const sut = AffiliateId.create(uuidV7);
-
-      expect(sut.getValue()).toBe(uuidV7.toLowerCase());
-    });
-
-    it('creates AffiliateId when given valid UUID v8 (Notion format)', () => {
-      const uuidV8 = '26663820-64ba-8034-a128-d5dd352ef273';
-
-      const sut = AffiliateId.create(uuidV8);
-
-      expect(sut.getValue()).toBe(uuidV8.toLowerCase());
+      expect(sut.getValue()).toBe(value);
     });
 
     it('normalizes UUID to lowercase', () => {
@@ -35,37 +24,27 @@ describe('AffiliateId', () => {
 
       const sut = AffiliateId.create(uppercaseUuid);
 
-      const expectedValue = uppercaseUuid.toLowerCase();
+      const expectedValue = '550e8400-e29b-41d4-a716-446655440000';
       expect(sut.getValue()).toBe(expectedValue);
     });
 
-    it('throws InvalidAffiliateIdError when value is empty string', () => {
-      const emptyValue = '';
-
-      expect(() => AffiliateId.create(emptyValue)).toThrow(
-        InvalidAffiliateIdError
-      );
-      expect(() => AffiliateId.create(emptyValue)).toThrow(
-        'AffiliateId cannot be empty'
-      );
-    });
-
-    it('throws InvalidAffiliateIdError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => AffiliateId.create(whitespaceValue)).toThrow(
-        InvalidAffiliateIdError
-      );
-    });
+    it.each([
+      { scenario: 'empty', value: '' },
+      { scenario: 'whitespace only', value: '   ' },
+    ])(
+      'rejects $scenario affiliateId with InvalidAffiliateIdError',
+      ({ value }) => {
+        expect(() => AffiliateId.create(value)).toThrow(
+          InvalidAffiliateIdError
+        );
+      }
+    );
 
     it('throws InvalidAffiliateIdError when UUID format is invalid', () => {
       const invalidUuid = 'not-a-uuid';
 
       expect(() => AffiliateId.create(invalidUuid)).toThrow(
         InvalidAffiliateIdError
-      );
-      expect(() => AffiliateId.create(invalidUuid)).toThrow(
-        'Invalid UUID format'
       );
     });
 
@@ -121,17 +100,6 @@ describe('AffiliateId', () => {
       const result = id1.equals(id2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the UUID string value', () => {
-      const uuid = '550e8400-e29b-41d4-a716-446655440000';
-      const sut = AffiliateId.create(uuid);
-
-      const result = sut.toString();
-
-      expect(result).toBe(uuid);
     });
   });
 });

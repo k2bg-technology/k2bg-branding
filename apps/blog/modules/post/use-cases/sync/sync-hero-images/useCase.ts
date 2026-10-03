@@ -1,4 +1,4 @@
-import { SyncError } from '../../shared';
+import { type Logger, SyncError } from '../../shared';
 import type {
   ExternalImageSource,
   ImageSourceRecord,
@@ -11,23 +11,17 @@ export interface SyncHeroImagesOutput {
   failedCount: number;
 }
 
-/**
- * SyncHeroImages Use Case
- *
- * Syncs hero images from multiple external sources to image storage
- */
 export class SyncHeroImages {
   constructor(
     private readonly imageSources: ExternalImageSource[],
-    private readonly imageRepository: ImageRepository
+    private readonly imageRepository: ImageRepository,
+    private readonly logger: Logger
   ) {}
 
   async execute(): Promise<SyncHeroImagesOutput> {
     try {
-      // Collect images from all sources
       const allImages = await this.collectImagesFromAllSources();
 
-      // Upload all images in parallel
       const results = await this.uploadImages(allImages);
 
       const uploaded = results.filter((r) => r.success);
@@ -65,7 +59,11 @@ export class SyncHeroImages {
         try {
           await this.imageRepository.uploadImage(image.id, image.url);
           return { image, success: true };
-        } catch {
+        } catch (error) {
+          this.logger.error(
+            { err: error, imageId: image.id },
+            'Failed to upload hero image'
+          );
           return { image, success: false };
         }
       })

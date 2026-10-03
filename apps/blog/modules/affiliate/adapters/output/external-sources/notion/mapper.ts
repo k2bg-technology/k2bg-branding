@@ -31,7 +31,7 @@ import {
 import { DEFAULT_VALUES, MappingError } from '../../../shared';
 
 // Image source URL extraction with file priority
-function getImageSourceUrl(props: NotionProperties): string | null {
+function getImageSourceUrl(props: NotionProperties) {
   const fileUrl = getAllFileUrls(props, 'imageSourceFile')?.[0];
   if (fileUrl) return fileUrl;
   return getUrl(props, 'imageSourceUrl');
@@ -79,7 +79,7 @@ function extractCoreProps(page: PageObjectResponse): CorePropsRaw {
 
 // Individual entity mappers
 
-function mapToBanner(page: PageObjectResponse): AffiliateBanner {
+function mapToBanner(page: PageObjectResponse) {
   const props = page.properties;
   const coreProps = extractCoreProps(page);
 
@@ -97,7 +97,7 @@ function mapToBanner(page: PageObjectResponse): AffiliateBanner {
   });
 }
 
-function mapToProduct(page: PageObjectResponse): AffiliateProduct {
+function mapToProduct(page: PageObjectResponse) {
   const props = page.properties;
   const coreProps = extractCoreProps(page);
 
@@ -124,11 +124,11 @@ function mapToProduct(page: PageObjectResponse): AffiliateProduct {
   });
 }
 
-function mapToText(page: PageObjectResponse): AffiliateText {
+function mapToText(page: PageObjectResponse) {
   return AffiliateText.reconstitute(extractCoreProps(page));
 }
 
-function mapToSubProvider(page: PageObjectResponse): AffiliateSubProvider {
+function mapToSubProvider(page: PageObjectResponse) {
   const props = page.properties;
   const coreProps = extractCoreProps(page);
 

@@ -1,17 +1,22 @@
 import type { Client } from '@notionhq/client';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import type { NotionToMarkdown } from 'notion-to-md';
-import type { Post } from '../../../../domain';
-import type { ExternalPostSource } from '../../../../use-cases';
+import { filterFullPageObjectResponses } from '../../../../../../infrastructure/notion';
+import type {
+  AuthorRecord,
+  ExternalPostBatch,
+  ExternalPostSource,
+} from '../../../../use-cases';
 import { ExternalSourceError, postLogger } from '../../../shared';
-import { getEmbedTypeFromPage, mapEmbedType, notionPageToPost } from './mapper';
+import {
+  getEmbedTypeFromPage,
+  mapEmbedType,
+  notionPageToAuthorRecord,
+  notionPageToPost,
+} from './mapper';
 
 const DATABASE_ID = process.env.NOTION_POST_DATABASE_ID ?? '';
 
-/**
- * Notion implementation of ExternalPostSource.
- * Fetches posts from Notion database.
- */
 export class NotionExternalPostSource implements ExternalPostSource {
   constructor(
     private readonly notionClient: Client,
@@ -45,7 +50,7 @@ export class NotionExternalPostSource implements ExternalPostSource {
     });
   }
 
-  async fetchAllPosts(): Promise<Post[]> {
+  async fetchAll(): Promise<ExternalPostBatch> {
     try {
       const database = await this.notionClient.databases.query({
         database_id: this.databaseId,
@@ -57,16 +62,23 @@ export class NotionExternalPostSource implements ExternalPostSource {
       });
 
       const posts = await Promise.all(
-        database.results.map(async (page) => {
-          const pageResponse = page as PageObjectResponse;
+        filterFullPageObjectResponses(database.results).map(async (page) => {
           const mdBlocks = await this.n2m.pageToMarkdown(page.id);
           const content = this.n2m.toMarkdownString(mdBlocks).parent;
-          return notionPageToPost(pageResponse, content);
+          return notionPageToPost(page, content);
         })
       );
 
+      const authorsById = new Map<string, AuthorRecord>();
+      for (const page of filterFullPageObjectResponses(database.results)) {
+        const author = notionPageToAuthorRecord(page);
+        if (author) {
+          authorsById.set(author.id, author);
+        }
+      }
+
       postLogger.info({ count: posts.length }, 'Fetched all posts from Notion');
-      return posts;
+      return { posts, authors: Array.from(authorsById.values()) };
     } catch (error) {
       postLogger.error({ err: error }, 'Failed to fetch posts from Notion');
       throw new ExternalSourceError('Notion', error);

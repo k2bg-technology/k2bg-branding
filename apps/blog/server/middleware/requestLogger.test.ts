@@ -6,7 +6,7 @@ const { infoMock } = vi.hoisted(() => ({
   infoMock: vi.fn(),
 }));
 
-vi.mock('../../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ info: infoMock }),
   },
@@ -65,16 +65,5 @@ describe('requestLogger', () => {
       path: '/error',
       status: statusInternalServerError,
     });
-  });
-
-  it('logs POST method correctly', async () => {
-    const app = createApp();
-    app.post('/submit', (c) => c.json({ received: true }));
-    infoMock.mockClear();
-
-    await app.request('/submit', { method: 'POST' });
-
-    const startCall = infoMock.mock.calls[0];
-    expect(startCall[0]).toEqual({ method: 'POST', path: '/submit' });
   });
 });

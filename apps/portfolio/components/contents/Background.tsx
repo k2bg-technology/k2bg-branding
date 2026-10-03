@@ -15,7 +15,7 @@ export function Background({
           <Image
             src="/images/background-pattern.jpg"
             fill
-            alt="Background Pattern Image"
+            alt={dictionary.imageAlt}
             sizes="(min-width: 768px) 56rem, 100vw"
           />
         </div>

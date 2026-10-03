@@ -9,27 +9,33 @@ import type { Contact, EmailSender } from '../../../../domain';
 import { EmailSendFailedError } from '../../../../domain';
 import { contactLogger } from '../../../shared';
 
-/**
- * AWS SES Email Sender Adapter
- *
- * Implements EmailSender interface using AWS SES as the email service provider.
- */
 export class AwsSesEmailSender implements EmailSender {
   constructor(
     private readonly sesClient: SESClient,
     private readonly senderEmail: string
   ) {}
 
-  async send(
+  async sendToVisitor(
     contact: Contact,
+    subject: string,
+    htmlBody: string
+  ): Promise<void> {
+    await this.sendEmail([contact.email.getValue()], subject, htmlBody);
+  }
+
+  async sendToOwner(subject: string, htmlBody: string): Promise<void> {
+    await this.sendEmail([this.senderEmail], subject, htmlBody);
+  }
+
+  private async sendEmail(
+    toAddresses: string[],
     subject: string,
     htmlBody: string
   ): Promise<void> {
     const params: SendEmailCommandInput = {
       Source: this.senderEmail,
       Destination: {
-        ToAddresses: [contact.email.getValue()],
-        BccAddresses: [this.senderEmail],
+        ToAddresses: toAddresses,
       },
       Message: {
         Subject: { Data: subject, Charset: 'UTF-8' },

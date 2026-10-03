@@ -50,8 +50,34 @@ describe('testDatabase', () => {
     });
   });
 
-  it('truncates all tables between tests', async () => {
+  it('removes inserted authors and posts when tables are truncated', async () => {
     const db = getTestDb();
+    const authorUuid = '660e8400-e29b-41d4-a716-446655440000';
+    const now = new Date('2024-01-15T00:00:00.000Z');
+    await db.insert(authors).values({
+      uuid: authorUuid,
+      name: 'Test Author',
+      avatarUrl: null,
+      updatedAt: now,
+    });
+    await db.insert(posts).values({
+      uuid: '550e8400-e29b-41d4-a716-446655440000',
+      title: 'Post to truncate',
+      content: 'content',
+      type: 'ARTICLE',
+      excerpt: '',
+      imageUrl: 'https://example.com/image.jpg',
+      slug: 'post-to-truncate',
+      status: 'DRAFT',
+      category: 'OTHER',
+      tags: ['ts'],
+      releaseDate: '2024-01-15',
+      revisionDate: '2024-01-15',
+      authorId: authorUuid,
+      updatedAt: now,
+    });
+
+    await truncateAllTables();
 
     const remainingPosts = await db.select().from(posts);
     const remainingAuthors = await db.select().from(authors);

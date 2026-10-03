@@ -1,5 +1,7 @@
 # K2BG Blog
 
+![A 1990s bookstore at dawn just before opening, bundles of fresh magazines on the sidewalk, its shelves dissolving into article cards and text blocks](public/hero.jpg)
+
 A **Next.js 16** blog application with **Notion CMS** integration, built following **Clean Architecture** and **Domain-Driven Design** principles. Part of the [K2BG Branding monorepo](../../README.md).
 
 ## Technology Stack
@@ -24,7 +26,7 @@ A **Next.js 16** blog application with **Notion CMS** integration, built followi
 
 ### Prerequisites
 
-- Node.js 20.9+
+- Node.js 22.22+ or 24.15+ (exact range in `package.json` `engines`)
 - pnpm 10.33.2+
 - PostgreSQL (or Docker)
 
@@ -67,9 +69,17 @@ Opens on [http://localhost:6007](http://localhost:6007).
 ### Testing
 
 ```bash
-pnpm test          # Run once
-pnpm test:watch    # Watch mode
+pnpm test          # Run jsdom tests once
+pnpm test:watch    # Watch jsdom tests
+pnpm test:db       # Run PostgreSQL integration tests (requires Docker)
+pnpm test:all      # Run both projects (requires Docker)
 ```
+
+The commands above run from `apps/blog`; use `pnpm -F blog test` from the
+monorepo root. The jsdom project excludes `*.db.test.ts` and generated `.next`,
+`node_modules`, and `dist` directories at every depth. Database tests use a
+Testcontainers-managed PostgreSQL instance and apply the Drizzle migrations;
+a running Docker daemon is required.
 
 ## Architecture
 
@@ -391,6 +401,29 @@ H_CAPTCHA_SECRET=
 # Analytics
 GOOGLE_TAG_MANAGER_ID=
 ```
+
+## Deployment
+
+The blog is hosted on **AWS Amplify Hosting** (`WEB_COMPUTE`, Next.js SSR).
+
+- **Build spec**: the root [`amplify.yml`](/amplify.yml) is the source of truth — a committed
+  `amplify.yml` overrides the console's build settings, so build-spec changes go through PR
+  review. Its `appRoot: apps/blog` must match the Amplify console environment variable
+  `AMPLIFY_MONOREPO_APP_ROOT=apps/blog` (required for monorepo specs).
+- **Deploys**: the [Deploy Blog workflow](/.github/workflows/deploy-blog.yml) runs on every
+  push to `main` (and on `workflow_dispatch`). It assumes the `k2bg-blog-amplify-deploy` IAM
+  role via GitHub OIDC (ARN in the `AWS_DEPLOY_ROLE_ARN` repository secret; assumable only
+  from this repository's `main` ref), starts an Amplify `RELEASE` job, and polls until the
+  build finishes — the deploy result is visible as a GitHub check on `main`. Amplify's own
+  auto-build is disabled, so the workflow is the only deploy trigger. If the CI-driven path
+  is unavailable, re-enable auto-build for `main` in the Amplify console to restore
+  push-triggered deploys.
+- **PR previews**: web previews cannot be enabled while the repository is public, because
+  `WEB_COMPUTE` apps require an IAM service role (AWS restriction). UI changes are verified
+  locally and via Chromatic.
+- **Ownership split**: the Amplify console owns app creation, environment variables, service
+  roles, and the auto-build/preview toggles; the repository owns `amplify.yml`, the deploy
+  workflow, and this documentation.
 
 ## Project Structure
 

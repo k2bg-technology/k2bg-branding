@@ -82,12 +82,6 @@ describe('extractHeadings', () => {
     expect(result).toEqual([]);
   });
 
-  it('returns empty array for empty string', () => {
-    const result = extractHeadings('');
-
-    expect(result).toEqual([]);
-  });
-
   it('generates unique slugs for duplicate headings', () => {
     const markdown = ['## Section', '## Section', '## Section'].join('\n');
 

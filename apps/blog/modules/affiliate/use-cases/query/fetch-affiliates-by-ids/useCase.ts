@@ -9,12 +9,6 @@ export interface FetchAffiliatesByIdsOutput {
   affiliates: Map<string, AffiliateOutput>;
 }
 
-/**
- * FetchAffiliatesByIds Use Case
- *
- * Fetches multiple affiliates by their IDs in a single batch operation.
- * This is more efficient than fetching each affiliate individually.
- */
 export class FetchAffiliatesByIds {
   constructor(private readonly affiliateRepository: AffiliateRepository) {}
 

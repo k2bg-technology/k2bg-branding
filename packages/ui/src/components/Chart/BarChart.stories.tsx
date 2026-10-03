@@ -1,0 +1,319 @@
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, waitFor } from 'storybook/test';
+
+import { BarChart, ChartColor } from '.';
+
+const weekdayCategories = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const monthCategories = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];
+
+const meta = {
+  component: BarChart,
+  args: {
+    label: 'Energy consumption per day of week',
+    categories: weekdayCategories,
+    series: [
+      {
+        id: 'energy',
+        label: 'Energy',
+        values: [12.4, 11.8, 13.2, 12.9, 14.1, 16.8, 15.4],
+      },
+    ],
+  },
+  argTypes: {
+    stacked: {
+      control: 'boolean',
+    },
+    height: {
+      control: 'select',
+      options: ['sm', 'md', 'lg'],
+    },
+    showLegend: {
+      control: 'boolean',
+    },
+    animated: {
+      control: 'boolean',
+    },
+  },
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const chart = canvas.getByRole('application', { name: args.label });
+    const tooltip = () =>
+      canvasElement.querySelector('[data-slot="chart-tooltip"]');
+
+    await userEvent.tab();
+    await expect(chart).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+    await waitFor(() => expect(tooltip()).toBeInTheDocument());
+    const firstTooltipText = tooltip()?.textContent;
+
+    await userEvent.keyboard('{ArrowRight}');
+
+    await waitFor(() =>
+      expect(tooltip()?.textContent).not.toBe(firstTooltipText)
+    );
+  },
+  parameters: {
+    docs: {
+      description: {
+        component: 'components.barChart.description',
+      },
+      overview: 'components.barChart.overview',
+      usage: 'components.barChart.usage',
+      accessibility: 'components.barChart.accessibility',
+      doList: 'components.barChart.doList',
+      dontList: 'components.barChart.dontList',
+      relatedComponents: 'components.barChart.relatedComponents',
+      dependencies: 'components.barChart.dependencies',
+      references: 'components.barChart.references',
+    },
+  },
+} satisfies Meta<typeof BarChart>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {};
+
+export const Grouped: Story = {
+  args: {
+    label: 'Energy consumption per room and day of week',
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        values: [5.2, 4.8, 5.6, 5.3, 6.1, 7.4, 6.8],
+      },
+      {
+        id: 'kitchen',
+        label: 'Kitchen',
+        values: [4.1, 3.9, 4.5, 4.3, 4.8, 5.9, 5.2],
+      },
+      {
+        id: 'bedroom',
+        label: 'Bedroom',
+        values: [3.1, 3.1, 3.1, 3.3, 3.2, 3.5, 3.4],
+      },
+    ],
+  },
+};
+
+export const Stacked: Story = {
+  args: {
+    label: 'Sleep stages per night in August 2026',
+    categories: [
+      'Aug 18',
+      'Aug 19',
+      'Aug 20',
+      'Aug 21',
+      'Aug 22',
+      'Aug 23',
+      'Aug 24',
+    ],
+    stacked: true,
+    valueFormatter: (value: number) => `${value}h`,
+    series: [
+      {
+        id: 'awake',
+        label: 'Awake',
+        values: [0.6, 0.4, 0.9, 0.3, 0.7, 0.2, 0.5],
+      },
+      {
+        id: 'rem',
+        label: 'REM',
+        values: [1.4, 1.7, 1.1, 1.9, 1.3, 2.1, 1.8],
+      },
+      {
+        id: 'core',
+        label: 'Core',
+        values: [4.2, 4.5, 3.8, 4.6, 4.0, 4.9, 4.4],
+      },
+      {
+        id: 'deep',
+        label: 'Deep',
+        values: [1.1, 1.3, 0.8, 1.4, 0.9, 1.6, 1.2],
+      },
+    ],
+  },
+};
+
+export const StatusColors: Story = {
+  args: {
+    label: 'Sleep quality per day of week',
+    series: [
+      {
+        id: 'deepSleep',
+        label: 'Deep sleep (good)',
+        color: ChartColor.SUCCESS,
+        values: [2.1, 1.9, 2.3, 2.0, 1.8, 2.6, 2.4],
+      },
+      {
+        id: 'restless',
+        label: 'Restless (warning)',
+        color: ChartColor.WARNING,
+        values: [0.8, 1.1, 0.6, 0.9, 1.3, 0.4, 0.5],
+      },
+    ],
+  },
+};
+
+export const AllSemanticColors: Story = {
+  args: {
+    label: 'Four semantic chart colors',
+    categories: ['Sample A', 'Sample B', 'Sample C'],
+    series: [
+      {
+        id: 'success',
+        label: 'Success',
+        color: ChartColor.SUCCESS,
+        values: [4, 5, 6],
+      },
+      {
+        id: 'error',
+        label: 'Error',
+        color: ChartColor.ERROR,
+        values: [3, 4, 5],
+      },
+      {
+        id: 'warning',
+        label: 'Warning',
+        color: ChartColor.WARNING,
+        values: [2, 3, 4],
+      },
+      { id: 'info', label: 'Info', color: ChartColor.INFO, values: [1, 2, 3] },
+    ],
+    showLegend: true,
+  },
+};
+
+export const ExplicitColorBeyondPalette: Story = {
+  args: {
+    label: 'Explicit color after twelve default series',
+    categories: ['Sample A', 'Sample B', 'Sample C'],
+    series: [
+      ...Array.from({ length: 12 }, (_, index) => ({
+        id: `series-${index + 1}`,
+        label: `Series ${index + 1}`,
+        values: [index + 1, index + 2, index + 3],
+      })),
+      {
+        id: 'highlight',
+        label: 'Highlight',
+        color: ChartColor.ERROR,
+        values: [14, 15, 16],
+      },
+    ],
+    showLegend: true,
+    height: 'lg',
+  },
+};
+
+export const FormattedValues: Story = {
+  args: {
+    label: 'Energy consumption per day of week in kilowatt hours',
+    valueFormatter: (value: number) => `${value}kWh`,
+  },
+};
+
+export const MixedSign: Story = {
+  args: {
+    label: 'Net energy balance per month in kilowatt hours',
+    categories: monthCategories,
+    valueFormatter: (value: number) => `${value}kWh`,
+    series: [
+      {
+        id: 'netEnergy',
+        label: 'Net energy',
+        values: [-42.5, -18.3, 24.6, 61.2, 48.7, -6.4],
+      },
+    ],
+  },
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const chart = canvas.getByRole('application', { name: args.label });
+    const tooltip = () =>
+      canvasElement.querySelector('[data-slot="chart-tooltip"]');
+
+    await userEvent.tab();
+    await expect(chart).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    // The first two months are negative, so either landing spot proves the sign.
+    await waitFor(() =>
+      expect(tooltip()?.textContent).toMatch(/-\d+(\.\d+)?kWh/)
+    );
+  },
+};
+
+export const MissingValues: Story = {
+  args: {
+    label: 'Energy consumption per room and day of week',
+    series: [
+      {
+        id: 'livingRoom',
+        label: 'Living room',
+        values: [5.2, null, 5.6, 5.3, 6.1, 7.4, 6.8],
+      },
+      {
+        id: 'kitchen',
+        label: 'Kitchen',
+        values: [null, null, 4.5, 4.3, null, 5.9, 5.2],
+      },
+    ],
+  },
+  play: async ({ args, canvas, canvasElement, userEvent }) => {
+    const chart = canvas.getByRole('application', { name: args.label });
+    const tooltip = () =>
+      canvasElement.querySelector('[data-slot="chart-tooltip"]');
+
+    await userEvent.tab();
+    await expect(chart).toHaveFocus();
+    await userEvent.keyboard('{ArrowRight}');
+
+    // Tuesday has no measurement in either room and Monday none in the kitchen,
+    // so wherever the reader lands the gap is stated instead of hidden.
+    await waitFor(() => expect(tooltip()?.textContent).toContain('—'));
+  },
+};
+
+export const LongAxisLabels: Story = {
+  args: {
+    label: 'Energy consumption per month in watt hours',
+    categories: monthCategories,
+    valueFormatter: (value: number) => `${value.toLocaleString('en-US')} Wh`,
+    series: [
+      {
+        id: 'energy',
+        label: 'Energy',
+        values: [1284000, 1176500, 1342800, 1408300, 1519600, 1247100],
+      },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const tickLineCounts = () =>
+      Array.from(
+        canvasElement.querySelectorAll(
+          '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+        ),
+        (tick) => tick.querySelectorAll('tspan').length
+      );
+
+    await waitFor(() => expect(tickLineCounts().length).toBeGreaterThan(0));
+
+    // A tick label that does not fit the axis width is wrapped onto a second line.
+    await expect(tickLineCounts().every((lines) => lines === 1)).toBe(true);
+  },
+};
+
+export const CompactAxisLabels: Story = {
+  args: {
+    label: 'Energy consumption per month in watt hours',
+    categories: monthCategories,
+    valueFormatter: (value: number) => `${value.toLocaleString('en-US')} Wh`,
+    axisValueFormatter: (value: number) => `${Math.round(value / 1000)}k`,
+    series: [
+      {
+        id: 'energy',
+        label: 'Energy',
+        values: [1284000, 1176500, 1342800, 1408300, 1519600, 1247100],
+      },
+    ],
+  },
+};

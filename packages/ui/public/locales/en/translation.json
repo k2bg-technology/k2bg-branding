@@ -660,11 +660,11 @@
         }
       ]
     },
-    "skelton": {
+    "skeleton": {
       "description": "Displays animated placeholder content while the actual content is loading, providing visual feedback to users.",
-      "overview": "Skelton is a loading state component that shows placeholder shapes mimicking the layout of content being loaded. It consists of three sub-components: Line for text placeholders, Box for rectangular content areas like images, and Round for circular elements like avatars. The root component wraps all skeleton elements and applies a pulsing animation to indicate loading state. Each sub-component accepts className props for customizing dimensions and spacing.",
-      "usage": "Use Skelton to indicate content is loading and prevent layout shifts when data arrives. For basic usage, wrap Skelton.Line, Skelton.Box, or Skelton.Round components within the Skelton root. Use Skelton.Line for text content placeholders with customizable height via className. Use Skelton.Box for image or card placeholders with optional centered icon. Use Skelton.Round for avatar or circular element placeholders. Combine multiple sub-components to create layouts that match the expected content structure. Apply width constraints via className to match actual content dimensions.",
-      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the root Skelton component includes role status to indicate the loading state to screen readers. The pulsing animation is subtle and does not cause distraction or trigger vestibular disorders. For screen reader users, the loading state is communicated through the status role. Ensure skeleton layouts match actual content structure to prevent confusion when content loads. Consider adding aria-busy on parent containers when skeleton content is displayed.",
+      "overview": "Skeleton is a loading state component that shows placeholder shapes mimicking the layout of content being loaded. It consists of three sub-components: Line for text placeholders, Box for rectangular content areas like images, and Round for circular elements like avatars. The root component wraps all skeleton elements and applies a pulsing animation to indicate loading state. Each sub-component accepts className props for customizing dimensions and spacing.",
+      "usage": "Use Skeleton to indicate content is loading and prevent layout shifts when data arrives. For basic usage, wrap Skeleton.Line, Skeleton.Box, or Skeleton.Round components within the Skeleton root. Use Skeleton.Line for text content placeholders with customizable height via className. Use Skeleton.Box for image or card placeholders with optional centered icon. Use Skeleton.Round for avatar or circular element placeholders. Combine multiple sub-components to create layouts that match the expected content structure. Apply width constraints via className to match actual content dimensions.",
+      "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the root Skeleton component includes role status to indicate the loading state to screen readers. The pulsing animation is subtle and does not cause distraction or trigger vestibular disorders. For screen reader users, the loading state is communicated through the status role. Ensure skeleton layouts match actual content structure to prevent confusion when content loads. Consider adding aria-busy on parent containers when skeleton content is displayed.",
       "doList": [
         "Match skeleton layout to the expected content structure",
         "Use appropriate sub-components for different content types",
@@ -683,17 +683,17 @@
         {
           "name": "Avatar",
           "path": "/?path=/docs/components-avatar--docs",
-          "description": "Use Skelton.Round as placeholder while Avatar images load"
+          "description": "Use Skeleton.Round as placeholder while Avatar images load"
         },
         {
           "name": "BlogCard",
           "path": "/?path=/docs/components-blogcard--docs",
-          "description": "Use Skelton to create loading states for blog card layouts"
+          "description": "Use Skeleton to create loading states for blog card layouts"
         },
         {
           "name": "Icon",
           "path": "/?path=/docs/components-icon--docs",
-          "description": "Use Icon within Skelton.Box or Skelton.Round as visual indicators"
+          "description": "Use Icon within Skeleton.Box or Skeleton.Round as visual indicators"
         }
       ],
       "dependencies": [
@@ -860,6 +860,870 @@
           "linkText": "WAI-ARIA Live Regions",
           "url": "https://www.w3.org/WAI/ARIA/apg/patterns/alert/",
           "description": "ARIA Authoring Practices Guide for alert and status patterns"
+        }
+      ]
+    },
+    "timeSeriesChart": {
+      "description": "Plots one or more series of values over time as lines, areas, or filled ranges, with reference lines and bands, a tooltip, a legend, and a period-aware time axis.",
+      "overview": "TimeSeriesChart answers the question of how a measurement changes over time. Each series is a list of timestamped points; the chart merges them onto a shared time axis, thins the tick labels to fit the selected period, and draws either lines or filled areas. Series colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a series can opt into a status color to signal a threshold or condition. A null value leaves a gap instead of drawing a misleading connection, and the value axis fits the data so that small movements far from zero remain visible. Besides plain measurements, a series can be a band that carries a low and a high bound per timestamp and is drawn as a filled range, which is how a confidence interval, a percentile band, or the spread around a baseline is shown; stacking several bands of decreasing width behind one median line produces a fan chart. Separate from the series, thresholds draw a dashed horizontal line at a value with an optional label, and reference bands shade a value range across the full width. Both stretch the value axis when they fall outside the measured range, so a limit that has not been crossed stays visible. The curve between points is linear by default and can be set per chart or per series to a step for values that hold until they change, or to a smooth natural curve. The time axis and the tooltip read timestamps in a given IANA time zone, so a day of readings starts at local midnight rather than at UTC midnight.",
+      "usage": "Use TimeSeriesChart when the shape of a value over time matters: temperature across a month, portfolio value across a year, page views across a week. Pass a label that names the chart for assistive technology, a period that matches the span of the data so the axis ticks use a suitable format, and series whose labels are already localized. Use the area variant when the magnitude under the line is meaningful, and the line variant when only the trajectory matters. Add thresholds for the limits and targets the series is judged against, and bands for the range a value is expected to stay inside, giving each a status color that matches its meaning. Use a band series when the spread around a value is part of the measurement, and give the bounds and their median line the same color so they read as one series. Set timeZone to the IANA name of the zone the data belongs to, since the axis reads UTC otherwise. Keep interpolation linear for measurements, use step for values that hold until they change such as a thermostat setting, and reserve natural for decorative trends, because a smooth curve overshoots the points it passes through and can show a value crossing a limit that no measurement crossed. Provide a valueFormatter to attach units or currency formatting, and keep animation off unless the chart is the focus of an interaction. Pair every chart with a table view of the same numbers for readers who cannot use the visual.",
+      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys step through the data points and update the tooltip, so keyboard users can read every value. Series are distinguished by a palette validated for color vision deficiencies, and the legend repeats each series label in text next to its swatch. Tooltips show the series label and formatted value in text. Threshold lines are dashed and carry an optional text label, so a limit is named rather than identified by its color. A band series repeats its label in the legend and reports both bounds in the tooltip as a range, so the spread is readable as numbers. Reference bands are drawn behind the data at a low opacity, which keeps the series above them at full contrast. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
+      "doList": [
+        "Give every chart a label that says what is measured and over which span",
+        "Choose the period that matches the span of the data",
+        "Localize series labels and format values in the consuming app",
+        "Set timeZone to the zone the data belongs to",
+        "Label thresholds so a limit is named as well as drawn",
+        "Give a band series and its median line the same color",
+        "Keep the number of series at five or fewer",
+        "Provide a table view of the same data next to the chart",
+        "Use status colors only to mark thresholds or conditions"
+      ],
+      "dontList": [
+        "Plot categories without a time dimension (use BarChart instead)",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Rely on color alone to distinguish series without a legend",
+        "Use natural interpolation for measurements that are read exactly",
+        "Leave the time zone at UTC for data that belongs to another zone",
+        "Turn on animation in visual regression tests",
+        "Interpolate across missing values by filling gaps with zero",
+        "Stack unrelated measurements with different units on one axis"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares values across categories instead of over time"
+        },
+        {
+          "name": "ScatterChart",
+          "path": "/?path=/docs/components-chart-scatterchart--docs",
+          "description": "Plots two measurements against each other instead of against time"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "barChart": {
+      "description": "Compares values across categories as vertical bars, grouped or stacked for multiple series, with a tooltip and an optional legend.",
+      "overview": "BarChart answers the question of how categories compare to each other at a point in time. Each series provides one value per category, and categories are drawn in the order given. With several series the bars are grouped side by side within each category so that both the per-category comparison and the per-series comparison stay readable. Setting stacked places those series on top of each other instead, giving one bar per category whose height is the total and whose segments are its parts; series stack in the order they are given, so the first series sits at the bottom and the legend reads in that same bottom to top order. Only the top segment carries rounded corners, because every other segment meets the one above it. A stack holds together only when every value is zero or greater, since a negative segment would cross the baseline. The value axis always starts at zero so bar lengths are proportional to the values, and series colors follow the same palette order as the time series chart.",
+      "usage": "Use BarChart when the reader needs to compare discrete categories: spending by category, allocation by asset class, energy by day of the week. Pass a label that names the chart for assistive technology, the categories already localized and in the order they should appear, and one series per measurement with one value per category. Set stacked when the category total is meaningful and the series are parts of it, such as sleep stages that add up to one night, and keep the grouped layout when the series are compared against each other rather than summed. Provide a valueFormatter to attach units or currency formatting. Keep the number of categories small enough that labels remain readable, and pair the chart with a table view of the same values.",
+      "accessibility": "The chart surface is focusable and exposes the chart label as its accessible name. Once focused, the left and right arrow keys move between categories and update the tooltip, so keyboard users can read every value. Category labels are rendered as text on the axis, the legend repeats each series label in text next to its swatch, and the tooltip lists the series label and formatted value for the active category. In a stacked chart the tooltip lists every segment of the active category in stack order, which matches the order of the legend, so a segment is identified by position as well as by color. The chart does not expose the underlying numbers to screen readers on its own; place a data table with the same values next to it for a complete alternative.",
+      "doList": [
+        "Give every chart a label that says what is compared",
+        "Order categories deliberately (by value, time, or a natural sequence)",
+        "Localize category and series labels in the consuming app",
+        "Keep the value axis at zero so bar lengths stay honest",
+        "Stack only series whose values are zero or greater",
+        "Provide a table view of the same data next to the chart",
+        "Keep the number of series at five or fewer"
+      ],
+      "dontList": [
+        "Use bars for continuous time series (use TimeSeriesChart instead)",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Crowd the axis with more categories than the labels can fit",
+        "Rely on color alone to distinguish grouped series",
+        "Stack series whose values can turn negative",
+        "Turn on animation in visual regression tests",
+        "Mix measurements with different units in one chart"
+      ],
+      "relatedComponents": [
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows how a value changes over time instead of across categories"
+        },
+        {
+          "name": "DonutChart",
+          "path": "/?path=/docs/components-chart-donutchart--docs",
+          "description": "Shows the same parts as shares of one total"
+        },
+        {
+          "name": "SankeyChart",
+          "path": "/?path=/docs/components-chart-sankeychart--docs",
+          "description": "Traces how a total splits and moves between stages"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "statTile": {
+      "description": "Presents one headline number with its label, an optional change badge with a trend arrow, a short supporting line, and an optional compact chart.",
+      "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. A small label sits above a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat sits in the top-right corner, and an optional description such as the comparison period follows beneath the value. An optional chart slot holds one compact visualization, such as a Sparkline, pinned to the bottom edge so a row of tiles keeps a common baseline. The slot accepts any element and renders nothing for a value that is not one, so a tile without a chart keeps its layout instead of reserving empty space. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
+      "usage": "Use StatTile for the key figures at the top of a dashboard page, typically in a row of two to four tiles: total portfolio value, period return, dividends received, overall yield. Pass a short label that names the measurement, the formatted value, and a delta whose label includes its sign so the direction is readable as text. The delta chip is tinted by direction, up as positive and down as negative; when a falling number is good news, such as a drop in expenses, set the delta sentiment to positive so the color matches the meaning. Reserve the description for context the reader needs to interpret the number, such as the comparison period. Put a Sparkline in the chart slot when the recent shape of the number helps read it, and give that sparkline its own label, because the tile label does not describe it. When the question is how a value changed over time or how categories compare, use a chart beside the tiles instead.",
+      "accessibility": "The label, value, delta text, and description are all rendered as plain text in reading order, so screen readers announce the tile as a short sentence. The trend arrow is decorative and hidden from assistive technology; the direction must be carried by the delta text itself, for example with a leading plus or minus sign. The delta chip keeps its text in the default ink color and conveys sentiment only through its tint and icon, so the chip meets contrast requirements while never relying on color alone. A visualization placed in the chart slot carries its own accessible name, which the tile neither supplies nor overrides. The tile has no interactive parts of its own.",
+      "doList": [
+        "Keep the label to a few words that name the measurement",
+        "Format the value and the delta in the consuming app, including units and sign",
+        "Use the description for the comparison period or data source",
+        "Put one compact visualization such as a Sparkline in the chart slot",
+        "Group related tiles in a single row with consistent spacing",
+        "Pair the tiles with the charts and tables that explain them"
+      ],
+      "dontList": [
+        "Put a chart with axes or a legend in the chart slot (use TimeSeriesChart)",
+        "Leave a sparkline in the chart slot without its own label",
+        "Rely on the arrow alone to communicate direction without a sign in the text",
+        "Use the delta badge for unrelated status text",
+        "Stack more than four tiles in one row on wide screens",
+        "Nest interactive controls inside the tile"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Provides the trend arrow inside the delta chip"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Fits the chart slot as a compact trend under the value"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows the shape of a value over time instead of a single magnitude"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Card",
+          "url": "https://ui.shadcn.com/docs/components/card",
+          "description": "Reference card whose header grid and action slot this component mirrors"
+        },
+        {
+          "linkText": "shadcn/ui Dashboard blocks",
+          "url": "https://ui.shadcn.com/blocks",
+          "description": "Reference layouts whose building blocks this component mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Authoring Practices",
+          "url": "https://www.w3.org/WAI/ARIA/apg/",
+          "description": "Patterns for accessible composite controls and tables"
+        }
+      ]
+    },
+    "table": {
+      "description": "Composable table parts for hand-built tables: header, body, footer, rows, heading cells, data cells, and a caption that share one set of rules and spacing.",
+      "overview": "Table is the primitive under every table in the library. Table itself renders the table element inside a container that scrolls horizontally when columns overflow, and its parts map one to one onto the native elements: Table.Header, Table.Body, and Table.Footer are the row groups, Table.Row is a row, Table.Head is a heading cell, Table.Cell is a data cell, and Table.Caption is the caption. Rows are separated by one pixel rules, the last body row has none, a row highlights while hovered, and a row marked with the selected state keeps a tint. Every part accepts a class name so a consumer can right-align numbers, fix column widths, or wrap the whole table in a bordered frame.",
+      "usage": "Compose the parts directly when the table is written by hand, such as an invoice list with a total row, or when a table needs column widths, spans, or cell content that the data-driven DataTable does not express. Right-align numeric cells with text-right and tabular figures so digits line up, put summary rows in Table.Footer, and wrap the table in a rounded bordered frame when it should read as a card. Reach for DataTable instead when columns and rows come from data and a caption is all the table needs.",
+      "accessibility": "Every part renders its native element, so assistive technology announces the table with its caption as the name, the row and column counts, and each cell with its column heading. Put scope col on heading cells so the association is explicit. A visually hidden caption still names the table, and a table without a caption needs an aria-label. The hover and selected tints convey no state on their own; a consumer that selects rows must also expose the selection through aria-selected or a control inside the row.",
+      "doList": [
+        "Name the table with Table.Caption or an aria-label",
+        "Set scope col on every Table.Head",
+        "Right-align numbers with text-right and tabular figures",
+        "Keep summary rows in Table.Footer",
+        "Use DataTable when the rows come straight from data"
+      ],
+      "dontList": [
+        "Use it for page layout",
+        "Rely on the hover tint to show selection or focus",
+        "Nest interactive controls without accessible names in cells",
+        "Mix column counts between header and body rows",
+        "Skip the caption and the aria-label at the same time"
+      ],
+      "relatedComponents": [
+        {
+          "name": "DataTable",
+          "path": "/?path=/docs/components-datatable--docs",
+          "description": "Data-driven table built on these parts"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Fits a trend column beside the numbers of a row"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Table",
+          "url": "https://ui.shadcn.com/docs/components/table",
+          "description": "Reference table parts whose rules, spacing, and row states this primitive mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Table Pattern",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/table/",
+          "description": "Accessibility pattern for static tables"
+        },
+        {
+          "linkText": "MDN table element",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table",
+          "description": "Native table semantics the parts render"
+        }
+      ]
+    },
+    "dataTable": {
+      "description": "Renders tabular data as a semantic table with a caption, column headers, and right-aligned numeric columns.",
+      "overview": "DataTable is the text view of dashboard data: the same numbers that charts draw, laid out as rows and columns that every reader and assistive technology can traverse. It composes the Table parts inside a rounded bordered frame. Columns declare their heading and whether they hold numbers, rows map column ids to cell content, and an optional empty message fills one full-width row when there are no rows. The table always carries a caption that names it, which can be visually hidden when a heading above the table already does that job. Sorting, pagination, and selection are intentionally out of scope.",
+      "usage": "Use DataTable next to every chart on a page so that the underlying values are available as text, and on their own for lists that are naturally tabular such as allocation by asset class or transactions in a period. Provide a caption that says what the table contains and for which period, localize headers and cell content in the consuming app, mark numeric columns with align end so their digits line up, and pass an empty message so an empty period explains itself instead of showing a bare header. Keep the number of columns small enough to read without horizontal scrolling on common screens; the container scrolls horizontally only as a fallback.",
+      "accessibility": "The component renders a native table with a caption, so assistive technology announces the table name, row and column counts, and each cell with its column header. Column headers are marked with the column scope. The caption remains in the accessibility tree when it is visually hidden. Numeric columns use tabular figures and right alignment for scanning. Rows highlight while hovered to aid scanning; the highlight conveys no state, and the table has no interactive parts of its own.",
+      "doList": [
+        "Give every table a caption that names its content and period",
+        "Mark numeric columns with align end",
+        "Format cell values and localize headers in the consuming app",
+        "Place the table next to the chart that visualizes the same data",
+        "Keep column counts small enough to avoid horizontal scrolling"
+      ],
+      "dontList": [
+        "Use it for layout or for a grid of unrelated widgets",
+        "Omit the caption because a heading exists (hide it visually instead)",
+        "Put interactive controls in cells without their own accessible names",
+        "Rely on row hover to convey selection or state",
+        "Render hundreds of rows without pagination in the consuming app"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Table",
+          "path": "/?path=/docs/components-table--docs",
+          "description": "Parts this table is composed from"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Chart whose values a table view makes available as text"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Chart whose values a table view makes available as text"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Fits a trend column beside the numbers of a row"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Table",
+          "url": "https://ui.shadcn.com/docs/components/table",
+          "description": "Reference table parts whose rules and spacing this component mirrors"
+        },
+        {
+          "linkText": "shadcn/ui Data Table",
+          "url": "https://ui.shadcn.com/docs/components/data-table",
+          "description": "Reference layout for the bordered frame and the empty row"
+        },
+        {
+          "linkText": "WAI-ARIA Authoring Practices",
+          "url": "https://www.w3.org/WAI/ARIA/apg/",
+          "description": "Patterns for accessible composite controls and tables"
+        }
+      ]
+    },
+    "periodSelector": {
+      "description": "Steps through periods with previous and next buttons around a label naming the current period.",
+      "overview": "PeriodSelector is the control for choosing which month, quarter, or year a dashboard page shows. It shows the current period as text between two icon buttons for stepping backwards and forwards. The component is fully controlled: the app owns the current period, formats its label, decides when the boundaries are reached, and reacts to the previous and next callbacks. No date arithmetic or calendar logic lives in the component, so it works for any period vocabulary.",
+      "usage": "Place PeriodSelector above the tiles and charts whose data it drives. Pass the localized label for the current period, handlers that move the period in the app state, and disable the button that would step past the available data range. Provide accessible names for both buttons that say what they do, such as previous month and next month. Keep one selector per page so that every section reads from the same period.",
+      "accessibility": "The two buttons are icon-only and receive their accessible names from the previousLabel and nextLabel props, so screen readers announce their purpose. Both are native buttons: they are focusable, activate with Enter or Space, and expose the disabled state at the range boundaries. The period label is a polite live region, so a change is announced after the step without interrupting. The controls are grouped in a fieldset so their relationship is conveyed.",
+      "doList": [
+        "Provide previousLabel and nextLabel that describe the step",
+        "Disable the button that would leave the available data range",
+        "Localize and format the period label in the consuming app",
+        "Drive every tile, chart, and table on the page from the selected period",
+        "Keep the label short and stable in width"
+      ],
+      "dontList": [
+        "Leave the buttons without accessible names",
+        "Implement date arithmetic inside the component",
+        "Use it for arbitrary navigation that is not a period",
+        "Wrap the label in a heading or other landmark",
+        "Place several selectors on one page that disagree with each other"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Button",
+          "path": "/?path=/docs/components-button--docs",
+          "description": "Used for the previous and next icon buttons"
+        },
+        {
+          "name": "Icon",
+          "path": "/?path=/docs/components-icon--docs",
+          "description": "Provides the chevron icons"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "HyperUI Pagination",
+          "url": "https://hyperui.dev/components/application/pagination",
+          "description": "Reference previous and next controls whose proportions this component mirrors"
+        },
+        {
+          "linkText": "shadcn/ui Dashboard blocks",
+          "url": "https://ui.shadcn.com/blocks",
+          "description": "Reference layouts whose building blocks this component mirrors"
+        },
+        {
+          "linkText": "WAI-ARIA Authoring Practices",
+          "url": "https://www.w3.org/WAI/ARIA/apg/",
+          "description": "Patterns for accessible composite controls and tables"
+        }
+      ]
+    },
+    "donutChart": {
+      "description": "Shows how one total divides into parts as a ring, with an optional headline in the hole, a tooltip, and a legend.",
+      "overview": "DonutChart answers the question of how a whole splits into parts at one point in time. Each slice carries an id, a localized label, and a value, and the ring is drawn in the order the slices are given, with neighbouring slices touching. The hole holds an optional headline value and caption, rendered as selectable text rather than as part of the drawing, so the total reads as text while the slices underneath still answer the pointer. Slice colors come from the chart palette tokens in a fixed order that stays distinguishable for viewers with color vision deficiencies, and a slice can opt into a status color. The tooltip reports the formatted value together with its share of the total as a whole percentage.",
+      "usage": "Use DonutChart when the composition of a single total is the point: asset allocation by instrument, spending by category, storage by file type. Pass a label that names the chart for assistive technology and slices whose labels are already localized. Supply centerValue and centerLabel to state the total that the ring divides, and a valueFormatter to attach units or currency formatting. Keep the slice count at five or fewer and group the remainder into one other slice, because thin slices are hard to compare by angle. Choose BarChart when the ranking of the parts matters more than their share, and pair every chart with a table view of the same numbers.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Slices answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a data table with the same values required next to the chart rather than optional. The legend repeats each slice label in text next to its swatch, so slices are identified without relying on color. The center text sits in the reading order as real text, so screen readers announce the headline and its caption. Neighbouring slices touch; the fixed palette order keeps adjacent colors distinguishable, and the legend names every slice in text.",
+      "doList": [
+        "Give every chart a label that says what the total represents",
+        "State the total in the center so the parts have a reference",
+        "Keep the slice count at five or fewer",
+        "Group small remainders into a single other slice",
+        "Localize slice labels and format values in the consuming app",
+        "Provide a table view of the same data next to the chart"
+      ],
+      "dontList": [
+        "Plot values that are not parts of one total",
+        "Pass negative values, which have no share of a whole",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Compare two rings slice by slice (use BarChart instead)",
+        "Rely on the tooltip alone, which the keyboard cannot reach",
+        "Turn on animation in visual regression tests"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares the same parts as bars when their ranking matters"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows how a value changes over time instead of how a total divides"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "scatterChart": {
+      "description": "Plots pairs of measurements as points on two numeric axes, with an optional fitted trend line, a tooltip, and a legend.",
+      "overview": "ScatterChart answers the question of whether two measurements move together. Each series is a list of x and y pairs, both axes are numeric and fit their domain to the data, and the grid rules run in both directions because both measures carry meaning. An optional trend line is drawn as a dashed line across the measured horizontal range, so it stops where the data stops instead of running to the edge of the axis. Its slope and intercept are supplied by the consuming app, which keeps the drawn line identical to the fit the data source reports. Series colors follow the chart palette order, and the tooltip names the series and lists both measures with their own labels and formatting.",
+      "usage": "Use ScatterChart when the relationship between two measurements matters: carbon dioxide against sleep quality, outdoor temperature against energy use, price against yield. Pass a label for assistive technology, xLabel and yLabel that name the two measures, and one series per group of observations. Provide xValueFormatter and yValueFormatter so each axis carries its own unit. Add a trendLine only when the fit comes from the plotted data, and name the method in the surrounding text. Compare groups with separate series rather than by encoding a third measure, because point size and shape are not configurable.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Points answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a data table with the same pairs required next to the chart rather than optional. Axis ticks are rendered as text in the formatting each axis declares, and the legend repeats each series label next to its swatch. The tooltip labels both numbers with xLabel and yLabel, so a reading is never left to axis position alone. The trend line is dashed rather than solid, so it stays distinct from a series without relying on color.",
+      "doList": [
+        "Give every chart a label that names both measures",
+        "Set xLabel and yLabel to the measures they describe",
+        "Format each axis with its own unit",
+        "Fit the trend line from the plotted data in the consuming app",
+        "Use one series per group being compared",
+        "Provide a table view of the same pairs next to the chart"
+      ],
+      "dontList": [
+        "Plot a measurement against time (use TimeSeriesChart instead)",
+        "Draw a trend line that was fitted to different data",
+        "Describe a correlation as a cause in the surrounding text",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Crowd one chart with more series than the legend can name",
+        "Turn on animation in visual regression tests"
+      ],
+      "relatedComponents": [
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Plots one measure against time instead of against a second measure"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares one measure across named categories"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "sankeyChart": {
+      "description": "Traces how a quantity moves between stages as ribbons whose width is the amount, with a tooltip for every flow and node.",
+      "overview": "SankeyChart answers the question of where a quantity goes as it passes through stages. Nodes name the places a quantity rests, links carry an amount from one node to another, and the layout places nodes in columns and draws each link as a ribbon whose thickness is proportional to its value. Node labels sit beside their column and turn inward on the right-hand side, so the last column stays inside the surface. Node colors follow the chart palette order while the ribbons stay a neutral tint, which keeps the nodes as the emphasis. Hovering a ribbon reports the flow from source to target with its value, and hovering a node reports that node total.",
+      "usage": "Use SankeyChart when the movement of an amount between stages is the point: income divided into spending and savings, energy from source to use, visitors from channel to outcome. Pass a label for assistive technology, nodes whose labels are already localized, and links that address nodes by id. Provide a valueFormatter so every flow carries its unit. Keep the graph shallow, at two or three columns, and keep node counts low so the ribbons stay traceable. A link whose source or target is missing from the node list is dropped rather than drawn, so validate ids in the consuming app instead of relying on that fallback. Give the chart a generous height, because ribbons and their labels need vertical room.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Ribbons and nodes answer the pointer rather than the keyboard, so the tooltip cannot be reached without a mouse or touch, which makes a table of flows with their source, target, and value required next to the chart rather than optional. Node labels are rendered as text beside every node, so no node is identified by color alone. The tooltip states the direction of a flow from source to target in text. There is no legend, because the labels sit on the nodes themselves.",
+      "doList": [
+        "Give every chart a label that says which quantity flows",
+        "Address links by node id and localize node labels",
+        "Format flow values with their unit in the consuming app",
+        "Keep the graph to two or three columns",
+        "Give the chart enough height for every ribbon",
+        "Provide a table of flows with source, target, and value"
+      ],
+      "dontList": [
+        "Send a flow back into a node it has already left",
+        "Mix units across the flows of one chart",
+        "Reference node ids that the node list does not declare",
+        "Compare independent totals with it (use BarChart instead)",
+        "Rely on the tooltip alone, which the keyboard cannot reach",
+        "Crowd a column with nodes whose labels overlap"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares independent totals instead of tracing flows between them"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows how one of these totals moves over time"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
+    "calendarHeatmap": {
+      "description": "Lays out daily values as a grid of small squares, one column per week, shaded on a four-step color scale.",
+      "overview": "CalendarHeatmap answers the question of which days a measurement ran high and how regularly that happened. Days fill a grid of seven rows starting at Monday, one column per week, and the range is padded outward to whole weeks so the grid stays rectangular. A day the data omits and a day whose value is null both render as an outlined empty cell, which stays distinct from a measured zero. Values map to four opaque steps of the chosen palette color, mixed toward the surface color rather than made translucent, so the contrast of every step is fixed and verifiable. The scale runs from zero to the largest value unless max is set, which is what makes two grids comparable. Optional weekday labels sit on every other row so they do not collide at the small cell size, and an optional legend names the low and high ends of the scale.",
+      "usage": "Use CalendarHeatmap for a long run of daily values where the pattern across weeks matters more than the exact number: steps per day, days with a workout, entries per day. Pass a label that names the measurement and its span, and days as ISO calendar dates with their values. Treat each date as an opaque calendar day already resolved in the consuming app, because the grid never shifts a date between time zones. Set max explicitly when several grids are compared, so their scales agree. Pass weekdayLabels and scaleLabels already localized, and a valueFormatter so the per-cell hover text carries units. Choose MatrixHeatmap when the two dimensions are something other than weeks and weekdays.",
+      "accessibility": "The grid is exposed as a single image with the chart label as its accessible name, so assistive technology announces what the grid shows instead of reading hundreds of cells. Each measured cell carries its date and formatted value as native hover text, which the pointer reaches but the keyboard does not, so a table of the same values is required for a complete alternative. The four color steps are opaque, so their contrast against the surface does not depend on what sits behind them. Missing days are drawn as outlined cells rather than as a paler shade, so absence is not read as a low value. The legend names the low and high ends in words instead of leaving the ramp to be inferred.",
+      "doList": [
+        "Give the grid a label that names the measurement and its span",
+        "Pass dates as ISO calendar days resolved in the consuming app",
+        "Set max explicitly when comparing several grids",
+        "Show the legend with localized low and high labels",
+        "Pass null for a day that has no measurement",
+        "Provide a table view of the same daily values"
+      ],
+      "dontList": [
+        "Shift dates between time zones before passing them",
+        "Fill missing days with zero to close the gaps",
+        "Use it for a span shorter than a few weeks (use Sparkline instead)",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Rely on the hover text, which the keyboard cannot reach",
+        "Read exact values off the shading"
+      ],
+      "relatedComponents": [
+        {
+          "name": "MatrixHeatmap",
+          "path": "/?path=/docs/components-chart-matrixheatmap--docs",
+          "description": "Uses the same color scale across two named dimensions"
+        },
+        {
+          "name": "Sparkline",
+          "path": "/?path=/docs/components-chart-sparkline--docs",
+          "description": "Shows a short run of the same daily values as a trend line"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
+        }
+      ]
+    },
+    "matrixHeatmap": {
+      "description": "Shades a grid of values across two named dimensions, with row and column headings and an optional scale legend.",
+      "overview": "MatrixHeatmap answers the question of where two dimensions intersect at high values. Rows and columns are named by the consuming app, and values arrive as a grid indexed by row and then by column. Each cell is a square shaded on the same four opaque steps as the calendar grid, mixed toward the surface color so the contrast of every step is fixed. A value at or below min renders as the empty step and a null renders as an outlined cell, which keeps a missing reading distinct from a low one. The scale spans min to max, and both can be set so several grids share one scale. Row headings sit to the left of each row and column headings above the grid, both as plain text.",
+      "usage": "Use MatrixHeatmap when a measurement is indexed by two named dimensions: hour of day against day of week, room against month, channel against campaign. Pass a label that names the measurement and its span, localized row and column headings, and a values grid whose rows align with the row headings. Set min and max when the meaningful range does not start at zero, such as carbon dioxide that never falls below the outdoor level, since without min the empty step marks only an exact zero. Provide a valueFormatter so the per-cell hover text carries units, and keep the grid small enough that headings stay readable. Choose CalendarHeatmap when the two dimensions are weeks and weekdays.",
+      "accessibility": "The grid is exposed as a single image with the chart label as its accessible name, so assistive technology announces what the grid shows instead of reading every cell. Row and column headings are rendered as text, so a cell can be located without reading the shading. Each measured cell carries its headings and formatted value as native hover text, which the pointer reaches but the keyboard does not, so a table of the same values is required for a complete alternative. The four color steps are opaque, so their contrast against the surface does not depend on what sits behind them. Missing readings are drawn as outlined cells rather than as a paler shade, so absence is not read as a low value.",
+      "doList": [
+        "Give the grid a label that names both dimensions and the span",
+        "Localize row and column headings in the consuming app",
+        "Align every values row with its row heading",
+        "Set min and max when the meaningful range does not start at zero",
+        "Pass null for a reading that is missing",
+        "Provide a table view of the same values"
+      ],
+      "dontList": [
+        "Fill missing readings with zero to keep the grid full",
+        "Mix measurements with different units in one grid",
+        "Crowd the grid with more headings than can be read",
+        "Pass raw colors or CSS values instead of the chart palette",
+        "Rely on the hover text, which the keyboard cannot reach",
+        "Read exact values off the shading"
+      ],
+      "relatedComponents": [
+        {
+          "name": "CalendarHeatmap",
+          "path": "/?path=/docs/components-chart-calendarheatmap--docs",
+          "description": "Uses the same color scale for daily values laid out as weeks"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares one dimension when the second one is not needed"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
+        }
+      ]
+    },
+    "sparkline": {
+      "description": "Draws a bare trend line for a short run of values, sized to fit inside a tile or a table cell.",
+      "overview": "Sparkline answers the question of which way a number has been moving, in about the space of a line of text. It draws the values as a single stroke with no axes, ticks, grid, or tooltip, scaled so the smallest value sits at the bottom of the box and the largest at the top. Because the scale comes from the values themselves, the line shows shape rather than magnitude, and a run of identical values sits flat in the middle. A null breaks the stroke instead of interpolating across it, so the values are drawn as separate runs, and a lone measurement between gaps renders as a dot. The stroke keeps its weight when the box is stretched, so the same values read consistently in a wide tile and in a narrow cell.",
+      "usage": "Use Sparkline next to a number that already states the magnitude: inside a StatTile, in a trend column of a DataTable, or beside a heading. Pass a label that names the measurement and its span, because the line carries no axis to read it from. Set the size with className, since the drawing stretches to whatever box it is given. Pass null for a gap rather than dropping the point, so the spacing between measurements stays even. Choose a chart palette color that matches the series the line belongs to. Choose TimeSeriesChart when the reader needs to read values, dates, or a scale from the chart.",
+      "accessibility": "The drawing is exposed as a single image with the label as its accessible name, so assistive technology announces what the line shows instead of describing a shape. The component has no interactive parts and no tooltip, so nothing is reachable by pointer alone. The exact values must be available as text nearby, in the tile value, the table cell, or a table view. The stroke is the only carrier of the information, so it stays on a chart palette color against the surface rather than being tinted for decoration. A break in the line is a gap in the data, not a visual style.",
+      "doList": [
+        "Give every sparkline a label that names the measurement and its span",
+        "Place it next to the number it supports",
+        "Set the width and height with className",
+        "Pass null for a missing value to keep the spacing even",
+        "Use a chart palette color that matches the series"
+      ],
+      "dontList": [
+        "Use it as the only view of a value",
+        "Read magnitude from it, since the scale fits the values",
+        "Drop missing points instead of passing null",
+        "Stretch it wide enough that a full chart would fit",
+        "Add axis labels or a legend around it"
+      ],
+      "relatedComponents": [
+        {
+          "name": "StatTile",
+          "path": "/?path=/docs/components-stattile--docs",
+          "description": "Holds a sparkline in its chart slot under the headline value"
+        },
+        {
+          "name": "DataTable",
+          "path": "/?path=/docs/components-datatable--docs",
+          "description": "Holds a sparkline in a trend column beside the numbers"
+        },
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows the same values with axes, a tooltip, and a legend"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
+        }
+      ]
+    },
+    "hypnogram": {
+      "description": "Shows one sleep session as stage segments on a time axis, with a row per stage from awake at the top to deep at the bottom.",
+      "overview": "Hypnogram answers the question of how a sleep session moved between stages. Each segment carries a start, an end, and one of four stages: awake, REM, core, and deep. Rows run from the lightest stage at the top to the deepest at the bottom, and every segment is drawn as a bar on its own row with a thin connector to the segment before it, so the descent into deep sleep and the return toward waking read as one path. Segments are sorted by start, and the chart spans the first start to the last end. The time axis labels both ends plus the whole hours between them, read on the wall clock of the given time zone. Stage colors come from the palette with one default per stage, and each default can be overridden.",
+      "usage": "Use Hypnogram for a single sleep session, or for another sequence of a few named states across hours. Pass a label that names the session and its span, segments in epoch milliseconds where each end is the next start, and stageLabels already localized. Set timeZone to the IANA name of the zone the session was slept in, so the hour labels read as the local clock, since the labels read in UTC otherwise. Override stageColors only to match a palette the reader already knows. Put the time spent in each stage next to the chart as text or a table, because durations are hard to add up by eye. Choose BarChart to compare stage totals across several nights.",
+      "accessibility": "The drawing is exposed as a single image with the label as its accessible name, so assistive technology announces the session instead of reading every segment. Stage names are rendered as text at the start of each row, so a row is identified without relying on its color. Rows run from the lightest stage to the deepest, so depth is carried by position as well as by color. The chart has no tooltip and no interactive parts, so no information is reachable by pointer alone. Time labels use a 24 hour clock in the given zone, which keeps a session that crosses midnight unambiguous.",
+      "doList": [
+        "Give every chart a label that names the session and its span",
+        "Pass segments whose end is the start of the next segment",
+        "Set timeZone to the zone the session was slept in",
+        "Localize the four stage labels in the consuming app",
+        "Provide the time spent in each stage as text or a table"
+      ],
+      "dontList": [
+        "Plot several sessions on one chart",
+        "Leave gaps between segments that the axis cannot explain",
+        "Label a session in UTC when it was slept in another zone",
+        "Read stage durations off the bar lengths",
+        "Recolor stages so the depth order stops matching the rows"
+      ],
+      "relatedComponents": [
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares stage totals across nights, stacked into one bar per night"
+        },
+        {
+          "name": "CalendarHeatmap",
+          "path": "/?path=/docs/components-chart-calendarheatmap--docs",
+          "description": "Shows one nightly measure across many nights"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        },
+        {
+          "linkText": "WCAG 2.1: Use of Color",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/use-of-color.html",
+          "description": "Success criterion on never conveying information by color alone"
+        },
+        {
+          "linkText": "WCAG 2.1: Non-text Contrast",
+          "url": "https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html",
+          "description": "Success criterion on the contrast of graphical objects that carry information"
+        }
+      ]
+    },
+    "treemapChart": {
+      "description": "Shows how a whole divides into many parts as tiles whose area is the amount, with one optional level of grouping.",
+      "overview": "TreemapChart answers the question of which few parts of a whole dominate the rest. Every node becomes a tile whose area is proportional to its value, so a long tail of small parts stays visible instead of collapsing into slivers a ring cannot separate. Nodes that carry a group are tiled inside the area of that group, and the outline and name of a group are drawn over its tiles rather than reserved out of them, so every tile keeps the area its value earned. A group's name is set on the inverted plate, so it never reads as one more part, and it gives way wherever a part has already claimed that spot with its own label. Color follows the grouping: one palette color per group, or, with colorBy set to value, the sequential scale the heatmaps already use. A tile carries its label only where the label fits inside it, and the tooltip always states the full label, the value, the share of the total, and, for a part that belongs to a group, that group's total. A share that is not zero but rounds down to nothing reads as less than one percent, so a small part is never reported as none.",
+      "usage": "Use TreemapChart when a whole divides into more parts than a ring can carry, especially when a handful of them dominate a long tail: spending by category, storage by folder, visits by source. Pass a label for assistive technology, nodes whose labels are already localized, and a valueFormatter so every tile carries its unit. Values must be finite and at or above zero; a value that is negative, missing, or infinite is left out and reported in development, and a zero takes no area but keeps its row in the table. Keep grouping to the single level the component draws, and leave colorBy at group unless the value itself is the comparison. Give the chart a generous height, because a tile needs room before it can show its label.",
+      "accessibility": "The chart surface exposes the chart label as its accessible name. Every tile is focusable and named with its group, label, value, and share, so the numbers the tooltip shows reach the keyboard as well as the pointer. The component carries a visually hidden table of the same numbers, captioned with the chart label, so no part depends on being seen: a zero-value part appears there even though it has no tile. Tile labels are omitted where they do not fit rather than clipped, and label text sits on an opaque plate so it keeps at least 4.5:1 against the tile beneath it. Area, not color alone, carries the comparison.",
+      "doList": [
+        "Give every chart a label that says which whole is divided",
+        "Format tile values with their unit in the consuming app",
+        "Keep grouping to the single level the chart draws",
+        "Give the chart enough height for tiles to carry their labels",
+        "Pass values that are finite and at or above zero",
+        "Let the table alternative carry the parts too small to label"
+      ],
+      "dontList": [
+        "Give a part a negative value to mean a reduction",
+        "Mix units across the parts of one chart",
+        "Rely on a tile label for a part too small to hold one",
+        "Compare independent totals with it (use BarChart instead)",
+        "Divide a whole into a handful of parts (use DonutChart instead)",
+        "Nest a second level of grouping inside a group"
+      ],
+      "relatedComponents": [
+        {
+          "name": "DonutChart",
+          "path": "/?path=/docs/components-chart-donutchart--docs",
+          "description": "Divides a whole into a handful of parts instead of dozens"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Ranks independent totals instead of dividing one whole"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, the tiled layout, and the tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.2.8",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "shadcn/ui Chart",
+          "url": "https://ui.shadcn.com/docs/components/chart",
+          "description": "Reference implementation whose structure and styling this component follows"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
         }
       ]
     }

@@ -1,7 +1,7 @@
 import type { ErrorHandler } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
-import { logger } from '../../modules/shared/logger';
+import { logger } from 'logger';
 
 const apiLogger = logger.child({ module: 'api' });
 

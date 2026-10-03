@@ -1,6 +1,6 @@
 export {
+  type AwsSesConfig,
   configureAwsSes,
   getAwsSesEmailSender,
   resetAwsSesConfig,
-  type AwsSesConfig,
 } from './client';

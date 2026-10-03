@@ -1,13 +1,3 @@
-/**
- * Affiliate Domain Enums
- *
- * Defines enumeration types for the Affiliate domain.
- */
-
-// =============================================================================
-// AffiliateType
-// =============================================================================
-
 export const AffiliateType = {
   BANNER: 'BANNER',
   PRODUCT: 'PRODUCT',

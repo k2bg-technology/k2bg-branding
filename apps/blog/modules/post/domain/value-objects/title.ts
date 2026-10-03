@@ -1,11 +1,5 @@
 import { InvalidTitleError } from '../errors/errors';
 
-/**
- * Title Value Object
- *
- * Represents the title of a Post.
- * Validates that the title is not empty and does not exceed 100 characters.
- */
 export class Title {
   private static readonly MAX_LENGTH = 100;
 

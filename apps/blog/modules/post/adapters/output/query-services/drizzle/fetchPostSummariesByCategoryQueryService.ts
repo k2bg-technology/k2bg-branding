@@ -46,7 +46,7 @@ export class DrizzleFetchPostSummariesByCategoryQueryService
           .from(posts)
           .leftJoin(authors, eq(posts.authorId, authors.uuid))
           .where(whereClause)
-          .orderBy(direction(posts.releaseDate))
+          .orderBy(direction(posts.releaseDate), direction(posts.uuid))
           .limit(pageSize)
           .offset(offset),
         this.db.select({ value: count() }).from(posts).where(whereClause),

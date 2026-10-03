@@ -86,6 +86,8 @@ export function createNotionPageResponse(
     object: 'page',
     created_time: '2024-01-15T00:00:00.000Z',
     last_edited_time: '2024-01-15T00:00:00.000Z',
+    url: 'https://notion.so/page',
+    public_url: null,
     properties: {
       content: {
         type: 'title',

@@ -1,9 +1,6 @@
 import type { Media } from '../../domain';
 import type { MediaOutput } from './types';
 
-/**
- * Maps Media entity to MediaOutput DTO
- */
 export const toMediaOutput = (media: Media): MediaOutput => ({
   id: media.id.getValue(),
   name: media.name.getValue(),

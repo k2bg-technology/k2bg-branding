@@ -13,9 +13,6 @@ export interface FetchPostSummariesResult {
   totalCount: number;
 }
 
-/**
- * Query service interface for fetching paginated post summaries
- */
 export interface FetchPostSummariesQueryService {
   fetchPostSummaries(
     params: FetchPostSummariesParams

@@ -5,6 +5,7 @@ export {
   SyncError,
   UseCaseError,
 } from './errors';
+export type { Logger } from './logger';
 export type { OgImageUrlGenerator } from './ogImageUrlGenerator';
 export { toPostOutput } from './postOutputMapper';
 export type {

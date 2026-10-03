@@ -1,13 +1,11 @@
 import type { Post } from '../../../domain';
+import type { AuthorRecord } from './authorRecord';
 
-/**
- * External post source interface
- *
- * Abstracts the source of posts
- */
+export interface ExternalPostBatch {
+  posts: Post[];
+  authors: AuthorRecord[];
+}
+
 export interface ExternalPostSource {
-  /**
-   * Fetches all posts from the external source
-   */
-  fetchAllPosts(): Promise<Post[]>;
+  fetchAll(): Promise<ExternalPostBatch>;
 }

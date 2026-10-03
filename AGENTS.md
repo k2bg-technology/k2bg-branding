@@ -12,24 +12,30 @@ selection, engineering trade-offs, writing tone).
 ## Project Structure & Module Organization
 
 - Monorepo managed by pnpm workspaces and Turborepo.
-- Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000) and
-  `apps/portfolio` (Next.js, multilingual, port 3001).
+- Apps: `apps/blog` (Next.js + Drizzle ORM + Hono API server, port 3000),
+  `apps/portfolio` (Next.js, multilingual, port 3001), `apps/scene-studio`
+  (Remotion Studio for programmatic short-form videos, port 3002), and
+  `apps/observatory` (Next.js, personal data visualization, port 3003).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
-  (Vitest helpers), `packages/tailwind-config` (design tokens), `packages/biome-config`,
-  `packages/tsconfig`.
+  (Vitest helpers), `packages/logger` (pino root logger with PII redaction; apps create
+  module loggers via `logger.child({ module })`), `packages/tailwind-config` (design
+  tokens), `packages/biome-config`, `packages/tsconfig`.
 - CI, templates, and bots live under `.github/`. See `.github/PULL_REQUEST_TEMPLATE.md`.
-- Tech stack: Next.js 16 (Turbopack, React Compiler), TypeScript (strict, 100%),
-  Tailwind CSS v4, Turborepo, pnpm 10+.
+- Tech stack: Next.js 16 (Turbopack, React Compiler), Remotion, TypeScript (strict,
+  100%), Tailwind CSS v4, Turborepo, pnpm 10+.
 
 ## Build, Test, and Development Commands
 
-- Install: `pnpm install` (pnpm 10+, Node 20.9+).
-- Develop all: `pnpm dev` (runs `turbo run dev`); filter: `pnpm -F blog dev` / `pnpm -F portfolio dev`.
+- Install: `pnpm install` (pnpm 10+, Node 22.22+ or 24.15+; exact range in `package.json` `engines`).
+- Develop all: `pnpm dev` (runs `turbo run dev`); filter with `pnpm -F blog dev`,
+  `pnpm -F portfolio dev`, `pnpm -F scene-studio dev`, or `pnpm -F observatory dev`.
 - Build: `pnpm build`; Start: `pnpm start` (per app/package via filter as above).
 - Lint/Types/Format: `pnpm lint` (Biome), `pnpm typecheck`, `pnpm format` (Biome).
-- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog and Test Utils).
+- Test: `pnpm test` or `pnpm test:watch` (Vitest in Blog, Portfolio, Scene Studio, Observatory, and Test Utils).
 - Component scaffolding: `pnpm generate:component`, `pnpm generate:style`.
 - Storybook (UI): `pnpm -F ui storybook` (port 6006); Chromatic via CI.
+- Video (Scene Studio): `pnpm -F scene-studio dev` (Remotion Studio, port 3002);
+  render locally via `pnpm -F scene-studio render <composition-id>`.
 
 ## Architecture
 
@@ -89,6 +95,61 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   `middleware.ts` because i18n locale detection requires the edge runtime — do not rename it.
   Use `proxy.ts` only when adding new middleware to the blog app.
 
+### Scene Studio (Video Generation)
+
+- `apps/scene-studio` renders short-form vertical videos (1080×1920) with
+  [Remotion](https://www.remotion.dev/): compositions are React components driven by
+  props/JSON, styled with Tailwind v4 reusing `packages/tailwind-config` tokens.
+- Reusable video primitives (titles, captions, safe area, overlays, media, effect
+  shaders, 3D stages, brand outro) live in `apps/scene-studio/src/primitives/` — the
+  full inventory is documented in `apps/scene-studio/README.md`; keep them
+  use-case-agnostic per the template guidelines and verify them via the `primitives`
+  demo compositions in Studio (no Storybook). Extract them into a `packages/`-level
+  workspace only when a second consumer (e.g. a web preview app) actually exists.
+- Animations must be deterministic: derive all state from `useCurrentFrame()` and props —
+  never `requestAnimationFrame`, unseeded randomness, or the current time.
+- 3D is supported via `@remotion/three`: each 3D effect is a focused primitive built on
+  `ThreeCanvas` (e.g. `DepthGallery`), driven by props and `useCurrentFrame()` — never
+  React Three Fiber's `useFrame`. Headless rendering uses the `angle` OpenGL renderer set
+  in `remotion.config.ts`. There is no general-purpose 3D abstraction or scene DSL.
+- Media assets are never committed; `apps/scene-studio/public/assets/` is gitignored
+  (reference files via `staticFile()`). Rendering is local-macOS-only for now (brand
+  system fonts are unavailable on Linux/CI).
+- All `remotion` / `@remotion/*` packages stay on one identical exact-pinned version;
+  bump them together in a single commit.
+- Template/composition design and naming (three-layer structure, no universal
+  templates): `.claude/rules/remotion-template-guidelines.md`.
+
+### Observatory App
+
+- `apps/observatory` is a Next.js app (port 3003) that visualizes accumulated personal
+  data: finances, health, home environment, and web analytics. It runs locally only.
+- Single-locale: no i18n dictionaries and no `middleware.ts` / `proxy.ts`.
+- Clean Architecture vertical slices mirror the blog: `apps/observatory/modules/<module>/`
+  holds `use-cases/` (use cases, query-service ports, read models) and `adapters/`
+  (warehouse query services, mappers, `RepositoryError` / `MappingError`, module
+  logger); add `domain/` only when a module has entities or invariants. Use-case
+  factories live in `apps/observatory/infrastructure/di/`.
+- Warehouse reads: `apps/observatory/infrastructure/warehouse/` wraps the data
+  warehouse SDK (BigQuery) behind the app-owned `WarehouseClient` interface. Every
+  read goes through `WarehouseClient.query()`, which caches rows in the Next.js data
+  cache (`unstable_cache`) under the `warehouse` tag for the `revalidate` window each
+  query declares (warehouse data changes at most daily — long windows bound scan
+  costs); rows are normalized to plain JSON so cache hits and misses match. Query
+  services receive the client (plus the location or dataset id they need) via
+  constructor injection and wrap driver failures in `RepositoryError`.
+- The warehouse SDK is Node-only: query code stays in server components and
+  `server-only` modules, and dashboard pages export `dynamic = 'force-dynamic'` so
+  `next build` never queries the warehouse.
+- A failed warehouse read renders an inline unavailable state (canonical:
+  `apps/observatory/components/table-catalog/TableCatalog.tsx`) after `logger.error`;
+  dashboards never `notFound()` on data failures.
+- Env vars: `WAREHOUSE_PROJECT_ID` and `WAREHOUSE_LOCATION` (required),
+  `GOOGLE_APPLICATION_CREDENTIALS` and `OBSERVATORY_DASHBOARDS_DIR` (optional) — see
+  `apps/observatory/.env.example`. Each dashboard definition names its dataset.
+  `/` lists dashboards and `/catalog` lists the referenced datasets' tables and views.
+- Visualization components belong in `packages/ui`, not in the app.
+
 ### Key Integrations
 
 - **Notion API** — content management and blog posts.
@@ -122,6 +183,8 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 - Biome enforced (`biome.jsonc`); TypeScript strict across the repo (shared `packages/tsconfig`).
 - Prefer full, descriptive identifiers — avoid abbreviations (`dictionary` not `dict`,
   `language` not `lang`).
+- Detailed coding standards: `.claude/rules/code-style.md` (Claude Code auto-loads it for
+  TypeScript sources; other agents can read it directly).
 
 ### File & Directory Naming
 
@@ -226,8 +289,21 @@ export const postSchema = z.object({ id: z.string(), title: z.string() })
   (see `apps/blog/vitest.config.mts`); `packages/test-utils/setupTests.ts` loads
   `@testing-library/jest-dom/vitest`.
 - Coverage reporters: `text,json,html` (see `apps/blog/vitest.config.mts`).
-- Test behavior over implementation; AAA structure; name the subject `sut`; prefer `it.each`
-  over loops. Full standards: `.claude/rules/unit-test-guidelines.md`.
+- Test behavior over implementation; AAA structure; name the subject `sut`; use `it.each`
+  for equivalent Act/Assert cases. Fixture loops and data transformations are not repeated
+  behavior cases. Full standards: `.claude/rules/unit-test-guidelines.md`.
+- Unit tests assert observable inputs, outputs, state changes, and required external effects
+  at the smallest public boundary. Expectations are specified independently of production
+  calculations. Incoming data stubs are checked through outcomes; outgoing interactions
+  require an externally meaningful effect, a documented adapter contract, or an ordering,
+  guard, or single-flight rule.
+- Database integration tests use the real test database and assert freshly queried persisted
+  state. Diagnostic logs do not need assertions; explicit operational outputs and emitted
+  security redaction remain testable contracts.
+- What needs a test, what does not (decorative appearance, wiring, forwarding, efficiency-only
+  interactions, sibling constraints, unreachable scenarios), and whether an existing test is
+  kept, improved, moved, or deleted are stated in `.claude/rules/unit-test-guidelines.md`
+  ("What Needs a Test" and "Retaining, Improving, Moving, and Deleting Tests").
 - Run before pushing: `pnpm typecheck && pnpm lint && pnpm test` (or scope via `pnpm -F blog test`).
 
 ## Internationalization (Portfolio App)
@@ -256,6 +332,11 @@ See `turbo.json` for the complete env list. Critical variables:
 - `INSTAGRAM_LONG_ACCESS_TOKEN` — Instagram integration.
 - `API_KEY` — Hono server authentication (`x-api-key` header).
 - Database connection strings for Drizzle/PostgreSQL.
+- `WAREHOUSE_PROJECT_ID` / `WAREHOUSE_LOCATION` — Observatory warehouse reads;
+  `OBSERVATORY_DASHBOARDS_DIR`
+  (optional) names the directory holding dashboard definition JSON files;
+  `GOOGLE_APPLICATION_CREDENTIALS` (optional) points Application Default Credentials
+  at a service-account key.
 
 ## Security & Configuration
 
@@ -263,6 +344,9 @@ See `turbo.json` for the complete env list. Critical variables:
   app-specific secrets in `apps/*/.env.local` and never commit them.
 - Avoid storing tokens in code or stories; prefer `.env` and runtime config.
 - Never log PII; ensure authentication wraps protected Hono routes (`x-api-key`).
+- The blog deploys to AWS Amplify: the root `amplify.yml` is the build spec (it overrides
+  console build settings) and `.github/workflows/deploy-blog.yml` drives deploys on `main`.
+  Details: `apps/blog/README.md` (Deployment section).
 
 ## Documentation Rules (Agent Docs)
 
@@ -305,11 +389,43 @@ rather than guess. (Claude Code: use the `k2bg-design-system` MCP tools — see 
 
 ## Codex Review Guidelines
 
-Codex posts only P0/P1 issues. Apply these rules when reviewing a pull request:
+Codex posts only P0/P1 issues. Review the whole pull request each time and report every
+P0/P1 issue found in one review. A re-review verifies the earlier findings and the changes
+made since, including their effect on unchanged code; a newly found P0/P1 issue is reported
+wherever it is. A finding that was resolved, or dismissed on its thread with a reason, is not
+repeated while the fix or the reason holds; it is raised again only with concrete evidence
+that the defect remains or that the reason is wrong, and the finding states that evidence.
 
-- **Missing tests (P1):** New or changed logic without co-located `*.test.ts(x)`
-  coverage. Follow `.claude/rules/unit-test-guidelines.md` (behavior-focused tests,
-  AAA structure, `sut` naming, no custom loops — use `it.each`).
+A finding names a scenario the repository can reach. A scenario is reachable when a unit's
+public contract accepts it — a prop combination a component allows, a request a route can
+receive, hostile input at a trust boundary — with values realistic for the domain and on a
+supported runtime. The absence of a current call site does not make a scenario unreachable,
+being representable in a type does not make it reachable, and a hypothetical edit to the code
+(a transform added, a clock returning seconds) is not a scenario: a finding names an input the
+current code accepts. Judge realism at the
+repository's scale: personal sites and local-only tools with one maintainer. Outside that
+reach (magnitudes near numeric limits, a runtime without an API that every supported runtime
+provides), only a security exposure, data loss, or a crash is a finding.
+
+Apply these rules when reviewing a pull request:
+
+- **Missing tests (P1):** New or changed behavior whose regression would silently yield a wrong
+  user-visible result, accept invalid input at a trust boundary, reject valid configuration, or
+  lose a stated security, persistence, operational-output, or external-effect guarantee, and
+  whose outcome no test asserts for a reachable input to the current code — running the code
+  in a test is not coverage; and a change that stops tests from running in CI. Mutation-level
+  coverage (a line that can change without a test failing, an edit that no test would catch)
+  is not the goal and is not a finding. The finding names a concrete input or state, the
+  expected outcome, and why the existing tests miss it, and asserts the behavior where the
+  decision is made. What needs a test and what does not — decorative appearance, wiring and
+  forwarding between tested units, efficiency-only interaction assertions, unread output
+  fields, sibling constraints of one tested pattern, schema pass-through of valid values,
+  diagnostic logging, and scenarios the reach rule excludes — is stated in
+  `.claude/rules/unit-test-guidelines.md` ("What Needs a Test"); an accessible role or name and
+  what assistive technology announces are behavior there, decorative styling is not. Tests
+  assert at the smallest public boundary that shows the behavior and follow that file; a
+  branch is not extracted into a helper to be tested (`.claude/rules/code-style.md`, "Inline
+  Needless Functions").
 - **Clean Architecture violations (P1):** Wrong dependency direction or layer-boundary
   crossings in the blog app's `domain` / `use-cases` / `adapters` slices.
   See the `clean-architecture-guidelines` skill.
@@ -328,3 +444,7 @@ Defer formatting/style nits already enforced by Biome; do not duplicate lint out
   unless asked), and `@codex fix the P1 issue` for small, scoped corrections.
 - **Claude (`@claude` / local Claude Code) = primary implementer** for feature work.
 - Keep the two agents from overlapping: do not ask both to implement the same PR.
+- A reported finding that the reach rule in "Codex Review Guidelines" or the test bar in
+  `.claude/rules/unit-test-guidelines.md` ("What Needs a Test") excludes is dismissed on its
+  thread with the rule cited instead of being fixed. Authors adjudicate each Missing-tests
+  finding against that bar before writing a test; a mutation sweep is not a pre-PR requirement.

@@ -1,12 +1,12 @@
-import { Skelton } from 'ui';
-import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
+import { Skeleton } from 'ui';
+import { ArticlesSkeleton } from '../../../components/articles/ArticlesSkeleton';
 import { PageLayout } from '../../../components/page-layout';
 
 export default function Loading() {
   return (
     <PageLayout>
-      <Skelton.Line className="w-[10rem] h-[1.875rem]" />
-      <ArticlesSkelton />
+      <Skeleton.Line className="w-[10rem] h-[1.875rem]" />
+      <ArticlesSkeleton />
     </PageLayout>
   );
 }

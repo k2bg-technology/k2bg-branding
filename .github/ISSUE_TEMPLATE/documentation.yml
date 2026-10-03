@@ -47,9 +47,11 @@ body:
       label: Documentation Location
       description: Where is this documentation located or should be located?
       options:
-        - Root directory (README.md, CLAUDE.md)
+        - Root directory (README.md, AGENTS.md, CLAUDE.md)
         - Blog app (apps/blog/)
         - Portfolio app (apps/portfolio/)
+        - Scene Studio (apps/scene-studio/)
+        - Observatory app (apps/observatory/)
         - UI package (packages/ui/)
         - Shared packages
         - Component documentation

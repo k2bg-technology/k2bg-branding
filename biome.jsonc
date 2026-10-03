@@ -1,12 +1,14 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.3.11/schema.json",
   "extends": ["./packages/biome-config/biome.jsonc"],
+  "plugins": ["./packages/biome-config/plugins/noLet.grit"],
 
   "files": {
     "includes": [
-      "**/apps/**/*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
-      "**/packages/**/*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}",
-      "*.{ts,tsx,js,jsx,mjs,cjs,json,jsonc}"
+      "**/apps/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}",
+      "**/packages/**/*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}",
+      "scripts/**/*.{ts,mts,cts,mjs,cjs,js}",
+      "*.{ts,tsx,mts,cts,js,jsx,mjs,cjs,json,jsonc}"
     ]
   }
 }

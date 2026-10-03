@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['index.ts', 'vitest.config.ts', 'setupTests.ts'],
+  entry: ['vitest.config.ts', 'setupTests.ts'],
   format: ['esm'],
   dts: true,
   clean: true,

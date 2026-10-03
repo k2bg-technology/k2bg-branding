@@ -1,0 +1,9 @@
+language js
+
+or {
+  JsVariableDeclaration(),
+  JsForVariableDeclaration()
+} as $declaration where {
+  $declaration <: r"^let\b[\s\S]*",
+  register_diagnostic(span=$declaration, message="`let` is not allowed. Restructure the code to use `const`. Only module-level state that must survive across calls may be suppressed with `// biome-ignore lint/plugin/noLet: <reason>`.")
+}

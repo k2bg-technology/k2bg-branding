@@ -1,11 +1,5 @@
 import { InvalidMediaNameError } from '../errors/errors';
 
-/**
- * MediaName Value Object
- *
- * Represents the display name of a media item.
- * Max 200 characters, non-empty, trimmed.
- */
 export class MediaName {
   private static readonly MAX_LENGTH = 200;
 

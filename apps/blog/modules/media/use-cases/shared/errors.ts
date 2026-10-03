@@ -1,6 +1,3 @@
-/**
- * Base error for use-case layer
- */
 export class UseCaseError extends Error {
   constructor(message: string) {
     super(message);
@@ -8,9 +5,6 @@ export class UseCaseError extends Error {
   }
 }
 
-/**
- * Thrown when a media is not found
- */
 export class MediaNotFoundError extends UseCaseError {
   constructor(identifier: string) {
     super(`Media not found: ${identifier}`);

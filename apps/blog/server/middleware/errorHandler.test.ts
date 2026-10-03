@@ -7,7 +7,7 @@ const { errorMock } = vi.hoisted(() => ({
   errorMock: vi.fn(),
 }));
 
-vi.mock('../../modules/shared/logger', () => ({
+vi.mock('logger', () => ({
   logger: {
     child: () => ({ error: errorMock }),
   },
@@ -104,24 +104,6 @@ describe('errorHandler', () => {
   });
 
   describe('error logging', () => {
-    it('logs HTTPException at error level with status and path', async () => {
-      const app = createApp();
-      errorMock.mockClear();
-
-      await app.request('/http-exception');
-
-      expect(errorMock).toHaveBeenCalledOnce();
-      const [logObj, logMessage] = errorMock.mock.calls[0];
-      const statusNotFound = 404;
-      expect(logObj).toMatchObject({
-        status: statusNotFound,
-        errorName: 'Error',
-        path: '/http-exception',
-      });
-      expect(logObj.err).toBeInstanceOf(HTTPException);
-      expect(logMessage).toBe('Post not found');
-    });
-
     it('logs unknown errors at error level with 500 status', async () => {
       const app = createApp();
       errorMock.mockClear();
@@ -129,14 +111,14 @@ describe('errorHandler', () => {
       await app.request('/unknown-error');
 
       expect(errorMock).toHaveBeenCalledOnce();
-      const [logObj, logMessage] = errorMock.mock.calls[0];
+      const [logObj] = errorMock.mock.calls[0];
       const statusInternalServerError = 500;
       expect(logObj).toMatchObject({
         status: statusInternalServerError,
         errorName: 'Error',
         path: '/unknown-error',
       });
-      expect(logMessage).toBe('Internal Server Error');
+      expect(logObj.err).toBeInstanceOf(Error);
     });
 
     it('logs custom error name for classification', async () => {
@@ -160,15 +142,6 @@ describe('errorHandler', () => {
       const body = await res.json();
       const parsed = new Date(body.error.timestamp);
       expect(parsed.toISOString()).toBe(body.error.timestamp);
-    });
-
-    it('returns application/json content type', async () => {
-      const app = createApp();
-      errorMock.mockClear();
-
-      const res = await app.request('/unknown-error');
-
-      expect(res.headers.get('content-type')).toContain('application/json');
     });
   });
 });

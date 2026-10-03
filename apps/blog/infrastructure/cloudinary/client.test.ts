@@ -1,4 +1,5 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
+import { v2 as cloudinary } from 'cloudinary';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   buildImageUrl,
   configureCloudinary,
@@ -10,7 +11,9 @@ vi.mock('cloudinary', () => ({
   v2: {
     config: vi.fn(),
     uploader: {
-      upload: vi.fn().mockResolvedValue({ secure_url: 'https://example.com/image.jpg' }),
+      upload: vi
+        .fn()
+        .mockResolvedValue({ secure_url: 'https://example.com/image.jpg' }),
     },
     api: {
       resource: vi.fn().mockResolvedValue({ version: '12345' }),
@@ -38,9 +41,13 @@ describe('cloudinary/client', () => {
 
   describe('configureCloudinary', () => {
     it('configures cloudinary with environment variables', () => {
-      const cloudinary = getCloudinary();
+      getCloudinary();
 
-      expect(cloudinary.config).toHaveBeenCalled();
+      expect(cloudinary.config).toHaveBeenCalledWith({
+        cloud_name: 'test-cloud',
+        api_key: 'test-key',
+        api_secret: 'test-secret',
+      });
     });
 
     it('accepts custom configuration', () => {
@@ -50,23 +57,13 @@ describe('cloudinary/client', () => {
         apiSecret: 'custom-secret',
       });
 
-      const cloudinary = getCloudinary();
+      getCloudinary();
 
-      expect(cloudinary).toBeDefined();
-    });
-  });
-
-  describe('getCloudinary', () => {
-    it('returns the cloudinary instance', () => {
-      const cloudinary = getCloudinary();
-
-      expect(cloudinary).toBeDefined();
-    });
-
-    it('auto-configures on first call', () => {
-      const cloudinary = getCloudinary();
-
-      expect(cloudinary.config).toHaveBeenCalled();
+      expect(cloudinary.config).toHaveBeenCalledWith({
+        cloud_name: 'custom-cloud',
+        api_key: 'custom-key',
+        api_secret: 'custom-secret',
+      });
     });
   });
 

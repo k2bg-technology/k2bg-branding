@@ -6,6 +6,7 @@ import { defineConfig } from 'vitest/config';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const uiAlias = resolve(__dirname, '../../packages/ui/index.ts');
+const loggerAlias = resolve(__dirname, '../../packages/logger/index.ts');
 const jsdomSetupPath = resolve(
   __dirname,
   '../../packages/test-utils/setupTests.ts'
@@ -18,12 +19,10 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'dist/'],
     },
-    // Vitest renamed `workspace` to `projects` in 3.2; this app is pinned to
-    // 3.1.x via test-utils' peerDependency, so the older field name applies.
-    workspace: [
+    projects: [
       {
         plugins: [react()],
-        resolve: { alias: { ui: uiAlias } },
+        resolve: { alias: { ui: uiAlias, logger: loggerAlias } },
         test: {
           name: 'jsdom',
           globals: true,
@@ -31,12 +30,16 @@ export default defineConfig({
           setupFiles: [jsdomSetupPath],
           css: false,
           include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-          exclude: ['**/*.db.test.ts', 'node_modules/**', 'dist/**'],
-          ...(process.env.CI && { minThreads: 4, maxThreads: 4 }),
+          exclude: [
+            '**/*.db.test.ts',
+            '**/.next/**',
+            '**/node_modules/**',
+            '**/dist/**',
+          ],
         },
       },
       {
-        resolve: { alias: { ui: uiAlias } },
+        resolve: { alias: { ui: uiAlias, logger: loggerAlias } },
         test: {
           name: 'node-db',
           globals: true,
@@ -48,11 +51,12 @@ export default defineConfig({
           // once for every *.db.test.ts file. A setupFile would re-run the
           // beforeAll/afterAll per test file.
           globalSetup: [dbGlobalSetupPath],
-          // singleFork keeps all DB test files in one worker so they share the
-          // same connection pool; per-test isolation comes from
+          // A single non-isolated fork keeps all DB test files in one worker so
+          // they share the same connection pool; per-test isolation comes from
           // truncateAllTables(), not from spinning up a new container.
           pool: 'forks',
-          poolOptions: { forks: { singleFork: true } },
+          maxWorkers: 1,
+          isolate: false,
           testTimeout: 30_000,
           hookTimeout: 120_000,
         },

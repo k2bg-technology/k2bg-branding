@@ -41,7 +41,7 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'main',
-        class: 'bg-main-default text-white hover:bg-main-default/90',
+        class: 'bg-main-default text-base-white hover:bg-main-default/90',
       },
       {
         variant: 'outline',
@@ -57,7 +57,7 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'accent',
-        class: 'bg-accent-default text-white hover:bg-accent-default/90',
+        class: 'bg-accent-default text-base-white hover:bg-accent-default/90',
       },
       {
         variant: 'outline',
@@ -88,7 +88,7 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'error',
-        class: 'bg-error text-white hover:bg-error/90',
+        class: 'bg-error text-base-white hover:bg-error/90',
       },
       {
         variant: 'outline',
@@ -103,7 +103,7 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'warning',
-        class: 'bg-warning text-white hover:bg-warning/90',
+        class: 'bg-warning text-base-white hover:bg-warning/90',
       },
       {
         variant: 'outline',
@@ -118,7 +118,7 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'info',
-        class: 'bg-info text-white hover:bg-info/90',
+        class: 'bg-info text-base-white hover:bg-info/90',
       },
       {
         variant: 'outline',
@@ -133,7 +133,7 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'success',
-        class: 'bg-success text-white hover:bg-success/90',
+        class: 'bg-success text-base-white hover:bg-success/90',
       },
       {
         variant: 'outline',
@@ -148,7 +148,7 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'dark',
-        class: 'bg-base-black text-white hover:bg-base-black/90',
+        class: 'bg-base-black text-base-white hover:bg-base-black/90',
       },
       {
         variant: 'outline',
@@ -163,17 +163,17 @@ export const buttonVariants = cva(
       {
         variant: 'default',
         color: 'light',
-        class: 'bg-white text-base-black hover:bg-white/90',
+        class: 'bg-base-white text-base-black hover:bg-base-white/90',
       },
       {
         variant: 'outline',
         color: 'light',
-        class: 'border-white/20 text-white hover:bg-white/10',
+        class: 'border-base-white/20 text-base-white hover:bg-base-white/10',
       },
       {
         variant: 'ghost',
         color: 'light',
-        class: 'text-white hover:bg-white/10',
+        class: 'text-base-white hover:bg-base-white/10',
       },
     ],
     defaultVariants: {

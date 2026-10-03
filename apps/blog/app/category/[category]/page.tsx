@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { Articles } from '../../../components/articles/Articles';
-import { ArticlesSkelton } from '../../../components/articles/ArticlesSkelton';
+import { ArticlesSkeleton } from '../../../components/articles/ArticlesSkeleton';
 import { PageLayout } from '../../../components/page-layout';
 import { ScrollToTopButton } from '../../../components/scroll-to-top-button/ScrollToTopButton';
 import {
@@ -10,14 +10,21 @@ import {
   getDefaultOgImageUrl,
 } from '../../../infrastructure/di';
 import { postLogger } from '../../../modules/post/adapters/shared/logger';
-import { Category } from '../../../modules/post/domain';
+import { getCategoryDisplayName } from '../../../modules/post/domain';
 import { UseCaseError } from '../../../modules/post/use-cases/shared';
+import {
+  BLOG_CATEGORY_DESCRIPTIONS,
+  BLOG_SITE_NAME,
+  isListedCategory,
+  LISTED_CATEGORIES,
+  type ListedCategory,
+} from '../../siteMetadata';
 
 const PAGE_SIZE = 6;
 
 export const revalidate = 3600;
 
-type Params = Promise<{ category: Category }>;
+type Params = Promise<{ category: string }>;
 type SearchParams = Promise<{
   page?: string;
 }>;
@@ -27,40 +34,45 @@ interface Props {
   searchParams: SearchParams;
 }
 
-export async function generateStaticParams() {
-  return [
-    Category.ENGINEERING,
-    Category.DESIGN,
-    Category.DATA_SCIENCE,
-    Category.LIFE_STYLE,
-    Category.OTHER,
-  ].map((category) => ({
+export interface CategoryStaticParameter {
+  category: ListedCategory;
+}
+
+export async function generateStaticParams(): Promise<
+  CategoryStaticParameter[]
+> {
+  return LISTED_CATEGORIES.map((category) => ({
     category,
   }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { category } = await params;
+  if (!isListedCategory(category)) {
+    notFound();
+  }
 
   const ogImageUrl = getDefaultOgImageUrl();
-  const description = `${category} カテゴリの記事一覧`;
+  const displayName = getCategoryDisplayName(category);
+  const description = BLOG_CATEGORY_DESCRIPTIONS[category];
 
   return {
-    title: category,
+    title: displayName,
+    description,
     alternates: {
       canonical: `/category/${category}`,
     },
     openGraph: {
-      title: category,
+      title: displayName,
       description,
       type: 'website',
       locale: 'ja_JP',
-      siteName: 'K2.B.G Technology Blog',
+      siteName: BLOG_SITE_NAME,
       images: [{ url: ogImageUrl, width: 1200, height: 630 }],
     },
     twitter: {
       card: 'summary_large_image',
-      title: category,
+      title: displayName,
       description,
       images: [ogImageUrl],
     },
@@ -69,6 +81,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function Page({ params, searchParams }: Props) {
   const { category } = await params;
+  if (!isListedCategory(category)) {
+    notFound();
+  }
+  const listedCategory = category;
 
   const { page = '1' } = await searchParams;
   const currentPage = Number(page);
@@ -79,19 +95,19 @@ export default async function Page({ params, searchParams }: Props) {
   async function fetchArticles() {
     return fetchPostSummariesByCategory
       .execute({
-        category,
+        category: listedCategory,
         page: currentPage,
         pageSize: PAGE_SIZE,
       })
       .catch((error) => {
         if (error instanceof UseCaseError) {
           postLogger.warn(
-            { err: error, category, page: currentPage },
+            { err: error, category: listedCategory, page: currentPage },
             'Invalid category page request'
           );
         } else {
           postLogger.error(
-            { err: error, category, page: currentPage },
+            { err: error, category: listedCategory, page: currentPage },
             'Failed to fetch post summaries by category'
           );
         }
@@ -107,10 +123,10 @@ export default async function Page({ params, searchParams }: Props) {
         </PageLayout.Fab>
       }
     >
-      <h1 className="col-span-full text-heading-1 font-bold capitalize">
-        {category}
+      <h1 className="col-span-full text-heading-1 font-bold">
+        {getCategoryDisplayName(listedCategory)}
       </h1>
-      <Suspense key={currentPage} fallback={<ArticlesSkelton />}>
+      <Suspense key={currentPage} fallback={<ArticlesSkeleton />}>
         <Articles fetchArticles={fetchArticles} />
       </Suspense>
     </PageLayout>

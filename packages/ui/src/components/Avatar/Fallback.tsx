@@ -10,7 +10,7 @@ export function Fallback({
     <AvatarPrimitive.Fallback
       {...rest}
       className={cn(
-        'flex h-full w-full items-center justify-center rounded-full bg-gray-200',
+        'flex h-full w-full items-center justify-center rounded-full bg-base-light',
         className
       )}
     />

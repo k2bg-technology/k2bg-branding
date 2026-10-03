@@ -5,6 +5,7 @@
   "hero": {
     "corporateName": "K2.B.G. Technology",
     "officialName": "KK Bit Growth Technology",
+    "imageAlt": "K2.B.G. Technology hero image",
     "slogan": "Scale up your business with the power of IT",
     "description1": "IT is crucial for modern business, but it's also fast-changing and hard to use effectively.",
     "description2": "From my work across various industries, I've seen the challenges and benefits of shifting to IT-based processes. The transition can be tough but the gains in productivity, flexibility, and risk avoidance are significant.",
@@ -12,6 +13,7 @@
   },
   "background": {
     "background": "Background",
+    "imageAlt": "Background section pattern image",
     "description1": "I have a bachelor's in Information Science and Engineering. Early in my career, I worked in design and layout for a printing company. Then, I switched to a trading company to handle purchasing and sales analysis for kitchenware.",
     "description2": "I realized the huge impact IT can have on business efficiency while working in non-IT industries. This led me to become a web application engineer. I've since worked in various sectors like healthcare, e-commerce, and online communication.",
     "description3": "Now, I'm a freelance engineer specializing in UI/UX design and data analysis. I support IT companies in app development and share my expertise through my own platforms.",
@@ -23,6 +25,7 @@
   },
   "skill": {
     "skill": "Skill",
+    "imageAlt": "Skill section pattern image",
     "programming": "Programming and Frameworks",
     "programmingStack": "Nodejs（Javascript、Typescript）、React(ReactNative）、Python、FastAPI、Scrapy、Golang、Wordpress",
     "uiux": "UI・UX",
@@ -40,32 +43,38 @@
     "overview": "overview",
     "webApp": {
       "title": "Web Application Development",
+      "imageAlt": "Stock analysis web application preview image",
       "techStack": "Node.js、Typescript、React、Next.js、Python、FastAPI、Jupyter Notebook",
       "overview": "This is an app for analyzing and predicting stock prices using historical data. Right now, it only lets you view past stock prices and create portfolios. In the future, we'll add a feature to forecast stock prices using backend APIs and display the predictions."
     },
     "mobileApp": {
       "title": "Mobile Application Development",
+      "imageAlt": "Mobile application preview image",
       "techStack": "Node.js、Typescript、React Native、Golang、Mysql、Docker",
       "overview": "This is a product management app that lets you quickly enter and check costs and inventory from your phone. We developed it to eliminate the hassle of using a PC and Excel for tracking product info during fieldwork like buying and inspections."
     },
     "scrapingApp": {
       "title": "Web scraping",
+      "imageAlt": "Web scraping application preview image",
       "techStack": "Python、Scrapy、Selenium、Docker、Bigquery",
       "overview": "In a time where having lots of data is valuable, we think it's crucial to gather information from the web. We've built a tool using the Scrapy framework that can collect data from both static and dynamic web pages. It can also send this data to places like CSV files or BigQuery through a pipeline."
     },
     "blogApp": {
       "title": "Blog",
-      "techStack": "TypeScript、React、Next.js(App Router)、Tailwind CSS、Notion API、Prisma、PostgreSQL、Cloudinary、AWS SES、TanStack Query、Zustand、Zod、Vitest、Storybook",
-      "overview": "A tech blog built with Clean Architecture, covering programming, marketing, design, and finance. Uses Notion as a headless CMS, Prisma + PostgreSQL for persistence, Cloudinary for image optimization, and AWS SES for emails. Features Markdown rendering with syntax highlighting, search, and category filtering."
+      "imageAlt": "Blog application preview image",
+      "techStack": "TypeScript、React、Next.js(App Router)、Tailwind CSS、Notion API、Drizzle ORM、PostgreSQL、Cloudinary、AWS SES、TanStack Query、Zustand、Zod、Vitest、Storybook",
+      "overview": "A tech blog built with Clean Architecture, covering programming, marketing, design, and finance. Uses Notion as a headless CMS, Drizzle ORM + PostgreSQL for persistence, Cloudinary for image optimization, and AWS SES for emails. Features Markdown rendering with syntax highlighting, search, and category filtering."
     },
     "github": "Github",
     "githubApp": "Github App",
     "githubApi": "Github Api",
     "siteURL": "site URL",
-    "preview": "preview"
+    "preview": "preview",
+    "videoFallback": "Your browser does not support HTML5 video."
   },
   "contact": {
     "contact": "Contact",
+    "imageAlt": "Contact section pattern image",
     "description1": "Please fill in the required information and press the send button. It may take a few days to reply, but we will try to reply as soon as possible.",
     "description2": "We are available to work from home for 1-2 hours on weekdays and 3 hours on weekends.",
     "description3": "We are sorry, but we are available outside of the hours of 9:00 to 20:00 on weekdays. We would appreciate it if you could consult with us accordingly.",
@@ -85,5 +94,8 @@
   },
   "footer": {
     "copyright": "\u00A9 K2.B.G. Technology Design: "
+  },
+  "scrollHelper": {
+    "label": "Scroll"
   }
 }

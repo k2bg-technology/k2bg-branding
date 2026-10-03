@@ -14,8 +14,10 @@ interface DocumentProps {
   techStack: string;
   overview: string;
   backgroundImage: string;
+  backgroundImageAlt: string;
   preview: ReactNode;
   previewVideo: string;
+  videoFallback: string;
   siteLink?: ReactNode;
 }
 
@@ -27,9 +29,11 @@ function Document(props: DocumentProps) {
     techStack,
     overview,
     backgroundImage,
+    backgroundImageAlt,
     siteLink,
     preview,
     previewVideo,
+    videoFallback,
   } = props;
 
   return (
@@ -38,7 +42,7 @@ function Document(props: DocumentProps) {
         <Image
           src={backgroundImage}
           fill
-          alt="Stock Image"
+          alt={backgroundImageAlt}
           sizes="(min-width: 768px) 25vw, 100vw"
           className="object-cover brightness-50 transition-all duration-300 ease-in group-hover:scale-110"
         />
@@ -68,7 +72,7 @@ function Document(props: DocumentProps) {
               className="w-full max-w-screen-lg max-h-[calc(100vh-10rem)] aspect-video"
             >
               <source src={previewVideo} type="video/mp4" />
-              <p>Your browser support HTML5 video.</p>
+              <p>{videoFallback}</p>
             </video>
           </div>
         }
@@ -106,6 +110,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               techStack={dictionary.webApp.techStack}
               overview={dictionary.webApp.overview}
               backgroundImage="/images/stock.jpg"
+              backgroundImageAlt={dictionary.webApp.imageAlt}
               preview={
                 <Button
                   color="light"
@@ -116,6 +121,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
                 </Button>
               }
               previewVideo="/videos/stock-app.mp4"
+              videoFallback={dictionary.videoFallback}
               siteLink={
                 <>
                   <ExternalLinkButton
@@ -142,6 +148,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               techStack={dictionary.mobileApp.techStack}
               overview={dictionary.mobileApp.overview}
               backgroundImage="/images/mobile.jpg"
+              backgroundImageAlt={dictionary.mobileApp.imageAlt}
               preview={
                 <Button
                   color="light"
@@ -152,6 +159,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
                 </Button>
               }
               previewVideo="/videos/mobile.mp4"
+              videoFallback={dictionary.videoFallback}
               siteLink={
                 <>
                   <ExternalLinkButton
@@ -178,6 +186,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               techStack={dictionary.scrapingApp.techStack}
               overview={dictionary.scrapingApp.overview}
               backgroundImage="/images/web.jpg"
+              backgroundImageAlt={dictionary.scrapingApp.imageAlt}
               preview={
                 <Button
                   color="light"
@@ -188,6 +197,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
                 </Button>
               }
               previewVideo="/videos/scrapy.mp4"
+              videoFallback={dictionary.videoFallback}
               siteLink={
                 <ExternalLinkButton
                   href="https://github.com/krd-knt/scrapy_snippets"
@@ -206,6 +216,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               techStack={dictionary.blogApp.techStack}
               overview={dictionary.blogApp.overview}
               backgroundImage="/images/blog.jpg"
+              backgroundImageAlt={dictionary.blogApp.imageAlt}
               preview={
                 <Button
                   color="light"
@@ -216,6 +227,7 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
                 </Button>
               }
               previewVideo="/videos/blog.mp4"
+              videoFallback={dictionary.videoFallback}
               siteLink={
                 <ExternalLinkButton
                   href="https://blog.k2bg.technology"
