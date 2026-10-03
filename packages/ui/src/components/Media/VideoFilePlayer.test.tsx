@@ -5,6 +5,7 @@ import { VideoFilePlayer } from './VideoFilePlayer';
 
 const videoFile = 'https://example.com/scene.mp4';
 const captionsFile = 'https://example.com/scene.vtt';
+const captionsName = 'Scene walkthrough';
 
 describe('VideoFilePlayer', () => {
   it('renders a captions track pointing at the given captions source', () => {
@@ -13,6 +14,7 @@ describe('VideoFilePlayer', () => {
         file={videoFile}
         width={600}
         height={400}
+        name={captionsName}
         captionsSource={captionsFile}
       />
     );
@@ -23,19 +25,20 @@ describe('VideoFilePlayer', () => {
   });
 
   it('labels the captions track with the given name', () => {
-    const name = 'Scene walkthrough';
-
     const { container } = render(
       <VideoFilePlayer
         file={videoFile}
         width={600}
         height={400}
-        name={name}
+        name={captionsName}
         captionsSource={captionsFile}
       />
     );
 
-    expect(container.querySelector('track')).toHaveAttribute('label', name);
+    expect(container.querySelector('track')).toHaveAttribute(
+      'label',
+      captionsName
+    );
   });
 
   it('renders no track when no captions source is given', () => {
@@ -44,5 +47,19 @@ describe('VideoFilePlayer', () => {
     );
 
     expect(container.querySelector('track')).toBeNull();
+  });
+
+  it('rejects a captions source without a name at the type level', () => {
+    const element = (
+      // @ts-expect-error -- a captions track needs a name for its accessible name.
+      <VideoFilePlayer
+        file={videoFile}
+        width={600}
+        height={400}
+        captionsSource={captionsFile}
+      />
+    );
+
+    expect(element).toBeDefined();
   });
 });

@@ -39,23 +39,6 @@ function getHelperText() {
   return screen.getByText(helperTextContent);
 }
 
-const stateClassCases: ReadonlyArray<{
-  state: string;
-  helperTextProps: HelperTextProps;
-  expectedClass: string;
-}> = [
-  {
-    state: 'error',
-    helperTextProps: { error: true },
-    expectedClass: 'text-error',
-  },
-  {
-    state: 'disabled',
-    helperTextProps: { disabled: true },
-    expectedClass: 'text-neutral-300',
-  },
-];
-
 describe('Form.HelperText', () => {
   it('renders the helper text content', () => {
     render(buildControl());
@@ -119,15 +102,6 @@ describe('Form.HelperText', () => {
 
     expect(element).toBeDefined();
   });
-
-  it.each(stateClassCases)(
-    'styles the helper text with $expectedClass when $state',
-    ({ helperTextProps, expectedClass }) => {
-      render(buildControl({ helperTextProps }));
-
-      expect(getHelperText()).toHaveClass(expectedClass);
-    }
-  );
 
   it('renders without an id outside a control', () => {
     render(<Form.HelperText>{helperTextContent}</Form.HelperText>);

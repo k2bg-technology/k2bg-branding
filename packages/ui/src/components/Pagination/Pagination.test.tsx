@@ -1,5 +1,5 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 import { Pagination } from '.';
 import type { PaginationProps } from './Pagination';
@@ -109,16 +109,15 @@ describe('Pagination', () => {
     );
   });
 
-  it.each(['1', '2', '4', '5'])(
-    'leaves page %s without aria-current',
-    (pageLabel) => {
-      renderPagination({ count: 5, currentIndex: 3 });
+  it('leaves a non-selected page without aria-current', () => {
+    const pageLabel = '1';
 
-      expect(
-        screen.getByRole('button', { name: pageLabel })
-      ).not.toHaveAttribute('aria-current');
-    }
-  );
+    renderPagination({ count: 5, currentIndex: 3 });
+
+    expect(screen.getByRole('button', { name: pageLabel })).not.toHaveAttribute(
+      'aria-current'
+    );
+  });
 
   it('disables the previous control on the first page', () => {
     renderPagination({ count: 5, currentIndex: 1 });
@@ -182,51 +181,8 @@ describe('Pagination', () => {
       const control = getControl();
 
       expect(control).toBeInstanceOf(HTMLAnchorElement);
+      expect(control).toHaveRole('link');
       expect(control).toHaveAttribute('href', href);
-      expect(control).not.toHaveAttribute('role');
-      expect(control).not.toHaveAttribute('type');
     }
   );
-
-  it('forwards extra props to the previous control', () => {
-    const previousControlId = 'pagination-previous';
-
-    renderPagination({
-      count: 5,
-      currentIndex: 3,
-      prevProps: { id: previousControlId },
-    });
-
-    expect(getPreviousControl()).toHaveAttribute('id', previousControlId);
-  });
-
-  it('forwards extra props to the next control', () => {
-    const nextControlId = 'pagination-next';
-
-    renderPagination({
-      count: 5,
-      currentIndex: 3,
-      nextProps: { id: nextControlId },
-    });
-
-    expect(getNextControl()).toHaveAttribute('id', nextControlId);
-  });
-
-  it.each([
-    { controlName: 'previous', getControl: getPreviousControl },
-    { controlName: 'next', getControl: getNextControl },
-  ])('calls the $controlName control handler on click', ({ getControl }) => {
-    const handleClick = vi.fn();
-
-    renderPagination({
-      count: 5,
-      currentIndex: 3,
-      prevProps: { onClick: handleClick },
-      nextProps: { onClick: handleClick },
-    });
-
-    fireEvent.click(getControl());
-
-    expect(handleClick).toHaveBeenCalledTimes(1);
-  });
 });

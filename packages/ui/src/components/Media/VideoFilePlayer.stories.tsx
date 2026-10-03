@@ -8,7 +8,7 @@ const meta: Meta<typeof VideoFilePlayer> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof VideoFilePlayer>;
 
 export const Default: Story = {
   render: () => (

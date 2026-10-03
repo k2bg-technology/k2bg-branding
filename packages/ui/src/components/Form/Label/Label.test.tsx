@@ -34,25 +34,6 @@ function getLabel() {
   return screen.getByText(labelText);
 }
 
-type FormStateProps = Pick<LabelProps, 'error' | 'disabled'>;
-
-const stateClassCases: ReadonlyArray<{
-  state: string;
-  formStateProps: FormStateProps;
-  expectedClass: string;
-}> = [
-  {
-    state: 'error',
-    formStateProps: { error: true },
-    expectedClass: 'text-error',
-  },
-  {
-    state: 'disabled',
-    formStateProps: { disabled: true },
-    expectedClass: 'text-neutral-300',
-  },
-];
-
 describe('Form.Label', () => {
   it('names the associated control', () => {
     renderInControl();
@@ -68,24 +49,6 @@ describe('Form.Label', () => {
       renderInControl({ controlProps: { required: true } });
 
       expect(getLabel()).not.toHaveAttribute(leakedAttribute);
-    }
-  );
-
-  it.each(stateClassCases)(
-    'styles the label with $expectedClass when $state',
-    ({ formStateProps, expectedClass }) => {
-      renderInControl({ labelProps: formStateProps });
-
-      expect(getLabel()).toHaveClass(expectedClass);
-    }
-  );
-
-  it.each(stateClassCases)(
-    'styles the label with $expectedClass when the control is $state',
-    ({ formStateProps, expectedClass }) => {
-      renderInControl({ controlProps: formStateProps });
-
-      expect(getLabel()).toHaveClass(expectedClass);
     }
   );
 

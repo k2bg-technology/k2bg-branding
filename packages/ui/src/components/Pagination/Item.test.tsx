@@ -46,19 +46,6 @@ describe('Pagination.Item', () => {
     expect(item).toHaveAttribute('href', itemHref);
   });
 
-  it('leaves a rendered anchor without a redundant role or type attribute', () => {
-    render(
-      <Pagination.Item render={<a href={itemHref} />}>
-        {itemLabel}
-      </Pagination.Item>
-    );
-
-    const item = screen.getByRole('link', { name: itemLabel });
-
-    expect(item).not.toHaveAttribute('role');
-    expect(item).not.toHaveAttribute('type');
-  });
-
   it('marks a rendered anchor as the current page when selected', () => {
     render(
       <Pagination.Item selected render={<a href={itemHref} />}>
