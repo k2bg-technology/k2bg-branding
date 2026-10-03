@@ -678,4 +678,18 @@ describe('FileSystemDefinitionSource', () => {
       );
     }
   );
+
+  it.each(['week', 'day'])('loads a %s-grain definition', async (grain) => {
+    await withDefinitionDirectory(
+      { 'valid.json': createDefinition({ grain }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0]?.grain).toBe(grain);
+      }
+    );
+  });
 });

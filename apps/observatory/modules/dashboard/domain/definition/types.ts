@@ -1,3 +1,5 @@
+import type { PeriodGrain } from '../period';
+
 export const SectionKind = {
   STAT_TILES: 'stat-tiles',
   TIME_SERIES: 'time-series',
@@ -109,7 +111,7 @@ export interface DashboardDefinition {
   id: string;
   title: string;
   description?: string;
-  grain: 'month';
+  grain: PeriodGrain;
   timeZone: string;
   locale: string;
   currency?: string;

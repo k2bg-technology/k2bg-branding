@@ -29,7 +29,7 @@ function addParameter(
     return { valid: false, problem: 'repeated-key', key };
   }
   if (key === 'period') {
-    const period = Period.parse(value);
+    const period = Period.parse(dashboard.grain, value);
     return period === null
       ? { valid: false, problem: 'invalid-period', key }
       : { valid: true, state: { ...result.state, period } };

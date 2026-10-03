@@ -4,6 +4,7 @@ import type {
   SourceDefinition,
   ValueTransform,
 } from '../definition';
+import type { PeriodGrain } from '../period';
 
 export interface DateRange {
   firstDate: string;
@@ -18,6 +19,7 @@ export interface MeasureQueryPlan {
 
 interface BaseSectionQueryPlan {
   sectionId: string;
+  grain: PeriodGrain;
   source: SourceDefinition;
   timeZone: string;
   dateRange: DateRange;

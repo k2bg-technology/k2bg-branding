@@ -139,7 +139,7 @@ describe('ResolveDashboardPeriod', () => {
   });
 
   it('keeps the requested period even outside the bounds', async () => {
-    const requestedPeriod = Period.parse('2026-06');
+    const requestedPeriod = Period.parse('month', '2026-06');
     if (requestedPeriod === null) {
       throw new Error('Expected fixture period to parse');
     }
@@ -166,7 +166,7 @@ describe('ResolveDashboardPeriod', () => {
   });
 
   it('keeps a requested period for an empty source and disables navigation', async () => {
-    const requestedPeriod = Period.parse('2026-08');
+    const requestedPeriod = Period.parse('month', '2026-08');
     if (requestedPeriod === null) {
       throw new Error('Expected fixture period to parse');
     }

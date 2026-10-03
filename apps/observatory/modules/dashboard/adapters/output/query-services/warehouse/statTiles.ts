@@ -8,6 +8,7 @@ import {
   calendarDateExpression,
   PERIOD_END_PARAMETER,
   PERIOD_START_PARAMETER,
+  periodKeyExpression,
   TIME_ZONE_PARAMETER,
   timeColumn,
 } from './query';
@@ -51,7 +52,7 @@ export function buildGroupedSectionQuery(
     return `${value} AS ${valueColumnAlias(index)}`;
   });
   const filteredSelections = [
-    `FORMAT_DATE('%Y-%m', ${calendarDate}) AS period`,
+    `${periodKeyExpression(plan.grain, calendarDate)} AS period`,
     `${sourceTime} AS source_time`,
   ].concat(valueSelections);
   const projections = plan.measures.flatMap((measure, index) => {

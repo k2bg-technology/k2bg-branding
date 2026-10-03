@@ -73,7 +73,7 @@ function timeSeriesDashboard(locale = 'en-US'): DashboardDefinition {
 }
 
 function resolution(month: string): DashboardPeriodResolution {
-  const period = Period.parse(month);
+  const period = Period.parse('month', month);
   if (period === null) {
     throw new Error('Expected fixture period to parse');
   }

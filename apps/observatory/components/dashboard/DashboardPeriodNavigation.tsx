@@ -15,17 +15,6 @@ interface Props {
   periodResolution: Promise<DashboardPeriodResolution | null>;
 }
 
-function monthLabel(
-  period: DashboardPeriodResolution['period'],
-  locale: string
-) {
-  return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'long',
-    timeZone: 'UTC',
-  }).format(new Date(Date.UTC(period.year, period.month - 1, 1)));
-}
-
 export async function DashboardPeriodNavigation({
   dashboard,
   state,
@@ -39,7 +28,7 @@ export async function DashboardPeriodNavigation({
     }
     return (
       <PeriodNavigation
-        label={monthLabel(resolution.period, dashboard.locale)}
+        label={resolution.period.label(dashboard.locale)}
         labels={labels}
         previousHref={
           resolution.previousTarget === null
@@ -63,7 +52,7 @@ export async function DashboardPeriodNavigation({
         label={
           state.period === null
             ? labels.period
-            : monthLabel(state.period, dashboard.locale)
+            : state.period.label(dashboard.locale)
         }
         labels={labels}
       />
