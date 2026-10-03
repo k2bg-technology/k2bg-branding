@@ -3,6 +3,7 @@ import type { PeriodGrain, SectionGrain } from '../period';
 export const SectionKind = {
   STAT_TILES: 'stat-tiles',
   TIME_SERIES: 'time-series',
+  TABLE: 'table',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
 
@@ -61,6 +62,32 @@ export type SourceFilter =
 
 export type ValueTransform = 'negate' | 'absolute';
 
+export const TableColumnType = {
+  TEXT: 'text',
+  NUMBER: 'number',
+  DATE: 'date',
+  TIMESTAMP: 'timestamp',
+} as const;
+export type TableColumnType =
+  (typeof TableColumnType)[keyof typeof TableColumnType];
+export type TableAlignment = 'start' | 'end';
+export type SortDirection = 'ascending' | 'descending';
+
+interface TableColumnBase {
+  header: string;
+  column: string;
+  alignment?: TableAlignment;
+}
+
+export type TableColumnDefinition =
+  | (TableColumnBase & { type: 'text' | 'date' | 'timestamp' })
+  | (TableColumnBase & {
+      type: 'number';
+      format: ValueFormat;
+      unit?: string;
+      transform?: ValueTransform;
+    });
+
 export interface SourceDefinition {
   dataset: string;
   view: string;
@@ -109,7 +136,21 @@ export interface TimeSeriesSection {
   }[];
 }
 
-export type Section = StatTilesSection | TimeSeriesSection;
+export interface TableSection {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.TABLE;
+  width?: SectionWidth;
+  columns: TableColumnDefinition[];
+  sort?: { column: string; direction: SortDirection };
+  limit?: number;
+  paging?: { pageSize: number };
+  emptyMessage?: string;
+}
+
+export type AggregatingSection = StatTilesSection | TimeSeriesSection;
+export type Section = AggregatingSection | TableSection;
 
 export interface DashboardDefinition {
   id: string;
@@ -127,6 +168,9 @@ export interface DashboardDefinition {
     previousPeriod?: string;
     nextPeriod?: string;
     truncated?: string;
+    previousPage?: string;
+    nextPage?: string;
+    pagination?: string;
   };
   sections: Section[];
 }

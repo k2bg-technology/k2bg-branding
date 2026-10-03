@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import type { SectionQueryPlan } from '../../../../domain';
+import type { SectionQueryPlan, TableQueryPlan } from '../../../../domain';
 import { AmbiguousLatestValueError, Period } from '../../../../domain';
 import { MappingError } from '../../../shared';
-import { toDateBounds, toSectionData } from './mapper';
+import { toDateBounds, toSectionData, toTableRows } from './mapper';
 
 function plan(): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
   return {
@@ -266,5 +266,67 @@ describe('hour buckets', () => {
       values: [0],
     });
     expect(toSectionData(rows.slice(0, 120), hourPlan)?.truncated).toBe(false);
+  });
+});
+
+const pagedTablePlan: TableQueryPlan = {
+  sectionId: 'detail',
+  source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+  timeZone: 'UTC',
+  dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+  columns: [
+    { column: 'date', type: 'date' },
+    { column: 'description', type: 'text' },
+    { column: 'amount', type: 'number' },
+  ],
+  sort: null,
+  rows: { pageSize: 20, page: 3 },
+};
+
+describe('toTableRows', () => {
+  const warehouseRow = {
+    cell_0: '2026-08-15',
+    cell_1: 'Rent',
+    cell_2: 120000,
+    page_number: 3,
+    page_count: 3,
+  };
+
+  it('maps a page with one cell per declared column', () => {
+    expect(toTableRows([warehouseRow], pagedTablePlan)).toEqual({
+      rows: [['2026-08-15', 'Rent', 120000]],
+      page: { number: 3, count: 3 },
+    });
+  });
+
+  it('maps a limit table without page metadata', () => {
+    const plan = { ...pagedTablePlan, rows: { limit: 10 } };
+    expect(toTableRows([warehouseRow], plan)).toEqual({
+      rows: [['2026-08-15', 'Rent', 120000]],
+      page: null,
+    });
+  });
+
+  it('returns null for no rows', () => {
+    expect(toTableRows([], pagedTablePlan)).toBeNull();
+  });
+
+  it.each([
+    { name: 'text number', row: { ...warehouseRow, cell_1: 5 } },
+    { name: 'invalid date', row: { ...warehouseRow, cell_0: '2026-13-01' } },
+    { name: 'zero page', row: { ...warehouseRow, page_number: 0 } },
+    { name: 'page beyond count', row: { ...warehouseRow, page_number: 4 } },
+  ])('rejects $name', ({ row }) => {
+    expect(() => toTableRows([row], pagedTablePlan)).toThrow(MappingError);
+  });
+
+  it('rejects an invalid timestamp cell', () => {
+    const plan = {
+      ...pagedTablePlan,
+      columns: [{ column: 'recorded_at', type: 'timestamp' as const }],
+    };
+    expect(() =>
+      toTableRows([{ cell_0: 'x', page_number: 1, page_count: 1 }], plan)
+    ).toThrow(MappingError);
   });
 });

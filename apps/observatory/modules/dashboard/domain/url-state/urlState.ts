@@ -1,4 +1,4 @@
-import type { DashboardDefinition } from '../definition';
+import { type DashboardDefinition, SectionKind } from '../definition';
 import { Period } from '../period';
 
 export type SearchParameters = Record<string, string | string[] | undefined>;
@@ -39,8 +39,14 @@ function addParameter(
   }
   if (key.startsWith('page.')) {
     const sectionId = key.slice('page.'.length);
-    if (!dashboard.sections.some((section) => section.id === sectionId)) {
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === sectionId
+    );
+    if (section === undefined) {
       return { valid: false, problem: 'unknown-section', key };
+    }
+    if (section.kind !== SectionKind.TABLE || section.paging === undefined) {
+      return { valid: false, problem: 'unpaged-section', key };
     }
     const page = Number(value);
     if (!PAGE_PATTERN.test(value) || !Number.isSafeInteger(page)) {
@@ -79,6 +85,14 @@ export function parseUrlState(
 
 export function withPeriod(state: UrlState, period: Period): UrlState {
   return { ...state, period, pages: {} };
+}
+
+export function withPage(
+  state: UrlState,
+  sectionId: string,
+  page: number
+): UrlState {
+  return { ...state, pages: { ...state.pages, [sectionId]: page } };
 }
 
 export function serializeUrlState(state: UrlState): string {

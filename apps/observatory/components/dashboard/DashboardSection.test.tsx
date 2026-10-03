@@ -6,7 +6,10 @@ vi.mock('../../modules/dashboard/adapters/shared', () => ({
 }));
 
 import { toSectionData } from '../../modules/dashboard/adapters/output/query-services/warehouse/mapper';
-import type { DashboardDefinition } from '../../modules/dashboard/domain';
+import type {
+  DashboardDefinition,
+  UrlState,
+} from '../../modules/dashboard/domain';
 import {
   AmbiguousLatestValueError,
   Period,
@@ -95,12 +98,21 @@ function data(): SectionData {
   };
 }
 
+const urlState: UrlState = {
+  period: null,
+  controls: {},
+  pages: {},
+  foreign: [],
+};
+
 describe('DashboardSection', () => {
   it('names a time-series chart, fills missing months as gaps, and states its window', async () => {
     const definition = timeSeriesDashboard();
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -133,6 +145,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -155,6 +169,8 @@ describe('DashboardSection', () => {
 
     const first = render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -167,6 +183,8 @@ describe('DashboardSection', () => {
     first.unmount();
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-04')),
@@ -182,6 +200,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -205,6 +225,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -219,6 +241,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -234,16 +258,22 @@ describe('DashboardSection', () => {
   it('keeps a mixed section ready when only a non-comparing previous value is ambiguous', async () => {
     const definition = dashboard();
     const selected = resolution('2026-08');
+    const section = definition.sections[0];
+    if (section.kind !== 'stat-tiles') {
+      throw new Error('Expected stat-tiles fixture');
+    }
     const mapped = toSectionData(
       [
         { period: '2026-07', value_0: 100, value_1: 7, distinct_count_1: 2 },
         { period: '2026-08', value_0: 120, value_1: 9, distinct_count_1: 1 },
       ],
-      planSection(definition.sections[0], selected.period, definition.timeZone)
+      planSection(section, selected.period, definition.timeZone)
     );
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(selected),
@@ -262,6 +292,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-07')),
@@ -277,6 +309,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -292,6 +326,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-09')),
@@ -308,6 +344,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(null),
@@ -324,6 +362,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -339,6 +379,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -358,6 +400,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.reject(new Error('warehouse failed')),
@@ -375,6 +419,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -391,6 +437,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -410,6 +458,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -436,6 +486,8 @@ describe('DashboardSection', () => {
 
     render(
       await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -450,5 +502,147 @@ describe('DashboardSection', () => {
     );
 
     expect(screen.getAllByText('-10 min')).toHaveLength(2);
+  });
+});
+
+function tableDashboard(
+  locale = 'en-US',
+  emptyMessage?: string
+): DashboardDefinition {
+  return {
+    ...dashboard(locale),
+    timeZone: 'Asia/Tokyo',
+    sections: [
+      {
+        id: 'detail',
+        title: 'Largest entries',
+        kind: 'table',
+        source: {
+          dataset: 'metrics',
+          view: 'entries',
+          time: { column: 'recorded_at', type: 'timestamp' },
+        },
+        columns: [
+          { header: 'Date', column: 'occurred_on', type: 'date' },
+          { header: 'Description', column: 'description', type: 'text' },
+          { header: 'Recorded at', column: 'recorded_at', type: 'timestamp' },
+          {
+            header: 'Amount',
+            column: 'amount',
+            type: 'number',
+            format: { type: 'number' },
+          },
+          { header: 'Missing', column: 'missing', type: 'text' },
+        ],
+        paging: { pageSize: 20 },
+        emptyMessage,
+      },
+    ],
+  };
+}
+
+describe('DashboardSection table', () => {
+  it.each([
+    {
+      locale: 'en-US',
+      date: 'Aug 15, 2026',
+      timestamp: /Aug 15, 2026, 6:05[ \u202f]PM/,
+    },
+    { locale: 'ja-JP', date: '2026/08/15', timestamp: '2026/08/15 18:05' },
+  ])('formats table cells in $locale', async ({ locale, date, timestamp }) => {
+    const definition = tableDashboard(locale);
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => null,
+        fetchTableRows: async () => ({
+          rows: [['2026-08-15', 'Rent', 1786784700000, 1200, null]],
+          page: { number: 1, count: 1 },
+        }),
+      })
+    );
+    expect(
+      screen.getByRole('table', { name: 'Largest entries' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getAllByRole('columnheader').map((header) => header.textContent)
+    ).toEqual(['Date', 'Description', 'Recorded at', 'Amount', 'Missing']);
+    expect(screen.getByText(date)).toBeInTheDocument();
+    expect(screen.getByText(timestamp)).toBeInTheDocument();
+    expect(screen.getByText('1,200')).toBeInTheDocument();
+    expect(screen.getByText('—')).toBeInTheDocument();
+    expect(screen.queryByRole('navigation')).not.toBeInTheDocument();
+  });
+
+  it('renders the table empty message when the row query is empty', async () => {
+    const definition = tableDashboard('en-US', 'No entries in this period.');
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => null,
+        fetchTableRows: async () => null,
+      })
+    );
+    expect(
+      screen.getByRole('table', { name: 'Largest entries' })
+    ).toHaveTextContent('No entries in this period.');
+  });
+
+  it('shows the generic empty state without an override', async () => {
+    const definition = tableDashboard();
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => null,
+        fetchTableRows: async () => null,
+      })
+    );
+    expect(screen.getByText('No data available.')).toBeInTheDocument();
+  });
+
+  it('uses the clamped page instead of the URL page', async () => {
+    const definition = tableDashboard();
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState: { ...urlState, pages: { detail: 7 } },
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => null,
+        fetchTableRows: async () => ({
+          rows: [['2026-08-15', 'Rent', 1786784700000, 1200, null]],
+          page: { number: 3, count: 3 },
+        }),
+      })
+    );
+    expect(screen.getByRole('link', { name: '3' })).toHaveAttribute(
+      'aria-current',
+      'page'
+    );
+    expect(screen.getByRole('button', { name: 'Next page' })).toBeDisabled();
+  });
+
+  it('shows unavailable state when the row query fails', async () => {
+    const definition = tableDashboard();
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => null,
+        fetchTableRows: async () => Promise.reject(new Error('driver failed')),
+      })
+    );
+    expect(screen.getByRole('alert')).toBeInTheDocument();
   });
 });

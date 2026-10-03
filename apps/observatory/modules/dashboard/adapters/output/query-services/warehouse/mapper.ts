@@ -5,10 +5,17 @@ import {
   Reduction,
   resolveLatest,
   type SectionQueryPlan,
+  type TableQueryPlan,
 } from '../../../../domain';
-import type { SectionData } from '../../../../use-cases';
+import type { SectionData, TableCell, TableRows } from '../../../../use-cases';
 import { MappingError } from '../../../shared';
-import { distinctCountAlias, valueColumnAlias } from './aliases';
+import {
+  cellColumnAlias,
+  distinctCountAlias,
+  PAGE_COUNT_ALIAS,
+  PAGE_NUMBER_ALIAS,
+  valueColumnAlias,
+} from './aliases';
 import { FIRST_DATE_ALIAS, LAST_DATE_ALIAS } from './query';
 
 function readCalendarDate(row: WarehouseRow, key: string): string {
@@ -103,4 +110,62 @@ export function toSectionData(
       };
     }),
   };
+}
+
+function readCell(
+  row: WarehouseRow,
+  key: string,
+  type: TableQueryPlan['columns'][number]['type']
+): TableCell {
+  const value = row[key];
+  if (value === null) {
+    return null;
+  }
+  if (type === 'number' || type === 'timestamp') {
+    return readNullableNumber(row, key);
+  }
+  if (
+    typeof value === 'string' &&
+    (type !== 'date' || parseCalendarDate(value) !== null)
+  ) {
+    return value;
+  }
+  throw new MappingError(
+    `${key} must be ${type === 'date' ? 'a calendar date' : 'a string'} or null, received ${JSON.stringify(value)}`
+  );
+}
+
+function readPageNumber(row: WarehouseRow, key: string): number {
+  const value = row[key];
+  if (typeof value !== 'number' || !Number.isInteger(value) || value < 1) {
+    throw new MappingError(
+      `${key} must be a positive integer, received ${JSON.stringify(value)}`
+    );
+  }
+  return value;
+}
+
+export function toTableRows(
+  rows: WarehouseRow[],
+  plan: TableQueryPlan
+): TableRows | null {
+  if (rows.length === 0) {
+    return null;
+  }
+  const cells = rows.map((row) =>
+    plan.columns.map((column, index) =>
+      readCell(row, cellColumnAlias(index), column.type)
+    )
+  );
+  if ('limit' in plan.rows) {
+    return { rows: cells, page: null };
+  }
+  const number = readPageNumber(rows[0], PAGE_NUMBER_ALIAS);
+  const count = readPageNumber(rows[0], PAGE_COUNT_ALIAS);
+  if (number > count) {
+    throw new MappingError(
+      `${PAGE_NUMBER_ALIAS} must not exceed ${PAGE_COUNT_ALIAS}`
+    );
+  }
+  return { rows: cells, page: { number, count } };
 }

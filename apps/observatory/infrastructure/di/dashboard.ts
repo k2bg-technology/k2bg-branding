@@ -4,9 +4,11 @@ import {
   systemClock,
   WarehouseFetchPeriodBoundsQueryService,
   WarehouseFetchSectionDataQueryService,
+  WarehouseFetchTableRowsQueryService,
 } from '../../modules/dashboard/adapters';
 import {
   FetchSectionData,
+  FetchTableRows,
   LoadDashboards,
   ResolveDashboardPeriod,
 } from '../../modules/dashboard/use-cases';
@@ -28,5 +30,11 @@ export function createResolveDashboardPeriodUseCase(): ResolveDashboardPeriod {
 export function createFetchSectionDataUseCase(): FetchSectionData {
   return new FetchSectionData(
     new WarehouseFetchSectionDataQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchTableRowsUseCase(): FetchTableRows {
+  return new FetchTableRows(
+    new WarehouseFetchTableRowsQueryService(getWarehouseClient())
   );
 }
