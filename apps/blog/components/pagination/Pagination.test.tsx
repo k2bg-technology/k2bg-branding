@@ -9,11 +9,11 @@ import { Pagination } from './Pagination';
 
 const pathname = '/blog';
 
-let searchParameters = new URLSearchParams();
+const useSearchParamsMock = vi.hoisted(() => vi.fn());
 
 vi.mock('next/navigation', () => ({
   usePathname: () => pathname,
-  useSearchParams: () => searchParameters,
+  useSearchParams: useSearchParamsMock,
 }));
 
 interface RenderOptions {
@@ -25,10 +25,12 @@ interface RenderOptions {
 function renderPagination(options: RenderOptions) {
   const { count, currentPage, category } = options;
 
-  searchParameters = new URLSearchParams({
-    page: String(currentPage),
-    ...(category === undefined ? {} : { category }),
-  });
+  useSearchParamsMock.mockReturnValue(
+    new URLSearchParams({
+      page: String(currentPage),
+      ...(category === undefined ? {} : { category }),
+    })
+  );
 
   return render(<Pagination count={count} />);
 }
