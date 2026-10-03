@@ -1,4 +1,4 @@
-import { type Section, SectionKind } from '../definition';
+import { type AggregatingSection, SectionKind } from '../definition';
 import type { Period } from '../period';
 import { planStatTilesSection } from './statTiles';
 import { planTimeSeriesSection } from './timeSeries';
@@ -9,7 +9,7 @@ function assertNever(value: never): never {
 }
 
 export function planSection(
-  section: Section,
+  section: AggregatingSection,
   period: Period,
   timeZone: string
 ): SectionQueryPlan {

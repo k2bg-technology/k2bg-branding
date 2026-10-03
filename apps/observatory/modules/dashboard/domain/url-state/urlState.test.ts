@@ -2,7 +2,12 @@ import { describe, expect, it } from 'vitest';
 
 import type { DashboardDefinition } from '../definition';
 import { Period } from '../period';
-import { parseUrlState, serializeUrlState, withPeriod } from './urlState';
+import {
+  parseUrlState,
+  serializeUrlState,
+  withPage,
+  withPeriod,
+} from './urlState';
 
 const dashboard: DashboardDefinition = {
   id: 'summary',
@@ -26,6 +31,51 @@ const dashboard: DashboardDefinition = {
           format: { type: 'number' },
         },
       ],
+    },
+    {
+      id: 'topn',
+      title: 'Top N',
+      kind: 'table',
+      source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+      columns: [
+        {
+          header: 'Value',
+          column: 'value',
+          type: 'number',
+          format: { type: 'number' },
+        },
+      ],
+      limit: 10,
+    },
+    {
+      id: 'detail',
+      title: 'Detail',
+      kind: 'table',
+      source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+      columns: [
+        {
+          header: 'Value',
+          column: 'value',
+          type: 'number',
+          format: { type: 'number' },
+        },
+      ],
+      paging: { pageSize: 20 },
+    },
+    {
+      id: 'other',
+      title: 'Other',
+      kind: 'table',
+      source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+      columns: [
+        {
+          header: 'Value',
+          column: 'value',
+          type: 'number',
+          format: { type: 'number' },
+        },
+      ],
+      paging: { pageSize: 20 },
     },
   ],
 };
@@ -53,24 +103,34 @@ describe('parseUrlState', () => {
       key: 'page.unknown',
     },
     {
-      parameters: { 'page.headline': '0' },
+      parameters: { 'page.detail': '0' },
       problem: 'invalid-page',
+      key: 'page.detail',
+    },
+    {
+      parameters: { 'page.detail': 'abc' },
+      problem: 'invalid-page',
+      key: 'page.detail',
+    },
+    {
+      parameters: { 'page.detail': '1e3' },
+      problem: 'invalid-page',
+      key: 'page.detail',
+    },
+    {
+      parameters: { 'page.detail': '1.0' },
+      problem: 'invalid-page',
+      key: 'page.detail',
+    },
+    {
+      parameters: { 'page.headline': '2' },
+      problem: 'unpaged-section',
       key: 'page.headline',
     },
     {
-      parameters: { 'page.headline': 'abc' },
-      problem: 'invalid-page',
-      key: 'page.headline',
-    },
-    {
-      parameters: { 'page.headline': '1e3' },
-      problem: 'invalid-page',
-      key: 'page.headline',
-    },
-    {
-      parameters: { 'page.headline': '1.0' },
-      problem: 'invalid-page',
-      key: 'page.headline',
+      parameters: { 'page.topn': '2' },
+      problem: 'unpaged-section',
+      key: 'page.topn',
     },
     {
       parameters: { 'control.any': 'x', period: '2026-08' },
@@ -89,22 +149,14 @@ describe('parseUrlState', () => {
   });
 
   it('reads a valid period and every section page into the state', () => {
-    const twoSections = {
-      ...dashboard,
-      sections: [
-        dashboard.sections[0],
-        { ...dashboard.sections[0], id: 'detail' },
-      ],
-    };
-
     const result = parseUrlState(
-      { period: '2026-08', 'page.headline': '2', 'page.detail': '3' },
-      twoSections
+      { period: '2026-08', 'page.other': '2', 'page.detail': '3' },
+      dashboard
     );
 
     expect(result.valid && result.state.period?.toString()).toBe('2026-08');
     expect(result.valid && result.state.pages).toEqual({
-      headline: 2,
+      other: 2,
       detail: 3,
     });
   });
@@ -140,7 +192,7 @@ describe('URL period transition', () => {
   it('drops section pages while keeping foreign keys and encoding their delimiters', () => {
     const parameters = Object.fromEntries(
       new URLSearchParams(
-        'period=2026-08&page.headline=2&note%26period=kept%3Dvalue'
+        'period=2026-08&page.detail=2&note%26period=kept%3Dvalue'
       )
     );
     const parsed = parseUrlState(parameters, dashboard);
@@ -160,5 +212,20 @@ describe('URL period transition', () => {
       { key: 'note&period', value: 'kept=value' },
     ]);
     expect(new URLSearchParams(query).getAll('period')).toEqual(['2026-09']);
+  });
+});
+
+describe('URL page transition', () => {
+  it('omits page one and serializes later pages', () => {
+    const parsed = parseUrlState({ period: '2026-08' }, dashboard);
+    if (!parsed.valid) {
+      throw new Error('Expected URL fixture to parse');
+    }
+    expect(serializeUrlState(withPage(parsed.state, 'detail', 1))).toBe(
+      'period=2026-08'
+    );
+    expect(serializeUrlState(withPage(parsed.state, 'detail', 2))).toBe(
+      'period=2026-08&page.detail=2'
+    );
   });
 });

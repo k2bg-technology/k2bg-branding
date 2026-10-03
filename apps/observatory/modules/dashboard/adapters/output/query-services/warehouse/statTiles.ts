@@ -11,6 +11,7 @@ import {
   periodKeyExpression,
   TIME_ZONE_PARAMETER,
   timeColumn,
+  valueExpression,
 } from './query';
 
 const aggregateNames = {
@@ -42,14 +43,7 @@ export function buildGroupedSectionQuery(
   const sourceTime = quoteIdentifier(timeColumn(plan.source.time));
   const filters = buildSourceFilters(plan.source);
   const valueSelections = plan.measures.map((measure, index) => {
-    const value = `CAST(${quoteIdentifier(measure.column)} AS FLOAT64)`;
-    if (measure.transform === 'negate') {
-      return `-(${value}) AS ${valueColumnAlias(index)}`;
-    }
-    if (measure.transform === 'absolute') {
-      return `ABS(${value}) AS ${valueColumnAlias(index)}`;
-    }
-    return `${value} AS ${valueColumnAlias(index)}`;
+    return `${valueExpression(measure.column, measure.transform)} AS ${valueColumnAlias(index)}`;
   });
   const filteredSelections = [
     `${periodKeyExpression(plan.grain, calendarDate)} AS period`,

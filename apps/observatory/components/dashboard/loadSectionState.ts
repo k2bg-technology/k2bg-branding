@@ -2,12 +2,17 @@ import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
   DashboardDefinition,
   Section,
+  StatTilesSection,
+  TableSection,
+  TimeSeriesSection,
 } from '../../modules/dashboard/domain';
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchSectionDataInput,
+  FetchTableRowsInput,
   SectionData,
+  TableRows,
 } from '../../modules/dashboard/use-cases';
 
 interface Input {
@@ -17,12 +22,30 @@ interface Input {
   fetchSectionData: (
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
+  fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
+  page: number;
 }
 
 export type SectionState =
   | {
       status: 'ready';
+      kind: 'stat-tiles';
+      section: StatTilesSection;
       data: SectionData;
+      resolution: DashboardPeriodResolution;
+    }
+  | {
+      status: 'ready';
+      kind: 'time-series';
+      section: TimeSeriesSection;
+      data: SectionData;
+      resolution: DashboardPeriodResolution;
+    }
+  | {
+      status: 'ready';
+      kind: 'table';
+      section: TableSection;
+      data: TableRows;
       resolution: DashboardPeriodResolution;
     }
   | { status: 'empty' }
@@ -33,22 +56,24 @@ export async function loadSectionState({
   section,
   periodResolution,
   fetchSectionData,
+  fetchTableRows,
+  page,
 }: Input): Promise<SectionState> {
   try {
     const resolution = await periodResolution;
     if (resolution === null) {
       return { status: 'empty' };
     }
-    const data = await fetchSectionData({
-      dashboard,
-      section,
-      period: resolution.period,
-    });
-    if (data === null) {
-      return { status: 'empty' };
-    }
     switch (section.kind) {
-      case SectionKind.STAT_TILES:
+      case SectionKind.STAT_TILES: {
+        const data = await fetchSectionData({
+          dashboard,
+          section,
+          period: resolution.period,
+        });
+        if (data === null) {
+          return { status: 'empty' };
+        }
         if (
           !data.buckets.some(
             (bucket) => bucket.period === resolution.period.toString()
@@ -56,16 +81,63 @@ export async function loadSectionState({
         ) {
           return { status: 'empty' };
         }
-        break;
-      case SectionKind.TIME_SERIES:
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          data,
+          resolution,
+        };
+      }
+      case SectionKind.TIME_SERIES: {
+        const data = await fetchSectionData({
+          dashboard,
+          section,
+          period: resolution.period,
+        });
+        if (data === null) {
+          return { status: 'empty' };
+        }
         if (data.buckets.length === 0) {
           return { status: 'empty' };
         }
-        break;
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          data,
+          resolution,
+        };
+      }
+      case SectionKind.TABLE: {
+        const data = await fetchTableRows({
+          dashboard,
+          section,
+          period: resolution.period,
+          page,
+        });
+        if (data === null) {
+          return section.emptyMessage === undefined
+            ? { status: 'empty' }
+            : {
+                status: 'ready',
+                kind: section.kind,
+                section,
+                data: { rows: [], page: null },
+                resolution,
+              };
+        }
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          data,
+          resolution,
+        };
+      }
       default:
         return assertNever(section);
     }
-    return { status: 'ready', data, resolution };
   } catch (error) {
     dashboardLogger.error(
       { err: error, dashboardId: dashboard.id, sectionId: section.id },

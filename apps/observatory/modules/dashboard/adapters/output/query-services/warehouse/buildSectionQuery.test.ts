@@ -30,13 +30,14 @@ function plan(
 describe('buildSectionQuery', () => {
   it('builds the fixture time series with a trailing window, two reductions, and one extra bucket', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections[1];
     const period = Period.parse('month', '2026-08');
-    if (period === null) {
-      throw new Error('Expected fixture period to parse');
+    if (period === null || section.kind !== 'time-series') {
+      throw new Error('Expected time-series fixture and period');
     }
 
     const result = buildSectionQuery(
-      planSection(dashboard.sections[1], period, dashboard.timeZone)
+      planSection(section, period, dashboard.timeZone)
     );
 
     expect(result).toEqual({
@@ -66,11 +67,12 @@ describe('buildSectionQuery', () => {
 
   it('rejects an unsafe time-series measure identifier', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections[1];
     const period = Period.parse('month', '2026-08');
-    if (period === null) {
-      throw new Error('Expected fixture period to parse');
+    if (period === null || section.kind !== 'time-series') {
+      throw new Error('Expected time-series fixture and period');
     }
-    const plan = planSection(dashboard.sections[1], period, dashboard.timeZone);
+    const plan = planSection(section, period, dashboard.timeZone);
     plan.measures[0].column = 'value; DROP TABLE rows';
 
     expect(() => buildSectionQuery(plan)).toThrow(RepositoryError);
@@ -131,13 +133,14 @@ describe('buildSectionQuery', () => {
 
   it('builds a two-month query when the fixture has one comparing tile', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections[0];
     const period = Period.parse('month', '2026-09');
-    if (period === null) {
-      throw new Error('Expected fixture period to parse');
+    if (period === null || section.kind !== 'stat-tiles') {
+      throw new Error('Expected stat-tiles fixture and period');
     }
 
     const result = buildSectionQuery(
-      planSection(dashboard.sections[0], period, dashboard.timeZone)
+      planSection(section, period, dashboard.timeZone)
     );
 
     expect(result.params).toEqual({
@@ -227,13 +230,14 @@ describe('buildSectionQuery', () => {
       ...sampleDashboard,
       grain: 'day',
     });
+    const section = dashboard.sections[0];
     const period = Period.parse('day', '2026-09-03');
-    if (period === null) {
-      throw new Error('Expected fixture period to parse');
+    if (period === null || section.kind !== 'stat-tiles') {
+      throw new Error('Expected stat-tiles fixture and period');
     }
 
     const result = buildSectionQuery(
-      planSection(dashboard.sections[0], period, dashboard.timeZone)
+      planSection(section, period, dashboard.timeZone)
     );
 
     expect(result.params).toEqual({

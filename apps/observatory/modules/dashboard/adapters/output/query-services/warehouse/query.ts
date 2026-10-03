@@ -3,6 +3,7 @@ import {
   PeriodGrain,
   type SourceDefinition,
   type TimeBinding,
+  type ValueTransform,
 } from '../../../../domain';
 import { qualifiedView, quoteIdentifier } from './identifier';
 
@@ -28,6 +29,20 @@ export const LAST_DATE_ALIAS = 'last_date';
 export interface BuiltQuery {
   sql: string;
   params: WarehouseQueryParams;
+}
+
+export function valueExpression(
+  column: string,
+  transform?: ValueTransform
+): string {
+  const value = `CAST(${quoteIdentifier(column)} AS FLOAT64)`;
+  if (transform === 'negate') {
+    return `-(${value})`;
+  }
+  if (transform === 'absolute') {
+    return `ABS(${value})`;
+  }
+  return value;
 }
 
 export function buildSourceFilters(source: SourceDefinition): {

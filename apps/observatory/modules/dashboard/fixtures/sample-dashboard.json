@@ -9,7 +9,10 @@
   "labels": {
     "period": "Review month",
     "previousPeriod": "Earlier month",
-    "nextPeriod": "Later month"
+    "nextPeriod": "Later month",
+    "previousPage": "Earlier page",
+    "nextPage": "Later page",
+    "pagination": "Entry pages"
   },
   "currency": "JPY",
   "revalidate": 86400,
@@ -60,6 +63,47 @@
         { "label": "First measure", "column": "first_value", "reduction": "sum" },
         { "label": "Second measure", "column": "second_value", "reduction": "sum" }
       ]
+    },
+    {
+      "id": "largest-entries",
+      "title": "Largest entries",
+      "kind": "table",
+      "width": "half",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "columns": [
+        { "header": "Date", "column": "occurred_on", "type": "date" },
+        { "header": "Description", "column": "description", "type": "text" },
+        { "header": "Amount", "column": "amount", "type": "number", "format": { "type": "currency" }, "transform": "absolute" }
+      ],
+      "sort": { "column": "amount", "direction": "descending" },
+      "limit": 10
+    },
+    {
+      "id": "entry-details",
+      "title": "Entry details",
+      "kind": "table",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" },
+        "filters": [
+          { "column": "category", "operator": "not-equals", "value": "transfer" }
+        ]
+      },
+      "columns": [
+        { "header": "Date", "column": "occurred_on", "type": "date" },
+        { "header": "Description", "column": "description", "type": "text" },
+        { "header": "Recorded at", "column": "recorded_at", "type": "timestamp" },
+        { "header": "Code", "column": "code", "type": "text", "alignment": "end" },
+        { "header": "Amount", "column": "amount", "type": "number", "format": { "type": "currency" } }
+      ],
+      "sort": { "column": "occurred_on", "direction": "descending" },
+      "paging": { "pageSize": 20 },
+      "emptyMessage": "No entries in this period."
     }
   ]
 }

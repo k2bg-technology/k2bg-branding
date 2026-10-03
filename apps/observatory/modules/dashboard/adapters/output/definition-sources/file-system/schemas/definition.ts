@@ -7,6 +7,7 @@ import {
   SectionKind,
 } from '../../../../../domain';
 import { sourceSchema, statTilesSectionSchema } from './statTiles';
+import { tableSectionSchema } from './table';
 import { timeSeriesSectionSchema } from './timeSeries';
 
 function supportsLocale(locale: string): boolean {
@@ -27,6 +28,12 @@ function supportsTimeZone(timeZone: string): boolean {
   }
 }
 
+const sectionSchemasByKind = {
+  [SectionKind.STAT_TILES]: statTilesSectionSchema,
+  [SectionKind.TIME_SERIES]: timeSeriesSectionSchema,
+  [SectionKind.TABLE]: tableSectionSchema,
+};
+
 const sectionSchemaBase = z.unknown().transform((value, context): Section => {
   const kindResult = z
     .object({ kind: z.string() })
@@ -41,43 +48,29 @@ const sectionSchemaBase = z.unknown().transform((value, context): Section => {
     return z.NEVER;
   }
 
-  switch (kindResult.data.kind) {
-    case SectionKind.STAT_TILES: {
-      const result = statTilesSectionSchema.safeParse(value);
-      if (result.success) {
-        return result.data;
-      }
-      result.error.issues.forEach((issue) => {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: issue.path,
-          message: issue.message,
-        });
-      });
-      return z.NEVER;
-    }
-    case SectionKind.TIME_SERIES: {
-      const result = timeSeriesSectionSchema.safeParse(value);
-      if (result.success) {
-        return result.data;
-      }
-      result.error.issues.forEach((issue) => {
-        context.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: issue.path,
-          message: issue.message,
-        });
-      });
-      return z.NEVER;
-    }
-    default:
-      context.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ['kind'],
-        message: `Unsupported section kind: ${JSON.stringify(kindResult.data.kind)}`,
-      });
-      return z.NEVER;
+  const schema = Object.entries(sectionSchemasByKind).find(
+    ([kind]) => kind === kindResult.data.kind
+  )?.[1];
+  if (schema === undefined) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ['kind'],
+      message: `Unsupported section kind: ${JSON.stringify(kindResult.data.kind)}`,
+    });
+    return z.NEVER;
   }
+  const result = schema.safeParse(value);
+  if (result.success) {
+    return result.data;
+  }
+  result.error.issues.forEach((issue) => {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: issue.path,
+      message: issue.message,
+    });
+  });
+  return z.NEVER;
 });
 const sectionSchema = sectionSchemaBase satisfies z.ZodType<
   Section,
@@ -115,6 +108,9 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       previousPeriod: z.string().min(1).optional(),
       nextPeriod: z.string().min(1).optional(),
       truncated: z.string().min(1).optional(),
+      previousPage: z.string().min(1).optional(),
+      nextPage: z.string().min(1).optional(),
+      pagination: z.string().min(1).optional(),
     })
     .optional(),
   sections: z.array(sectionSchema).min(1),

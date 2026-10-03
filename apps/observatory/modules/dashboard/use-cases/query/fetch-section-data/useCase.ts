@@ -1,15 +1,15 @@
 import {
+  type AggregatingSection,
   type DashboardDefinition,
   type Period,
   planSection,
-  type Section,
 } from '../../../domain';
 import type { SectionData } from '../../shared';
 import type { FetchSectionDataQueryService } from './queryService';
 
 export interface FetchSectionDataInput {
   dashboard: DashboardDefinition;
-  section: Section;
+  section: AggregatingSection;
   period: Period;
 }
 
