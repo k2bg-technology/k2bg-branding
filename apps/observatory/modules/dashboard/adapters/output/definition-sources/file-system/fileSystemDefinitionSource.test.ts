@@ -2,6 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
+import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 
 vi.mock('server-only', () => ({}));
 
@@ -33,6 +34,21 @@ function createTimeSeries(overrides: Record<string, unknown> = {}) {
     window: 12,
     format: { type: 'duration', inputUnit: 'seconds' },
     series: [{ label: 'Elapsed', column: 'elapsed' }],
+    ...overrides,
+  };
+}
+
+function createTable(overrides: Record<string, unknown> = {}) {
+  return {
+    id: 'detail',
+    title: 'Detail',
+    kind: 'table',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    columns: [
+      { header: 'Description', column: 'description', type: 'text' },
+      { header: 'Amount', column: 'amount', type: 'number' },
+    ],
+    paging: { pageSize: 20 },
     ...overrides,
   };
 }
@@ -72,6 +88,94 @@ async function withDefinitionDirectory(
 }
 
 describe('FileSystemDefinitionSource', () => {
+  it('loads the sample fixture with both table kinds and pagination labels', async () => {
+    await withDefinitionDirectory(
+      { 'sample.json': sampleDashboard },
+      async (directory) => {
+        const result = await new FileSystemDefinitionSource(directory).load();
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0].sections.slice(2)).toMatchObject([
+          { id: 'largest-entries', kind: 'table', limit: 10 },
+          { id: 'entry-details', kind: 'table', paging: { pageSize: 20 } },
+        ]);
+        expect(result.definitions[0].labels).toMatchObject({
+          previousPage: 'Earlier page',
+          nextPage: 'Later page',
+          pagination: 'Entry pages',
+        });
+      }
+    );
+  });
+
+  it('defaults an unformatted number column to number format', async () => {
+    await withDefinitionDirectory(
+      { 'table.json': createDefinition({ sections: [createTable()] }) },
+      async (directory) => {
+        const result = await new FileSystemDefinitionSource(directory).load();
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0].sections[0]).toMatchObject({
+          columns: [
+            { type: 'text' },
+            { type: 'number', format: { type: 'number' } },
+          ],
+        });
+      }
+    );
+  });
+
+  it.each([
+    {
+      name: 'zero limit',
+      section: createTable({ paging: undefined, limit: 0 }),
+      path: 'sections[0].limit',
+    },
+    {
+      name: 'oversize page',
+      section: createTable({ paging: { pageSize: 101 } }),
+      path: 'sections[0].paging.pageSize',
+    },
+    {
+      name: 'format on text',
+      section: createTable({
+        columns: [
+          {
+            header: 'Description',
+            column: 'description',
+            type: 'text',
+            format: { type: 'number' },
+          },
+        ],
+      }),
+      path: 'sections[0].columns[0]',
+    },
+    {
+      name: 'invalid type',
+      section: createTable({
+        columns: [
+          { header: 'Description', column: 'description', type: 'integer' },
+        ],
+      }),
+      path: 'sections[0].columns[0].type',
+    },
+    {
+      name: 'invalid direction',
+      section: createTable({
+        sort: { column: 'description', direction: 'desc' },
+      }),
+      path: 'sections[0].sort.direction',
+    },
+  ])('reports table $name at its JSON path', async ({ section, path }) => {
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const result = await new FileSystemDefinitionSource(directory).load();
+        expect(result.definitions).toHaveLength(0);
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({ fileName: 'invalid.json', path })
+        );
+      }
+    );
+  });
   it('loads filters with every operator and transforms on tiles and series', async () => {
     const filters = [
       { column: 'enabled', operator: 'equals', value: true },
