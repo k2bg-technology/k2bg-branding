@@ -21,6 +21,12 @@ export function VideoStreamingPlayer({
   ...rest
 }: Props) {
   return (
-    <iframe {...rest} src={url} width={width} height={height} title={name} />
+    <iframe
+      title={name ?? 'Embedded video player'}
+      {...rest}
+      src={url}
+      width={width}
+      height={height}
+    />
   );
 }

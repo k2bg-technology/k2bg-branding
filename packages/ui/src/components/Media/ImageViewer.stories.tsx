@@ -10,7 +10,7 @@ const meta: Meta<typeof ImageViewer> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ImageViewer>;
 
 export const Default: Story = {
   render: () => (

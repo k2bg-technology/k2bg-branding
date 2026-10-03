@@ -1,6 +1,7 @@
 'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { Pagination as UIPagination } from 'ui';
 
 interface Props {
@@ -11,7 +12,6 @@ export function Pagination(props: Props) {
   const { count } = props;
 
   const pathname = usePathname();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get('page')) || 1;
 
@@ -21,20 +21,30 @@ export function Pagination(props: Props) {
     return `${pathname}?${params.toString()}`;
   };
 
+  const hasPrevPage = currentPage > 1;
+  const hasNextPage = currentPage < count;
+
   return (
     <UIPagination
       count={count}
       currentIndex={currentPage}
       prevProps={{
-        onClick: () => router.push(createPageURL(currentPage - 1)),
+        // Disabled prev/next stay plain <button>s — an <a> can't express the
+        // disabled state (no `:disabled` pseudo-class), so only wire a Link
+        // render when the control is actually enabled.
+        render: hasPrevPage ? (
+          <Link href={createPageURL(currentPage - 1)} />
+        ) : undefined,
       }}
       nextProps={{
-        onClick: () => router.push(createPageURL(currentPage + 1)),
+        render: hasNextPage ? (
+          <Link href={createPageURL(currentPage + 1)} />
+        ) : undefined,
       }}
       renderItem={(index) => (
         <UIPagination.Item
           selected={index === currentPage}
-          onClick={() => router.push(createPageURL(index))}
+          render={<Link href={createPageURL(index)} />}
           data-gtm={`article_click_pagination_${index}`}
         >
           {index}
