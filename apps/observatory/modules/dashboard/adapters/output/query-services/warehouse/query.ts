@@ -13,6 +13,55 @@ export interface BuiltQuery {
   params: WarehouseQueryParams;
 }
 
+export function buildSourceFilters(source: SourceDefinition): {
+  clauses: string[];
+  params: WarehouseQueryParams;
+} {
+  const filters = source.filters ?? [];
+  const clauses = filters.map((filter, filterIndex) => {
+    const column = quoteIdentifier(filter.column);
+    if ('value' in filter) {
+      const operators = {
+        equals: '=',
+        'not-equals': '!=',
+        'less-than': '<',
+        'less-than-or-equal': '<=',
+        'greater-than': '>',
+        'greater-than-or-equal': '>=',
+      };
+      return `${column} ${operators[filter.operator]} @filter_${filterIndex}`;
+    }
+    if ('values' in filter) {
+      const parameters = filter.values.map(
+        (_, valueIndex) => `@filter_${filterIndex}_${valueIndex}`
+      );
+      const operator = filter.operator === 'in' ? 'IN' : 'NOT IN';
+      return `${column} ${operator} (${parameters.join(', ')})`;
+    }
+    return `${column} ${filter.operator === 'is-null' ? 'IS NULL' : 'IS NOT NULL'}`;
+  });
+  const params = filters.reduce<WarehouseQueryParams>(
+    (parameters, filter, filterIndex) => {
+      if ('value' in filter) {
+        parameters[`filter_${filterIndex}`] = filter.value;
+        return parameters;
+      }
+      if ('values' in filter) {
+        return filter.values.reduce<WarehouseQueryParams>(
+          (setParameters, value, valueIndex) => {
+            setParameters[`filter_${filterIndex}_${valueIndex}`] = value;
+            return setParameters;
+          },
+          parameters
+        );
+      }
+      return parameters;
+    },
+    {}
+  );
+  return { clauses, params };
+}
+
 export function timeColumn(time: TimeBinding): string {
   return typeof time === 'string' ? time : time.column;
 }
@@ -29,13 +78,17 @@ export function buildPeriodBoundsQuery(
   timeZone: string
 ): BuiltQuery {
   const calendarDate = calendarDateExpression(source.time);
+  const filters = buildSourceFilters(source);
   return {
     sql: [
       `SELECT FORMAT_DATE('%F', MIN(${calendarDate})) AS ${FIRST_DATE_ALIAS},`,
       `FORMAT_DATE('%F', MAX(${calendarDate})) AS ${LAST_DATE_ALIAS}`,
       `FROM ${qualifiedView(source.dataset, source.view)}`,
+      ...(filters.clauses.length === 0
+        ? []
+        : [`WHERE ${filters.clauses.join('\nAND ')}`]),
       'HAVING COUNT(*) > 0',
     ].join('\n'),
-    params: { [TIME_ZONE_PARAMETER]: timeZone },
+    params: { [TIME_ZONE_PARAMETER]: timeZone, ...filters.params },
   };
 }

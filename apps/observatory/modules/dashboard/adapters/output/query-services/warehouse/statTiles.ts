@@ -4,6 +4,7 @@ import { distinctCountAlias, valueColumnAlias } from './aliases';
 import { qualifiedView, quoteIdentifier } from './identifier';
 import {
   type BuiltQuery,
+  buildSourceFilters,
   calendarDateExpression,
   PERIOD_END_PARAMETER,
   PERIOD_START_PARAMETER,
@@ -38,10 +39,17 @@ export function buildGroupedSectionQuery(
 ): BuiltQuery {
   const calendarDate = calendarDateExpression(plan.source.time);
   const sourceTime = quoteIdentifier(timeColumn(plan.source.time));
-  const valueSelections = plan.measures.map(
-    (measure, index) =>
-      `CAST(${quoteIdentifier(measure.column)} AS FLOAT64) AS ${valueColumnAlias(index)}`
-  );
+  const filters = buildSourceFilters(plan.source);
+  const valueSelections = plan.measures.map((measure, index) => {
+    const value = `CAST(${quoteIdentifier(measure.column)} AS FLOAT64)`;
+    if (measure.transform === 'negate') {
+      return `-(${value}) AS ${valueColumnAlias(index)}`;
+    }
+    if (measure.transform === 'absolute') {
+      return `ABS(${value}) AS ${valueColumnAlias(index)}`;
+    }
+    return `${value} AS ${valueColumnAlias(index)}`;
+  });
   const filteredSelections = [
     `FORMAT_DATE('%Y-%m', ${calendarDate}) AS period`,
     `${sourceTime} AS source_time`,
@@ -65,6 +73,7 @@ export function buildGroupedSectionQuery(
     `FROM ${qualifiedView(plan.source.dataset, plan.source.view)}`,
     `WHERE ${calendarDate} >= CAST(@${PERIOD_START_PARAMETER} AS DATE)`,
     `AND ${calendarDate} <= CAST(@${PERIOD_END_PARAMETER} AS DATE)`,
+    ...filters.clauses.map((clause) => `AND ${clause}`),
     '),',
     'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
     `SELECT filtered.period, ${projections.join(',\n')}`,
@@ -78,6 +87,7 @@ export function buildGroupedSectionQuery(
     [PERIOD_START_PARAMETER]: plan.dateRange.firstDate,
     [PERIOD_END_PARAMETER]: plan.dateRange.lastDate,
     [TIME_ZONE_PARAMETER]: plan.timeZone,
+    ...filters.params,
     ...(bucketLimit === undefined ? {} : { bucket_limit: bucketLimit + 1 }),
   };
   return { sql, params };
