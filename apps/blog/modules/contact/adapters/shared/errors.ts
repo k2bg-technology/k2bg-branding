@@ -1,7 +1,3 @@
-/**
- * Base error class for repository operations.
- * Wraps underlying errors while preserving the original cause.
- */
 export class RepositoryError extends Error {
   constructor(
     message: string,

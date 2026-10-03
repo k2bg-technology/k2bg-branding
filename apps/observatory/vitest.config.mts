@@ -28,6 +28,5 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'dist/'],
     },
-    ...(process.env.CI && { minThreads: 4, maxThreads: 4 }),
   },
 });

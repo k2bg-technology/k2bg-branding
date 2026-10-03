@@ -23,7 +23,7 @@ interface Props {
 // stays strictly below the upper edge.
 const MAX_THRESHOLD = 0.99;
 
-function formatOffset(value: number): string {
+function formatOffset(value: number) {
   return value.toFixed(6);
 }
 

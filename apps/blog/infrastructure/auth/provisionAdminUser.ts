@@ -84,11 +84,10 @@ export async function provisionAdminUser(
     return { status: 'created', userId: existing.user.id };
   }
 
-  const user = await context.internalAdapter.createUser({
-    email,
-    name: input.name,
-    emailVerified: false,
-  });
+  const user = await context.internalAdapter.createUser(
+    { email, name: input.name, emailVerified: false },
+    { method: 'admin' }
+  );
   await context.internalAdapter.linkAccount({
     accountId: user.id,
     providerId: 'credential',

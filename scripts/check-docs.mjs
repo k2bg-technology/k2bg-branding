@@ -3,19 +3,19 @@
  * Verify that agent documentation (AGENTS.md, CLAUDE.md, .claude/**) does not rot:
  * 1. Backtick-quoted repo paths must exist on disk.
  * 2. Exact product version pins must not appear (package.json is the source of truth).
- * 3. Legacy-tech guard: tech that was migrated away from this repo must not re-enter
- *    the docs (AI agents tend to reproduce legacy examples from training data).
+ * 3. Legacy-tech guard: retired dependencies must not re-enter the docs.
  *
  * Append `docs-check-ignore` (e.g. in an HTML comment) to a line to exempt it.
  *
  * Co-located tests: scripts/check-docs.test.mjs
  * (run with `node --test scripts/check-docs.test.mjs`).
  */
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const PATH_PATTERN = /`((?:apps|packages|scripts|\.claude|\.github)\/[^`\s]+)`/g;
+const PATH_PATTERN =
+  /`((?:apps|packages|scripts|\.claude|\.github)\/[^`\s]+)`/g;
 const GLOB_OR_PLACEHOLDER = /[*{}<>[\]]/;
 const IGNORE_MARKER = 'docs-check-ignore';
 
@@ -26,15 +26,18 @@ const IGNORE_MARKER = 'docs-check-ignore';
 const REMOVED_TECH_GUARDS = [
   {
     pattern: /\bprisma\b/i,
-    reason: 'Legacy tech: Prisma was replaced by Drizzle (#255) — use Drizzle in examples',
+    reason:
+      'Legacy tech: Prisma was replaced by Drizzle (#255) — use Drizzle in examples',
   },
   {
     pattern: /radix/i,
-    reason: 'Legacy tech: Radix UI was replaced by Base UI (#254) — use @base-ui/react',
+    reason:
+      'Legacy tech: Radix UI was replaced by Base UI (#254) — use @base-ui/react',
   },
   {
     pattern: /react-webpack5|@swc\/core/,
-    reason: 'Legacy tech: Storybook Webpack/SWC builder was replaced by Vite (#310)',
+    reason:
+      'Legacy tech: Storybook Webpack/SWC builder was replaced by Vite (#310)',
   },
 ];
 
@@ -124,15 +127,16 @@ function runCheck() {
   const repositoryRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
   const documentationFiles = collectDocumentationFiles(repositoryRoot);
 
-  const documentationFailures = documentationFiles.flatMap((documentationFile) =>
-    findDocumentationProblems(
-      readFileSync(join(repositoryRoot, documentationFile), 'utf8'),
-      {
-        fileLabel: documentationFile,
-        pathExists: (referencedPath) =>
-          existsSync(join(repositoryRoot, referencedPath)),
-      }
-    )
+  const documentationFailures = documentationFiles.flatMap(
+    (documentationFile) =>
+      findDocumentationProblems(
+        readFileSync(join(repositoryRoot, documentationFile), 'utf8'),
+        {
+          fileLabel: documentationFile,
+          pathExists: (referencedPath) =>
+            existsSync(join(repositoryRoot, referencedPath)),
+        }
+      )
   );
 
   const portfolioContentFailures = PORTFOLIO_CONTENT_DRIFT_FILES.flatMap(

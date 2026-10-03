@@ -19,7 +19,7 @@ function createMockFetcher(posts: SocialPost[] = []): MockSocialFeedFetcher {
   };
 }
 
-function createSocialPost(id: string): SocialPost {
+function createSocialPost(id: string) {
   return SocialPost.create({
     id: PostId.create(id),
     mediaUrl: MediaUrl.create(`https://example.com/image-${id}.jpg`),
@@ -71,24 +71,39 @@ describe('FetchFeed', () => {
       expect(result[2].id).toBe('3');
     });
 
-    it('uses default limit of 6 when not specified', async () => {
-      const mockFetcher = createMockFetcher([]);
-      const sut = new FetchFeed(mockFetcher);
+    it('returns the six posts selected by the default limit', async () => {
+      const posts = Array.from({ length: 6 }, (_, index) =>
+        createSocialPost(String(index + 1))
+      );
+      const fakeFetcher: SocialFeedFetcher = {
+        fetchUserMedia: async (limit) => (limit === 6 ? posts : []),
+      };
+      const sut = new FetchFeed(fakeFetcher);
 
-      await sut.execute();
+      const result = await sut.execute();
 
-      const defaultLimit = 6;
-      expect(mockFetcher.fetchUserMedia).toHaveBeenCalledWith(defaultLimit);
+      expect(result.map((post) => post.id)).toEqual([
+        '1',
+        '2',
+        '3',
+        '4',
+        '5',
+        '6',
+      ]);
     });
 
-    it('passes custom limit to fetcher', async () => {
-      const mockFetcher = createMockFetcher([]);
-      const sut = new FetchFeed(mockFetcher);
-      const customLimit = 10;
+    it('returns ten posts selected by a custom limit of ten', async () => {
+      const posts = Array.from({ length: 10 }, (_, index) =>
+        createSocialPost(String(index + 1))
+      );
+      const fakeFetcher: SocialFeedFetcher = {
+        fetchUserMedia: async (limit) => (limit === 10 ? posts : []),
+      };
+      const sut = new FetchFeed(fakeFetcher);
 
-      await sut.execute({ limit: customLimit });
+      const result = await sut.execute({ limit: 10 });
 
-      expect(mockFetcher.fetchUserMedia).toHaveBeenCalledWith(customLimit);
+      expect(result).toHaveLength(10);
     });
 
     it('maps VIDEO type with displayUrl from thumbnail', async () => {

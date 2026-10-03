@@ -1,5 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
+import { Sparkline } from '../Chart';
+
 import { StatTile, StatTileSentiment, StatTileTrend } from '.';
 
 const meta = {
@@ -13,6 +15,7 @@ const meta = {
   argTypes: {
     value: { control: 'text' },
     description: { control: 'text' },
+    chart: { control: false },
   },
   parameters: {
     docs: {
@@ -72,6 +75,24 @@ export const ValueOnly: Story = {
     value: '¥48,200',
     delta: undefined,
     description: undefined,
+  },
+};
+
+export const WithChart: Story = {
+  args: {
+    label: 'Steps (7-day avg)',
+    value: '9,842',
+    delta: { label: '+6.2%', trend: StatTileTrend.UP },
+    description: undefined,
+    chart: (
+      <Sparkline
+        label="Daily step count over the last 14 days"
+        values={[
+          8120, 7640, 9210, 10480, 9860, 12240, 11380, 8940, 8210, 9670, 10120,
+          11540, 12980, 9842,
+        ]}
+      />
+    ),
   },
 };
 

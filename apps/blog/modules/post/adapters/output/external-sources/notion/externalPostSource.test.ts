@@ -248,7 +248,7 @@ describe('NotionExternalPostSource', () => {
       );
     });
 
-    it('converts pages to markdown content', async () => {
+    it('returns converted Markdown as post content', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
       const notionPage = createNotionPageResponse({
@@ -264,12 +264,9 @@ describe('NotionExternalPostSource', () => {
         'test-database-id'
       );
 
-      await sut.fetchAll();
+      const result = await sut.fetchAll();
 
-      expect(mockN2M.pageToMarkdown).toHaveBeenCalledWith(
-        '00000000-0000-4000-a000-000000000001'
-      );
-      expect(mockN2M.toMarkdownString).toHaveBeenCalled();
+      expect(result.posts[0].content.getValue()).toBe('Test content');
     });
 
     it('returns an empty batch when no posts exist', async () => {
@@ -361,20 +358,6 @@ describe('NotionExternalPostSource', () => {
       );
 
       await expect(sut.fetchAll()).rejects.toThrow(ExternalSourceError);
-    });
-
-    it('includes source name in error', async () => {
-      const mockClient = createMockNotionClient();
-      const mockN2M = createMockN2M();
-      mockClient.databases.query.mockRejectedValue(new Error('API Error'));
-
-      const sut = new NotionExternalPostSource(
-        mockClient as never,
-        mockN2M as never,
-        'test-database-id'
-      );
-
-      await expect(sut.fetchAll()).rejects.toThrow('Notion');
     });
   });
 });

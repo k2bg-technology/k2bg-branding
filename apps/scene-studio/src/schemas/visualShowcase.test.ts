@@ -12,6 +12,12 @@ const validProps = {
       durationInSeconds: 4,
       caption: 'Morning light',
     },
+    {
+      mediaType: 'video' as const,
+      src: 'https://videos.example.com/quiet-forms.mp4',
+      durationInSeconds: 8,
+      startFromInSeconds: 2,
+    },
   ],
   cta: 'Explore more work',
 };

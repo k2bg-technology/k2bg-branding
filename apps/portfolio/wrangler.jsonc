@@ -4,6 +4,9 @@
   "name": "k2bg-branding-portfolio",
   "compatibility_date": "2026-03-22",
   "compatibility_flags": ["nodejs_compat"],
+  // Runtime variables are managed in the Worker dashboard; without keep_vars
+  // `wrangler deploy` would delete them on every deploy.
+  "keep_vars": true,
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"

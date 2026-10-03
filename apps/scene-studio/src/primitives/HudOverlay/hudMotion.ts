@@ -21,11 +21,20 @@ interface HudMarkStateInput {
   seed?: number;
 }
 
+export interface HudMarkState {
+  kind: HudMarkKind;
+  xInPercent: number;
+  yInPercent: number;
+  sizeInPx: number;
+  rotationInDegrees: number;
+  opacity: number;
+}
+
 export function getHudMarkState({
   markIndex,
   frame,
   seed = 0,
-}: HudMarkStateInput) {
+}: HudMarkStateInput): HudMarkState {
   const markKey = markIndex + 1;
   const kind =
     HUD_MARK_KINDS[
@@ -78,7 +87,7 @@ interface TimecodeInput {
   fps: number;
 }
 
-function padToTwoDigits(value: number): string {
+function padToTwoDigits(value: number) {
   return value.toString().padStart(2, '0');
 }
 

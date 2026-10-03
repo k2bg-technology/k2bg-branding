@@ -1,5 +1,10 @@
 export type {
+  FetchTableCatalogQuery,
   FetchTableCatalogQueryService,
   FetchTableCatalogResult,
 } from './queryService';
-export { FetchTableCatalog, type FetchTableCatalogOutput } from './useCase';
+export {
+  FetchTableCatalog,
+  type FetchTableCatalogInput,
+  type FetchTableCatalogOutput,
+} from './useCase';

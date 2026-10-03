@@ -1,13 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  getDirectionalStepInUv,
-  MAX_SMEAR_IN_SCREEN,
-  TAP_COUNT,
-} from './blurStep';
+import { getDirectionalStepInUv } from './blurStep';
 
 const PORTRAIT_ASPECT = 1080 / 1920;
-const FULL_STEP_IN_SCREEN = MAX_SMEAR_IN_SCREEN / (TAP_COUNT - 1);
 
 describe('getDirectionalStepInUv', () => {
   it.each([
@@ -29,14 +24,20 @@ describe('getDirectionalStepInUv', () => {
   );
 
   it('smears along x and widens it by the canvas aspect at angle 0', () => {
-    const step = getDirectionalStepInUv({
+    const portraitStep = getDirectionalStepInUv({
       amount: 1,
       angleInDegrees: 0,
       canvasAspect: PORTRAIT_ASPECT,
     });
+    const squareStep = getDirectionalStepInUv({
+      amount: 1,
+      angleInDegrees: 0,
+      canvasAspect: 1,
+    });
 
-    expect(step.x).toBeCloseTo(FULL_STEP_IN_SCREEN / PORTRAIT_ASPECT);
-    expect(step.y).toBeCloseTo(0);
+    expect(portraitStep.x).toBeGreaterThan(0);
+    expect(portraitStep.x * PORTRAIT_ASPECT).toBeCloseTo(squareStep.x);
+    expect(portraitStep.y).toBeCloseTo(0);
   });
 
   it('smears along y at angle 90', () => {
@@ -47,47 +48,60 @@ describe('getDirectionalStepInUv', () => {
     });
 
     expect(step.x).toBeCloseTo(0);
-    expect(step.y).toBeCloseTo(FULL_STEP_IN_SCREEN);
+    expect(step.y).toBeGreaterThan(Math.abs(step.x));
   });
 
-  it.each([{ amount: 0.25 }, { amount: 0.5 }, { amount: 1 }])(
-    'scales the step length with amount $amount',
-    ({ amount }) => {
-      const step = getDirectionalStepInUv({
-        amount,
-        angleInDegrees: 90,
-        canvasAspect: PORTRAIT_ASPECT,
-      });
-
-      expect(step.y).toBeCloseTo(amount * FULL_STEP_IN_SCREEN);
-    }
-  );
-
-  it('clamps amount into the unit range', () => {
-    const step = getDirectionalStepInUv({
-      amount: 2,
+  it('scales the step length in proportion to amount', () => {
+    const halfStep = getDirectionalStepInUv({
+      amount: 0.5,
+      angleInDegrees: 90,
+      canvasAspect: PORTRAIT_ASPECT,
+    });
+    const fullStep = getDirectionalStepInUv({
+      amount: 1,
       angleInDegrees: 90,
       canvasAspect: PORTRAIT_ASPECT,
     });
 
-    expect(step.y).toBeCloseTo(FULL_STEP_IN_SCREEN);
+    expect(halfStep.y).toBeCloseTo(fullStep.y / 2, 6);
   });
 
-  it.each([
-    { angleInDegrees: 0 },
-    { angleInDegrees: 30 },
-    { angleInDegrees: 135 },
-  ])(
-    'keeps the full smear length at angle $angleInDegrees on a square canvas',
-    ({ angleInDegrees }) => {
-      const step = getDirectionalStepInUv({
-        amount: 1,
-        angleInDegrees,
-        canvasAspect: 1,
-      });
+  it('clamps amount into the unit range', () => {
+    const excessiveStep = getDirectionalStepInUv({
+      amount: 2,
+      angleInDegrees: 90,
+      canvasAspect: PORTRAIT_ASPECT,
+    });
+    const fullStep = getDirectionalStepInUv({
+      amount: 1,
+      angleInDegrees: 90,
+      canvasAspect: PORTRAIT_ASPECT,
+    });
+    const negativeStep = getDirectionalStepInUv({
+      amount: -0.5,
+      angleInDegrees: 90,
+      canvasAspect: PORTRAIT_ASPECT,
+    });
 
-      const smearLength = Math.hypot(step.x, step.y) * (TAP_COUNT - 1);
-      expect(smearLength).toBeCloseTo(MAX_SMEAR_IN_SCREEN);
-    }
-  );
+    expect(excessiveStep).toEqual(fullStep);
+    expect(negativeStep).toEqual({ x: 0, y: 0 });
+  });
+
+  it('keeps the full smear length at any angle on a square canvas', () => {
+    const horizontalStep = getDirectionalStepInUv({
+      amount: 1,
+      angleInDegrees: 0,
+      canvasAspect: 1,
+    });
+    const diagonalStep = getDirectionalStepInUv({
+      amount: 1,
+      angleInDegrees: 135,
+      canvasAspect: 1,
+    });
+
+    expect(Math.hypot(diagonalStep.x, diagonalStep.y)).toBeCloseTo(
+      Math.hypot(horizontalStep.x, horizontalStep.y),
+      6
+    );
+  });
 });

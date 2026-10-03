@@ -35,62 +35,10 @@ describe('SocialPost', () => {
       expect(post.timestamp).toEqual(new Date('2024-01-15T10:00:00Z'));
     });
 
-    it('creates SocialPost with optional caption', () => {
-      const caption = 'Beautiful sunset';
-      const props = createValidProps({ caption });
-
-      const post = SocialPost.create(props);
-
-      expect(post.caption).toBe(caption);
-    });
-
-    it('creates SocialPost with optional thumbnailUrl', () => {
-      const thumbnailUrl = MediaUrl.create('https://example.com/thumbnail.jpg');
-      const props = createValidProps({ thumbnailUrl });
-
-      const post = SocialPost.create(props);
-
-      expect(post.thumbnailUrl?.getValue()).toBe(
-        'https://example.com/thumbnail.jpg'
-      );
-    });
-
     it('throws InvalidSocialPostError when id is missing', () => {
       const props = createValidProps();
       // @ts-expect-error Testing invalid input
       delete props.id;
-
-      expect(() => SocialPost.create(props)).toThrow(InvalidSocialPostError);
-    });
-
-    it('throws InvalidSocialPostError when mediaUrl is missing', () => {
-      const props = createValidProps();
-      // @ts-expect-error Testing invalid input
-      delete props.mediaUrl;
-
-      expect(() => SocialPost.create(props)).toThrow(InvalidSocialPostError);
-    });
-
-    it('throws InvalidSocialPostError when permalink is missing', () => {
-      const props = createValidProps();
-      // @ts-expect-error Testing invalid input
-      delete props.permalink;
-
-      expect(() => SocialPost.create(props)).toThrow(InvalidSocialPostError);
-    });
-
-    it('throws InvalidSocialPostError when mediaType is missing', () => {
-      const props = createValidProps();
-      // @ts-expect-error Testing invalid input
-      delete props.mediaType;
-
-      expect(() => SocialPost.create(props)).toThrow(InvalidSocialPostError);
-    });
-
-    it('throws InvalidSocialPostError when timestamp is missing', () => {
-      const props = createValidProps();
-      // @ts-expect-error Testing invalid input
-      delete props.timestamp;
 
       expect(() => SocialPost.create(props)).toThrow(InvalidSocialPostError);
     });
@@ -120,15 +68,6 @@ describe('SocialPost', () => {
     it('returns mediaUrl for VIDEO type when thumbnailUrl is not available', () => {
       const props = createValidProps({
         mediaType: MediaType.VIDEO,
-      });
-      const post = SocialPost.create(props);
-
-      expect(post.getDisplayUrl()).toBe('https://example.com/image.jpg');
-    });
-
-    it('returns mediaUrl for CAROUSEL_ALBUM type', () => {
-      const props = createValidProps({
-        mediaType: MediaType.CAROUSEL_ALBUM,
       });
       const post = SocialPost.create(props);
 

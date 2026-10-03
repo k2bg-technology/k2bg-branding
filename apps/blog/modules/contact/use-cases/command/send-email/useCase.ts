@@ -8,11 +8,6 @@ export interface SendEmailInput {
   message: string;
 }
 
-/**
- * SendEmail Use Case
- *
- * Sends a confirmation email to the contact form submitter.
- */
 export class SendEmail {
   constructor(
     private readonly emailSender: EmailSender,

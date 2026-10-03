@@ -58,18 +58,5 @@ describe('FetchPost', () => {
         sut.execute({ id: '550e8400-e29b-41d4-a716-446655440000' })
       ).rejects.toThrow(PostNotFoundError);
     });
-
-    it('calls query service with correct PostId', async () => {
-      const post = createPost();
-      const fetchPost = vi.fn().mockResolvedValue({ post, author: null });
-      const queryService = createMockQueryService({ fetchPost });
-      const sut = new FetchPost(queryService);
-
-      await sut.execute({ id: post.id.getValue() });
-
-      expect(fetchPost).toHaveBeenCalledTimes(1);
-      const calledPostId = fetchPost.mock.calls[0][0];
-      expect(calledPostId.getValue()).toBe(post.id.getValue());
-    });
   });
 });

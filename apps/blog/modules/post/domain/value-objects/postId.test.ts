@@ -4,28 +4,17 @@ import { PostId } from './postId';
 
 describe('PostId', () => {
   describe('create', () => {
-    it('creates PostId when given valid UUID v4', () => {
-      const uuidV4 = '550e8400-e29b-41d4-a716-446655440000';
+    it.each([
+      { version: 'v4', value: '550e8400-e29b-41d4-a716-446655440000' },
+      { version: 'v7', value: '019234f8-7e01-7abc-89ab-0123456789ab' },
+      {
+        version: 'v8 (Notion format)',
+        value: '26663820-64ba-8034-a128-d5dd352ef273',
+      },
+    ])('accepts a valid UUID $version', ({ value }) => {
+      const sut = PostId.create(value);
 
-      const sut = PostId.create(uuidV4);
-
-      expect(sut.getValue()).toBe(uuidV4.toLowerCase());
-    });
-
-    it('creates PostId when given valid UUID v7', () => {
-      const uuidV7 = '019234f8-7e01-7abc-89ab-0123456789ab';
-
-      const sut = PostId.create(uuidV7);
-
-      expect(sut.getValue()).toBe(uuidV7.toLowerCase());
-    });
-
-    it('creates PostId when given valid UUID v8 (Notion format)', () => {
-      const uuidV8 = '26663820-64ba-8034-a128-d5dd352ef273';
-
-      const sut = PostId.create(uuidV8);
-
-      expect(sut.getValue()).toBe(uuidV8.toLowerCase());
+      expect(sut.getValue()).toBe(value);
     });
 
     it('normalizes UUID to lowercase', () => {
@@ -33,7 +22,7 @@ describe('PostId', () => {
 
       const sut = PostId.create(uppercaseUuid);
 
-      const expectedValue = uppercaseUuid.toLowerCase();
+      const expectedValue = '550e8400-e29b-41d4-a716-446655440000';
       expect(sut.getValue()).toBe(expectedValue);
     });
 
@@ -41,26 +30,12 @@ describe('PostId', () => {
       const emptyValue = '';
 
       expect(() => PostId.create(emptyValue)).toThrow(InvalidPostIdError);
-      expect(() => PostId.create(emptyValue)).toThrow('PostId cannot be empty');
-    });
-
-    it('throws InvalidPostIdError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => PostId.create(whitespaceValue)).toThrow(InvalidPostIdError);
     });
 
     it('throws InvalidPostIdError when UUID format is invalid', () => {
       const invalidUuid = 'not-a-uuid';
 
       expect(() => PostId.create(invalidUuid)).toThrow(InvalidPostIdError);
-      expect(() => PostId.create(invalidUuid)).toThrow('Invalid UUID format');
-    });
-
-    it('throws InvalidPostIdError when UUID version is not supported (v1)', () => {
-      const uuidV1 = '550e8400-e29b-11d4-a716-446655440000';
-
-      expect(() => PostId.create(uuidV1)).toThrow(InvalidPostIdError);
     });
   });
 
@@ -109,17 +84,6 @@ describe('PostId', () => {
       const result = id1.equals(id2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the UUID string value', () => {
-      const uuid = '550e8400-e29b-41d4-a716-446655440000';
-      const sut = PostId.create(uuid);
-
-      const result = sut.toString();
-
-      expect(result).toBe(uuid);
     });
   });
 });

@@ -1,0 +1,61 @@
+{
+  "id": "sample-dashboard",
+  "title": "Sample dashboard",
+  "description": "A fixture for the dashboard walking skeleton.",
+  "grain": "month",
+  "timeZone": "Asia/Tokyo",
+  "locale": "ja-JP",
+  "defaultPeriod": "last-complete",
+  "labels": {
+    "period": "Review month",
+    "previousPeriod": "Earlier month",
+    "nextPeriod": "Later month"
+  },
+  "currency": "JPY",
+  "revalidate": 86400,
+  "sections": [
+    {
+      "id": "monthly-summary",
+      "title": "Monthly summary",
+      "kind": "stat-tiles",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "monthly_summary",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "tiles": [
+        {
+          "label": "Total",
+          "column": "total_value",
+          "reduction": "sum",
+          "comparison": { "direction": "higher-is-better" },
+          "format": { "type": "currency" }
+        },
+        {
+          "label": "Latest rate",
+          "column": "latest_rate",
+          "reduction": "latest",
+          "format": { "type": "percent", "inputScale": "ratio" }
+        }
+      ]
+    },
+    {
+      "id": "monthly-trend",
+      "title": "Monthly trend",
+      "kind": "time-series",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "monthly_summary",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "window": 12,
+      "variant": "area",
+      "stacked": true,
+      "format": { "type": "number" },
+      "series": [
+        { "label": "First measure", "column": "first_value", "reduction": "sum" },
+        { "label": "Second measure", "column": "second_value", "reduction": "sum" }
+      ]
+    }
+  ]
+}

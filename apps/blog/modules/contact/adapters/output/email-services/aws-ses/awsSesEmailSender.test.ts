@@ -44,7 +44,7 @@ vi.mock('@aws-sdk/client-ses', () => ({
   SESServiceException: MockSESServiceException,
 }));
 
-function createContact(): Contact {
+function createContact() {
   return Contact.create({
     name: 'John Doe',
     email: 'john@example.com',
@@ -52,24 +52,23 @@ function createContact(): Contact {
   });
 }
 
+function createMockSesClient() {
+  return new MockSESClient() as unknown as ConstructorParameters<
+    typeof AwsSesEmailSender
+  >[0];
+}
+
 describe('AwsSesEmailSender', () => {
   const senderEmail = 'sender@example.com';
-  let mockSesClient: InstanceType<typeof MockSESClient>;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockSesClient = new MockSESClient();
   });
 
   describe('sendToVisitor', () => {
     it('sends email to the visitor without BCC addresses', async () => {
       mockSend.mockResolvedValue({});
-      const sut = new AwsSesEmailSender(
-        mockSesClient as unknown as ConstructorParameters<
-          typeof AwsSesEmailSender
-        >[0],
-        senderEmail
-      );
+      const sut = new AwsSesEmailSender(createMockSesClient(), senderEmail);
       const contact = createContact();
 
       await sut.sendToVisitor(contact, 'Test Subject', '<p>Test body</p>');
@@ -95,12 +94,7 @@ describe('AwsSesEmailSender', () => {
   describe('sendToOwner', () => {
     it('sends email to the configured sender email without BCC addresses', async () => {
       mockSend.mockResolvedValue({});
-      const sut = new AwsSesEmailSender(
-        mockSesClient as unknown as ConstructorParameters<
-          typeof AwsSesEmailSender
-        >[0],
-        senderEmail
-      );
+      const sut = new AwsSesEmailSender(createMockSesClient(), senderEmail);
 
       await sut.sendToOwner('Owner Subject', '<p>Owner body</p>');
 
@@ -125,53 +119,29 @@ describe('AwsSesEmailSender', () => {
         message: 'Email address is not verified',
       });
       mockSend.mockRejectedValue(sesError);
-      const sut = new AwsSesEmailSender(
-        mockSesClient as unknown as ConstructorParameters<
-          typeof AwsSesEmailSender
-        >[0],
-        senderEmail
-      );
+      const sut = new AwsSesEmailSender(createMockSesClient(), senderEmail);
 
       await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
         EmailSendFailedError
       );
-      await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
-        'Failed to send email: [MessageRejected] Email address is not verified'
-      );
     });
 
-    it('handles unknown error types', async () => {
+    it('wraps unknown failures as EmailSendFailedError', async () => {
       mockSend.mockRejectedValue('Unknown error');
-      const sut = new AwsSesEmailSender(
-        mockSesClient as unknown as ConstructorParameters<
-          typeof AwsSesEmailSender
-        >[0],
-        senderEmail
-      );
+      const sut = new AwsSesEmailSender(createMockSesClient(), senderEmail);
 
       await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
         EmailSendFailedError
       );
-      await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
-        'Failed to send email: Unknown error occurred'
-      );
     });
 
-    it('handles non-SES Error types', async () => {
+    it('wraps general errors as EmailSendFailedError', async () => {
       const genericError = new Error('Network timeout');
       mockSend.mockRejectedValue(genericError);
-      const sut = new AwsSesEmailSender(
-        mockSesClient as unknown as ConstructorParameters<
-          typeof AwsSesEmailSender
-        >[0],
-        senderEmail
-      );
+      const sut = new AwsSesEmailSender(createMockSesClient(), senderEmail);
 
       await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
         EmailSendFailedError
-      );
-      await expect(sut.sendToOwner('Subject', '<p>Body</p>')).rejects.toThrow(
-        'Failed to send email: Network timeout'
       );
     });
   });

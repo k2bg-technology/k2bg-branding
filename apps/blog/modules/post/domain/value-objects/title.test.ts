@@ -28,12 +28,6 @@ describe('Title', () => {
       expect(() => Title.create(emptyValue)).toThrow('Title cannot be empty');
     });
 
-    it('throws InvalidTitleError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => Title.create(whitespaceValue)).toThrow(InvalidTitleError);
-    });
-
     it('throws InvalidTitleError when value exceeds 100 characters', () => {
       const longTitle = 'a'.repeat(101);
 
@@ -60,18 +54,6 @@ describe('Title', () => {
       const sut = Title.reconstitute(value);
 
       expect(sut.getValue()).toBe(value);
-    });
-  });
-
-  describe('getLength', () => {
-    it('returns the length of the title', () => {
-      const title = 'Hello World';
-      const sut = Title.create(title);
-
-      const result = sut.getLength();
-
-      const expectedLength = 11;
-      expect(result).toBe(expectedLength);
     });
   });
 

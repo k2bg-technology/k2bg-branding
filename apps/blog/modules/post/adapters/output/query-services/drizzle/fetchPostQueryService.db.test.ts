@@ -21,7 +21,7 @@ async function seedAuthorAndPost(
     author?: Parameters<typeof createDrizzleAuthorRow>[0];
     postOverrides?: Parameters<typeof createPost>[0];
   } = {}
-): Promise<{ postUuid: string; authorUuid: string }> {
+) {
   const db = getTestDb();
   const author = createDrizzleAuthorRow(options.author);
   await db.insert(authors).values({

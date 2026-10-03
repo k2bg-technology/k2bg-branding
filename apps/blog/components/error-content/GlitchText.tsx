@@ -12,6 +12,14 @@ interface GlitchTextProps {
   intensity?: 'low' | 'medium' | 'high';
 }
 
+type GlitchIntensity = NonNullable<GlitchTextProps['intensity']>;
+
+const glitchIntervalByIntensity: Record<GlitchIntensity, number> = {
+  low: 10000,
+  medium: 6000,
+  high: 4000,
+};
+
 export function GlitchText({
   children,
   className,
@@ -20,8 +28,7 @@ export function GlitchText({
   const [isGlitching, setIsGlitching] = useState(false);
 
   useEffect(() => {
-    const interval =
-      intensity === 'high' ? 4000 : intensity === 'medium' ? 6000 : 10000;
+    const interval = glitchIntervalByIntensity[intensity];
     const glitchInterval = setInterval(() => {
       setIsGlitching(true);
       setTimeout(() => setIsGlitching(false), 250);

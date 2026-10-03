@@ -26,7 +26,7 @@ const PULSE_PERIOD_IN_FRAMES = 180;
 const BASE_OPACITY = 0.02;
 const PULSE_PEAK_OPACITY = 0.4;
 
-function getPulseBell(frame: number, pulsePhase: number): number {
+function getPulseBell(frame: number, pulsePhase: number) {
   const wave = Math.sin(
     (frame * 2 * Math.PI) / PULSE_PERIOD_IN_FRAMES + pulsePhase
   );
@@ -35,7 +35,18 @@ function getPulseBell(frame: number, pulsePhase: number): number {
   return Math.max(0, wave) ** 4;
 }
 
-export function getLightLeakMotion(frame: number) {
+type LightLeakWash = (typeof LIGHT_LEAK_WASHES)[number];
+
+export interface LightLeakMotion {
+  name: LightLeakWash['name'];
+  color: LightLeakWash['color'];
+  centerXInPercent: number;
+  centerYInPercent: number;
+  radiusInPercent: LightLeakWash['radiusInPercent'];
+  opacity: number;
+}
+
+export function getLightLeakMotion(frame: number): LightLeakMotion[] {
   return LIGHT_LEAK_WASHES.map((wash) => ({
     name: wash.name,
     color: wash.color,

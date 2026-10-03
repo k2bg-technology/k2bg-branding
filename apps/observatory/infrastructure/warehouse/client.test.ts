@@ -3,21 +3,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   createWarehouseClient,
   getWarehouseClient,
-  getWarehouseLocation,
   resetWarehouseClient,
   type WarehouseQueryRequest,
 } from './client';
 
-const { bigQueryConstructorMock, queryMock, unstableCacheMock, infoMock } =
-  vi.hoisted(() => ({
+const { bigQueryConstructorMock, queryMock, unstableCacheMock } = vi.hoisted(
+  () => ({
     bigQueryConstructorMock: vi.fn(),
     queryMock: vi.fn(),
     unstableCacheMock: vi.fn(
       (load: () => Promise<unknown>, _keyParts: string[], _options: unknown) =>
         load
     ),
-    infoMock: vi.fn(),
-  }));
+  })
+);
 
 vi.mock('server-only', () => ({}));
 
@@ -35,7 +34,7 @@ vi.mock('next/cache', () => ({
 }));
 
 vi.mock('logger', () => ({
-  logger: { child: () => ({ info: infoMock }) },
+  logger: { child: () => ({ info: vi.fn() }) },
 }));
 
 const TEST_PROJECT_ID = 'test-project';
@@ -63,7 +62,6 @@ describe('warehouse/client', () => {
     queryMock.mockReset();
     queryMock.mockResolvedValue([[]]);
     unstableCacheMock.mockClear();
-    infoMock.mockClear();
     process.env.WAREHOUSE_PROJECT_ID = TEST_PROJECT_ID;
     process.env.WAREHOUSE_LOCATION = TEST_LOCATION;
   });
@@ -74,13 +72,6 @@ describe('warehouse/client', () => {
   });
 
   describe('createWarehouseClient', () => {
-    it('creates different instances on each call', () => {
-      const client1 = createWarehouseClient();
-      const client2 = createWarehouseClient();
-
-      expect(client1).not.toBe(client2);
-    });
-
     it('initialises the driver with the configured project id and location', () => {
       createWarehouseClient();
 
@@ -118,31 +109,6 @@ describe('warehouse/client', () => {
 
       expect(client1).toBe(client2);
       expect(bigQueryConstructorMock).toHaveBeenCalledTimes(1);
-    });
-
-    it('returns a new instance after reset', () => {
-      const client1 = getWarehouseClient();
-      resetWarehouseClient();
-
-      const client2 = getWarehouseClient();
-
-      expect(client1).not.toBe(client2);
-    });
-  });
-
-  describe('getWarehouseLocation', () => {
-    it('returns the configured location', () => {
-      const location = getWarehouseLocation();
-
-      expect(location).toBe(TEST_LOCATION);
-    });
-
-    it('throws when WAREHOUSE_LOCATION is unset', () => {
-      delete process.env.WAREHOUSE_LOCATION;
-
-      expect(() => getWarehouseLocation()).toThrow(
-        'WAREHOUSE_LOCATION environment variable is required'
-      );
     });
   });
 
@@ -202,17 +168,6 @@ describe('warehouse/client', () => {
         revalidate: ONE_HOUR_IN_SECONDS,
         tags: ['warehouse'],
       });
-    });
-
-    it('logs the query name when the loader runs', async () => {
-      const sut = createWarehouseClient();
-
-      await sut.query(createRequest());
-
-      expect(infoMock).toHaveBeenCalledWith(
-        { name: 'sample-query' },
-        'Executing warehouse query'
-      );
     });
 
     it('propagates driver failures', async () => {

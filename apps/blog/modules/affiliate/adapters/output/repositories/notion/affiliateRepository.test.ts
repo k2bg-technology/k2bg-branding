@@ -186,37 +186,35 @@ describe('NotionAffiliateRepository', () => {
       await expect(sut.findByIds(ids)).rejects.toThrow(ExternalSourceError);
     });
 
-    it('fetches pages in parallel', async () => {
+    it('starts every page fetch before any page fetch resolves', async () => {
       const mockClient = createMockNotionClient();
-      const callOrder: string[] = [];
-      mockClient.pages.retrieve.mockImplementation(async ({ page_id }) => {
-        callOrder.push(`start-${page_id}`);
-        await new Promise((resolve) => setTimeout(resolve, 10));
-        callOrder.push(`end-${page_id}`);
-        return createNotionAffiliatePageResponse({
-          type: 'AFFILIATE_BANNER',
-          id: page_id,
-        });
-      });
+      const requestedIds: string[] = [];
+      const pendingPages = new Map<
+        string,
+        (page: ReturnType<typeof createNotionAffiliatePageResponse>) => void
+      >();
+      mockClient.pages.retrieve.mockImplementation(
+        ({ page_id }) =>
+          new Promise((resolve) => {
+            requestedIds.push(page_id);
+            pendingPages.set(page_id, resolve);
+          })
+      );
       const sut = new NotionAffiliateRepository(mockClient as never);
       const ids = [
-        AffiliateId.reconstitute('id1'),
-        AffiliateId.reconstitute('id2'),
+        AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440001'),
+        AffiliateId.reconstitute('550e8400-e29b-41d4-a716-446655440002'),
       ];
 
-      await sut.findByIds(ids);
+      const resultPromise = sut.findByIds(ids);
 
-      // Both starts should happen before any ends (parallel execution)
-      expect(callOrder.indexOf('start-id1')).toBeLessThan(
-        callOrder.indexOf('end-id1')
-      );
-      expect(callOrder.indexOf('start-id2')).toBeLessThan(
-        callOrder.indexOf('end-id2')
-      );
-      // Both starts should happen before both ends
-      expect(callOrder.indexOf('start-id2')).toBeLessThan(
-        callOrder.indexOf('end-id1')
-      );
+      expect(requestedIds).toEqual(ids.map((id) => id.getValue()));
+      for (const id of requestedIds) {
+        pendingPages.get(id)?.(
+          createNotionAffiliatePageResponse({ type: 'AFFILIATE_BANNER', id })
+        );
+      }
+      await expect(resultPromise).resolves.toHaveProperty('size', 2);
     });
   });
 });

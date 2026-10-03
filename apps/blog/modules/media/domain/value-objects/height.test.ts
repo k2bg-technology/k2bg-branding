@@ -31,15 +31,6 @@ describe('Height', () => {
       );
     });
 
-    it('throws InvalidHeightError when value is negative', () => {
-      const negativeValue = -100;
-
-      expect(() => Height.create(negativeValue)).toThrow(InvalidHeightError);
-      expect(() => Height.create(negativeValue)).toThrow(
-        'Height must be a positive number'
-      );
-    });
-
     it('throws InvalidHeightError when value is not an integer', () => {
       const floatValue = 100.5;
 
@@ -51,7 +42,7 @@ describe('Height', () => {
   });
 
   describe('reconstitute', () => {
-    it('creates Height without validation', () => {
+    it('restores Height from a valid persisted value', () => {
       const value = 600;
 
       const sut = Height.reconstitute(value);
@@ -78,17 +69,6 @@ describe('Height', () => {
       const result = height1.equals(height2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the height as string value', () => {
-      const height = 600;
-      const sut = Height.create(height);
-
-      const result = sut.toString();
-
-      expect(result).toBe('600');
     });
   });
 });

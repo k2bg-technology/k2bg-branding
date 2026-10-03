@@ -1,11 +1,5 @@
 import { InvalidMessageError } from '../errors/errors';
 
-/**
- * Message Value Object
- *
- * Represents a contact message.
- * Validates that the message is not empty and does not exceed maximum length.
- */
 export class Message {
   private static readonly MAX_LENGTH = 1000;
 

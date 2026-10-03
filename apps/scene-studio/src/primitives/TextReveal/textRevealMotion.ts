@@ -74,6 +74,12 @@ interface TextUnitMotionInput {
   blurInPx: number;
 }
 
+export interface TextUnitMotion {
+  opacity: number;
+  translateYInPx: number;
+  blurInPx: number;
+}
+
 export function getTextUnitMotion({
   unitIndex,
   frame,
@@ -82,7 +88,7 @@ export function getTextUnitMotion({
   unitDurationInFrames,
   offsetInPx,
   blurInPx,
-}: TextUnitMotionInput) {
+}: TextUnitMotionInput): TextUnitMotion {
   const progress = interpolate(
     frame - enterDelayInFrames - unitIndex * staggerInFrames,
     [0, unitDurationInFrames],

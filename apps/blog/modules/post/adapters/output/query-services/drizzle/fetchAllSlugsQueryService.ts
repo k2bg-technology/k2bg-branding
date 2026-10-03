@@ -1,4 +1,4 @@
-import { asc, desc, eq } from 'drizzle-orm';
+import { and, asc, desc, eq } from 'drizzle-orm';
 import type { DrizzleClient } from '../../../../../../infrastructure/drizzle/client';
 import { posts } from '../../../../../../infrastructure/drizzle/schema';
 import type {
@@ -18,12 +18,20 @@ export class DrizzleFetchAllSlugsQueryService
 
     try {
       const rows = await this.db
-        .select({ uuid: posts.uuid, slug: posts.slug })
+        .select({
+          uuid: posts.uuid,
+          slug: posts.slug,
+          revisionDate: posts.revisionDate,
+        })
         .from(posts)
-        .where(eq(posts.type, 'ARTICLE'))
+        .where(and(eq(posts.type, 'ARTICLE'), eq(posts.status, 'PUBLISHED')))
         .orderBy(direction(posts.releaseDate));
 
-      return rows.map((row) => ({ id: row.uuid, slug: row.slug }));
+      return rows.map((row) => ({
+        id: row.uuid,
+        slug: row.slug,
+        revisionDate: row.revisionDate,
+      }));
     } catch (error) {
       throw new RepositoryError('Failed to fetch all slugs', error);
     }

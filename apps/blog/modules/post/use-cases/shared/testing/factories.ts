@@ -98,6 +98,7 @@ export function createSlugOutput(
   return {
     id: '550e8400-e29b-41d4-a716-446655440000',
     slug: 'test-post',
+    revisionDate: '2024-01-15',
     ...overrides,
   };
 }

@@ -11,6 +11,7 @@ import {
   createFetchPostSummariesUseCase,
   getDefaultOgImageUrl,
 } from '../../infrastructure/di';
+import { BLOG_SITE_DESCRIPTION, BLOG_SITE_NAME } from '../siteMetadata';
 
 const PAGE_SIZE = 8;
 
@@ -18,12 +19,9 @@ export const revalidate = 3600;
 
 const defaultOgImageUrl = getDefaultOgImageUrl();
 
-const blogDescription =
-  'エンジニアでなくてもテクノロジーを活用できる —— そんな情報を発信するブログです。非IT出身からエンジニアへ転身した筆者が、プログラミング・AI・自動化・UI/UXなど幅広いテーマを、わかりやすく解説します。';
-
 export const metadata: Metadata = {
-  title: 'K2.B.G Technology Blog',
-  description: blogDescription,
+  title: { absolute: BLOG_SITE_NAME },
+  description: BLOG_SITE_DESCRIPTION,
   robots: {
     index: true,
     follow: true,
@@ -36,17 +34,17 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: 'K2.B.G Technology Blog',
-    description: blogDescription,
+    title: BLOG_SITE_NAME,
+    description: BLOG_SITE_DESCRIPTION,
     type: 'website',
     locale: 'ja_JP',
-    siteName: 'K2.B.G Technology Blog',
+    siteName: BLOG_SITE_NAME,
     images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'K2.B.G Technology Blog',
-    description: blogDescription,
+    title: BLOG_SITE_NAME,
+    description: BLOG_SITE_DESCRIPTION,
     images: [defaultOgImageUrl],
   },
   alternates: {

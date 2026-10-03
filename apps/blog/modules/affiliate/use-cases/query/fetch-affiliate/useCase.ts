@@ -13,11 +13,6 @@ export interface FetchAffiliateOutput {
   affiliate: AffiliateOutput;
 }
 
-/**
- * FetchAffiliate Use Case
- *
- * Fetches a single affiliate by its ID.
- */
 export class FetchAffiliate {
   constructor(private readonly affiliateRepository: AffiliateRepository) {}
 

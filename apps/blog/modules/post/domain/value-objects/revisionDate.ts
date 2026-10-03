@@ -1,12 +1,6 @@
 import { InvalidRevisionDateError } from '../errors/errors';
 import type { ReleaseDate } from './releaseDate';
 
-/**
- * RevisionDate Value Object
- *
- * Represents the date when a Post was last revised.
- * Must be on or after the release date.
- */
 export class RevisionDate {
   private readonly value: Date;
 

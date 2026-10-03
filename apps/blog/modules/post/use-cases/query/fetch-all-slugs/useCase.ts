@@ -11,11 +11,6 @@ export interface FetchAllSlugsOutput {
 
 const DEFAULT_ORDER: SortOrder = 'desc';
 
-/**
- * FetchAllSlugs Use Case
- *
- * Fetches all post slugs.
- */
 export class FetchAllSlugs {
   constructor(private readonly queryService: FetchAllSlugsQueryService) {}
 
@@ -28,6 +23,7 @@ export class FetchAllSlugs {
       slugs: slugRecords.map((record) => ({
         id: record.id,
         slug: record.slug,
+        revisionDate: record.revisionDate,
       })),
     };
   }

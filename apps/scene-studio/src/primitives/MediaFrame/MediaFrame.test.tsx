@@ -61,7 +61,9 @@ describe('MediaFrame', () => {
   it('renders a video element instead of an image for video sources', () => {
     render(<MediaFrame src="assets/clip.mp4" mediaType="video" />);
 
-    expect(screen.getByTestId('video')).toBeDefined();
+    expect(screen.getByTestId('video').getAttribute('data-src')).toBe(
+      '/public/assets/clip.mp4'
+    );
     expect(screen.queryByTestId('image')).toBeNull();
   });
 

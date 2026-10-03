@@ -31,38 +31,37 @@ describe('FetchPostSummaries', () => {
       expect(result.currentPage).toBe(1);
     });
 
-    it('uses default values when not provided', async () => {
-      const fetchPostSummaries = vi
-        .fn()
-        .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ fetchPostSummaries });
+    it('selects the first ten descending summaries by default', async () => {
+      const firstPageSummary = createPostSummaryOutput({ id: 'first-page-id' });
+      const queryService = createMockQueryService({
+        fetchPostSummaries: async ({ page, pageSize, orderBy, status }) =>
+          page === 1 &&
+          pageSize === 10 &&
+          orderBy === 'desc' &&
+          status === undefined
+            ? { posts: [firstPageSummary], totalCount: 1 }
+            : { posts: [], totalCount: 0 },
+      });
       const sut = new FetchPostSummaries(queryService);
 
-      await sut.execute();
+      const result = await sut.execute();
 
-      expect(fetchPostSummaries).toHaveBeenCalledWith({
-        page: 1,
-        pageSize: 10,
-        orderBy: 'desc',
-        status: undefined,
-      });
+      expect(result.items.map((post) => post.id)).toEqual(['first-page-id']);
     });
 
-    it('passes status filter to the query service', async () => {
-      const fetchPostSummaries = vi
-        .fn()
-        .mockResolvedValue({ posts: [], totalCount: 0 });
-      const queryService = createMockQueryService({ fetchPostSummaries });
+    it('selects summaries with the requested publication status', async () => {
+      const publishedSummary = createPostSummaryOutput({ id: 'published-id' });
+      const queryService = createMockQueryService({
+        fetchPostSummaries: async ({ status }) =>
+          status === PostStatus.PUBLISHED
+            ? { posts: [publishedSummary], totalCount: 1 }
+            : { posts: [], totalCount: 0 },
+      });
       const sut = new FetchPostSummaries(queryService);
 
-      await sut.execute({ status: PostStatus.PUBLISHED });
+      const result = await sut.execute({ status: PostStatus.PUBLISHED });
 
-      expect(fetchPostSummaries).toHaveBeenCalledWith({
-        page: 1,
-        pageSize: 10,
-        orderBy: 'desc',
-        status: PostStatus.PUBLISHED,
-      });
+      expect(result.items.map((post) => post.id)).toEqual(['published-id']);
     });
 
     it('calculates pagination correctly', async () => {
@@ -133,26 +132,6 @@ describe('FetchPostSummaries', () => {
       await expect(sut.execute({ pageSize: 101 })).rejects.toThrow(
         InvalidPaginationError
       );
-    });
-
-    it('passes through PostSummaryOutput from query service', async () => {
-      const summary = createPostSummaryOutput({
-        id: 'test-uuid',
-        title: 'My Title',
-        slug: 'test-uuid/my-slug',
-      });
-      const queryService = createMockQueryService({
-        fetchPostSummaries: vi
-          .fn()
-          .mockResolvedValue({ posts: [summary], totalCount: 1 }),
-      });
-      const sut = new FetchPostSummaries(queryService);
-
-      const result = await sut.execute();
-
-      expect(result.items[0].id).toBe('test-uuid');
-      expect(result.items[0].title).toBe('My Title');
-      expect(result.items[0].slug).toBe('test-uuid/my-slug');
     });
   });
 });

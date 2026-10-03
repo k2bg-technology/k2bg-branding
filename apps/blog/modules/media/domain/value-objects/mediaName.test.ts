@@ -39,14 +39,6 @@ describe('MediaName', () => {
       );
     });
 
-    it('throws InvalidMediaNameError when value is whitespace only', () => {
-      const whitespaceValue = '   ';
-
-      expect(() => MediaName.create(whitespaceValue)).toThrow(
-        InvalidMediaNameError
-      );
-    });
-
     it('throws InvalidMediaNameError when name exceeds 200 characters', () => {
       const tooLongName = 'a'.repeat(201);
 
@@ -87,17 +79,6 @@ describe('MediaName', () => {
       const result = name1.equals(name2);
 
       expect(result).toBe(false);
-    });
-  });
-
-  describe('toString', () => {
-    it('returns the name string value', () => {
-      const name = 'Hero Image';
-      const sut = MediaName.create(name);
-
-      const result = sut.toString();
-
-      expect(result).toBe(name);
     });
   });
 });

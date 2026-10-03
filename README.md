@@ -37,7 +37,7 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Prerequisites
 
-- Node.js 20.9+
+- Node.js 22.22+ or 24.15+ (exact range in `package.json` `engines`)
 - pnpm 10.33.2+
 
 ### Installation

@@ -37,27 +37,18 @@ describe('SendEmail Use Case', () => {
   });
 
   describe('execute', () => {
-    it('creates contact and sends both emails with correct parameters', async () => {
+    it('sends contact notification and confirmation with their subjects and rendered bodies', async () => {
       const mockEmailSender = createMockEmailSender();
-      const fakeEmailTemplateRenderer = createFakeEmailTemplateRenderer();
+      const fakeEmailTemplateRenderer: EmailTemplateRenderer = {
+        renderOwnerNotification: (contact) =>
+          `<html>Notification from ${contact.name.getValue()}: ${contact.message.getValue()}</html>`,
+        renderVisitorConfirmation: (contact) =>
+          `<html>Confirmation for ${contact.email.getValue()}</html>`,
+      };
       const sut = new SendEmail(mockEmailSender, fakeEmailTemplateRenderer);
       const input = createValidInput();
 
       await sut.execute(input);
-
-      expect(
-        fakeEmailTemplateRenderer.renderOwnerNotification
-      ).toHaveBeenCalledTimes(1);
-      expect(
-        fakeEmailTemplateRenderer.renderVisitorConfirmation
-      ).toHaveBeenCalledTimes(1);
-
-      const [renderedContact] = vi.mocked(
-        fakeEmailTemplateRenderer.renderOwnerNotification
-      ).mock.calls[0] as [Contact];
-      expect(renderedContact.name.getValue()).toBe('John Doe');
-      expect(renderedContact.email.getValue()).toBe('john@example.com');
-      expect(renderedContact.message.getValue()).toBe('Test message');
 
       const expectedOwnerSubject = 'John Doe 様からお問合せが届きました。';
       const expectedVisitorSubject =
@@ -65,17 +56,17 @@ describe('SendEmail Use Case', () => {
 
       expect(mockEmailSender.sendToOwner).toHaveBeenCalledWith(
         expectedOwnerSubject,
-        '<html>Owner Notification</html>'
+        '<html>Notification from John Doe: Test message</html>'
       );
 
       const [contact, visitorSubject, visitorHtmlBody] = vi.mocked(
         mockEmailSender.sendToVisitor
       ).mock.calls[0] as [Contact, string, string];
-      expect(contact.name.getValue()).toBe('John Doe');
       expect(contact.email.getValue()).toBe('john@example.com');
-      expect(contact.message.getValue()).toBe('Test message');
       expect(visitorSubject).toBe(expectedVisitorSubject);
-      expect(visitorHtmlBody).toBe('<html>Visitor Confirmation</html>');
+      expect(visitorHtmlBody).toBe(
+        '<html>Confirmation for john@example.com</html>'
+      );
     });
 
     it('sends owner notification before visitor confirmation', async () => {

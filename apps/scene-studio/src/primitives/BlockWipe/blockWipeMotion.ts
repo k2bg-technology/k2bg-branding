@@ -46,7 +46,7 @@ const EMPTY_CLIP_PATH = 'polygon(0% 0%, 0% 0%, 0% 0%)';
 const PROJECTION_TOLERANCE_SHARE = 1e-9;
 const COORDINATE_PRECISION = 3;
 
-function formatCoordinate(value: number): string {
+function formatCoordinate(value: number) {
   return `${Number(value.toFixed(COORDINATE_PRECISION))}%`;
 }
 

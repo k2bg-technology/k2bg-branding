@@ -217,7 +217,7 @@ function mapCategory(category: string): Category {
  * Converts a UUID or string to kebab-case slug format.
  * Removes non-alphanumeric characters except hyphens and converts to lowercase.
  */
-function toKebabCase(value: string): string {
+function toKebabCase(value: string) {
   return value
     .toLowerCase()
     .replace(/[^a-z0-9-]/g, '-')

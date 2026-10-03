@@ -7,7 +7,7 @@ import {
   Icon,
   Popover,
 } from 'ui';
-import { Category } from '../../modules/post/domain';
+import { Category, getCategoryDisplayName } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 import { Search } from '../search/Search';
 import { Sidebar } from '../sidebar/Sidebar';
@@ -39,7 +39,7 @@ export function Header() {
                       })}
                       data-gtm="header_click_engineering"
                     >
-                      Engineering
+                      {getCategoryDisplayName(Category.ENGINEERING)}
                     </Link>
                   </li>
                   <li>
@@ -52,7 +52,7 @@ export function Header() {
                       })}
                       data-gtm="header_click_design"
                     >
-                      Design
+                      {getCategoryDisplayName(Category.DESIGN)}
                     </Link>
                   </li>
                   <li>
@@ -65,7 +65,7 @@ export function Header() {
                       })}
                       data-gtm="header_click_data_science"
                     >
-                      Data Science
+                      {getCategoryDisplayName(Category.DATA_SCIENCE)}
                     </Link>
                   </li>
                   <li>
@@ -78,7 +78,7 @@ export function Header() {
                       })}
                       data-gtm="header_click_life_style"
                     >
-                      Life Style
+                      {getCategoryDisplayName(Category.LIFE_STYLE)}
                     </Link>
                   </li>
                 </ul>
@@ -150,7 +150,7 @@ export function Header() {
                           href={`/category/${Category.ENGINEERING}`}
                           data-gtm="header_click_engineering"
                         >
-                          Engineering
+                          {getCategoryDisplayName(Category.ENGINEERING)}
                         </Link>
                       }
                     />
@@ -160,7 +160,7 @@ export function Header() {
                           href={`/category/${Category.DESIGN}`}
                           data-gtm="header_click_design"
                         >
-                          Design
+                          {getCategoryDisplayName(Category.DESIGN)}
                         </Link>
                       }
                     />
@@ -170,7 +170,7 @@ export function Header() {
                           href={`/category/${Category.DATA_SCIENCE}`}
                           data-gtm="header_click_data_science"
                         >
-                          Data Science
+                          {getCategoryDisplayName(Category.DATA_SCIENCE)}
                         </Link>
                       }
                     />
@@ -180,7 +180,7 @@ export function Header() {
                           href={`/category/${Category.LIFE_STYLE}`}
                           data-gtm="header_click_life_style"
                         >
-                          Life Style
+                          {getCategoryDisplayName(Category.LIFE_STYLE)}
                         </Link>
                       }
                     />

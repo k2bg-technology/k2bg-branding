@@ -7,9 +7,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { TwirlDistortion } from './TwirlDistortion';
 
 const DEGREES_TO_RADIANS = Math.PI / 180;
-// Mirrors MAX_RGB_SPREAD: the channel spread the shader receives at rgbShift 1.
-const FULL_RGB_SPREAD = 0.08;
-const DEFAULT_MAX_ROTATION_IN_DEGREES = 240;
 
 const mocks = vi.hoisted(() => ({
   capturedUniforms: null as Record<string, unknown> | null,
@@ -74,11 +71,16 @@ describe('TwirlDistortion', () => {
   );
 
   it('clamps amount into the unit range', () => {
-    render(<TwirlDistortion src="card.svg" amount={2} />);
-
-    expect(mocks.capturedUniforms?.uRotationInRadians).toBeCloseTo(
-      DEFAULT_MAX_ROTATION_IN_DEGREES * DEGREES_TO_RADIANS
+    render(
+      <TwirlDistortion src="card.svg" amount={1} maxRotationInDegrees={180} />
     );
+    const fullRotation = mocks.capturedUniforms?.uRotationInRadians;
+
+    render(
+      <TwirlDistortion src="card.svg" amount={2} maxRotationInDegrees={180} />
+    );
+
+    expect(mocks.capturedUniforms?.uRotationInRadians).toBe(fullRotation);
   });
 
   it('spreads no channels when rgbShift is 0', () => {
@@ -88,15 +90,23 @@ describe('TwirlDistortion', () => {
   });
 
   it('derives the channel spread from rgbShift', () => {
-    render(<TwirlDistortion src="card.svg" amount={1} rgbShift={0.5} />);
+    render(<TwirlDistortion src="card.svg" amount={1} rgbShift={1} />);
+    const fullSpread = mocks.capturedUniforms?.uRgbSpread as number;
 
-    expect(mocks.capturedUniforms?.uRgbSpread).toBeCloseTo(FULL_RGB_SPREAD / 2);
+    render(<TwirlDistortion src="card.svg" amount={1} rgbShift={0.5} />);
+    const halfSpread = mocks.capturedUniforms?.uRgbSpread as number;
+
+    expect(halfSpread).toBeCloseTo(fullSpread / 2);
+    expect(halfSpread).toBeGreaterThan(0);
   });
 
   it('clamps rgbShift into the unit range', () => {
+    render(<TwirlDistortion src="card.svg" amount={1} rgbShift={1} />);
+    const fullSpread = mocks.capturedUniforms?.uRgbSpread;
+
     render(<TwirlDistortion src="card.svg" amount={1} rgbShift={3} />);
 
-    expect(mocks.capturedUniforms?.uRgbSpread).toBeCloseTo(FULL_RGB_SPREAD);
+    expect(mocks.capturedUniforms?.uRgbSpread).toBe(fullSpread);
   });
 
   it('passes the falloff radius through', () => {

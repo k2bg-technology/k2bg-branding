@@ -1,6 +1,6 @@
 export {
   createDrizzleClient,
+  type DrizzleClient,
   getDrizzleClient,
   resetDrizzleClient,
-  type DrizzleClient,
 } from './client';

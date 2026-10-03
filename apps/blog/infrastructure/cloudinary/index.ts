@@ -1,15 +1,15 @@
 export {
   buildImageUrl,
+  type CloudinaryConfig,
   cloudinary,
   configureCloudinary,
   getCloudinary,
   getResource,
   resetCloudinaryConfig,
-  uploadFile,
-  uploadImage,
-  type CloudinaryConfig,
   type UploadApiOptions,
   type UploadApiResponse,
+  uploadFile,
+  uploadImage,
 } from './client';
 
 export { CloudinaryOgImageUrlGenerator } from './getOgImageUrl';

@@ -1,5 +1,5 @@
+import handlebars from 'handlebars';
 import path from 'path';
-
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { Contact } from '../../../../domain';
@@ -7,7 +7,8 @@ import { RepositoryError } from '../../../shared';
 import { HandlebarsEmailTemplateRenderer } from './handlebarsEmailTemplateRenderer';
 
 const { mockGenerateHtmlTemplate } = vi.hoisted(() => ({
-  mockGenerateHtmlTemplate: vi.fn(),
+  mockGenerateHtmlTemplate:
+    vi.fn<(filePath: string, context: Record<string, unknown>) => string>(),
 }));
 
 vi.mock('../../../shared', async (importOriginal) => {
@@ -18,7 +19,7 @@ vi.mock('../../../shared', async (importOriginal) => {
   };
 });
 
-function createContact(): Contact {
+function createContact() {
   return Contact.create({
     name: 'John Doe',
     email: 'john@example.com',
@@ -28,6 +29,18 @@ function createContact(): Contact {
 
 describe('HandlebarsEmailTemplateRenderer', () => {
   const originalCompanyLogoUrl = process.env.COMPANY_LOGO_URL;
+  const notificationTemplatePath = path.join(
+    process.cwd(),
+    'app',
+    '_mail-templates',
+    'contact-notification.hbs'
+  );
+  const confirmationTemplatePath = path.join(
+    process.cwd(),
+    'app',
+    '_mail-templates',
+    'contact.hbs'
+  );
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -43,31 +56,23 @@ describe('HandlebarsEmailTemplateRenderer', () => {
 
   describe('renderOwnerNotification', () => {
     it('returns the rendered notification template mapped from the contact', () => {
-      mockGenerateHtmlTemplate.mockReturnValue('<html>Rendered</html>');
+      const templates = new Map([
+        [
+          notificationTemplatePath,
+          '<h1>{{name}}</h1><p>{{email}}</p><p>{{message}}</p><img src="{{companyLogoUrl}}"><footer>{{year}}</footer>',
+        ],
+      ]);
+      mockGenerateHtmlTemplate.mockImplementation((filePath, context) =>
+        handlebars.compile(templates.get(filePath) ?? '')(context)
+      );
       const sut = new HandlebarsEmailTemplateRenderer();
       const contact = createContact();
 
       const result = sut.renderOwnerNotification(contact);
 
-      expect(result).toBe('<html>Rendered</html>');
-      expect(mockGenerateHtmlTemplate).toHaveBeenCalledTimes(1);
-      const [filePath, templateContext] = mockGenerateHtmlTemplate.mock
-        .calls[0] as [string, Record<string, unknown>];
-      expect(filePath).toBe(
-        path.join(
-          process.cwd(),
-          'app',
-          '_mail-templates',
-          'contact-notification.hbs'
-        )
+      expect(result).toBe(
+        '<h1>John Doe</h1><p>john@example.com</p><p>Test message</p><img src="https://example.com/logo.png"><footer>2024</footer>'
       );
-      expect(templateContext).toEqual({
-        name: 'John Doe',
-        email: 'john@example.com',
-        message: 'Test message',
-        year: '2024',
-        companyLogoUrl: 'https://example.com/logo.png',
-      });
     });
 
     it('throws RepositoryError when generateHtmlTemplate fails', () => {
@@ -92,24 +97,23 @@ describe('HandlebarsEmailTemplateRenderer', () => {
 
   describe('renderVisitorConfirmation', () => {
     it('returns the rendered confirmation template without the message', () => {
-      mockGenerateHtmlTemplate.mockReturnValue('<html>Rendered</html>');
+      const templates = new Map([
+        [
+          confirmationTemplatePath,
+          '<h1>{{name}}</h1><p>{{message}}</p><img src="{{companyLogoUrl}}"><footer>{{year}}</footer>',
+        ],
+      ]);
+      mockGenerateHtmlTemplate.mockImplementation((filePath, context) =>
+        handlebars.compile(templates.get(filePath) ?? '')(context)
+      );
       const sut = new HandlebarsEmailTemplateRenderer();
       const contact = createContact();
 
       const result = sut.renderVisitorConfirmation(contact);
 
-      expect(result).toBe('<html>Rendered</html>');
-      expect(mockGenerateHtmlTemplate).toHaveBeenCalledTimes(1);
-      const [filePath, templateContext] = mockGenerateHtmlTemplate.mock
-        .calls[0] as [string, Record<string, unknown>];
-      expect(filePath).toBe(
-        path.join(process.cwd(), 'app', '_mail-templates', 'contact.hbs')
+      expect(result).toBe(
+        '<h1>John Doe</h1><p></p><img src="https://example.com/logo.png"><footer>2024</footer>'
       );
-      expect(templateContext).toEqual({
-        name: 'John Doe',
-        year: '2024',
-        companyLogoUrl: 'https://example.com/logo.png',
-      });
     });
 
     it('throws RepositoryError when generateHtmlTemplate fails', () => {

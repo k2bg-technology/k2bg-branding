@@ -15,11 +15,9 @@ import {
   TargetUrl,
 } from '../../../domain';
 
+// biome-ignore lint/plugin/noLet: The factory sequence counter persists across factory calls.
 let counter = 0;
 
-/**
- * Creates a test AffiliateBanner entity
- */
 export const createAffiliateBanner = (
   overrides: Partial<{
     id: AffiliateId;
@@ -53,9 +51,6 @@ export const createAffiliateBanner = (
   });
 };
 
-/**
- * Creates a test AffiliateProduct entity
- */
 export const createAffiliateProduct = (
   overrides: Partial<{
     id: AffiliateId;
@@ -97,9 +92,6 @@ export const createAffiliateProduct = (
   });
 };
 
-/**
- * Creates a test AffiliateText entity
- */
 export const createAffiliateText = (
   overrides: Partial<{
     id: AffiliateId;
@@ -123,9 +115,6 @@ export const createAffiliateText = (
   });
 };
 
-/**
- * Creates a test AffiliateSubProvider entity
- */
 export const createAffiliateSubProvider = (
   overrides: Partial<{
     id: AffiliateId;
@@ -152,9 +141,6 @@ export const createAffiliateSubProvider = (
   });
 };
 
-/**
- * Resets the counter for test isolation
- */
 export const resetFactoryCounter = (): void => {
   counter = 0;
 };

@@ -1,4 +1,8 @@
-import type { ComponentPropsWithoutRef, ReactNode } from 'react';
+import {
+  type ComponentPropsWithoutRef,
+  isValidElement,
+  type ReactNode,
+} from 'react';
 import { cn } from '../../utils/cn';
 import { Icon } from '../Icon';
 
@@ -33,6 +37,8 @@ export interface StatTileProps
   value: string;
   delta?: StatTileDelta;
   description?: ReactNode;
+  /** Compact visualization pinned to the bottom edge, e.g. a `Sparkline`. */
+  chart?: ReactNode;
 }
 
 const trendIconNames = {
@@ -70,7 +76,7 @@ function DeltaChip({ delta }: { delta: StatTileDelta }) {
       data-trend={delta.trend}
       data-sentiment={sentiment}
       className={cn(
-        'inline-flex items-center gap-normal self-end rounded-sm p-1 text-caption font-medium',
+        'col-start-2 row-span-2 row-start-1 inline-flex items-center gap-condensed self-start justify-self-end rounded-md px-2 py-0.5 text-caption font-medium',
         sentimentClassNames[sentiment]
       )}
     >
@@ -91,6 +97,7 @@ export function StatTile({
   value,
   delta,
   description,
+  chart,
   className,
   ...rest
 }: StatTileProps) {
@@ -103,20 +110,25 @@ export function StatTile({
       )}
       {...rest}
     >
-      {delta && <DeltaChip delta={delta} />}
-      <div>
-        <span className="block text-body-r-sm text-base-black/80">{label}</span>
-        <p className="flex flex-wrap items-baseline gap-x-normal">
-          <span className="text-heading-2 font-medium tabular-nums">
-            {value}
-          </span>
-          {description && (
-            <span className="text-caption text-base-black/80">
-              {description}
-            </span>
-          )}
-        </p>
+      <div className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto] items-start gap-x-normal gap-y-condensed">
+        <span className="col-start-1 row-start-1 text-body-r-sm text-base-black/80">
+          {label}
+        </span>
+        <span className="col-start-1 row-start-2 text-heading-2 font-semibold tabular-nums">
+          {value}
+        </span>
+        {delta && <DeltaChip delta={delta} />}
       </div>
+      {description && (
+        <span className="block text-body-r-sm text-base-black/80">
+          {description}
+        </span>
+      )}
+      {isValidElement(chart) && (
+        <div data-slot="stat-tile-chart" className="mt-auto">
+          {chart}
+        </div>
+      )}
     </div>
   );
 }

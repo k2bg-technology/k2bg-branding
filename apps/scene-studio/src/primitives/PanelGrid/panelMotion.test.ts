@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { durationsInFrames } from '../../tokens/motion';
 import { getPanelEnterDirection, getPanelMotion } from './panelMotion';
 
 const ENTER_DELAY_IN_FRAMES = 6;
 const STAGGER_IN_FRAMES = 5;
 const PANEL_TRAVEL_IN_PERCENT = 110;
+const ENTER_DURATION_IN_FRAMES = 20;
+const EXIT_DURATION_IN_FRAMES = 10;
 
 describe('getPanelEnterDirection', () => {
   it.each([
@@ -49,7 +50,7 @@ describe('getPanelMotion', () => {
       frame:
         ENTER_DELAY_IN_FRAMES +
         panelIndex * STAGGER_IN_FRAMES +
-        durationsInFrames.enter,
+        ENTER_DURATION_IN_FRAMES,
       enterDelayInFrames: ENTER_DELAY_IN_FRAMES,
       staggerInFrames: STAGGER_IN_FRAMES,
       enterFrom: 'alternate',
@@ -87,7 +88,7 @@ describe('getPanelMotion', () => {
     const result = getPanelMotion({
       panelIndex,
       frame:
-        exitAtFrame + panelIndex * STAGGER_IN_FRAMES + durationsInFrames.fast,
+        exitAtFrame + panelIndex * STAGGER_IN_FRAMES + EXIT_DURATION_IN_FRAMES,
       enterDelayInFrames: ENTER_DELAY_IN_FRAMES,
       staggerInFrames: STAGGER_IN_FRAMES,
       enterFrom: 'alternate',

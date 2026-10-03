@@ -1,11 +1,5 @@
 import { InvalidExcerptError } from '../errors/errors';
 
-/**
- * Excerpt Value Object
- *
- * Represents an optional summary/excerpt of a Post.
- * Validates that the excerpt does not exceed 500 characters.
- */
 export class Excerpt {
   private static readonly MAX_LENGTH = 500;
 

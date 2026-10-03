@@ -80,24 +80,6 @@ describe('FetchAffiliatesByIds', () => {
       expect(result.affiliates.has(nonExistentId)).toBe(false);
     });
 
-    it('calls repository with correct AffiliateIds', async () => {
-      const findByIds = vi.fn().mockResolvedValue(new Map());
-      const repository = createMockRepository({ findByIds });
-      const sut = new FetchAffiliatesByIds(repository);
-
-      const ids = [
-        '550e8400-e29b-41d4-a716-446655440001',
-        '550e8400-e29b-41d4-a716-446655440002',
-      ];
-      await sut.execute({ ids });
-
-      expect(findByIds).toHaveBeenCalledTimes(1);
-      const calledIds = findByIds.mock.calls[0][0];
-      expect(calledIds).toHaveLength(2);
-      expect(calledIds[0].getValue()).toBe(ids[0]);
-      expect(calledIds[1].getValue()).toBe(ids[1]);
-    });
-
     it('maps affiliate output correctly', async () => {
       const banner = createAffiliateBanner();
       const affiliatesMap = new Map([[banner.id.getValue(), banner]]);
@@ -116,19 +98,6 @@ describe('FetchAffiliatesByIds', () => {
         throw new Error('Expected banner type');
       }
       expect(output.imageSourceUrl).toBe(banner.imageSourceUrl.getValue());
-    });
-
-    it('accepts readonly string array', async () => {
-      const repository = createMockRepository();
-      const sut = new FetchAffiliatesByIds(repository);
-
-      const readonlyIds: readonly string[] = [
-        '550e8400-e29b-41d4-a716-446655440003',
-        '550e8400-e29b-41d4-a716-446655440004',
-      ] as const;
-      const result = await sut.execute({ ids: readonlyIds });
-
-      expect(result.affiliates).toBeDefined();
     });
   });
 });

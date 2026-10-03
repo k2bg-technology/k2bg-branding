@@ -11,7 +11,7 @@ const MINIMUM_BURST_STRENGTH = 0.4;
 // tear lines jump instead of sliding.
 const TICKS_PER_SECOND = 8;
 
-function hash(value: number, seed: number): number {
+function hash(value: number, seed: number) {
   const raw = Math.sin(value * 127.1 + seed * 311.7) * 43758.5453123;
 
   return raw - Math.floor(raw);

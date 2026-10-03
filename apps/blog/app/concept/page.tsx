@@ -9,10 +9,10 @@ import {
   createFetchPostUseCase,
   getDefaultOgImageUrl,
 } from '../../infrastructure/di';
-import { blogSiteName } from '../siteMetadata';
+import { BLOG_SITE_NAME } from '../siteMetadata';
 
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
-const conceptDescription = 'K2.B.G Technology Blog のコンセプトを紹介します。';
+const conceptDescription = `${BLOG_SITE_NAME} のコンセプトを紹介します。`;
 const defaultOgImageUrl = getDefaultOgImageUrl();
 
 export const revalidate = 3600;
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'ja_JP',
     url: '/concept',
-    siteName: blogSiteName,
+    siteName: BLOG_SITE_NAME,
     images: [{ url: defaultOgImageUrl, width: 1200, height: 630 }],
   },
   twitter: {
