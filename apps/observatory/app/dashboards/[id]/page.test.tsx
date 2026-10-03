@@ -6,6 +6,7 @@ const mocks = vi.hoisted(() => ({
   loadDashboards: vi.fn(),
   resolvePeriod: vi.fn(),
   fetchSectionData: vi.fn(),
+  fetchTableRows: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
   notFound: vi.fn(() => {
     throw new Error('not-found');
@@ -18,6 +19,7 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createResolveDashboardPeriodUseCase:
     mocks.createResolveDashboardPeriodUseCase,
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
+  createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
 }));
 vi.mock('../../../modules/dashboard/adapters/shared', () => ({
   dashboardLogger: { error: vi.fn(), warn: vi.fn() },
@@ -121,13 +123,60 @@ describe('dashboard page', () => {
     await renderPage({
       period: '2026-09',
       note: 'kept&safe',
-      'page.first': '2',
     });
 
     expect(screen.getByText('September 2026')).toBeInTheDocument();
     expect(
       screen.getByRole('link', { name: 'Previous period' })
     ).toHaveAttribute('href', '?period=2026-08&note=kept%26safe');
+  });
+
+  it('rejects a page key on a stat-tiles section before warehouse initialization', async () => {
+    await expect(
+      Page({
+        params: Promise.resolve({ id: 'summary' }),
+        searchParams: Promise.resolve({ 'page.first': '2' }),
+      })
+    ).rejects.toThrow('not-found');
+    expect(mocks.createResolveDashboardPeriodUseCase).not.toHaveBeenCalled();
+  });
+
+  it('renders a paged table and drops its page when navigating periods', async () => {
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          sections: [
+            {
+              id: 'detail',
+              title: 'Detail',
+              kind: 'table',
+              source: {
+                dataset: 'metrics',
+                view: 'entries',
+                time: 'recorded_on',
+              },
+              columns: [
+                { header: 'Description', column: 'description', type: 'text' },
+              ],
+              paging: { pageSize: 20 },
+            },
+          ],
+        },
+      ],
+      issues: [],
+    });
+    mocks.fetchTableRows.mockResolvedValue({
+      rows: [['Rent']],
+      page: { number: 2, count: 3 },
+    });
+    await renderPage({ period: '2026-09', 'page.detail': '2', note: 'kept' });
+    expect(screen.getByRole('table', { name: 'Detail' })).toHaveTextContent(
+      'Rent'
+    );
+    expect(
+      screen.getByRole('link', { name: 'Previous period' })
+    ).toHaveAttribute('href', '?period=2026-08&note=kept');
   });
 
   it('formats the month and navigation labels from the dashboard definition', async () => {

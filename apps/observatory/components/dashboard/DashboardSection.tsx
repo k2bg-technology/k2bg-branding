@@ -1,17 +1,21 @@
 import type {
   DashboardDefinition,
   Section,
+  UrlState,
 } from '../../modules/dashboard/domain';
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchSectionDataInput,
+  FetchTableRowsInput,
   SectionData,
+  TableRows,
 } from '../../modules/dashboard/use-cases';
 import { loadSectionState } from './loadSectionState';
 import { SectionEmpty } from './SectionEmpty';
 import { SectionUnavailable } from './SectionUnavailable';
 import { StatTilesSection } from './sections/StatTilesSection';
+import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
 
 interface Props {
@@ -21,6 +25,8 @@ interface Props {
   fetchSectionData: (
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
+  fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
+  urlState: UrlState;
 }
 
 function assertNever(value: never): never {
@@ -32,12 +38,16 @@ export async function DashboardSection({
   section,
   periodResolution,
   fetchSectionData,
+  fetchTableRows,
+  urlState,
 }: Props) {
   const state = await loadSectionState({
     dashboard,
     section,
     periodResolution,
     fetchSectionData,
+    fetchTableRows,
+    page: urlState.pages[section.id] ?? 1,
   });
 
   return (
@@ -45,27 +55,37 @@ export async function DashboardSection({
       <h2 className="text-heading-3">{section.title}</h2>
       {(() => {
         if (state.status === 'ready') {
-          if (section.kind === SectionKind.STAT_TILES) {
+          if (state.kind === SectionKind.STAT_TILES) {
             return (
               <StatTilesSection
                 dashboard={dashboard}
-                section={section}
+                section={state.section}
                 data={state.data}
                 period={state.resolution.period}
               />
             );
           }
-          if (section.kind === SectionKind.TIME_SERIES) {
+          if (state.kind === SectionKind.TIME_SERIES) {
             return (
               <TimeSeriesSection
                 dashboard={dashboard}
-                section={section}
+                section={state.section}
                 data={state.data}
                 period={state.resolution.period}
               />
             );
           }
-          return assertNever(section);
+          if (state.kind === SectionKind.TABLE) {
+            return (
+              <TableSection
+                dashboard={dashboard}
+                section={state.section}
+                data={state.data}
+                urlState={urlState}
+              />
+            );
+          }
+          return assertNever(state);
         }
         if (state.status === 'empty') {
           return <SectionEmpty />;
