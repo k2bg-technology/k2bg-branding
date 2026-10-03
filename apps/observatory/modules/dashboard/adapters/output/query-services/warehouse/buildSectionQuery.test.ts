@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { SectionQueryPlan } from '../../../../domain';
+import type { SectionQueryPlan, SourceFilter } from '../../../../domain';
 import { Period, planSection, Reduction } from '../../../../domain';
 import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 import { RepositoryError } from '../../../shared';
@@ -144,7 +144,12 @@ describe('buildSectionQuery', () => {
       period_start: '2026-08-01',
       period_end: '2026-09-30',
       time_zone: 'Asia/Tokyo',
+      filter_0: 'reporting',
     });
+    expect(result.sql).toContain('AND `category` = @filter_0');
+    expect(result.sql).toContain(
+      'ABS(CAST(`total_value` AS FLOAT64)) AS value_0'
+    );
     expect(result.sql).toContain('SUM(value_0) AS FLOAT64');
     expect(result.sql).toContain(
       'ARRAY_AGG(STRUCT(source_time, value_1) ORDER BY source_time DESC LIMIT 1)'
@@ -235,9 +240,144 @@ describe('buildSectionQuery', () => {
       period_start: '2026-09-02',
       period_end: '2026-09-03',
       time_zone: 'Asia/Tokyo',
+      filter_0: 'reporting',
     });
     expect(result.sql).toContain(
       "FORMAT_DATE('%F', DATE(`recorded_at`, @time_zone)) AS period"
+    );
+  });
+
+  it.each([
+    { operator: 'equals', sqlOperator: '=' },
+    { operator: 'not-equals', sqlOperator: '!=' },
+    { operator: 'less-than', sqlOperator: '<' },
+    { operator: 'less-than-or-equal', sqlOperator: '<=' },
+    { operator: 'greater-than', sqlOperator: '>' },
+    { operator: 'greater-than-or-equal', sqlOperator: '>=' },
+  ] as const)('binds a $operator comparison', ({ operator, sqlOperator }) => {
+    const source = {
+      ...plan().source,
+      filters: [{ column: 'category', operator, value: "x' OR '1'='1" }],
+    };
+
+    const result = buildSectionQuery({ ...plan(), source });
+
+    expect(result.sql).toContain(`AND \`category\` ${sqlOperator} @filter_0`);
+    expect(result.sql).not.toContain("x' OR '1'='1");
+    expect(result.params).toEqual({
+      period_start: '2026-09-01',
+      period_end: '2026-09-30',
+      time_zone: 'Asia/Tokyo',
+      filter_0: "x' OR '1'='1",
+    });
+  });
+
+  it.each([
+    { operator: 'in', sqlOperator: 'IN' },
+    { operator: 'not-in', sqlOperator: 'NOT IN' },
+  ] as const)(
+    'binds each member of a $operator set',
+    ({ operator, sqlOperator }) => {
+      const source = {
+        ...plan().source,
+        filters: [
+          { column: 'category', operator, values: ['one', 'two', 'three'] },
+        ],
+      };
+
+      const result = buildSectionQuery({ ...plan(), source });
+
+      expect(result.sql).toContain(
+        `AND \`category\` ${sqlOperator} (@filter_0_0, @filter_0_1, @filter_0_2)`
+      );
+      expect(result.params).toEqual({
+        period_start: '2026-09-01',
+        period_end: '2026-09-30',
+        time_zone: 'Asia/Tokyo',
+        filter_0_0: 'one',
+        filter_0_1: 'two',
+        filter_0_2: 'three',
+      });
+    }
+  );
+
+  it.each([
+    { operator: 'is-null', sqlOperator: 'IS NULL' },
+    { operator: 'is-not-null', sqlOperator: 'IS NOT NULL' },
+  ] as const)(
+    'builds a $operator null check without a value',
+    ({ operator, sqlOperator }) => {
+      const source = {
+        ...plan().source,
+        filters: [{ column: 'category', operator }],
+      };
+
+      const result = buildSectionQuery({ ...plan(), source });
+
+      expect(result.sql).toContain(`AND \`category\` ${sqlOperator}`);
+      expect(result.params).toEqual({
+        period_start: '2026-09-01',
+        period_end: '2026-09-30',
+        time_zone: 'Asia/Tokyo',
+      });
+    }
+  );
+
+  it('joins two filters and applies the same clause to period bounds', () => {
+    const filters: SourceFilter[] = [
+      { column: 'category', operator: 'equals', value: 'reporting' },
+      { column: 'amount', operator: 'greater-than', value: 0 },
+    ];
+    const source = { ...plan().source, filters };
+
+    const section = buildSectionQuery({ ...plan(), source });
+    const bounds = buildPeriodBoundsQuery(source, 'Asia/Tokyo');
+
+    expect(section.sql).toContain(
+      'AND `category` = @filter_0\nAND `amount` > @filter_1'
+    );
+    expect(bounds.sql).toContain(
+      'WHERE `category` = @filter_0\nAND `amount` > @filter_1'
+    );
+    expect(section.params).toMatchObject({
+      filter_0: 'reporting',
+      filter_1: 0,
+    });
+    expect(bounds.params).toEqual({
+      time_zone: 'Asia/Tokyo',
+      filter_0: 'reporting',
+      filter_1: 0,
+    });
+  });
+
+  it('transforms row values in filtered before sum and latest reductions', () => {
+    const section = plan();
+    section.measures = [
+      {
+        column: 'amount',
+        reduction: 'sum',
+        transform: 'absolute',
+        compares: false,
+      },
+      {
+        column: 'amount',
+        reduction: 'latest',
+        transform: 'negate',
+        compares: false,
+      },
+    ];
+
+    const result = buildSectionQuery(section);
+
+    expect(result.sql).toContain(
+      'ABS(CAST(`amount` AS FLOAT64)) AS value_0, -(CAST(`amount` AS FLOAT64)) AS value_1\nFROM'
+    );
+    expect(result.sql).toContain('SUM(value_0)');
+    expect(result.sql).toContain(
+      'ARRAY_AGG(STRUCT(source_time, value_1) ORDER BY source_time DESC LIMIT 1)'
+    );
+    expect(result.sql).toContain(
+      'COUNT(DISTINCT IF(source_time = latest_time, TO_JSON_STRING(value_1), NULL))'
     );
   });
 });

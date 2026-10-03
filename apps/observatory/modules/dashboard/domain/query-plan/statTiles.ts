@@ -23,6 +23,7 @@ export function planStatTilesSection(
     measures: section.tiles.map((tile) => ({
       column: tile.column,
       reduction: tile.reduction,
+      transform: tile.transform,
       compares: tile.comparison !== undefined,
     })),
   };
