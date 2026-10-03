@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import {
   type DashboardDefinition,
+  PeriodGrain,
   type Section,
   SectionKind,
 } from '../../../../../domain';
@@ -88,7 +89,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
   id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
   title: z.string().min(1),
   description: z.string().min(1).optional(),
-  grain: z.literal('month'),
+  grain: z.enum([PeriodGrain.MONTH, PeriodGrain.WEEK, PeriodGrain.DAY]),
   timeZone: z.string().refine(supportsTimeZone, 'must be a valid time zone'),
   locale: z
     .string()

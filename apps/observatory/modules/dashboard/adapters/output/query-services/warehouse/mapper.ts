@@ -1,6 +1,7 @@
 import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import {
   Period,
+  parseCalendarDate,
   Reduction,
   resolveLatest,
   type SectionQueryPlan,
@@ -12,7 +13,7 @@ import { FIRST_DATE_ALIAS, LAST_DATE_ALIAS } from './query';
 
 function readCalendarDate(row: WarehouseRow, key: string): string {
   const value = row[key];
-  if (typeof value !== 'string' || Period.fromCalendarDate(value) === null) {
+  if (typeof value !== 'string' || parseCalendarDate(value) === null) {
     throw new MappingError(
       `${key} must be a calendar date, received ${JSON.stringify(value)}`
     );
@@ -69,9 +70,12 @@ export function toSectionData(
     truncated: plan.kind === 'time-series' && rows.length > plan.bucketLimit,
     buckets: includedRows.map((row) => {
       const period = row.period;
-      if (typeof period !== 'string' || Period.parse(period) === null) {
+      if (
+        typeof period !== 'string' ||
+        Period.parse(plan.grain, period) === null
+      ) {
         throw new MappingError(
-          `period must be YYYY-MM, received ${JSON.stringify(period)}`
+          `period must match ${plan.grain} grain, received ${JSON.stringify(period)}`
         );
       }
       return {

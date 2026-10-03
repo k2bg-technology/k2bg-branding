@@ -12,6 +12,7 @@ export function planTimeSeriesSection(
   return {
     kind: section.kind,
     sectionId: section.id,
+    grain: period.grain,
     source: section.source,
     timeZone,
     selectedPeriod: period.toString(),

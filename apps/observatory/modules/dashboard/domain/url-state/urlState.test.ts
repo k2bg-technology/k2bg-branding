@@ -108,6 +108,32 @@ describe('parseUrlState', () => {
       detail: 3,
     });
   });
+
+  it.each([
+    { grain: 'week', period: '2026-W35' },
+    { grain: 'day', period: '2026-09-03' },
+  ] as const)('reads a $grain period $period', ({ grain, period }) => {
+    const result = parseUrlState({ period }, { ...dashboard, grain });
+
+    expect(result.valid && result.state.period?.toString()).toBe(period);
+  });
+
+  it.each([
+    { grain: 'week', period: '2026-09' },
+    { grain: 'day', period: '2026-W35' },
+    { grain: 'day', period: '2026-09' },
+  ] as const)(
+    'rejects period $period on a $grain dashboard',
+    ({ grain, period }) => {
+      const result = parseUrlState({ period }, { ...dashboard, grain });
+
+      expect(result).toEqual({
+        valid: false,
+        problem: 'invalid-period',
+        key: 'period',
+      });
+    }
+  );
 });
 
 describe('URL period transition', () => {
@@ -118,7 +144,7 @@ describe('URL period transition', () => {
       )
     );
     const parsed = parseUrlState(parameters, dashboard);
-    const next = Period.parse('2026-09');
+    const next = Period.parse('month', '2026-09');
     if (!parsed.valid || next === null) {
       throw new Error('Expected URL fixtures to parse');
     }

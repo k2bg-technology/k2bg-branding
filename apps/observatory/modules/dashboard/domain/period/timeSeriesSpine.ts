@@ -9,18 +9,15 @@ export function timeSeriesSpine(
   const requestedFirst = selectedPeriod.shift(-(window - 1));
   const firstPeriod =
     truncated && buckets[0] !== undefined
-      ? (Period.parse(buckets[0].period) ?? requestedFirst)
+      ? (Period.parse(selectedPeriod.grain, buckets[0].period) ??
+        requestedFirst)
       : requestedFirst;
-  const monthCount =
-    (selectedPeriod.year - firstPeriod.year) * 12 +
-    selectedPeriod.month -
-    firstPeriod.month +
-    1;
+  const periodCount = firstPeriod.distanceTo(selectedPeriod) + 1;
   const bucketsByPeriod = new Map(
     buckets.map((bucket) => [bucket.period, bucket])
   );
   const measureCount = buckets[0]?.values.length ?? 0;
-  return Array.from({ length: monthCount }, (_, index) => {
+  return Array.from({ length: periodCount }, (_, index) => {
     const period = firstPeriod.shift(index);
     return {
       period,

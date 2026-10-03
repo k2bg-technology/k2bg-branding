@@ -9,8 +9,8 @@ export function periodNavigation(
   period: Period,
   bounds: DateBounds
 ): PeriodNavigationTargets {
-  const first = Period.fromCalendarDate(bounds.firstDate);
-  const last = Period.fromCalendarDate(bounds.lastDate);
+  const first = Period.containing(period.grain, bounds.firstDate);
+  const last = Period.containing(period.grain, bounds.lastDate);
   if (first === null || last === null) {
     throw new Error('Invalid dashboard period bounds');
   }
@@ -24,11 +24,11 @@ function previousTargetFor(
   first: Period,
   last: Period
 ): Period | null {
-  if (period.toString() <= first.toString()) {
+  if (period.firstDate <= first.firstDate) {
     return null;
   }
   const previous = period.shift(-1);
-  return previous.toString() > last.toString() ? last : previous;
+  return previous.firstDate > last.firstDate ? last : previous;
 }
 
 function nextTargetFor(
@@ -36,9 +36,9 @@ function nextTargetFor(
   first: Period,
   last: Period
 ): Period | null {
-  if (period.toString() >= last.toString()) {
+  if (period.firstDate >= last.firstDate) {
     return null;
   }
   const next = period.shift(1);
-  return next.toString() < first.toString() ? first : next;
+  return next.firstDate < first.firstDate ? first : next;
 }

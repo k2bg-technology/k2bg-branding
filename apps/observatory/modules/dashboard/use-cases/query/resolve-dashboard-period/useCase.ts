@@ -54,6 +54,7 @@ export class ResolveDashboardPeriod {
       requestedPeriod ??
       resolveDefaultPeriod({
         defaultPeriod: dashboard.defaultPeriod,
+        grain: dashboard.grain,
         timeZone: dashboard.timeZone,
         bounds,
         now: this.clock.now(),

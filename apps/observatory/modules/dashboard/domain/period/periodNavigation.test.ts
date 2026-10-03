@@ -49,12 +49,44 @@ describe('periodNavigation', () => {
     'returns navigation targets $scenario',
     ({ selectedMonth, bounds, expectedPreviousTarget, expectedNextTarget }) => {
       const sut = periodNavigation;
-      const selectedPeriod = Period.parse(selectedMonth);
+      const selectedPeriod = Period.parse('month', selectedMonth);
       if (selectedPeriod === null) {
         throw new Error('Expected fixture period to parse');
       }
 
       const targets = sut(selectedPeriod, bounds);
+
+      expect(targets.previousTarget?.toString() ?? null).toBe(
+        expectedPreviousTarget
+      );
+      expect(targets.nextTarget?.toString() ?? null).toBe(expectedNextTarget);
+    }
+  );
+
+  it.each([
+    {
+      selectedWeek: '2026-W53',
+      expectedPreviousTarget: null,
+      expectedNextTarget: '2027-W01',
+    },
+    {
+      selectedWeek: '2027-W01',
+      expectedPreviousTarget: '2026-W53',
+      expectedNextTarget: null,
+    },
+  ])(
+    'returns ISO week targets across a year boundary from $selectedWeek',
+    ({ selectedWeek, expectedPreviousTarget, expectedNextTarget }) => {
+      const sut = periodNavigation;
+      const selectedPeriod = Period.parse('week', selectedWeek);
+      if (selectedPeriod === null) {
+        throw new Error('Expected fixture period to parse');
+      }
+
+      const targets = sut(selectedPeriod, {
+        firstDate: '2026-12-30',
+        lastDate: '2027-01-07',
+      });
 
       expect(targets.previousTarget?.toString() ?? null).toBe(
         expectedPreviousTarget

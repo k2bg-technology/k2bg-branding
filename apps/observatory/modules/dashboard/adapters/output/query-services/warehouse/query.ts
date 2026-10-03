@@ -1,6 +1,23 @@
 import type { WarehouseQueryParams } from '../../../../../../infrastructure/warehouse';
-import type { SourceDefinition, TimeBinding } from '../../../../domain';
+import {
+  PeriodGrain,
+  type SourceDefinition,
+  type TimeBinding,
+} from '../../../../domain';
 import { qualifiedView, quoteIdentifier } from './identifier';
+
+const periodKeyFormats: Record<PeriodGrain, string> = {
+  [PeriodGrain.MONTH]: '%Y-%m',
+  [PeriodGrain.WEEK]: '%G-W%V',
+  [PeriodGrain.DAY]: '%F',
+};
+
+export function periodKeyExpression(
+  grain: PeriodGrain,
+  calendarDate: string
+): string {
+  return `FORMAT_DATE('${periodKeyFormats[grain]}', ${calendarDate})`;
+}
 
 export const PERIOD_START_PARAMETER = 'period_start';
 export const PERIOD_END_PARAMETER = 'period_end';

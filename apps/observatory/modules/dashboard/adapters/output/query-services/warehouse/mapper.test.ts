@@ -9,6 +9,7 @@ function plan(): SectionQueryPlan {
   return {
     kind: 'stat-tiles',
     sectionId: 'headline',
+    grain: 'month',
     source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
     timeZone: 'UTC',
     selectedPeriod: '2026-08',
@@ -130,7 +131,7 @@ describe('warehouse dashboard mapper', () => {
       measures: [{ column: 'total', reduction: 'sum' }],
       bucketLimit: 120,
     };
-    const selected = Period.parse('2026-08');
+    const selected = Period.parse('month', '2026-08');
     if (selected === null) {
       throw new Error('Expected selected period to parse');
     }
@@ -173,5 +174,33 @@ describe('warehouse dashboard mapper', () => {
         timeSeriesPlan
       )
     ).toThrow(AmbiguousLatestValueError);
+  });
+
+  it.each([
+    { grain: 'week', key: '2026-08-01' },
+    { grain: 'day', key: '2026-W31' },
+  ] as const)('rejects a $grain plan with bucket $key', ({ grain, key }) => {
+    const queryPlan = { ...plan(), grain, selectedPeriod: key };
+
+    expect(() =>
+      toSectionData(
+        [{ period: key, value_0: 5, value_1: null, distinct_count_1: 1 }],
+        queryPlan
+      )
+    ).toThrow(MappingError);
+  });
+
+  it.each([
+    { grain: 'week', key: '2026-W31' },
+    { grain: 'day', key: '2026-08-15' },
+  ] as const)('maps a $grain bucket $key', ({ grain, key }) => {
+    const queryPlan = { ...plan(), grain, selectedPeriod: key };
+
+    const result = toSectionData(
+      [{ period: key, value_0: 5, value_1: 9, distinct_count_1: 1 }],
+      queryPlan
+    );
+
+    expect(result?.buckets).toEqual([{ period: key, values: [5, 9] }]);
   });
 });

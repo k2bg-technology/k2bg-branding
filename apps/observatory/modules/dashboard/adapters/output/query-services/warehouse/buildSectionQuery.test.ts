@@ -15,6 +15,7 @@ function plan(
   return {
     kind: 'stat-tiles',
     sectionId: 'headline',
+    grain: 'month',
     source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
     timeZone: 'Asia/Tokyo',
     selectedPeriod: '2026-09',
@@ -29,7 +30,7 @@ function plan(
 describe('buildSectionQuery', () => {
   it('builds the fixture time series with a trailing window, two reductions, and one extra bucket', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
-    const period = Period.parse('2026-08');
+    const period = Period.parse('month', '2026-08');
     if (period === null) {
       throw new Error('Expected fixture period to parse');
     }
@@ -65,7 +66,7 @@ describe('buildSectionQuery', () => {
 
   it('rejects an unsafe time-series measure identifier', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
-    const period = Period.parse('2026-08');
+    const period = Period.parse('month', '2026-08');
     if (period === null) {
       throw new Error('Expected fixture period to parse');
     }
@@ -130,7 +131,7 @@ describe('buildSectionQuery', () => {
 
   it('builds a two-month query when the fixture has one comparing tile', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
-    const period = Period.parse('2026-09');
+    const period = Period.parse('month', '2026-09');
     if (period === null) {
       throw new Error('Expected fixture period to parse');
     }
@@ -170,6 +171,74 @@ describe('buildSectionQuery', () => {
     };
 
     expect(() => buildSectionQuery(unsafe)).toThrow(RepositoryError);
+  });
+
+  it('builds a complete two-week query across the ISO year boundary', () => {
+    const dashboard = dashboardDefinitionSchema.parse({
+      ...sampleDashboard,
+      grain: 'week',
+    });
+    const section = dashboard.sections[1];
+    if (section.kind !== 'time-series') {
+      throw new Error('Expected a time-series fixture section');
+    }
+    section.window = 2;
+    const period = Period.parse('week', '2027-W01');
+    if (period === null) {
+      throw new Error('Expected fixture period to parse');
+    }
+
+    const result = buildSectionQuery(
+      planSection(section, period, dashboard.timeZone)
+    );
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%G-W%V', DATE(`recorded_at`, @time_zone)) AS period, `recorded_at` AS source_time, CAST(`first_value` AS FLOAT64) AS value_0, CAST(`second_value` AS FLOAT64) AS value_1",
+        'FROM `sample_dataset.monthly_summary`',
+        'WHERE DATE(`recorded_at`, @time_zone) >= CAST(@period_start AS DATE)',
+        'AND DATE(`recorded_at`, @time_zone) <= CAST(@period_end AS DATE)',
+        '),',
+        'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+        'SELECT filtered.period, CAST(SUM(value_0) AS FLOAT64) AS value_0,',
+        'CAST(SUM(value_1) AS FLOAT64) AS value_1',
+        'FROM filtered JOIN bucket_times USING (period)',
+        'GROUP BY filtered.period',
+        'ORDER BY filtered.period DESC',
+        'LIMIT @bucket_limit',
+      ].join('\n'),
+      params: {
+        period_start: '2026-12-28',
+        period_end: '2027-01-10',
+        time_zone: 'Asia/Tokyo',
+        bucket_limit: 121,
+      },
+    });
+  });
+
+  it('compares a day tile with the preceding day', () => {
+    const dashboard = dashboardDefinitionSchema.parse({
+      ...sampleDashboard,
+      grain: 'day',
+    });
+    const period = Period.parse('day', '2026-09-03');
+    if (period === null) {
+      throw new Error('Expected fixture period to parse');
+    }
+
+    const result = buildSectionQuery(
+      planSection(dashboard.sections[0], period, dashboard.timeZone)
+    );
+
+    expect(result.params).toEqual({
+      period_start: '2026-09-02',
+      period_end: '2026-09-03',
+      time_zone: 'Asia/Tokyo',
+    });
+    expect(result.sql).toContain(
+      "FORMAT_DATE('%F', DATE(`recorded_at`, @time_zone)) AS period"
+    );
   });
 });
 
