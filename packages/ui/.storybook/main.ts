@@ -53,6 +53,10 @@ const config: StorybookConfig = {
         // the mask/background image. Webpack served every SVG as a file URL too.
         assetsInlineLimit: (filePath: string) =>
           filePath.endsWith('.svg') ? false : undefined,
+        // `staticDirs` already copies ../public into the output. Vite's own
+        // public-dir copy writes the same tree concurrently and intermittently
+        // fails the build with EEXIST on mkdir.
+        copyPublicDir: false,
       },
     }),
 };

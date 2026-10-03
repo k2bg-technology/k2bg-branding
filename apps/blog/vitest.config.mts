@@ -19,9 +19,7 @@ export default defineConfig({
       reporter: ['text', 'json', 'html'],
       exclude: ['node_modules/', 'dist/'],
     },
-    // Vitest renamed `workspace` to `projects` in 3.2; this app is pinned to
-    // 3.1.x via test-utils' peerDependency, so the older field name applies.
-    workspace: [
+    projects: [
       {
         plugins: [react()],
         resolve: { alias: { ui: uiAlias, logger: loggerAlias } },
@@ -54,11 +52,12 @@ export default defineConfig({
           // once for every *.db.test.ts file. A setupFile would re-run the
           // beforeAll/afterAll per test file.
           globalSetup: [dbGlobalSetupPath],
-          // singleFork keeps all DB test files in one worker so they share the
-          // same connection pool; per-test isolation comes from
+          // A single non-isolated fork keeps all DB test files in one worker so
+          // they share the same connection pool; per-test isolation comes from
           // truncateAllTables(), not from spinning up a new container.
           pool: 'forks',
-          poolOptions: { forks: { singleFork: true } },
+          maxWorkers: 1,
+          isolate: false,
           testTimeout: 30_000,
           hookTimeout: 120_000,
         },
