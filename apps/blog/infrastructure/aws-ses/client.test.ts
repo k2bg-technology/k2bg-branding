@@ -10,18 +10,24 @@ import {
 } from './client';
 
 vi.mock('@aws-sdk/client-ses', () => ({
-  SESClient: vi.fn().mockImplementation((config) => ({
-    config,
-    send: vi.fn().mockResolvedValue({}),
-  })),
+  SESClient: vi.fn(
+    class {
+      send = vi.fn().mockResolvedValue({});
+      constructor(readonly config: unknown) {}
+    }
+  ),
 }));
 
 vi.mock('../../modules/contact/adapters', () => ({
-  AwsSesEmailSender: vi.fn().mockImplementation((sesClient, senderEmail) => ({
-    sesClient,
-    senderEmail,
-    send: vi.fn().mockResolvedValue(undefined),
-  })),
+  AwsSesEmailSender: vi.fn(
+    class {
+      send = vi.fn().mockResolvedValue(undefined);
+      constructor(
+        readonly sesClient: unknown,
+        readonly senderEmail: unknown
+      ) {}
+    }
+  ),
 }));
 
 describe('aws-ses/client', () => {

@@ -10,17 +10,21 @@ import {
 } from './client';
 
 vi.mock('@notionhq/client', () => ({
-  Client: vi.fn().mockImplementation(() => ({
-    databases: { query: vi.fn() },
-    pages: { retrieve: vi.fn() },
-  })),
+  Client: vi.fn(
+    class {
+      databases = { query: vi.fn() };
+      pages = { retrieve: vi.fn() };
+    }
+  ),
 }));
 
 vi.mock('notion-to-md', () => ({
-  NotionToMarkdown: vi.fn().mockImplementation(() => ({
-    pageToMarkdown: vi.fn(),
-    toMarkdownString: vi.fn(),
-  })),
+  NotionToMarkdown: vi.fn(
+    class {
+      pageToMarkdown = vi.fn();
+      toMarkdownString = vi.fn();
+    }
+  ),
 }));
 
 describe('notion/client', () => {
