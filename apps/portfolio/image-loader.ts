@@ -6,6 +6,7 @@ const generatedWidthsByImage: Record<string, readonly number[]> = {
   blog: [640],
   'contact-pattern': [640, 1080, 1440],
   hero: [640],
+  'hero-readme': [640, 1080, 1200],
   mobile: [640],
   'skill-pattern': [640, 1080, 1440],
   stock: [640],
@@ -14,7 +15,7 @@ const generatedWidthsByImage: Record<string, readonly number[]> = {
 const localJpegPattern = /^\/images\/([^/?]+)\.jpg$/;
 
 // biome-ignore lint/style/noDefaultExport: Next.js custom loader files require a default export.
-export default function imageLoader({ src, width }: ImageLoaderProps) {
+export default function imageLoader({ src, width }: ImageLoaderProps): string {
   const match = src.match(localJpegPattern);
 
   if (!match || match[1] === 'hero-og') {
