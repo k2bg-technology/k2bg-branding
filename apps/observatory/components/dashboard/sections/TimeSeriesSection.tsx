@@ -26,9 +26,6 @@ function chartPeriod(
   firstDate: string,
   lastDate: string
 ): ChartPeriod {
-  if (grain === 'hour') {
-    return ChartPeriod.DAY;
-  }
   if (grain === 'month') {
     return ChartPeriod.MONTH;
   }
@@ -40,6 +37,9 @@ function chartPeriod(
       Date.parse(`${firstDate}T00:00:00Z`)) /
       86_400_000 +
     1;
+  if (grain === 'hour') {
+    return span === 1 ? ChartPeriod.DAY : ChartPeriod.WEEK;
+  }
   if (span <= 7) {
     return ChartPeriod.WEEK;
   }

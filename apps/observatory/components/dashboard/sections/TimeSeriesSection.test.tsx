@@ -136,6 +136,14 @@ describe('TimeSeriesSection', () => {
     expect(screen.getByText(/Aug 14/).textContent).toBe('Aug 14 – 15, 2026');
   });
 
+  it('ticks a 48-hour range by date', () => {
+    const props = renderSeries(definition('day', 'hour', 48), '2026-08-15', [
+      { period: '2026-08-15T00', value_0: 15 },
+    ]);
+
+    expect(props.period).toBe(ChartPeriod.WEEK);
+  });
+
   it.each([
     { window: 7, chartPeriod: ChartPeriod.WEEK },
     { window: 8, chartPeriod: ChartPeriod.MONTH },
