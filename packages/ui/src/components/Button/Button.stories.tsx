@@ -84,6 +84,7 @@ export const SuccessIcon: Story = {
 
 export const IconButton: Story = {
   args: {
+    'aria-label': 'Menu',
     children: <Icon name="bars-3" />,
     color: 'dark',
     variant: 'ghost',

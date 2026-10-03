@@ -29,6 +29,7 @@ export function Pagination(props: Props) {
       count={count}
       currentIndex={currentPage}
       prevProps={{
+        'aria-label': '前のページ',
         // Disabled prev/next stay plain <button>s — an <a> can't express the
         // disabled state (no `:disabled` pseudo-class), so only wire a Link
         // render when the control is actually enabled.
@@ -37,6 +38,7 @@ export function Pagination(props: Props) {
         ) : undefined,
       }}
       nextProps={{
+        'aria-label': '次のページ',
         render: hasNextPage ? (
           <Link href={createPageURL(currentPage + 1)} />
         ) : undefined,

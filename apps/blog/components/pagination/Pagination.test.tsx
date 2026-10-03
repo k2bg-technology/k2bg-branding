@@ -8,6 +8,8 @@ import { Pagination } from './Pagination';
 // `render` target, so mocking either would hide the semantics under test.
 
 const pathname = '/blog';
+const previousPageLabel = '前のページ';
+const nextPageLabel = '次のページ';
 
 const useSearchParamsMock = vi.hoisted(() => vi.fn());
 
@@ -33,16 +35,6 @@ function renderPagination(options: RenderOptions) {
   );
 
   return render(<Pagination count={count} />);
-}
-
-// The previous/next controls are icon-only and therefore have no accessible
-// name, so they are located by their fixed position inside the pagination nav.
-function getPreviousControl() {
-  return screen.getByRole('navigation').firstElementChild;
-}
-
-function getNextControl() {
-  return screen.getByRole('navigation').lastElementChild;
 }
 
 describe('Pagination', () => {
@@ -109,7 +101,9 @@ describe('Pagination', () => {
   it('renders a disabled button as the previous control on the first page', () => {
     renderPagination({ count: 5, currentPage: 1 });
 
-    const previousControl = getPreviousControl();
+    const previousControl = screen.getByRole('button', {
+      name: previousPageLabel,
+    });
 
     expect(previousControl).toBeInstanceOf(HTMLButtonElement);
     expect(previousControl).toBeDisabled();
@@ -119,7 +113,7 @@ describe('Pagination', () => {
   it('renders a link as the next control on the first page', () => {
     renderPagination({ count: 5, currentPage: 1 });
 
-    const nextControl = getNextControl();
+    const nextControl = screen.getByRole('link', { name: nextPageLabel });
 
     expect(nextControl).toBeInstanceOf(HTMLAnchorElement);
     expect(nextControl).toHaveRole('link');
@@ -129,7 +123,7 @@ describe('Pagination', () => {
   it('renders a disabled button as the next control on the last page', () => {
     renderPagination({ count: 5, currentPage: 5 });
 
-    const nextControl = getNextControl();
+    const nextControl = screen.getByRole('button', { name: nextPageLabel });
 
     expect(nextControl).toBeInstanceOf(HTMLButtonElement);
     expect(nextControl).toBeDisabled();
@@ -139,7 +133,9 @@ describe('Pagination', () => {
   it('renders a link as the previous control on the last page', () => {
     renderPagination({ count: 5, currentPage: 5 });
 
-    const previousControl = getPreviousControl();
+    const previousControl = screen.getByRole('link', {
+      name: previousPageLabel,
+    });
 
     expect(previousControl).toBeInstanceOf(HTMLAnchorElement);
     expect(previousControl).toHaveRole('link');
