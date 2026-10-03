@@ -10,6 +10,7 @@ export function planStatTilesSection(
   return {
     kind: section.kind,
     sectionId: section.id,
+    grain: period.grain,
     source: section.source,
     timeZone,
     selectedPeriod: period.toString(),
@@ -22,6 +23,7 @@ export function planStatTilesSection(
     measures: section.tiles.map((tile) => ({
       column: tile.column,
       reduction: tile.reduction,
+      transform: tile.transform,
       compares: tile.comparison !== undefined,
     })),
   };

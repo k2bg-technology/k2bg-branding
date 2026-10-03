@@ -15,6 +15,7 @@ function createPlan(
   return {
     kind: 'stat-tiles',
     sectionId: 'headline',
+    grain: 'month',
     source: { dataset: 'metrics', view: 'events', time: 'recorded_on' },
     timeZone: 'UTC',
     selectedPeriod: '2026-09',

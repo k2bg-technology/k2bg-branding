@@ -1,3 +1,5 @@
+import type { PeriodGrain } from '../period';
+
 export const SectionKind = {
   STAT_TILES: 'stat-tiles',
   TIME_SERIES: 'time-series',
@@ -34,17 +36,40 @@ export type ValueFormat =
   | { type: 'duration'; inputUnit: 'seconds' | 'minutes' | 'hours' };
 
 export type TimeBinding = string | { column: string; type: 'timestamp' };
+export type FilterValue = string | number | boolean;
+export type SourceFilter =
+  | {
+      column: string;
+      operator:
+        | 'equals'
+        | 'not-equals'
+        | 'less-than'
+        | 'less-than-or-equal'
+        | 'greater-than'
+        | 'greater-than-or-equal';
+      value: FilterValue;
+    }
+  | {
+      column: string;
+      operator: 'in' | 'not-in';
+      values: FilterValue[];
+    }
+  | { column: string; operator: 'is-null' | 'is-not-null' };
+
+export type ValueTransform = 'negate' | 'absolute';
 
 export interface SourceDefinition {
   dataset: string;
   view: string;
   time: TimeBinding;
+  filters?: SourceFilter[];
 }
 
 export interface StatTileDefinition {
   label: string;
   column: string;
   reduction: Reduction;
+  transform?: ValueTransform;
   format: ValueFormat;
   unit?: string;
   comparison?: {
@@ -72,7 +97,12 @@ export interface TimeSeriesSection {
   stacked: boolean;
   format: ValueFormat;
   unit?: string;
-  series: { label: string; column: string; reduction: Reduction }[];
+  series: {
+    label: string;
+    column: string;
+    reduction: Reduction;
+    transform?: ValueTransform;
+  }[];
 }
 
 export type Section = StatTilesSection | TimeSeriesSection;
@@ -81,7 +111,7 @@ export interface DashboardDefinition {
   id: string;
   title: string;
   description?: string;
-  grain: 'month';
+  grain: PeriodGrain;
   timeZone: string;
   locale: string;
   currency?: string;

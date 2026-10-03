@@ -1,14 +1,26 @@
+import { ChartPeriod } from 'ui';
+
 import type {
   DashboardDefinition,
   Period,
+  PeriodGrain,
   TimeSeriesSection as TimeSeriesSectionDefinition,
 } from '../../../modules/dashboard/domain';
 import {
   DEFAULT_DASHBOARD_LABELS,
+  formatPeriodRange,
   timeSeriesSpine,
+  toEpochMilliseconds,
 } from '../../../modules/dashboard/domain';
 import type { SectionData } from '../../../modules/dashboard/use-cases';
 import { TimeSeriesSectionChart } from './TimeSeriesSectionChart';
+
+// ChartPeriod describes the displayed span, so date buckets use date ticks.
+const chartPeriodByGrain: Record<PeriodGrain, ChartPeriod> = {
+  month: ChartPeriod.MONTH,
+  week: ChartPeriod.QUARTER,
+  day: ChartPeriod.MONTH,
+};
 
 interface Props {
   dashboard: DashboardDefinition;
@@ -27,27 +39,17 @@ export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
   const series = section.series.map((definition, index) => ({
     id: `series-${index}`,
     label: definition.label,
-    points: spine.map(({ period: month, values }) => ({
-      timestamp: Date.UTC(month.year, month.month - 1, 1),
+    points: spine.map(({ period: bucketPeriod, values }) => ({
+      timestamp: toEpochMilliseconds(bucketPeriod.firstDate),
       value: values[index] ?? null,
     })),
   }));
-  const formatter = new Intl.DateTimeFormat(dashboard.locale, {
-    year: 'numeric',
-    month: 'short',
-    timeZone: 'UTC',
-  });
   const first = spine[0]?.period;
   const last = spine.at(-1)?.period;
   if (first === undefined || last === undefined) {
     return null;
   }
-  const firstDate = new Date(Date.UTC(first.year, first.month - 1, 1));
-  const lastDate = new Date(Date.UTC(last.year, last.month - 1, 1));
-  const windowLabel =
-    first.toString() === last.toString()
-      ? formatter.format(firstDate)
-      : formatter.formatRange(firstDate, lastDate);
+  const windowLabel = formatPeriodRange(first, last, dashboard.locale);
   const labels = { ...DEFAULT_DASHBOARD_LABELS, ...dashboard.labels };
 
   return (
@@ -58,6 +60,7 @@ export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
       </p>
       <TimeSeriesSectionChart
         label={section.title}
+        chartPeriod={chartPeriodByGrain[dashboard.grain]}
         series={series}
         variant={section.variant}
         stacked={section.stacked}

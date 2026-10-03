@@ -35,7 +35,7 @@ function createDashboard(): DashboardDefinition {
 describe('FetchSectionData', () => {
   it('plans the selected month and applies the dashboard revalidation window', async () => {
     const dashboard = createDashboard();
-    const period = Period.parse('2026-09');
+    const period = Period.parse('month', '2026-09');
     if (period === null) {
       throw new Error('Expected fixture period to parse');
     }

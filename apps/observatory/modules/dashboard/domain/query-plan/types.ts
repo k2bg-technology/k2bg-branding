@@ -1,4 +1,10 @@
-import type { Reduction, SectionKind, SourceDefinition } from '../definition';
+import type {
+  Reduction,
+  SectionKind,
+  SourceDefinition,
+  ValueTransform,
+} from '../definition';
+import type { PeriodGrain } from '../period';
 
 export interface DateRange {
   firstDate: string;
@@ -8,10 +14,12 @@ export interface DateRange {
 export interface MeasureQueryPlan {
   column: string;
   reduction: Reduction;
+  transform?: ValueTransform;
 }
 
 interface BaseSectionQueryPlan {
   sectionId: string;
+  grain: PeriodGrain;
   source: SourceDefinition;
   timeZone: string;
   dateRange: DateRange;

@@ -75,11 +75,11 @@ describe('dashboard page', () => {
       execute: mocks.resolvePeriod,
     });
     mocks.resolvePeriod.mockImplementation(async ({ requestedPeriod }) => {
-      const period = requestedPeriod ?? Period.parse('2026-09');
+      const period = requestedPeriod ?? Period.parse('month', '2026-09');
       return {
         period,
         bounds: { firstDate: '2026-08-01', lastDate: '2026-09-30' },
-        previousTarget: Period.parse('2026-08'),
+        previousTarget: Period.parse('month', '2026-08'),
         nextTarget: null,
       };
     });

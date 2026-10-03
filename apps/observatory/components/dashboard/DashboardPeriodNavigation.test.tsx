@@ -10,7 +10,7 @@ import { Period } from '../../modules/dashboard/domain';
 import { DashboardPeriodNavigation } from './DashboardPeriodNavigation';
 
 function month(value: string): Period {
-  const period = Period.parse(value);
+  const period = Period.parse('month', value);
   if (period === null) {
     throw new Error('Expected fixture period to parse');
   }

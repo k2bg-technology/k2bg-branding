@@ -12,6 +12,7 @@ export function planTimeSeriesSection(
   return {
     kind: section.kind,
     sectionId: section.id,
+    grain: period.grain,
     source: section.source,
     timeZone,
     selectedPeriod: period.toString(),
@@ -22,6 +23,7 @@ export function planTimeSeriesSection(
     measures: section.series.map((series) => ({
       column: series.column,
       reduction: series.reduction,
+      transform: series.transform,
     })),
     bucketLimit: MAXIMUM_SECTION_BUCKETS,
   };
