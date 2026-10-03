@@ -6,6 +6,7 @@ import {
   SectionKind,
   SectionWidth,
   type SourceDefinition,
+  type SourceFilter,
   type StatTileDefinition,
   type StatTilesSection,
   type TimeBinding,
@@ -28,10 +29,46 @@ const timeBindingSchema = z.union([
   }),
 ]) satisfies z.ZodType<TimeBinding>;
 
+const filterValueSchema = z.union([
+  z.string(),
+  z.number().finite(),
+  z.boolean(),
+]);
+const filterSchema = z.discriminatedUnion('operator', [
+  z.strictObject({
+    column: identifierSchema,
+    operator: z.enum([
+      'equals',
+      'not-equals',
+      'less-than',
+      'less-than-or-equal',
+      'greater-than',
+      'greater-than-or-equal',
+    ]),
+    value: filterValueSchema,
+  }),
+  z.strictObject({
+    column: identifierSchema,
+    operator: z.enum(['in', 'not-in']),
+    values: z
+      .array(filterValueSchema)
+      .min(1)
+      .refine(
+        (values) => values.every((value) => typeof value === typeof values[0]),
+        'all values must have the same type'
+      ),
+  }),
+  z.strictObject({
+    column: identifierSchema,
+    operator: z.enum(['is-null', 'is-not-null']),
+  }),
+]) satisfies z.ZodType<SourceFilter>;
+
 export const sourceSchema = z.strictObject({
   dataset: identifierSchema,
   view: identifierSchema,
   time: timeBindingSchema,
+  filters: z.array(filterSchema).min(1).optional(),
 }) satisfies z.ZodType<SourceDefinition>;
 
 export const valueFormatSchema = z.discriminatedUnion('type', [
@@ -54,6 +91,7 @@ export const reductionSchema = z.enum([
   Reduction.MAXIMUM,
   Reduction.LATEST,
 ]);
+export const transformSchema = z.enum(['negate', 'absolute']);
 
 export const sectionIdSchema = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
 export const sectionWidthSchema = z.enum([
@@ -66,6 +104,7 @@ const tileSchemaBase = z.strictObject({
   label: z.string().min(1),
   column: identifierSchema,
   reduction: reductionSchema.default(Reduction.SUM),
+  transform: transformSchema.optional(),
   format: valueFormatSchema,
   unit: z.string().min(1).optional(),
   comparison: z

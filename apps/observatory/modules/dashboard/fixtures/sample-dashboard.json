@@ -21,13 +21,17 @@
       "source": {
         "dataset": "sample_dataset",
         "view": "monthly_summary",
-        "time": { "column": "recorded_at", "type": "timestamp" }
+        "time": { "column": "recorded_at", "type": "timestamp" },
+        "filters": [
+          { "column": "category", "operator": "equals", "value": "reporting" }
+        ]
       },
       "tiles": [
         {
           "label": "Total",
           "column": "total_value",
           "reduction": "sum",
+          "transform": "absolute",
           "comparison": { "direction": "higher-is-better" },
           "format": { "type": "currency" }
         },

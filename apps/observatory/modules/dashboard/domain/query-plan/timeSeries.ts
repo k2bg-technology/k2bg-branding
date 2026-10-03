@@ -22,6 +22,7 @@ export function planTimeSeriesSection(
     measures: section.series.map((series) => ({
       column: series.column,
       reduction: series.reduction,
+      transform: series.transform,
     })),
     bucketLimit: MAXIMUM_SECTION_BUCKETS,
   };

@@ -72,6 +72,139 @@ async function withDefinitionDirectory(
 }
 
 describe('FileSystemDefinitionSource', () => {
+  it('loads filters with every operator and transforms on tiles and series', async () => {
+    const filters = [
+      { column: 'enabled', operator: 'equals', value: true },
+      { column: 'category', operator: 'not-equals', value: 'two' },
+      { column: 'amount', operator: 'less-than', value: 10 },
+      { column: 'amount', operator: 'less-than-or-equal', value: 10 },
+      { column: 'amount', operator: 'greater-than', value: 0 },
+      { column: 'amount', operator: 'greater-than-or-equal', value: 0 },
+      { column: 'category', operator: 'in', values: ['one', 'two'] },
+      { column: 'category', operator: 'not-in', values: ['three'] },
+      { column: 'category', operator: 'is-null' },
+      { column: 'category', operator: 'is-not-null' },
+    ];
+    const source = {
+      dataset: 'metrics',
+      view: 'monthly',
+      time: 'recorded_on',
+      filters,
+    };
+    await withDefinitionDirectory(
+      {
+        'valid.json': createDefinition({
+          periodSource: source,
+          sections: [
+            createSection({
+              source,
+              tiles: [
+                {
+                  label: 'Total',
+                  column: 'total',
+                  transform: 'absolute',
+                  format: { type: 'number' },
+                },
+              ],
+            }),
+            createTimeSeries({
+              source,
+              series: [
+                { label: 'Change', column: 'change', transform: 'negate' },
+              ],
+            }),
+          ],
+        }),
+      },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0].periodSource?.filters).toEqual(filters);
+        expect(result.definitions[0].sections[0]).toMatchObject({
+          source: { filters },
+          tiles: [{ transform: 'absolute' }],
+        });
+        expect(result.definitions[0].sections[1]).toMatchObject({
+          series: [{ transform: 'negate' }],
+        });
+      }
+    );
+  });
+
+  it.each([
+    { name: 'empty filters', filters: [], path: 'source.filters' },
+    {
+      name: 'missing comparison value',
+      filters: [{ column: 'amount', operator: 'equals' }],
+      path: 'source.filters[0].value',
+    },
+    {
+      name: 'set values on comparison',
+      filters: [
+        { column: 'amount', operator: 'equals', value: 1, values: [2] },
+      ],
+      path: 'source.filters[0]',
+    },
+    {
+      name: 'mixed set values',
+      filters: [{ column: 'category', operator: 'in', values: ['one', 2] }],
+      path: 'source.filters[0].values',
+    },
+    {
+      name: 'invalid transform',
+      tiles: [
+        {
+          label: 'Total',
+          column: 'total',
+          transform: 'square',
+          format: { type: 'number' },
+        },
+      ],
+      path: 'tiles[0].transform',
+    },
+  ])(
+    'reports $name with file name and JSON path',
+    async ({ filters, tiles, path }) => {
+      await withDefinitionDirectory(
+        {
+          'invalid.json': createDefinition({
+            sections: [
+              createSection({
+                ...(filters === undefined
+                  ? {}
+                  : {
+                      source: {
+                        dataset: 'metrics',
+                        view: 'monthly',
+                        time: 'recorded_on',
+                        filters,
+                      },
+                    }),
+                ...(tiles === undefined ? {} : { tiles }),
+              }),
+            ],
+          }),
+        },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions).toHaveLength(0);
+          expect(result.issues).toContainEqual(
+            expect.objectContaining({
+              fileName: 'invalid.json',
+              path: `sections[0].${path}`,
+            })
+          );
+        }
+      );
+    }
+  );
+
   it('loads a time series with defaults while keeping another definition available', async () => {
     await withDefinitionDirectory(
       {
