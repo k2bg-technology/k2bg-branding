@@ -21,15 +21,15 @@ function createError(digest?: string): Error & { digest?: string } {
 function renderErrorBoundary({
   dictionary = en.errorBoundary,
   error = createError(),
-  reset = vi.fn(),
+  retry = vi.fn(),
 }: {
   dictionary?: Dictionary['errorBoundary'];
   error?: Error & { digest?: string };
-  reset?: () => void;
+  retry?: () => void;
 } = {}) {
   render(
     <ErrorBoundaryDictionaryProvider dictionary={dictionary}>
-      <ErrorBoundary error={error} reset={reset} />
+      <ErrorBoundary error={error} retry={retry} />
     </ErrorBoundaryDictionaryProvider>
   );
 }
@@ -58,16 +58,16 @@ describe('ErrorBoundary', () => {
     }
   );
 
-  it('calls reset once when the retry button is clicked', async () => {
-    const reset = vi.fn();
+  it('calls retry once when the retry button is clicked', async () => {
+    const retry = vi.fn();
     const user = userEvent.setup();
-    renderErrorBoundary({ dictionary: en.errorBoundary, reset });
+    renderErrorBoundary({ dictionary: en.errorBoundary, retry });
 
     await user.click(
       screen.getByRole('button', { name: en.errorBoundary.retry })
     );
 
-    expect(reset).toHaveBeenCalledTimes(1);
+    expect(retry).toHaveBeenCalledTimes(1);
   });
 
   it('renders the error digest so the failure can be traced in server logs', () => {

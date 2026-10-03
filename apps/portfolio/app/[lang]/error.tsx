@@ -5,10 +5,10 @@ import { useErrorBoundaryDictionary } from '../../components/providers/ErrorBoun
 
 interface Props {
   error: Error & { digest?: string };
-  reset: () => void;
+  retry: () => void;
 }
 
-export default function ErrorBoundary({ error, reset }: Props) {
+export default function ErrorBoundary({ error, retry }: Props) {
   const dictionary = useErrorBoundaryDictionary();
 
   return (
@@ -21,7 +21,7 @@ export default function ErrorBoundary({ error, reset }: Props) {
           {dictionary.title}
         </h1>
         <p className="text-body-r-md leading-body-r-md">{dictionary.message}</p>
-        <Button type="button" color="main" onClick={reset}>
+        <Button type="button" color="main" onClick={retry}>
           {dictionary.retry}
         </Button>
       </div>
