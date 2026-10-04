@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import {
   Reduction,
+  SectionGrain,
   SectionKind,
   type TimeSeriesSection,
 } from '../../../../../domain';
@@ -28,7 +29,15 @@ const timeSeriesSectionSchemaBase = z.strictObject({
   source: sourceSchema,
   kind: z.literal(SectionKind.TIME_SERIES),
   width: sectionWidthSchema.optional(),
-  window: z.number().int().min(1),
+  grain: z
+    .enum([
+      SectionGrain.MONTH,
+      SectionGrain.WEEK,
+      SectionGrain.DAY,
+      SectionGrain.HOUR,
+    ])
+    .optional(),
+  window: z.number().int().min(1).optional(),
   variant: z.enum(['line', 'area']).default('line'),
   stacked: z.boolean().default(false),
   format: valueFormatSchema,

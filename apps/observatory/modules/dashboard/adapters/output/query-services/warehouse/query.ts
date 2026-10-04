@@ -95,14 +95,35 @@ export function buildSourceFilters(source: SourceDefinition): {
 }
 
 export function timeColumn(time: TimeBinding): string {
-  return typeof time === 'string' ? time : time.column;
+  if (typeof time === 'string') {
+    return time;
+  }
+  return 'date' in time ? time.date : time.column;
 }
 
 export function calendarDateExpression(time: TimeBinding): string {
   const quoted = quoteIdentifier(timeColumn(time));
+  if (typeof time !== 'string' && 'date' in time) {
+    return quoted;
+  }
   return typeof time === 'string'
     ? `DATE(TIMESTAMP(DATETIME(${quoted}), @${TIME_ZONE_PARAMETER}), @${TIME_ZONE_PARAMETER})`
     : `DATE(${quoted}, @${TIME_ZONE_PARAMETER})`;
+}
+
+export function validatedHourExpression(time: TimeBinding): string | null {
+  if (typeof time === 'string' || !('date' in time)) {
+    return null;
+  }
+  const hour = quoteIdentifier(time.hour);
+  return `IF(${hour} BETWEEN 0 AND 23, ${hour}, ERROR('source.time.hour must be an integer from 0 through 23'))`;
+}
+
+export function sourceTimeExpression(time: TimeBinding): string {
+  const validatedHour = validatedHourExpression(time);
+  return validatedHour === null
+    ? quoteIdentifier(timeColumn(time))
+    : `DATETIME(${calendarDateExpression(time)}, TIME(${validatedHour}, 0, 0))`;
 }
 
 export function buildPeriodBoundsQuery(

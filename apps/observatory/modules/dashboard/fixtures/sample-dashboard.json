@@ -104,6 +104,23 @@
       "sort": { "column": "occurred_on", "direction": "descending" },
       "paging": { "pageSize": 20 },
       "emptyMessage": "No entries in this period."
+    },
+    {
+      "id": "daily-trend",
+      "title": "Daily trend",
+      "kind": "time-series",
+      "grain": "day",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "daily_readings",
+        "time": { "date": "reading_date", "hour": "reading_hour" }
+      },
+      "variant": "line",
+      "stacked": false,
+      "format": { "type": "number" },
+      "series": [
+        { "label": "Temperature", "column": "temperature", "reduction": "average" }
+      ]
     }
   ]
 }

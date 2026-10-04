@@ -19,7 +19,6 @@ export interface MeasureQueryPlan {
 
 interface BaseSectionQueryPlan {
   sectionId: string;
-  grain: PeriodGrain;
   source: SourceDefinition;
   timeZone: string;
   dateRange: DateRange;
@@ -29,10 +28,15 @@ interface BaseSectionQueryPlan {
 export type SectionQueryPlan =
   | (BaseSectionQueryPlan & {
       kind: typeof SectionKind.STAT_TILES;
+      grain: PeriodGrain;
       measures: (MeasureQueryPlan & { compares: boolean })[];
     })
-  | (BaseSectionQueryPlan & {
-      kind: typeof SectionKind.TIME_SERIES;
-      measures: MeasureQueryPlan[];
-      bucketLimit: number;
-    });
+  | (BaseSectionQueryPlan &
+      (
+        | { grain: PeriodGrain; firstHour?: never }
+        | { grain: 'hour'; firstHour: number }
+      ) & {
+        kind: typeof SectionKind.TIME_SERIES;
+        measures: MeasureQueryPlan[];
+        bucketLimit: number;
+      });

@@ -90,6 +90,37 @@ describe('buildTableQuery', () => {
     expect(result.sql).not.toContain('transfer');
   });
 
+  it('orders a date-and-hour source by its validated hour', () => {
+    const plan = planTableSection(largest, period, dashboard.timeZone, 1);
+    plan.source = {
+      dataset: 'home',
+      view: 'readings',
+      time: { date: 'reading_date', hour: 'reading_hour' },
+    };
+    plan.columns = [{ column: 'description', type: 'text' }];
+    plan.sort = null;
+
+    const result = buildTableQuery(plan);
+
+    const validatedHour =
+      "IF(`reading_hour` BETWEEN 0 AND 23, `reading_hour`, ERROR('source.time.hour must be an integer from 0 through 23'))";
+    expect(result.sql).toBe(
+      [
+        'WITH projected AS (',
+        `SELECT DATETIME(\`reading_date\`, TIME(${validatedHour}, 0, 0)) AS source_time, CAST(\`description\` AS STRING) AS cell_0`,
+        'FROM `home.readings`',
+        'WHERE `reading_date` >= CAST(@period_start AS DATE)',
+        'AND `reading_date` <= CAST(@period_end AS DATE)',
+        `AND ${validatedHour} IS NOT NULL`,
+        ')',
+        'SELECT cell_0',
+        'FROM projected',
+        'ORDER BY source_time DESC NULLS LAST, cell_0 ASC NULLS LAST',
+        'LIMIT @row_limit',
+      ].join('\n')
+    );
+  });
+
   it('orders by source time and all cells when sort is absent', () => {
     const query = buildTableQuery({
       ...planTableSection(largest, period, dashboard.timeZone, 1),

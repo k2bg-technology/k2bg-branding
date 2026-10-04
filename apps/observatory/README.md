@@ -87,13 +87,25 @@ Every warehouse read goes through `WarehouseClient.query()`, which caches rows i
 
 ## Dashboard Definitions
 
-Dashboard routes read strict JSON definitions from `OBSERVATORY_DASHBOARDS_DIR`. The [sample dashboard](modules/dashboard/fixtures/sample-dashboard.json) documents `stat-tiles`, `time-series`, and `table` sections, source filters, value transforms, formats, reduction bindings, `defaultPeriod`, labels, and a previous-period comparison. Files with definition issues are skipped and logged without hiding valid dashboards.
+Dashboard routes read strict JSON definitions from `OBSERVATORY_DASHBOARDS_DIR`. The [sample dashboard](modules/dashboard/fixtures/sample-dashboard.json) documents `stat-tiles`, `time-series`, and `table` sections, including a finer daily series on a monthly dashboard, source filters, value transforms, formats, reduction bindings, `defaultPeriod`, labels, and a previous-period comparison. Files with definition issues are skipped and logged without hiding valid dashboards.
 
 A dashboard requires `grain: "month"`, `"week"`, or `"day"`. Open `/dashboards/<id>?period=YYYY-MM`, `?period=YYYY-Www` (ISO week), or `?period=YYYY-MM-DD` according to that grain. Without `period`, the dashboard opens on `latest-with-data` by default; `last-complete` selects the previous complete period in the dashboard time zone and clamps it to the available range. The optional `periodSource` supplies navigation bounds; otherwise the first section's source does. Bounds follow that source's filters. Each section reads its own filtered source, including periods outside the navigation bounds. A tile with `comparison.direction` (`higher-is-better`, `lower-is-better`, or `neutral`) displays a change from its own source's previous period. `labels.period`, `labels.previousPeriod`, and `labels.nextPeriod` override navigation text.
 
 Each section source and `periodSource` can declare one or more `filters`, joined with AND. Each filter names a column and an `operator`: `equals`, `not-equals`, `less-than`, `less-than-or-equal`, `greater-than`, or `greater-than-or-equal` takes one `value`; `in` or `not-in` takes a nonempty `values` array whose entries all have the same type; `is-null` and `is-not-null` take no value. Values are strings, finite numbers, or booleans and are bound as query parameters. SQL NULL matches no comparison or set filter, including `not-equals` and `not-in`; use `is-null` to include it.
 
-A `time-series` section declares a positive integer `window` of trailing periods in the dashboard grain ending at the selected period, a shared `format` and optional `unit`, and 1–12 `series` bindings with `label`, `column`, and optional `reduction` (default `sum`). Its `variant` is `line` by default or `area`; `stacked` defaults to `false`. Stacking adds values, so it requires the `area` variant and `sum` for every series. Missing periods appear as gaps. A query reads at most 121 complete buckets to detect the 120-bucket cap; if more exist, the oldest are omitted and `labels.truncated` (default: “Older periods are not shown”) accompanies the shortened displayed range.
+A `time-series` section may set its own `grain`:
+
+| Dashboard grain | Allowed section grains |
+| --- | --- |
+| `month` | `month`, `day` |
+| `week` | `week`, `day` |
+| `day` | `day`, `hour` |
+
+Without a section `grain`, the dashboard grain applies. A positive integer `window` counts trailing buckets of the section grain, ending at the selected period's last bucket. It is required at the dashboard grain. A finer section without `window` covers the selected period. A section also declares a shared `format` and optional `unit`, and 1–12 `series` bindings with `label`, `column`, and optional `reduction` (default `sum`). Its `variant` is `line` by default or `area`; `stacked` defaults to `false`. Stacking adds values, so it requires the `area` variant and `sum` for every series.
+
+Any section source or `periodSource` accepts a time binding as a column name, `{ "column": "recorded_at", "type": "timestamp" }`, or `{ "date": "reading_date", "hour": "reading_hour" }`. The pair names a DATE column and an INT64 hour column containing wall-clock hours 0–23 in the dashboard time zone. Hour sections require the pair; other sections and period bounds may also use it. Invalid source hours make the affected section unavailable inline.
+
+Missing buckets throughout the requested range receive null values and appear as gaps. Chart points use local midnight for date buckets and local hours for hour buckets in the dashboard time zone. If local midnight does not exist, a date bucket uses that date's first existing hour. A nonexistent spring hour is omitted; a repeated fall hour uses its earlier occurrence. A query reads at most 121 complete returned buckets to detect the 120-bucket cap. Synthetic null points do not count toward that cap. If more returned buckets exist, the oldest are omitted and `labels.truncated` (default: “Older periods are not shown”) accompanies the shortened displayed range.
 
 Tiles and series accept `number`, `currency`, `percent` (`inputScale`: `ratio` or `percent`), and `duration` formats. Duration requires `inputUnit` (`seconds`, `minutes`, or `hours`) and displays whole minutes with hours where applicable. The optional `unit` text follows the formatted value.
 

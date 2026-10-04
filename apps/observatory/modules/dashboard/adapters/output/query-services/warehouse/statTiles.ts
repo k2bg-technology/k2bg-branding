@@ -1,7 +1,7 @@
 import type { WarehouseQueryParams } from '../../../../../../infrastructure/warehouse';
 import { Reduction, type SectionQueryPlan } from '../../../../domain';
 import { distinctCountAlias, valueColumnAlias } from './aliases';
-import { qualifiedView, quoteIdentifier } from './identifier';
+import { qualifiedView } from './identifier';
 import {
   type BuiltQuery,
   buildSourceFilters,
@@ -9,8 +9,9 @@ import {
   PERIOD_END_PARAMETER,
   PERIOD_START_PARAMETER,
   periodKeyExpression,
+  sourceTimeExpression,
   TIME_ZONE_PARAMETER,
-  timeColumn,
+  validatedHourExpression,
   valueExpression,
 } from './query';
 
@@ -40,14 +41,18 @@ export function buildGroupedSectionQuery(
   bucketLimit?: number
 ): BuiltQuery {
   const calendarDate = calendarDateExpression(plan.source.time);
-  const sourceTime = quoteIdentifier(timeColumn(plan.source.time));
+  const validatedHour = validatedHourExpression(plan.source.time);
   const filters = buildSourceFilters(plan.source);
   const valueSelections = plan.measures.map((measure, index) => {
     return `${valueExpression(measure.column, measure.transform)} AS ${valueColumnAlias(index)}`;
   });
   const filteredSelections = [
-    `${periodKeyExpression(plan.grain, calendarDate)} AS period`,
-    `${sourceTime} AS source_time`,
+    `${
+      plan.grain === 'hour'
+        ? `FORMAT('%sT%02d', FORMAT_DATE('%F', ${calendarDate}), ${validatedHour})`
+        : periodKeyExpression(plan.grain, calendarDate)
+    } AS period`,
+    `${sourceTimeExpression(plan.source.time)} AS source_time`,
   ].concat(valueSelections);
   const projections = plan.measures.flatMap((measure, index) => {
     const alias = valueColumnAlias(index);
@@ -68,6 +73,12 @@ export function buildGroupedSectionQuery(
     `FROM ${qualifiedView(plan.source.dataset, plan.source.view)}`,
     `WHERE ${calendarDate} >= CAST(@${PERIOD_START_PARAMETER} AS DATE)`,
     `AND ${calendarDate} <= CAST(@${PERIOD_END_PARAMETER} AS DATE)`,
+    ...(validatedHour === null ? [] : [`AND ${validatedHour} IS NOT NULL`]),
+    ...(plan.kind === 'time-series' && plan.grain === 'hour'
+      ? [
+          `AND (${calendarDate} > CAST(@${PERIOD_START_PARAMETER} AS DATE) OR ${validatedHour} >= @first_hour)`,
+        ]
+      : []),
     ...filters.clauses.map((clause) => `AND ${clause}`),
     '),',
     'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
@@ -82,6 +93,9 @@ export function buildGroupedSectionQuery(
     [PERIOD_START_PARAMETER]: plan.dateRange.firstDate,
     [PERIOD_END_PARAMETER]: plan.dateRange.lastDate,
     [TIME_ZONE_PARAMETER]: plan.timeZone,
+    ...(plan.kind === 'time-series' && plan.grain === 'hour'
+      ? { first_hour: plan.firstHour }
+      : {}),
     ...filters.params,
     ...(bucketLimit === undefined ? {} : { bucket_limit: bucketLimit + 1 }),
   };

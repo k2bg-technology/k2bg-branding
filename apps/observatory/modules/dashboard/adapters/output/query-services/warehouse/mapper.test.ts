@@ -5,7 +5,7 @@ import { AmbiguousLatestValueError, Period } from '../../../../domain';
 import { MappingError } from '../../../shared';
 import { toDateBounds, toSectionData, toTableRows } from './mapper';
 
-function plan(): SectionQueryPlan {
+function plan(): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
   return {
     kind: 'stat-tiles',
     sectionId: 'headline',
@@ -202,6 +202,70 @@ describe('warehouse dashboard mapper', () => {
     );
 
     expect(result?.buckets).toEqual([{ period: key, values: [5, 9] }]);
+  });
+});
+
+describe('hour buckets', () => {
+  const hourPlan: Extract<SectionQueryPlan, { kind: 'time-series' }> = {
+    kind: 'time-series',
+    sectionId: 'readings',
+    grain: 'hour',
+    firstHour: 0,
+    source: {
+      dataset: 'home',
+      view: 'hourly_readings',
+      time: { date: 'reading_date', hour: 'reading_hour' },
+    },
+    timeZone: 'Asia/Tokyo',
+    selectedPeriod: '2026-08-15',
+    dateRange: { firstDate: '2026-08-10', lastDate: '2026-08-15' },
+    measures: [{ column: 'temperature', reduction: 'average' }],
+    bucketLimit: 120,
+  };
+
+  it('maps valid hour keys with unchanged values', () => {
+    expect(
+      toSectionData([{ period: '2026-08-15T03', value_0: 21 }], hourPlan)
+    ).toEqual({
+      truncated: false,
+      buckets: [{ period: '2026-08-15T03', values: [21] }],
+    });
+  });
+
+  it.each([
+    '2026-08-15T24',
+    '2026-08-15T-1',
+    '2026-08-15T1',
+    '2026-02-30T03',
+    '2026-08-15',
+  ])('rejects malformed hour key %s', (period) => {
+    expect(() => toSectionData([{ period, value_0: 1 }], hourPlan)).toThrow(
+      new MappingError(`period must match hour grain, received "${period}"`)
+    );
+  });
+
+  it('retains the newest 120 complete hour buckets in ascending order', () => {
+    const rows = Array.from({ length: 121 }, (_, index) => {
+      const instant = new Date(Date.UTC(2026, 7, 15, 23 - index));
+      return {
+        period: `${instant.toISOString().slice(0, 10)}T${String(instant.getUTCHours()).padStart(2, '0')}`,
+        value_0: index,
+      };
+    });
+
+    const result = toSectionData(rows, hourPlan);
+
+    expect(result?.truncated).toBe(true);
+    expect(result?.buckets).toHaveLength(120);
+    expect(result?.buckets[0]).toEqual({
+      period: '2026-08-11T00',
+      values: [119],
+    });
+    expect(result?.buckets.at(-1)).toEqual({
+      period: '2026-08-15T23',
+      values: [0],
+    });
+    expect(toSectionData(rows.slice(0, 120), hourPlan)?.truncated).toBe(false);
   });
 });
 

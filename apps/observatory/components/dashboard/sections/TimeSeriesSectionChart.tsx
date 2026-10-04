@@ -16,6 +16,7 @@ interface Props {
   variant: 'line' | 'area';
   stacked: boolean;
   locale: string;
+  timeZone: string;
   currency?: string;
   format: ValueFormat;
   unit?: string;
@@ -29,6 +30,7 @@ export function TimeSeriesSectionChart({
   variant,
   stacked,
   locale,
+  timeZone,
   currency,
   format,
   unit,
@@ -40,7 +42,7 @@ export function TimeSeriesSectionChart({
       period={chartPeriod}
       variant={variant}
       stacked={stacked}
-      timeZone="UTC"
+      timeZone={timeZone}
       locale={locale}
       valueFormatter={(value) =>
         formatValue(value, { format, unit }, { locale, currency })

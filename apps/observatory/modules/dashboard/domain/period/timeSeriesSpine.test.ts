@@ -1,26 +1,36 @@
 import { describe, expect, it } from 'vitest';
 
 import { Period } from './period';
+import { resolveSectionRange } from './sectionRange';
 import { timeSeriesSpine } from './timeSeriesSpine';
 
-describe('timeSeriesSpine', () => {
-  it('keeps a reduced January average and draws an absent February as a gap', () => {
-    const period = Period.parse('month', '2026-03');
-    if (period === null) {
-      throw new Error('Expected period to parse');
-    }
-    const reducedBuckets = [
-      { period: '2026-01', values: [15] },
-      { period: '2026-03', values: [30] },
-    ];
+function selected(grain: 'month' | 'week' | 'day', key: string) {
+  const period = Period.parse(grain, key);
+  if (period === null) {
+    throw new Error('Expected period to parse');
+  }
+  return period;
+}
 
-    const result = timeSeriesSpine(period, 3, reducedBuckets, false);
+describe('timeSeriesSpine', () => {
+  it('preserves values and fills an absent month', () => {
+    const range = resolveSectionRange(
+      { window: 3 },
+      selected('month', '2026-03')
+    );
+
+    const result = timeSeriesSpine(
+      range,
+      [
+        { period: '2026-01', values: [15] },
+        { period: '2026-03', values: [30] },
+      ],
+      1,
+      'UTC'
+    );
 
     expect(
-      result.map(({ period: month, values }) => ({
-        period: month.toString(),
-        value: values[0],
-      }))
+      result.map(({ period, values }) => ({ period, value: values[0] }))
     ).toEqual([
       { period: '2026-01', value: 15 },
       { period: '2026-02', value: null },
@@ -28,87 +38,164 @@ describe('timeSeriesSpine', () => {
     ]);
   });
 
-  it('starts a truncated range at the oldest returned bucket', () => {
-    const period = Period.parse('month', '2026-03');
-    if (period === null) {
-      throw new Error('Expected period to parse');
-    }
-
-    const result = timeSeriesSpine(
-      period,
-      12,
-      [
-        { period: '2026-02', values: [20] },
-        { period: '2026-03', values: [30] },
-      ],
-      true
-    );
-
-    expect(result.map(({ period: month }) => month.toString())).toEqual([
-      '2026-02',
-      '2026-03',
-    ]);
-  });
-
   it.each([
     {
       grain: 'week',
-      selected: '2027-W01',
+      selectedKey: '2027-W01',
       first: '2026-W52',
       gap: '2026-W53',
     },
     {
       grain: 'day',
-      selected: '2026-03-01',
+      selectedKey: '2026-03-01',
       first: '2026-02-27',
       gap: '2026-02-28',
     },
   ] as const)(
-    'draws the absent $gap as a gap in a $grain window through $selected',
-    ({ grain, selected, first, gap }) => {
-      const period = Period.parse(grain, selected);
-      if (period === null) {
-        throw new Error('Expected period to parse');
-      }
-      const buckets = [
-        { period: first, values: [10] },
-        { period: selected, values: [30] },
-      ];
+    'fills a $grain gap across a calendar boundary',
+    ({ grain, selectedKey, first, gap }) => {
+      const range = resolveSectionRange(
+        { window: 3 },
+        selected(grain, selectedKey)
+      );
 
-      const result = timeSeriesSpine(period, 3, buckets, false);
+      const result = timeSeriesSpine(
+        range,
+        [
+          { period: first, values: [10] },
+          { period: selectedKey, values: [30] },
+        ],
+        1,
+        'UTC'
+      );
 
-      expect(
-        result.map(({ period: bucketPeriod, values }) => ({
-          period: bucketPeriod.toString(),
-          value: values[0],
-        }))
-      ).toEqual([
-        { period: first, value: 10 },
-        { period: gap, value: null },
-        { period: selected, value: 30 },
+      expect(result.map(({ period }) => period)).toEqual([
+        first,
+        gap,
+        selectedKey,
       ]);
+      expect(result[1].values).toEqual([null]);
     }
   );
 
-  it('starts a truncated week range at the oldest returned ISO week', () => {
-    const period = Period.parse('week', '2027-W01');
-    if (period === null) {
-      throw new Error('Expected period to parse');
-    }
-
-    const result = timeSeriesSpine(
-      period,
-      5,
-      [
-        { period: '2026-W53', values: [20] },
-        { period: '2027-W01', values: [30] },
-      ],
-      true
+  it('starts at a retained truncated bucket and fills the trailing gap', () => {
+    const range = resolveSectionRange(
+      { window: 12 },
+      selected('month', '2026-03'),
+      { truncated: true, firstBucket: '2026-02' }
     );
 
-    expect(result.map(({ period: week }) => week.toString())).toEqual([
-      '2026-W53',
-      '2027-W01',
+    const result = timeSeriesSpine(
+      range,
+      [{ period: '2026-02', values: [20] }],
+      1,
+      'UTC'
+    );
+
+    expect(result.map(({ period, values }) => [period, values[0]])).toEqual([
+      ['2026-02', 20],
+      ['2026-03', null],
     ]);
+  });
+
+  it('fills leading, middle, and trailing days across January through April', () => {
+    const range = resolveSectionRange(
+      { grain: 'day', window: 120 },
+      selected('month', '2026-04')
+    );
+
+    const result = timeSeriesSpine(
+      range,
+      [
+        { period: '2026-01-10', values: [10] },
+        { period: '2026-04-20', values: [20] },
+      ],
+      1,
+      'UTC'
+    );
+
+    expect(result).toHaveLength(120);
+    expect(result[0]).toMatchObject({ period: '2026-01-01', values: [null] });
+    expect(
+      result.find(({ period }) => period === '2026-01-10')?.values
+    ).toEqual([10]);
+    expect(
+      result.find(({ period }) => period === '2026-02-01')?.values
+    ).toEqual([null]);
+    expect(
+      result.find(({ period }) => period === '2026-03-31')?.values
+    ).toEqual([null]);
+    expect(
+      result.find(({ period }) => period === '2026-04-20')?.values
+    ).toEqual([20]);
+    expect(result.at(-1)).toMatchObject({
+      period: '2026-04-30',
+      values: [null],
+    });
+  });
+
+  it('omits a spring hour without shifting the next measured value', () => {
+    const range = resolveSectionRange(
+      { grain: 'hour' },
+      selected('day', '2026-03-08')
+    );
+
+    const result = timeSeriesSpine(
+      range,
+      [
+        { period: '2026-03-08T02', values: [2] },
+        { period: '2026-03-08T03', values: [3] },
+      ],
+      1,
+      'America/New_York'
+    );
+
+    expect(result).toHaveLength(23);
+    expect(result.some(({ period }) => period === '2026-03-08T02')).toBe(false);
+    expect(result.find(({ period }) => period === '2026-03-08T03')).toEqual({
+      period: '2026-03-08T03',
+      timestamp: 1772953200000,
+      values: [3],
+    });
+  });
+
+  it('uses the earlier fall hour once', () => {
+    const range = resolveSectionRange(
+      { grain: 'hour' },
+      selected('day', '2026-11-01')
+    );
+
+    const result = timeSeriesSpine(
+      range,
+      [{ period: '2026-11-01T01', values: [1] }],
+      1,
+      'America/New_York'
+    );
+
+    expect(result.filter(({ period }) => period === '2026-11-01T01')).toEqual([
+      { period: '2026-11-01T01', timestamp: 1793509200000, values: [1] },
+    ]);
+  });
+
+  it('starts a truncated hour range at a retained nonzero hour', () => {
+    const range = resolveSectionRange(
+      { grain: 'hour', window: 30 },
+      selected('day', '2026-08-15'),
+      { truncated: true, firstBucket: '2026-08-15T03' }
+    );
+
+    const result = timeSeriesSpine(
+      range,
+      [{ period: '2026-08-15T03', values: [3] }],
+      1,
+      'Asia/Tokyo'
+    );
+
+    expect(result[0]).toMatchObject({ period: '2026-08-15T03', values: [3] });
+    expect(result.at(-1)).toMatchObject({
+      period: '2026-08-15T23',
+      values: [null],
+    });
+    expect(result).toHaveLength(21);
   });
 });
