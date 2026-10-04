@@ -185,24 +185,35 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   `language` not `lang`).
 - Detailed coding standards: `.claude/rules/code-style.md` (Claude Code auto-loads it for
   TypeScript sources; other agents can read it directly).
+- Naming (identifier casing, verbs, booleans, Clean Architecture names, files and
+  directories): `.claude/rules/naming-guidelines.md`. The summary below is the short form;
+  the rule file decides when they differ.
 
 ### File & Directory Naming
 
-- React components: **PascalCase** (`Header.tsx`, `ArticleHeading.tsx`).
-- Component stories: **PascalCase** `.stories.tsx` (`Button.stories.tsx`).
-- Tests: **camelCase** `.test.ts(x)` / `.spec.ts(x)` (`useSnsShareInfo.test.ts`).
-- Utility files: **camelCase** (`generateHtmlTemplate.ts`).
-- Entity/domain files: **camelCase** (`apps/blog/modules/post/domain/entities/entity.ts`,
-  `apps/blog/modules/contact/domain/repositories/emailSender.ts`).
-- Config files: **lowercase** (`globals.css`, `middleware.ts`).
-- Component directories: **kebab-case** in apps (`apps/blog/components/article-heading/`);
-  **PascalCase** in `packages/ui` (`packages/ui/src/components/Avatar/`); domain/module
-  directories: **camelCase** (`useCases/`). `packages/ui` `*.module.css` keys must be
-  lowerCamelCase.
+- React components: **PascalCase** (`Header.tsx`, `ArticleHeading.tsx`); the file exports one
+  component with the file's name.
+- Component stories and component tests carry the component's name: `Button.stories.tsx`,
+  `Header.test.tsx`.
+- Hook, utility, domain, adapter, and server files: **camelCase** (`useSnsShareInfo.ts`,
+  `apps/blog/modules/post/domain/value-objects/slug.ts`,
+  `apps/blog/modules/contact/domain/repositories/emailSender.ts`); their tests carry the
+  source file's name (`useSnsShareInfo.test.ts`, `slug.test.ts`). Database integration tests
+  add a `.db` segment (`postRepository.db.test.ts`).
+- Route files and framework config: **lowercase** as the framework names them (`page.tsx`,
+  `not-found.tsx`, `middleware.ts`).
+- Directories: **kebab-case** throughout apps — component directories
+  (`apps/blog/components/article-heading/`), module layers and use cases
+  (`use-cases/query/fetch-post/`, `query-services/`); **PascalCase** for component
+  directories in `packages/ui` (`packages/ui/src/components/Avatar/`) and for Scene Studio
+  primitives, patterns, and compositions. An app component directory is a feature unit
+  (main component, parts, skeleton, hooks, tests); components never sit directly in
+  `components/` or inside `app/`. `packages/ui` `*.module.css` keys must be lowerCamelCase.
 
 ### Component Patterns
 
-- Always name the main props interface `Props`; compose with `extends` for HTML props.
+- Name the file's main props type `Props`; compose with `extends` for HTML props. A props
+  type exported from `packages/ui` for consumers is `<Component>Props` (`BarChartProps`).
 
 ```typescript
 interface Props
@@ -216,7 +227,8 @@ interface Props
 components/component-name/
 ├── ComponentName.tsx
 ├── ComponentName.stories.tsx   # if UI component
-└── componentName.test.ts
+├── ComponentName.test.tsx
+└── useComponentName.ts         # component-specific hook, if any
 ```
 
 ### Import / Export Patterns
@@ -230,14 +242,15 @@ import { Button, DropdownMenu } from 'ui';
 
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 
-import { Category } from '../../modules/post/domain/types';
+import { Category } from '../../modules/post/domain';
 
-import MotionHeader from './MotionHeader';
+import { MotionHeader } from './MotionHeader';
 ```
 
 - Use `workspace:*` for internal packages; import UI components via `import { Button } from 'ui'`.
-- Default exports for main components; named exports for utilities/types; barrel re-exports
-  (`export * from './entity'`).
+- Named exports for components, utilities, and types; barrel re-exports
+  (`export * from './entity'`). `export default` only where a framework requires it (Next.js
+  route files, Storybook meta, Remotion's root, config files).
 
 ### TypeScript Patterns
 
@@ -252,7 +265,8 @@ Strict mode, composite projects, path mapping via workspace resolution.
 ### Design System (UI Package)
 
 - Use Class Variance Authority (CVA) for component variants.
-- Use dot notation for compound components; set `displayName`.
+- Use dot notation for compound components; set `displayName = '<Parent>.<Part>'` on every
+  part (canonical: `packages/ui/src/components/Table/Cell.tsx`).
 - Component slot props: keep a permissive `ReactNode` type and render nothing for invalid
   (non-element) values — do not narrow the type or add a default fallback.
 

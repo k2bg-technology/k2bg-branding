@@ -33,9 +33,12 @@ paths: apps/**/*.{ts,tsx}, packages/**/*.{ts,tsx}
 - **Use Unambiguous Names**:
   - When indicating ranges, use `min` or `max`, `first` and `last` when limits are inclusive.
   - Use `begin` and `end` for inclusive/exclusive ranges.
-  - For boolean values, clarify meaning using prefixes like `is_`, `has_`, `can_`.
-  - **Avoid negative names (e.g., `disable_ssl`)**, use affirmative forms (e.g., `use_ssl`).
-- **Match User Expectations**: Don't use names that contradict conventions or expectations readers are familiar with (e.g., `get` should be a lightweight accessor).
+  - For boolean values, clarify meaning: `is` / `has` / `can` / `should` prefixes for variables
+    and functions, state adjectives for props (`disabled`, `open`).
+  - **Avoid negative names (e.g., `disableSync`)**, use affirmative forms (e.g., `enabled`).
+- **Match User Expectations**: Don't use names that contradict conventions or expectations readers are familiar with (e.g., `get` never hides a network call).
+- **Spelling is fixed in one place**: casing, acronyms, verb prefixes, Clean Architecture
+  names, and file and directory names are stated in `.claude/rules/naming-guidelines.md`.
 
 ## Comment Guidelines
 
