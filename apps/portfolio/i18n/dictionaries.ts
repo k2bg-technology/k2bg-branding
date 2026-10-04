@@ -1,9 +1,9 @@
 import 'server-only';
 
-import type en from './locales/en/translation.json';
 import type { Language } from './settings';
+import type { Dictionary } from './types';
 
-export type Dictionary = typeof en;
+export type { Dictionary };
 
 const dictionaries: Record<Language, () => Promise<Dictionary>> = {
   ja: () =>
