@@ -8,7 +8,9 @@ const VARIANT_WIDTHS = [640, 1080, 1920];
 
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const appDirectory = path.resolve(scriptDirectory, '..');
-const imageDirectory = path.join(appDirectory, 'public', 'images');
+const imageDirectory = process.argv[2]
+  ? path.resolve(process.argv[2])
+  : path.join(appDirectory, 'public', 'images');
 const outputDirectory = path.join(imageDirectory, 'generated');
 
 async function isOutputCurrent(inputPath, outputPath) {
