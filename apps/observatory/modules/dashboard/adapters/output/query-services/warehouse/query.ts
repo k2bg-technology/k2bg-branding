@@ -111,6 +111,21 @@ export function calendarDateExpression(time: TimeBinding): string {
     : `DATE(${quoted}, @${TIME_ZONE_PARAMETER})`;
 }
 
+export function validatedHourExpression(time: TimeBinding): string | null {
+  if (typeof time === 'string' || !('date' in time)) {
+    return null;
+  }
+  const hour = quoteIdentifier(time.hour);
+  return `IF(${hour} BETWEEN 0 AND 23, ${hour}, ERROR('source.time.hour must be an integer from 0 through 23'))`;
+}
+
+export function sourceTimeExpression(time: TimeBinding): string {
+  const validatedHour = validatedHourExpression(time);
+  return validatedHour === null
+    ? quoteIdentifier(timeColumn(time))
+    : `DATETIME(${calendarDateExpression(time)}, TIME(${validatedHour}, 0, 0))`;
+}
+
 export function buildPeriodBoundsQuery(
   source: SourceDefinition,
   timeZone: string

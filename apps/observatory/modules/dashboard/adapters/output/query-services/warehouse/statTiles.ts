@@ -1,7 +1,7 @@
 import type { WarehouseQueryParams } from '../../../../../../infrastructure/warehouse';
 import { Reduction, type SectionQueryPlan } from '../../../../domain';
 import { distinctCountAlias, valueColumnAlias } from './aliases';
-import { qualifiedView, quoteIdentifier } from './identifier';
+import { qualifiedView } from './identifier';
 import {
   type BuiltQuery,
   buildSourceFilters,
@@ -9,8 +9,9 @@ import {
   PERIOD_END_PARAMETER,
   PERIOD_START_PARAMETER,
   periodKeyExpression,
+  sourceTimeExpression,
   TIME_ZONE_PARAMETER,
-  timeColumn,
+  validatedHourExpression,
   valueExpression,
 } from './query';
 
@@ -40,18 +41,7 @@ export function buildGroupedSectionQuery(
   bucketLimit?: number
 ): BuiltQuery {
   const calendarDate = calendarDateExpression(plan.source.time);
-  const pair =
-    typeof plan.source.time !== 'string' && 'date' in plan.source.time
-      ? plan.source.time
-      : null;
-  const validatedHour =
-    pair === null
-      ? null
-      : `IF(${quoteIdentifier(pair.hour)} BETWEEN 0 AND 23, ${quoteIdentifier(pair.hour)}, ERROR('source.time.hour must be an integer from 0 through 23'))`;
-  const sourceTime =
-    pair === null
-      ? quoteIdentifier(timeColumn(plan.source.time))
-      : `DATETIME(${calendarDate}, TIME(${validatedHour}, 0, 0))`;
+  const validatedHour = validatedHourExpression(plan.source.time);
   const filters = buildSourceFilters(plan.source);
   const valueSelections = plan.measures.map((measure, index) => {
     return `${valueExpression(measure.column, measure.transform)} AS ${valueColumnAlias(index)}`;
@@ -62,7 +52,7 @@ export function buildGroupedSectionQuery(
         ? `FORMAT('%sT%02d', FORMAT_DATE('%F', ${calendarDate}), ${validatedHour})`
         : periodKeyExpression(plan.grain, calendarDate)
     } AS period`,
-    `${sourceTime} AS source_time`,
+    `${sourceTimeExpression(plan.source.time)} AS source_time`,
   ].concat(valueSelections);
   const projections = plan.measures.flatMap((measure, index) => {
     const alias = valueColumnAlias(index);
