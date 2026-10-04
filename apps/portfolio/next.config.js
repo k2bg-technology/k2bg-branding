@@ -43,7 +43,9 @@ module.exports = {
   transpilePackages: ['ui', 'tailwind-config'],
   turbopack: {},
   images: {
-    unoptimized: true,
+    loader: 'custom',
+    loaderFile: './image-loader.ts',
+    deviceSizes: [640, 1080, 1920],
   },
   async headers() {
     return [

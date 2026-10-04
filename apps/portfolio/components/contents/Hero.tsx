@@ -12,6 +12,7 @@ export function Hero({ dictionary }: { dictionary: HeroDictionary }) {
             src="/images/hero.jpg"
             fill
             alt={dictionary.imageAlt}
+            sizes="100vw"
             className="object-cover"
           />
         </div>
