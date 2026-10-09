@@ -770,14 +770,14 @@ describe('bars sections', () => {
     ]);
   });
 
-  it('renders unavailable and logs a label collision', async () => {
+  it('renders unavailable and logs a label collision with a folded category', async () => {
     const definition = makeDashboard();
     await renderBars(definition, async () => ({
       grouping: 'category',
       groups: [
-        { category: 'Other categories', values: [5] },
         { category: 'Rent', values: [10] },
-        { category: 'Food', values: [2] },
+        { category: 'Food', values: [5] },
+        { category: 'Other categories', values: [1] },
       ],
     }));
 

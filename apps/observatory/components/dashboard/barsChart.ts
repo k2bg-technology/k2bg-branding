@@ -56,7 +56,7 @@ function timeAxis(
   };
 }
 
-// Labels can collide with category values, so build them inside the section's logged load boundary.
+// Labels can collide with any category value, folded ones included, so check them inside the section's logged load boundary.
 export function barsChart(
   section: BarsSection,
   data: GroupedValues,
@@ -76,6 +76,9 @@ export function barsChart(
       ...group,
       rank: group.values[rankIndex] ?? null,
     }));
+    categoryLabels(items, section.x.topN?.otherLabel ?? null, labels, {
+      sectionId: section.id,
+    });
     const selection =
       section.x.topN === undefined
         ? { kept: items, remainder: null }
@@ -130,6 +133,9 @@ export function barsChart(
   if (section.pivot === undefined)
     throw new Error('Pivot bars require a pivot');
   const items = categoryItemsFromBuckets(data.buckets);
+  categoryLabels(items, section.pivot.topN.otherLabel, labels, {
+    sectionId: section.id,
+  });
   const { kept, remainder } = selectTopN(items, section.pivot.topN.count);
   const seriesLabels = categoryLabels(
     kept,
