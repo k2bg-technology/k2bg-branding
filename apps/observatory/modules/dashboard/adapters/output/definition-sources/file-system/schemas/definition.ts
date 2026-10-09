@@ -111,6 +111,10 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       previousPage: z.string().min(1).optional(),
       nextPage: z.string().min(1).optional(),
       pagination: z.string().min(1).optional(),
+      asOf: z.string().min(1).optional(),
+      accumulatingSince: z.string().min(1).optional(),
+      availableFrom: z.string().min(1).optional(),
+      notReady: z.string().min(1).optional(),
     })
     .optional(),
   sections: z.array(sectionSchema).min(1),

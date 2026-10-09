@@ -98,11 +98,56 @@ describe('FileSystemDefinitionSource', () => {
           { id: 'largest-entries', kind: 'table', limit: 10 },
           { id: 'entry-details', kind: 'table', paging: { pageSize: 20 } },
         ]);
+        expect(result.definitions[0].sections.slice(5)).toMatchObject([
+          {
+            id: 'latest-day',
+            period: 'latest',
+            readiness: { column: 'is_complete' },
+          },
+          {
+            id: 'latest-day-by-hour',
+            period: 'latest',
+            grain: 'hour',
+            availability: { minimumBuckets: 48 },
+          },
+        ]);
         expect(result.definitions[0].labels).toMatchObject({
           previousPage: 'Earlier page',
           nextPage: 'Later page',
           pagination: 'Entry pages',
+          asOf: 'Latest date',
+          notReady: 'The latest day is still being processed',
         });
+      }
+    );
+  });
+
+  it.each([
+    {
+      section: createSection({ period: 'selected' }),
+      path: 'sections[0].period',
+    },
+    {
+      section: createSection({ availability: { since: '2026-02-30' } }),
+      path: 'sections[0].availability.since',
+    },
+    {
+      section: createSection({
+        availability: { since: '2026-04-01', minimumBuckets: 0 },
+      }),
+      path: 'sections[0].availability.minimumBuckets',
+    },
+    {
+      section: createSection({ readiness: { column: 'bad-name' } }),
+      path: 'sections[0].readiness.column',
+    },
+  ])('rejects an invalid section gate at $path', async ({ section, path }) => {
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const result = await new FileSystemDefinitionSource(directory).load();
+        expect(result.definitions).toHaveLength(0);
+        expect(result.issues).toContainEqual(expect.objectContaining({ path }));
       }
     );
   });
