@@ -94,7 +94,11 @@ describe('FileSystemDefinitionSource', () => {
       async (directory) => {
         const result = await new FileSystemDefinitionSource(directory).load();
         expect(result.issues).toEqual([]);
-        expect(result.definitions[0].sections.slice(2)).toMatchObject([
+        expect(
+          result.definitions[0].sections.filter((section) =>
+            ['largest-entries', 'entry-details'].includes(section.id)
+          )
+        ).toMatchObject([
           { id: 'largest-entries', kind: 'table', limit: 10 },
           { id: 'entry-details', kind: 'table', paging: { pageSize: 20 } },
         ]);
@@ -793,6 +797,108 @@ describe('FileSystemDefinitionSource', () => {
 
         expect(result.issues).toEqual([]);
         expect(result.definitions[0]?.grain).toBe(grain);
+      }
+    );
+  });
+});
+
+describe('bars schema', () => {
+  const createBars = (overrides: Record<string, unknown> = {}) => ({
+    id: 'bars',
+    title: 'Bars',
+    kind: 'bars',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    x: { axis: 'category', column: 'category', order: 'value-desc' },
+    series: [{ label: 'Amount', column: 'amount' }],
+    format: { type: 'number' },
+    ...overrides,
+  });
+  const issuePath = async (section: Record<string, unknown>) => {
+    const paths: string[] = [];
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const loaded = await new FileSystemDefinitionSource(directory).load();
+        paths.push(...loaded.issues.map((issue) => issue.path));
+      }
+    );
+    return paths[0];
+  };
+
+  it.each([
+    [
+      { x: { axis: 'rows', column: 'category', order: 'value-desc' } },
+      'sections[0].x.axis',
+    ],
+    [{ x: { axis: 'time' } }, 'sections[0].x.window'],
+    [{ x: { axis: 'category', column: 'category' } }, 'sections[0].x.order'],
+    [
+      {
+        pivot: { column: 'category', value: { column: 'amount' } },
+        series: undefined,
+        x: { axis: 'time', window: 3 },
+      },
+      'sections[0].pivot.topN',
+    ],
+    [
+      {
+        pivot: {
+          column: 'category',
+          value: { column: 'amount' },
+          topN: { count: 12, otherLabel: 'Other' },
+        },
+        series: undefined,
+        x: { axis: 'time', window: 3 },
+      },
+      'sections[0].pivot.topN.count',
+    ],
+    [
+      {
+        x: {
+          axis: 'category',
+          column: 'category',
+          order: 'value-desc',
+          topN: { count: 0, otherLabel: 'Other' },
+        },
+      },
+      'sections[0].x.topN.count',
+    ],
+    [
+      { x: { axis: 'category', column: 'category', order: 'as-provided' } },
+      'sections[0].x.order',
+    ],
+    [
+      {
+        x: {
+          axis: 'category',
+          column: 'category',
+          order: { sortKey: { column: 'weekday', type: 'date' } },
+        },
+      },
+      'sections[0].x.order.sortKey.type',
+    ],
+    [
+      {
+        x: { axis: 'time', window: 3, topN: { count: 1, otherLabel: 'Other' } },
+      },
+      'sections[0].x',
+    ],
+  ] as const)('reports invalid bars shape at %s', async (overrides, path) => {
+    expect(await issuePath(createBars(overrides))).toBe(path);
+  });
+
+  it('loads all sample bars sections and the null label', async () => {
+    await withDefinitionDirectory(
+      { 'sample.json': sampleDashboard },
+      async (directory) => {
+        const loaded = await new FileSystemDefinitionSource(directory).load();
+        expect(loaded.issues).toEqual([]);
+        expect(
+          loaded.definitions[0].sections
+            .filter((section) => section.kind === 'bars')
+            .map((section) => section.id)
+        ).toEqual(['category-trend', 'category-ranking', 'weekday-totals']);
+        expect(loaded.definitions[0].labels?.nullCategory).toBe('No category');
       }
     );
   });

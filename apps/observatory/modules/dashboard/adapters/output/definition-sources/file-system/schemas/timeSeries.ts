@@ -15,7 +15,7 @@ import {
   valueFormatSchema,
 } from './statTiles';
 
-const seriesSchema = z.strictObject({
+export const seriesSchema = z.strictObject({
   label: z.string().min(1),
   column: identifierSchema,
   reduction: reductionSchema.default(Reduction.SUM),
