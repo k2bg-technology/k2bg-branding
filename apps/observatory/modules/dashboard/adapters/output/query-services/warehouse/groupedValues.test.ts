@@ -111,7 +111,7 @@ describe('buildGroupedValuesQuery', () => {
         'SELECT category, CAST(SUM(value_0) AS FLOAT64) AS value_0,',
         'CAST(AVG(value_1) AS FLOAT64) AS value_1,',
         'MIN(sort_key) AS sort_key,',
-        'CAST(COUNT(DISTINCT sort_key) AS FLOAT64) AS sort_key_distinct_count',
+        'CAST(COUNT(DISTINCT TO_JSON_STRING(sort_key)) AS FLOAT64) AS sort_key_distinct_count',
         'FROM filtered',
         'GROUP BY category',
         'ORDER BY category',

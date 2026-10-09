@@ -75,7 +75,7 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
   if (plan.category?.sortKey !== null && plan.category?.sortKey !== undefined) {
     projections.push(
       `MIN(${SORT_KEY_ALIAS}) AS ${SORT_KEY_ALIAS}`,
-      `CAST(COUNT(DISTINCT ${SORT_KEY_ALIAS}) AS FLOAT64) AS ${SORT_KEY_DISTINCT_COUNT_ALIAS}`
+      `CAST(COUNT(DISTINCT TO_JSON_STRING(${SORT_KEY_ALIAS})) AS FLOAT64) AS ${SORT_KEY_DISTINCT_COUNT_ALIAS}`
     );
   }
   const sql = [
