@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const mocks = vi.hoisted(() => ({
   loadDashboards: vi.fn(),
   resolvePeriod: vi.fn(),
+  resolveSectionGate: vi.fn(),
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
@@ -18,6 +19,9 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createLoadDashboardsUseCase: () => ({ execute: mocks.loadDashboards }),
   createResolveDashboardPeriodUseCase:
     mocks.createResolveDashboardPeriodUseCase,
+  createResolveSectionGateUseCase: () => ({
+    execute: mocks.resolveSectionGate,
+  }),
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
   createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
 }));
@@ -85,6 +89,11 @@ describe('dashboard page', () => {
         nextTarget: null,
       };
     });
+    mocks.resolveSectionGate.mockImplementation(async ({ selectedPeriod }) =>
+      selectedPeriod === null
+        ? { status: 'empty' }
+        : { status: 'open', period: selectedPeriod }
+    );
     mocks.fetchSectionData.mockImplementation(async ({ period }) => ({
       buckets: [
         {
