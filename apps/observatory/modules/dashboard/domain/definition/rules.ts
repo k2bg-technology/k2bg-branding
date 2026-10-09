@@ -33,6 +33,7 @@ function currencyViolations(
   return definition.sections.flatMap((section, sectionIndex) => {
     switch (section.kind) {
       case SectionKind.TIME_SERIES:
+      case SectionKind.BARS:
         return section.format.type === 'currency'
           ? [
               {
@@ -78,6 +79,158 @@ function currencyViolations(
       default:
         throw new Error(`Unsupported section kind: ${JSON.stringify(section)}`);
     }
+  });
+}
+
+function barsSeriesSourceViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.BARS &&
+    (section.series === undefined) === (section.pivot === undefined)
+      ? [
+          {
+            path: ['sections', index, 'series'],
+            message: 'A bars section declares exactly one of series and pivot',
+          },
+        ]
+      : []
+  );
+}
+
+function barsRankingViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) => {
+    if (
+      section.kind !== SectionKind.BARS ||
+      section.x.axis !== 'category' ||
+      section.series === undefined
+    ) {
+      return [];
+    }
+    const { by, order, topN } = section.x;
+    if (by === undefined) {
+      return section.series.length > 1 &&
+        (topN !== undefined || order === 'value-desc')
+        ? [
+            {
+              path: ['sections', index, 'x', 'by'],
+              message: 'Ranking several series requires by',
+            },
+          ]
+        : [];
+    }
+    const matches = section.series.filter((series) => series.column === by);
+    if (matches.length === 1) {
+      return [];
+    }
+    return [
+      {
+        path: ['sections', index, 'x', 'by'],
+        message:
+          matches.length === 0
+            ? `Ranking column "${by}" is not a declared series`
+            : `Ranking column "${by}" matches several declared series`,
+      },
+    ];
+  });
+}
+
+function barsPivotAxisViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.BARS &&
+    section.pivot !== undefined &&
+    section.x.axis !== 'time'
+      ? [
+          {
+            path: ['sections', index, 'pivot'],
+            message:
+              'pivot splits time buckets by a category column and requires the time axis',
+          },
+        ]
+      : []
+  );
+}
+
+function barsSumViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, sectionIndex) => {
+    if (section.kind !== SectionKind.BARS) {
+      return [];
+    }
+    const bindings =
+      section.pivot === undefined
+        ? (section.series ?? []).map((binding, index) => ({
+            binding,
+            path: ['sections', sectionIndex, 'series', index, 'reduction'] as (
+              | string
+              | number
+            )[],
+          }))
+        : [
+            {
+              binding: section.pivot.value,
+              path: [
+                'sections',
+                sectionIndex,
+                'pivot',
+                'value',
+                'reduction',
+              ] as (string | number)[],
+            },
+          ];
+    const stacking = section.stacked
+      ? bindings
+          .filter(({ binding }) => binding.reduction !== Reduction.SUM)
+          .map(({ path }) => ({
+            path,
+            message: 'Stacking adds values up and requires the sum reduction',
+          }))
+      : [];
+    const hasRemainder =
+      section.pivot !== undefined ||
+      (section.x.axis === 'category' && section.x.topN !== undefined);
+    const remainder = hasRemainder
+      ? bindings
+          .filter(({ binding }) => binding.reduction !== Reduction.SUM)
+          .map(({ path }) => ({
+            path,
+            message:
+              'A remainder adds values up and requires the sum reduction',
+          }))
+      : [];
+    if (
+      section.x.axis !== 'category' ||
+      section.x.order !== 'value-desc' ||
+      section.series === undefined
+    ) {
+      return [...stacking, ...remainder];
+    }
+    const matches = section.series
+      .map((series, index) => ({ series, index }))
+      .filter(
+        ({ series }) =>
+          series.column ===
+          (section.x.axis === 'category' ? section.x.by : undefined)
+      );
+    const soleSeriesIndex =
+      section.x.by === undefined && section.series.length === 1 ? 0 : -1;
+    const rankingIndex =
+      matches.length === 1 ? matches[0].index : soleSeriesIndex;
+    const ranking =
+      rankingIndex >= 0 &&
+      section.series[rankingIndex].reduction !== Reduction.SUM
+        ? [
+            {
+              path: [
+                'sections',
+                sectionIndex,
+                'series',
+                rankingIndex,
+                'reduction',
+              ],
+              message:
+                'Ranking by value adds values up and requires the sum reduction',
+            },
+          ]
+        : [];
+    return [...stacking, ...remainder, ...ranking];
   });
 }
 
@@ -166,6 +319,10 @@ export function validateDefinitionRules(
     currencyViolations(definition),
     stackingViolations(definition),
     tableRowBoundViolations(definition),
-    tableSortViolations(definition)
+    tableSortViolations(definition),
+    barsSeriesSourceViolations(definition),
+    barsRankingViolations(definition),
+    barsPivotAxisViolations(definition),
+    barsSumViolations(definition)
   );
 }
