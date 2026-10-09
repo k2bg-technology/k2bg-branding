@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 import {
   PercentInputScale,
+  parseCalendarDate,
   Reduction,
   SectionKind,
   SectionWidth,
@@ -104,6 +105,28 @@ export const sectionWidthSchema = z.enum([
   SectionWidth.THIRD,
 ]);
 
+export const sectionGateFields = {
+  period: z.literal('latest').optional(),
+  availability: z
+    .strictObject({
+      since: z
+        .string()
+        .refine(
+          (value) => parseCalendarDate(value) !== null,
+          'must be a calendar date (YYYY-MM-DD)'
+        ),
+      minimumBuckets: z.number().int().min(1).optional(),
+      note: z.string().min(1).optional(),
+    })
+    .optional(),
+  readiness: z
+    .strictObject({
+      column: identifierSchema,
+      note: z.string().min(1).optional(),
+    })
+    .optional(),
+};
+
 const tileSchemaBase = z.strictObject({
   label: z.string().min(1),
   column: identifierSchema,
@@ -129,6 +152,7 @@ const statTilesSectionSchemaBase = z.strictObject({
   source: sourceSchema,
   kind: z.literal(SectionKind.STAT_TILES),
   width: sectionWidthSchema.optional(),
+  ...sectionGateFields,
   tiles: z.array(tileSchema).min(1),
 });
 export const statTilesSectionSchema =

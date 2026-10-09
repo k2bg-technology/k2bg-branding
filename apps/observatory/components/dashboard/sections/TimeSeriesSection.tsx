@@ -76,10 +76,12 @@ export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
 
   return (
     <div className="flex flex-col gap-condensed">
-      <p>
-        {windowLabel}
-        {data.truncated && ` · ${labels.truncated}`}
-      </p>
+      {section.period !== 'latest' && (
+        <p>
+          {windowLabel}
+          {data.truncated && ` · ${labels.truncated}`}
+        </p>
+      )}
       <TimeSeriesSectionChart
         label={section.title}
         chartPeriod={chartPeriod(

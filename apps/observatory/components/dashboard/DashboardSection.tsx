@@ -10,11 +10,16 @@ import type {
   FetchSectionDataInput,
   FetchTableRowsInput,
   GroupedValues,
+  ResolveSectionGateInput,
   SectionData,
+  SectionGate,
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { loadSectionState } from './loadSectionState';
+import { SectionAccumulating } from './SectionAccumulating';
+import { SectionAsOf } from './SectionAsOf';
 import { SectionEmpty } from './SectionEmpty';
+import { SectionNotReady } from './SectionNotReady';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
 import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
@@ -26,6 +31,7 @@ interface Props {
   dashboard: DashboardDefinition;
   section: Section;
   periodResolution: Promise<DashboardPeriodResolution | null>;
+  resolveSectionGate: (input: ResolveSectionGateInput) => Promise<SectionGate>;
   fetchSectionData: (
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
@@ -42,6 +48,7 @@ export async function DashboardSection({
   dashboard,
   section,
   periodResolution,
+  resolveSectionGate,
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
@@ -51,6 +58,7 @@ export async function DashboardSection({
     dashboard,
     section,
     periodResolution,
+    resolveSectionGate,
     fetchSectionData,
     fetchTableRows,
     fetchBarsData,
@@ -60,6 +68,18 @@ export async function DashboardSection({
   return (
     <section id={section.id} className="flex flex-col gap-normal">
       <h2 className="text-heading-3">{section.title}</h2>
+      {state.status === 'ready' && section.period === 'latest' && (
+        <SectionAsOf dashboard={dashboard} period={state.period} />
+      )}
+      {state.status === 'ready' &&
+        section.availability !== undefined &&
+        section.availability.minimumBuckets === undefined && (
+          <SectionAccumulating
+            dashboard={dashboard}
+            since={section.availability.since}
+            note={section.availability.note}
+          />
+        )}
       {(() => {
         if (state.status === 'ready') {
           if (state.kind === SectionKind.STAT_TILES) {
@@ -68,7 +88,7 @@ export async function DashboardSection({
                 dashboard={dashboard}
                 section={state.section}
                 data={state.data}
-                period={state.resolution.period}
+                period={state.period}
               />
             );
           }
@@ -78,7 +98,7 @@ export async function DashboardSection({
                 dashboard={dashboard}
                 section={state.section}
                 data={state.data}
-                period={state.resolution.period}
+                period={state.period}
               />
             );
           }
@@ -88,7 +108,7 @@ export async function DashboardSection({
                 dashboard={dashboard}
                 section={state.section}
                 data={state.data}
-                period={state.resolution.period}
+                period={state.period}
               />
             );
           }
@@ -112,6 +132,19 @@ export async function DashboardSection({
             );
           }
           return assertNever(state);
+        }
+        if (state.status === 'accumulating') {
+          return (
+            <SectionAccumulating
+              dashboard={dashboard}
+              since={state.since}
+              availableFrom={state.availableFrom}
+              note={state.note}
+            />
+          );
+        }
+        if (state.status === 'not-ready') {
+          return <SectionNotReady dashboard={dashboard} note={state.note} />;
         }
         if (state.status === 'empty') {
           return <SectionEmpty />;
