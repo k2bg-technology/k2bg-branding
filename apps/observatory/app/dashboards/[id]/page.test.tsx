@@ -7,6 +7,7 @@ const mocks = vi.hoisted(() => ({
   resolvePeriod: vi.fn(),
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
+  fetchBarsData: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
   notFound: vi.fn(() => {
     throw new Error('not-found');
@@ -20,6 +21,7 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
     mocks.createResolveDashboardPeriodUseCase,
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
   createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
+  createFetchBarsDataUseCase: () => ({ execute: mocks.fetchBarsData }),
 }));
 vi.mock('../../../modules/dashboard/adapters/shared', () => ({
   dashboardLogger: { error: vi.fn(), warn: vi.fn() },
@@ -284,5 +286,43 @@ describe('dashboard page', () => {
     expect(screen.getByText('Period')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Previous period' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'Next period' })).toBeNull();
+  });
+
+  it('fetches and renders a bars section', async () => {
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          sections: [
+            {
+              id: 'bars',
+              title: 'Largest categories',
+              kind: 'bars',
+              source: {
+                dataset: 'metrics',
+                view: 'entries',
+                time: 'recorded_on',
+              },
+              x: { axis: 'category', column: 'category', order: 'value-desc' },
+              series: [{ label: 'Amount', column: 'amount', reduction: 'sum' }],
+              stacked: false,
+              format: { type: 'number' },
+            },
+          ],
+        },
+      ],
+      issues: [],
+    });
+    mocks.fetchBarsData.mockResolvedValue({
+      grouping: 'category',
+      groups: [{ category: 'Rent', values: [1200] }],
+    });
+
+    await renderPage();
+
+    expect(
+      screen.getByRole('heading', { name: 'Largest categories' })
+    ).toBeInTheDocument();
+    expect(mocks.fetchBarsData).toHaveBeenCalled();
   });
 });

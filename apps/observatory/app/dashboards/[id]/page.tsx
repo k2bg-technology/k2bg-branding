@@ -5,6 +5,7 @@ import { DashboardPeriodNavigation } from '../../../components/dashboard/Dashboa
 import { DashboardSection } from '../../../components/dashboard/DashboardSection';
 import { SectionSkeleton } from '../../../components/dashboard/SectionSkeleton';
 import {
+  createFetchBarsDataUseCase,
   createFetchSectionDataUseCase,
   createFetchTableRowsUseCase,
   createLoadDashboardsUseCase,
@@ -95,6 +96,9 @@ export default async function Page({ params, searchParams }: Props) {
                 }
                 fetchTableRows={(input) =>
                   createFetchTableRowsUseCase().execute(input)
+                }
+                fetchBarsData={(input) =>
+                  createFetchBarsDataUseCase().execute(input)
                 }
                 urlState={parsed.state}
               />

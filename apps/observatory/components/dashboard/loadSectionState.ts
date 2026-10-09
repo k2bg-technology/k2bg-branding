@@ -1,5 +1,6 @@
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
+  BarsSection,
   ControlSelections,
   DashboardDefinition,
   Section,
@@ -10,11 +11,14 @@ import type {
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
+  FetchBarsDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
+  GroupedValues,
   SectionData,
   TableRows,
 } from '../../modules/dashboard/use-cases';
+import { type BarsChartInput, barsChart } from './barsChart';
 
 interface Input {
   dashboard: DashboardDefinition;
@@ -24,6 +28,7 @@ interface Input {
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
+  fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
   page: number;
   selections: ControlSelections;
 }
@@ -50,6 +55,13 @@ export type SectionState =
       data: TableRows;
       resolution: DashboardPeriodResolution;
     }
+  | {
+      status: 'ready';
+      kind: 'bars';
+      section: BarsSection;
+      chart: BarsChartInput;
+      resolution: DashboardPeriodResolution;
+    }
   | { status: 'empty' }
   | { status: 'unavailable' };
 
@@ -59,6 +71,7 @@ export async function loadSectionState({
   periodResolution,
   fetchSectionData,
   fetchTableRows,
+  fetchBarsData,
   page,
   selections,
 }: Input): Promise<SectionState> {
@@ -138,6 +151,21 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           data,
+          resolution,
+        };
+      }
+      case SectionKind.BARS: {
+        const data = await fetchBarsData({
+          dashboard,
+          section,
+          period: resolution.period,
+        });
+        if (data === null) return { status: 'empty' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          chart: barsChart(section, data, resolution.period, dashboard),
           resolution,
         };
       }
