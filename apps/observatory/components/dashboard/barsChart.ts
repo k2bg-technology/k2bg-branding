@@ -9,7 +9,8 @@ import {
   DEFAULT_DASHBOARD_LABELS,
   formatPeriodRange,
   orderCategories,
-  type Period,
+  Period,
+  resolveSectionRange,
   selectTopN,
   timeSeriesSpine,
 } from '../../modules/dashboard/domain';
@@ -20,6 +21,39 @@ export interface BarsChartInput {
   series: BarSeries[];
   windowLabel: string | null;
   truncated: boolean;
+}
+
+function timeAxis(
+  window: number,
+  buckets: { period: string; values: (number | null)[] }[],
+  measureCount: number,
+  truncated: boolean,
+  period: Period,
+  dashboard: DashboardDefinition
+) {
+  const range = resolveSectionRange({ window }, period, {
+    truncated,
+    firstBucket: buckets[0]?.period,
+  });
+  const spine = timeSeriesSpine(
+    range,
+    buckets,
+    measureCount,
+    dashboard.timeZone
+  );
+  const first = Period.containing(period.grain, range.display.first.date);
+  const last = Period.containing(period.grain, range.display.last.date);
+  if (first === null || last === null)
+    throw new Error('Time bars require a valid range');
+  return {
+    categories: spine.map(
+      (bucket) =>
+        Period.parse(period.grain, bucket.period)?.label(dashboard.locale) ??
+        bucket.period
+    ),
+    spine,
+    windowLabel: formatPeriodRange(first, last, dashboard.locale),
+  };
 }
 
 // Labels can collide with category values, so build them inside the section's logged load boundary.
@@ -73,24 +107,22 @@ export function barsChart(
   if (data.grouping === 'period') {
     if (section.series === undefined)
       throw new Error('Time bars require series');
-    const spine = timeSeriesSpine(
-      period,
+    const axis = timeAxis(
       section.x.window,
       data.buckets,
-      data.truncated
+      section.series.length,
+      data.truncated,
+      period,
+      dashboard
     );
-    const first = spine[0]?.period;
-    const last = spine.at(-1)?.period;
-    if (first === undefined || last === undefined)
-      throw new Error('Time bars require buckets');
     return {
-      categories: spine.map((bucket) => bucket.period.label(dashboard.locale)),
+      categories: axis.categories,
       series: section.series.map((binding, index) => ({
         id: `series-${index}`,
         label: binding.label,
-        values: spine.map((bucket) => bucket.values[index] ?? null),
+        values: axis.spine.map((bucket) => bucket.values[index] ?? null),
       })),
-      windowLabel: formatPeriodRange(first, last, dashboard.locale),
+      windowLabel: axis.windowLabel,
       truncated: data.truncated,
     };
   }
@@ -112,24 +144,22 @@ export function barsChart(
       ...(remainder === null ? [] : [remainder[index] ?? null]),
     ],
   }));
-  const spine = timeSeriesSpine(
-    period,
+  const axis = timeAxis(
     section.x.window,
     wideBuckets,
-    data.truncated
+    seriesLabels.length,
+    data.truncated,
+    period,
+    dashboard
   );
-  const first = spine[0]?.period;
-  const last = spine.at(-1)?.period;
-  if (first === undefined || last === undefined)
-    throw new Error('Pivot bars require buckets');
   return {
-    categories: spine.map((bucket) => bucket.period.label(dashboard.locale)),
+    categories: axis.categories,
     series: seriesLabels.map((label, index) => ({
       id: index < kept.length ? `category-${index}` : 'remainder',
       label,
-      values: spine.map((bucket) => bucket.values[index] ?? null),
+      values: axis.spine.map((bucket) => bucket.values[index] ?? null),
     })),
-    windowLabel: formatPeriodRange(first, last, dashboard.locale),
+    windowLabel: axis.windowLabel,
     truncated: data.truncated,
   };
 }

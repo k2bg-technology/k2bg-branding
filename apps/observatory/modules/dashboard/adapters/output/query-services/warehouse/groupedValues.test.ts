@@ -166,6 +166,35 @@ describe('buildGroupedValuesQuery', () => {
     });
   });
 
+  it('validates a date-and-hour source and keeps the latest value by its hour', () => {
+    const plan: GroupedValuesPlan = {
+      sectionId: 'readings',
+      source: {
+        dataset: 'home',
+        view: 'readings',
+        time: { date: 'reading_date', hour: 'reading_hour' },
+      },
+      timeZone: 'Asia/Tokyo',
+      dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+      measures: [{ column: 'temperature', reduction: 'latest' }],
+      buckets: null,
+      category: { column: 'room', sortKey: null },
+    };
+
+    const result = buildGroupedValuesQuery(plan);
+
+    const validatedHour =
+      "IF(`reading_hour` BETWEEN 0 AND 23, `reading_hour`, ERROR('source.time.hour must be an integer from 0 through 23'))";
+    expect(result.sql.split('\n').slice(0, 6)).toEqual([
+      'WITH filtered AS (',
+      `SELECT CAST(\`room\` AS STRING) AS category, DATETIME(\`reading_date\`, TIME(${validatedHour}, 0, 0)) AS source_time, CAST(\`temperature\` AS FLOAT64) AS value_0`,
+      'FROM `home.readings`',
+      'WHERE `reading_date` >= CAST(@period_start AS DATE)',
+      'AND `reading_date` <= CAST(@period_end AS DATE)',
+      `AND ${validatedHour} IS NOT NULL`,
+    ]);
+  });
+
   it('rejects unsafe identifiers and a plan without a grouping key', () => {
     const plan = planBarsSection(
       fixtureSection('category-ranking'),

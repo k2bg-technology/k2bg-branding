@@ -14,8 +14,9 @@ import {
   PERIOD_END_PARAMETER,
   PERIOD_START_PARAMETER,
   periodKeyExpression,
+  sourceTimeExpression,
   TIME_ZONE_PARAMETER,
-  timeColumn,
+  validatedHourExpression,
   valueExpression,
 } from './query';
 import {
@@ -29,6 +30,7 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
     throw new Error('Grouped values require a period or category key');
   }
   const calendarDate = calendarDateExpression(plan.source.time);
+  const validatedHour = validatedHourExpression(plan.source.time);
   const filters = buildSourceFilters(plan.source);
   const keys = [
     ...(plan.buckets === null ? [] : ['period']),
@@ -47,7 +49,7 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
           `CAST(${quoteIdentifier(plan.category.column)} AS STRING) AS ${CATEGORY_ALIAS}`,
         ]),
     ...(hasLatest
-      ? [`${quoteIdentifier(timeColumn(plan.source.time))} AS source_time`]
+      ? [`${sourceTimeExpression(plan.source.time)} AS source_time`]
       : []),
     ...(plan.category?.sortKey === null || plan.category?.sortKey === undefined
       ? []
@@ -82,6 +84,7 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
     `FROM ${qualifiedView(plan.source.dataset, plan.source.view)}`,
     `WHERE ${calendarDate} >= CAST(@${PERIOD_START_PARAMETER} AS DATE)`,
     `AND ${calendarDate} <= CAST(@${PERIOD_END_PARAMETER} AS DATE)`,
+    ...(validatedHour === null ? [] : [`AND ${validatedHour} IS NOT NULL`]),
     ...filters.clauses.map((clause) => `AND ${clause}`),
     ...(hasLatest || plan.buckets !== null ? [')' + ','] : [')']),
     ...(hasLatest
