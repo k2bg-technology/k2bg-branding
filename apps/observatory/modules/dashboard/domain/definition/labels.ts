@@ -11,6 +11,7 @@ export interface DashboardLabels {
   availableFrom: string;
   notReady: string;
   nullCategory: string;
+  missingValue: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -26,4 +27,5 @@ export const DEFAULT_DASHBOARD_LABELS = {
   availableFrom: 'Available from',
   notReady: 'The latest data is not ready yet',
   nullCategory: 'None',
+  missingValue: 'No data',
 };

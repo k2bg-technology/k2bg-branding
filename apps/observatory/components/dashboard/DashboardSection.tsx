@@ -22,6 +22,7 @@ import { SectionEmpty } from './SectionEmpty';
 import { SectionNotReady } from './SectionNotReady';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
+import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
@@ -94,6 +95,16 @@ export async function DashboardSection({
           if (state.kind === SectionKind.TIME_SERIES) {
             return (
               <TimeSeriesSection
+                dashboard={dashboard}
+                section={state.section}
+                data={state.data}
+                period={state.period}
+              />
+            );
+          }
+          if (state.kind === SectionKind.CALENDAR_HEATMAP) {
+            return (
+              <CalendarHeatmapSection
                 dashboard={dashboard}
                 section={state.section}
                 data={state.data}

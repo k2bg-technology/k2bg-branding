@@ -1,5 +1,6 @@
 export * from './availability';
 export * from './calendarDate';
+export * from './calendarRange';
 export * from './defaultPeriod';
 export * from './instant';
 export * from './period';

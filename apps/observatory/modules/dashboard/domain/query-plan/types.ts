@@ -39,4 +39,9 @@ export type SectionQueryPlan =
         kind: typeof SectionKind.TIME_SERIES;
         measures: MeasureQueryPlan[];
         bucketLimit: number;
-      });
+      })
+  | (BaseSectionQueryPlan & {
+      kind: typeof SectionKind.CALENDAR_HEATMAP;
+      grain: 'day';
+      measures: MeasureQueryPlan[];
+    });

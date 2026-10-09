@@ -1,6 +1,7 @@
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
   BarsSection,
+  CalendarHeatmapSection,
   DashboardDefinition,
   Period,
   Section,
@@ -47,6 +48,13 @@ export type SectionState =
       status: 'ready';
       kind: 'time-series';
       section: TimeSeriesSection;
+      data: SectionData;
+      period: Period;
+    }
+  | {
+      status: 'ready';
+      kind: 'calendar-heatmap';
+      section: CalendarHeatmapSection;
       data: SectionData;
       period: Period;
     }
@@ -122,6 +130,23 @@ export async function loadSectionState({
           return { status: 'empty' };
         }
         if (data.buckets.length === 0) {
+          return { status: 'empty' };
+        }
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          data,
+          period,
+        };
+      }
+      case SectionKind.CALENDAR_HEATMAP: {
+        const data = await fetchSectionData({
+          dashboard,
+          section,
+          period,
+        });
+        if (data === null) {
           return { status: 'empty' };
         }
         return {

@@ -1,10 +1,11 @@
-import type { PeriodGrain, SectionGrain } from '../period';
+import type { CalendarRange, PeriodGrain, SectionGrain } from '../period';
 
 export const SectionKind = {
   STAT_TILES: 'stat-tiles',
   TIME_SERIES: 'time-series',
   TABLE: 'table',
   BARS: 'bars',
+  CALENDAR_HEATMAP: 'calendar-heatmap',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
 
@@ -154,6 +155,21 @@ export interface TimeSeriesSection extends SectionGateFields {
   }[];
 }
 
+export interface CalendarHeatmapSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.CALENDAR_HEATMAP;
+  width?: SectionWidth;
+  range: CalendarRange;
+  window?: number;
+  value: { column: string; reduction: Reduction; transform?: ValueTransform };
+  format: ValueFormat;
+  unit?: string;
+  maximum?: number;
+  scaleLabels?: { less: string; more: string };
+}
+
 export interface TableSection extends SectionGateFields {
   id: string;
   title: string;
@@ -204,7 +220,10 @@ export interface BarsSection extends SectionGateFields {
   unit?: string;
 }
 
-export type AggregatingSection = StatTilesSection | TimeSeriesSection;
+export type AggregatingSection =
+  | StatTilesSection
+  | TimeSeriesSection
+  | CalendarHeatmapSection;
 export type Section = AggregatingSection | TableSection | BarsSection;
 
 export interface DashboardDefinition {
@@ -231,6 +250,7 @@ export interface DashboardDefinition {
     availableFrom?: string;
     notReady?: string;
     nullCategory?: string;
+    missingValue?: string;
   };
   sections: Section[];
 }
