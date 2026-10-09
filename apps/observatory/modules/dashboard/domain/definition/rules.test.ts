@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 
 import { validateDefinitionRules } from './rules';
-import type { DashboardDefinition, TableSection } from './types';
+import type {
+  CalendarHeatmapSection,
+  DashboardDefinition,
+  TableSection,
+} from './types';
 
 function createDefinition(): DashboardDefinition {
   return {
@@ -125,6 +129,77 @@ describe('validateDefinitionRules', () => {
       path: ['sections', 0, 'tiles', 0, 'format'],
       message: 'A currency tile requires dashboard currency',
     });
+  });
+});
+
+function createCalendarHeatmap(): CalendarHeatmapSection {
+  return {
+    id: 'daily-values',
+    title: 'Daily values',
+    kind: 'calendar-heatmap',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    range: 'trailing',
+    window: 30,
+    value: { column: 'amount', reduction: 'sum' },
+    format: { type: 'number' },
+  };
+}
+
+describe('calendar heatmap rules', () => {
+  it('rejects a window on a calendar-year heatmap', () => {
+    const definition = createDefinition();
+    definition.sections = [
+      { ...createCalendarHeatmap(), range: 'calendar-year' },
+    ];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'window'],
+        message: 'A calendar-year calendar heatmap does not take window',
+      },
+    ]);
+  });
+
+  it('requires a window on a trailing heatmap', () => {
+    const definition = createDefinition();
+    definition.sections = [{ ...createCalendarHeatmap(), window: undefined }];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'window'],
+        message: 'A trailing calendar heatmap requires window',
+      },
+    ]);
+  });
+
+  it('requires dashboard currency for a currency heatmap', () => {
+    const definition = createDefinition();
+    delete definition.currency;
+    definition.sections = [
+      { ...createCalendarHeatmap(), format: { type: 'currency' } },
+    ];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'format'],
+        message: 'A currency section requires dashboard currency',
+      },
+    ]);
+  });
+
+  it('accepts a trailing heatmap with a window', () => {
+    const definition = createDefinition();
+    definition.sections = [createCalendarHeatmap()];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([]);
   });
 });
 
