@@ -75,6 +75,23 @@ function timeSeriesDashboard(locale = 'en-US'): DashboardDefinition {
   return definition;
 }
 
+function calendarDashboard(): DashboardDefinition {
+  const definition = dashboard();
+  definition.sections = [
+    {
+      id: 'daily-values',
+      title: 'Daily values',
+      kind: 'calendar-heatmap',
+      source: { dataset: 'metrics', view: 'values', time: 'recorded_on' },
+      range: 'trailing',
+      window: 7,
+      value: { column: 'value', reduction: 'sum' },
+      format: { type: 'number' },
+    },
+  ];
+  return definition;
+}
+
 function resolution(month: string): DashboardPeriodResolution {
   const period = Period.parse('month', month);
   if (period === null) {
@@ -106,6 +123,40 @@ const urlState: UrlState = {
 };
 
 describe('DashboardSection', () => {
+  it('shows empty for a calendar heatmap with no rows', async () => {
+    const definition = calendarDashboard();
+
+    render(
+      await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => null,
+      })
+    );
+
+    expect(screen.getByText('No data available.')).toBeInTheDocument();
+  });
+
+  it('shows unavailable when the calendar heatmap query fails', async () => {
+    const definition = calendarDashboard();
+
+    render(
+      await DashboardSection({
+        urlState,
+        fetchTableRows: async () => null,
+        dashboard: definition,
+        section: definition.sections[0],
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        fetchSectionData: async () => Promise.reject(new Error('query failed')),
+      })
+    );
+
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+  });
+
   it('names a time-series chart, fills missing months as gaps, and states its window', async () => {
     const definition = timeSeriesDashboard();
 

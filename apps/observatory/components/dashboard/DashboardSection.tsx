@@ -14,6 +14,7 @@ import type {
 import { loadSectionState } from './loadSectionState';
 import { SectionEmpty } from './SectionEmpty';
 import { SectionUnavailable } from './SectionUnavailable';
+import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
@@ -68,6 +69,16 @@ export async function DashboardSection({
           if (state.kind === SectionKind.TIME_SERIES) {
             return (
               <TimeSeriesSection
+                dashboard={dashboard}
+                section={state.section}
+                data={state.data}
+                period={state.resolution.period}
+              />
+            );
+          }
+          if (state.kind === SectionKind.CALENDAR_HEATMAP) {
+            return (
+              <CalendarHeatmapSection
                 dashboard={dashboard}
                 section={state.section}
                 data={state.data}
