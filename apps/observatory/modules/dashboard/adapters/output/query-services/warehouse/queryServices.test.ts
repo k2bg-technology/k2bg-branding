@@ -4,10 +4,15 @@ import type {
   WarehouseClient,
   WarehouseQueryRequest,
 } from '../../../../../../infrastructure/warehouse';
-import type { SectionQueryPlan, TableQueryPlan } from '../../../../domain';
+import type {
+  ReadinessQueryPlan,
+  SectionQueryPlan,
+  TableQueryPlan,
+} from '../../../../domain';
 import { MappingError, RepositoryError } from '../../../shared';
 import { WarehouseFetchPeriodBoundsQueryService } from './fetchPeriodBoundsQueryService';
 import { WarehouseFetchSectionDataQueryService } from './fetchSectionDataQueryService';
+import { WarehouseFetchSectionReadinessQueryService } from './fetchSectionReadinessQueryService';
 import { WarehouseFetchTableRowsQueryService } from './fetchTableRowsQueryService';
 
 function createPlan(
@@ -24,6 +29,52 @@ function createPlan(
     measures: [{ column: 'amount', reduction, compares: false }],
   } satisfies SectionQueryPlan;
 }
+
+describe('WarehouseFetchSectionReadinessQueryService', () => {
+  const plan: ReadinessQueryPlan = {
+    sectionId: 'headline',
+    source: { dataset: 'metrics', view: 'daily', time: 'recorded_on' },
+    timeZone: 'Asia/Tokyo',
+    dateRange: { firstDate: '2026-08-15', lastDate: '2026-08-15' },
+    column: 'is_complete',
+  };
+  const options = { name: 'readiness', revalidate: 86_400 };
+
+  it('maps a ready result from the readiness query', async () => {
+    const client: WarehouseClient = {
+      query: async (request) =>
+        request.sql.includes('COUNTIF(ready IS NOT TRUE)') &&
+        request.params?.period_start === '2026-08-15'
+          ? [{ not_ready_count: 0 }]
+          : [],
+    };
+    const sut = new WarehouseFetchSectionReadinessQueryService(client);
+    expect(await sut.fetchSectionReadiness(plan, options)).toBe(true);
+  });
+
+  it('wraps a driver failure with its cause', async () => {
+    const cause = new Error('driver failed');
+    const client: WarehouseClient = {
+      query: async () => Promise.reject(cause),
+    };
+    const sut = new WarehouseFetchSectionReadinessQueryService(client);
+    const result = sut.fetchSectionReadiness(plan, options);
+    await expect(result).rejects.toBeInstanceOf(RepositoryError);
+    await expect(result).rejects.toMatchObject({ cause });
+  });
+
+  it('keeps a mapping error unwrapped', async () => {
+    const client: WarehouseClient = {
+      query: async () => [{ not_ready_count: 'x' }],
+    };
+    const sut = new WarehouseFetchSectionReadinessQueryService(client);
+    const error = await sut
+      .fetchSectionReadiness(plan, options)
+      .catch((cause: unknown) => cause);
+    expect(error).toBeInstanceOf(MappingError);
+    expect(error).toMatchObject({ cause: undefined });
+  });
+});
 
 describe('WarehouseFetchSectionDataQueryService', () => {
   it.each([
