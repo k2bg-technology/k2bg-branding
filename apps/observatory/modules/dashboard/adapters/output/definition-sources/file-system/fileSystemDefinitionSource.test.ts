@@ -102,7 +102,48 @@ describe('FileSystemDefinitionSource', () => {
           previousPage: 'Earlier page',
           nextPage: 'Later page',
           pagination: 'Entry pages',
+          applyControls: 'Apply filters',
         });
+        expect(result.definitions[0].controls).toEqual([
+          {
+            id: 'category',
+            label: 'Category',
+            column: 'category',
+            options: ['reporting', 'operations'],
+            allLabel: 'All categories',
+          },
+        ]);
+        expect(result.definitions[0].sections[1].controls).toEqual([
+          'category',
+        ]);
+      }
+    );
+  });
+
+  it.each([
+    { name: 'empty options', options: [], path: 'controls[0].options' },
+    {
+      name: 'blank option',
+      options: ['', 'food'],
+      path: 'controls[0].options[0]',
+    },
+  ])('rejects $name at its JSON path', async ({ options, path }) => {
+    await withDefinitionDirectory(
+      {
+        'invalid.json': createDefinition({
+          controls: [
+            { id: 'category', label: 'Category', column: 'category', options },
+          ],
+          sections: [createSection({ controls: ['category'] })],
+        }),
+      },
+      async (directory) => {
+        const result = await new FileSystemDefinitionSource(directory).load();
+
+        expect(result.definitions).toHaveLength(0);
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({ fileName: 'invalid.json', path })
+        );
       }
     );
   });

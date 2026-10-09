@@ -6,6 +6,7 @@ import {
   type Section,
   SectionKind,
 } from '../../../../../domain';
+import { controlSchema } from './controls';
 import { sourceSchema, statTilesSectionSchema } from './statTiles';
 import { tableSectionSchema } from './table';
 import { timeSeriesSectionSchema } from './timeSeries';
@@ -99,6 +100,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
     .optional(),
   revalidate: z.number().int().positive().default(86_400),
   periodSource: sourceSchema.optional(),
+  controls: z.array(controlSchema).min(1).optional(),
   defaultPeriod: z
     .enum(['latest-with-data', 'last-complete'])
     .default('latest-with-data'),
@@ -111,6 +113,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       previousPage: z.string().min(1).optional(),
       nextPage: z.string().min(1).optional(),
       pagination: z.string().min(1).optional(),
+      applyControls: z.string().min(1).optional(),
     })
     .optional(),
   sections: z.array(sectionSchema).min(1),

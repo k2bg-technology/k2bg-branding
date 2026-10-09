@@ -103,6 +103,7 @@ export const sectionWidthSchema = z.enum([
   SectionWidth.HALF,
   SectionWidth.THIRD,
 ]);
+export const sectionControlsSchema = z.array(sectionIdSchema).min(1).optional();
 
 const tileSchemaBase = z.strictObject({
   label: z.string().min(1),
@@ -129,6 +130,7 @@ const statTilesSectionSchemaBase = z.strictObject({
   source: sourceSchema,
   kind: z.literal(SectionKind.STAT_TILES),
   width: sectionWidthSchema.optional(),
+  controls: sectionControlsSchema,
   tiles: z.array(tileSchema).min(1),
 });
 export const statTilesSectionSchema =

@@ -12,10 +12,14 @@
     "nextPeriod": "Later month",
     "previousPage": "Earlier page",
     "nextPage": "Later page",
-    "pagination": "Entry pages"
+    "pagination": "Entry pages",
+    "applyControls": "Apply filters"
   },
   "currency": "JPY",
   "revalidate": 86400,
+  "controls": [
+    { "id": "category", "label": "Category", "column": "category", "options": ["reporting", "operations"], "allLabel": "All categories" }
+  ],
   "sections": [
     {
       "id": "monthly-summary",
@@ -50,6 +54,7 @@
       "id": "monthly-trend",
       "title": "Monthly trend",
       "kind": "time-series",
+      "controls": ["category"],
       "source": {
         "dataset": "sample_dataset",
         "view": "monthly_summary",
@@ -69,6 +74,7 @@
       "title": "Largest entries",
       "kind": "table",
       "width": "half",
+      "controls": ["category"],
       "source": {
         "dataset": "sample_dataset",
         "view": "entries",
