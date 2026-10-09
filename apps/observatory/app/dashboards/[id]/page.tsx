@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-
+import { DashboardControls } from '../../../components/dashboard/DashboardControls';
 import { DashboardPeriodNavigation } from '../../../components/dashboard/DashboardPeriodNavigation';
 import { DashboardSection } from '../../../components/dashboard/DashboardSection';
 import { SectionSkeleton } from '../../../components/dashboard/SectionSkeleton';
@@ -75,6 +75,7 @@ export default async function Page({ params, searchParams }: Props) {
             periodResolution={periodResolution}
           />
         </Suspense>
+        <DashboardControls dashboard={dashboard} state={parsed.state} />
       </header>
       <div className="grid grid-cols-1 gap-spacious lg:grid-cols-6">
         {dashboard.sections.map((section) => (

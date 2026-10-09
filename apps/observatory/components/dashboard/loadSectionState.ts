@@ -1,5 +1,6 @@
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
+  ControlSelections,
   DashboardDefinition,
   Section,
   StatTilesSection,
@@ -24,6 +25,7 @@ interface Input {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   page: number;
+  selections: ControlSelections;
 }
 
 export type SectionState =
@@ -58,6 +60,7 @@ export async function loadSectionState({
   fetchSectionData,
   fetchTableRows,
   page,
+  selections,
 }: Input): Promise<SectionState> {
   try {
     const resolution = await periodResolution;
@@ -70,6 +73,7 @@ export async function loadSectionState({
           dashboard,
           section,
           period: resolution.period,
+          selections,
         });
         if (data === null) {
           return { status: 'empty' };
@@ -94,6 +98,7 @@ export async function loadSectionState({
           dashboard,
           section,
           period: resolution.period,
+          selections,
         });
         if (data === null) {
           return { status: 'empty' };
@@ -115,6 +120,7 @@ export async function loadSectionState({
           section,
           period: resolution.period,
           page,
+          selections,
         });
         if (data === null) {
           return section.emptyMessage === undefined
