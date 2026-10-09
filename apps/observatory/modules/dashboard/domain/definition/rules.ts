@@ -1,9 +1,13 @@
+import { SectionGrain } from '../period';
 import {
   type DashboardDefinition,
   type DefinitionViolation,
   Reduction,
   SectionKind,
 } from './types';
+
+const HOUR_BINDING_MESSAGE =
+  'An hour section requires source.time with date and hour columns';
 
 function duplicateSectionViolations(
   definition: DashboardDefinition
@@ -168,7 +172,10 @@ function sectionGrainViolations(
     day: ['day', 'hour'],
   } as const;
   return definition.sections.flatMap((section, sectionIndex) => {
-    if (section.kind !== SectionKind.TIME_SERIES) {
+    if (
+      section.kind !== SectionKind.TIME_SERIES ||
+      section.period === 'latest'
+    ) {
       return [];
     }
     const grain = section.grain ?? definition.grain;
@@ -196,12 +203,77 @@ function sectionGrainViolations(
         ? [
             {
               path: ['sections', sectionIndex, 'source', 'time'],
-              message:
-                'An hour section requires source.time with date and hour columns',
+              message: HOUR_BINDING_MESSAGE,
             },
           ]
         : []),
     ];
+  });
+}
+
+function historySettingViolations(
+  section: DashboardDefinition['sections'][number]
+) {
+  switch (section.kind) {
+    case SectionKind.TIME_SERIES:
+      return section.window === undefined
+        ? []
+        : [
+            {
+              path: ['window'],
+              message:
+                'A latest section reads one date and does not accept window',
+            },
+          ];
+    case SectionKind.STAT_TILES:
+      return section.tiles.flatMap((tile, tileIndex) =>
+        tile.comparison === undefined
+          ? []
+          : [
+              {
+                path: ['tiles', tileIndex, 'comparison'],
+                message:
+                  'A latest section reads one date and does not accept comparison',
+              },
+            ]
+      );
+    case SectionKind.TABLE:
+      return [];
+    default:
+      throw new Error(`Unsupported section kind: ${JSON.stringify(section)}`);
+  }
+}
+
+function latestSectionViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, sectionIndex) => {
+    if (section.period !== 'latest') {
+      return [];
+    }
+    const grainViolations =
+      section.kind !== SectionKind.TIME_SERIES ||
+      section.grain === SectionGrain.HOUR
+        ? []
+        : [
+            {
+              path: ['grain'],
+              message: 'A latest time-series section requires grain "hour"',
+            },
+          ];
+    const bindingViolations =
+      section.kind === SectionKind.TIME_SERIES &&
+      section.grain === SectionGrain.HOUR &&
+      (typeof section.source.time === 'string' ||
+        !('date' in section.source.time))
+        ? [{ path: ['source', 'time'], message: HOUR_BINDING_MESSAGE }]
+        : [];
+    return [
+      ...grainViolations,
+      ...bindingViolations,
+      ...historySettingViolations(section),
+    ].map((violation) => ({
+      ...violation,
+      path: ['sections', sectionIndex, ...violation.path],
+    }));
   });
 }
 
@@ -212,6 +284,7 @@ export function validateDefinitionRules(
     currencyViolations(definition),
     stackingViolations(definition),
     sectionGrainViolations(definition),
+    latestSectionViolations(definition),
     tableRowBoundViolations(definition),
     tableSortViolations(definition)
   );

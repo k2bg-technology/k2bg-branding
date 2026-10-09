@@ -1,3 +1,4 @@
+export * from './availability';
 export * from './calendarDate';
 export * from './defaultPeriod';
 export * from './instant';

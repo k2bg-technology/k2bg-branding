@@ -198,6 +198,89 @@ describe('time-series grain rules', () => {
   });
 });
 
+describe('latest section rules', () => {
+  function latestSeries() {
+    const definition = createDefinition();
+    definition.sections = [
+      {
+        id: 'trend',
+        title: 'Trend',
+        kind: 'time-series',
+        period: 'latest',
+        grain: 'hour',
+        source: {
+          dataset: 'metrics',
+          view: 'readings',
+          time: { date: 'reading_date', hour: 'reading_hour' },
+        },
+        variant: 'line',
+        stacked: false,
+        format: { type: 'number' },
+        series: [{ label: 'Value', column: 'value', reduction: 'average' }],
+      },
+    ];
+    return definition;
+  }
+
+  it('rejects a window', () => {
+    const definition = latestSeries();
+    const section = definition.sections[0];
+    if (section.kind !== 'time-series') throw new Error('Expected time series');
+    section.window = 24;
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'window'],
+      message: 'A latest section reads one date and does not accept window',
+    });
+  });
+
+  it('rejects a day series without a dashboard-grain cascade', () => {
+    const definition = latestSeries();
+    const section = definition.sections[0];
+    if (section.kind !== 'time-series') throw new Error('Expected time series');
+    section.grain = 'day';
+    expect(validateDefinitionRules(definition)).toEqual([
+      {
+        path: ['sections', 0, 'grain'],
+        message: 'A latest time-series section requires grain "hour"',
+      },
+    ]);
+  });
+
+  it('requires a date-and-hour binding', () => {
+    const definition = latestSeries();
+    definition.sections[0].source.time = 'recorded_on';
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'source', 'time'],
+      message:
+        'An hour section requires source.time with date and hour columns',
+    });
+  });
+
+  it('accepts an hourly series on a month dashboard', () => {
+    expect(validateDefinitionRules(latestSeries())).toEqual([]);
+  });
+
+  it('rejects tile comparison', () => {
+    const definition = createDefinition();
+    const section = definition.sections[0];
+    if (section.kind !== 'stat-tiles') throw new Error('Expected tiles');
+    section.period = 'latest';
+    section.tiles[0].comparison = { direction: 'neutral' };
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'tiles', 0, 'comparison'],
+      message: 'A latest section reads one date and does not accept comparison',
+    });
+  });
+
+  it('accepts availability and readiness on a following section', () => {
+    const definition = createDefinition();
+    const section = definition.sections[0];
+    section.availability = { since: '2026-04-01', minimumBuckets: 3 };
+    section.readiness = { column: 'is_complete' };
+    expect(validateDefinitionRules(definition)).toEqual([]);
+  });
+});
+
 function createTable(): TableSection {
   return {
     id: 'detail',
