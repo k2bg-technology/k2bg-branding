@@ -1,10 +1,19 @@
 import { describe, expect, it } from 'vitest';
 
-import type { SectionQueryPlan, TableQueryPlan } from '../../../../domain';
-import { AmbiguousLatestValueError, Period } from '../../../../domain';
+import type {
+  GroupedValuesPlan,
+  SectionQueryPlan,
+  TableQueryPlan,
+} from '../../../../domain';
+import {
+  AmbiguousLatestValueError,
+  AmbiguousSortKeyError,
+  Period,
+} from '../../../../domain';
 import { MappingError } from '../../../shared';
 import {
   toDateBounds,
+  toGroupedValues,
   toSectionData,
   toSectionReadiness,
   toTableRows,
@@ -352,5 +361,143 @@ describe('toTableRows', () => {
     expect(() =>
       toTableRows([{ cell_0: 'x', page_number: 1, page_count: 1 }], plan)
     ).toThrow(MappingError);
+  });
+});
+
+function groupedPlan(): GroupedValuesPlan {
+  return {
+    sectionId: 'bars',
+    source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-01-01', lastDate: '2026-08-31' },
+    measures: [{ column: 'amount', reduction: 'sum' }],
+    buckets: { grain: 'month', bucketLimit: 120 },
+    category: { column: 'category', sortKey: null },
+  };
+}
+
+describe('toGroupedValues', () => {
+  it('preserves NULL categories and groups pivot cells oldest first', () => {
+    expect(
+      toGroupedValues(
+        [
+          { period: '2026-08', category: 'food', value_0: 300 },
+          { period: '2026-08', category: null, value_0: 20 },
+          { period: '2026-07', category: 'food', value_0: 100 },
+        ],
+        groupedPlan()
+      )
+    ).toEqual({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        { period: '2026-07', cells: [{ category: 'food', values: [100] }] },
+        {
+          period: '2026-08',
+          cells: [
+            { category: 'food', values: [300] },
+            { category: null, values: [20] },
+          ],
+        },
+      ],
+    });
+    expect(toGroupedValues([], groupedPlan())).toBeNull();
+  });
+
+  it('caps distinct periods rather than rows', () => {
+    const periods = Array.from({ length: 121 }, (_, index) =>
+      Period.parse('month', '2026-08')?.shift(-index).toString()
+    );
+    const rows = periods.flatMap((period) => [
+      { period, category: 'A', value_0: 1 },
+      { period, category: 'B', value_0: 2 },
+    ]);
+    const result = toGroupedValues(rows, groupedPlan());
+    expect(result?.grouping).toBe('period-category');
+    if (result?.grouping !== 'period-category')
+      throw new Error('Expected pivot groups');
+    expect(result.truncated).toBe(true);
+    expect(result.buckets).toHaveLength(120);
+    expect(result.buckets[0].period).toBe(periods[119]);
+    expect(result.buckets[0].cells).toHaveLength(2);
+  });
+
+  it('validates sort key ambiguity and row values', () => {
+    const plan = {
+      ...groupedPlan(),
+      buckets: null,
+      category: {
+        column: 'category',
+        sortKey: { column: 'weekday', type: 'number' as const },
+      },
+    };
+    expect(
+      toGroupedValues(
+        [
+          {
+            category: 'Mon',
+            value_0: 3,
+            sort_key: 2,
+            sort_key_distinct_count: 1,
+          },
+        ],
+        plan
+      )
+    ).toEqual({
+      grouping: 'category',
+      groups: [{ category: 'Mon', values: [3], sortKey: 2 }],
+    });
+    expect(() =>
+      toGroupedValues(
+        [
+          {
+            category: 'Mon',
+            value_0: 3,
+            sort_key: 2,
+            sort_key_distinct_count: 2,
+          },
+        ],
+        plan
+      )
+    ).toThrow(AmbiguousSortKeyError);
+    expect(() =>
+      toGroupedValues(
+        [{ category: 5, value_0: 3, sort_key: 2, sort_key_distinct_count: 1 }],
+        plan
+      )
+    ).toThrow(MappingError);
+    expect(() =>
+      toGroupedValues(
+        [
+          {
+            category: 'Mon',
+            value_0: 3,
+            sort_key: 'x',
+            sort_key_distinct_count: 1,
+          },
+        ],
+        plan
+      )
+    ).toThrow(MappingError);
+  });
+
+  it('rejects ambiguous latest values', () => {
+    const plan = {
+      ...groupedPlan(),
+      measures: [{ column: 'balance', reduction: 'latest' as const }],
+    };
+    expect(() =>
+      toGroupedValues(
+        [
+          {
+            period: '2026-08',
+            category: null,
+            value_0: 3,
+            distinct_count_0: 2,
+          },
+        ],
+        plan
+      )
+    ).toThrow(AmbiguousLatestValueError);
   });
 });

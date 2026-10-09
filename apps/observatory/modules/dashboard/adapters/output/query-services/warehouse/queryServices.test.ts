@@ -9,7 +9,11 @@ import type {
   SectionQueryPlan,
   TableQueryPlan,
 } from '../../../../domain';
+import { Period, planBarsSection } from '../../../../domain';
+import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 import { MappingError, RepositoryError } from '../../../shared';
+import { dashboardDefinitionSchema } from '../../definition-sources/file-system/schemas';
+import { WarehouseFetchGroupedValuesQueryService } from './fetchGroupedValuesQueryService';
 import { WarehouseFetchPeriodBoundsQueryService } from './fetchPeriodBoundsQueryService';
 import { WarehouseFetchSectionDataQueryService } from './fetchSectionDataQueryService';
 import { WarehouseFetchSectionReadinessQueryService } from './fetchSectionReadinessQueryService';
@@ -294,5 +298,49 @@ describe('WarehouseFetchPeriodBoundsQueryService', () => {
 
     await expect(result).rejects.toBeInstanceOf(RepositoryError);
     await expect(result).rejects.toMatchObject({ cause });
+  });
+});
+
+describe('WarehouseFetchGroupedValuesQueryService', () => {
+  const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+  const section = dashboard.sections.find(
+    (candidate) => candidate.id === 'category-trend'
+  );
+  const period = Period.parse('month', '2026-08');
+  if (section?.kind !== 'bars' || period === null)
+    throw new Error('Expected bars fixture');
+  const plan = planBarsSection(section, period, dashboard.timeZone);
+
+  it('maps pivot rows from the grouped warehouse query', async () => {
+    const client: WarehouseClient = {
+      query: async ({ params, sql }) =>
+        params?.bucket_limit === 121 &&
+        params?.filter_0 === 'transfer' &&
+        sql.includes('GROUP BY period, category')
+          ? [{ period: '2026-08', category: 'food', value_0: 10 }]
+          : [],
+    };
+    const sut = new WarehouseFetchGroupedValuesQueryService(client);
+
+    expect(
+      await sut.fetchGroupedValues(plan, { name: 'bars', revalidate: 86_400 })
+    ).toEqual({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        { period: '2026-08', cells: [{ category: 'food', values: [10] }] },
+      ],
+    });
+  });
+
+  it('wraps driver failure with its cause', async () => {
+    const cause = new Error('driver failed');
+    const sut = new WarehouseFetchGroupedValuesQueryService({
+      query: async () => Promise.reject(cause),
+    });
+
+    await expect(
+      sut.fetchGroupedValues(plan, { name: 'bars', revalidate: 86_400 })
+    ).rejects.toMatchObject({ cause });
   });
 });

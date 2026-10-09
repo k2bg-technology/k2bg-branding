@@ -10,6 +10,7 @@ export interface DashboardLabels {
   accumulatingSince: string;
   availableFrom: string;
   notReady: string;
+  nullCategory: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -24,4 +25,5 @@ export const DEFAULT_DASHBOARD_LABELS = {
   accumulatingSince: 'Accumulating since',
   availableFrom: 'Available from',
   notReady: 'The latest data is not ready yet',
+  nullCategory: 'None',
 };

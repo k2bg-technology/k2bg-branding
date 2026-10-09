@@ -1,5 +1,6 @@
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
+  BarsSection,
   DashboardDefinition,
   Period,
   Section,
@@ -10,13 +11,16 @@ import type {
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
+  FetchBarsDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
+  GroupedValues,
   ResolveSectionGateInput,
   SectionData,
   SectionGate,
   TableRows,
 } from '../../modules/dashboard/use-cases';
+import { type BarsChartInput, barsChart } from './barsChart';
 
 interface Input {
   dashboard: DashboardDefinition;
@@ -27,6 +31,7 @@ interface Input {
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
+  fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
   page: number;
 }
 
@@ -52,6 +57,13 @@ export type SectionState =
       data: TableRows;
       period: Period;
     }
+  | {
+      status: 'ready';
+      kind: 'bars';
+      section: BarsSection;
+      chart: BarsChartInput;
+      period: Period;
+    }
   | Exclude<SectionGate, { status: 'open' }>
   | { status: 'unavailable' };
 
@@ -62,6 +74,7 @@ export async function loadSectionState({
   resolveSectionGate,
   fetchSectionData,
   fetchTableRows,
+  fetchBarsData,
   page,
 }: Input): Promise<SectionState> {
   try {
@@ -142,6 +155,21 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           data,
+          period,
+        };
+      }
+      case SectionKind.BARS: {
+        const data = await fetchBarsData({
+          dashboard,
+          section,
+          period,
+        });
+        if (data === null) return { status: 'empty' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          chart: barsChart(section, data, period, dashboard),
           period,
         };
       }
