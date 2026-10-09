@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 vi.mock('../../modules/dashboard/adapters/shared', () => ({
@@ -20,6 +20,15 @@ import type {
   SectionData,
 } from '../../modules/dashboard/use-cases';
 import { DashboardSection } from './DashboardSection';
+
+const openGate = async ({
+  selectedPeriod,
+}: {
+  selectedPeriod: Period | null;
+}) =>
+  selectedPeriod === null
+    ? { status: 'empty' as const }
+    : { status: 'open' as const, period: selectedPeriod };
 
 function dashboard(locale = 'en-US'): DashboardDefinition {
   return {
@@ -117,6 +126,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => ({
           truncated: false,
           buckets: [
@@ -152,6 +162,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => ({
           truncated: false,
           buckets: [{ period: '2026-08', values: [30] }],
@@ -177,6 +188,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
+        resolveSectionGate: openGate,
         fetchSectionData,
       })
     );
@@ -192,6 +204,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-04')),
+        resolveSectionGate: openGate,
         fetchSectionData,
       })
     );
@@ -210,6 +223,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => ({
           truncated: true,
           buckets: [
@@ -236,6 +250,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => null,
       })
     );
@@ -253,6 +268,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => data(),
       })
     );
@@ -285,6 +301,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(selected),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => mapped,
       })
     );
@@ -306,6 +323,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-07')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => data(),
       })
     );
@@ -324,6 +342,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => data(),
       })
     );
@@ -342,6 +361,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-09')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => data(),
       })
     );
@@ -361,6 +381,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(null),
+        resolveSectionGate: openGate,
         fetchSectionData,
       })
     );
@@ -380,6 +401,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => null,
       })
     );
@@ -398,6 +420,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => ({
           truncated: false,
           buckets: [{ period: '2026-08', values: [120, 9] }],
@@ -420,6 +443,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.reject(new Error('warehouse failed')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => data(),
       })
     );
@@ -440,6 +464,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () =>
           Promise.reject(new AmbiguousLatestValueError('headline', 'latest')),
       })
@@ -459,6 +484,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => ({
           truncated: false,
           buckets: [{ period: '2026-08', values: [null, 9] }],
@@ -481,6 +507,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => ({
           truncated: false,
           buckets: [
@@ -510,6 +537,7 @@ describe('DashboardSection', () => {
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => ({
           truncated: false,
           buckets: [
@@ -576,6 +604,7 @@ describe('DashboardSection table', () => {
         section: definition.sections[0],
         urlState,
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => null,
         fetchBarsData: async () => null,
         fetchTableRows: async () => ({
@@ -605,6 +634,7 @@ describe('DashboardSection table', () => {
         section: definition.sections[0],
         urlState,
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => null,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
@@ -623,6 +653,7 @@ describe('DashboardSection table', () => {
         section: definition.sections[0],
         urlState,
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => null,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
@@ -639,6 +670,7 @@ describe('DashboardSection table', () => {
         section: definition.sections[0],
         urlState: { ...urlState, pages: { detail: 7 } },
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => null,
         fetchBarsData: async () => null,
         fetchTableRows: async () => ({
@@ -662,12 +694,271 @@ describe('DashboardSection table', () => {
         section: definition.sections[0],
         urlState,
         periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
         fetchSectionData: async () => null,
         fetchTableRows: async () => Promise.reject(new Error('driver failed')),
         fetchBarsData: async () => null,
       })
     );
     expect(screen.getByRole('alert')).toBeInTheDocument();
+  });
+});
+
+describe('DashboardSection gates', () => {
+  it('shows accumulation and does not fetch chart data', async () => {
+    const definition = timeSeriesDashboard();
+    const fetchSectionData = vi.fn(async () => data());
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-05')),
+        resolveSectionGate: async () => ({
+          status: 'accumulating',
+          since: '2026-03-15',
+          availableFrom: {
+            grain: 'month',
+            start: { date: '2026-06-01', hour: 0 },
+          },
+          note: 'Three months are needed',
+        }),
+        fetchSectionData,
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+      })
+    );
+    expect(
+      screen.getByText(
+        'Accumulating since March 15, 2026 · Available from June 2026'
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByText('Three months are needed')).toBeInTheDocument();
+    expect(screen.queryByRole('application')).toBeNull();
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(fetchSectionData).not.toHaveBeenCalled();
+  });
+
+  it('formats an hourly availability target', async () => {
+    const definition = timeSeriesDashboard();
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: async () => ({
+          status: 'accumulating',
+          since: '2026-08-15',
+          availableFrom: {
+            grain: 'hour',
+            start: { date: '2026-08-16', hour: 6 },
+          },
+        }),
+        fetchSectionData: async () => null,
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+      })
+    );
+    expect(
+      screen.getByText(/Available from August 16, 2026 at 06:00/)
+    ).toBeInTheDocument();
+  });
+
+  it('shows not ready and does not fetch chart data', async () => {
+    const definition = timeSeriesDashboard();
+    const fetchSectionData = vi.fn(async () => data());
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section: definition.sections[0],
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: async () => ({
+          status: 'not-ready',
+          note: 'Waiting for the monthly close',
+        }),
+        fetchSectionData,
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+      })
+    );
+    expect(
+      screen.getByText('The latest data is not ready yet')
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Waiting for the monthly close')
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('application')).toBeNull();
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(fetchSectionData).not.toHaveBeenCalled();
+  });
+
+  it('uses Japanese accumulation and readiness labels', async () => {
+    const definition = timeSeriesDashboard('ja-JP');
+    definition.labels = {
+      accumulatingSince: '収集開始',
+      availableFrom: '有効化',
+      notReady: '準備中',
+    };
+    const props = {
+      dashboard: definition,
+      section: definition.sections[0],
+      urlState,
+      periodResolution: Promise.resolve(resolution('2026-05')),
+      fetchSectionData: async () => null,
+      fetchTableRows: async () => null,
+      fetchBarsData: async () => null,
+    };
+    const first = render(
+      await DashboardSection({
+        ...props,
+        resolveSectionGate: async () => ({
+          status: 'accumulating',
+          since: '2026-03-15',
+          availableFrom: {
+            grain: 'month' as const,
+            start: { date: '2026-06-01', hour: 0 },
+          },
+        }),
+      })
+    );
+    expect(
+      screen.getByText('収集開始 2026年3月15日 · 有効化 2026年6月')
+    ).toBeInTheDocument();
+    first.unmount();
+    render(
+      await DashboardSection({
+        ...props,
+        resolveSectionGate: async () => ({ status: 'not-ready' }),
+      })
+    );
+    expect(screen.getByText('準備中')).toBeInTheDocument();
+  });
+
+  it('renders a latest tile without awaiting dashboard period resolution', async () => {
+    const definition = dashboard();
+    const section = definition.sections[0];
+    if (section.kind !== 'stat-tiles') throw new Error('Expected tiles');
+    section.period = 'latest';
+    section.tiles = section.tiles
+      .slice(1)
+      .map((tile) => ({ ...tile, comparison: undefined }));
+    const day = Period.parse('day', '2026-08-15');
+    if (day === null) throw new Error('Expected day');
+    const periodResolution = Promise.reject(new Error('never awaited'));
+    void periodResolution.catch(() => undefined);
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section,
+        urlState,
+        periodResolution,
+        resolveSectionGate: async () => ({ status: 'open', period: day }),
+        fetchSectionData: async ({ period }) =>
+          period.toString() === '2026-08-15'
+            ? {
+                truncated: false,
+                buckets: [{ period: '2026-08-15', values: [21.5] }],
+              }
+            : null,
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+      })
+    );
+    expect(screen.getByText('As of August 15, 2026')).toBeInTheDocument();
+    expect(screen.getByText('21.5')).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('shows the latest hourly chart with one as-of date', async () => {
+    const definition = timeSeriesDashboard();
+    definition.timeZone = 'Asia/Tokyo';
+    const section = definition.sections[0];
+    if (section.kind !== 'time-series') throw new Error('Expected series');
+    section.period = 'latest';
+    section.grain = 'hour';
+    section.window = undefined;
+    section.source.time = { date: 'reading_date', hour: 'reading_hour' };
+    const day = Period.parse('day', '2026-08-15');
+    if (day === null) throw new Error('Expected day');
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section,
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-03')),
+        resolveSectionGate: async () => ({ status: 'open', period: day }),
+        fetchSectionData: async () => ({
+          truncated: false,
+          buckets: [
+            { period: '2026-08-15T00', values: [21] },
+            { period: '2026-08-15T23', values: [25] },
+          ],
+        }),
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+      })
+    );
+    expect(
+      screen.getByRole('application', { name: 'Monthly trend' })
+    ).toBeInTheDocument();
+    expect(screen.getByText('As of August 15, 2026')).toBeInTheDocument();
+    expect(screen.queryByText('Aug 15, 2026')).toBeNull();
+  });
+
+  it('shows availability without a minimum above ready content', async () => {
+    const definition = timeSeriesDashboard();
+    const section = definition.sections[0];
+    section.availability = { since: '2026-03-15', note: 'Started mid-March' };
+    render(
+      await DashboardSection({
+        dashboard: definition,
+        section,
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-03')),
+        resolveSectionGate: openGate,
+        fetchSectionData: async () => ({
+          truncated: false,
+          buckets: [{ period: '2026-03', values: [30] }],
+        }),
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+      })
+    );
+    expect(
+      screen.getByRole('application', { name: 'Monthly trend' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Accumulating since March 15, 2026')
+    ).toBeInTheDocument();
+    expect(screen.getByText('Started mid-March')).toBeInTheDocument();
+  });
+
+  it('shows a latest table with its empty message', async () => {
+    const definition = tableDashboard('en-US', 'No entries in this period.');
+    const section = definition.sections[0];
+    section.period = 'latest';
+    const day = Period.parse('day', '2026-08-15');
+    if (day === null) throw new Error('Expected day');
+    await act(async () => {
+      render(
+        await DashboardSection({
+          dashboard: definition,
+          section,
+          urlState,
+          periodResolution: Promise.resolve(null),
+          resolveSectionGate: async () => ({ status: 'open', period: day }),
+          fetchSectionData: async () => null,
+          fetchTableRows: async () => null,
+          fetchBarsData: async () => null,
+        })
+      );
+    });
+    expect(
+      screen.getByRole('table', { name: 'Largest entries' })
+    ).toHaveTextContent('No entries in this period.');
+    expect(screen.getByText('As of August 15, 2026')).toBeInTheDocument();
   });
 });
 
@@ -714,6 +1005,10 @@ describe('bars sections', () => {
       section: definition.sections[0],
       urlState,
       periodResolution: Promise.resolve(resolution(month)),
+      resolveSectionGate: async () => ({
+        status: 'open',
+        period: resolution(month).period,
+      }),
       fetchSectionData: async () => null,
       fetchTableRows: async () => null,
       fetchBarsData,

@@ -10,6 +10,7 @@ import {
   createFetchTableRowsUseCase,
   createLoadDashboardsUseCase,
   createResolveDashboardPeriodUseCase,
+  createResolveSectionGateUseCase,
 } from '../../../infrastructure/di/dashboard';
 import { dashboardLogger } from '../../../modules/dashboard/adapters/shared';
 import {
@@ -90,6 +91,9 @@ export default async function Page({ params, searchParams }: Props) {
                 dashboard={dashboard}
                 section={section}
                 periodResolution={periodResolution}
+                resolveSectionGate={(input) =>
+                  createResolveSectionGateUseCase().execute(input)
+                }
                 fetchSectionData={(input) =>
                   createFetchSectionDataUseCase().execute(input)
                 }

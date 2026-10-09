@@ -6,6 +6,10 @@ export interface DashboardLabels {
   previousPage: string;
   nextPage: string;
   pagination: string;
+  asOf: string;
+  accumulatingSince: string;
+  availableFrom: string;
+  notReady: string;
   nullCategory: string;
 }
 
@@ -17,5 +21,9 @@ export const DEFAULT_DASHBOARD_LABELS = {
   previousPage: 'Previous page',
   nextPage: 'Next page',
   pagination: 'Pagination',
+  asOf: 'As of',
+  accumulatingSince: 'Accumulating since',
+  availableFrom: 'Available from',
+  notReady: 'The latest data is not ready yet',
   nullCategory: 'None',
 };

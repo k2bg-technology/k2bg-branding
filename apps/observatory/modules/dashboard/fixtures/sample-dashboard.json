@@ -13,6 +13,10 @@
     "previousPage": "Earlier page",
     "nextPage": "Later page",
     "pagination": "Entry pages",
+    "asOf": "Latest date",
+    "accumulatingSince": "Collecting since",
+    "availableFrom": "Meaningful from",
+    "notReady": "The latest day is still being processed",
     "nullCategory": "No category"
   },
   "currency": "JPY",
@@ -237,6 +241,33 @@
       "series": [
         { "label": "Temperature", "column": "temperature", "reduction": "average" }
       ]
+    },
+    {
+      "id": "latest-day",
+      "title": "Latest day",
+      "kind": "stat-tiles",
+      "period": "latest",
+      "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "availability": { "since": "2026-04-01", "note": "Readings are collected since April 2026." },
+      "readiness": { "column": "is_complete", "note": "Shown once every reading of the day has arrived." },
+      "tiles": [
+        { "label": "Average temperature", "column": "temperature", "reduction": "average", "format": { "type": "number" }, "unit": "°C" }
+      ]
+    },
+    {
+      "id": "latest-day-by-hour",
+      "title": "Latest day by hour",
+      "kind": "time-series",
+      "period": "latest",
+      "grain": "hour",
+      "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "availability": { "since": "2026-04-01", "minimumBuckets": 48, "note": "Two full days of readings are needed before the hourly shape is meaningful." },
+      "variant": "line",
+      "stacked": false,
+      "format": { "type": "number" },
+      "series": [{ "label": "Temperature", "column": "temperature", "reduction": "average" }]
     }
   ]
 }

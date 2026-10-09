@@ -54,6 +54,7 @@ describe('loadSectionState bars ranking', () => {
         previousTarget: null,
         nextTarget: null,
       }),
+      resolveSectionGate: async () => ({ status: 'open', period }),
       fetchSectionData: async () => null,
       fetchTableRows: async () => null,
       fetchBarsData: async () => ({

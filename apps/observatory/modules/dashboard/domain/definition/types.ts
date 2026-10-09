@@ -108,7 +108,24 @@ export interface StatTileDefinition {
   };
 }
 
-export interface StatTilesSection {
+export interface SectionAvailability {
+  since: string;
+  minimumBuckets?: number;
+  note?: string;
+}
+
+export interface SectionReadiness {
+  column: string;
+  note?: string;
+}
+
+export interface SectionGateFields {
+  period?: 'latest';
+  availability?: SectionAvailability;
+  readiness?: SectionReadiness;
+}
+
+export interface StatTilesSection extends SectionGateFields {
   id: string;
   title: string;
   source: SourceDefinition;
@@ -117,7 +134,7 @@ export interface StatTilesSection {
   tiles: StatTileDefinition[];
 }
 
-export interface TimeSeriesSection {
+export interface TimeSeriesSection extends SectionGateFields {
   id: string;
   title: string;
   source: SourceDefinition;
@@ -137,7 +154,7 @@ export interface TimeSeriesSection {
   }[];
 }
 
-export interface TableSection {
+export interface TableSection extends SectionGateFields {
   id: string;
   title: string;
   source: SourceDefinition;
@@ -173,7 +190,7 @@ export type BarsAxis =
       order: CategoryOrder;
     };
 
-export interface BarsSection {
+export interface BarsSection extends SectionGateFields {
   id: string;
   title: string;
   source: SourceDefinition;
@@ -209,6 +226,10 @@ export interface DashboardDefinition {
     previousPage?: string;
     nextPage?: string;
     pagination?: string;
+    asOf?: string;
+    accumulatingSince?: string;
+    availableFrom?: string;
+    notReady?: string;
     nullCategory?: string;
   };
   sections: Section[];

@@ -15,8 +15,28 @@ import {
   toDateBounds,
   toGroupedValues,
   toSectionData,
+  toSectionReadiness,
   toTableRows,
 } from './mapper';
+
+describe('toSectionReadiness', () => {
+  it.each([
+    { count: 0, ready: true },
+    { count: 3, ready: false },
+  ])('maps $count not-ready rows to $ready', ({ count, ready }) => {
+    expect(toSectionReadiness([{ not_ready_count: count }])).toBe(ready);
+  });
+
+  it('rejects a missing result row', () => {
+    expect(() => toSectionReadiness([])).toThrow(MappingError);
+  });
+
+  it('rejects an invalid count', () => {
+    expect(() => toSectionReadiness([{ not_ready_count: 'two' }])).toThrow(
+      MappingError
+    );
+  });
+});
 
 function plan(): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
   return {
