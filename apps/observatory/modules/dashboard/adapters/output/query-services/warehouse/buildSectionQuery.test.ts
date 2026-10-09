@@ -30,9 +30,11 @@ function plan(
 describe('buildSectionQuery', () => {
   it('builds the fixture calendar heatmap over 91 trailing days in ascending order without a limit', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
-    const section = dashboard.sections[5];
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'daily-spending'
+    );
     const period = Period.parse('month', '2026-08');
-    if (period === null || section.kind !== 'calendar-heatmap') {
+    if (period === null || section?.kind !== 'calendar-heatmap') {
       throw new Error('Expected calendar-heatmap fixture and period');
     }
 

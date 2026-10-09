@@ -13,3 +13,17 @@ export class AmbiguousLatestValueError extends DomainError {
     );
   }
 }
+
+export class AmbiguousSortKeyError extends DomainError {
+  constructor(sectionId: string, column: string) {
+    super(
+      `Section "${sectionId}" cannot order by "${column}": a category has several distinct sort keys`
+    );
+  }
+}
+
+export class DuplicateCategoryLabelError extends DomainError {
+  constructor(sectionId: string, label: string) {
+    super(`Section "${sectionId}" shows two categories labelled "${label}"`);
+  }
+}

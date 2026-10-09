@@ -6,6 +6,7 @@ import {
   type Section,
   SectionKind,
 } from '../../../../../domain';
+import { barsSectionSchema } from './bars';
 import { calendarHeatmapSectionSchema } from './calendarHeatmap';
 import { sourceSchema, statTilesSectionSchema } from './statTiles';
 import { tableSectionSchema } from './table';
@@ -33,6 +34,7 @@ const sectionSchemasByKind = {
   [SectionKind.STAT_TILES]: statTilesSectionSchema,
   [SectionKind.TIME_SERIES]: timeSeriesSectionSchema,
   [SectionKind.TABLE]: tableSectionSchema,
+  [SectionKind.BARS]: barsSectionSchema,
   [SectionKind.CALENDAR_HEATMAP]: calendarHeatmapSectionSchema,
 };
 
@@ -113,6 +115,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       previousPage: z.string().min(1).optional(),
       nextPage: z.string().min(1).optional(),
       pagination: z.string().min(1).optional(),
+      nullCategory: z.string().min(1).optional(),
       missingValue: z.string().min(1).optional(),
     })
     .optional(),

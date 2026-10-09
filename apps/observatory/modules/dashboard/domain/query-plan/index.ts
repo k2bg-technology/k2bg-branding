@@ -1,4 +1,6 @@
+export * from './bars';
 export * from './calendarHeatmap';
+export * from './groupedValues';
 export * from './planSection';
 export * from './statTiles';
 export * from './table';

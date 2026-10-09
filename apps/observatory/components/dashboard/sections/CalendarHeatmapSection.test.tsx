@@ -10,10 +10,10 @@ import { Period, planSection } from '../../../modules/dashboard/domain';
 import sampleDashboard from '../../../modules/dashboard/fixtures/sample-dashboard.json';
 import { CalendarHeatmapSection } from './CalendarHeatmapSection';
 
-function fixtureSection(index: number) {
+function fixtureSection(id: string) {
   const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
-  const section = dashboard.sections[index];
-  if (section.kind !== 'calendar-heatmap') {
+  const section = dashboard.sections.find((candidate) => candidate.id === id);
+  if (section?.kind !== 'calendar-heatmap') {
     throw new Error('Expected calendar heatmap fixture');
   }
   return { dashboard, section };
@@ -55,7 +55,7 @@ async function mountCalendarSection(
 
 describe('CalendarHeatmapSection', () => {
   it('names the grid, formats a zero, and leaves a missing day with the dashboard label', async () => {
-    const { dashboard, section } = fixtureSection(5);
+    const { dashboard, section } = fixtureSection('daily-spending');
 
     await mountCalendarSection(dashboard, section, '2026-08', [
       { period: '2026-08-03', value_0: 0 },
@@ -72,7 +72,7 @@ describe('CalendarHeatmapSection', () => {
   });
 
   it('renders every day of the calendar year and none of the previous year', async () => {
-    const { dashboard, section } = fixtureSection(6);
+    const { dashboard, section } = fixtureSection('yearly-readings');
 
     await mountCalendarSection(dashboard, section, '2026-03', [
       { period: '2026-01-01', value_0: 3 },
@@ -86,7 +86,7 @@ describe('CalendarHeatmapSection', () => {
   });
 
   it('includes the leap day', async () => {
-    const { dashboard, section } = fixtureSection(6);
+    const { dashboard, section } = fixtureSection('yearly-readings');
 
     await mountCalendarSection(dashboard, section, '2028-02', [
       { period: '2028-02-29', value_0: 1 },

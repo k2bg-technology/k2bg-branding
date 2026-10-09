@@ -4,6 +4,7 @@ export const SectionKind = {
   STAT_TILES: 'stat-tiles',
   TIME_SERIES: 'time-series',
   TABLE: 'table',
+  BARS: 'bars',
   CALENDAR_HEATMAP: 'calendar-heatmap',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
@@ -165,11 +166,48 @@ export interface TableSection {
   emptyMessage?: string;
 }
 
+export type SortKeyType = 'text' | 'number';
+export interface ValueBinding {
+  column: string;
+  reduction: Reduction;
+  transform?: ValueTransform;
+}
+export interface TopN {
+  count: number;
+  otherLabel: string;
+}
+export type CategoryOrder =
+  | 'value-desc'
+  | { sortKey: { column: string; type: SortKeyType } };
+export type BarsAxis =
+  | { axis: 'time'; window: number }
+  | {
+      axis: 'category';
+      column: string;
+      by?: string;
+      topN?: TopN;
+      order: CategoryOrder;
+    };
+
+export interface BarsSection {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.BARS;
+  width?: SectionWidth;
+  x: BarsAxis;
+  series?: (ValueBinding & { label: string })[];
+  pivot?: { column: string; value: ValueBinding; topN: TopN };
+  stacked: boolean;
+  format: ValueFormat;
+  unit?: string;
+}
+
 export type AggregatingSection =
   | StatTilesSection
   | TimeSeriesSection
   | CalendarHeatmapSection;
-export type Section = AggregatingSection | TableSection;
+export type Section = AggregatingSection | TableSection | BarsSection;
 
 export interface DashboardDefinition {
   id: string;
@@ -190,6 +228,7 @@ export interface DashboardDefinition {
     previousPage?: string;
     nextPage?: string;
     pagination?: string;
+    nullCategory?: string;
     missingValue?: string;
   };
   sections: Section[];
