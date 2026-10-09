@@ -6,6 +6,7 @@ export interface DashboardLabels {
   previousPage: string;
   nextPage: string;
   pagination: string;
+  applyControls: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -16,4 +17,7 @@ export const DEFAULT_DASHBOARD_LABELS = {
   previousPage: 'Previous page',
   nextPage: 'Next page',
   pagination: 'Pagination',
+  applyControls: 'Apply',
 };
+
+export const DEFAULT_CONTROL_ALL_LABEL = 'All';

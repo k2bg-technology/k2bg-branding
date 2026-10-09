@@ -61,11 +61,53 @@ describe('FetchSectionData', () => {
       dashboard,
       section,
       period,
+      selections: {},
     });
 
     expect(result).toEqual({
       buckets: [{ period: '2026-09', values: [42] }],
       truncated: false,
     });
+  });
+
+  it('plans selected control filters for a section', async () => {
+    const dashboard = createDashboard();
+    dashboard.controls = [
+      {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: ['food'],
+      },
+    ];
+    const section = dashboard.sections[0];
+    if (section.kind !== 'stat-tiles') {
+      throw new Error('Expected stat-tiles fixture');
+    }
+    section.controls = ['category'];
+    const period = Period.parse('month', '2026-09');
+    if (period === null) {
+      throw new Error('Expected fixture period to parse');
+    }
+    const buckets = [{ period: '2026-09', values: [42] }];
+    const queryService = {
+      fetchSectionData: async (plan: SectionQueryPlan) =>
+        JSON.stringify(plan.source.filters) ===
+        JSON.stringify([
+          { column: 'category', operator: 'equals', value: 'food' },
+        ])
+          ? { buckets, truncated: false }
+          : null,
+    };
+    const sut = new FetchSectionData(queryService);
+
+    const result = await sut.execute({
+      dashboard,
+      section,
+      period,
+      selections: { category: 'food' },
+    });
+
+    expect(result?.buckets).toEqual(buckets);
   });
 });

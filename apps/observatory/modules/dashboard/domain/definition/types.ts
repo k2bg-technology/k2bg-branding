@@ -95,6 +95,14 @@ export interface SourceDefinition {
   filters?: SourceFilter[];
 }
 
+export interface ControlDefinition {
+  id: string;
+  label: string;
+  column: string;
+  options: string[];
+  allLabel?: string;
+}
+
 export interface StatTileDefinition {
   label: string;
   column: string;
@@ -113,6 +121,7 @@ export interface StatTilesSection {
   source: SourceDefinition;
   kind: typeof SectionKind.STAT_TILES;
   width?: SectionWidth;
+  controls?: string[];
   tiles: StatTileDefinition[];
 }
 
@@ -122,6 +131,7 @@ export interface TimeSeriesSection {
   source: SourceDefinition;
   kind: typeof SectionKind.TIME_SERIES;
   width?: SectionWidth;
+  controls?: string[];
   grain?: SectionGrain;
   window?: number;
   variant: 'line' | 'area';
@@ -142,6 +152,7 @@ export interface TableSection {
   source: SourceDefinition;
   kind: typeof SectionKind.TABLE;
   width?: SectionWidth;
+  controls?: string[];
   columns: TableColumnDefinition[];
   sort?: { column: string; direction: SortDirection };
   limit?: number;
@@ -162,6 +173,7 @@ export interface DashboardDefinition {
   currency?: string;
   revalidate: number;
   periodSource?: SourceDefinition;
+  controls?: ControlDefinition[];
   defaultPeriod: 'latest-with-data' | 'last-complete';
   labels?: {
     period?: string;
@@ -171,6 +183,7 @@ export interface DashboardDefinition {
     previousPage?: string;
     nextPage?: string;
     pagination?: string;
+    applyControls?: string;
   };
   sections: Section[];
 }

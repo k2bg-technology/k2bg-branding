@@ -33,6 +33,84 @@ function createDefinition(): DashboardDefinition {
 }
 
 describe('validateDefinitionRules', () => {
+  it.each([
+    {
+      name: 'duplicate control ids',
+      controls: [
+        {
+          id: 'category',
+          label: 'Category',
+          column: 'category',
+          options: ['a'],
+        },
+        { id: 'category', label: 'Other', column: 'category', options: ['b'] },
+      ],
+      sectionControls: ['category'],
+      path: ['controls', 1, 'id'],
+      message: 'Duplicate control id "category"',
+    },
+    {
+      name: 'duplicate options',
+      controls: [
+        {
+          id: 'category',
+          label: 'Category',
+          column: 'category',
+          options: ['a', 'a'],
+        },
+      ],
+      sectionControls: ['category'],
+      path: ['controls', 0, 'options', 1],
+      message: 'Duplicate option "a"',
+    },
+    {
+      name: 'unused controls',
+      controls: [
+        {
+          id: 'category',
+          label: 'Category',
+          column: 'category',
+          options: ['a'],
+        },
+      ],
+      sectionControls: [],
+      path: ['controls', 0, 'id'],
+      message: 'Control "category" is not used by any section',
+    },
+    {
+      name: 'undeclared section controls',
+      controls: [],
+      sectionControls: ['missing'],
+      path: ['sections', 0, 'controls', 0],
+      message: 'Control "missing" is not a declared control',
+    },
+    {
+      name: 'duplicate section controls',
+      controls: [
+        {
+          id: 'category',
+          label: 'Category',
+          column: 'category',
+          options: ['a'],
+        },
+      ],
+      sectionControls: ['category', 'category'],
+      path: ['sections', 0, 'controls', 1],
+      message: 'Duplicate control "category"',
+    },
+  ])(
+    'reports $name at the later path',
+    ({ controls, sectionControls, path, message }) => {
+      const definition = createDefinition();
+      definition.controls = controls;
+      definition.sections[0].controls = sectionControls;
+
+      const result = validateDefinitionRules(definition);
+
+      expect(result).toContainEqual({ path, message });
+    }
+  );
+
   it('rejects stacking with an average series at its reduction path', () => {
     const definition = createDefinition();
     definition.sections = [

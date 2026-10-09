@@ -1,3 +1,4 @@
+import type { ControlSelections } from '../controls';
 import { type DashboardDefinition, SectionKind } from '../definition';
 import { Period } from '../period';
 
@@ -5,7 +6,7 @@ export type SearchParameters = Record<string, string | string[] | undefined>;
 
 export interface UrlState {
   period: Period | null;
-  controls: Record<string, string>;
+  controls: ControlSelections;
   pages: Record<string, number>;
   foreign: { key: string; value: string }[];
 }
@@ -35,7 +36,26 @@ function addParameter(
       : { valid: true, state: { ...result.state, period } };
   }
   if (key.startsWith('control.')) {
-    return { valid: false, problem: 'unknown-control', key };
+    const controlId = key.slice('control.'.length);
+    const control = dashboard.controls?.find(
+      (candidate) => candidate.id === controlId
+    );
+    if (control === undefined) {
+      return { valid: false, problem: 'unknown-control', key };
+    }
+    if (value === '') {
+      return result;
+    }
+    if (!control.options.includes(value)) {
+      return { valid: false, problem: 'invalid-control', key };
+    }
+    return {
+      valid: true,
+      state: {
+        ...result.state,
+        controls: { ...result.state.controls, [controlId]: value },
+      },
+    };
   }
   if (key.startsWith('page.')) {
     const sectionId = key.slice('page.'.length);
