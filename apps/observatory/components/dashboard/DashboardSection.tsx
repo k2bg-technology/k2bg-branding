@@ -6,14 +6,17 @@ import type {
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
+  FetchBarsDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
+  GroupedValues,
   SectionData,
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { loadSectionState } from './loadSectionState';
 import { SectionEmpty } from './SectionEmpty';
 import { SectionUnavailable } from './SectionUnavailable';
+import { BarsSection } from './sections/BarsSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
@@ -26,6 +29,7 @@ interface Props {
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
+  fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
   urlState: UrlState;
 }
 
@@ -39,6 +43,7 @@ export async function DashboardSection({
   periodResolution,
   fetchSectionData,
   fetchTableRows,
+  fetchBarsData,
   urlState,
 }: Props) {
   const state = await loadSectionState({
@@ -47,6 +52,7 @@ export async function DashboardSection({
     periodResolution,
     fetchSectionData,
     fetchTableRows,
+    fetchBarsData,
     page: urlState.pages[section.id] ?? 1,
   });
 
@@ -82,6 +88,15 @@ export async function DashboardSection({
                 section={state.section}
                 data={state.data}
                 urlState={urlState}
+              />
+            );
+          }
+          if (state.kind === SectionKind.BARS) {
+            return (
+              <BarsSection
+                dashboard={dashboard}
+                section={state.section}
+                chart={state.chart}
               />
             );
           }

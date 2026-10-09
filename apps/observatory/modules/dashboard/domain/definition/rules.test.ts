@@ -271,3 +271,164 @@ describe('table definition rules', () => {
     });
   });
 });
+
+describe('bars definition rules', () => {
+  const validBars = (): import('./types').BarsSection => ({
+    id: 'bars',
+    title: 'Bars',
+    kind: 'bars',
+    source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+    x: { axis: 'category', column: 'category', order: 'value-desc' },
+    series: [{ label: 'Amount', column: 'amount', reduction: 'sum' }],
+    stacked: false,
+    format: { type: 'number' },
+  });
+  const violations = (
+    section: import('./types').BarsSection,
+    currency = 'USD'
+  ) => {
+    const definition = createDefinition();
+    if (currency === '') delete definition.currency;
+    else definition.currency = currency;
+    definition.sections = [section];
+    return validateDefinitionRules(definition);
+  };
+
+  it('requires exactly one series source', () => {
+    const section = validBars();
+    expect(violations({ ...section, series: undefined })).toContainEqual({
+      path: ['sections', 0, 'series'],
+      message: 'A bars section declares exactly one of series and pivot',
+    });
+    expect(
+      violations({
+        ...section,
+        pivot: {
+          column: 'category',
+          value: { column: 'amount', reduction: 'sum' },
+          topN: { count: 1, otherLabel: 'Other' },
+        },
+      })
+    ).toContainEqual({
+      path: ['sections', 0, 'series'],
+      message: 'A bars section declares exactly one of series and pivot',
+    });
+  });
+
+  it('requires one resolvable ranking binding when several series rank', () => {
+    const section = validBars();
+    section.series?.push({ label: 'Count', column: 'count', reduction: 'sum' });
+    section.x = {
+      axis: 'category',
+      column: 'category',
+      order: 'value-desc',
+      topN: { count: 1, otherLabel: 'Other' },
+    };
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'x', 'by'],
+      message: 'Ranking several series requires by',
+    });
+    section.x.by = 'fee';
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'x', 'by'],
+      message: 'Ranking column "fee" is not a declared series',
+    });
+    section.x.by = 'amount';
+    section.series?.push({
+      label: 'Duplicate',
+      column: 'amount',
+      reduction: 'sum',
+    });
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'x', 'by'],
+      message: 'Ranking column "amount" matches several declared series',
+    });
+    section.x = {
+      axis: 'category',
+      column: 'category',
+      order: { sortKey: { column: 'weekday', type: 'number' } },
+    };
+    expect(violations(section)).toEqual([]);
+  });
+
+  it('requires the time axis for a pivot and sum where bars add values', () => {
+    const section = validBars();
+    section.pivot = {
+      column: 'category',
+      value: { column: 'amount', reduction: 'average' },
+      topN: { count: 1, otherLabel: 'Other' },
+    };
+    section.series = undefined;
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'pivot'],
+      message:
+        'pivot splits time buckets by a category column and requires the time axis',
+    });
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'pivot', 'value', 'reduction'],
+      message: 'A remainder adds values up and requires the sum reduction',
+    });
+    section.x = { axis: 'time', window: 12 };
+    section.stacked = true;
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'pivot', 'value', 'reduction'],
+      message: 'Stacking adds values up and requires the sum reduction',
+    });
+  });
+
+  it('checks stacking, remainder, ranking, and currency independently', () => {
+    const section = validBars();
+    section.series?.push({
+      label: 'Average',
+      column: 'average',
+      reduction: 'average',
+    });
+    section.x = {
+      axis: 'category',
+      column: 'category',
+      by: 'average',
+      topN: { count: 1, otherLabel: 'Other' },
+      order: 'value-desc',
+    };
+    section.stacked = true;
+    section.format = { type: 'currency' };
+    const messages = violations(section, '').map(({ message }) => message);
+    expect(messages).toContain(
+      'Stacking adds values up and requires the sum reduction'
+    );
+    expect(messages).toContain(
+      'A remainder adds values up and requires the sum reduction'
+    );
+    expect(messages).toContain(
+      'Ranking by value adds values up and requires the sum reduction'
+    );
+    expect(messages).toContain(
+      'A currency section requires dashboard currency'
+    );
+  });
+
+  it('accepts a stacked sum pivot and a two-series sort key section', () => {
+    const pivot = validBars();
+    pivot.x = { axis: 'time', window: 12 };
+    pivot.series = undefined;
+    pivot.pivot = {
+      column: 'category',
+      value: { column: 'amount', reduction: 'sum' },
+      topN: { count: 1, otherLabel: 'Other' },
+    };
+    pivot.stacked = true;
+    expect(violations(pivot)).toEqual([]);
+    const keyed = validBars();
+    keyed.x = {
+      axis: 'category',
+      column: 'category',
+      order: { sortKey: { column: 'weekday', type: 'number' } },
+    };
+    keyed.series?.push({
+      label: 'Average',
+      column: 'average',
+      reduction: 'average',
+    });
+    expect(violations(keyed)).toEqual([]);
+  });
+});

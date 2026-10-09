@@ -12,7 +12,8 @@
     "nextPeriod": "Later month",
     "previousPage": "Earlier page",
     "nextPage": "Later page",
-    "pagination": "Entry pages"
+    "pagination": "Entry pages",
+    "nullCategory": "No category"
   },
   "currency": "JPY",
   "revalidate": 86400,
@@ -104,6 +105,121 @@
       "sort": { "column": "occurred_on", "direction": "descending" },
       "paging": { "pageSize": 20 },
       "emptyMessage": "No entries in this period."
+    },
+    {
+      "id": "category-trend",
+      "title": "Monthly total by category",
+      "kind": "bars",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": {
+          "column": "recorded_at",
+          "type": "timestamp"
+        },
+        "filters": [
+          {
+            "column": "category",
+            "operator": "not-equals",
+            "value": "transfer"
+          }
+        ]
+      },
+      "x": {
+        "axis": "time",
+        "window": 12
+      },
+      "pivot": {
+        "column": "category",
+        "value": {
+          "column": "amount",
+          "reduction": "sum",
+          "transform": "absolute"
+        },
+        "topN": {
+          "count": 5,
+          "otherLabel": "Other categories"
+        }
+      },
+      "stacked": true,
+      "format": {
+        "type": "currency"
+      }
+    },
+    {
+      "id": "category-ranking",
+      "title": "Largest categories",
+      "kind": "bars",
+      "width": "half",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": {
+          "column": "recorded_at",
+          "type": "timestamp"
+        }
+      },
+      "x": {
+        "axis": "category",
+        "column": "category",
+        "by": "amount",
+        "topN": {
+          "count": 8,
+          "otherLabel": "Other categories"
+        },
+        "order": "value-desc"
+      },
+      "series": [
+        {
+          "label": "Amount",
+          "column": "amount",
+          "reduction": "sum",
+          "transform": "absolute"
+        }
+      ],
+      "format": {
+        "type": "currency"
+      }
+    },
+    {
+      "id": "weekday-totals",
+      "title": "Total by weekday",
+      "kind": "bars",
+      "width": "half",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": {
+          "column": "recorded_at",
+          "type": "timestamp"
+        }
+      },
+      "x": {
+        "axis": "category",
+        "column": "weekday_name",
+        "order": {
+          "sortKey": {
+            "column": "weekday_number",
+            "type": "number"
+          }
+        }
+      },
+      "series": [
+        {
+          "label": "Amount",
+          "column": "amount",
+          "reduction": "sum",
+          "transform": "absolute"
+        },
+        {
+          "label": "Average entry",
+          "column": "amount",
+          "reduction": "average"
+        }
+      ],
+      "format": {
+        "type": "currency"
+      }
     },
     {
       "id": "daily-trend",

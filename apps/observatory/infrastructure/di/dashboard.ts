@@ -2,11 +2,13 @@ import {
   DEFINITION_DIRECTORY_VARIABLE,
   FileSystemDefinitionSource,
   systemClock,
+  WarehouseFetchGroupedValuesQueryService,
   WarehouseFetchPeriodBoundsQueryService,
   WarehouseFetchSectionDataQueryService,
   WarehouseFetchTableRowsQueryService,
 } from '../../modules/dashboard/adapters';
 import {
+  FetchBarsData,
   FetchSectionData,
   FetchTableRows,
   LoadDashboards,
@@ -36,5 +38,11 @@ export function createFetchSectionDataUseCase(): FetchSectionData {
 export function createFetchTableRowsUseCase(): FetchTableRows {
   return new FetchTableRows(
     new WarehouseFetchTableRowsQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchBarsDataUseCase(): FetchBarsData {
+  return new FetchBarsData(
+    new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
   );
 }
