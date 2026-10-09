@@ -128,6 +128,76 @@ describe('validateDefinitionRules', () => {
   });
 });
 
+describe('time-series grain rules', () => {
+  function seriesDefinition(
+    grain: DashboardDefinition['grain'],
+    sectionGrain?: 'month' | 'week' | 'day' | 'hour',
+    window?: number
+  ) {
+    const definition = createDefinition();
+    definition.grain = grain;
+    definition.sections = [
+      {
+        id: 'trend',
+        title: 'Trend',
+        kind: 'time-series',
+        source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+        ...(sectionGrain === undefined ? {} : { grain: sectionGrain }),
+        ...(window === undefined ? {} : { window }),
+        variant: 'line',
+        stacked: false,
+        format: { type: 'number' },
+        series: [{ label: 'Value', column: 'value', reduction: 'average' }],
+      },
+    ];
+    return definition;
+  }
+
+  it.each([
+    { dashboard: 'month', section: 'week' },
+    { dashboard: 'week', section: 'hour' },
+  ] as const)(
+    'rejects $dashboard to $section without cascading',
+    ({ dashboard, section }) => {
+      const definition = seriesDefinition(dashboard, section);
+
+      expect(validateDefinitionRules(definition)).toEqual([
+        {
+          path: ['sections', 0, 'grain'],
+          message: `Section grain "${section}" is not supported by dashboard grain "${dashboard}"`,
+        },
+      ]);
+    }
+  );
+
+  it('requires a window at the dashboard grain', () => {
+    const definition = seriesDefinition('month', 'month');
+
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'window'],
+      message: 'A time-series section at the dashboard grain requires window',
+    });
+  });
+
+  it('requires a date-and-hour binding at hour grain', () => {
+    const definition = seriesDefinition('day', 'hour');
+
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'source', 'time'],
+      message:
+        'An hour section requires source.time with date and hour columns',
+    });
+  });
+
+  it('accepts a finer hour section with a date-and-hour binding and no window', () => {
+    const definition = seriesDefinition('day', 'hour');
+    const section = definition.sections[0];
+    section.source.time = { date: 'reading_date', hour: 'reading_hour' };
+
+    expect(validateDefinitionRules(definition)).toEqual([]);
+  });
+});
+
 function createTable(): TableSection {
   return {
     id: 'detail',

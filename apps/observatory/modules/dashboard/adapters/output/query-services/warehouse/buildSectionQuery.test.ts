@@ -229,6 +229,9 @@ describe('buildSectionQuery', () => {
     const dashboard = dashboardDefinitionSchema.parse({
       ...sampleDashboard,
       grain: 'day',
+      sections: sampleDashboard.sections.map((section) =>
+        section.id === 'daily-trend' ? { ...section, window: 7 } : section
+      ),
     });
     const section = dashboard.sections[0];
     const period = Period.parse('day', '2026-09-03');
@@ -408,6 +411,121 @@ describe('buildPeriodBoundsQuery', () => {
         `SELECT FORMAT_DATE('%F', MIN(${expression})) AS first_date,`,
         `FORMAT_DATE('%F', MAX(${expression})) AS last_date`,
         'FROM `metrics.events`',
+        'HAVING COUNT(*) > 0',
+      ].join('\n'),
+      params: { time_zone: 'Asia/Tokyo' },
+    });
+  });
+});
+
+describe('date-and-hour binding', () => {
+  const validatedHour =
+    "IF(`reading_hour` BETWEEN 0 AND 23, `reading_hour`, ERROR('source.time.hour must be an integer from 0 through 23'))";
+  const source = {
+    dataset: 'home',
+    view: 'hourly_readings',
+    time: { date: 'reading_date', hour: 'reading_hour' },
+  };
+
+  it('builds the complete 30-hour query with validated hours before grouping and limiting', () => {
+    const period = Period.parse('day', '2026-08-15');
+    if (period === null) {
+      throw new Error('Expected day period');
+    }
+    const section = {
+      kind: 'time-series' as const,
+      id: 'temperature',
+      title: 'Temperature',
+      source,
+      grain: 'hour' as const,
+      window: 30,
+      variant: 'line' as const,
+      stacked: false,
+      format: { type: 'number' as const },
+      series: [
+        {
+          label: 'Temperature',
+          column: 'temperature',
+          reduction: Reduction.AVERAGE,
+        },
+      ],
+    };
+
+    const result = buildSectionQuery(
+      planSection(section, period, 'Asia/Tokyo')
+    );
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        `SELECT FORMAT('%sT%02d', FORMAT_DATE('%F', \`reading_date\`), ${validatedHour}) AS period, DATETIME(\`reading_date\`, TIME(${validatedHour}, 0, 0)) AS source_time, CAST(\`temperature\` AS FLOAT64) AS value_0`,
+        'FROM `home.hourly_readings`',
+        'WHERE `reading_date` >= CAST(@period_start AS DATE)',
+        'AND `reading_date` <= CAST(@period_end AS DATE)',
+        `AND ${validatedHour} IS NOT NULL`,
+        `AND (\`reading_date\` > CAST(@period_start AS DATE) OR ${validatedHour} >= @first_hour)`,
+        '),',
+        'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+        'SELECT filtered.period, CAST(AVG(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN bucket_times USING (period)',
+        'GROUP BY filtered.period',
+        'ORDER BY filtered.period DESC',
+        'LIMIT @bucket_limit',
+      ].join('\n'),
+      params: {
+        period_start: '2026-08-14',
+        period_end: '2026-08-15',
+        time_zone: 'Asia/Tokyo',
+        first_hour: 18,
+        bucket_limit: 121,
+      },
+    });
+  });
+
+  it('uses local DATE at day grain and validates hours for latest ordering', () => {
+    const period = Period.parse('month', '2026-08');
+    if (period === null) {
+      throw new Error('Expected month period');
+    }
+    const section = {
+      kind: 'time-series' as const,
+      id: 'temperature',
+      title: 'Temperature',
+      source,
+      grain: 'day' as const,
+      variant: 'line' as const,
+      stacked: false,
+      format: { type: 'number' as const },
+      series: [
+        {
+          label: 'Temperature',
+          column: 'temperature',
+          reduction: Reduction.LATEST,
+        },
+      ],
+    };
+
+    const result = buildSectionQuery(
+      planSection(section, period, 'Asia/Tokyo')
+    );
+
+    expect(result.sql).toContain("FORMAT_DATE('%F', `reading_date`) AS period");
+    expect(result.sql).toContain(
+      `DATETIME(\`reading_date\`, TIME(${validatedHour}, 0, 0)) AS source_time`
+    );
+    expect(result.sql).toContain(`AND ${validatedHour} IS NOT NULL`);
+    expect(result.sql).not.toContain('@first_hour');
+    expect(result.sql).toContain(
+      'ARRAY_AGG(STRUCT(source_time, value_0) ORDER BY source_time DESC LIMIT 1)'
+    );
+  });
+
+  it('uses only the date column for period bounds', () => {
+    expect(buildPeriodBoundsQuery(source, 'Asia/Tokyo')).toEqual({
+      sql: [
+        "SELECT FORMAT_DATE('%F', MIN(`reading_date`)) AS first_date,",
+        "FORMAT_DATE('%F', MAX(`reading_date`)) AS last_date",
+        'FROM `home.hourly_readings`',
         'HAVING COUNT(*) > 0',
       ].join('\n'),
       params: { time_zone: 'Asia/Tokyo' },

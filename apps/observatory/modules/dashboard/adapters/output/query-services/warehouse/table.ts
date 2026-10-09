@@ -12,13 +12,15 @@ import {
   calendarDateExpression,
   PERIOD_END_PARAMETER,
   PERIOD_START_PARAMETER,
+  sourceTimeExpression,
   TIME_ZONE_PARAMETER,
-  timeColumn,
+  validatedHourExpression,
   valueExpression,
 } from './query';
 
 export function buildTableQuery(plan: TableQueryPlan): BuiltQuery {
   const calendarDate = calendarDateExpression(plan.source.time);
+  const validatedHour = validatedHourExpression(plan.source.time);
   const filters = buildSourceFilters(plan.source);
   const aliases = plan.columns.map((_, index) => cellColumnAlias(index));
   const projections = plan.columns.map((column, index) => {
@@ -52,10 +54,11 @@ export function buildTableQuery(plan: TableQueryPlan): BuiltQuery {
         ];
   const projected = [
     'WITH projected AS (',
-    `SELECT ${[`${quoteIdentifier(timeColumn(plan.source.time))} AS source_time`, ...projections].join(', ')}`,
+    `SELECT ${[`${sourceTimeExpression(plan.source.time)} AS source_time`, ...projections].join(', ')}`,
     `FROM ${qualifiedView(plan.source.dataset, plan.source.view)}`,
     `WHERE ${calendarDate} >= CAST(@${PERIOD_START_PARAMETER} AS DATE)`,
     `AND ${calendarDate} <= CAST(@${PERIOD_END_PARAMETER} AS DATE)`,
+    ...(validatedHour === null ? [] : [`AND ${validatedHour} IS NOT NULL`]),
     ...filters.clauses.map((clause) => `AND ${clause}`),
     ')',
   ];

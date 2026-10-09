@@ -1,4 +1,4 @@
-import type { PeriodGrain } from '../period';
+import type { PeriodGrain, SectionGrain } from '../period';
 
 export const SectionKind = {
   STAT_TILES: 'stat-tiles',
@@ -37,7 +37,10 @@ export type ValueFormat =
   | { type: 'percent'; inputScale: PercentInputScale }
   | { type: 'duration'; inputUnit: 'seconds' | 'minutes' | 'hours' };
 
-export type TimeBinding = string | { column: string; type: 'timestamp' };
+export type TimeBinding =
+  | string
+  | { column: string; type: 'timestamp' }
+  | { date: string; hour: string };
 export type FilterValue = string | number | boolean;
 export type SourceFilter =
   | {
@@ -120,7 +123,8 @@ export interface TimeSeriesSection {
   source: SourceDefinition;
   kind: typeof SectionKind.TIME_SERIES;
   width?: SectionWidth;
-  window: number;
+  grain?: SectionGrain;
+  window?: number;
   variant: 'line' | 'area';
   stacked: boolean;
   format: ValueFormat;

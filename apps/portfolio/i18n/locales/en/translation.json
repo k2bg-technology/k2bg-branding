@@ -2,6 +2,16 @@
   "metadata": {
     "description": "K2.B.G. Technology supports business improvement through IT, specializing in application development, data analysis, and digital transformation."
   },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for may have moved or no longer exists.",
+    "returnHome": "Back to home"
+  },
+  "errorBoundary": {
+    "title": "Something went wrong",
+    "message": "We could not display this page. Please try again in a moment.",
+    "retry": "Retry"
+  },
   "hero": {
     "corporateName": "K2.B.G. Technology",
     "officialName": "KK Bit Growth Technology",
@@ -86,7 +96,10 @@
       "messageLabel": "Message",
       "messagePlaceholder": "Please enter your message here",
       "submit": "SUBMIT",
-      "reset": "RESET"
+      "reset": "RESET",
+      "submitting": "SENDING",
+      "successMessage": "Thank you. Your message has been sent.",
+      "errorMessage": "We could not send your message. Please try again."
     },
     "githubAccountName": "@k2bg-technology",
     "xAccountName": "@WebDeveloper_InTokyo",

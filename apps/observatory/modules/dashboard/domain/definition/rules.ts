@@ -312,12 +312,59 @@ function stackingViolations(
   });
 }
 
+function sectionGrainViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  const allowed = {
+    month: ['month', 'day'],
+    week: ['week', 'day'],
+    day: ['day', 'hour'],
+  } as const;
+  return definition.sections.flatMap((section, sectionIndex) => {
+    if (section.kind !== SectionKind.TIME_SERIES) {
+      return [];
+    }
+    const grain = section.grain ?? definition.grain;
+    if (!(allowed[definition.grain] as readonly string[]).includes(grain)) {
+      return [
+        {
+          path: ['sections', sectionIndex, 'grain'],
+          message: `Section grain "${grain}" is not supported by dashboard grain "${definition.grain}"`,
+        },
+      ];
+    }
+    return [
+      ...(grain === definition.grain && section.window === undefined
+        ? [
+            {
+              path: ['sections', sectionIndex, 'window'],
+              message:
+                'A time-series section at the dashboard grain requires window',
+            },
+          ]
+        : []),
+      ...(grain === 'hour' &&
+      (typeof section.source.time === 'string' ||
+        !('date' in section.source.time && 'hour' in section.source.time))
+        ? [
+            {
+              path: ['sections', sectionIndex, 'source', 'time'],
+              message:
+                'An hour section requires source.time with date and hour columns',
+            },
+          ]
+        : []),
+    ];
+  });
+}
+
 export function validateDefinitionRules(
   definition: DashboardDefinition
 ): DefinitionViolation[] {
   return duplicateSectionViolations(definition).concat(
     currencyViolations(definition),
     stackingViolations(definition),
+    sectionGrainViolations(definition),
     tableRowBoundViolations(definition),
     tableSortViolations(definition),
     barsSeriesSourceViolations(definition),

@@ -903,3 +903,172 @@ describe('bars schema', () => {
     );
   });
 });
+
+describe('section grain and paired time loading', () => {
+  const pairedTime = { date: 'reading_date', hour: 'reading_hour' };
+
+  it.each([
+    {
+      name: 'month-to-week',
+      definition: createDefinition({
+        sections: [createTimeSeries({ grain: 'week' })],
+      }),
+      path: 'sections[0].grain',
+    },
+    {
+      name: 'week-to-hour',
+      definition: createDefinition({
+        grain: 'week',
+        sections: [
+          createTimeSeries({
+            grain: 'hour',
+            source: { dataset: 'metrics', view: 'readings', time: pairedTime },
+          }),
+        ],
+      }),
+      path: 'sections[0].grain',
+    },
+    {
+      name: 'stat-tiles grain',
+      definition: createDefinition({
+        sections: [createSection({ grain: 'day' })],
+      }),
+      path: 'sections[0]',
+    },
+    {
+      name: 'same-grain missing window',
+      definition: createDefinition({
+        sections: [createTimeSeries({ window: undefined })],
+      }),
+      path: 'sections[0].window',
+    },
+    {
+      name: 'hour missing pair',
+      definition: createDefinition({
+        grain: 'day',
+        sections: [createTimeSeries({ grain: 'hour', window: undefined })],
+      }),
+      path: 'sections[0].source.time',
+    },
+    {
+      name: 'unsafe hour identifier',
+      definition: createDefinition({
+        grain: 'day',
+        sections: [
+          createTimeSeries({
+            grain: 'hour',
+            source: {
+              dataset: 'metrics',
+              view: 'readings',
+              time: { date: 'reading_date', hour: 'hour;DROP' },
+            },
+          }),
+        ],
+      }),
+      path: 'sections[0].source.time.hour',
+    },
+    {
+      name: 'malformed pair binding',
+      definition: createDefinition({
+        grain: 'day',
+        sections: [
+          createTimeSeries({
+            grain: 'hour',
+            source: {
+              dataset: 'metrics',
+              view: 'readings',
+              time: { date: 'reading_date' },
+            },
+          }),
+        ],
+      }),
+      path: 'sections[0].source.time',
+    },
+  ])(
+    'skips $name and reports its file and JSON path',
+    async ({ definition, path }) => {
+      await withDefinitionDirectory(
+        { 'invalid.json': definition },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions).toEqual([]);
+          expect(result.issues[0]).toMatchObject({ fileName: 'invalid.json' });
+          expect(result.issues.map((issue) => issue.path)).toContain(path);
+        }
+      );
+    }
+  );
+
+  it('loads allowed grains and paired bindings in sections and period sources', async () => {
+    const definitions = {
+      'monthly.json': createDefinition({
+        id: 'monthly',
+        grain: 'month',
+        periodSource: {
+          dataset: 'metrics',
+          view: 'readings',
+          time: pairedTime,
+        },
+        sections: [
+          createSection({
+            source: { dataset: 'metrics', view: 'readings', time: pairedTime },
+          }),
+          createTimeSeries({
+            id: 'monthly-trend',
+            source: { dataset: 'metrics', view: 'readings', time: pairedTime },
+          }),
+          createTimeSeries({
+            id: 'daily-trend',
+            grain: 'day',
+            window: undefined,
+            source: { dataset: 'metrics', view: 'readings', time: pairedTime },
+          }),
+        ],
+      }),
+      'weekly.json': createDefinition({
+        id: 'weekly',
+        grain: 'week',
+        sections: [
+          createTimeSeries({ grain: 'week', window: 2 }),
+          createTimeSeries({
+            id: 'daily-trend',
+            grain: 'day',
+            window: undefined,
+          }),
+        ],
+      }),
+      'daily.json': createDefinition({
+        id: 'daily',
+        grain: 'day',
+        sections: [
+          createTimeSeries({ grain: 'day', window: 7 }),
+          createTimeSeries({
+            id: 'hourly-trend',
+            grain: 'hour',
+            window: undefined,
+            source: { dataset: 'metrics', view: 'readings', time: pairedTime },
+          }),
+        ],
+      }),
+    };
+    await withDefinitionDirectory(definitions, async (directory) => {
+      const sut = new FileSystemDefinitionSource(directory);
+
+      const result = await sut.load();
+
+      expect(result.issues).toEqual([]);
+      expect(result.definitions).toHaveLength(3);
+      expect(
+        result.definitions.find((definition) => definition.id === 'monthly')
+          ?.periodSource?.time
+      ).toEqual(pairedTime);
+      expect(
+        result.definitions.find((definition) => definition.id === 'daily')
+          ?.sections[1]
+      ).toMatchObject({ grain: 'hour', source: { time: pairedTime } });
+    });
+  });
+});

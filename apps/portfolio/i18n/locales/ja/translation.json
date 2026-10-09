@@ -2,6 +2,16 @@
   "metadata": {
     "description": "K2.B.G. Technologyは、アプリケーション開発・データ分析・DX推進を通じて、企業のIT化による業務改善を支援いたします。"
   },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "message": "お探しのページは移動したか、現在は存在しない可能性があります。",
+    "returnHome": "ホームへ戻る"
+  },
+  "errorBoundary": {
+    "title": "エラーが発生しました",
+    "message": "ページの表示中に問題が発生しました。時間をおいて再度お試しください。",
+    "retry": "再試行"
+  },
   "hero": {
     "corporateName": "K2.B.G. Technology",
     "officialName": "KK Bit Growth Technology",
@@ -86,7 +96,10 @@
       "messageLabel": "メッセージ",
       "messagePlaceholder": "ここにメッセージをご記入ください",
       "submit": "送信",
-      "reset": "リセット"
+      "reset": "リセット",
+      "submitting": "送信中",
+      "successMessage": "お問い合わせを送信しました。",
+      "errorMessage": "送信できませんでした。時間をおいて再度お試しください。"
     },
     "githubAccountName": "@k2bg-technology",
     "xAccountName": "@WebDeveloper_InTokyo",
