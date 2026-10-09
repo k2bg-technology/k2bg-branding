@@ -88,7 +88,7 @@ async function withDefinitionDirectory(
 }
 
 describe('FileSystemDefinitionSource', () => {
-  it('loads the sample fixture with both table kinds and pagination labels', async () => {
+  it('loads the sample fixture with both table kinds, calendar ranges, and labels', async () => {
     await withDefinitionDirectory(
       { 'sample.json': sampleDashboard },
       async (directory) => {
@@ -98,11 +98,55 @@ describe('FileSystemDefinitionSource', () => {
           { id: 'largest-entries', kind: 'table', limit: 10 },
           { id: 'entry-details', kind: 'table', paging: { pageSize: 20 } },
         ]);
+        expect(result.definitions[0].sections.slice(5, 7)).toMatchObject([
+          {
+            id: 'daily-spending',
+            kind: 'calendar-heatmap',
+            range: 'trailing',
+            window: 91,
+            value: { reduction: 'sum' },
+          },
+          {
+            id: 'yearly-readings',
+            kind: 'calendar-heatmap',
+            range: 'calendar-year',
+            maximum: 40,
+          },
+        ]);
         expect(result.definitions[0].labels).toMatchObject({
           previousPage: 'Earlier page',
           nextPage: 'Later page',
           pagination: 'Entry pages',
+          missingValue: 'No entries',
         });
+      }
+    );
+  });
+
+  it('reports a calendar heatmap window above 366 at its JSON path', async () => {
+    const section = {
+      id: 'daily-values',
+      title: 'Daily values',
+      kind: 'calendar-heatmap',
+      source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+      window: 367,
+      value: { column: 'amount' },
+      format: { type: 'number' },
+    };
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions).toHaveLength(0);
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({
+            fileName: 'invalid.json',
+            path: 'sections[0].window',
+          })
+        );
       }
     );
   });
