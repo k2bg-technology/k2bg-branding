@@ -3,6 +3,7 @@ import type {
   BarsSection,
   ControlSelections,
   DashboardDefinition,
+  Period,
   Section,
   StatTilesSection,
   TableSection,
@@ -15,7 +16,9 @@ import type {
   FetchSectionDataInput,
   FetchTableRowsInput,
   GroupedValues,
+  ResolveSectionGateInput,
   SectionData,
+  SectionGate,
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { type BarsChartInput, barsChart } from './barsChart';
@@ -24,6 +27,7 @@ interface Input {
   dashboard: DashboardDefinition;
   section: Section;
   periodResolution: Promise<DashboardPeriodResolution | null>;
+  resolveSectionGate: (input: ResolveSectionGateInput) => Promise<SectionGate>;
   fetchSectionData: (
     input: FetchSectionDataInput
   ) => Promise<SectionData | null>;
@@ -39,36 +43,37 @@ export type SectionState =
       kind: 'stat-tiles';
       section: StatTilesSection;
       data: SectionData;
-      resolution: DashboardPeriodResolution;
+      period: Period;
     }
   | {
       status: 'ready';
       kind: 'time-series';
       section: TimeSeriesSection;
       data: SectionData;
-      resolution: DashboardPeriodResolution;
+      period: Period;
     }
   | {
       status: 'ready';
       kind: 'table';
       section: TableSection;
       data: TableRows;
-      resolution: DashboardPeriodResolution;
+      period: Period;
     }
   | {
       status: 'ready';
       kind: 'bars';
       section: BarsSection;
       chart: BarsChartInput;
-      resolution: DashboardPeriodResolution;
+      period: Period;
     }
-  | { status: 'empty' }
+  | Exclude<SectionGate, { status: 'open' }>
   | { status: 'unavailable' };
 
 export async function loadSectionState({
   dashboard,
   section,
   periodResolution,
+  resolveSectionGate,
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
@@ -76,25 +81,30 @@ export async function loadSectionState({
   selections,
 }: Input): Promise<SectionState> {
   try {
-    const resolution = await periodResolution;
-    if (resolution === null) {
-      return { status: 'empty' };
+    const resolution =
+      section.period === 'latest' ? null : await periodResolution;
+    const gate = await resolveSectionGate({
+      dashboard,
+      section,
+      selectedPeriod: resolution?.period ?? null,
+    });
+    if (gate.status !== 'open') {
+      return gate;
     }
+    const period = gate.period;
     switch (section.kind) {
       case SectionKind.STAT_TILES: {
         const data = await fetchSectionData({
           dashboard,
           section,
-          period: resolution.period,
+          period,
           selections,
         });
         if (data === null) {
           return { status: 'empty' };
         }
         if (
-          !data.buckets.some(
-            (bucket) => bucket.period === resolution.period.toString()
-          )
+          !data.buckets.some((bucket) => bucket.period === period.toString())
         ) {
           return { status: 'empty' };
         }
@@ -103,14 +113,14 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           data,
-          resolution,
+          period,
         };
       }
       case SectionKind.TIME_SERIES: {
         const data = await fetchSectionData({
           dashboard,
           section,
-          period: resolution.period,
+          period,
           selections,
         });
         if (data === null) {
@@ -124,14 +134,14 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           data,
-          resolution,
+          period,
         };
       }
       case SectionKind.TABLE: {
         const data = await fetchTableRows({
           dashboard,
           section,
-          period: resolution.period,
+          period,
           page,
           selections,
         });
@@ -143,7 +153,7 @@ export async function loadSectionState({
                 kind: section.kind,
                 section,
                 data: { rows: [], page: null },
-                resolution,
+                period,
               };
         }
         return {
@@ -151,22 +161,22 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           data,
-          resolution,
+          period,
         };
       }
       case SectionKind.BARS: {
         const data = await fetchBarsData({
           dashboard,
           section,
-          period: resolution.period,
+          period,
         });
         if (data === null) return { status: 'empty' };
         return {
           status: 'ready',
           kind: section.kind,
           section,
-          chart: barsChart(section, data, resolution.period, dashboard),
-          resolution,
+          chart: barsChart(section, data, period, dashboard),
+          period,
         };
       }
       default:

@@ -23,6 +23,7 @@ import {
   CATEGORY_ALIAS,
   cellColumnAlias,
   distinctCountAlias,
+  NOT_READY_COUNT_ALIAS,
   PAGE_COUNT_ALIAS,
   PAGE_NUMBER_ALIAS,
   SORT_KEY_ALIAS,
@@ -39,6 +40,22 @@ function readCalendarDate(row: WarehouseRow, key: string): string {
     );
   }
   return value;
+}
+
+export function toSectionReadiness(rows: WarehouseRow[]): boolean {
+  const row = rows[0];
+  if (row === undefined) {
+    throw new MappingError(
+      `${NOT_READY_COUNT_ALIAS} must be returned in one row`
+    );
+  }
+  const value = readNullableNumber(row, NOT_READY_COUNT_ALIAS);
+  if (value === null || !Number.isInteger(value) || value < 0) {
+    throw new MappingError(
+      `${NOT_READY_COUNT_ALIAS} must be a non-negative integer, received ${JSON.stringify(value)}`
+    );
+  }
+  return value === 0;
 }
 
 function readNullableNumber(row: WarehouseRow, key: string): number | null {

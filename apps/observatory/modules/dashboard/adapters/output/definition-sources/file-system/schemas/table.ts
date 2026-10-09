@@ -8,6 +8,7 @@ import {
 import {
   identifierSchema,
   sectionControlsSchema,
+  sectionGateFields,
   sectionIdSchema,
   sectionWidthSchema,
   sourceSchema,
@@ -46,6 +47,7 @@ const tableSectionSchemaBase = z.strictObject({
   source: sourceSchema,
   kind: z.literal(SectionKind.TABLE),
   width: sectionWidthSchema.optional(),
+  ...sectionGateFields,
   controls: sectionControlsSchema,
   columns: z.array(columnSchema).min(1),
   sort: z

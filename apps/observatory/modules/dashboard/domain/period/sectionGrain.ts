@@ -1,4 +1,4 @@
-import { parseCalendarDate } from './calendarDate';
+import { parseCalendarDate, toEpochMilliseconds } from './calendarDate';
 import { Period, PeriodGrain } from './period';
 
 export const SectionGrain = { ...PeriodGrain, HOUR: 'hour' } as const;
@@ -7,6 +7,35 @@ export type SectionGrain = (typeof SectionGrain)[keyof typeof SectionGrain];
 export interface BucketStart {
   date: string;
   hour: number;
+}
+
+export interface SectionBucket {
+  grain: SectionGrain;
+  start: BucketStart;
+}
+
+export function formatBucketLabel(
+  bucket: SectionBucket,
+  locale: string
+): string {
+  if (bucket.grain === SectionGrain.HOUR) {
+    return new Intl.DateTimeFormat(locale, {
+      timeZone: 'UTC',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).format(
+      toEpochMilliseconds(bucket.start.date) + bucket.start.hour * 3_600_000
+    );
+  }
+  const period = Period.containing(bucket.grain, bucket.start.date);
+  if (period === null) {
+    throw new Error('Invalid bucket date');
+  }
+  return period.label(locale);
 }
 
 export function parseBucketKey(
