@@ -28,6 +28,42 @@ function plan(
 }
 
 describe('buildSectionQuery', () => {
+  it('builds the fixture calendar heatmap over 91 trailing days in ascending order without a limit', () => {
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'daily-spending'
+    );
+    const period = Period.parse('month', '2026-08');
+    if (period === null || section?.kind !== 'calendar-heatmap') {
+      throw new Error('Expected calendar-heatmap fixture and period');
+    }
+
+    const result = buildSectionQuery(
+      planSection(section, period, dashboard.timeZone)
+    );
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%F', DATE(`recorded_at`, @time_zone)) AS period, `recorded_at` AS source_time, ABS(CAST(`amount` AS FLOAT64)) AS value_0",
+        'FROM `sample_dataset.entries`',
+        'WHERE DATE(`recorded_at`, @time_zone) >= CAST(@period_start AS DATE)',
+        'AND DATE(`recorded_at`, @time_zone) <= CAST(@period_end AS DATE)',
+        '),',
+        'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+        'SELECT filtered.period, CAST(SUM(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN bucket_times USING (period)',
+        'GROUP BY filtered.period',
+        'ORDER BY filtered.period',
+      ].join('\n'),
+      params: {
+        period_start: '2026-06-02',
+        period_end: '2026-08-31',
+        time_zone: 'Asia/Tokyo',
+      },
+    });
+  });
+
   it('builds the fixture time series with a trailing window, two reductions, and one extra bucket', () => {
     const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
     const section = dashboard.sections[1];

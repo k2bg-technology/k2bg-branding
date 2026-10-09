@@ -18,6 +18,7 @@
     "availableFrom": "Meaningful from",
     "notReady": "The latest day is still being processed",
     "nullCategory": "No category",
+    "missingValue": "No entries",
     "applyControls": "Apply filters"
   },
   "currency": "JPY",
@@ -247,6 +248,35 @@
       "series": [
         { "label": "Temperature", "column": "temperature", "reduction": "average" }
       ]
+    },
+    {
+      "id": "daily-spending",
+      "title": "Daily spending",
+      "kind": "calendar-heatmap",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "window": 91,
+      "value": { "column": "amount", "transform": "absolute" },
+      "format": { "type": "currency" },
+      "scaleLabels": { "less": "Less", "more": "More" }
+    },
+    {
+      "id": "yearly-readings",
+      "title": "Daily peak reading this year",
+      "kind": "calendar-heatmap",
+      "range": "calendar-year",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "daily_readings",
+        "time": { "date": "reading_date", "hour": "reading_hour" }
+      },
+      "value": { "column": "temperature", "reduction": "maximum" },
+      "format": { "type": "number" },
+      "unit": "°C",
+      "maximum": 40
     },
     {
       "id": "latest-day",

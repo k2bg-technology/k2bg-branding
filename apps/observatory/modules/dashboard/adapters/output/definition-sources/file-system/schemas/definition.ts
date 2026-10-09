@@ -7,6 +7,7 @@ import {
   SectionKind,
 } from '../../../../../domain';
 import { barsSectionSchema } from './bars';
+import { calendarHeatmapSectionSchema } from './calendarHeatmap';
 import { controlSchema } from './controls';
 import { sourceSchema, statTilesSectionSchema } from './statTiles';
 import { tableSectionSchema } from './table';
@@ -35,6 +36,7 @@ const sectionSchemasByKind = {
   [SectionKind.TIME_SERIES]: timeSeriesSectionSchema,
   [SectionKind.TABLE]: tableSectionSchema,
   [SectionKind.BARS]: barsSectionSchema,
+  [SectionKind.CALENDAR_HEATMAP]: calendarHeatmapSectionSchema,
 };
 
 const sectionSchemaBase = z.unknown().transform((value, context): Section => {
@@ -120,6 +122,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       availableFrom: z.string().min(1).optional(),
       notReady: z.string().min(1).optional(),
       nullCategory: z.string().min(1).optional(),
+      missingValue: z.string().min(1).optional(),
       applyControls: z.string().min(1).optional(),
     })
     .optional(),

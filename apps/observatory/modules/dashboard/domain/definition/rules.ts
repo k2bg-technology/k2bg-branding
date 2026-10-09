@@ -36,6 +36,7 @@ function currencyViolations(
 
   return definition.sections.flatMap((section, sectionIndex) => {
     switch (section.kind) {
+      case SectionKind.CALENDAR_HEATMAP:
       case SectionKind.TIME_SERIES:
       case SectionKind.BARS:
         return section.format.type === 'currency'
@@ -416,6 +417,33 @@ function sectionControlViolations(definition: DashboardDefinition) {
   );
 }
 
+function calendarRangeViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) => {
+    if (section.kind !== SectionKind.CALENDAR_HEATMAP) {
+      return [];
+    }
+    if (section.range === 'calendar-year' && section.window !== undefined) {
+      return [
+        {
+          path: ['sections', index, 'window'],
+          message: 'A calendar-year calendar heatmap does not take window',
+        },
+      ];
+    }
+    if (section.range === 'trailing' && section.window === undefined) {
+      return [
+        {
+          path: ['sections', index, 'window'],
+          message: 'A trailing calendar heatmap requires window',
+        },
+      ];
+    }
+    return [];
+  });
+}
+
 function historySettingViolations(
   section: DashboardDefinition['sections'][number]
 ) {
@@ -489,6 +517,7 @@ export function validateDefinitionRules(
     currencyViolations(definition),
     stackingViolations(definition),
     sectionGrainViolations(definition),
+    calendarRangeViolations(definition),
     latestSectionViolations(definition),
     tableRowBoundViolations(definition),
     tableSortViolations(definition),
