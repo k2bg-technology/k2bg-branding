@@ -14,14 +14,14 @@ import {
   valueExpression,
 } from './query';
 
-const aggregateNames = {
+export const aggregateNames = {
   [Reduction.SUM]: 'SUM',
   [Reduction.AVERAGE]: 'AVG',
   [Reduction.MINIMUM]: 'MIN',
   [Reduction.MAXIMUM]: 'MAX',
 } as const;
 
-function latestValueProjection(alias: string): string {
+export function latestValueProjection(alias: string): string {
   return [
     'CAST(',
     `ARRAY_AGG(STRUCT(source_time, ${alias}) ORDER BY source_time DESC LIMIT 1)[SAFE_OFFSET(0)].${alias}`,
@@ -30,7 +30,10 @@ function latestValueProjection(alias: string): string {
   ].join(' ');
 }
 
-function latestDistinctCountProjection(alias: string, index: number): string {
+export function latestDistinctCountProjection(
+  alias: string,
+  index: number
+): string {
   return `CAST(COUNT(DISTINCT IF(source_time = latest_time, TO_JSON_STRING(${alias}), NULL)) AS FLOAT64) AS ${distinctCountAlias(index)}`;
 }
 

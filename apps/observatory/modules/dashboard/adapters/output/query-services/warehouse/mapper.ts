@@ -1,19 +1,31 @@
 import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import {
+  type GroupedValuesPlan,
   Period,
+  type PeriodGrain,
   parseCalendarDate,
   Reduction,
   resolveLatest,
+  resolveSortKey,
   type SectionQueryPlan,
+  type SortKeyType,
   type TableQueryPlan,
 } from '../../../../domain';
-import type { SectionData, TableCell, TableRows } from '../../../../use-cases';
+import type {
+  GroupedValues,
+  SectionData,
+  TableCell,
+  TableRows,
+} from '../../../../use-cases';
 import { MappingError } from '../../../shared';
 import {
+  CATEGORY_ALIAS,
   cellColumnAlias,
   distinctCountAlias,
   PAGE_COUNT_ALIAS,
   PAGE_NUMBER_ALIAS,
+  SORT_KEY_ALIAS,
+  SORT_KEY_DISTINCT_COUNT_ALIAS,
   valueColumnAlias,
 } from './aliases';
 import { FIRST_DATE_ALIAS, LAST_DATE_ALIAS } from './query';
@@ -168,4 +180,121 @@ export function toTableRows(
     );
   }
   return { rows: cells, page: { number, count } };
+}
+
+function readGroupedPeriod(row: WarehouseRow, grain: PeriodGrain) {
+  const period = row.period;
+  if (typeof period !== 'string' || Period.parse(grain, period) === null) {
+    throw new MappingError(
+      `period must match ${grain} grain, received ${JSON.stringify(period)}`
+    );
+  }
+  return period;
+}
+
+function readGroupedCategory(row: WarehouseRow) {
+  const category = row[CATEGORY_ALIAS];
+  if (category === null || typeof category === 'string') return category;
+  throw new MappingError(
+    `category must be a string or null, received ${JSON.stringify(category)}`
+  );
+}
+
+function readGroupedSortKey(row: WarehouseRow, type: SortKeyType) {
+  const sortKey = row[SORT_KEY_ALIAS];
+  if (sortKey === null) return null;
+  if (type === 'text' && typeof sortKey === 'string') return sortKey;
+  if (
+    type === 'number' &&
+    typeof sortKey === 'number' &&
+    Number.isFinite(sortKey)
+  )
+    return sortKey;
+  throw new MappingError(
+    `${SORT_KEY_ALIAS} must be ${type === 'text' ? 'a string' : 'a finite number'} or null, received ${JSON.stringify(sortKey)}`
+  );
+}
+
+export function toGroupedValues(
+  rows: WarehouseRow[],
+  plan: GroupedValuesPlan
+): GroupedValues | null {
+  if (rows.length === 0) return null;
+  if (plan.buckets === null && plan.category === null) {
+    throw new Error('Grouped values require a period or category key');
+  }
+  const sortKeyPlan = plan.category?.sortKey ?? null;
+  const mapped = rows.map((row) => {
+    const period =
+      plan.buckets === null ? '' : readGroupedPeriod(row, plan.buckets.grain);
+    const category = plan.category === null ? null : readGroupedCategory(row);
+    const values = plan.measures.map((measure, index) => {
+      const value = readNullableNumber(row, valueColumnAlias(index));
+      return measure.reduction === Reduction.LATEST
+        ? resolveLatest(
+            value,
+            readDistinctCount(row, distinctCountAlias(index)),
+            { sectionId: plan.sectionId, column: measure.column }
+          )
+        : value;
+    });
+    const sortKey =
+      sortKeyPlan === null ? null : readGroupedSortKey(row, sortKeyPlan.type);
+    return {
+      period,
+      category,
+      values,
+      sortKey,
+      sortKeyDistinctCount:
+        sortKeyPlan === null
+          ? 0
+          : readDistinctCount(row, SORT_KEY_DISTINCT_COUNT_ALIAS),
+    };
+  });
+  if (plan.buckets === null) {
+    if (plan.category === null)
+      throw new Error('Grouped values require a category key');
+    return {
+      grouping: 'category',
+      groups: mapped.map(
+        ({ category, values, sortKey, sortKeyDistinctCount }) => ({
+          category,
+          values,
+          ...(sortKeyPlan === null
+            ? {}
+            : {
+                sortKey: resolveSortKey(sortKey, sortKeyDistinctCount, {
+                  sectionId: plan.sectionId,
+                  column: sortKeyPlan.column,
+                }),
+              }),
+        })
+      ),
+    };
+  }
+  const periods = Array.from(new Set(mapped.map((row) => row.period)));
+  const includedPeriods = periods.slice(0, plan.buckets.bucketLimit);
+  const included = mapped.filter((row) => includedPeriods.includes(row.period));
+  const buckets = [...includedPeriods].reverse().map((period) => ({
+    period,
+    cells: included.filter((row) => row.period === period),
+  }));
+  if (plan.category === null) {
+    return {
+      grouping: 'period',
+      truncated: periods.length > plan.buckets.bucketLimit,
+      buckets: buckets.map(({ period, cells }) => ({
+        period,
+        values: cells[0].values,
+      })),
+    };
+  }
+  return {
+    grouping: 'period-category',
+    truncated: periods.length > plan.buckets.bucketLimit,
+    buckets: buckets.map(({ period, cells }) => ({
+      period,
+      cells: cells.map(({ category, values }) => ({ category, values })),
+    })),
+  };
 }
