@@ -115,12 +115,16 @@ export function pivotTable(
   const totalsRowLabel = section.totals?.row;
   if (totalsRowLabel !== undefined && allRowLabels.includes(totalsRowLabel))
     throw new DuplicateCategoryLabelError(section.id, totalsRowLabel);
-  const totalsColumnLabel = section.totals?.column;
-  if (
-    totalsColumnLabel !== undefined &&
-    columnHeaders.includes(totalsColumnLabel)
-  )
-    throw new DuplicateCategoryLabelError(section.id, totalsColumnLabel);
+  const headerRow = [
+    section.rows.label,
+    ...columnHeaders,
+    ...(section.totals?.column === undefined ? [] : [section.totals.column]),
+  ];
+  const repeatedHeader = headerRow.find(
+    (header, index) => headerRow.indexOf(header) !== index
+  );
+  if (repeatedHeader !== undefined)
+    throw new DuplicateCategoryLabelError(section.id, repeatedHeader);
   const selection =
     section.rows.topN === undefined
       ? { kept: items, remainder: null }

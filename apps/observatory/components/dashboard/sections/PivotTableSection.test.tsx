@@ -343,6 +343,18 @@ describe('pivot table sections', () => {
     expect(screen.getByText('No data available.')).toBeInTheDocument();
   });
 
+  it('shows unavailable and logs a category column named like the row-heading column', async () => {
+    vi.mocked(dashboardLogger.error).mockClear();
+    const section = fixtureSection('category-by-weekday');
+    await mountPivot(fixtureDashboard, section, '2026-08', async () => ({
+      exceeded: false,
+      cells: [{ row: 'reporting', column: section.rows.label, value: 1 }],
+    }));
+
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(dashboardLogger.error).toHaveBeenCalled();
+  });
+
   it('shows unavailable when the fetch fails', async () => {
     const section = fixtureSection('category-pivot');
     await mountPivot(fixtureDashboard, section, '2026-08', async () =>
@@ -370,6 +382,11 @@ describe('pivot table sections', () => {
     {
       name: 'a totals column named like a month column',
       totals: { column: '2026年8月', row: 'All categories' },
+      rows: ['food'],
+    },
+    {
+      name: 'a totals column named like the row-heading column',
+      totals: { column: 'Category', row: 'All categories' },
       rows: ['food'],
     },
   ])('shows unavailable and logs $name', async ({ totals, rows }) => {
