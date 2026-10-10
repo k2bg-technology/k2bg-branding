@@ -45,6 +45,7 @@ export {
   TreemapChart,
   type TreemapChartNode,
   type TreemapChartProps,
+  type TreemapChartTableHeaders,
 } from './src/components/Chart';
 export {
   DataTable,

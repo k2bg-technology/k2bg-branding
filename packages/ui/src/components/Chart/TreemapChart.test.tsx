@@ -505,4 +505,21 @@ describe('TreemapChart', () => {
 
     expect(tiles(container)).toHaveLength(0);
   });
+
+  it('heads the table alternative with the given headers', () => {
+    render(
+      <TreemapChart
+        label="Spending"
+        nodes={groupedNodes}
+        tableHeaders={{
+          group: '分類',
+          label: '項目',
+          value: '金額',
+          share: '割合',
+        }}
+      />
+    );
+
+    expect(tableRows('Spending')[0]).toEqual(['分類', '項目', '金額', '割合']);
+  });
 });

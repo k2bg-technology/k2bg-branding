@@ -172,6 +172,26 @@ export const Grouped: Story = {
   },
 };
 
+export const LocalizedTable: Story = {
+  args: {
+    label: '分類別の支出',
+    nodes: groupedNodes,
+    tableHeaders: {
+      group: '分類',
+      label: '項目',
+      value: '金額',
+      share: '割合',
+    },
+  },
+  play: async ({ args, canvas }) => {
+    const table = canvas.getByRole('table', { name: args.label });
+    const headerCells = within(within(table).getAllByRole('row')[0])
+      .getAllByRole('columnheader')
+      .map((cell) => cell.textContent);
+    await expect(headerCells).toEqual(['分類', '項目', '金額', '割合']);
+  },
+};
+
 /** A group worth a hundredth of the whole still gets exactly its hundredth. */
 export const UnevenGroups: Story = {
   args: {
