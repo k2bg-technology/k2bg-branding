@@ -53,3 +53,13 @@ export type GroupedValues =
         sortKey?: SortKeyValue;
       }[];
     };
+
+export type MatrixKey = string | null;
+export type MatrixData =
+  | { status: 'too-large' }
+  | {
+      status: 'ready';
+      rowCategories: CategoryValue[] | null;
+      columnCategories: CategoryValue[] | null;
+      cells: { row: MatrixKey; column: MatrixKey; value: number | null }[];
+    };
