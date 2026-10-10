@@ -13,6 +13,7 @@ import {
   FetchSectionData,
   FetchTableRows,
   LoadDashboards,
+  ResolveControlOptions,
   ResolveDashboardPeriod,
   ResolveSectionGate,
 } from '../../modules/dashboard/use-cases';
@@ -28,6 +29,14 @@ export function createResolveDashboardPeriodUseCase(): ResolveDashboardPeriod {
   return new ResolveDashboardPeriod(
     new WarehouseFetchPeriodBoundsQueryService(getWarehouseClient()),
     systemClock
+  );
+}
+
+export function createResolveControlOptionsUseCase(): ResolveControlOptions {
+  const client = getWarehouseClient();
+  return new ResolveControlOptions(
+    new WarehouseFetchPeriodBoundsQueryService(client),
+    new WarehouseFetchGroupedValuesQueryService(client)
   );
 }
 

@@ -379,15 +379,16 @@ function controlDeclarationViolations(definition: DashboardDefinition) {
             message: `Duplicate control id "${control.id}"`,
           },
         ]),
-    ...control.options.flatMap((option, optionIndex) =>
-      control.options.indexOf(option) === optionIndex
-        ? []
-        : [
-            {
-              path: ['controls', index, 'options', optionIndex],
-              message: `Duplicate option "${option}"`,
-            },
-          ]
+    ...(control.options === 'distinct' ? [] : control.options).flatMap(
+      (option, optionIndex) =>
+        control.options.indexOf(option) === optionIndex
+          ? []
+          : [
+              {
+                path: ['controls', index, 'options', optionIndex],
+                message: `Duplicate option "${option}"`,
+              },
+            ]
     ),
     ...(usedIds.has(control.id)
       ? []
@@ -415,6 +416,41 @@ function sectionControlViolations(definition: DashboardDefinition) {
         : [{ path, message: `Duplicate control "${controlId}"` }];
     })
   );
+}
+
+function distinctControlViolations(definition: DashboardDefinition) {
+  return (definition.controls ?? []).flatMap((control, index) => {
+    if (control.options !== 'distinct') {
+      return [];
+    }
+    if (control.order !== 'value-desc') {
+      return control.value === undefined
+        ? []
+        : [
+            {
+              path: ['controls', index, 'value'],
+              message: 'A sortKey order does not take value',
+            },
+          ];
+    }
+    if (control.value === undefined) {
+      return [
+        {
+          path: ['controls', index, 'value'],
+          message: 'Ranking by value requires value',
+        },
+      ];
+    }
+    return control.value.reduction === Reduction.SUM
+      ? []
+      : [
+          {
+            path: ['controls', index, 'value', 'reduction'],
+            message:
+              'Ranking by value adds values up and requires the sum reduction',
+          },
+        ];
+  });
 }
 
 function calendarRangeViolations(
@@ -526,6 +562,7 @@ export function validateDefinitionRules(
     barsPivotAxisViolations(definition),
     barsSumViolations(definition),
     controlDeclarationViolations(definition),
-    sectionControlViolations(definition)
+    sectionControlViolations(definition),
+    distinctControlViolations(definition)
   );
 }

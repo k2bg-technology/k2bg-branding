@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
   fetchBarsData: vi.fn(),
+  resolveControlOptions: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
   notFound: vi.fn(() => {
     throw new Error('not-found');
@@ -18,6 +19,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock('next/navigation', () => ({ notFound: mocks.notFound }));
 vi.mock('../../../infrastructure/di/dashboard', () => ({
   createLoadDashboardsUseCase: () => ({ execute: mocks.loadDashboards }),
+  createResolveControlOptionsUseCase: () => ({
+    execute: mocks.resolveControlOptions,
+  }),
   createResolveDashboardPeriodUseCase:
     mocks.createResolveDashboardPeriodUseCase,
   createResolveSectionGateUseCase: () => ({
@@ -155,6 +159,43 @@ describe('dashboard page', () => {
       Page({
         params: Promise.resolve({ id: 'summary' }),
         searchParams: Promise.resolve({ 'control.category': 'drink' }),
+      })
+    ).rejects.toThrow('not-found');
+
+    expect(mocks.createResolveDashboardPeriodUseCase).not.toHaveBeenCalled();
+  });
+
+  it('rejects a value outside the resolved distinct options before resolving the period', async () => {
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          controls: [
+            {
+              id: 'region',
+              label: 'Region',
+              column: 'region',
+              options: 'distinct',
+              order: { sortKey: { column: 'region', type: 'text' } },
+            },
+          ],
+          sections: dashboard().sections.map((section) =>
+            section.id === 'first'
+              ? { ...section, controls: ['region'] }
+              : section
+          ),
+        },
+      ],
+      issues: [],
+    });
+    mocks.resolveControlOptions.mockResolvedValue({
+      region: { status: 'ready', options: ['east'], truncated: false },
+    });
+
+    await expect(
+      Page({
+        params: Promise.resolve({ id: 'summary' }),
+        searchParams: Promise.resolve({ 'control.region': 'west' }),
       })
     ).rejects.toThrow('not-found');
 

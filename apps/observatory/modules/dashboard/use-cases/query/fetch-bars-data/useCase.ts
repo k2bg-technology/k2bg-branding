@@ -1,5 +1,7 @@
 import {
+  applyControlSelections,
   type BarsSection,
+  type ControlSelections,
   type DashboardDefinition,
   type Period,
   planBarsSection,
@@ -11,6 +13,7 @@ export interface FetchBarsDataInput {
   dashboard: DashboardDefinition;
   section: BarsSection;
   period: Period;
+  selections: ControlSelections;
 }
 
 export class FetchBarsData {
@@ -20,9 +23,17 @@ export class FetchBarsData {
     dashboard,
     section,
     period,
+    selections,
   }: FetchBarsDataInput): Promise<GroupedValues | null> {
     return this.queryService.fetchGroupedValues(
-      planBarsSection(section, period, dashboard.timeZone),
+      planBarsSection(
+        {
+          ...section,
+          source: applyControlSelections(dashboard, section, selections),
+        },
+        period,
+        dashboard.timeZone
+      ),
       {
         name: `dashboard-${dashboard.id}-section-${section.id}`,
         revalidate: dashboard.revalidate,

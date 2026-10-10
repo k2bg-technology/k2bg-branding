@@ -15,6 +15,13 @@ const categoryControl: ControlDefinition = {
   column: 'category',
   options: ['food', 'drink'],
 };
+const regionControl: ControlDefinition = {
+  id: 'region',
+  label: 'Region',
+  column: 'region',
+  options: 'distinct',
+  order: { sortKey: { column: 'region', type: 'text' } },
+};
 
 const dashboard: DashboardDefinition = {
   id: 'summary',
@@ -36,8 +43,92 @@ const emptyState: UrlState = {
 };
 
 describe('DashboardControls', () => {
+  it('keeps resolved distinct options in their provided order', () => {
+    render(
+      <DashboardControls
+        dashboard={{ ...dashboard, controls: [regionControl] }}
+        state={emptyState}
+        controlOptions={{
+          region: { status: 'ready', options: ['west', 'east'] },
+        }}
+      />
+    );
+
+    expect(
+      within(screen.getByRole('combobox', { name: 'Region' }))
+        .getAllByRole('option')
+        .map((option) => option.textContent)
+    ).toEqual(['All', 'west', 'east']);
+  });
+
+  it('keeps the selected value and describes an unavailable control', () => {
+    render(
+      <DashboardControls
+        dashboard={{ ...dashboard, controls: [regionControl] }}
+        state={{ ...emptyState, controls: { region: 'east' } }}
+        controlOptions={{ region: { status: 'unavailable' } }}
+      />
+    );
+
+    const select = screen.getByRole('combobox', { name: 'Region' });
+    expect(
+      within(select)
+        .getAllByRole('option')
+        .map((option) => option.textContent)
+    ).toEqual(['All', 'east']);
+    expect(select).toHaveValue('east');
+    expect(select).toHaveAccessibleDescription('Options could not be loaded');
+    const form = select.closest('form');
+    if (form === null) throw new Error('Expected controls form');
+    expect(
+      new URLSearchParams(
+        Array.from(new FormData(form), ([key, value]) => [key, String(value)])
+      ).toString()
+    ).toBe('control.region=east');
+  });
+
+  it('shows only all when unavailable without a selection', () => {
+    render(
+      <DashboardControls
+        dashboard={{ ...dashboard, controls: [regionControl] }}
+        state={emptyState}
+        controlOptions={{ region: { status: 'unavailable' } }}
+      />
+    );
+
+    expect(
+      within(screen.getByRole('combobox', { name: 'Region' })).getAllByRole(
+        'option'
+      )
+    ).toHaveLength(1);
+  });
+
+  it('uses the dashboard unavailable label as the select description', () => {
+    render(
+      <DashboardControls
+        dashboard={{
+          ...dashboard,
+          controls: [regionControl],
+          labels: { controlOptionsUnavailable: '選択肢を読み込めません' },
+        }}
+        state={emptyState}
+        controlOptions={{ region: { status: 'unavailable' } }}
+      />
+    );
+
+    expect(
+      screen.getByRole('combobox', { name: 'Region' })
+    ).toHaveAccessibleDescription('選択肢を読み込めません');
+  });
+
   it('labels the select and lists all before the fixed options', () => {
-    render(<DashboardControls dashboard={dashboard} state={emptyState} />);
+    render(
+      <DashboardControls
+        controlOptions={{}}
+        dashboard={dashboard}
+        state={emptyState}
+      />
+    );
 
     const select = screen.getByRole('combobox', { name: 'Category' });
     expect(
@@ -51,6 +142,7 @@ describe('DashboardControls', () => {
   it('uses the custom all label as the empty option', () => {
     render(
       <DashboardControls
+        controlOptions={{}}
         dashboard={{
           ...dashboard,
           controls: [{ ...categoryControl, allLabel: 'All categories' }],
@@ -69,6 +161,7 @@ describe('DashboardControls', () => {
   it('shows the selected option', () => {
     render(
       <DashboardControls
+        controlOptions={{}}
         dashboard={dashboard}
         state={{ ...emptyState, controls: { category: 'drink' } }}
       />
@@ -96,7 +189,13 @@ describe('DashboardControls', () => {
       query: 'control.category=',
     },
   ])('submits $name without page parameters', ({ state, query }) => {
-    render(<DashboardControls dashboard={dashboard} state={state} />);
+    render(
+      <DashboardControls
+        controlOptions={{}}
+        dashboard={dashboard}
+        state={state}
+      />
+    );
 
     const form = screen.getByRole('button', { name: 'Apply' }).closest('form');
     if (form === null) {
@@ -113,6 +212,7 @@ describe('DashboardControls', () => {
   it('uses the dashboard apply label on a submit button', () => {
     render(
       <DashboardControls
+        controlOptions={{}}
         dashboard={{ ...dashboard, labels: { applyControls: '適用' } }}
         state={emptyState}
       />
@@ -127,6 +227,7 @@ describe('DashboardControls', () => {
   it('renders nothing for a dashboard without controls', () => {
     const { container } = render(
       <DashboardControls
+        controlOptions={{}}
         dashboard={{ ...dashboard, controls: undefined }}
         state={emptyState}
       />
@@ -138,6 +239,7 @@ describe('DashboardControls', () => {
   it('replaces an unsubmitted choice when the URL state changes and changes back', () => {
     const { rerender } = render(
       <DashboardControls
+        controlOptions={{}}
         dashboard={dashboard}
         state={{ ...emptyState, controls: { category: 'food' } }}
       />
@@ -148,12 +250,14 @@ describe('DashboardControls', () => {
 
     rerender(
       <DashboardControls
+        controlOptions={{}}
         dashboard={dashboard}
         state={{ ...emptyState, controls: { category: 'drink' } }}
       />
     );
     rerender(
       <DashboardControls
+        controlOptions={{}}
         dashboard={dashboard}
         state={{ ...emptyState, controls: { category: 'food' } }}
       />

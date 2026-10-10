@@ -32,6 +32,8 @@ describe('FetchBarsData', () => {
           : null,
     });
 
-    expect(await sut.execute({ dashboard, section, period })).toEqual(data);
+    expect(
+      await sut.execute({ dashboard, section, period, selections: {} })
+    ).toEqual(data);
   });
 });

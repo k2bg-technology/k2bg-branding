@@ -24,13 +24,20 @@ const dashboard: DashboardDefinition = {
       column: 'category',
       options: ['food', 'drink'],
     },
+    {
+      id: 'region',
+      label: 'Region',
+      column: 'region',
+      options: 'distinct',
+      order: { sortKey: { column: 'region', type: 'text' } },
+    },
   ],
   sections: [
     {
       id: 'headline',
       title: 'Headline',
       kind: 'stat-tiles',
-      controls: ['category'],
+      controls: ['category', 'region'],
       source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
       tiles: [
         {
@@ -89,6 +96,10 @@ const dashboard: DashboardDefinition = {
   ],
 };
 
+const controlOptions = {
+  region: { status: 'ready' as const, options: ['east', 'west'] },
+};
+
 describe('parseUrlState', () => {
   it.each([
     {
@@ -115,6 +126,11 @@ describe('parseUrlState', () => {
       parameters: { 'control.category': "' OR 1=1 --" },
       problem: 'invalid-control',
       key: 'control.category',
+    },
+    {
+      parameters: { 'control.region': 'north' },
+      problem: 'invalid-control',
+      key: 'control.region',
     },
     {
       parameters: { 'page.unknown': '2' },
@@ -162,7 +178,7 @@ describe('parseUrlState', () => {
       key: 'period',
     },
   ])('rejects $problem for $key', ({ parameters, problem, key }) => {
-    const result = parseUrlState(parameters, dashboard);
+    const result = parseUrlState(parameters, dashboard, controlOptions);
 
     expect(result).toEqual({ valid: false, problem, key });
   });
@@ -170,7 +186,8 @@ describe('parseUrlState', () => {
   it('reads a valid period and every section page into the state', () => {
     const result = parseUrlState(
       { period: '2026-08', 'page.other': '2', 'page.detail': '3' },
-      dashboard
+      dashboard,
+      controlOptions
     );
 
     expect(result.valid && result.state.period?.toString()).toBe('2026-08');
@@ -181,22 +198,60 @@ describe('parseUrlState', () => {
   });
 
   it('reads a declared control option', () => {
-    const result = parseUrlState({ 'control.category': 'food' }, dashboard);
+    const result = parseUrlState(
+      { 'control.category': 'food' },
+      dashboard,
+      controlOptions
+    );
 
     expect(result.valid && result.state.controls).toEqual({ category: 'food' });
   });
 
   it('treats an empty control option as all', () => {
-    const result = parseUrlState({ 'control.category': '' }, dashboard);
+    const result = parseUrlState(
+      { 'control.category': '' },
+      dashboard,
+      controlOptions
+    );
 
     expect(result.valid && result.state.controls).toEqual({});
+  });
+
+  it('reads a resolved distinct option', () => {
+    const result = parseUrlState(
+      { 'control.region': 'east' },
+      dashboard,
+      controlOptions
+    );
+
+    expect(result.valid && result.state.controls).toEqual({ region: 'east' });
+  });
+
+  it('keeps any non-empty choice when distinct options are unavailable', () => {
+    const unavailable = { region: { status: 'unavailable' as const } };
+
+    const selected = parseUrlState(
+      { 'control.region': 'anything' },
+      dashboard,
+      unavailable
+    );
+    const all = parseUrlState({ 'control.region': '' }, dashboard, unavailable);
+
+    expect(selected.valid && selected.state.controls).toEqual({
+      region: 'anything',
+    });
+    expect(all.valid && all.state.controls).toEqual({});
   });
 
   it.each([
     { grain: 'week', period: '2026-W35' },
     { grain: 'day', period: '2026-09-03' },
   ] as const)('reads a $grain period $period', ({ grain, period }) => {
-    const result = parseUrlState({ period }, { ...dashboard, grain });
+    const result = parseUrlState(
+      { period },
+      { ...dashboard, grain },
+      controlOptions
+    );
 
     expect(result.valid && result.state.period?.toString()).toBe(period);
   });
@@ -208,7 +263,11 @@ describe('parseUrlState', () => {
   ] as const)(
     'rejects period $period on a $grain dashboard',
     ({ grain, period }) => {
-      const result = parseUrlState({ period }, { ...dashboard, grain });
+      const result = parseUrlState(
+        { period },
+        { ...dashboard, grain },
+        controlOptions
+      );
 
       expect(result).toEqual({
         valid: false,
@@ -226,7 +285,7 @@ describe('URL period transition', () => {
         'period=2026-08&control.category=food&page.detail=2&note%26period=kept%3Dvalue'
       )
     );
-    const parsed = parseUrlState(parameters, dashboard);
+    const parsed = parseUrlState(parameters, dashboard, controlOptions);
     const next = Period.parse('month', '2026-09');
     if (!parsed.valid || next === null) {
       throw new Error('Expected URL fixtures to parse');
@@ -235,7 +294,8 @@ describe('URL period transition', () => {
     const query = serializeUrlState(withPeriod(parsed.state, next));
     const reparsed = parseUrlState(
       Object.fromEntries(new URLSearchParams(query)),
-      dashboard
+      dashboard,
+      controlOptions
     );
 
     expect(query).toBe(
@@ -252,7 +312,8 @@ describe('URL page transition', () => {
   it('omits page one and serializes later pages', () => {
     const parsed = parseUrlState(
       { period: '2026-08', 'control.category': 'food' },
-      dashboard
+      dashboard,
+      controlOptions
     );
     if (!parsed.valid) {
       throw new Error('Expected URL fixture to parse');
