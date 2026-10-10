@@ -97,6 +97,37 @@ describe('ResolveSectionGate', () => {
     });
   });
 
+  it('judges a calendar-year heatmap over the whole year it reads', async () => {
+    const section: Section = {
+      id: 'yearly',
+      title: 'Yearly',
+      kind: 'calendar-heatmap',
+      source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      range: 'calendar-year',
+      value: { column: 'temperature', reduction: 'maximum' },
+      format: { type: 'number' },
+      availability: { since: '2026-08-15', minimumBuckets: 30 },
+      readiness: { column: 'is_complete' },
+    };
+    const sut = new ResolveSectionGate(
+      { fetchPeriodBounds: async () => null },
+      {
+        fetchSectionReadiness: async (plan) =>
+          plan.dateRange.firstDate === '2026-01-01' &&
+          plan.dateRange.lastDate === '2026-12-31',
+      }
+    );
+
+    const result = await sut.execute({
+      dashboard: dashboard(section),
+      section,
+      selectedPeriod: month('2026-08'),
+      selections: {},
+    });
+
+    expect(result).toEqual({ status: 'open', period: month('2026-08') });
+  });
+
   it('opens a following section at the selected period', async () => {
     const section = tiles();
     const sut = sutWithBounds();
