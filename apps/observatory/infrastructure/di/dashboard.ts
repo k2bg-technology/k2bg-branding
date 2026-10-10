@@ -12,6 +12,7 @@ import {
   FetchBarsData,
   FetchSectionData,
   FetchTableRows,
+  FetchTimeSeriesPivot,
   LoadDashboards,
   ResolveDashboardPeriod,
   ResolveSectionGate,
@@ -53,6 +54,12 @@ export function createFetchTableRowsUseCase(): FetchTableRows {
 
 export function createFetchBarsDataUseCase(): FetchBarsData {
   return new FetchBarsData(
+    new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchTimeSeriesPivotUseCase(): FetchTimeSeriesPivot {
+  return new FetchTimeSeriesPivot(
     new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
   );
 }

@@ -57,6 +57,46 @@ function month(value: string) {
 }
 
 describe('ResolveSectionGate', () => {
+  it('counts calendar heatmap availability in days on a month dashboard', async () => {
+    const section: Section = {
+      id: 'daily',
+      title: 'Daily',
+      kind: 'calendar-heatmap',
+      source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      range: 'trailing',
+      window: 91,
+      value: { column: 'temperature', reduction: 'maximum' },
+      format: { type: 'number' },
+      availability: { since: '2026-08-15', minimumBuckets: 30 },
+    };
+    const sut = sutWithBounds();
+
+    expect(
+      await sut.execute({
+        dashboard: dashboard(section),
+        section,
+        selectedPeriod: month('2026-08'),
+        selections: {},
+      })
+    ).toEqual({
+      status: 'accumulating',
+      since: '2026-08-15',
+      availableFrom: { grain: 'day', start: { date: '2026-09-14', hour: 0 } },
+      note: undefined,
+    });
+    expect(
+      await sut.execute({
+        dashboard: dashboard(section),
+        section,
+        selectedPeriod: month('2026-09'),
+        selections: {},
+      })
+    ).toEqual({
+      status: 'open',
+      period: month('2026-09'),
+    });
+  });
+
   it('opens a following section at the selected period', async () => {
     const section = tiles();
     const sut = sutWithBounds();

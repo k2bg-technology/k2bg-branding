@@ -13,6 +13,9 @@ export interface GroupedValuesPlan {
   timeZone: string;
   dateRange: DateRange;
   measures: MeasureQueryPlan[];
-  buckets: { grain: PeriodGrain; bucketLimit: number } | null;
+  buckets:
+    | { grain: PeriodGrain; firstHour?: never; bucketLimit: number }
+    | { grain: 'hour'; firstHour: number; bucketLimit: number }
+    | null;
   category: { column: string; sortKey: SortKeyQueryPlan | null } | null;
 }

@@ -13,6 +13,7 @@ export interface DashboardLabels {
   nullCategory: string;
   missingValue: string;
   applyControls: string;
+  tooManySeries: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -30,6 +31,7 @@ export const DEFAULT_DASHBOARD_LABELS = {
   nullCategory: 'None',
   missingValue: 'No data',
   applyControls: 'Apply',
+  tooManySeries: 'Too many series to show',
 };
 
 export const DEFAULT_CONTROL_ALL_LABEL = 'All';

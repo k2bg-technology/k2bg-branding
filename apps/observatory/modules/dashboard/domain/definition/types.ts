@@ -144,6 +144,35 @@ export interface StatTilesSection extends SectionGateFields {
   tiles: StatTileDefinition[];
 }
 
+export type SeriesInterpolation = 'linear' | 'step';
+
+export interface LineSeriesDefinition {
+  label: string;
+  column: string;
+  reduction: Reduction;
+  transform?: ValueTransform;
+  interpolation?: SeriesInterpolation;
+}
+
+export interface BandSeriesDefinition {
+  label: string;
+  low: string;
+  high: string;
+  reduction: Reduction;
+  interpolation?: SeriesInterpolation;
+}
+
+export type TimeSeriesSeriesDefinition =
+  | LineSeriesDefinition
+  | BandSeriesDefinition;
+
+export interface TimeSeriesPivot {
+  column: string;
+  value: ValueBinding;
+  topN?: TopN;
+  interpolation?: SeriesInterpolation;
+}
+
 export interface TimeSeriesSection extends SectionGateFields {
   id: string;
   title: string;
@@ -157,12 +186,10 @@ export interface TimeSeriesSection extends SectionGateFields {
   stacked: boolean;
   format: ValueFormat;
   unit?: string;
-  series: {
-    label: string;
-    column: string;
-    reduction: Reduction;
-    transform?: ValueTransform;
-  }[];
+  series?: TimeSeriesSeriesDefinition[];
+  pivot?: TimeSeriesPivot;
+  thresholds?: { value: number; label?: string }[];
+  bands?: { from: number; to: number }[];
 }
 
 export interface CalendarHeatmapSection extends SectionGateFields {
@@ -266,6 +293,7 @@ export interface DashboardDefinition {
     nullCategory?: string;
     missingValue?: string;
     applyControls?: string;
+    tooManySeries?: string;
   };
   sections: Section[];
 }

@@ -1,13 +1,12 @@
 import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import {
   type GroupedValuesPlan,
-  Period,
-  type PeriodGrain,
   parseBucketKey,
   parseCalendarDate,
   Reduction,
   resolveLatest,
   resolveSortKey,
+  type SectionGrain,
   type SectionQueryPlan,
   type SortKeyType,
   type TableQueryPlan,
@@ -200,9 +199,9 @@ export function toTableRows(
   return { rows: cells, page: { number, count } };
 }
 
-function readGroupedPeriod(row: WarehouseRow, grain: PeriodGrain) {
+function readGroupedPeriod(row: WarehouseRow, grain: SectionGrain) {
   const period = row.period;
-  if (typeof period !== 'string' || Period.parse(grain, period) === null) {
+  if (typeof period !== 'string' || parseBucketKey(grain, period) === null) {
     throw new MappingError(
       `period must match ${grain} grain, received ${JSON.stringify(period)}`
     );

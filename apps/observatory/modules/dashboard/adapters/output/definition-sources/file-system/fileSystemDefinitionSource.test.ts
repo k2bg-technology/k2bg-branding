@@ -120,6 +120,12 @@ describe('FileSystemDefinitionSource', () => {
             range: 'calendar-year',
             maximum: 40,
           },
+          {
+            id: 'daily-peak-availability',
+            kind: 'calendar-heatmap',
+            availability: { minimumBuckets: 30 },
+            readiness: { column: 'is_complete' },
+          },
         ]);
         expect(
           result.definitions[0].sections.filter((section) =>
@@ -146,7 +152,42 @@ describe('FileSystemDefinitionSource', () => {
           asOf: 'Latest date',
           notReady: 'The latest day is still being processed',
           applyControls: 'Apply filters',
+          tooManySeries: 'Too many categories for one chart',
         });
+        expect(
+          result.definitions[0].sections.filter((section) =>
+            [
+              'category-series',
+              'temperature-range',
+              'latest-day-by-room',
+            ].includes(section.id)
+          )
+        ).toMatchObject([
+          {
+            id: 'category-series',
+            pivot: { topN: { count: 4 }, interpolation: 'step' },
+          },
+          {
+            id: 'temperature-range',
+            series: [
+              { column: 'temperature' },
+              {
+                low: 'temperature_low',
+                high: 'temperature_high',
+                reduction: 'average',
+              },
+              { interpolation: 'step' },
+            ],
+            thresholds: [{ value: 28, label: 'Too warm' }],
+            bands: [{ from: 18, to: 24 }],
+          },
+          {
+            id: 'latest-day-by-room',
+            period: 'latest',
+            grain: 'hour',
+            pivot: { column: 'room' },
+          },
+        ]);
         expect(result.definitions[0].controls).toEqual([
           {
             id: 'category',
@@ -940,6 +981,73 @@ describe('FileSystemDefinitionSource', () => {
   });
 });
 
+describe('time-series series schema', () => {
+  it.each([
+    {
+      section: createTimeSeries({ series: [{ label: 'Range', low: 'low' }] }),
+      path: 'sections[0].series[0].high',
+    },
+    {
+      section: createTimeSeries({
+        series: [{ label: 'Value', column: 'value', interpolation: 'natural' }],
+      }),
+      path: 'sections[0].series[0].interpolation',
+    },
+    {
+      section: createTimeSeries({
+        series: [{ label: 'Value', column: 'value', low: 'low', high: 'high' }],
+      }),
+      path: 'sections[0].series[0]',
+    },
+    {
+      section: createTimeSeries({ bands: [{ from: 24, to: 18 }] }),
+      path: 'sections[0].bands[0].from',
+    },
+    {
+      section: createTimeSeries({ thresholds: [{ value: 'high' }] }),
+      path: 'sections[0].thresholds[0].value',
+    },
+    {
+      section: createTimeSeries({
+        series: undefined,
+        pivot: {
+          column: 'category',
+          value: { column: 'value' },
+          topN: { count: 12, otherLabel: 'Other' },
+        },
+      }),
+      path: 'sections[0].pivot.topN.count',
+    },
+    {
+      section: createTimeSeries({
+        series: undefined,
+        pivot: {
+          column: 'category',
+          value: { column: 'value' },
+          interpolation: 'natural',
+        },
+      }),
+      path: 'sections[0].pivot.interpolation',
+    },
+    {
+      section: createTimeSeries({ thresholds: [] }),
+      path: 'sections[0].thresholds',
+    },
+  ])('rejects invalid shape at $path', async ({ section, path }) => {
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+        const result = await sut.load();
+        expect(result.definitions).toEqual([]);
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({ fileName: 'invalid.json', path })
+        );
+      }
+    );
+  });
+});
+
 describe('bars schema', () => {
   const createBars = (overrides: Record<string, unknown> = {}) => ({
     id: 'bars',
@@ -1035,7 +1143,12 @@ describe('bars schema', () => {
           loaded.definitions[0].sections
             .filter((section) => section.kind === 'bars')
             .map((section) => section.id)
-        ).toEqual(['category-trend', 'category-ranking', 'weekday-totals']);
+        ).toEqual([
+          'category-trend',
+          'category-ranking',
+          'weekday-totals',
+          'latest-day-categories',
+        ]);
         expect(loaded.definitions[0].labels?.nullCategory).toBe('No category');
       }
     );
