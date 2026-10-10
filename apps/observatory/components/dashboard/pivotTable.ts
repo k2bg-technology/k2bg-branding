@@ -6,6 +6,7 @@ import {
   compareCategoryValues,
   type DashboardDefinition,
   DEFAULT_DASHBOARD_LABELS,
+  DuplicateCategoryLabelError,
   orderCategories,
   Period,
   type PivotTableSection,
@@ -105,7 +106,21 @@ export function pivotTable(
           labels,
           context
         );
-  categoryLabels(items, section.rows.topN?.otherLabel ?? null, labels, context);
+  const allRowLabels = categoryLabels(
+    items,
+    section.rows.topN?.otherLabel ?? null,
+    labels,
+    context
+  );
+  const totalsRowLabel = section.totals?.row;
+  if (totalsRowLabel !== undefined && allRowLabels.includes(totalsRowLabel))
+    throw new DuplicateCategoryLabelError(section.id, totalsRowLabel);
+  const totalsColumnLabel = section.totals?.column;
+  if (
+    totalsColumnLabel !== undefined &&
+    columnHeaders.includes(totalsColumnLabel)
+  )
+    throw new DuplicateCategoryLabelError(section.id, totalsColumnLabel);
   const selection =
     section.rows.topN === undefined
       ? { kept: items, remainder: null }

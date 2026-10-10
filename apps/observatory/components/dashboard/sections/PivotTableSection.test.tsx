@@ -351,12 +351,37 @@ describe('pivot table sections', () => {
     expect(screen.getByRole('alert')).toBeInTheDocument();
   });
 
-  it('shows unavailable and logs a row label collision', async () => {
+  it.each([
+    {
+      name: 'a row named like the remainder',
+      totals: { column: 'Total', row: 'All categories' },
+      rows: ['Other categories'],
+    },
+    {
+      name: 'a row named like the totals row',
+      totals: { column: 'Total', row: 'All categories' },
+      rows: ['All categories'],
+    },
+    {
+      name: 'a folded row named like the totals row',
+      totals: { column: 'Total', row: 'All categories' },
+      rows: ['a', 'b', 'c', 'd', 'e', 'f', 'All categories'],
+    },
+    {
+      name: 'a totals column named like a month column',
+      totals: { column: '2026年8月', row: 'All categories' },
+      rows: ['food'],
+    },
+  ])('shows unavailable and logs $name', async ({ totals, rows }) => {
     vi.mocked(dashboardLogger.error).mockClear();
-    const section = fixtureSection('category-pivot');
+    const section = { ...fixtureSection('category-pivot'), totals };
     await mountPivot(fixtureDashboard, section, '2026-08', async () => ({
       exceeded: false,
-      cells: [{ row: 'Other categories', column: '2026-08', value: 1 }],
+      cells: rows.map((row, index) => ({
+        row,
+        column: '2026-08',
+        value: rows.length - index,
+      })),
     }));
 
     expect(screen.getByRole('alert')).toBeInTheDocument();
