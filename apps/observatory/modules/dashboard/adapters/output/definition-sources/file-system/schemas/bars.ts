@@ -7,6 +7,7 @@ import {
 } from '../../../../../domain';
 import {
   identifierSchema,
+  sectionControlsSchema,
   sectionIdSchema,
   sectionWidthSchema,
   sourceSchema,
@@ -14,7 +15,7 @@ import {
 } from './statTiles';
 import { seriesSchema } from './timeSeries';
 
-const valueBindingSchema = seriesSchema.omit({ label: true });
+export const valueBindingSchema = seriesSchema.omit({ label: true });
 const pivotTopNSchema = z.strictObject({
   count: z.number().int().min(1).max(11),
   otherLabel: z.string().min(1),
@@ -29,7 +30,7 @@ const sortKeyOrderSchema = z.strictObject({
     type: z.enum(['text', 'number']),
   }),
 });
-const orderSchema = z
+export const orderSchema = z
   .unknown()
   .transform((value, context): CategoryOrder | typeof z.NEVER => {
     if (value === 'value-desc') return value;
@@ -80,6 +81,7 @@ const barsSectionSchemaBase = z.strictObject({
   stacked: z.boolean().default(false),
   format: valueFormatSchema,
   unit: z.string().min(1).optional(),
+  controls: sectionControlsSchema,
 });
 
 export const barsSectionSchema = barsSectionSchemaBase satisfies z.ZodType<

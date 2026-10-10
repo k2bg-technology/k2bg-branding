@@ -36,4 +36,32 @@ describe('FetchBarsData', () => {
       await sut.execute({ dashboard, section, period, selections: {} })
     ).toEqual(data);
   });
+
+  it('filters a bars section by its declared control', async () => {
+    const filteredSection = dashboard.sections.find(
+      (candidate) => candidate.id === 'weekday-totals'
+    );
+    if (filteredSection?.kind !== 'bars')
+      throw new Error('Expected bars fixture');
+    const data = {
+      grouping: 'category' as const,
+      groups: [{ category: 'Monday', values: [120] }],
+    };
+    const sut = new FetchBarsData({
+      fetchGroupedValues: async (plan) =>
+        JSON.stringify(plan.source.filters) ===
+        JSON.stringify([{ column: 'code', operator: 'equals', value: 'A1' }])
+          ? data
+          : null,
+    });
+
+    const result = await sut.execute({
+      dashboard,
+      section: filteredSection,
+      period,
+      selections: { code: 'A1' },
+    });
+
+    expect(result).toEqual(data);
+  });
 });
