@@ -8,6 +8,11 @@ export function collectDatasetIds(
     ...(definition.periodSource === undefined
       ? []
       : [definition.periodSource.dataset]),
+    ...(definition.controls ?? []).flatMap((control) =>
+      control.options === 'distinct' && control.source !== undefined
+        ? [control.source.dataset]
+        : []
+    ),
   ]);
   return Array.from(new Set(datasetIds)).sort();
 }
