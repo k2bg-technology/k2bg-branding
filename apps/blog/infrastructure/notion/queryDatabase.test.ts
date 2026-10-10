@@ -42,16 +42,14 @@ describe('queryDatabase', () => {
     expect(fetch).toHaveBeenNthCalledWith(
       2,
       'https://api.notion.com/v1/data_sources/source-id/query?filter_properties=title',
-      expect.objectContaining({
-        method: 'POST',
-        body: JSON.stringify({
-          sorts: [{ property: 'releaseDate', direction: 'descending' }],
-          filter: { property: 'status', status: { equals: 'PUBLISHED' } },
-          start_cursor: 'previous-page',
-          page_size: 25,
-        }),
-      })
+      expect.objectContaining({ method: 'POST' })
     );
+    expect(JSON.parse(String(fetch.mock.calls[1]?.[1]?.body))).toEqual({
+      sorts: [{ property: 'releaseDate', direction: 'descending' }],
+      filter: { property: 'status', status: { equals: 'PUBLISHED' } },
+      start_cursor: 'previous-page',
+      page_size: 25,
+    });
   });
 
   it.each([
