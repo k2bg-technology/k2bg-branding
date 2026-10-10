@@ -1,4 +1,6 @@
 import {
+  applyControlSelections,
+  type ControlSelections,
   type DashboardDefinition,
   type Period,
   planTableSection,
@@ -12,6 +14,7 @@ export interface FetchTableRowsInput {
   section: TableSection;
   period: Period;
   page: number;
+  selections: ControlSelections;
 }
 
 export class FetchTableRows {
@@ -22,9 +25,18 @@ export class FetchTableRows {
     section,
     period,
     page,
+    selections,
   }: FetchTableRowsInput): Promise<TableRows | null> {
     return this.queryService.fetchTableRows(
-      planTableSection(section, period, dashboard.timeZone, page),
+      planTableSection(
+        {
+          ...section,
+          source: applyControlSelections(dashboard, section, selections),
+        },
+        period,
+        dashboard.timeZone,
+        page
+      ),
       {
         name: `dashboard-${dashboard.id}-section-${section.id}`,
         revalidate: dashboard.revalidate,

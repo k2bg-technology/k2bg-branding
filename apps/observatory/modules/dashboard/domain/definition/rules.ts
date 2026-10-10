@@ -365,6 +365,58 @@ function sectionGrainViolations(
   });
 }
 
+function controlDeclarationViolations(definition: DashboardDefinition) {
+  const controls = definition.controls ?? [];
+  const usedIds = new Set(
+    definition.sections.flatMap((section) => section.controls ?? [])
+  );
+  return controls.flatMap((control, index) => [
+    ...(controls.findIndex((candidate) => candidate.id === control.id) === index
+      ? []
+      : [
+          {
+            path: ['controls', index, 'id'],
+            message: `Duplicate control id "${control.id}"`,
+          },
+        ]),
+    ...control.options.flatMap((option, optionIndex) =>
+      control.options.indexOf(option) === optionIndex
+        ? []
+        : [
+            {
+              path: ['controls', index, 'options', optionIndex],
+              message: `Duplicate option "${option}"`,
+            },
+          ]
+    ),
+    ...(usedIds.has(control.id)
+      ? []
+      : [
+          {
+            path: ['controls', index, 'id'],
+            message: `Control "${control.id}" is not used by any section`,
+          },
+        ]),
+  ]);
+}
+
+function sectionControlViolations(definition: DashboardDefinition) {
+  const declaredIds = (definition.controls ?? []).map((control) => control.id);
+  return definition.sections.flatMap((section, sectionIndex) =>
+    (section.controls ?? []).flatMap((controlId, controlIndex) => {
+      const path = ['sections', sectionIndex, 'controls', controlIndex];
+      if (!declaredIds.includes(controlId)) {
+        return [
+          { path, message: `Control "${controlId}" is not a declared control` },
+        ];
+      }
+      return section.controls?.indexOf(controlId) === controlIndex
+        ? []
+        : [{ path, message: `Duplicate control "${controlId}"` }];
+    })
+  );
+}
+
 function calendarRangeViolations(
   definition: DashboardDefinition
 ): DefinitionViolation[] {
@@ -472,6 +524,8 @@ export function validateDefinitionRules(
     barsSeriesSourceViolations(definition),
     barsRankingViolations(definition),
     barsPivotAxisViolations(definition),
-    barsSumViolations(definition)
+    barsSumViolations(definition),
+    controlDeclarationViolations(definition),
+    sectionControlViolations(definition)
   );
 }

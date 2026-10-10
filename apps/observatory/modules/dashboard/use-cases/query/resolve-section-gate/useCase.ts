@@ -1,4 +1,6 @@
 import {
+  applyControlSelections,
+  type ControlSelections,
   type DashboardDefinition,
   type Period,
   PeriodGrain,
@@ -15,6 +17,7 @@ export interface ResolveSectionGateInput {
   dashboard: DashboardDefinition;
   section: Section;
   selectedPeriod: Period | null;
+  selections: ControlSelections;
 }
 
 export type SectionGate =
@@ -45,13 +48,15 @@ export class ResolveSectionGate {
     dashboard,
     section,
     selectedPeriod,
+    selections,
   }: ResolveSectionGateInput): Promise<SectionGate> {
+    const source = applyControlSelections(dashboard, section, selections);
     const period = await (async () => {
       if (section.period !== 'latest') {
         return selectedPeriod;
       }
       const bounds = await this.periodBoundsQueryService.fetchPeriodBounds(
-        section.source,
+        source,
         dashboard.timeZone,
         {
           name: `dashboard-${dashboard.id}-section-${section.id}-latest-date`,
@@ -96,7 +101,7 @@ export class ResolveSectionGate {
       const ready = await this.readinessQueryService.fetchSectionReadiness(
         {
           sectionId: section.id,
-          source: section.source,
+          source,
           timeZone: dashboard.timeZone,
           dateRange: { firstDate: period.firstDate, lastDate: period.lastDate },
           column: section.readiness.column,

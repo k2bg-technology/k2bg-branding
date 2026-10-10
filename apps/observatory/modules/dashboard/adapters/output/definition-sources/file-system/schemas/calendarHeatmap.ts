@@ -8,6 +8,7 @@ import {
 import {
   identifierSchema,
   reductionSchema,
+  sectionControlsSchema,
   sectionIdSchema,
   sectionWidthSchema,
   sourceSchema,
@@ -34,6 +35,7 @@ const calendarHeatmapSectionSchemaBase = z.strictObject({
   scaleLabels: z
     .strictObject({ less: z.string().min(1), more: z.string().min(1) })
     .optional(),
+  controls: sectionControlsSchema,
 });
 
 export const calendarHeatmapSectionSchema =

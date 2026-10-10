@@ -12,6 +12,7 @@ export interface DashboardLabels {
   notReady: string;
   nullCategory: string;
   missingValue: string;
+  applyControls: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -28,4 +29,7 @@ export const DEFAULT_DASHBOARD_LABELS = {
   notReady: 'The latest data is not ready yet',
   nullCategory: 'None',
   missingValue: 'No data',
+  applyControls: 'Apply',
 };
+
+export const DEFAULT_CONTROL_ALL_LABEL = 'All';

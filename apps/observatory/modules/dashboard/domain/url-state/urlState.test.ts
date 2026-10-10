@@ -17,11 +17,20 @@ const dashboard: DashboardDefinition = {
   locale: 'en-US',
   revalidate: 86_400,
   defaultPeriod: 'latest-with-data',
+  controls: [
+    {
+      id: 'category',
+      label: 'Category',
+      column: 'category',
+      options: ['food', 'drink'],
+    },
+  ],
   sections: [
     {
       id: 'headline',
       title: 'Headline',
       kind: 'stat-tiles',
+      controls: ['category'],
       source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
       tiles: [
         {
@@ -98,6 +107,16 @@ describe('parseUrlState', () => {
       key: 'control.any',
     },
     {
+      parameters: { 'control.any': '' },
+      problem: 'unknown-control',
+      key: 'control.any',
+    },
+    {
+      parameters: { 'control.category': "' OR 1=1 --" },
+      problem: 'invalid-control',
+      key: 'control.category',
+    },
+    {
       parameters: { 'page.unknown': '2' },
       problem: 'unknown-section',
       key: 'page.unknown',
@@ -161,6 +180,18 @@ describe('parseUrlState', () => {
     });
   });
 
+  it('reads a declared control option', () => {
+    const result = parseUrlState({ 'control.category': 'food' }, dashboard);
+
+    expect(result.valid && result.state.controls).toEqual({ category: 'food' });
+  });
+
+  it('treats an empty control option as all', () => {
+    const result = parseUrlState({ 'control.category': '' }, dashboard);
+
+    expect(result.valid && result.state.controls).toEqual({});
+  });
+
   it.each([
     { grain: 'week', period: '2026-W35' },
     { grain: 'day', period: '2026-09-03' },
@@ -192,7 +223,7 @@ describe('URL period transition', () => {
   it('drops section pages while keeping foreign keys and encoding their delimiters', () => {
     const parameters = Object.fromEntries(
       new URLSearchParams(
-        'period=2026-08&page.detail=2&note%26period=kept%3Dvalue'
+        'period=2026-08&control.category=food&page.detail=2&note%26period=kept%3Dvalue'
       )
     );
     const parsed = parseUrlState(parameters, dashboard);
@@ -207,7 +238,9 @@ describe('URL period transition', () => {
       dashboard
     );
 
-    expect(query).toBe('period=2026-09&note%26period=kept%3Dvalue');
+    expect(query).toBe(
+      'period=2026-09&control.category=food&note%26period=kept%3Dvalue'
+    );
     expect(reparsed.valid && reparsed.state.foreign).toEqual([
       { key: 'note&period', value: 'kept=value' },
     ]);
@@ -217,15 +250,18 @@ describe('URL period transition', () => {
 
 describe('URL page transition', () => {
   it('omits page one and serializes later pages', () => {
-    const parsed = parseUrlState({ period: '2026-08' }, dashboard);
+    const parsed = parseUrlState(
+      { period: '2026-08', 'control.category': 'food' },
+      dashboard
+    );
     if (!parsed.valid) {
       throw new Error('Expected URL fixture to parse');
     }
     expect(serializeUrlState(withPage(parsed.state, 'detail', 1))).toBe(
-      'period=2026-08'
+      'period=2026-08&control.category=food'
     );
     expect(serializeUrlState(withPage(parsed.state, 'detail', 2))).toBe(
-      'period=2026-08&page.detail=2'
+      'period=2026-08&control.category=food&page.detail=2'
     );
   });
 });

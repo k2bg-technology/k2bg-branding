@@ -18,10 +18,14 @@
     "availableFrom": "Meaningful from",
     "notReady": "The latest day is still being processed",
     "nullCategory": "No category",
-    "missingValue": "No entries"
+    "missingValue": "No entries",
+    "applyControls": "Apply filters"
   },
   "currency": "JPY",
   "revalidate": 86400,
+  "controls": [
+    { "id": "category", "label": "Category", "column": "category", "options": ["reporting", "operations"], "allLabel": "All categories" }
+  ],
   "sections": [
     {
       "id": "monthly-summary",
@@ -56,6 +60,7 @@
       "id": "monthly-trend",
       "title": "Monthly trend",
       "kind": "time-series",
+      "controls": ["category"],
       "source": {
         "dataset": "sample_dataset",
         "view": "monthly_summary",
@@ -75,6 +80,7 @@
       "title": "Largest entries",
       "kind": "table",
       "width": "half",
+      "controls": ["category"],
       "source": {
         "dataset": "sample_dataset",
         "view": "entries",

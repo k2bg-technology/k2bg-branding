@@ -97,6 +97,14 @@ export interface SourceDefinition {
   filters?: SourceFilter[];
 }
 
+export interface ControlDefinition {
+  id: string;
+  label: string;
+  column: string;
+  options: string[];
+  allLabel?: string;
+}
+
 export interface StatTileDefinition {
   label: string;
   column: string;
@@ -132,6 +140,7 @@ export interface StatTilesSection extends SectionGateFields {
   source: SourceDefinition;
   kind: typeof SectionKind.STAT_TILES;
   width?: SectionWidth;
+  controls?: string[];
   tiles: StatTileDefinition[];
 }
 
@@ -141,6 +150,7 @@ export interface TimeSeriesSection extends SectionGateFields {
   source: SourceDefinition;
   kind: typeof SectionKind.TIME_SERIES;
   width?: SectionWidth;
+  controls?: string[];
   grain?: SectionGrain;
   window?: number;
   variant: 'line' | 'area';
@@ -168,6 +178,7 @@ export interface CalendarHeatmapSection extends SectionGateFields {
   unit?: string;
   maximum?: number;
   scaleLabels?: { less: string; more: string };
+  controls?: string[];
 }
 
 export interface TableSection extends SectionGateFields {
@@ -176,6 +187,7 @@ export interface TableSection extends SectionGateFields {
   source: SourceDefinition;
   kind: typeof SectionKind.TABLE;
   width?: SectionWidth;
+  controls?: string[];
   columns: TableColumnDefinition[];
   sort?: { column: string; direction: SortDirection };
   limit?: number;
@@ -218,6 +230,7 @@ export interface BarsSection extends SectionGateFields {
   stacked: boolean;
   format: ValueFormat;
   unit?: string;
+  controls?: string[];
 }
 
 export type AggregatingSection =
@@ -236,6 +249,7 @@ export interface DashboardDefinition {
   currency?: string;
   revalidate: number;
   periodSource?: SourceDefinition;
+  controls?: ControlDefinition[];
   defaultPeriod: 'latest-with-data' | 'last-complete';
   labels?: {
     period?: string;
@@ -251,6 +265,7 @@ export interface DashboardDefinition {
     notReady?: string;
     nullCategory?: string;
     missingValue?: string;
+    applyControls?: string;
   };
   sections: Section[];
 }

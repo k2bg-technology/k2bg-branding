@@ -130,6 +130,37 @@ describe('dashboard page', () => {
     expect(mocks.fetchSectionData).not.toHaveBeenCalled();
   });
 
+  it('rejects a control value outside its fixed options before initializing the warehouse', async () => {
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          controls: [
+            {
+              id: 'category',
+              label: 'Category',
+              column: 'category',
+              options: ['food'],
+            },
+          ],
+          sections: dashboard().sections.map((section, index) =>
+            index === 0 ? { ...section, controls: ['category'] } : section
+          ),
+        },
+      ],
+      issues: [],
+    });
+
+    await expect(
+      Page({
+        params: Promise.resolve({ id: 'summary' }),
+        searchParams: Promise.resolve({ 'control.category': 'drink' }),
+      })
+    ).rejects.toThrow('not-found');
+
+    expect(mocks.createResolveDashboardPeriodUseCase).not.toHaveBeenCalled();
+  });
+
   it('shows a locale-formatted month and preserves foreign parameters in navigation', async () => {
     await renderPage({
       period: '2026-09',

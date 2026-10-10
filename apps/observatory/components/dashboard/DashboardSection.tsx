@@ -63,6 +63,7 @@ export async function DashboardSection({
     fetchTableRows,
     fetchBarsData,
     page: urlState.pages[section.id] ?? 1,
+    selections: urlState.controls,
   });
 
   return (

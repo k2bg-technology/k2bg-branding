@@ -1,5 +1,7 @@
 import {
   type AggregatingSection,
+  applyControlSelections,
+  type ControlSelections,
   type DashboardDefinition,
   type Period,
   planSection,
@@ -11,6 +13,7 @@ export interface FetchSectionDataInput {
   dashboard: DashboardDefinition;
   section: AggregatingSection;
   period: Period;
+  selections: ControlSelections;
 }
 
 export class FetchSectionData {
@@ -20,9 +23,17 @@ export class FetchSectionData {
     dashboard,
     section,
     period,
+    selections,
   }: FetchSectionDataInput): Promise<SectionData | null> {
     return this.queryService.fetchSectionData(
-      planSection(section, period, dashboard.timeZone),
+      planSection(
+        {
+          ...section,
+          source: applyControlSelections(dashboard, section, selections),
+        },
+        period,
+        dashboard.timeZone
+      ),
       {
         name: `dashboard-${dashboard.id}-section-${section.id}`,
         revalidate: dashboard.revalidate,

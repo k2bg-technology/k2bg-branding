@@ -65,6 +65,7 @@ describe('loadSectionState bars ranking', () => {
         ],
       }),
       page: 1,
+      selections: {},
     });
 
     expect(state.status).toBe('ready');

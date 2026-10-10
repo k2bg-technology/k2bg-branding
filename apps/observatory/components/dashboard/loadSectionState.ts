@@ -2,6 +2,7 @@ import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
   BarsSection,
   CalendarHeatmapSection,
+  ControlSelections,
   DashboardDefinition,
   Period,
   Section,
@@ -34,6 +35,7 @@ interface Input {
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
   page: number;
+  selections: ControlSelections;
 }
 
 export type SectionState =
@@ -84,6 +86,7 @@ export async function loadSectionState({
   fetchTableRows,
   fetchBarsData,
   page,
+  selections,
 }: Input): Promise<SectionState> {
   try {
     const resolution =
@@ -92,6 +95,7 @@ export async function loadSectionState({
       dashboard,
       section,
       selectedPeriod: resolution?.period ?? null,
+      selections,
     });
     if (gate.status !== 'open') {
       return gate;
@@ -103,6 +107,7 @@ export async function loadSectionState({
           dashboard,
           section,
           period,
+          selections,
         });
         if (data === null) {
           return { status: 'empty' };
@@ -125,6 +130,7 @@ export async function loadSectionState({
           dashboard,
           section,
           period,
+          selections,
         });
         if (data === null) {
           return { status: 'empty' };
@@ -145,6 +151,7 @@ export async function loadSectionState({
           dashboard,
           section,
           period,
+          selections,
         });
         if (data === null) {
           return { status: 'empty' };
@@ -163,6 +170,7 @@ export async function loadSectionState({
           section,
           period,
           page,
+          selections,
         });
         if (data === null) {
           return section.emptyMessage === undefined

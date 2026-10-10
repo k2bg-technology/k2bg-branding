@@ -9,6 +9,7 @@ import {
 import {
   identifierSchema,
   reductionSchema,
+  sectionControlsSchema,
   sectionGateFields,
   sectionIdSchema,
   sectionWidthSchema,
@@ -31,6 +32,7 @@ const timeSeriesSectionSchemaBase = z.strictObject({
   kind: z.literal(SectionKind.TIME_SERIES),
   width: sectionWidthSchema.optional(),
   ...sectionGateFields,
+  controls: sectionControlsSchema,
   grain: z
     .enum([
       SectionGrain.MONTH,

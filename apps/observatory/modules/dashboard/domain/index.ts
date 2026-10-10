@@ -1,4 +1,5 @@
 export * from './comparison';
+export * from './controls';
 export * from './definition';
 export * from './errors';
 export * from './period';

@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import type { DashboardDefinition, Section } from '../../../domain';
+import type {
+  DashboardDefinition,
+  Section,
+  SourceDefinition,
+} from '../../../domain';
 import { Period } from '../../../domain';
 import { ResolveSectionGate } from './useCase';
 
@@ -60,6 +64,7 @@ describe('ResolveSectionGate', () => {
       dashboard: dashboard(section),
       section,
       selectedPeriod: month('2026-05'),
+      selections: {},
     });
     expect(result.status).toBe('open');
     if (result.status === 'open')
@@ -74,6 +79,7 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod: null,
+        selections: {},
       })
     ).toEqual({ status: 'empty' });
   });
@@ -99,6 +105,7 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod: month('2026-05'),
+        selections: {},
       })
     ).toEqual({
       status: 'accumulating',
@@ -120,6 +127,7 @@ describe('ResolveSectionGate', () => {
       dashboard: dashboard(section),
       section,
       selectedPeriod: month('2026-06'),
+      selections: {},
     });
     expect(result.status === 'open' && result.period.toString()).toBe(
       '2026-06'
@@ -157,6 +165,7 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod: month(selected),
+        selections: {},
       });
       expect(result).toMatchObject(expected);
     }
@@ -171,6 +180,7 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod,
+        selections: {},
       });
       expect(result.status === 'open' && result.period.toString()).toBe(
         '2026-08-15'
@@ -190,6 +200,7 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod: month('2026-03'),
+        selections: {},
       })
     ).toEqual({ status: 'empty' });
   });
@@ -219,6 +230,7 @@ describe('ResolveSectionGate', () => {
           dashboard: dashboard(section),
           section,
           selectedPeriod: null,
+          selections: {},
         })
       ).toMatchObject(expected);
     }
@@ -248,6 +260,7 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod: null,
+        selections: {},
       })
     ).toMatchObject({
       status: 'accumulating',
@@ -283,6 +296,7 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod: month(selected),
+        selections: {},
       });
       expect(result.status).toBe(status);
       if (status === 'not-ready')
@@ -319,7 +333,56 @@ describe('ResolveSectionGate', () => {
         dashboard: dashboard(section),
         section,
         selectedPeriod: null,
+        selections: {},
       })
     ).toEqual({ status: 'not-ready', note: undefined });
+  });
+
+  it('reads the latest date and readiness of a controlled section from the selected slice', async () => {
+    const section = {
+      ...tiles(),
+      period: 'latest' as const,
+      readiness: { column: 'is_complete' },
+      controls: ['category'],
+    };
+    const definition = {
+      ...dashboard(section),
+      controls: [
+        {
+          id: 'category',
+          label: 'Category',
+          column: 'category',
+          options: ['food', 'rent'],
+        },
+      ],
+    };
+    const selectsFood = (source: SourceDefinition) =>
+      source.filters?.some(
+        (filter) =>
+          filter.column === 'category' &&
+          filter.operator === 'equals' &&
+          filter.value === 'food'
+      ) ?? false;
+    const sut = new ResolveSectionGate(
+      {
+        fetchPeriodBounds: async (source) => ({
+          firstDate: '2026-01-01',
+          lastDate: selectsFood(source) ? '2026-08-10' : '2026-08-15',
+        }),
+      },
+      { fetchSectionReadiness: async (plan) => selectsFood(plan.source) }
+    );
+
+    const result = await sut.execute({
+      dashboard: definition,
+      section,
+      selectedPeriod: null,
+      selections: { category: 'food' },
+    });
+
+    expect(result).toMatchObject({ status: 'open' });
+    expect(result.status === 'open' && result.period.lastDate).toBe(
+      '2026-08-10'
+    );
   });
 });
