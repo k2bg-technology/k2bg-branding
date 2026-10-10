@@ -140,6 +140,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -162,6 +163,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -184,6 +186,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -220,6 +223,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -246,6 +250,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -262,6 +267,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-04')),
@@ -281,6 +287,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -308,6 +315,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -326,6 +334,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -359,6 +368,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(selected),
@@ -381,6 +391,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-07')),
@@ -400,6 +411,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -419,6 +431,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-09')),
@@ -439,6 +452,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(null),
@@ -459,6 +473,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -478,6 +493,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -501,6 +517,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.reject(new Error('warehouse failed')),
@@ -522,6 +539,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -542,6 +560,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -565,6 +584,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -595,6 +615,7 @@ describe('DashboardSection', () => {
         urlState,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -668,6 +689,7 @@ describe('DashboardSection table', () => {
         resolveSectionGate: openGate,
         fetchSectionData: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         fetchTableRows: async () => ({
           rows: [['2026-08-15', 'Rent', 1786784700000, 1200, null]],
           page: { number: 1, count: 1 },
@@ -699,6 +721,7 @@ describe('DashboardSection table', () => {
         fetchSectionData: async () => null,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -718,6 +741,7 @@ describe('DashboardSection table', () => {
         fetchSectionData: async () => null,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(screen.getByText('No data available.')).toBeInTheDocument();
@@ -734,6 +758,7 @@ describe('DashboardSection table', () => {
         resolveSectionGate: openGate,
         fetchSectionData: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
         fetchTableRows: async () => ({
           rows: [['2026-08-15', 'Rent', 1786784700000, 1200, null]],
           page: { number: 3, count: 3 },
@@ -759,6 +784,7 @@ describe('DashboardSection table', () => {
         fetchSectionData: async () => null,
         fetchTableRows: async () => Promise.reject(new Error('driver failed')),
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -787,6 +813,7 @@ describe('DashboardSection gates', () => {
         fetchSectionData,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -819,6 +846,7 @@ describe('DashboardSection gates', () => {
         fetchSectionData: async () => null,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -842,6 +870,7 @@ describe('DashboardSection gates', () => {
         fetchSectionData,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -870,6 +899,7 @@ describe('DashboardSection gates', () => {
       fetchSectionData: async () => null,
       fetchTableRows: async () => null,
       fetchBarsData: async () => null,
+      fetchPivotData: async () => null,
     };
     const first = render(
       await DashboardSection({
@@ -925,6 +955,7 @@ describe('DashboardSection gates', () => {
             : null,
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(screen.getByText('As of August 15, 2026')).toBeInTheDocument();
@@ -959,6 +990,7 @@ describe('DashboardSection gates', () => {
         }),
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -985,6 +1017,7 @@ describe('DashboardSection gates', () => {
         }),
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -1013,6 +1046,7 @@ describe('DashboardSection gates', () => {
           fetchSectionData: async () => null,
           fetchTableRows: async () => null,
           fetchBarsData: async () => null,
+          fetchPivotData: async () => null,
         })
       );
     });
@@ -1073,6 +1107,7 @@ describe('bars sections', () => {
       fetchSectionData: async () => null,
       fetchTableRows: async () => null,
       fetchBarsData,
+      fetchPivotData: async () => null,
     });
     return render(view);
   };

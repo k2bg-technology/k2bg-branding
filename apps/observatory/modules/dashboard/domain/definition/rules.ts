@@ -39,6 +39,7 @@ function currencyViolations(
       case SectionKind.CALENDAR_HEATMAP:
       case SectionKind.TIME_SERIES:
       case SectionKind.BARS:
+      case SectionKind.PIVOT_TABLE:
         return section.format.type === 'currency'
           ? [
               {
@@ -510,6 +511,87 @@ function latestSectionViolations(definition: DashboardDefinition) {
   });
 }
 
+function pivotTableViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  const allowed = {
+    month: ['month', 'day'],
+    week: ['week', 'day'],
+    day: ['day'],
+  } as const;
+  return definition.sections.flatMap((section, index) => {
+    if (section.kind !== SectionKind.PIVOT_TABLE) return [];
+    const reductionPath = ['sections', index, 'value', 'reduction'];
+    const addsUp =
+      section.value.reduction === Reduction.SUM
+        ? []
+        : [
+            ...(section.totals === undefined
+              ? []
+              : [
+                  {
+                    path: reductionPath,
+                    message:
+                      'Totals add values up and require the sum reduction',
+                  },
+                ]),
+            ...(section.rows.order === 'total-desc'
+              ? [
+                  {
+                    path: reductionPath,
+                    message:
+                      'Ordering rows by total adds values up and requires the sum reduction',
+                  },
+                ]
+              : []),
+            ...(section.rows.topN === undefined
+              ? []
+              : [
+                  {
+                    path: reductionPath,
+                    message:
+                      'A remainder adds values up and requires the sum reduction',
+                  },
+                ]),
+          ];
+    if (section.columns.axis === 'category') {
+      return [
+        ...addsUp,
+        ...(section.columns.column === section.rows.column
+          ? [
+              {
+                path: ['sections', index, 'columns', 'column'],
+                message:
+                  'A category column axis requires a column other than rows.column',
+              },
+            ]
+          : []),
+      ];
+    }
+    const grain = section.columns.grain ?? definition.grain;
+    if (!(allowed[definition.grain] as readonly string[]).includes(grain)) {
+      return [
+        ...addsUp,
+        {
+          path: ['sections', index, 'columns', 'grain'],
+          message: `Section grain "${grain}" is not supported by dashboard grain "${definition.grain}"`,
+        },
+      ];
+    }
+    return [
+      ...addsUp,
+      ...(grain === definition.grain && section.columns.window === undefined
+        ? [
+            {
+              path: ['sections', index, 'columns', 'window'],
+              message: 'A pivot table at the dashboard grain requires window',
+            },
+          ]
+        : []),
+    ];
+  });
+}
+
 export function validateDefinitionRules(
   definition: DashboardDefinition
 ): DefinitionViolation[] {
@@ -525,6 +607,7 @@ export function validateDefinitionRules(
     barsRankingViolations(definition),
     barsPivotAxisViolations(definition),
     barsSumViolations(definition),
+    pivotTableViolations(definition),
     controlDeclarationViolations(definition),
     sectionControlViolations(definition)
   );

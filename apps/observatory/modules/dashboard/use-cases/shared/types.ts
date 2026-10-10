@@ -53,3 +53,15 @@ export type GroupedValues =
         sortKey?: SortKeyValue;
       }[];
     };
+
+export interface PivotCell {
+  row: CategoryValue;
+  column: CategoryValue;
+  value: number | null;
+  sortKey?: SortKeyValue;
+}
+
+export interface PivotCells {
+  cells: PivotCell[];
+  exceeded: boolean;
+}

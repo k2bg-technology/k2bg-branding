@@ -19,11 +19,11 @@ const pivotTopNSchema = z.strictObject({
   count: z.number().int().min(1).max(11),
   otherLabel: z.string().min(1),
 });
-const axisTopNSchema = z.strictObject({
+export const axisTopNSchema = z.strictObject({
   count: z.number().int().min(1).max(100),
   otherLabel: z.string().min(1),
 });
-const sortKeyOrderSchema = z.strictObject({
+export const sortKeyOrderSchema = z.strictObject({
   sortKey: z.strictObject({
     column: identifierSchema,
     type: z.enum(['text', 'number']),
