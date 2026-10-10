@@ -95,6 +95,7 @@ export async function loadSectionState({
       dashboard,
       section,
       selectedPeriod: resolution?.period ?? null,
+      selections,
     });
     if (gate.status !== 'open') {
       return gate;
