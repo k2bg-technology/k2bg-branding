@@ -4,6 +4,7 @@ import type {
   GroupedValuesPlan,
   SectionQueryPlan,
   TableQueryPlan,
+  TreemapQueryPlan,
 } from '../../../../domain';
 import {
   AmbiguousLatestValueError,
@@ -17,6 +18,7 @@ import {
   toSectionData,
   toSectionReadiness,
   toTableRows,
+  toTreemapParts,
 } from './mapper';
 
 describe('toSectionReadiness', () => {
@@ -35,6 +37,53 @@ describe('toSectionReadiness', () => {
     expect(() => toSectionReadiness([{ not_ready_count: 'two' }])).toThrow(
       MappingError
     );
+  });
+});
+
+describe('toTreemapParts', () => {
+  const plan: TreemapQueryPlan = {
+    sectionId: 'tree',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+    measure: { column: 'amount' },
+    group: 'category_group',
+    category: 'category',
+  };
+
+  it('maps grouped values and preserves a null group and null sum', () => {
+    const result = toTreemapParts(
+      [
+        { group_key: 'Home', category: 'Rent', value_0: 600 },
+        { group_key: null, category: 'Misc', value_0: null },
+      ],
+      plan
+    );
+
+    expect(result).toEqual([
+      { group: 'Home', category: 'Rent', value: 600 },
+      { group: null, category: 'Misc', value: null },
+    ]);
+  });
+
+  it('omits the group property for an ungrouped plan', () => {
+    const result = toTreemapParts([{ category: 'Rent', value_0: 600 }], {
+      ...plan,
+      group: null,
+    });
+
+    expect(result).toEqual([{ category: 'Rent', value: 600 }]);
+    expect(result?.[0]).not.toHaveProperty('group');
+  });
+
+  it('returns null for no rows', () => {
+    expect(toTreemapParts([], plan)).toBeNull();
+  });
+
+  it('rejects a group that is not text or null', () => {
+    expect(() =>
+      toTreemapParts([{ group_key: 5, category: 'Rent', value_0: 600 }], plan)
+    ).toThrow(MappingError);
   });
 });
 

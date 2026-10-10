@@ -7,9 +7,11 @@ import {
   WarehouseFetchSectionDataQueryService,
   WarehouseFetchSectionReadinessQueryService,
   WarehouseFetchTableRowsQueryService,
+  WarehouseFetchTreemapPartsQueryService,
 } from '../../modules/dashboard/adapters';
 import {
   FetchBarsData,
+  FetchCompositionData,
   FetchSectionData,
   FetchTableRows,
   LoadDashboards,
@@ -54,5 +56,14 @@ export function createFetchTableRowsUseCase(): FetchTableRows {
 export function createFetchBarsDataUseCase(): FetchBarsData {
   return new FetchBarsData(
     new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchCompositionDataUseCase(): FetchCompositionData {
+  const client = getWarehouseClient();
+  return new FetchCompositionData(
+    new WarehouseFetchGroupedValuesQueryService(client),
+    new WarehouseFetchTreemapPartsQueryService(client),
+    new WarehouseFetchSectionDataQueryService(client)
   );
 }

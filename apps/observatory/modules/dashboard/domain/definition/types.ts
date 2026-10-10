@@ -6,6 +6,8 @@ export const SectionKind = {
   TABLE: 'table',
   BARS: 'bars',
   CALENDAR_HEATMAP: 'calendar-heatmap',
+  DONUT: 'donut',
+  TREEMAP: 'treemap',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
 
@@ -233,11 +235,52 @@ export interface BarsSection extends SectionGateFields {
   controls?: string[];
 }
 
+export interface DonutSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.DONUT;
+  width?: SectionWidth;
+  controls?: string[];
+  category: string;
+  categoryLabel: string;
+  value: ValueBinding & { label: string };
+  order: CategoryOrder;
+  topN?: TopN;
+  centerColumn?: string;
+  centerLabel?: string;
+  format: ValueFormat;
+  unit?: string;
+}
+
+export interface TreemapSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.TREEMAP;
+  width?: SectionWidth;
+  controls?: string[];
+  group?: string;
+  groupLabel?: string;
+  category: string;
+  categoryLabel: string;
+  value: ValueBinding & { label: string };
+  topN?: TopN;
+  format: ValueFormat;
+  unit?: string;
+}
+
+export type CompositionSection = DonutSection | TreemapSection;
+
 export type AggregatingSection =
   | StatTilesSection
   | TimeSeriesSection
   | CalendarHeatmapSection;
-export type Section = AggregatingSection | TableSection | BarsSection;
+export type Section =
+  | AggregatingSection
+  | TableSection
+  | BarsSection
+  | CompositionSection;
 
 export interface DashboardDefinition {
   id: string;
@@ -266,6 +309,8 @@ export interface DashboardDefinition {
     nullCategory?: string;
     missingValue?: string;
     applyControls?: string;
+    negativeComposition?: string;
+    share?: string;
   };
   sections: Section[];
 }

@@ -4,7 +4,9 @@ import { validateDefinitionRules } from './rules';
 import type {
   CalendarHeatmapSection,
   DashboardDefinition,
+  DonutSection,
   TableSection,
+  TreemapSection,
 } from './types';
 
 function createDefinition(): DashboardDefinition {
@@ -207,6 +209,98 @@ describe('validateDefinitionRules', () => {
       path: ['sections', 0, 'tiles', 0, 'format'],
       message: 'A currency tile requires dashboard currency',
     });
+  });
+});
+
+describe('composition rules', () => {
+  const createDonut = (): DonutSection => ({
+    id: 'share',
+    title: 'Share',
+    kind: 'donut',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    category: 'category',
+    categoryLabel: 'Category',
+    value: { label: 'Amount', column: 'amount', reduction: 'sum' },
+    order: 'value-desc',
+    format: { type: 'number' },
+  });
+  const createTreemap = (): TreemapSection => ({
+    id: 'tree',
+    title: 'Tree',
+    kind: 'treemap',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    category: 'category',
+    categoryLabel: 'Category',
+    value: { label: 'Amount', column: 'amount', reduction: 'sum' },
+    format: { type: 'number' },
+  });
+
+  it.each([
+    { name: 'donut', section: createDonut() },
+    { name: 'treemap', section: createTreemap() },
+  ])(
+    'rejects a non-sum reduction on a $name at its reduction path',
+    ({ section }) => {
+      const definition = createDefinition();
+      definition.sections = [
+        { ...section, value: { ...section.value, reduction: 'average' } },
+      ];
+
+      const result = validateDefinitionRules(definition);
+
+      expect(result).toEqual([
+        {
+          path: ['sections', 0, 'value', 'reduction'],
+          message:
+            'A composition adds values up and requires the sum reduction',
+        },
+      ]);
+    }
+  );
+
+  it.each([
+    { name: 'group only', overrides: { group: 'category_group' } },
+    { name: 'groupLabel only', overrides: { groupLabel: 'Group' } },
+  ])('requires group and groupLabel together ($name)', ({ overrides }) => {
+    const definition = createDefinition();
+    definition.sections = [{ ...createTreemap(), ...overrides }];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'group'],
+        message: 'A treemap declares group and groupLabel together',
+      },
+    ]);
+  });
+
+  it('requires dashboard currency for a currency donut', () => {
+    const definition = createDefinition();
+    definition.currency = undefined;
+    definition.sections = [{ ...createDonut(), format: { type: 'currency' } }];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'format'],
+        message: 'A currency section requires dashboard currency',
+      },
+    ]);
+  });
+
+  it('accepts a sum donut with a sort key and a grouped sum treemap', () => {
+    const definition = createDefinition();
+    definition.sections = [
+      {
+        ...createDonut(),
+        order: { sortKey: { column: 'weekday_number', type: 'number' } },
+      },
+      { ...createTreemap(), group: 'category_group', groupLabel: 'Group' },
+    ];
+
+    expect(validateDefinitionRules(definition)).toEqual([]);
   });
 });
 

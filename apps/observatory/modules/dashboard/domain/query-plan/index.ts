@@ -1,5 +1,6 @@
 export * from './bars';
 export * from './calendarHeatmap';
+export * from './composition';
 export * from './groupedValues';
 export * from './planSection';
 export * from './readiness';

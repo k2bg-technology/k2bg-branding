@@ -53,3 +53,15 @@ export type GroupedValues =
         sortKey?: SortKeyValue;
       }[];
     };
+
+export interface CompositionPart {
+  group?: CategoryValue;
+  category: CategoryValue;
+  value: number | null;
+  sortKey?: SortKeyValue;
+}
+
+export interface CompositionData {
+  parts: CompositionPart[];
+  center: number | null;
+}

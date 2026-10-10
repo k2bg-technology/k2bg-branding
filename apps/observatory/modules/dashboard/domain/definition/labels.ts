@@ -13,6 +13,8 @@ export interface DashboardLabels {
   nullCategory: string;
   missingValue: string;
   applyControls: string;
+  negativeComposition: string;
+  share: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -30,6 +32,8 @@ export const DEFAULT_DASHBOARD_LABELS = {
   nullCategory: 'None',
   missingValue: 'No data',
   applyControls: 'Apply',
+  negativeComposition: 'Negative values cannot be shown as parts of a whole',
+  share: 'Share',
 };
 
 export const DEFAULT_CONTROL_ALL_LABEL = 'All';

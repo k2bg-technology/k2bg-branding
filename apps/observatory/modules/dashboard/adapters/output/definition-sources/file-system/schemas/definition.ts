@@ -8,6 +8,7 @@ import {
 } from '../../../../../domain';
 import { barsSectionSchema } from './bars';
 import { calendarHeatmapSectionSchema } from './calendarHeatmap';
+import { donutSectionSchema, treemapSectionSchema } from './composition';
 import { controlSchema } from './controls';
 import { sourceSchema, statTilesSectionSchema } from './statTiles';
 import { tableSectionSchema } from './table';
@@ -37,6 +38,8 @@ const sectionSchemasByKind = {
   [SectionKind.TABLE]: tableSectionSchema,
   [SectionKind.BARS]: barsSectionSchema,
   [SectionKind.CALENDAR_HEATMAP]: calendarHeatmapSectionSchema,
+  [SectionKind.DONUT]: donutSectionSchema,
+  [SectionKind.TREEMAP]: treemapSectionSchema,
 };
 
 const sectionSchemaBase = z.unknown().transform((value, context): Section => {
@@ -124,6 +127,8 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       nullCategory: z.string().min(1).optional(),
       missingValue: z.string().min(1).optional(),
       applyControls: z.string().min(1).optional(),
+      negativeComposition: z.string().min(1).optional(),
+      share: z.string().min(1).optional(),
     })
     .optional(),
   sections: z.array(sectionSchema).min(1),

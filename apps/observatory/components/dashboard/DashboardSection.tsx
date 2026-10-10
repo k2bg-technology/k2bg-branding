@@ -5,8 +5,10 @@ import type {
 } from '../../modules/dashboard/domain';
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
+  CompositionData,
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchCompositionDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   GroupedValues,
@@ -19,13 +21,16 @@ import { loadSectionState } from './loadSectionState';
 import { SectionAccumulating } from './SectionAccumulating';
 import { SectionAsOf } from './SectionAsOf';
 import { SectionEmpty } from './SectionEmpty';
+import { SectionNegativeComposition } from './SectionNegativeComposition';
 import { SectionNotReady } from './SectionNotReady';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
 import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
+import { DonutSection } from './sections/DonutSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
+import { TreemapSectionChart } from './sections/TreemapSectionChart';
 
 interface Props {
   dashboard: DashboardDefinition;
@@ -37,6 +42,9 @@ interface Props {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchCompositionData: (
+    input: FetchCompositionDataInput
+  ) => Promise<CompositionData | null>;
   urlState: UrlState;
 }
 
@@ -52,6 +60,7 @@ export async function DashboardSection({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchCompositionData,
   urlState,
 }: Props) {
   const state = await loadSectionState({
@@ -62,6 +71,7 @@ export async function DashboardSection({
     fetchSectionData,
     fetchTableRows,
     fetchBarsData,
+    fetchCompositionData,
     page: urlState.pages[section.id] ?? 1,
     selections: urlState.controls,
   });
@@ -132,6 +142,28 @@ export async function DashboardSection({
               />
             );
           }
+          if (state.kind === SectionKind.DONUT) {
+            return (
+              <DonutSection
+                dashboard={dashboard}
+                section={state.section}
+                chart={state.chart}
+              />
+            );
+          }
+          if (state.kind === SectionKind.TREEMAP) {
+            return (
+              <TreemapSectionChart
+                label={state.section.title}
+                nodes={state.chart.nodes}
+                tableHeaders={state.chart.tableHeaders}
+                locale={dashboard.locale}
+                currency={dashboard.currency}
+                format={state.section.format}
+                unit={state.section.unit}
+              />
+            );
+          }
           return assertNever(state);
         }
         if (state.status === 'accumulating') {
@@ -149,6 +181,9 @@ export async function DashboardSection({
         }
         if (state.status === 'empty') {
           return <SectionEmpty />;
+        }
+        if (state.status === 'negative') {
+          return <SectionNegativeComposition dashboard={dashboard} />;
         }
         if (state.status === 'unavailable') {
           return <SectionUnavailable />;

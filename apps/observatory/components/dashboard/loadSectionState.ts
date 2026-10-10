@@ -4,16 +4,20 @@ import type {
   CalendarHeatmapSection,
   ControlSelections,
   DashboardDefinition,
+  DonutSection,
   Period,
   Section,
   StatTilesSection,
   TableSection,
   TimeSeriesSection,
+  TreemapSection,
 } from '../../modules/dashboard/domain';
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
+  CompositionData,
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchCompositionDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   GroupedValues,
@@ -23,6 +27,12 @@ import type {
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { type BarsChartInput, barsChart } from './barsChart';
+import {
+  type DonutChartInput,
+  donutChart,
+  type TreemapChartInput,
+  treemapChart,
+} from './compositionChart';
 
 interface Input {
   dashboard: DashboardDefinition;
@@ -34,6 +44,9 @@ interface Input {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchCompositionData: (
+    input: FetchCompositionDataInput
+  ) => Promise<CompositionData | null>;
   page: number;
   selections: ControlSelections;
 }
@@ -74,6 +87,21 @@ export type SectionState =
       chart: BarsChartInput;
       period: Period;
     }
+  | {
+      status: 'ready';
+      kind: 'donut';
+      section: DonutSection;
+      chart: DonutChartInput;
+      period: Period;
+    }
+  | {
+      status: 'ready';
+      kind: 'treemap';
+      section: TreemapSection;
+      chart: TreemapChartInput;
+      period: Period;
+    }
+  | { status: 'negative' }
   | Exclude<SectionGate, { status: 'open' }>
   | { status: 'unavailable' };
 
@@ -85,6 +113,7 @@ export async function loadSectionState({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchCompositionData,
   page,
   selections,
 }: Input): Promise<SectionState> {
@@ -203,6 +232,42 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           chart: barsChart(section, data, period, dashboard),
+          period,
+        };
+      }
+      case SectionKind.DONUT: {
+        const data = await fetchCompositionData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        const result = donutChart(section, data, dashboard);
+        if (result.status !== 'ready') return { status: result.status };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          chart: result.chart,
+          period,
+        };
+      }
+      case SectionKind.TREEMAP: {
+        const data = await fetchCompositionData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        const result = treemapChart(section, data, dashboard);
+        if (result.status !== 'ready') return { status: result.status };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          chart: result.chart,
           period,
         };
       }

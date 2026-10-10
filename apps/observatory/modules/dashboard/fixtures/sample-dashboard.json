@@ -19,7 +19,9 @@
     "notReady": "The latest day is still being processed",
     "nullCategory": "No category",
     "missingValue": "No entries",
-    "applyControls": "Apply filters"
+    "applyControls": "Apply filters",
+    "negativeComposition": "Parts below zero cannot be drawn",
+    "share": "Share of total"
   },
   "currency": "JPY",
   "revalidate": 86400,
@@ -304,6 +306,47 @@
       "stacked": false,
       "format": { "type": "number" },
       "series": [{ "label": "Temperature", "column": "temperature", "reduction": "average" }]
+    },
+    {
+      "id": "spending-share",
+      "title": "Spending by category",
+      "kind": "donut",
+      "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "category": "category",
+      "categoryLabel": "Category",
+      "value": { "label": "Amount", "column": "amount", "transform": "absolute" },
+      "order": "value-desc",
+      "topN": { "count": 3, "otherLabel": "Other categories" },
+      "centerLabel": "Total spending",
+      "format": { "type": "currency" }
+    },
+    {
+      "id": "weekday-share",
+      "title": "Spending by weekday",
+      "kind": "donut",
+      "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "category": "weekday_name",
+      "categoryLabel": "Weekday",
+      "value": { "label": "Amount", "column": "amount", "transform": "absolute" },
+      "order": { "sortKey": { "column": "weekday_number", "type": "number" } },
+      "centerColumn": "running_balance",
+      "centerLabel": "Latest balance",
+      "format": { "type": "currency" }
+    },
+    {
+      "id": "category-tree",
+      "title": "Spending by category group",
+      "kind": "treemap",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "group": "category_group",
+      "groupLabel": "Group",
+      "category": "category",
+      "categoryLabel": "Category",
+      "value": { "label": "Amount", "column": "amount", "transform": "absolute" },
+      "topN": { "count": 2, "otherLabel": "Other categories" },
+      "format": { "type": "currency" }
     }
   ]
 }

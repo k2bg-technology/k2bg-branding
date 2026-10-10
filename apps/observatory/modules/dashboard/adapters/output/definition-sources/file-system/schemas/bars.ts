@@ -19,7 +19,7 @@ const pivotTopNSchema = z.strictObject({
   count: z.number().int().min(1).max(11),
   otherLabel: z.string().min(1),
 });
-const axisTopNSchema = z.strictObject({
+export const axisTopNSchema = z.strictObject({
   count: z.number().int().min(1).max(100),
   otherLabel: z.string().min(1),
 });
@@ -29,7 +29,7 @@ const sortKeyOrderSchema = z.strictObject({
     type: z.enum(['text', 'number']),
   }),
 });
-const orderSchema = z
+export const orderSchema = z
   .unknown()
   .transform((value, context): CategoryOrder | typeof z.NEVER => {
     if (value === 'value-desc') return value;
