@@ -4,6 +4,7 @@ import type {
   CalendarHeatmapSection,
   ControlSelections,
   DashboardDefinition,
+  MatrixHeatmapSection,
   Period,
   Section,
   StatTilesSection,
@@ -14,15 +15,18 @@ import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchMatrixDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   GroupedValues,
+  MatrixData,
   ResolveSectionGateInput,
   SectionData,
   SectionGate,
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { type BarsChartInput, barsChart } from './barsChart';
+import { type MatrixGridInput, matrixGrid } from './matrixGrid';
 
 interface Input {
   dashboard: DashboardDefinition;
@@ -34,6 +38,7 @@ interface Input {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchMatrixData: (input: FetchMatrixDataInput) => Promise<MatrixData | null>;
   page: number;
   selections: ControlSelections;
 }
@@ -74,6 +79,14 @@ export type SectionState =
       chart: BarsChartInput;
       period: Period;
     }
+  | {
+      status: 'ready';
+      kind: 'matrix-heatmap';
+      section: MatrixHeatmapSection;
+      grid: MatrixGridInput;
+      period: Period;
+    }
+  | { status: 'too-large' }
   | Exclude<SectionGate, { status: 'open' }>
   | { status: 'unavailable' };
 
@@ -85,6 +98,7 @@ export async function loadSectionState({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchMatrixData,
   page,
   selections,
 }: Input): Promise<SectionState> {
@@ -203,6 +217,23 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           chart: barsChart(section, data, period, dashboard),
+          period,
+        };
+      }
+      case SectionKind.MATRIX_HEATMAP: {
+        const data = await fetchMatrixData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        if (data.status === 'too-large') return { status: 'too-large' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          grid: matrixGrid(section, data, period, dashboard),
           period,
         };
       }

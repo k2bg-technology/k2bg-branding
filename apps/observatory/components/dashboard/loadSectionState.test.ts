@@ -57,6 +57,7 @@ describe('loadSectionState bars ranking', () => {
       resolveSectionGate: async () => ({ status: 'open', period }),
       fetchSectionData: async () => null,
       fetchTableRows: async () => null,
+      fetchMatrixData: async () => null,
       fetchBarsData: async () => ({
         grouping: 'category',
         groups: [

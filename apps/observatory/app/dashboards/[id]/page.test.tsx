@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
   fetchBarsData: vi.fn(),
+  fetchMatrixData: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
   notFound: vi.fn(() => {
     throw new Error('not-found');
@@ -26,6 +27,7 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
   createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
   createFetchBarsDataUseCase: () => ({ execute: mocks.fetchBarsData }),
+  createFetchMatrixDataUseCase: () => ({ execute: mocks.fetchMatrixData }),
 }));
 vi.mock('../../../modules/dashboard/adapters/shared', () => ({
   dashboardLogger: { error: vi.fn(), warn: vi.fn() },

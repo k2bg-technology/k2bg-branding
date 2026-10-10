@@ -7,9 +7,11 @@ import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchMatrixDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   GroupedValues,
+  MatrixData,
   ResolveSectionGateInput,
   SectionData,
   SectionGate,
@@ -20,9 +22,11 @@ import { SectionAccumulating } from './SectionAccumulating';
 import { SectionAsOf } from './SectionAsOf';
 import { SectionEmpty } from './SectionEmpty';
 import { SectionNotReady } from './SectionNotReady';
+import { SectionTooLarge } from './SectionTooLarge';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
 import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
+import { MatrixHeatmapSection } from './sections/MatrixHeatmapSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
@@ -37,6 +41,7 @@ interface Props {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchMatrixData: (input: FetchMatrixDataInput) => Promise<MatrixData | null>;
   urlState: UrlState;
 }
 
@@ -52,6 +57,7 @@ export async function DashboardSection({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchMatrixData,
   urlState,
 }: Props) {
   const state = await loadSectionState({
@@ -62,6 +68,7 @@ export async function DashboardSection({
     fetchSectionData,
     fetchTableRows,
     fetchBarsData,
+    fetchMatrixData,
     page: urlState.pages[section.id] ?? 1,
     selections: urlState.controls,
   });
@@ -132,6 +139,15 @@ export async function DashboardSection({
               />
             );
           }
+          if (state.kind === SectionKind.MATRIX_HEATMAP) {
+            return (
+              <MatrixHeatmapSection
+                dashboard={dashboard}
+                section={state.section}
+                grid={state.grid}
+              />
+            );
+          }
           return assertNever(state);
         }
         if (state.status === 'accumulating') {
@@ -149,6 +165,9 @@ export async function DashboardSection({
         }
         if (state.status === 'empty') {
           return <SectionEmpty />;
+        }
+        if (state.status === 'too-large') {
+          return <SectionTooLarge dashboard={dashboard} />;
         }
         if (state.status === 'unavailable') {
           return <SectionUnavailable />;

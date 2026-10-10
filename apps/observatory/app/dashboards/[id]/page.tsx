@@ -6,6 +6,7 @@ import { DashboardSection } from '../../../components/dashboard/DashboardSection
 import { SectionSkeleton } from '../../../components/dashboard/SectionSkeleton';
 import {
   createFetchBarsDataUseCase,
+  createFetchMatrixDataUseCase,
   createFetchSectionDataUseCase,
   createFetchTableRowsUseCase,
   createLoadDashboardsUseCase,
@@ -103,6 +104,9 @@ export default async function Page({ params, searchParams }: Props) {
                 }
                 fetchBarsData={(input) =>
                   createFetchBarsDataUseCase().execute(input)
+                }
+                fetchMatrixData={(input) =>
+                  createFetchMatrixDataUseCase().execute(input)
                 }
                 urlState={parsed.state}
               />
