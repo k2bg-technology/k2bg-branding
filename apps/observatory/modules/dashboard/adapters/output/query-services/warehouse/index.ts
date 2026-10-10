@@ -1,6 +1,7 @@
 export * from './aliases';
 export * from './buildSectionQuery';
 export * from './fetchGroupedValuesQueryService';
+export * from './fetchMatrixDataQueryService';
 export * from './fetchPeriodBoundsQueryService';
 export * from './fetchSectionDataQueryService';
 export * from './fetchSectionReadinessQueryService';
@@ -8,6 +9,7 @@ export * from './fetchTableRowsQueryService';
 export * from './groupedValues';
 export * from './identifier';
 export * from './mapper';
+export * from './matrixHeatmap';
 export * from './query';
 export * from './readiness';
 export * from './statTiles';

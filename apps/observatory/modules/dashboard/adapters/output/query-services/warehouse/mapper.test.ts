@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type {
   GroupedValuesPlan,
+  MatrixQueryPlan,
   SectionQueryPlan,
   TableQueryPlan,
 } from '../../../../domain';
@@ -14,6 +15,7 @@ import { MappingError } from '../../../shared';
 import {
   toDateBounds,
   toGroupedValues,
+  toMatrixData,
   toSectionData,
   toSectionReadiness,
   toTableRows,
@@ -35,6 +37,89 @@ describe('toSectionReadiness', () => {
     expect(() => toSectionReadiness([{ not_ready_count: 'two' }])).toThrow(
       MappingError
     );
+  });
+});
+
+function matrixPlan(overrides: Partial<MatrixQueryPlan> = {}) {
+  return {
+    sectionId: 'matrix',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-03' },
+    rows: { axis: 'category', column: 'category' },
+    columns: { axis: 'date', length: 3 },
+    measure: { column: 'amount', reduction: 'sum' },
+    cellLimit: 6,
+    ...overrides,
+  } satisfies MatrixQueryPlan;
+}
+
+const matrixRows = [
+  { row_key: '10', row_rank: 2, column_key: '2026-08-01', value_0: 0 },
+  { row_key: '9', row_rank: 1, column_key: '2026-08-02', value_0: 5 },
+  { row_key: null, row_rank: 3, column_key: '2026-08-01', value_0: null },
+];
+
+describe('toMatrixData', () => {
+  it('orders categories by rank with NULL last and keeps zero apart from missing', () => {
+    const sut = toMatrixData;
+
+    const result = sut(matrixRows, matrixPlan({ cellLimit: 9 }));
+
+    expect(result).toEqual({
+      status: 'ready',
+      rowCategories: ['9', '10', null],
+      columnCategories: null,
+      cells: [
+        { row: '10', column: '2026-08-01', value: 0 },
+        { row: '9', column: '2026-08-02', value: 5 },
+        { row: null, column: '2026-08-01', value: null },
+      ],
+    });
+  });
+
+  it('returns null for no rows', () => {
+    expect(toMatrixData([], matrixPlan())).toBeNull();
+  });
+
+  it('reports too large when more cells return than the budget', () => {
+    expect(toMatrixData(matrixRows, matrixPlan({ cellLimit: 2 }))).toEqual({
+      status: 'too-large',
+    });
+  });
+
+  it('reports too large when sparse cells span a grid above the budget', () => {
+    const sut = toMatrixData;
+
+    const above = sut(matrixRows, matrixPlan());
+    const boundary = sut(matrixRows, matrixPlan({ cellLimit: 9 }));
+
+    expect(above).toEqual({ status: 'too-large' });
+    expect(boundary?.status).toBe('ready');
+  });
+
+  it.each([
+    {
+      name: 'an hour key outside 00–23',
+      rows: [{ row_key: '24', column_key: '2026-08-01', value_0: 1 }],
+      plan: matrixPlan({ rows: { axis: 'hour', length: 24 } }),
+    },
+    {
+      name: 'a non-calendar date key',
+      rows: [
+        { row_key: 'food', row_rank: 1, column_key: '2026-13-01', value_0: 1 },
+      ],
+      plan: matrixPlan(),
+    },
+    {
+      name: 'a rank below one',
+      rows: [
+        { row_key: 'food', row_rank: 0, column_key: '2026-08-01', value_0: 1 },
+      ],
+      plan: matrixPlan(),
+    },
+  ])('rejects $name', ({ rows, plan }) => {
+    expect(() => toMatrixData(rows, plan)).toThrow(MappingError);
   });
 });
 
