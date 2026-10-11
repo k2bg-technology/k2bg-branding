@@ -5,6 +5,7 @@ import {
   WarehouseFetchGroupedValuesQueryService,
   WarehouseFetchMatrixDataQueryService,
   WarehouseFetchPeriodBoundsQueryService,
+  WarehouseFetchPivotDataQueryService,
   WarehouseFetchSectionDataQueryService,
   WarehouseFetchSectionReadinessQueryService,
   WarehouseFetchTableRowsQueryService,
@@ -12,8 +13,10 @@ import {
 import {
   FetchBarsData,
   FetchMatrixData,
+  FetchPivotData,
   FetchSectionData,
   FetchTableRows,
+  FetchTimeSeriesPivot,
   LoadDashboards,
   ResolveDashboardPeriod,
   ResolveSectionGate,
@@ -62,5 +65,17 @@ export function createFetchBarsDataUseCase(): FetchBarsData {
 export function createFetchMatrixDataUseCase(): FetchMatrixData {
   return new FetchMatrixData(
     new WarehouseFetchMatrixDataQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchTimeSeriesPivotUseCase(): FetchTimeSeriesPivot {
+  return new FetchTimeSeriesPivot(
+    new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchPivotDataUseCase(): FetchPivotData {
+  return new FetchPivotData(
+    new WarehouseFetchPivotDataQueryService(getWarehouseClient())
   );
 }

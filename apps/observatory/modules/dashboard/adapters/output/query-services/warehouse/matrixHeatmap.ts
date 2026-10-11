@@ -1,6 +1,7 @@
 import type { WarehouseQueryParams } from '../../../../../../infrastructure/warehouse';
 import type { MatrixAxisPlan, MatrixQueryPlan } from '../../../../domain';
 import {
+  CELL_LIMIT_PARAMETER,
   COLUMN_KEY_ALIAS,
   COLUMN_RANK_ALIAS,
   ROW_KEY_ALIAS,
@@ -20,7 +21,7 @@ import {
 } from './query';
 import { aggregateNames } from './statTiles';
 
-export const CELL_LIMIT_PARAMETER = 'cell_limit';
+export { CELL_LIMIT_PARAMETER } from './aliases';
 
 function groupExpression(
   axis: MatrixAxisPlan,

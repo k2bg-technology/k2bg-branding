@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v3';
 
 export type LoginInput = z.infer<typeof loginSchema>;
 

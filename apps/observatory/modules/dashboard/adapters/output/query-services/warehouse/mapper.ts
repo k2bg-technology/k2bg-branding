@@ -1,15 +1,16 @@
 import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import {
+  AmbiguousSortKeyError,
   type GroupedValuesPlan,
   type MatrixAxisPlan,
   type MatrixQueryPlan,
-  Period,
-  type PeriodGrain,
+  type PivotQueryPlan,
   parseBucketKey,
   parseCalendarDate,
   Reduction,
   resolveLatest,
   resolveSortKey,
+  type SectionGrain,
   type SectionQueryPlan,
   type SortKeyType,
   type TableQueryPlan,
@@ -18,6 +19,7 @@ import type {
   GroupedValues,
   MatrixData,
   MatrixKey,
+  PivotCells,
   SectionData,
   TableCell,
   TableRows,
@@ -208,9 +210,9 @@ export function toTableRows(
   return { rows: cells, page: { number, count } };
 }
 
-function readGroupedPeriod(row: WarehouseRow, grain: PeriodGrain) {
+function readGroupedPeriod(row: WarehouseRow, grain: SectionGrain) {
   const period = row.period;
-  if (typeof period !== 'string' || Period.parse(grain, period) === null) {
+  if (typeof period !== 'string' || parseBucketKey(grain, period) === null) {
     throw new MappingError(
       `period must match ${grain} grain, received ${JSON.stringify(period)}`
     );
@@ -417,4 +419,70 @@ export function toMatrixData(
     (plan.columns.axis === 'category' ? 0 : plan.columns.length);
   if (rowLength * columnLength > plan.cellLimit) return { status: 'too-large' };
   return { status: 'ready', rowCategories, columnCategories, cells };
+}
+
+export function toPivotCells(
+  rows: WarehouseRow[],
+  plan: PivotQueryPlan
+): PivotCells | null {
+  if (rows.length === 0) return null;
+  if (rows.length > plan.cellLimit) return { cells: [], exceeded: true };
+  const cells = rows.map((row) => {
+    const rowKey = row[ROW_KEY_ALIAS];
+    if (rowKey !== null && typeof rowKey !== 'string') {
+      throw new MappingError(
+        `${ROW_KEY_ALIAS} must be a string or null, received ${JSON.stringify(rowKey)}`
+      );
+    }
+    const columnKey = row[COLUMN_KEY_ALIAS];
+    if (plan.columnKey.kind === 'period') {
+      if (
+        typeof columnKey !== 'string' ||
+        parseBucketKey(plan.columnKey.grain, columnKey) === null
+      ) {
+        throw new MappingError(
+          `${COLUMN_KEY_ALIAS} must match ${plan.columnKey.grain} grain, received ${JSON.stringify(columnKey)}`
+        );
+      }
+    } else if (columnKey !== null && typeof columnKey !== 'string') {
+      throw new MappingError(
+        `${COLUMN_KEY_ALIAS} must be a string or null, received ${JSON.stringify(columnKey)}`
+      );
+    }
+    const value = readNullableNumber(row, valueColumnAlias(0));
+    const resolvedValue =
+      plan.measure.reduction === Reduction.LATEST
+        ? resolveLatest(value, readDistinctCount(row, distinctCountAlias(0)), {
+            sectionId: plan.sectionId,
+            column: plan.measure.column,
+          })
+        : value;
+    const sortKeyPlan = plan.rowKey.sortKey;
+    const sortKey =
+      sortKeyPlan === null
+        ? null
+        : resolveSortKey(
+            readGroupedSortKey(row, sortKeyPlan.type),
+            readDistinctCount(row, SORT_KEY_DISTINCT_COUNT_ALIAS),
+            { sectionId: plan.sectionId, column: sortKeyPlan.column }
+          );
+    return {
+      row: rowKey,
+      column: columnKey,
+      value: resolvedValue,
+      ...(sortKeyPlan === null ? {} : { sortKey }),
+    };
+  });
+  const rowSortKey = plan.rowKey.sortKey;
+  if (rowSortKey !== null) {
+    const sortKeys = new Map<string | null, string | number | null>();
+    cells.forEach((cell) => {
+      const sortKey = cell.sortKey ?? null;
+      if (sortKeys.has(cell.row) && sortKeys.get(cell.row) !== sortKey) {
+        throw new AmbiguousSortKeyError(plan.sectionId, rowSortKey.column);
+      }
+      sortKeys.set(cell.row, sortKey);
+    });
+  }
+  return { cells, exceeded: false };
 }

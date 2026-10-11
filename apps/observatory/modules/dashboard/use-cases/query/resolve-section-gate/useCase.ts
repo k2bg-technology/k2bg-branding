@@ -6,6 +6,7 @@ import {
   PeriodGrain,
   Period as PeriodValue,
   resolveAvailability,
+  resolveCalendarRange,
   type Section,
   type SectionBucket,
   SectionKind,
@@ -34,6 +35,9 @@ export type SectionGate =
 function bucketGrain(section: Section, dashboardGrain: PeriodGrain) {
   if (section.kind === SectionKind.TIME_SERIES) {
     return section.grain ?? dashboardGrain;
+  }
+  if (section.kind === SectionKind.CALENDAR_HEATMAP) {
+    return PeriodGrain.DAY;
   }
   return section.period === 'latest' ? PeriodGrain.DAY : dashboardGrain;
 }
@@ -78,6 +82,10 @@ export class ResolveSectionGate {
     if (period === null) {
       return { status: 'empty' };
     }
+    const readRange =
+      section.kind === SectionKind.CALENDAR_HEATMAP
+        ? resolveCalendarRange(section, period)
+        : { firstDate: period.firstDate, lastDate: period.lastDate };
 
     const availability = section.availability;
     if (availability?.minimumBuckets !== undefined) {
@@ -85,7 +93,7 @@ export class ResolveSectionGate {
         grain: bucketGrain(section, dashboard.grain),
         since: availability.since,
         minimumBuckets: availability.minimumBuckets,
-        lastDate: period.lastDate,
+        lastDate: readRange.lastDate,
       });
       if (result.status === 'accumulating') {
         return {
@@ -103,7 +111,7 @@ export class ResolveSectionGate {
           sectionId: section.id,
           source,
           timeZone: dashboard.timeZone,
-          dateRange: { firstDate: period.firstDate, lastDate: period.lastDate },
+          dateRange: readRange,
           column: section.readiness.column,
         },
         {

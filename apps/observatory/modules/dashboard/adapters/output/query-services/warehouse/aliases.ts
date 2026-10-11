@@ -20,3 +20,4 @@ export const ROW_KEY_ALIAS = 'row_key';
 export const COLUMN_KEY_ALIAS = 'column_key';
 export const ROW_RANK_ALIAS = 'row_rank';
 export const COLUMN_RANK_ALIAS = 'column_rank';
+export const CELL_LIMIT_PARAMETER = 'cell_limit';

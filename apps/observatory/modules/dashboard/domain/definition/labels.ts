@@ -13,6 +13,7 @@ export interface DashboardLabels {
   nullCategory: string;
   missingValue: string;
   applyControls: string;
+  tooManySeries: string;
   cellBudgetExceeded: string;
 }
 
@@ -31,6 +32,7 @@ export const DEFAULT_DASHBOARD_LABELS = {
   nullCategory: 'None',
   missingValue: 'No data',
   applyControls: 'Apply',
+  tooManySeries: 'Too many series to show',
   cellBudgetExceeded:
     'Too many cells to show. Narrow the section with a filter, a shorter window, or top-N.',
 };

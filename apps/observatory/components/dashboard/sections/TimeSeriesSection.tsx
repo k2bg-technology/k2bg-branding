@@ -1,7 +1,8 @@
-import { ChartPeriod } from 'ui';
+import { ChartPeriod, type TimeSeriesChartSeries } from 'ui';
 
 import type {
   DashboardDefinition,
+  SeriesSlot,
   TimeSeriesSection as TimeSeriesSectionDefinition,
 } from '../../../modules/dashboard/domain';
 import {
@@ -18,6 +19,7 @@ interface Props {
   dashboard: DashboardDefinition;
   section: TimeSeriesSectionDefinition;
   data: SectionData;
+  slots: SeriesSlot[];
   period: Period;
 }
 
@@ -46,7 +48,13 @@ function chartPeriod(
   return span <= 31 ? ChartPeriod.MONTH : ChartPeriod.QUARTER;
 }
 
-export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
+export function TimeSeriesSection({
+  dashboard,
+  section,
+  data,
+  slots,
+  period,
+}: Props) {
   const range = resolveSectionRange(section, period, {
     truncated: data.truncated,
     firstBucket: data.buckets[0]?.period,
@@ -54,16 +62,41 @@ export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
   const spine = timeSeriesSpine(
     range,
     data.buckets,
-    section.series.length,
+    data.buckets[0]?.values.length ?? 0,
     dashboard.timeZone
   );
-  const series = section.series.map((definition, index) => ({
-    id: `series-${index}`,
-    label: definition.label,
-    points: spine.map(({ timestamp, values }) => ({
-      timestamp,
-      value: values[index] ?? null,
-    })),
+  const series: TimeSeriesChartSeries[] = slots.map((slot) =>
+    slot.kind === 'band'
+      ? {
+          kind: 'band',
+          id: slot.id,
+          label: slot.label,
+          interpolation: slot.interpolation,
+          points: spine.map(({ timestamp, values }) => ({
+            timestamp,
+            low: values[slot.lowIndex] ?? null,
+            high: values[slot.highIndex] ?? null,
+          })),
+        }
+      : {
+          id: slot.id,
+          label: slot.label,
+          interpolation: slot.interpolation,
+          points: spine.map(({ timestamp, values }) => ({
+            timestamp,
+            value: values[slot.valueIndex] ?? null,
+          })),
+        }
+  );
+  const thresholds = section.thresholds?.map((threshold, index) => ({
+    id: `threshold-${index}`,
+    value: threshold.value,
+    label: threshold.label,
+  }));
+  const bands = section.bands?.map((band, index) => ({
+    id: `band-${index}`,
+    from: band.from,
+    to: band.to,
   }));
   const labelGrain = range.grain === 'hour' ? 'day' : range.grain;
   const first = Period.containing(labelGrain, range.display.first.date);
@@ -90,6 +123,8 @@ export function TimeSeriesSection({ dashboard, section, data, period }: Props) {
           range.display.last.date
         )}
         series={series}
+        thresholds={thresholds}
+        bands={bands}
         variant={section.variant}
         stacked={section.stacked}
         locale={dashboard.locale}

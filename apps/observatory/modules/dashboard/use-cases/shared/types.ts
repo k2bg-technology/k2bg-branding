@@ -63,3 +63,14 @@ export type MatrixData =
       columnCategories: CategoryValue[] | null;
       cells: { row: MatrixKey; column: MatrixKey; value: number | null }[];
     };
+export interface PivotCell {
+  row: CategoryValue;
+  column: CategoryValue;
+  value: number | null;
+  sortKey?: SortKeyValue;
+}
+
+export interface PivotCells {
+  cells: PivotCell[];
+  exceeded: boolean;
+}

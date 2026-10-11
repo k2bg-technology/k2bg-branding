@@ -13,6 +13,7 @@ import {
   Period,
   planBarsSection,
   planMatrixHeatmapSection,
+  planPivotTableSection,
 } from '../../../../domain';
 import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 import { MappingError, RepositoryError } from '../../../shared';
@@ -20,6 +21,7 @@ import { dashboardDefinitionSchema } from '../../definition-sources/file-system/
 import { WarehouseFetchGroupedValuesQueryService } from './fetchGroupedValuesQueryService';
 import { WarehouseFetchMatrixDataQueryService } from './fetchMatrixDataQueryService';
 import { WarehouseFetchPeriodBoundsQueryService } from './fetchPeriodBoundsQueryService';
+import { WarehouseFetchPivotDataQueryService } from './fetchPivotDataQueryService';
 import { WarehouseFetchSectionDataQueryService } from './fetchSectionDataQueryService';
 import { WarehouseFetchSectionReadinessQueryService } from './fetchSectionReadinessQueryService';
 import { WarehouseFetchTableRowsQueryService } from './fetchTableRowsQueryService';
@@ -400,5 +402,53 @@ describe('WarehouseFetchGroupedValuesQueryService', () => {
     await expect(
       sut.fetchGroupedValues(plan, { name: 'bars', revalidate: 86_400 })
     ).rejects.toMatchObject({ cause });
+  });
+});
+
+describe('WarehouseFetchPivotDataQueryService', () => {
+  const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+  const section = dashboard.sections.find(
+    (candidate) => candidate.id === 'category-pivot'
+  );
+  if (section?.kind !== 'pivot-table')
+    throw new Error('Expected pivot fixture');
+  const period = Period.parse('month', '2026-08');
+  if (period === null) throw new Error('Expected fixture period');
+  const plan = planPivotTableSection(section, period, dashboard.timeZone);
+  const options = {
+    name: 'dashboard-sample-dashboard-section-category-pivot',
+    revalidate: 86_400,
+  };
+
+  it('returns mapped cells from the limited aggregate query', async () => {
+    const client: WarehouseClient = {
+      query: async (request) =>
+        request.params?.cell_limit === 10_001 &&
+        request.params?.filter_0 === 'transfer' &&
+        request.sql.includes('GROUP BY row_key, column_key')
+          ? [{ row_key: 'food', column_key: '2026-08', value_0: 10 }]
+          : [],
+    };
+    const sut = new WarehouseFetchPivotDataQueryService(client);
+
+    expect(await sut.fetchPivotCells(plan, options)).toEqual({
+      exceeded: false,
+      cells: [{ row: 'food', column: '2026-08', value: 10 }],
+    });
+  });
+
+  it('wraps driver failures with their cause', async () => {
+    const cause = new Error('driver failed');
+    const client: WarehouseClient = {
+      query: async () => Promise.reject(cause),
+    };
+    const sut = new WarehouseFetchPivotDataQueryService(client);
+
+    await expect(sut.fetchPivotCells(plan, options)).rejects.toMatchObject({
+      cause,
+    });
+    await expect(sut.fetchPivotCells(plan, options)).rejects.toBeInstanceOf(
+      RepositoryError
+    );
   });
 });

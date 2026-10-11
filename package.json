@@ -22,7 +22,7 @@
     "@turbo/gen": "^1.13.4",
     "@types/webpack-env": "^1.18.8",
     "tsup": "^8.5.1",
-    "turbo": "2.11.3",
+    "turbo": "2.11.7",
     "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.33.2",
@@ -35,7 +35,8 @@
       "esbuild": "0.28.1",
       "@floating-ui/utils": "^0.2.11",
       "tmp": ">=0.2.6",
-      "@types/glob>@types/minimatch": "-"
+      "@types/glob>@types/minimatch": "-",
+      "jest-runtime": "30.4.2"
     },
     "onlyBuiltDependencies": [
       "@swc/core",

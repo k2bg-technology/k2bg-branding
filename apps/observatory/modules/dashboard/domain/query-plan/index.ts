@@ -2,6 +2,7 @@ export * from './bars';
 export * from './calendarHeatmap';
 export * from './groupedValues';
 export * from './matrixHeatmap';
+export * from './pivotTable';
 export * from './planSection';
 export * from './readiness';
 export * from './statTiles';
