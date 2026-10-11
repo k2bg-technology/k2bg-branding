@@ -6,6 +6,7 @@ export const SectionKind = {
   TABLE: 'table',
   BARS: 'bars',
   CALENDAR_HEATMAP: 'calendar-heatmap',
+  PIVOT_TABLE: 'pivot-table',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
 
@@ -233,11 +234,38 @@ export interface BarsSection extends SectionGateFields {
   controls?: string[];
 }
 
+export type PivotRowOrder =
+  | 'total-desc'
+  | 'as-provided'
+  | { sortKey: { column: string; type: SortKeyType } };
+export type PivotColumns =
+  | { axis: 'time'; grain?: PeriodGrain; window?: number }
+  | { axis: 'category'; column: string };
+
+export interface PivotTableSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.PIVOT_TABLE;
+  width?: SectionWidth;
+  controls?: string[];
+  rows: { column: string; label: string; order: PivotRowOrder; topN?: TopN };
+  columns: PivotColumns;
+  value: ValueBinding;
+  format: ValueFormat;
+  unit?: string;
+  totals?: { column?: string; row?: string };
+}
+
 export type AggregatingSection =
   | StatTilesSection
   | TimeSeriesSection
   | CalendarHeatmapSection;
-export type Section = AggregatingSection | TableSection | BarsSection;
+export type Section =
+  | AggregatingSection
+  | TableSection
+  | BarsSection
+  | PivotTableSection;
 
 export interface DashboardDefinition {
   id: string;
@@ -266,6 +294,7 @@ export interface DashboardDefinition {
     nullCategory?: string;
     missingValue?: string;
     applyControls?: string;
+    cellBudgetExceeded?: string;
   };
   sections: Section[];
 }

@@ -19,7 +19,8 @@
     "notReady": "The latest day is still being processed",
     "nullCategory": "No category",
     "missingValue": "No entries",
-    "applyControls": "Apply filters"
+    "applyControls": "Apply filters",
+    "cellBudgetExceeded": "Too many cells to show. Narrow the filters or shorten the window."
   },
   "currency": "JPY",
   "revalidate": 86400,
@@ -304,6 +305,43 @@
       "stacked": false,
       "format": { "type": "number" },
       "series": [{ "label": "Temperature", "column": "temperature", "reduction": "average" }]
+    },
+    {
+      "id": "category-pivot",
+      "title": "Monthly amount by category",
+      "kind": "pivot-table",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" },
+        "filters": [
+          { "column": "category", "operator": "not-equals", "value": "transfer" }
+        ]
+      },
+      "rows": {
+        "column": "category",
+        "label": "Category",
+        "topN": { "count": 5, "otherLabel": "Other categories" }
+      },
+      "columns": { "axis": "time", "window": 12 },
+      "value": { "column": "amount", "transform": "absolute" },
+      "format": { "type": "currency" },
+      "totals": { "column": "Total", "row": "All categories" }
+    },
+    {
+      "id": "category-by-weekday",
+      "title": "Average entry by category and weekday",
+      "kind": "pivot-table",
+      "controls": ["category"],
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "rows": { "column": "category", "label": "Category", "order": "as-provided" },
+      "columns": { "axis": "category", "column": "weekday_name" },
+      "value": { "column": "amount", "reduction": "average" },
+      "format": { "type": "currency" }
     }
   ]
 }

@@ -7,9 +7,11 @@ import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchPivotDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   GroupedValues,
+  PivotCells,
   ResolveSectionGateInput,
   SectionData,
   SectionGate,
@@ -23,6 +25,7 @@ import { SectionNotReady } from './SectionNotReady';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
 import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
+import { PivotTableSection } from './sections/PivotTableSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
@@ -37,6 +40,7 @@ interface Props {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
   urlState: UrlState;
 }
 
@@ -52,6 +56,7 @@ export async function DashboardSection({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchPivotData,
   urlState,
 }: Props) {
   const state = await loadSectionState({
@@ -62,6 +67,7 @@ export async function DashboardSection({
     fetchSectionData,
     fetchTableRows,
     fetchBarsData,
+    fetchPivotData,
     page: urlState.pages[section.id] ?? 1,
     selections: urlState.controls,
   });
@@ -129,6 +135,15 @@ export async function DashboardSection({
                 dashboard={dashboard}
                 section={state.section}
                 chart={state.chart}
+              />
+            );
+          }
+          if (state.kind === SectionKind.PIVOT_TABLE) {
+            return (
+              <PivotTableSection
+                dashboard={dashboard}
+                section={state.section}
+                table={state.table}
               />
             );
           }

@@ -4,12 +4,14 @@ import {
   systemClock,
   WarehouseFetchGroupedValuesQueryService,
   WarehouseFetchPeriodBoundsQueryService,
+  WarehouseFetchPivotDataQueryService,
   WarehouseFetchSectionDataQueryService,
   WarehouseFetchSectionReadinessQueryService,
   WarehouseFetchTableRowsQueryService,
 } from '../../modules/dashboard/adapters';
 import {
   FetchBarsData,
+  FetchPivotData,
   FetchSectionData,
   FetchTableRows,
   LoadDashboards,
@@ -54,5 +56,11 @@ export function createFetchTableRowsUseCase(): FetchTableRows {
 export function createFetchBarsDataUseCase(): FetchBarsData {
   return new FetchBarsData(
     new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchPivotDataUseCase(): FetchPivotData {
+  return new FetchPivotData(
+    new WarehouseFetchPivotDataQueryService(getWarehouseClient())
   );
 }

@@ -16,3 +16,6 @@ export const NOT_READY_COUNT_ALIAS = 'not_ready_count';
 export const CATEGORY_ALIAS = 'category';
 export const SORT_KEY_ALIAS = 'sort_key';
 export const SORT_KEY_DISTINCT_COUNT_ALIAS = 'sort_key_distinct_count';
+export const ROW_KEY_ALIAS = 'row_key';
+export const COLUMN_KEY_ALIAS = 'column_key';
+export const CELL_LIMIT_PARAMETER = 'cell_limit';

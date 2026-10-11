@@ -64,6 +64,7 @@ describe('loadSectionState bars ranking', () => {
           { category: 'B', values: [10, 20] },
         ],
       }),
+      fetchPivotData: async () => null,
       page: 1,
       selections: {},
     });

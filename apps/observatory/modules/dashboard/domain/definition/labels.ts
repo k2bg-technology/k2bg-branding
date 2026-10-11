@@ -13,6 +13,7 @@ export interface DashboardLabels {
   nullCategory: string;
   missingValue: string;
   applyControls: string;
+  cellBudgetExceeded: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -30,6 +31,8 @@ export const DEFAULT_DASHBOARD_LABELS = {
   nullCategory: 'None',
   missingValue: 'No data',
   applyControls: 'Apply',
+  cellBudgetExceeded:
+    'Too many cells to show. Narrow the section with a filter, a shorter window, or top-N.',
 };
 
 export const DEFAULT_CONTROL_ALL_LABEL = 'All';

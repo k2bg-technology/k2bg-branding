@@ -146,7 +146,29 @@ describe('FileSystemDefinitionSource', () => {
           asOf: 'Latest date',
           notReady: 'The latest day is still being processed',
           applyControls: 'Apply filters',
+          cellBudgetExceeded:
+            'Too many cells to show. Narrow the filters or shorten the window.',
         });
+        expect(
+          result.definitions[0].sections.filter(
+            (section) => section.kind === 'pivot-table'
+          )
+        ).toMatchObject([
+          {
+            id: 'category-pivot',
+            rows: { order: 'total-desc', topN: { count: 5 } },
+            columns: { axis: 'time', window: 12 },
+            value: { reduction: 'sum', transform: 'absolute' },
+            totals: { column: 'Total', row: 'All categories' },
+          },
+          {
+            id: 'category-by-weekday',
+            controls: ['category'],
+            rows: { order: 'as-provided' },
+            columns: { axis: 'category', column: 'weekday_name' },
+            value: { reduction: 'average' },
+          },
+        ]);
         expect(result.definitions[0].controls).toEqual([
           {
             id: 'category',
@@ -1208,5 +1230,76 @@ describe('section grain and paired time loading', () => {
           ?.sections[1]
       ).toMatchObject({ grain: 'hour', source: { time: pairedTime } });
     });
+  });
+});
+
+describe('pivot table schema', () => {
+  const createPivot = (overrides: Record<string, unknown> = {}) => ({
+    id: 'pivot',
+    title: 'Pivot',
+    kind: 'pivot-table',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    rows: {
+      column: 'category',
+      label: 'Category',
+      order: { sortKey: { column: 'weekday_number', type: 'number' } },
+    },
+    columns: { axis: 'category', column: 'weekday_name' },
+    value: { column: 'amount' },
+    format: { type: 'number' },
+    ...overrides,
+  });
+
+  it('loads a pivot table ordered by a sort key', async () => {
+    await withDefinitionDirectory(
+      { 'pivot.json': createDefinition({ sections: [createPivot()] }) },
+      async (directory) => {
+        const sut = await new FileSystemDefinitionSource(directory).load();
+        const section = sut.definitions[0].sections.find(
+          (candidate) => candidate.id === 'pivot'
+        );
+
+        expect(sut.issues).toEqual([]);
+        expect(section?.kind).toBe('pivot-table');
+        if (section?.kind !== 'pivot-table') throw new Error('Expected pivot');
+        expect(section.rows.order).toEqual({
+          sortKey: { column: 'weekday_number', type: 'number' },
+        });
+        expect(section.value.reduction).toBe('sum');
+      }
+    );
+  });
+
+  it.each([
+    { name: 'empty totals', patch: { totals: {} }, path: 'sections[0].totals' },
+    {
+      name: 'window above 120',
+      patch: { columns: { axis: 'time', window: 121 } },
+      path: 'sections[0].columns.window',
+    },
+    {
+      name: 'hour columns',
+      patch: { columns: { axis: 'time', grain: 'hour', window: 24 } },
+      path: 'sections[0].columns.grain',
+    },
+    {
+      name: 'bars order value',
+      patch: {
+        rows: { column: 'category', label: 'Category', order: 'value-desc' },
+      },
+      path: 'sections[0].rows.order',
+    },
+  ])('rejects $name at its JSON path', async ({ patch, path }) => {
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [createPivot(patch)] }) },
+      async (directory) => {
+        const sut = await new FileSystemDefinitionSource(directory).load();
+
+        expect(sut.definitions).toHaveLength(0);
+        expect(sut.issues).toContainEqual(
+          expect.objectContaining({ fileName: 'invalid.json', path })
+        );
+      }
+    );
   });
 });
