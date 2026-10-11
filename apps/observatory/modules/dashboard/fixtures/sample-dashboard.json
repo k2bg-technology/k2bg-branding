@@ -308,6 +308,36 @@
       "series": [{ "label": "Temperature", "column": "temperature", "reduction": "average" }]
     },
     {
+      "id": "hourly-readings",
+      "title": "Readings by hour",
+      "kind": "matrix-heatmap",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "rows": { "axis": "hour" },
+      "columns": { "axis": "date" },
+      "value": { "column": "temperature", "reduction": "average" },
+      "format": { "type": "number" },
+      "unit": "°C",
+      "minimum": 10,
+      "maximum": 35,
+      "scaleLabels": { "less": "Cooler", "more": "Warmer" }
+    },
+    {
+      "id": "daily-category-totals",
+      "title": "Daily total by category",
+      "kind": "matrix-heatmap",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" },
+        "filters": [{ "column": "category", "operator": "not-equals", "value": "transfer" }]
+      },
+      "rows": { "axis": "category", "column": "category" },
+      "columns": { "axis": "date" },
+      "window": 84,
+      "value": { "column": "amount", "transform": "absolute" },
+      "format": { "type": "currency" }
+    },
+    {
       "id": "category-series", "title": "Monthly amount by category", "kind": "time-series",
       "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" },
                   "filters": [{ "column": "category", "operator": "not-equals", "value": "transfer" }] },

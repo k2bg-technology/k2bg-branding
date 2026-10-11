@@ -6,6 +6,7 @@ export const SectionKind = {
   TABLE: 'table',
   BARS: 'bars',
   CALENDAR_HEATMAP: 'calendar-heatmap',
+  MATRIX_HEATMAP: 'matrix-heatmap',
   PIVOT_TABLE: 'pivot-table',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
@@ -18,6 +19,7 @@ export const Reduction = {
   LATEST: 'latest',
 } as const;
 export type Reduction = (typeof Reduction)[keyof typeof Reduction];
+export type AggregateReduction = Exclude<Reduction, typeof Reduction.LATEST>;
 
 export const SectionWidth = {
   FULL: 'full',
@@ -261,6 +263,33 @@ export interface BarsSection extends SectionGateFields {
   controls?: string[];
 }
 
+export type MatrixAxis =
+  | { axis: 'date' }
+  | { axis: 'hour' }
+  | { axis: 'category'; column: string };
+
+export interface MatrixHeatmapSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.MATRIX_HEATMAP;
+  width?: SectionWidth;
+  controls?: string[];
+  rows: MatrixAxis;
+  columns: MatrixAxis;
+  window?: number;
+  value: {
+    column: string;
+    reduction: AggregateReduction;
+    transform?: ValueTransform;
+  };
+  format: ValueFormat;
+  unit?: string;
+  minimum?: number;
+  maximum?: number;
+  scaleLabels?: { less: string; more: string };
+}
+
 export type PivotRowOrder =
   | 'total-desc'
   | 'as-provided'
@@ -292,6 +321,7 @@ export type Section =
   | AggregatingSection
   | TableSection
   | BarsSection
+  | MatrixHeatmapSection
   | PivotTableSection;
 
 export interface DashboardDefinition {

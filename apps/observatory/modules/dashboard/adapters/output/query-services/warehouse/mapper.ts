@@ -2,6 +2,8 @@ import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import {
   AmbiguousSortKeyError,
   type GroupedValuesPlan,
+  type MatrixAxisPlan,
+  type MatrixQueryPlan,
   type PivotQueryPlan,
   parseBucketKey,
   parseCalendarDate,
@@ -15,6 +17,8 @@ import {
 } from '../../../../domain';
 import type {
   GroupedValues,
+  MatrixData,
+  MatrixKey,
   PivotCells,
   SectionData,
   TableCell,
@@ -24,12 +28,14 @@ import { MappingError } from '../../../shared';
 import {
   CATEGORY_ALIAS,
   COLUMN_KEY_ALIAS,
+  COLUMN_RANK_ALIAS,
   cellColumnAlias,
   distinctCountAlias,
   NOT_READY_COUNT_ALIAS,
   PAGE_COUNT_ALIAS,
   PAGE_NUMBER_ALIAS,
   ROW_KEY_ALIAS,
+  ROW_RANK_ALIAS,
   SORT_KEY_ALIAS,
   SORT_KEY_DISTINCT_COUNT_ALIAS,
   valueColumnAlias,
@@ -319,6 +325,100 @@ export function toGroupedValues(
       cells: cells.map(({ category, values }) => ({ category, values })),
     })),
   };
+}
+
+function readMatrixKey(row: WarehouseRow, alias: string, axis: MatrixAxisPlan) {
+  const value = row[alias];
+  if (axis.axis === 'date') {
+    if (typeof value === 'string' && parseCalendarDate(value) !== null)
+      return value;
+    throw new MappingError(
+      `${alias} must be a calendar date, received ${JSON.stringify(value)}`
+    );
+  }
+  if (axis.axis === 'hour') {
+    if (typeof value === 'string' && /^(?:[01]\d|2[0-3])$/.test(value))
+      return value;
+    throw new MappingError(
+      `${alias} must be an hour from 00 through 23, received ${JSON.stringify(value)}`
+    );
+  }
+  if (value === null || typeof value === 'string') return value;
+  throw new MappingError(
+    `${alias} must be a string or null, received ${JSON.stringify(value)}`
+  );
+}
+
+function matrixCategories(
+  rows: WarehouseRow[],
+  keys: MatrixKey[],
+  rankAlias: string
+) {
+  const ranked = rows.map((row, index) => ({
+    key: keys[index],
+    rank: readMatrixRank(row, rankAlias),
+  }));
+  const distinct = Array.from(
+    new Map(ranked.map(({ key, rank }) => [key, { key, rank }])).values()
+  ).sort((first, second) => first.rank - second.rank);
+  const valid =
+    distinct.length === new Set(ranked.map(({ rank }) => rank)).size &&
+    distinct.every(
+      ({ key, rank }, index) =>
+        rank === index + 1 &&
+        ranked.every((item) => item.key !== key || item.rank === rank)
+    );
+  if (!valid) {
+    throw new MappingError(`${rankAlias} must number the distinct keys from 1`);
+  }
+  return distinct.map(({ key }) => key);
+}
+
+function readMatrixRank(row: WarehouseRow, alias: string) {
+  const rank = row[alias];
+  if (typeof rank !== 'number' || !Number.isInteger(rank) || rank < 1) {
+    throw new MappingError(
+      `${alias} must be a positive integer, received ${JSON.stringify(rank)}`
+    );
+  }
+  return rank;
+}
+
+export function toMatrixData(
+  rows: WarehouseRow[],
+  plan: MatrixQueryPlan
+): MatrixData | null {
+  if (rows.length === 0) return null;
+  if (rows.length > plan.cellLimit) return { status: 'too-large' };
+  const cells = rows.map((row) => ({
+    row: readMatrixKey(row, ROW_KEY_ALIAS, plan.rows),
+    column: readMatrixKey(row, COLUMN_KEY_ALIAS, plan.columns),
+    value: readNullableNumber(row, valueColumnAlias(0)),
+  }));
+  const rowCategories =
+    plan.rows.axis === 'category'
+      ? matrixCategories(
+          rows,
+          cells.map((cell) => cell.row),
+          ROW_RANK_ALIAS
+        )
+      : null;
+  const columnCategories =
+    plan.columns.axis === 'category'
+      ? matrixCategories(
+          rows,
+          cells.map((cell) => cell.column),
+          COLUMN_RANK_ALIAS
+        )
+      : null;
+  const rowLength =
+    rowCategories?.length ??
+    (plan.rows.axis === 'category' ? 0 : plan.rows.length);
+  const columnLength =
+    columnCategories?.length ??
+    (plan.columns.axis === 'category' ? 0 : plan.columns.length);
+  if (rowLength * columnLength > plan.cellLimit) return { status: 'too-large' };
+  return { status: 'ready', rowCategories, columnCategories, cells };
 }
 
 export function toPivotCells(

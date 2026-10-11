@@ -4,6 +4,7 @@ import { validateDefinitionRules } from './rules';
 import type {
   CalendarHeatmapSection,
   DashboardDefinition,
+  MatrixHeatmapSection,
   PivotTableSection,
   TableSection,
   TimeSeriesSection,
@@ -223,6 +224,120 @@ describe('validateDefinitionRules', () => {
       path: ['sections', 0, 'tiles', 0, 'format'],
       message: 'A currency tile requires dashboard currency',
     });
+  });
+});
+
+function createMatrixHeatmap() {
+  return {
+    id: 'matrix',
+    title: 'Matrix',
+    kind: 'matrix-heatmap',
+    source: {
+      dataset: 'metrics',
+      view: 'readings',
+      time: { date: 'reading_date', hour: 'reading_hour' },
+    },
+    rows: { axis: 'hour' },
+    columns: { axis: 'date' },
+    value: { column: 'value', reduction: 'sum' },
+    format: { type: 'number' },
+  } satisfies MatrixHeatmapSection;
+}
+
+describe('matrix heatmap rules', () => {
+  it.each([
+    {
+      name: 'the same date axis on both sides',
+      overrides: { rows: { axis: 'date' }, columns: { axis: 'date' } },
+      path: ['sections', 0, 'columns'],
+      message: 'A matrix heatmap requires two different axes',
+    },
+    {
+      name: 'the same category column on both sides',
+      overrides: {
+        rows: { axis: 'category', column: 'room' },
+        columns: { axis: 'category', column: 'room' },
+      },
+      path: ['sections', 0, 'columns'],
+      message: 'A matrix heatmap requires two different axes',
+    },
+    {
+      name: 'an hour axis without a date-and-hour binding',
+      overrides: {
+        source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      },
+      path: ['sections', 0, 'source', 'time'],
+      message:
+        'An hour section requires source.time with date and hour columns',
+    },
+    {
+      name: 'window without a date axis',
+      overrides: { columns: { axis: 'category', column: 'room' }, window: 7 },
+      path: ['sections', 0, 'window'],
+      message: 'window counts trailing days and requires a date axis',
+    },
+    {
+      name: 'maximum at the default minimum',
+      overrides: { maximum: 0 },
+      path: ['sections', 0, 'maximum'],
+      message: 'A matrix heatmap requires maximum above minimum',
+    },
+    {
+      name: 'minimum above maximum',
+      overrides: { minimum: 10, maximum: 5 },
+      path: ['sections', 0, 'maximum'],
+      message: 'A matrix heatmap requires maximum above minimum',
+    },
+  ] satisfies {
+    name: string;
+    overrides: Partial<MatrixHeatmapSection>;
+    path: (string | number)[];
+    message: string;
+  }[])('rejects $name at its path', ({ overrides, path, message }) => {
+    const section: MatrixHeatmapSection = {
+      ...createMatrixHeatmap(),
+      ...overrides,
+    };
+    const definition = { ...createDefinition(), sections: [section] };
+    const sut = validateDefinitionRules;
+
+    const result = sut(definition);
+
+    expect(result).toEqual([{ path, message }]);
+  });
+
+  it('requires dashboard currency for a currency matrix heatmap', () => {
+    const section = {
+      ...createMatrixHeatmap(),
+      format: { type: 'currency' as const },
+    };
+    const definition = {
+      ...createDefinition(),
+      currency: undefined,
+      sections: [section],
+    };
+
+    expect(validateDefinitionRules(definition)).toEqual([
+      {
+        path: ['sections', 0, 'format'],
+        message: 'A currency section requires dashboard currency',
+      },
+    ]);
+  });
+
+  it('accepts different category columns and an hour by date grid with a window', () => {
+    const categories = {
+      ...createMatrixHeatmap(),
+      rows: { axis: 'category' as const, column: 'room' },
+      columns: { axis: 'category' as const, column: 'sensor' },
+    };
+    const withWindow = { ...createMatrixHeatmap(), id: 'windowed', window: 7 };
+    const definition = {
+      ...createDefinition(),
+      sections: [categories, withWindow],
+    };
+
+    expect(validateDefinitionRules(definition)).toEqual([]);
   });
 });
 

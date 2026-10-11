@@ -88,7 +88,7 @@ async function withDefinitionDirectory(
 }
 
 describe('FileSystemDefinitionSource', () => {
-  it('loads the sample fixture with both table kinds, calendar ranges, and labels', async () => {
+  it('loads the sample fixture with both table kinds, calendar ranges, matrix axes, and labels', async () => {
     await withDefinitionDirectory(
       { 'sample.json': sampleDashboard },
       async (directory) => {
@@ -125,6 +125,27 @@ describe('FileSystemDefinitionSource', () => {
             kind: 'calendar-heatmap',
             availability: { minimumBuckets: 30 },
             readiness: { column: 'is_complete' },
+          },
+        ]);
+        expect(
+          result.definitions[0].sections.filter(
+            (section) => section.kind === 'matrix-heatmap'
+          )
+        ).toMatchObject([
+          {
+            id: 'hourly-readings',
+            rows: { axis: 'hour' },
+            columns: { axis: 'date' },
+            value: { reduction: 'average' },
+            minimum: 10,
+            maximum: 35,
+          },
+          {
+            id: 'daily-category-totals',
+            rows: { axis: 'category', column: 'category' },
+            columns: { axis: 'date' },
+            window: 84,
+            value: { reduction: 'sum' },
           },
         ]);
         expect(
@@ -1344,6 +1365,68 @@ describe('section grain and paired time loading', () => {
       ).toMatchObject({ grain: 'hour', source: { time: pairedTime } });
     });
   });
+});
+
+describe('matrix heatmap schema', () => {
+  const createMatrix = (overrides: Record<string, unknown> = {}) => ({
+    id: 'matrix',
+    title: 'Matrix',
+    kind: 'matrix-heatmap',
+    source: {
+      dataset: 'metrics',
+      view: 'readings',
+      time: { date: 'reading_date', hour: 'reading_hour' },
+    },
+    rows: { axis: 'hour' },
+    columns: { axis: 'date' },
+    value: { column: 'value' },
+    format: { type: 'number' },
+    ...overrides,
+  });
+
+  it.each([
+    {
+      name: 'window above 365',
+      override: { window: 366 },
+      path: 'sections[0].window',
+    },
+    {
+      name: 'latest reduction',
+      override: { value: { column: 'value', reduction: 'latest' } },
+      path: 'sections[0].value.reduction',
+    },
+    {
+      name: 'unknown axis',
+      override: { rows: { axis: 'time' } },
+      path: 'sections[0].rows.axis',
+    },
+    {
+      name: 'period gate',
+      override: { period: 'latest' },
+      path: 'sections[0]',
+    },
+  ])(
+    'rejects a matrix heatmap $name at its JSON path',
+    async ({ override, path }) => {
+      await withDefinitionDirectory(
+        {
+          'invalid.json': createDefinition({
+            sections: [createMatrix(override)],
+          }),
+        },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions).toEqual([]);
+          expect(result.issues).toContainEqual(
+            expect.objectContaining({ fileName: 'invalid.json', path })
+          );
+        }
+      );
+    }
+  );
 });
 
 describe('pivot table schema', () => {

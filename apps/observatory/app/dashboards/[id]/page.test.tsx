@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
   fetchBarsData: vi.fn(),
+  fetchMatrixData: vi.fn(),
   fetchTimeSeriesPivot: vi.fn(),
   fetchPivotData: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
@@ -28,6 +29,7 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
   createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
   createFetchBarsDataUseCase: () => ({ execute: mocks.fetchBarsData }),
+  createFetchMatrixDataUseCase: () => ({ execute: mocks.fetchMatrixData }),
   createFetchTimeSeriesPivotUseCase: () => ({
     execute: mocks.fetchTimeSeriesPivot,
   }),

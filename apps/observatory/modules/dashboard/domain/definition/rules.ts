@@ -40,6 +40,7 @@ function currencyViolations(
       case SectionKind.CALENDAR_HEATMAP:
       case SectionKind.TIME_SERIES:
       case SectionKind.BARS:
+      case SectionKind.MATRIX_HEATMAP:
       case SectionKind.PIVOT_TABLE:
         return section.format.type === 'currency'
           ? [
@@ -505,6 +506,58 @@ function calendarRangeViolations(
   });
 }
 
+function matrixHeatmapViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) => {
+    if (section.kind !== SectionKind.MATRIX_HEATMAP) return [];
+    const { rows, columns } = section;
+    const sameAxis =
+      rows.axis === columns.axis &&
+      (rows.axis !== 'category' ||
+        columns.axis !== 'category' ||
+        rows.column === columns.column);
+    const hasHourAxis = rows.axis === 'hour' || columns.axis === 'hour';
+    const hasDateAxis = rows.axis === 'date' || columns.axis === 'date';
+    const lacksHourBinding =
+      typeof section.source.time === 'string' ||
+      !('date' in section.source.time);
+    return [
+      ...(sameAxis
+        ? [
+            {
+              path: ['sections', index, 'columns'],
+              message: 'A matrix heatmap requires two different axes',
+            },
+          ]
+        : []),
+      ...(hasHourAxis && lacksHourBinding
+        ? [
+            {
+              path: ['sections', index, 'source', 'time'],
+              message: HOUR_BINDING_MESSAGE,
+            },
+          ]
+        : []),
+      ...(section.window !== undefined && !hasDateAxis
+        ? [
+            {
+              path: ['sections', index, 'window'],
+              message: 'window counts trailing days and requires a date axis',
+            },
+          ]
+        : []),
+      ...(section.maximum !== undefined &&
+      (section.minimum ?? 0) >= section.maximum
+        ? [
+            {
+              path: ['sections', index, 'maximum'],
+              message: 'A matrix heatmap requires maximum above minimum',
+            },
+          ]
+        : []),
+    ];
+  });
+}
+
 function historySettingViolations(
   section: DashboardDefinition['sections'][number]
 ) {
@@ -689,6 +742,7 @@ export function validateDefinitionRules(
     barsSumViolations(definition),
     pivotTableViolations(definition),
     controlDeclarationViolations(definition),
-    sectionControlViolations(definition)
+    sectionControlViolations(definition),
+    matrixHeatmapViolations(definition)
   );
 }

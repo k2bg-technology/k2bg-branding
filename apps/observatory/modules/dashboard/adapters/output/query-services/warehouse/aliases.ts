@@ -18,4 +18,6 @@ export const SORT_KEY_ALIAS = 'sort_key';
 export const SORT_KEY_DISTINCT_COUNT_ALIAS = 'sort_key_distinct_count';
 export const ROW_KEY_ALIAS = 'row_key';
 export const COLUMN_KEY_ALIAS = 'column_key';
+export const ROW_RANK_ALIAS = 'row_rank';
+export const COLUMN_RANK_ALIAS = 'column_rank';
 export const CELL_LIMIT_PARAMETER = 'cell_limit';

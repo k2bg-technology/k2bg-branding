@@ -4,6 +4,7 @@ import type {
   CalendarHeatmapSection,
   ControlSelections,
   DashboardDefinition,
+  MatrixHeatmapSection,
   Period,
   PivotTableSection,
   Section,
@@ -22,11 +23,13 @@ import {
 import type {
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchMatrixDataInput,
   FetchPivotDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   FetchTimeSeriesPivotInput,
   GroupedValues,
+  MatrixData,
   PivotBuckets,
   PivotCells,
   ResolveSectionGateInput,
@@ -35,6 +38,7 @@ import type {
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { type BarsChartInput, barsChart } from './barsChart';
+import { type MatrixGridInput, matrixGrid } from './matrixGrid';
 import { type PivotTableInput, pivotTable } from './pivotTable';
 
 interface Input {
@@ -47,6 +51,7 @@ interface Input {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchMatrixData: (input: FetchMatrixDataInput) => Promise<MatrixData | null>;
   fetchTimeSeriesPivot: (
     input: FetchTimeSeriesPivotInput
   ) => Promise<PivotBuckets | null>;
@@ -94,6 +99,14 @@ export type SectionState =
     }
   | {
       status: 'ready';
+      kind: 'matrix-heatmap';
+      section: MatrixHeatmapSection;
+      grid: MatrixGridInput;
+      period: Period;
+    }
+  | { status: 'too-large' }
+  | {
+      status: 'ready';
       kind: 'pivot-table';
       section: PivotTableSection;
       table: PivotTableInput;
@@ -111,6 +124,7 @@ export async function loadSectionState({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchMatrixData,
   fetchTimeSeriesPivot,
   fetchPivotData,
   page,
@@ -260,6 +274,23 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           chart: barsChart(section, data, period, dashboard),
+          period,
+        };
+      }
+      case SectionKind.MATRIX_HEATMAP: {
+        const data = await fetchMatrixData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        if (data.status === 'too-large') return { status: 'too-large' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          grid: matrixGrid(section, data, period, dashboard),
           period,
         };
       }
