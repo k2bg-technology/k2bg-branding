@@ -88,7 +88,7 @@ async function withDefinitionDirectory(
 }
 
 describe('FileSystemDefinitionSource', () => {
-  it('loads the sample fixture with both table kinds, calendar ranges, and labels', async () => {
+  it('loads the sample fixture with both table kinds, calendar ranges, matrix axes, and labels', async () => {
     await withDefinitionDirectory(
       { 'sample.json': sampleDashboard },
       async (directory) => {
@@ -120,6 +120,33 @@ describe('FileSystemDefinitionSource', () => {
             range: 'calendar-year',
             maximum: 40,
           },
+          {
+            id: 'daily-peak-availability',
+            kind: 'calendar-heatmap',
+            availability: { minimumBuckets: 30 },
+            readiness: { column: 'is_complete' },
+          },
+        ]);
+        expect(
+          result.definitions[0].sections.filter(
+            (section) => section.kind === 'matrix-heatmap'
+          )
+        ).toMatchObject([
+          {
+            id: 'hourly-readings',
+            rows: { axis: 'hour' },
+            columns: { axis: 'date' },
+            value: { reduction: 'average' },
+            minimum: 10,
+            maximum: 35,
+          },
+          {
+            id: 'daily-category-totals',
+            rows: { axis: 'category', column: 'category' },
+            columns: { axis: 'date' },
+            window: 84,
+            value: { reduction: 'sum' },
+          },
         ]);
         expect(
           result.definitions[0].sections.filter((section) =>
@@ -146,7 +173,65 @@ describe('FileSystemDefinitionSource', () => {
           asOf: 'Latest date',
           notReady: 'The latest day is still being processed',
           applyControls: 'Apply filters',
+          controlOptionsUnavailable: 'Codes could not be loaded',
+          tooManySeries: 'Too many categories for one chart',
+          cellBudgetExceeded:
+            'Too many cells to show. Narrow the filters or shorten the window.',
         });
+        expect(
+          result.definitions[0].sections.filter((section) =>
+            [
+              'category-series',
+              'temperature-range',
+              'latest-day-by-room',
+            ].includes(section.id)
+          )
+        ).toMatchObject([
+          {
+            id: 'category-series',
+            pivot: { topN: { count: 4 }, interpolation: 'step' },
+          },
+          {
+            id: 'temperature-range',
+            series: [
+              { column: 'temperature' },
+              {
+                low: 'temperature_low',
+                high: 'temperature_high',
+                reduction: 'average',
+              },
+              { interpolation: 'step' },
+            ],
+            thresholds: [{ value: 28, label: 'Too warm' }],
+            bands: [{ from: 18, to: 24 }],
+          },
+          {
+            id: 'latest-day-by-room',
+            period: 'latest',
+            grain: 'hour',
+            pivot: { column: 'room' },
+          },
+        ]);
+        expect(
+          result.definitions[0].sections.filter(
+            (section) => section.kind === 'pivot-table'
+          )
+        ).toMatchObject([
+          {
+            id: 'category-pivot',
+            rows: { order: 'total-desc', topN: { count: 5 } },
+            columns: { axis: 'time', window: 12 },
+            value: { reduction: 'sum', transform: 'absolute' },
+            totals: { column: 'Total', row: 'All categories' },
+          },
+          {
+            id: 'category-by-weekday',
+            controls: ['category'],
+            rows: { order: 'as-provided' },
+            columns: { axis: 'category', column: 'weekday_name' },
+            value: { reduction: 'average' },
+          },
+        ]);
         expect(result.definitions[0].controls).toEqual([
           {
             id: 'category',
@@ -155,28 +240,86 @@ describe('FileSystemDefinitionSource', () => {
             options: ['reporting', 'operations'],
             allLabel: 'All categories',
           },
+          {
+            id: 'code',
+            label: 'Code',
+            column: 'code',
+            options: 'distinct',
+            source: {
+              dataset: 'sample_dataset',
+              view: 'entries',
+              time: { column: 'recorded_at', type: 'timestamp' },
+            },
+            order: 'value-desc',
+            value: {
+              column: 'amount',
+              reduction: 'sum',
+              transform: 'absolute',
+            },
+            allLabel: 'All codes',
+          },
         ]);
-        expect(result.definitions[0].sections[1].controls).toEqual([
-          'category',
-        ]);
+        expect(
+          result.definitions[0].sections.find(
+            (section) => section.id === 'monthly-trend'
+          )?.controls
+        ).toEqual(['category']);
+        expect(
+          result.definitions[0].sections.find(
+            (section) => section.id === 'weekday-totals'
+          )?.controls
+        ).toEqual(['code']);
       }
     );
   });
 
   it.each([
-    { name: 'empty options', options: [], path: 'controls[0].options' },
+    {
+      name: 'empty options',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: [],
+      },
+      path: 'controls[0].options',
+    },
     {
       name: 'blank option',
-      options: ['', 'food'],
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: ['', 'food'],
+      },
       path: 'controls[0].options[0]',
     },
-  ])('rejects $name at its JSON path', async ({ options, path }) => {
+    {
+      name: 'order on a fixed list',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: ['food'],
+        order: 'value-desc',
+      },
+      path: 'controls[0]',
+    },
+    {
+      name: 'distinct without order',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+      },
+      path: 'controls[0].order',
+    },
+  ])('rejects $name at its JSON path', async ({ control, path }) => {
     await withDefinitionDirectory(
       {
         'invalid.json': createDefinition({
-          controls: [
-            { id: 'category', label: 'Category', column: 'category', options },
-          ],
+          controls: [control],
           sections: [createSection({ controls: ['category'] })],
         }),
       },
@@ -1030,6 +1173,73 @@ describe('composition definitions', () => {
   });
 });
 
+describe('time-series series schema', () => {
+  it.each([
+    {
+      section: createTimeSeries({ series: [{ label: 'Range', low: 'low' }] }),
+      path: 'sections[0].series[0].high',
+    },
+    {
+      section: createTimeSeries({
+        series: [{ label: 'Value', column: 'value', interpolation: 'natural' }],
+      }),
+      path: 'sections[0].series[0].interpolation',
+    },
+    {
+      section: createTimeSeries({
+        series: [{ label: 'Value', column: 'value', low: 'low', high: 'high' }],
+      }),
+      path: 'sections[0].series[0]',
+    },
+    {
+      section: createTimeSeries({ bands: [{ from: 24, to: 18 }] }),
+      path: 'sections[0].bands[0].from',
+    },
+    {
+      section: createTimeSeries({ thresholds: [{ value: 'high' }] }),
+      path: 'sections[0].thresholds[0].value',
+    },
+    {
+      section: createTimeSeries({
+        series: undefined,
+        pivot: {
+          column: 'category',
+          value: { column: 'value' },
+          topN: { count: 12, otherLabel: 'Other' },
+        },
+      }),
+      path: 'sections[0].pivot.topN.count',
+    },
+    {
+      section: createTimeSeries({
+        series: undefined,
+        pivot: {
+          column: 'category',
+          value: { column: 'value' },
+          interpolation: 'natural',
+        },
+      }),
+      path: 'sections[0].pivot.interpolation',
+    },
+    {
+      section: createTimeSeries({ thresholds: [] }),
+      path: 'sections[0].thresholds',
+    },
+  ])('rejects invalid shape at $path', async ({ section, path }) => {
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+        const result = await sut.load();
+        expect(result.definitions).toEqual([]);
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({ fileName: 'invalid.json', path })
+        );
+      }
+    );
+  });
+});
+
 describe('bars schema', () => {
   const createBars = (overrides: Record<string, unknown> = {}) => ({
     id: 'bars',
@@ -1125,7 +1335,12 @@ describe('bars schema', () => {
           loaded.definitions[0].sections
             .filter((section) => section.kind === 'bars')
             .map((section) => section.id)
-        ).toEqual(['category-trend', 'category-ranking', 'weekday-totals']);
+        ).toEqual([
+          'category-trend',
+          'category-ranking',
+          'weekday-totals',
+          'latest-day-categories',
+        ]);
         expect(loaded.definitions[0].labels?.nullCategory).toBe('No category');
       }
     );
@@ -1298,5 +1513,138 @@ describe('section grain and paired time loading', () => {
           ?.sections[1]
       ).toMatchObject({ grain: 'hour', source: { time: pairedTime } });
     });
+  });
+});
+
+describe('matrix heatmap schema', () => {
+  const createMatrix = (overrides: Record<string, unknown> = {}) => ({
+    id: 'matrix',
+    title: 'Matrix',
+    kind: 'matrix-heatmap',
+    source: {
+      dataset: 'metrics',
+      view: 'readings',
+      time: { date: 'reading_date', hour: 'reading_hour' },
+    },
+    rows: { axis: 'hour' },
+    columns: { axis: 'date' },
+    value: { column: 'value' },
+    format: { type: 'number' },
+    ...overrides,
+  });
+
+  it.each([
+    {
+      name: 'window above 365',
+      override: { window: 366 },
+      path: 'sections[0].window',
+    },
+    {
+      name: 'latest reduction',
+      override: { value: { column: 'value', reduction: 'latest' } },
+      path: 'sections[0].value.reduction',
+    },
+    {
+      name: 'unknown axis',
+      override: { rows: { axis: 'time' } },
+      path: 'sections[0].rows.axis',
+    },
+    {
+      name: 'period gate',
+      override: { period: 'latest' },
+      path: 'sections[0]',
+    },
+  ])(
+    'rejects a matrix heatmap $name at its JSON path',
+    async ({ override, path }) => {
+      await withDefinitionDirectory(
+        {
+          'invalid.json': createDefinition({
+            sections: [createMatrix(override)],
+          }),
+        },
+        async (directory) => {
+          const sut = new FileSystemDefinitionSource(directory);
+
+          const result = await sut.load();
+
+          expect(result.definitions).toEqual([]);
+          expect(result.issues).toContainEqual(
+            expect.objectContaining({ fileName: 'invalid.json', path })
+          );
+        }
+      );
+    }
+  );
+});
+
+describe('pivot table schema', () => {
+  const createPivot = (overrides: Record<string, unknown> = {}) => ({
+    id: 'pivot',
+    title: 'Pivot',
+    kind: 'pivot-table',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    rows: {
+      column: 'category',
+      label: 'Category',
+      order: { sortKey: { column: 'weekday_number', type: 'number' } },
+    },
+    columns: { axis: 'category', column: 'weekday_name' },
+    value: { column: 'amount' },
+    format: { type: 'number' },
+    ...overrides,
+  });
+
+  it('loads a pivot table ordered by a sort key', async () => {
+    await withDefinitionDirectory(
+      { 'pivot.json': createDefinition({ sections: [createPivot()] }) },
+      async (directory) => {
+        const sut = await new FileSystemDefinitionSource(directory).load();
+        const section = sut.definitions[0].sections.find(
+          (candidate) => candidate.id === 'pivot'
+        );
+
+        expect(sut.issues).toEqual([]);
+        expect(section?.kind).toBe('pivot-table');
+        if (section?.kind !== 'pivot-table') throw new Error('Expected pivot');
+        expect(section.rows.order).toEqual({
+          sortKey: { column: 'weekday_number', type: 'number' },
+        });
+        expect(section.value.reduction).toBe('sum');
+      }
+    );
+  });
+
+  it.each([
+    { name: 'empty totals', patch: { totals: {} }, path: 'sections[0].totals' },
+    {
+      name: 'window above 120',
+      patch: { columns: { axis: 'time', window: 121 } },
+      path: 'sections[0].columns.window',
+    },
+    {
+      name: 'hour columns',
+      patch: { columns: { axis: 'time', grain: 'hour', window: 24 } },
+      path: 'sections[0].columns.grain',
+    },
+    {
+      name: 'bars order value',
+      patch: {
+        rows: { column: 'category', label: 'Category', order: 'value-desc' },
+      },
+      path: 'sections[0].rows.order',
+    },
+  ])('rejects $name at its JSON path', async ({ patch, path }) => {
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [createPivot(patch)] }) },
+      async (directory) => {
+        const sut = await new FileSystemDefinitionSource(directory).load();
+
+        expect(sut.definitions).toHaveLength(0);
+        expect(sut.issues).toContainEqual(
+          expect.objectContaining({ fileName: 'invalid.json', path })
+        );
+      }
+    );
   });
 });

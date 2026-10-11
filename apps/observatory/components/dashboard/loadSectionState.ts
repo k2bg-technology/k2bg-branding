@@ -5,22 +5,37 @@ import type {
   ControlSelections,
   DashboardDefinition,
   DonutSection,
+  MatrixHeatmapSection,
   Period,
+  PivotTableSection,
   Section,
+  SeriesSlot,
   StatTilesSection,
   TableSection,
   TimeSeriesSection,
   TreemapSection,
 } from '../../modules/dashboard/domain';
-import { SectionKind } from '../../modules/dashboard/domain';
+import {
+  DEFAULT_DASHBOARD_LABELS,
+  layoutWideSeries,
+  MAXIMUM_PIVOT_SERIES,
+  SectionKind,
+  widenPivot,
+} from '../../modules/dashboard/domain';
 import type {
   CompositionData,
   DashboardPeriodResolution,
   FetchBarsDataInput,
   FetchCompositionDataInput,
+  FetchMatrixDataInput,
+  FetchPivotDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
+  FetchTimeSeriesPivotInput,
   GroupedValues,
+  MatrixData,
+  PivotBuckets,
+  PivotCells,
   ResolveSectionGateInput,
   SectionData,
   SectionGate,
@@ -33,6 +48,8 @@ import {
   type TreemapChartInput,
   treemapChart,
 } from './compositionChart';
+import { type MatrixGridInput, matrixGrid } from './matrixGrid';
+import { type PivotTableInput, pivotTable } from './pivotTable';
 
 interface Input {
   dashboard: DashboardDefinition;
@@ -47,6 +64,11 @@ interface Input {
   fetchCompositionData: (
     input: FetchCompositionDataInput
   ) => Promise<CompositionData | null>;
+  fetchMatrixData: (input: FetchMatrixDataInput) => Promise<MatrixData | null>;
+  fetchTimeSeriesPivot: (
+    input: FetchTimeSeriesPivotInput
+  ) => Promise<PivotBuckets | null>;
+  fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
   page: number;
   selections: ControlSelections;
 }
@@ -64,6 +86,7 @@ export type SectionState =
       kind: 'time-series';
       section: TimeSeriesSection;
       data: SectionData;
+      slots: SeriesSlot[];
       period: Period;
     }
   | {
@@ -102,7 +125,23 @@ export type SectionState =
       period: Period;
     }
   | { status: 'negative' }
+  | {
+      status: 'ready';
+      kind: 'matrix-heatmap';
+      section: MatrixHeatmapSection;
+      grid: MatrixGridInput;
+      period: Period;
+    }
+  | { status: 'too-large' }
+  | {
+      status: 'ready';
+      kind: 'pivot-table';
+      section: PivotTableSection;
+      table: PivotTableInput;
+      period: Period;
+    }
   | Exclude<SectionGate, { status: 'open' }>
+  | { status: 'too-many-series'; count: number; maximum: number }
   | { status: 'unavailable' };
 
 export async function loadSectionState({
@@ -114,6 +153,9 @@ export async function loadSectionState({
   fetchTableRows,
   fetchBarsData,
   fetchCompositionData,
+  fetchMatrixData,
+  fetchTimeSeriesPivot,
+  fetchPivotData,
   page,
   selections,
 }: Input): Promise<SectionState> {
@@ -155,23 +197,52 @@ export async function loadSectionState({
         };
       }
       case SectionKind.TIME_SERIES: {
-        const data = await fetchSectionData({
+        if (section.pivot === undefined) {
+          if (section.series === undefined)
+            throw new Error('A time-series section requires series or pivot');
+          const data = await fetchSectionData({
+            dashboard,
+            section,
+            period,
+            selections,
+          });
+          if (data === null || data.buckets.length === 0)
+            return { status: 'empty' };
+          return {
+            status: 'ready',
+            kind: section.kind,
+            section,
+            data,
+            slots: layoutWideSeries(section.series).slots,
+            period,
+          };
+        }
+        const data = await fetchTimeSeriesPivot({
           dashboard,
           section,
           period,
           selections,
         });
-        if (data === null) {
-          return { status: 'empty' };
-        }
-        if (data.buckets.length === 0) {
-          return { status: 'empty' };
-        }
+        if (data === null) return { status: 'empty' };
+        const widened = widenPivot(
+          data.buckets,
+          { topN: section.pivot.topN ?? null, maximum: MAXIMUM_PIVOT_SERIES },
+          { ...DEFAULT_DASHBOARD_LABELS, ...dashboard.labels },
+          { sectionId: section.id }
+        );
+        if (widened.status === 'too-many-series') return widened;
+        const interpolation = section.pivot.interpolation;
         return {
           status: 'ready',
           kind: section.kind,
           section,
-          data,
+          data: { buckets: widened.buckets, truncated: data.truncated },
+          slots: widened.series.map((series, index) => ({
+            kind: 'line',
+            ...series,
+            interpolation,
+            valueIndex: index,
+          })),
           period,
         };
       }
@@ -225,6 +296,7 @@ export async function loadSectionState({
           dashboard,
           section,
           period,
+          selections,
         });
         if (data === null) return { status: 'empty' };
         return {
@@ -268,6 +340,39 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           chart: result.chart,
+          period,
+        };
+      }
+      case SectionKind.MATRIX_HEATMAP: {
+        const data = await fetchMatrixData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        if (data.status === 'too-large') return { status: 'too-large' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          grid: matrixGrid(section, data, period, dashboard),
+          period,
+        };
+      }
+      case SectionKind.PIVOT_TABLE: {
+        const data = await fetchPivotData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          table: pivotTable(section, data, period, dashboard),
           period,
         };
       }

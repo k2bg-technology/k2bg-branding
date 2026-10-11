@@ -15,6 +15,9 @@ export interface DashboardLabels {
   applyControls: string;
   negativeComposition: string;
   share: string;
+  controlOptionsUnavailable: string;
+  tooManySeries: string;
+  cellBudgetExceeded: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -34,6 +37,10 @@ export const DEFAULT_DASHBOARD_LABELS = {
   applyControls: 'Apply',
   negativeComposition: 'Negative values cannot be shown as parts of a whole',
   share: 'Share',
+  controlOptionsUnavailable: 'Options could not be loaded',
+  tooManySeries: 'Too many series to show',
+  cellBudgetExceeded:
+    'Too many cells to show. Narrow the section with a filter, a shorter window, or top-N.',
 };
 
 export const DEFAULT_CONTROL_ALL_LABEL = 'All';

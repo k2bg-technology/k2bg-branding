@@ -6,6 +6,7 @@ import { categoryLabels } from './categoryLabels';
 import type { CategoryItem } from './categoryValue';
 import { orderCategories } from './orderCategories';
 import { selectTopN } from './selectTopN';
+import { widenPivot } from './widenPivot';
 
 const items: CategoryItem[] = [
   { category: 'A', rank: 10, values: [10, 1], sortKey: 2 },
@@ -13,6 +14,132 @@ const items: CategoryItem[] = [
   { category: 'C', rank: 3, values: [3, 2], sortKey: 3 },
   { category: 'D', rank: null, values: [null, 4], sortKey: null },
 ];
+
+describe('widenPivot', () => {
+  const buckets = [
+    {
+      period: '2026-01',
+      cells: [
+        { category: 'food', values: [10] },
+        { category: 'rent', values: [20] },
+      ],
+    },
+    { period: '2026-03', cells: [{ category: 'food', values: [5] }] },
+  ];
+  const labels = { nullCategory: 'None' };
+  const context = { sectionId: 'trend' };
+
+  it.each([
+    {
+      topN: { count: 1, otherLabel: 'Other' },
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'remainder', label: 'Other' },
+      ],
+    },
+    {
+      topN: null,
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'category-1', label: 'food' },
+      ],
+    },
+    {
+      topN: { count: 5, otherLabel: 'Other' },
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'category-1', label: 'food' },
+      ],
+    },
+  ])('orders and folds categories for $topN', ({ topN, series }) => {
+    expect(widenPivot(buckets, { topN, maximum: 12 }, labels, context)).toEqual(
+      {
+        status: 'ready',
+        series,
+        buckets: [
+          { period: '2026-01', values: [20, 10] },
+          { period: '2026-03', values: [null, 5] },
+        ],
+      }
+    );
+  });
+
+  it('reports thirteen categories without topN and keeps twelve', () => {
+    const cells = Array.from({ length: 13 }, (_, index) => ({
+      category: `c${String(index + 1).padStart(2, '0')}`,
+      values: [1],
+    }));
+    expect(
+      widenPivot(
+        [{ period: '2026-01', cells }],
+        { topN: null, maximum: 12 },
+        labels,
+        context
+      )
+    ).toEqual({
+      status: 'too-many-series',
+      count: 13,
+      maximum: 12,
+    });
+    const twelve = widenPivot(
+      [{ period: '2026-01', cells: cells.slice(0, 12) }],
+      { topN: null, maximum: 12 },
+      labels,
+      context
+    );
+    expect(twelve.status).toBe('ready');
+    if (twelve.status === 'ready') expect(twelve.series).toHaveLength(12);
+    const folded = widenPivot(
+      [{ period: '2026-01', cells }],
+      { topN: { count: 2, otherLabel: 'Other' }, maximum: 12 },
+      labels,
+      context
+    );
+    expect(folded.status).toBe('ready');
+    if (folded.status === 'ready')
+      expect(folded.series.map(({ id }) => id)).toEqual([
+        'category-0',
+        'category-1',
+        'remainder',
+      ]);
+  });
+
+  it('labels null and rejects a folded category with the remainder name', () => {
+    const named = widenPivot(
+      [
+        {
+          period: '2026-01',
+          cells: [
+            { category: null, values: [20] },
+            { category: 'food', values: [10] },
+          ],
+        },
+      ],
+      { topN: null, maximum: 12 },
+      labels,
+      context
+    );
+    expect(named.status).toBe('ready');
+    if (named.status === 'ready')
+      expect(named.series.map(({ label }) => label)).toEqual(['None', 'food']);
+    expect(() =>
+      widenPivot(
+        [
+          {
+            period: '2026-01',
+            cells: [
+              { category: 'food', values: [20] },
+              { category: 'Other', values: [10] },
+            ],
+          },
+        ],
+        { topN: { count: 1, otherLabel: 'Other' }, maximum: 12 },
+        labels,
+        context
+      )
+    ).toThrow(DuplicateCategoryLabelError);
+  });
+});
 
 describe('category presentation', () => {
   it('keeps the largest categories and folds every other value into a last remainder', () => {

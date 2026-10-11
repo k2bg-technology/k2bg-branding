@@ -57,6 +57,7 @@ describe('loadSectionState bars ranking', () => {
       resolveSectionGate: async () => ({ status: 'open', period }),
       fetchSectionData: async () => null,
       fetchTableRows: async () => null,
+      fetchMatrixData: async () => null,
       fetchBarsData: async () => ({
         grouping: 'category',
         groups: [
@@ -65,6 +66,8 @@ describe('loadSectionState bars ranking', () => {
         ],
       }),
       fetchCompositionData: async () => null,
+      fetchTimeSeriesPivot: async () => null,
+      fetchPivotData: async () => null,
       page: 1,
       selections: {},
     });

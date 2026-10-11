@@ -3,13 +3,18 @@ import { Suspense } from 'react';
 import { DashboardControls } from '../../../components/dashboard/DashboardControls';
 import { DashboardPeriodNavigation } from '../../../components/dashboard/DashboardPeriodNavigation';
 import { DashboardSection } from '../../../components/dashboard/DashboardSection';
+import { loadControlOptions } from '../../../components/dashboard/loadControlOptions';
 import { SectionSkeleton } from '../../../components/dashboard/SectionSkeleton';
 import {
   createFetchBarsDataUseCase,
   createFetchCompositionDataUseCase,
+  createFetchMatrixDataUseCase,
+  createFetchPivotDataUseCase,
   createFetchSectionDataUseCase,
   createFetchTableRowsUseCase,
+  createFetchTimeSeriesPivotUseCase,
   createLoadDashboardsUseCase,
+  createResolveControlOptionsUseCase,
   createResolveDashboardPeriodUseCase,
   createResolveSectionGateUseCase,
 } from '../../../infrastructure/di/dashboard';
@@ -57,7 +62,12 @@ export default async function Page({ params, searchParams }: Props) {
   if (dashboard === undefined) {
     notFound();
   }
-  const parsed = parseUrlState(await searchParams, dashboard);
+  const controlOptions = await loadControlOptions({
+    dashboard,
+    resolveControlOptions: (input) =>
+      createResolveControlOptionsUseCase().execute(input),
+  });
+  const parsed = parseUrlState(await searchParams, dashboard, controlOptions);
   if (!parsed.valid) {
     notFound();
   }
@@ -78,7 +88,11 @@ export default async function Page({ params, searchParams }: Props) {
             periodResolution={periodResolution}
           />
         </Suspense>
-        <DashboardControls dashboard={dashboard} state={parsed.state} />
+        <DashboardControls
+          dashboard={dashboard}
+          state={parsed.state}
+          controlOptions={controlOptions}
+        />
       </header>
       <div className="grid grid-cols-1 gap-spacious lg:grid-cols-6">
         {dashboard.sections.map((section) => (
@@ -107,6 +121,15 @@ export default async function Page({ params, searchParams }: Props) {
                 }
                 fetchCompositionData={(input) =>
                   createFetchCompositionDataUseCase().execute(input)
+                }
+                fetchMatrixData={(input) =>
+                  createFetchMatrixDataUseCase().execute(input)
+                }
+                fetchTimeSeriesPivot={(input) =>
+                  createFetchTimeSeriesPivotUseCase().execute(input)
+                }
+                fetchPivotData={(input) =>
+                  createFetchPivotDataUseCase().execute(input)
                 }
                 urlState={parsed.state}
               />

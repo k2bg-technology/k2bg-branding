@@ -8,6 +8,8 @@ export const SectionKind = {
   CALENDAR_HEATMAP: 'calendar-heatmap',
   DONUT: 'donut',
   TREEMAP: 'treemap',
+  MATRIX_HEATMAP: 'matrix-heatmap',
+  PIVOT_TABLE: 'pivot-table',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
 
@@ -19,6 +21,7 @@ export const Reduction = {
   LATEST: 'latest',
 } as const;
 export type Reduction = (typeof Reduction)[keyof typeof Reduction];
+export type AggregateReduction = Exclude<Reduction, typeof Reduction.LATEST>;
 
 export const SectionWidth = {
   FULL: 'full',
@@ -99,13 +102,24 @@ export interface SourceDefinition {
   filters?: SourceFilter[];
 }
 
-export interface ControlDefinition {
+interface ControlDefinitionBase {
   id: string;
   label: string;
   column: string;
-  options: string[];
   allLabel?: string;
 }
+export interface FixedListControlDefinition extends ControlDefinitionBase {
+  options: string[];
+}
+export interface DistinctControlDefinition extends ControlDefinitionBase {
+  options: 'distinct';
+  source?: SourceDefinition;
+  order: CategoryOrder;
+  value?: ValueBinding;
+}
+export type ControlDefinition =
+  | FixedListControlDefinition
+  | DistinctControlDefinition;
 
 export interface StatTileDefinition {
   label: string;
@@ -146,6 +160,35 @@ export interface StatTilesSection extends SectionGateFields {
   tiles: StatTileDefinition[];
 }
 
+export type SeriesInterpolation = 'linear' | 'step';
+
+export interface LineSeriesDefinition {
+  label: string;
+  column: string;
+  reduction: Reduction;
+  transform?: ValueTransform;
+  interpolation?: SeriesInterpolation;
+}
+
+export interface BandSeriesDefinition {
+  label: string;
+  low: string;
+  high: string;
+  reduction: Reduction;
+  interpolation?: SeriesInterpolation;
+}
+
+export type TimeSeriesSeriesDefinition =
+  | LineSeriesDefinition
+  | BandSeriesDefinition;
+
+export interface TimeSeriesPivot {
+  column: string;
+  value: ValueBinding;
+  topN?: TopN;
+  interpolation?: SeriesInterpolation;
+}
+
 export interface TimeSeriesSection extends SectionGateFields {
   id: string;
   title: string;
@@ -159,12 +202,10 @@ export interface TimeSeriesSection extends SectionGateFields {
   stacked: boolean;
   format: ValueFormat;
   unit?: string;
-  series: {
-    label: string;
-    column: string;
-    reduction: Reduction;
-    transform?: ValueTransform;
-  }[];
+  series?: TimeSeriesSeriesDefinition[];
+  pivot?: TimeSeriesPivot;
+  thresholds?: { value: number; label?: string }[];
+  bands?: { from: number; to: number }[];
 }
 
 export interface CalendarHeatmapSection extends SectionGateFields {
@@ -271,6 +312,55 @@ export interface TreemapSection extends SectionGateFields {
 }
 
 export type CompositionSection = DonutSection | TreemapSection;
+export type MatrixAxis =
+  | { axis: 'date' }
+  | { axis: 'hour' }
+  | { axis: 'category'; column: string };
+
+export interface MatrixHeatmapSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.MATRIX_HEATMAP;
+  width?: SectionWidth;
+  controls?: string[];
+  rows: MatrixAxis;
+  columns: MatrixAxis;
+  window?: number;
+  value: {
+    column: string;
+    reduction: AggregateReduction;
+    transform?: ValueTransform;
+  };
+  format: ValueFormat;
+  unit?: string;
+  minimum?: number;
+  maximum?: number;
+  scaleLabels?: { less: string; more: string };
+}
+
+export type PivotRowOrder =
+  | 'total-desc'
+  | 'as-provided'
+  | { sortKey: { column: string; type: SortKeyType } };
+export type PivotColumns =
+  | { axis: 'time'; grain?: PeriodGrain; window?: number }
+  | { axis: 'category'; column: string };
+
+export interface PivotTableSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.PIVOT_TABLE;
+  width?: SectionWidth;
+  controls?: string[];
+  rows: { column: string; label: string; order: PivotRowOrder; topN?: TopN };
+  columns: PivotColumns;
+  value: ValueBinding;
+  format: ValueFormat;
+  unit?: string;
+  totals?: { column?: string; row?: string };
+}
 
 export type AggregatingSection =
   | StatTilesSection
@@ -280,7 +370,9 @@ export type Section =
   | AggregatingSection
   | TableSection
   | BarsSection
-  | CompositionSection;
+  | CompositionSection
+  | MatrixHeatmapSection
+  | PivotTableSection;
 
 export interface DashboardDefinition {
   id: string;
@@ -311,6 +403,9 @@ export interface DashboardDefinition {
     applyControls?: string;
     negativeComposition?: string;
     share?: string;
+    controlOptionsUnavailable?: string;
+    tooManySeries?: string;
+    cellBudgetExceeded?: string;
   };
   sections: Section[];
 }

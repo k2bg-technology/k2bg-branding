@@ -21,12 +21,22 @@
     "missingValue": "No entries",
     "applyControls": "Apply filters",
     "negativeComposition": "Parts below zero cannot be drawn",
-    "share": "Share of total"
+    "share": "Share of total",
+    "controlOptionsUnavailable": "Codes could not be loaded",
+    "tooManySeries": "Too many categories for one chart",
+    "cellBudgetExceeded": "Too many cells to show. Narrow the filters or shorten the window."
   },
   "currency": "JPY",
   "revalidate": 86400,
   "controls": [
-    { "id": "category", "label": "Category", "column": "category", "options": ["reporting", "operations"], "allLabel": "All categories" }
+    { "id": "category", "label": "Category", "column": "category", "options": ["reporting", "operations"], "allLabel": "All categories" },
+    {
+      "id": "code", "label": "Code", "column": "code", "options": "distinct",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "order": "value-desc",
+      "value": { "column": "amount", "reduction": "sum", "transform": "absolute" },
+      "allLabel": "All codes"
+    }
   ],
   "sections": [
     {
@@ -100,6 +110,7 @@
       "id": "entry-details",
       "title": "Entry details",
       "kind": "table",
+      "controls": ["code"],
       "source": {
         "dataset": "sample_dataset",
         "view": "entries",
@@ -199,6 +210,7 @@
       "title": "Total by weekday",
       "kind": "bars",
       "width": "half",
+      "controls": ["code"],
       "source": {
         "dataset": "sample_dataset",
         "view": "entries",
@@ -346,6 +358,116 @@
       "categoryLabel": "Category",
       "value": { "label": "Amount", "column": "amount", "transform": "absolute" },
       "topN": { "count": 2, "otherLabel": "Other categories" },
+      "format": { "type": "currency" }
+    },
+    {
+      "id": "hourly-readings",
+      "title": "Readings by hour",
+      "kind": "matrix-heatmap",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "rows": { "axis": "hour" },
+      "columns": { "axis": "date" },
+      "value": { "column": "temperature", "reduction": "average" },
+      "format": { "type": "number" },
+      "unit": "°C",
+      "minimum": 10,
+      "maximum": 35,
+      "scaleLabels": { "less": "Cooler", "more": "Warmer" }
+    },
+    {
+      "id": "daily-category-totals",
+      "title": "Daily total by category",
+      "kind": "matrix-heatmap",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" },
+        "filters": [{ "column": "category", "operator": "not-equals", "value": "transfer" }]
+      },
+      "rows": { "axis": "category", "column": "category" },
+      "columns": { "axis": "date" },
+      "window": 84,
+      "value": { "column": "amount", "transform": "absolute" },
+      "format": { "type": "currency" }
+    },
+    {
+      "id": "category-series", "title": "Monthly amount by category", "kind": "time-series",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" },
+                  "filters": [{ "column": "category", "operator": "not-equals", "value": "transfer" }] },
+      "window": 12, "variant": "area", "stacked": true, "format": { "type": "currency" },
+      "pivot": { "column": "category",
+                 "value": { "column": "amount", "reduction": "sum", "transform": "absolute" },
+                 "topN": { "count": 4, "otherLabel": "Other categories" },
+                 "interpolation": "step" }
+    },
+    {
+      "id": "temperature-range", "title": "Daily temperature and comfort range", "kind": "time-series", "grain": "day",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "variant": "line", "stacked": false, "format": { "type": "number" }, "unit": "°C",
+      "series": [
+        { "label": "Temperature", "column": "temperature", "reduction": "average" },
+        { "label": "Typical range", "low": "temperature_low", "high": "temperature_high", "reduction": "average" },
+        { "label": "Heating", "column": "is_heating", "reduction": "maximum", "interpolation": "step" }
+      ],
+      "thresholds": [{ "value": 28, "label": "Too warm" }],
+      "bands": [{ "from": 18, "to": 24 }]
+    },
+    {
+      "id": "latest-day-by-room", "title": "Latest day by room", "kind": "time-series", "period": "latest", "grain": "hour", "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "variant": "line", "stacked": false, "format": { "type": "number" }, "unit": "°C",
+      "pivot": { "column": "room", "value": { "column": "temperature", "reduction": "average" } }
+    },
+    {
+      "id": "latest-day-categories", "title": "Latest day by category", "kind": "bars", "period": "latest", "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "x": { "axis": "category", "column": "category", "order": "value-desc" },
+      "series": [{ "label": "Amount", "column": "amount", "reduction": "sum", "transform": "absolute" }],
+      "format": { "type": "currency" }
+    },
+    {
+      "id": "daily-peak-availability", "title": "Daily peak reading, 91 days", "kind": "calendar-heatmap",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "window": 91,
+      "availability": { "since": "2026-04-01", "minimumBuckets": 30, "note": "A month of readings is needed before the pattern is meaningful." },
+      "readiness": { "column": "is_complete" },
+      "value": { "column": "temperature", "reduction": "maximum" }, "format": { "type": "number" }, "unit": "°C"
+    },
+    {
+      "id": "category-pivot",
+      "title": "Monthly amount by category",
+      "kind": "pivot-table",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" },
+        "filters": [
+          { "column": "category", "operator": "not-equals", "value": "transfer" }
+        ]
+      },
+      "rows": {
+        "column": "category",
+        "label": "Category",
+        "topN": { "count": 5, "otherLabel": "Other categories" }
+      },
+      "columns": { "axis": "time", "window": 12 },
+      "value": { "column": "amount", "transform": "absolute" },
+      "format": { "type": "currency" },
+      "totals": { "column": "Total", "row": "All categories" }
+    },
+    {
+      "id": "category-by-weekday",
+      "title": "Average entry by category and weekday",
+      "kind": "pivot-table",
+      "controls": ["category"],
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" }
+      },
+      "rows": { "column": "category", "label": "Category", "order": "as-provided" },
+      "columns": { "axis": "category", "column": "weekday_name" },
+      "value": { "column": "amount", "reduction": "average" },
       "format": { "type": "currency" }
     }
   ]

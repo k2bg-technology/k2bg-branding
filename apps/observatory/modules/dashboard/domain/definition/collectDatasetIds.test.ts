@@ -52,4 +52,22 @@ describe('collectDatasetIds', () => {
 
     expect(result).toEqual(['calendar', 'metrics']);
   });
+
+  it('includes the dataset of a distinct control source', () => {
+    const definition = createDefinition(['metrics']);
+    definition.controls = [
+      {
+        id: 'region',
+        label: 'Region',
+        column: 'region',
+        options: 'distinct',
+        source: { dataset: 'regions', view: 'entries', time: 'recorded_on' },
+        order: { sortKey: { column: 'region', type: 'text' } },
+      },
+    ];
+
+    const result = collectDatasetIds([definition]);
+
+    expect(result).toEqual(['metrics', 'regions']);
+  });
 });
