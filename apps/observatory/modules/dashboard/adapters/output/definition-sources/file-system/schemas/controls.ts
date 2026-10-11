@@ -5,8 +5,9 @@ import type {
   DistinctControlDefinition,
   FixedListControlDefinition,
 } from '../../../../../domain';
-import { orderSchema, valueBindingSchema } from './bars';
+import { orderSchema } from './bars';
 import { identifierSchema, sectionIdSchema, sourceSchema } from './statTiles';
+import { valueBindingSchema } from './timeSeries';
 
 const controlFields = {
   id: sectionIdSchema,

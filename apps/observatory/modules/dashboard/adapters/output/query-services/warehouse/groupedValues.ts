@@ -25,6 +25,20 @@ import {
   latestValueProjection,
 } from './statTiles';
 
+function bucketKeyExpression(
+  buckets: NonNullable<GroupedValuesPlan['buckets']>,
+  calendarDate: string,
+  validatedHour: string | null
+) {
+  if (buckets.grain !== 'hour') {
+    return periodKeyExpression(buckets.grain, calendarDate);
+  }
+  if (validatedHour === null) {
+    throw new Error('An hour plan requires a date-and-hour binding');
+  }
+  return `FORMAT('%sT%02d', FORMAT_DATE('%F', ${calendarDate}), ${validatedHour})`;
+}
+
 export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
   if (plan.buckets === null && plan.category === null) {
     throw new Error('Grouped values require a period or category key');
@@ -42,7 +56,9 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
   const filteredSelections = [
     ...(plan.buckets === null
       ? []
-      : [`${periodKeyExpression(plan.buckets.grain, calendarDate)} AS period`]),
+      : [
+          `${bucketKeyExpression(plan.buckets, calendarDate, validatedHour)} AS period`,
+        ]),
     ...(plan.category === null
       ? []
       : [
@@ -85,6 +101,11 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
     `WHERE ${calendarDate} >= CAST(@${PERIOD_START_PARAMETER} AS DATE)`,
     `AND ${calendarDate} <= CAST(@${PERIOD_END_PARAMETER} AS DATE)`,
     ...(validatedHour === null ? [] : [`AND ${validatedHour} IS NOT NULL`]),
+    ...(plan.buckets?.grain === 'hour'
+      ? [
+          `AND (${calendarDate} > CAST(@${PERIOD_START_PARAMETER} AS DATE) OR ${validatedHour} >= @first_hour)`,
+        ]
+      : []),
     ...filters.clauses.map((clause) => `AND ${clause}`),
     ...(hasLatest || plan.buckets !== null ? [')' + ','] : [')']),
     ...(hasLatest
@@ -106,6 +127,9 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
     [PERIOD_START_PARAMETER]: plan.dateRange.firstDate,
     [PERIOD_END_PARAMETER]: plan.dateRange.lastDate,
     [TIME_ZONE_PARAMETER]: plan.timeZone,
+    ...(plan.buckets?.grain === 'hour'
+      ? { first_hour: plan.buckets.firstHour }
+      : {}),
     ...filters.params,
     ...(plan.buckets === null
       ? {}

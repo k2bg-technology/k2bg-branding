@@ -7,9 +7,15 @@ import { SectionKind } from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchMatrixDataInput,
+  FetchPivotDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
+  FetchTimeSeriesPivotInput,
   GroupedValues,
+  MatrixData,
+  PivotBuckets,
+  PivotCells,
   ResolveSectionGateInput,
   SectionData,
   SectionGate,
@@ -20,9 +26,13 @@ import { SectionAccumulating } from './SectionAccumulating';
 import { SectionAsOf } from './SectionAsOf';
 import { SectionEmpty } from './SectionEmpty';
 import { SectionNotReady } from './SectionNotReady';
+import { SectionTooLarge } from './SectionTooLarge';
+import { SectionTooManySeries } from './SectionTooManySeries';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
 import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
+import { MatrixHeatmapSection } from './sections/MatrixHeatmapSection';
+import { PivotTableSection } from './sections/PivotTableSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
@@ -37,6 +47,11 @@ interface Props {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchMatrixData: (input: FetchMatrixDataInput) => Promise<MatrixData | null>;
+  fetchTimeSeriesPivot: (
+    input: FetchTimeSeriesPivotInput
+  ) => Promise<PivotBuckets | null>;
+  fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
   urlState: UrlState;
 }
 
@@ -52,6 +67,9 @@ export async function DashboardSection({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchMatrixData,
+  fetchTimeSeriesPivot,
+  fetchPivotData,
   urlState,
 }: Props) {
   const state = await loadSectionState({
@@ -62,6 +80,9 @@ export async function DashboardSection({
     fetchSectionData,
     fetchTableRows,
     fetchBarsData,
+    fetchMatrixData,
+    fetchTimeSeriesPivot,
+    fetchPivotData,
     page: urlState.pages[section.id] ?? 1,
     selections: urlState.controls,
   });
@@ -99,6 +120,7 @@ export async function DashboardSection({
                 dashboard={dashboard}
                 section={state.section}
                 data={state.data}
+                slots={state.slots}
                 period={state.period}
               />
             );
@@ -132,6 +154,24 @@ export async function DashboardSection({
               />
             );
           }
+          if (state.kind === SectionKind.MATRIX_HEATMAP) {
+            return (
+              <MatrixHeatmapSection
+                dashboard={dashboard}
+                section={state.section}
+                grid={state.grid}
+              />
+            );
+          }
+          if (state.kind === SectionKind.PIVOT_TABLE) {
+            return (
+              <PivotTableSection
+                dashboard={dashboard}
+                section={state.section}
+                table={state.table}
+              />
+            );
+          }
           return assertNever(state);
         }
         if (state.status === 'accumulating') {
@@ -147,8 +187,20 @@ export async function DashboardSection({
         if (state.status === 'not-ready') {
           return <SectionNotReady dashboard={dashboard} note={state.note} />;
         }
+        if (state.status === 'too-many-series') {
+          return (
+            <SectionTooManySeries
+              dashboard={dashboard}
+              count={state.count}
+              maximum={state.maximum}
+            />
+          );
+        }
         if (state.status === 'empty') {
           return <SectionEmpty />;
+        }
+        if (state.status === 'too-large') {
+          return <SectionTooLarge dashboard={dashboard} />;
         }
         if (state.status === 'unavailable') {
           return <SectionUnavailable />;

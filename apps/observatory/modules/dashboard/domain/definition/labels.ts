@@ -14,6 +14,8 @@ export interface DashboardLabels {
   missingValue: string;
   applyControls: string;
   controlOptionsUnavailable: string;
+  tooManySeries: string;
+  cellBudgetExceeded: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -32,6 +34,9 @@ export const DEFAULT_DASHBOARD_LABELS = {
   missingValue: 'No data',
   applyControls: 'Apply',
   controlOptionsUnavailable: 'Options could not be loaded',
+  tooManySeries: 'Too many series to show',
+  cellBudgetExceeded:
+    'Too many cells to show. Narrow the section with a filter, a shorter window, or top-N.',
 };
 
 export const DEFAULT_CONTROL_ALL_LABEL = 'All';

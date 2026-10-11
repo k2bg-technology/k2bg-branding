@@ -9,12 +9,19 @@ import type {
   SectionQueryPlan,
   TableQueryPlan,
 } from '../../../../domain';
-import { Period, planBarsSection } from '../../../../domain';
+import {
+  Period,
+  planBarsSection,
+  planMatrixHeatmapSection,
+  planPivotTableSection,
+} from '../../../../domain';
 import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 import { MappingError, RepositoryError } from '../../../shared';
 import { dashboardDefinitionSchema } from '../../definition-sources/file-system/schemas';
 import { WarehouseFetchGroupedValuesQueryService } from './fetchGroupedValuesQueryService';
+import { WarehouseFetchMatrixDataQueryService } from './fetchMatrixDataQueryService';
 import { WarehouseFetchPeriodBoundsQueryService } from './fetchPeriodBoundsQueryService';
+import { WarehouseFetchPivotDataQueryService } from './fetchPivotDataQueryService';
 import { WarehouseFetchSectionDataQueryService } from './fetchSectionDataQueryService';
 import { WarehouseFetchSectionReadinessQueryService } from './fetchSectionReadinessQueryService';
 import { WarehouseFetchTableRowsQueryService } from './fetchTableRowsQueryService';
@@ -77,6 +84,59 @@ describe('WarehouseFetchSectionReadinessQueryService', () => {
       .catch((cause: unknown) => cause);
     expect(error).toBeInstanceOf(MappingError);
     expect(error).toMatchObject({ cause: undefined });
+  });
+});
+
+describe('WarehouseFetchMatrixDataQueryService', () => {
+  const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+  const section = dashboard.sections.find(
+    (candidate) => candidate.id === 'daily-category-totals'
+  );
+  const period = Period.parse('month', '2026-08');
+  if (section?.kind !== 'matrix-heatmap' || period === null) {
+    throw new Error('Expected matrix fixture');
+  }
+  const plan = planMatrixHeatmapSection(section, period, dashboard.timeZone);
+  const options = { name: 'daily-category-totals', revalidate: 86_400 };
+
+  it('maps ranked cells from the matrix query', async () => {
+    const client: WarehouseClient = {
+      query: async ({ sql, params }) =>
+        params?.cell_limit === 2001 &&
+        params?.filter_0 === 'transfer' &&
+        sql.includes('GROUP BY row_group, column_group')
+          ? [
+              {
+                row_key: 'food',
+                row_rank: 1,
+                column_key: '2026-08-31',
+                value_0: 10,
+              },
+            ]
+          : [],
+    };
+    const sut = new WarehouseFetchMatrixDataQueryService(client);
+
+    const result = await sut.fetchMatrixData(plan, options);
+
+    expect(result).toEqual({
+      status: 'ready',
+      rowCategories: ['food'],
+      columnCategories: null,
+      cells: [{ row: 'food', column: '2026-08-31', value: 10 }],
+    });
+  });
+
+  it('wraps a driver failure with its cause', async () => {
+    const cause = new Error('driver failed');
+    const client: WarehouseClient = {
+      query: async () => Promise.reject(cause),
+    };
+    const sut = new WarehouseFetchMatrixDataQueryService(client);
+
+    const result = sut.fetchMatrixData(plan, options);
+
+    await expect(result).rejects.toMatchObject({ cause });
   });
 });
 
@@ -342,5 +402,53 @@ describe('WarehouseFetchGroupedValuesQueryService', () => {
     await expect(
       sut.fetchGroupedValues(plan, { name: 'bars', revalidate: 86_400 })
     ).rejects.toMatchObject({ cause });
+  });
+});
+
+describe('WarehouseFetchPivotDataQueryService', () => {
+  const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+  const section = dashboard.sections.find(
+    (candidate) => candidate.id === 'category-pivot'
+  );
+  if (section?.kind !== 'pivot-table')
+    throw new Error('Expected pivot fixture');
+  const period = Period.parse('month', '2026-08');
+  if (period === null) throw new Error('Expected fixture period');
+  const plan = planPivotTableSection(section, period, dashboard.timeZone);
+  const options = {
+    name: 'dashboard-sample-dashboard-section-category-pivot',
+    revalidate: 86_400,
+  };
+
+  it('returns mapped cells from the limited aggregate query', async () => {
+    const client: WarehouseClient = {
+      query: async (request) =>
+        request.params?.cell_limit === 10_001 &&
+        request.params?.filter_0 === 'transfer' &&
+        request.sql.includes('GROUP BY row_key, column_key')
+          ? [{ row_key: 'food', column_key: '2026-08', value_0: 10 }]
+          : [],
+    };
+    const sut = new WarehouseFetchPivotDataQueryService(client);
+
+    expect(await sut.fetchPivotCells(plan, options)).toEqual({
+      exceeded: false,
+      cells: [{ row: 'food', column: '2026-08', value: 10 }],
+    });
+  });
+
+  it('wraps driver failures with their cause', async () => {
+    const cause = new Error('driver failed');
+    const client: WarehouseClient = {
+      query: async () => Promise.reject(cause),
+    };
+    const sut = new WarehouseFetchPivotDataQueryService(client);
+
+    await expect(sut.fetchPivotCells(plan, options)).rejects.toMatchObject({
+      cause,
+    });
+    await expect(sut.fetchPivotCells(plan, options)).rejects.toBeInstanceOf(
+      RepositoryError
+    );
   });
 });

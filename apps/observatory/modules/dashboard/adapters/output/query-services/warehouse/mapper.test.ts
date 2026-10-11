@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest';
 
 import type {
   GroupedValuesPlan,
+  MatrixQueryPlan,
+  PivotQueryPlan,
   SectionQueryPlan,
   TableQueryPlan,
 } from '../../../../domain';
@@ -14,6 +16,8 @@ import { MappingError } from '../../../shared';
 import {
   toDateBounds,
   toGroupedValues,
+  toMatrixData,
+  toPivotCells,
   toSectionData,
   toSectionReadiness,
   toTableRows,
@@ -35,6 +39,89 @@ describe('toSectionReadiness', () => {
     expect(() => toSectionReadiness([{ not_ready_count: 'two' }])).toThrow(
       MappingError
     );
+  });
+});
+
+function matrixPlan(overrides: Partial<MatrixQueryPlan> = {}) {
+  return {
+    sectionId: 'matrix',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-03' },
+    rows: { axis: 'category', column: 'category' },
+    columns: { axis: 'date', length: 3 },
+    measure: { column: 'amount', reduction: 'sum' },
+    cellLimit: 6,
+    ...overrides,
+  } satisfies MatrixQueryPlan;
+}
+
+const matrixRows = [
+  { row_key: '10', row_rank: 2, column_key: '2026-08-01', value_0: 0 },
+  { row_key: '9', row_rank: 1, column_key: '2026-08-02', value_0: 5 },
+  { row_key: null, row_rank: 3, column_key: '2026-08-01', value_0: null },
+];
+
+describe('toMatrixData', () => {
+  it('orders categories by rank with NULL last and keeps zero apart from missing', () => {
+    const sut = toMatrixData;
+
+    const result = sut(matrixRows, matrixPlan({ cellLimit: 9 }));
+
+    expect(result).toEqual({
+      status: 'ready',
+      rowCategories: ['9', '10', null],
+      columnCategories: null,
+      cells: [
+        { row: '10', column: '2026-08-01', value: 0 },
+        { row: '9', column: '2026-08-02', value: 5 },
+        { row: null, column: '2026-08-01', value: null },
+      ],
+    });
+  });
+
+  it('returns null for no rows', () => {
+    expect(toMatrixData([], matrixPlan())).toBeNull();
+  });
+
+  it('reports too large when more cells return than the budget', () => {
+    expect(toMatrixData(matrixRows, matrixPlan({ cellLimit: 2 }))).toEqual({
+      status: 'too-large',
+    });
+  });
+
+  it('reports too large when sparse cells span a grid above the budget', () => {
+    const sut = toMatrixData;
+
+    const above = sut(matrixRows, matrixPlan());
+    const boundary = sut(matrixRows, matrixPlan({ cellLimit: 9 }));
+
+    expect(above).toEqual({ status: 'too-large' });
+    expect(boundary?.status).toBe('ready');
+  });
+
+  it.each([
+    {
+      name: 'an hour key outside 00–23',
+      rows: [{ row_key: '24', column_key: '2026-08-01', value_0: 1 }],
+      plan: matrixPlan({ rows: { axis: 'hour', length: 24 } }),
+    },
+    {
+      name: 'a non-calendar date key',
+      rows: [
+        { row_key: 'food', row_rank: 1, column_key: '2026-13-01', value_0: 1 },
+      ],
+      plan: matrixPlan(),
+    },
+    {
+      name: 'a rank below one',
+      rows: [
+        { row_key: 'food', row_rank: 0, column_key: '2026-08-01', value_0: 1 },
+      ],
+      plan: matrixPlan(),
+    },
+  ])('rejects $name', ({ rows, plan }) => {
+    expect(() => toMatrixData(rows, plan)).toThrow(MappingError);
   });
 });
 
@@ -377,6 +464,41 @@ function groupedPlan(): GroupedValuesPlan {
 }
 
 describe('toGroupedValues', () => {
+  it('maps hour keys oldest first and rejects a date-only key', () => {
+    const plan: GroupedValuesPlan = {
+      ...groupedPlan(),
+      measures: [{ column: 'temperature', reduction: 'average' }],
+      buckets: { grain: 'hour', firstHour: 0, bucketLimit: 120 },
+      category: { column: 'room', sortKey: null },
+    };
+
+    expect(
+      toGroupedValues(
+        [
+          { period: '2026-08-15T06', category: 'kitchen', value_0: 24 },
+          { period: '2026-08-15T05', category: null, value_0: 20 },
+        ],
+        plan
+      )
+    ).toEqual({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        { period: '2026-08-15T05', cells: [{ category: null, values: [20] }] },
+        {
+          period: '2026-08-15T06',
+          cells: [{ category: 'kitchen', values: [24] }],
+        },
+      ],
+    });
+    expect(() =>
+      toGroupedValues(
+        [{ period: '2026-08-15', category: 'kitchen', value_0: 24 }],
+        plan
+      )
+    ).toThrow(MappingError);
+  });
+
   it('preserves NULL categories and groups pivot cells oldest first', () => {
     expect(
       toGroupedValues(
@@ -497,6 +619,203 @@ describe('toGroupedValues', () => {
           },
         ],
         plan
+      )
+    ).toThrow(AmbiguousLatestValueError);
+  });
+});
+
+describe('toPivotCells', () => {
+  const pivotPlan = (overrides: Partial<PivotQueryPlan> = {}) =>
+    ({
+      sectionId: 'pivot',
+      source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+      timeZone: 'UTC',
+      dateRange: { firstDate: '2025-09-01', lastDate: '2026-08-31' },
+      rowKey: { column: 'category', sortKey: null },
+      columnKey: { kind: 'period', grain: 'month' },
+      measure: { column: 'amount', reduction: 'sum' },
+      cellLimit: 10_000,
+      ...overrides,
+    }) satisfies PivotQueryPlan;
+
+  it('maps nullable keys and values without a sort key', () => {
+    const sut = toPivotCells(
+      [
+        { row_key: 'food', column_key: '2026-08', value_0: 300 },
+        { row_key: null, column_key: '2026-07', value_0: 20 },
+      ],
+      pivotPlan()
+    );
+
+    expect(sut).toEqual({
+      exceeded: false,
+      cells: [
+        { row: 'food', column: '2026-08', value: 300 },
+        { row: null, column: '2026-07', value: 20 },
+      ],
+    });
+    expect(toPivotCells([], pivotPlan())).toBeNull();
+  });
+
+  it('reports the source-cell limit before mapping any row', () => {
+    const rows = [
+      { row_key: 5, column_key: 'bad', value_0: 'bad' },
+      { row_key: 5, column_key: 'bad', value_0: 'bad' },
+      { row_key: 5, column_key: 'bad', value_0: 'bad' },
+    ];
+
+    expect(toPivotCells(rows, pivotPlan({ cellLimit: 2 }))).toEqual({
+      cells: [],
+      exceeded: true,
+    });
+    expect(
+      toPivotCells(
+        rows.slice(0, 2).map((_, index) => ({
+          row_key: 'food',
+          column_key: `2026-0${index + 1}`,
+          value_0: 1,
+        })),
+        pivotPlan({ cellLimit: 2 })
+      )?.exceeded
+    ).toBe(false);
+  });
+
+  it.each([
+    {
+      name: 'a period key of the wrong grain',
+      rows: [{ row_key: 'food', column_key: '2026-08-01', value_0: 1 }],
+      plan: pivotPlan(),
+    },
+    {
+      name: 'a non-string row key',
+      rows: [{ row_key: 5, column_key: 'Mon', value_0: 1 }],
+      plan: pivotPlan({ columnKey: { kind: 'category', column: 'weekday' } }),
+    },
+  ])('rejects $name', ({ rows, plan }) => {
+    expect(() => toPivotCells(rows, plan)).toThrow(MappingError);
+  });
+
+  it('keeps a null category column key', () => {
+    expect(
+      toPivotCells(
+        [{ row_key: 'food', column_key: null, value_0: 1 }],
+        pivotPlan({ columnKey: { kind: 'category', column: 'weekday' } })
+      )
+    ).toEqual({
+      exceeded: false,
+      cells: [{ row: 'food', column: null, value: 1 }],
+    });
+  });
+
+  it('keeps a consistent sort key across cells', () => {
+    const plan = pivotPlan({
+      rowKey: {
+        column: 'category',
+        sortKey: { column: 'weekday_number', type: 'number' },
+      },
+    });
+    const sut = toPivotCells(
+      [
+        {
+          row_key: 'Mon',
+          column_key: '2026-07',
+          value_0: 10,
+          sort_key: 1,
+          sort_key_distinct_count: 1,
+        },
+        {
+          row_key: 'Mon',
+          column_key: '2026-08',
+          value_0: 20,
+          sort_key: 1,
+          sort_key_distinct_count: 1,
+        },
+      ],
+      plan
+    );
+
+    expect(sut?.cells.map((cell) => cell.sortKey)).toEqual([1, 1]);
+  });
+
+  it('rejects sort keys that disagree across cells', () => {
+    const plan = pivotPlan({
+      rowKey: {
+        column: 'category',
+        sortKey: { column: 'weekday_number', type: 'number' },
+      },
+    });
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'Mon',
+            column_key: '2026-07',
+            value_0: 10,
+            sort_key: 1,
+            sort_key_distinct_count: 1,
+          },
+          {
+            row_key: 'Mon',
+            column_key: '2026-08',
+            value_0: 20,
+            sort_key: 2,
+            sort_key_distinct_count: 1,
+          },
+        ],
+        plan
+      )
+    ).toThrow(AmbiguousSortKeyError);
+  });
+
+  it('rejects ambiguous or malformed sort keys inside a cell', () => {
+    const plan = pivotPlan({
+      rowKey: {
+        column: 'category',
+        sortKey: { column: 'weekday_number', type: 'number' },
+      },
+    });
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'Mon',
+            column_key: '2026-08',
+            value_0: 1,
+            sort_key: 1,
+            sort_key_distinct_count: 2,
+          },
+        ],
+        plan
+      )
+    ).toThrow(AmbiguousSortKeyError);
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'Mon',
+            column_key: '2026-08',
+            value_0: 1,
+            sort_key: 'x',
+            sort_key_distinct_count: 1,
+          },
+        ],
+        plan
+      )
+    ).toThrow(MappingError);
+  });
+
+  it('rejects ambiguous latest values', () => {
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'food',
+            column_key: '2026-08',
+            value_0: 1,
+            distinct_count_0: 2,
+          },
+        ],
+        pivotPlan({ measure: { column: 'balance', reduction: 'latest' } })
       )
     ).toThrow(AmbiguousLatestValueError);
   });

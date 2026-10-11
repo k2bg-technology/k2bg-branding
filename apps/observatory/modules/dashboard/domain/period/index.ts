@@ -3,6 +3,7 @@ export * from './calendarDate';
 export * from './calendarRange';
 export * from './defaultPeriod';
 export * from './instant';
+export * from './matrixRange';
 export * from './period';
 export * from './periodNavigation';
 export * from './sectionGrain';

@@ -2,6 +2,8 @@
 
 import {
   type ChartPeriod,
+  type ChartReferenceBand,
+  type ChartThreshold,
   TimeSeriesChart,
   type TimeSeriesChartSeries,
 } from 'ui';
@@ -13,6 +15,8 @@ interface Props {
   label: string;
   chartPeriod: ChartPeriod;
   series: TimeSeriesChartSeries[];
+  thresholds?: ChartThreshold[];
+  bands?: ChartReferenceBand[];
   variant: 'line' | 'area';
   stacked: boolean;
   locale: string;
@@ -27,6 +31,8 @@ export function TimeSeriesSectionChart({
   label,
   chartPeriod,
   series,
+  thresholds,
+  bands,
   variant,
   stacked,
   locale,
@@ -39,6 +45,8 @@ export function TimeSeriesSectionChart({
     <TimeSeriesChart
       label={label}
       series={series}
+      thresholds={thresholds}
+      bands={bands}
       period={chartPeriod}
       variant={variant}
       stacked={stacked}
