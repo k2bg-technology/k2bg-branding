@@ -379,6 +379,41 @@ function groupedPlan(): GroupedValuesPlan {
 }
 
 describe('toGroupedValues', () => {
+  it('maps hour keys oldest first and rejects a date-only key', () => {
+    const plan: GroupedValuesPlan = {
+      ...groupedPlan(),
+      measures: [{ column: 'temperature', reduction: 'average' }],
+      buckets: { grain: 'hour', firstHour: 0, bucketLimit: 120 },
+      category: { column: 'room', sortKey: null },
+    };
+
+    expect(
+      toGroupedValues(
+        [
+          { period: '2026-08-15T06', category: 'kitchen', value_0: 24 },
+          { period: '2026-08-15T05', category: null, value_0: 20 },
+        ],
+        plan
+      )
+    ).toEqual({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        { period: '2026-08-15T05', cells: [{ category: null, values: [20] }] },
+        {
+          period: '2026-08-15T06',
+          cells: [{ category: 'kitchen', values: [24] }],
+        },
+      ],
+    });
+    expect(() =>
+      toGroupedValues(
+        [{ period: '2026-08-15', category: 'kitchen', value_0: 24 }],
+        plan
+      )
+    ).toThrow(MappingError);
+  });
+
   it('preserves NULL categories and groups pivot cells oldest first', () => {
     expect(
       toGroupedValues(

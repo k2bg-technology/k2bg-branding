@@ -9,6 +9,7 @@ import {
   createFetchPivotDataUseCase,
   createFetchSectionDataUseCase,
   createFetchTableRowsUseCase,
+  createFetchTimeSeriesPivotUseCase,
   createLoadDashboardsUseCase,
   createResolveDashboardPeriodUseCase,
   createResolveSectionGateUseCase,
@@ -104,6 +105,9 @@ export default async function Page({ params, searchParams }: Props) {
                 }
                 fetchBarsData={(input) =>
                   createFetchBarsDataUseCase().execute(input)
+                }
+                fetchTimeSeriesPivot={(input) =>
+                  createFetchTimeSeriesPivotUseCase().execute(input)
                 }
                 fetchPivotData={(input) =>
                   createFetchPivotDataUseCase().execute(input)

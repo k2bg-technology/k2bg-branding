@@ -7,18 +7,18 @@ import {
 } from '../../../../../domain';
 import {
   identifierSchema,
+  sectionGateFields,
   sectionIdSchema,
   sectionWidthSchema,
   sourceSchema,
   valueFormatSchema,
 } from './statTiles';
-import { seriesSchema } from './timeSeries';
+import {
+  pivotTopNSchema,
+  seriesSchema,
+  valueBindingSchema,
+} from './timeSeries';
 
-const valueBindingSchema = seriesSchema.omit({ label: true });
-const pivotTopNSchema = z.strictObject({
-  count: z.number().int().min(1).max(11),
-  otherLabel: z.string().min(1),
-});
 export const axisTopNSchema = z.strictObject({
   count: z.number().int().min(1).max(100),
   otherLabel: z.string().min(1),
@@ -68,6 +68,7 @@ const barsSectionSchemaBase = z.strictObject({
   source: sourceSchema,
   kind: z.literal(SectionKind.BARS),
   width: sectionWidthSchema.optional(),
+  ...sectionGateFields,
   x: axisSchema,
   series: z.array(seriesSchema).min(1).max(12).optional(),
   pivot: z

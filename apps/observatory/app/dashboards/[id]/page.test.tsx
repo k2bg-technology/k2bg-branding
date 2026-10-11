@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
   fetchBarsData: vi.fn(),
+  fetchTimeSeriesPivot: vi.fn(),
   fetchPivotData: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
   notFound: vi.fn(() => {
@@ -27,6 +28,9 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
   createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
   createFetchBarsDataUseCase: () => ({ execute: mocks.fetchBarsData }),
+  createFetchTimeSeriesPivotUseCase: () => ({
+    execute: mocks.fetchTimeSeriesPivot,
+  }),
   createFetchPivotDataUseCase: () => ({ execute: mocks.fetchPivotData }),
 }));
 vi.mock('../../../modules/dashboard/adapters/shared', () => ({
@@ -77,6 +81,7 @@ async function renderPage(
 describe('dashboard page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.fetchTimeSeriesPivot.mockResolvedValue(null);
     mocks.loadDashboards.mockResolvedValue({
       definitions: [dashboard()],
       issues: [],

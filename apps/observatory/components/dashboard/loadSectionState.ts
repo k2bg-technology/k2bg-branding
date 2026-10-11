@@ -7,18 +7,27 @@ import type {
   Period,
   PivotTableSection,
   Section,
+  SeriesSlot,
   StatTilesSection,
   TableSection,
   TimeSeriesSection,
 } from '../../modules/dashboard/domain';
-import { SectionKind } from '../../modules/dashboard/domain';
+import {
+  DEFAULT_DASHBOARD_LABELS,
+  layoutWideSeries,
+  MAXIMUM_PIVOT_SERIES,
+  SectionKind,
+  widenPivot,
+} from '../../modules/dashboard/domain';
 import type {
   DashboardPeriodResolution,
   FetchBarsDataInput,
   FetchPivotDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
+  FetchTimeSeriesPivotInput,
   GroupedValues,
+  PivotBuckets,
   PivotCells,
   ResolveSectionGateInput,
   SectionData,
@@ -38,6 +47,9 @@ interface Input {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchTimeSeriesPivot: (
+    input: FetchTimeSeriesPivotInput
+  ) => Promise<PivotBuckets | null>;
   fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
   page: number;
   selections: ControlSelections;
@@ -56,6 +68,7 @@ export type SectionState =
       kind: 'time-series';
       section: TimeSeriesSection;
       data: SectionData;
+      slots: SeriesSlot[];
       period: Period;
     }
   | {
@@ -87,6 +100,7 @@ export type SectionState =
       period: Period;
     }
   | Exclude<SectionGate, { status: 'open' }>
+  | { status: 'too-many-series'; count: number; maximum: number }
   | { status: 'unavailable' };
 
 export async function loadSectionState({
@@ -97,6 +111,7 @@ export async function loadSectionState({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchTimeSeriesPivot,
   fetchPivotData,
   page,
   selections,
@@ -139,23 +154,52 @@ export async function loadSectionState({
         };
       }
       case SectionKind.TIME_SERIES: {
-        const data = await fetchSectionData({
+        if (section.pivot === undefined) {
+          if (section.series === undefined)
+            throw new Error('A time-series section requires series or pivot');
+          const data = await fetchSectionData({
+            dashboard,
+            section,
+            period,
+            selections,
+          });
+          if (data === null || data.buckets.length === 0)
+            return { status: 'empty' };
+          return {
+            status: 'ready',
+            kind: section.kind,
+            section,
+            data,
+            slots: layoutWideSeries(section.series).slots,
+            period,
+          };
+        }
+        const data = await fetchTimeSeriesPivot({
           dashboard,
           section,
           period,
           selections,
         });
-        if (data === null) {
-          return { status: 'empty' };
-        }
-        if (data.buckets.length === 0) {
-          return { status: 'empty' };
-        }
+        if (data === null) return { status: 'empty' };
+        const widened = widenPivot(
+          data.buckets,
+          { topN: section.pivot.topN ?? null, maximum: MAXIMUM_PIVOT_SERIES },
+          { ...DEFAULT_DASHBOARD_LABELS, ...dashboard.labels },
+          { sectionId: section.id }
+        );
+        if (widened.status === 'too-many-series') return widened;
+        const interpolation = section.pivot.interpolation;
         return {
           status: 'ready',
           kind: section.kind,
           section,
-          data,
+          data: { buckets: widened.buckets, truncated: data.truncated },
+          slots: widened.series.map((series, index) => ({
+            kind: 'line',
+            ...series,
+            interpolation,
+            valueIndex: index,
+          })),
           period,
         };
       }

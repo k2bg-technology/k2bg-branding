@@ -20,6 +20,7 @@
     "nullCategory": "No category",
     "missingValue": "No entries",
     "applyControls": "Apply filters",
+    "tooManySeries": "Too many categories for one chart",
     "cellBudgetExceeded": "Too many cells to show. Narrow the filters or shorten the window."
   },
   "currency": "JPY",
@@ -305,6 +306,49 @@
       "stacked": false,
       "format": { "type": "number" },
       "series": [{ "label": "Temperature", "column": "temperature", "reduction": "average" }]
+    },
+    {
+      "id": "category-series", "title": "Monthly amount by category", "kind": "time-series",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" },
+                  "filters": [{ "column": "category", "operator": "not-equals", "value": "transfer" }] },
+      "window": 12, "variant": "area", "stacked": true, "format": { "type": "currency" },
+      "pivot": { "column": "category",
+                 "value": { "column": "amount", "reduction": "sum", "transform": "absolute" },
+                 "topN": { "count": 4, "otherLabel": "Other categories" },
+                 "interpolation": "step" }
+    },
+    {
+      "id": "temperature-range", "title": "Daily temperature and comfort range", "kind": "time-series", "grain": "day",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "variant": "line", "stacked": false, "format": { "type": "number" }, "unit": "°C",
+      "series": [
+        { "label": "Temperature", "column": "temperature", "reduction": "average" },
+        { "label": "Typical range", "low": "temperature_low", "high": "temperature_high", "reduction": "average" },
+        { "label": "Heating", "column": "is_heating", "reduction": "maximum", "interpolation": "step" }
+      ],
+      "thresholds": [{ "value": 28, "label": "Too warm" }],
+      "bands": [{ "from": 18, "to": 24 }]
+    },
+    {
+      "id": "latest-day-by-room", "title": "Latest day by room", "kind": "time-series", "period": "latest", "grain": "hour", "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "variant": "line", "stacked": false, "format": { "type": "number" }, "unit": "°C",
+      "pivot": { "column": "room", "value": { "column": "temperature", "reduction": "average" } }
+    },
+    {
+      "id": "latest-day-categories", "title": "Latest day by category", "kind": "bars", "period": "latest", "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "x": { "axis": "category", "column": "category", "order": "value-desc" },
+      "series": [{ "label": "Amount", "column": "amount", "reduction": "sum", "transform": "absolute" }],
+      "format": { "type": "currency" }
+    },
+    {
+      "id": "daily-peak-availability", "title": "Daily peak reading, 91 days", "kind": "calendar-heatmap",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "window": 91,
+      "availability": { "since": "2026-04-01", "minimumBuckets": 30, "note": "A month of readings is needed before the pattern is meaningful." },
+      "readiness": { "column": "is_complete" },
+      "value": { "column": "temperature", "reduction": "maximum" }, "format": { "type": "number" }, "unit": "°C"
     },
     {
       "id": "category-pivot",

@@ -76,6 +76,7 @@ async function mountPivot(
     fetchSectionData: async () => null,
     fetchTableRows: async () => null,
     fetchBarsData: async () => null,
+    fetchTimeSeriesPivot: async () => null,
     fetchPivotData,
   });
   render(view);

@@ -4,6 +4,7 @@ import {
   type DefinitionViolation,
   Reduction,
   SectionKind,
+  type TimeSeriesSeriesDefinition,
 } from './types';
 
 const HOUR_BINDING_MESSAGE =
@@ -297,25 +298,84 @@ function stackingViolations(
             },
           ]
         : []),
-      ...section.series.flatMap((series, seriesIndex) =>
-        series.reduction === Reduction.SUM
-          ? []
-          : [
-              {
-                path: [
-                  'sections',
-                  sectionIndex,
-                  'series',
-                  seriesIndex,
-                  'reduction',
-                ],
-                message:
-                  'Stacking adds values up and requires the sum reduction',
-              },
-            ]
+      ...(section.series ?? []).flatMap((series, seriesIndex) =>
+        stackedSeriesViolations(series, [
+          'sections',
+          sectionIndex,
+          'series',
+          seriesIndex,
+        ])
       ),
+      ...(section.pivot === undefined ||
+      section.pivot.value.reduction === Reduction.SUM
+        ? []
+        : [
+            {
+              path: ['sections', sectionIndex, 'pivot', 'value', 'reduction'],
+              message: 'Stacking adds values up and requires the sum reduction',
+            },
+          ]),
     ];
   });
+}
+
+function stackedSeriesViolations(
+  series: TimeSeriesSeriesDefinition,
+  path: (string | number)[]
+): DefinitionViolation[] {
+  if ('low' in series) {
+    return [
+      {
+        path,
+        message:
+          'Stacking adds measurements up and does not accept a band series',
+      },
+    ];
+  }
+  if (series.reduction === Reduction.SUM) {
+    return [];
+  }
+  return [
+    {
+      path: [...path, 'reduction'],
+      message: 'Stacking adds values up and requires the sum reduction',
+    },
+  ];
+}
+
+function timeSeriesSeriesSourceViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.TIME_SERIES &&
+    (section.series === undefined) === (section.pivot === undefined)
+      ? [
+          {
+            path: ['sections', index, 'series'],
+            message:
+              'A time-series section declares exactly one of series and pivot',
+          },
+        ]
+      : []
+  );
+}
+
+function timeSeriesPivotViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.TIME_SERIES &&
+    section.pivot?.topN !== undefined &&
+    section.pivot.value.reduction !== Reduction.SUM
+      ? [
+          {
+            path: ['sections', index, 'pivot', 'value', 'reduction'],
+            message:
+              'A remainder adds values up and requires the sum reduction',
+          },
+        ]
+      : []
+  );
 }
 
 function sectionGrainViolations(
@@ -473,6 +533,24 @@ function historySettingViolations(
       );
     case SectionKind.TABLE:
       return [];
+    case SectionKind.BARS:
+      return section.x.axis === 'time'
+        ? [
+            {
+              path: ['x'],
+              message:
+                'A latest bars section reads one date and requires the category axis',
+            },
+          ]
+        : [];
+    case SectionKind.CALENDAR_HEATMAP:
+      return [
+        {
+          path: ['period'],
+          message:
+            'A calendar heatmap reads a range of days and does not accept period "latest"',
+        },
+      ];
     default:
       throw new Error(`Unsupported section kind: ${JSON.stringify(section)}`);
   }
@@ -598,6 +676,8 @@ export function validateDefinitionRules(
   return duplicateSectionViolations(definition).concat(
     currencyViolations(definition),
     stackingViolations(definition),
+    timeSeriesSeriesSourceViolations(definition),
+    timeSeriesPivotViolations(definition),
     sectionGrainViolations(definition),
     calendarRangeViolations(definition),
     latestSectionViolations(definition),
