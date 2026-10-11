@@ -7,6 +7,7 @@ import {
 } from '../../../../../domain';
 import {
   identifierSchema,
+  sectionControlsSchema,
   sectionGateFields,
   sectionIdSchema,
   sectionWidthSchema,
@@ -29,7 +30,7 @@ export const sortKeyOrderSchema = z.strictObject({
     type: z.enum(['text', 'number']),
   }),
 });
-const orderSchema = z
+export const orderSchema = z
   .unknown()
   .transform((value, context): CategoryOrder | typeof z.NEVER => {
     if (value === 'value-desc') return value;
@@ -81,6 +82,7 @@ const barsSectionSchemaBase = z.strictObject({
   stacked: z.boolean().default(false),
   format: valueFormatSchema,
   unit: z.string().min(1).optional(),
+  controls: sectionControlsSchema,
 });
 
 export const barsSectionSchema = barsSectionSchemaBase satisfies z.ZodType<

@@ -100,13 +100,24 @@ export interface SourceDefinition {
   filters?: SourceFilter[];
 }
 
-export interface ControlDefinition {
+interface ControlDefinitionBase {
   id: string;
   label: string;
   column: string;
-  options: string[];
   allLabel?: string;
 }
+export interface FixedListControlDefinition extends ControlDefinitionBase {
+  options: string[];
+}
+export interface DistinctControlDefinition extends ControlDefinitionBase {
+  options: 'distinct';
+  source?: SourceDefinition;
+  order: CategoryOrder;
+  value?: ValueBinding;
+}
+export type ControlDefinition =
+  | FixedListControlDefinition
+  | DistinctControlDefinition;
 
 export interface StatTileDefinition {
   label: string;
@@ -351,6 +362,7 @@ export interface DashboardDefinition {
     nullCategory?: string;
     missingValue?: string;
     applyControls?: string;
+    controlOptionsUnavailable?: string;
     tooManySeries?: string;
     cellBudgetExceeded?: string;
   };

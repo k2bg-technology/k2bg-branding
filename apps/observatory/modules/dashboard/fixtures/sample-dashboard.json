@@ -20,13 +20,21 @@
     "nullCategory": "No category",
     "missingValue": "No entries",
     "applyControls": "Apply filters",
+    "controlOptionsUnavailable": "Codes could not be loaded",
     "tooManySeries": "Too many categories for one chart",
     "cellBudgetExceeded": "Too many cells to show. Narrow the filters or shorten the window."
   },
   "currency": "JPY",
   "revalidate": 86400,
   "controls": [
-    { "id": "category", "label": "Category", "column": "category", "options": ["reporting", "operations"], "allLabel": "All categories" }
+    { "id": "category", "label": "Category", "column": "category", "options": ["reporting", "operations"], "allLabel": "All categories" },
+    {
+      "id": "code", "label": "Code", "column": "code", "options": "distinct",
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "order": "value-desc",
+      "value": { "column": "amount", "reduction": "sum", "transform": "absolute" },
+      "allLabel": "All codes"
+    }
   ],
   "sections": [
     {
@@ -100,6 +108,7 @@
       "id": "entry-details",
       "title": "Entry details",
       "kind": "table",
+      "controls": ["code"],
       "source": {
         "dataset": "sample_dataset",
         "view": "entries",
@@ -199,6 +208,7 @@
       "title": "Total by weekday",
       "kind": "bars",
       "width": "half",
+      "controls": ["code"],
       "source": {
         "dataset": "sample_dataset",
         "view": "entries",

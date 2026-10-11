@@ -173,6 +173,7 @@ describe('FileSystemDefinitionSource', () => {
           asOf: 'Latest date',
           notReady: 'The latest day is still being processed',
           applyControls: 'Apply filters',
+          controlOptionsUnavailable: 'Codes could not be loaded',
           tooManySeries: 'Too many categories for one chart',
           cellBudgetExceeded:
             'Too many cells to show. Narrow the filters or shorten the window.',
@@ -239,28 +240,86 @@ describe('FileSystemDefinitionSource', () => {
             options: ['reporting', 'operations'],
             allLabel: 'All categories',
           },
+          {
+            id: 'code',
+            label: 'Code',
+            column: 'code',
+            options: 'distinct',
+            source: {
+              dataset: 'sample_dataset',
+              view: 'entries',
+              time: { column: 'recorded_at', type: 'timestamp' },
+            },
+            order: 'value-desc',
+            value: {
+              column: 'amount',
+              reduction: 'sum',
+              transform: 'absolute',
+            },
+            allLabel: 'All codes',
+          },
         ]);
-        expect(result.definitions[0].sections[1].controls).toEqual([
-          'category',
-        ]);
+        expect(
+          result.definitions[0].sections.find(
+            (section) => section.id === 'monthly-trend'
+          )?.controls
+        ).toEqual(['category']);
+        expect(
+          result.definitions[0].sections.find(
+            (section) => section.id === 'weekday-totals'
+          )?.controls
+        ).toEqual(['code']);
       }
     );
   });
 
   it.each([
-    { name: 'empty options', options: [], path: 'controls[0].options' },
+    {
+      name: 'empty options',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: [],
+      },
+      path: 'controls[0].options',
+    },
     {
       name: 'blank option',
-      options: ['', 'food'],
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: ['', 'food'],
+      },
       path: 'controls[0].options[0]',
     },
-  ])('rejects $name at its JSON path', async ({ options, path }) => {
+    {
+      name: 'order on a fixed list',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: ['food'],
+        order: 'value-desc',
+      },
+      path: 'controls[0]',
+    },
+    {
+      name: 'distinct without order',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+      },
+      path: 'controls[0].order',
+    },
+  ])('rejects $name at its JSON path', async ({ control, path }) => {
     await withDefinitionDirectory(
       {
         'invalid.json': createDefinition({
-          controls: [
-            { id: 'category', label: 'Category', column: 'category', options },
-          ],
+          controls: [control],
           sections: [createSection({ controls: ['category'] })],
         }),
       },

@@ -267,6 +267,7 @@ export async function loadSectionState({
           dashboard,
           section,
           period,
+          selections,
         });
         if (data === null) return { status: 'empty' };
         return {

@@ -128,6 +128,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       nullCategory: z.string().min(1).optional(),
       missingValue: z.string().min(1).optional(),
       applyControls: z.string().min(1).optional(),
+      controlOptionsUnavailable: z.string().min(1).optional(),
       tooManySeries: z.string().min(1).optional(),
       cellBudgetExceeded: z.string().min(1).optional(),
     })

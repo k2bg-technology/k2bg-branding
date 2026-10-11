@@ -1,4 +1,8 @@
-import type { ControlSelections } from '../controls';
+import {
+  type ControlSelections,
+  type ResolvedControlOptionsById,
+  selectControlOptions,
+} from '../controls';
 import { type DashboardDefinition, SectionKind } from '../definition';
 import { Period } from '../period';
 
@@ -21,7 +25,8 @@ function addParameter(
   result: ParsedUrlState,
   key: string,
   value: string | string[] | undefined,
-  dashboard: DashboardDefinition
+  dashboard: DashboardDefinition,
+  controlOptions: ResolvedControlOptionsById
 ): ParsedUrlState {
   if (!result.valid || value === undefined) {
     return result;
@@ -46,7 +51,8 @@ function addParameter(
     if (value === '') {
       return result;
     }
-    if (!control.options.includes(value)) {
+    const resolved = selectControlOptions(control, controlOptions);
+    if (resolved.status === 'ready' && !resolved.options.includes(value)) {
       return { valid: false, problem: 'invalid-control', key };
     }
     return {
@@ -91,14 +97,16 @@ function addParameter(
 
 export function parseUrlState(
   searchParameters: SearchParameters,
-  dashboard: DashboardDefinition
+  dashboard: DashboardDefinition,
+  controlOptions: ResolvedControlOptionsById
 ): ParsedUrlState {
   const initial: ParsedUrlState = {
     valid: true,
     state: { period: null, controls: {}, pages: {}, foreign: [] },
   };
   return Object.entries(searchParameters).reduce<ParsedUrlState>(
-    (result, [key, value]) => addParameter(result, key, value, dashboard),
+    (result, [key, value]) =>
+      addParameter(result, key, value, dashboard, controlOptions),
     initial
   );
 }

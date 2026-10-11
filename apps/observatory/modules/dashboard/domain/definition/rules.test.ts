@@ -56,6 +56,59 @@ function createDefinition(): DashboardDefinition {
 describe('validateDefinitionRules', () => {
   it.each([
     {
+      name: 'missing ranking value',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+        order: 'value-desc',
+      },
+      path: ['controls', 0, 'value'],
+      message: 'Ranking by value requires value',
+    },
+    {
+      name: 'non-sum ranking value',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+        order: 'value-desc',
+        value: { column: 'amount', reduction: 'average' },
+      },
+      path: ['controls', 0, 'value', 'reduction'],
+      message: 'Ranking by value adds values up and requires the sum reduction',
+    },
+    {
+      name: 'value with a sort key',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+        order: { sortKey: { column: 'category', type: 'text' } },
+        value: { column: 'amount', reduction: 'sum' },
+      },
+      path: ['controls', 0, 'value'],
+      message: 'A sortKey order does not take value',
+    },
+  ] as const)(
+    'reports $name at its JSON path',
+    ({ control, path, message }) => {
+      const definition = createDefinition();
+      definition.controls = [control];
+      definition.sections[0].controls = ['category'];
+
+      expect(validateDefinitionRules(definition)).toContainEqual({
+        path: [...path],
+        message,
+      });
+    }
+  );
+
+  it.each([
+    {
       name: 'duplicate control ids',
       controls: [
         {
