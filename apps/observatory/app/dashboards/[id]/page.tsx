@@ -6,6 +6,7 @@ import { DashboardSection } from '../../../components/dashboard/DashboardSection
 import { SectionSkeleton } from '../../../components/dashboard/SectionSkeleton';
 import {
   createFetchBarsDataUseCase,
+  createFetchPivotDataUseCase,
   createFetchSectionDataUseCase,
   createFetchTableRowsUseCase,
   createFetchTimeSeriesPivotUseCase,
@@ -107,6 +108,9 @@ export default async function Page({ params, searchParams }: Props) {
                 }
                 fetchTimeSeriesPivot={(input) =>
                   createFetchTimeSeriesPivotUseCase().execute(input)
+                }
+                fetchPivotData={(input) =>
+                  createFetchPivotDataUseCase().execute(input)
                 }
                 urlState={parsed.state}
               />

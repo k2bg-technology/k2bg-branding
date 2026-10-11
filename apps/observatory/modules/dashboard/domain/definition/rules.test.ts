@@ -4,6 +4,7 @@ import { validateDefinitionRules } from './rules';
 import type {
   CalendarHeatmapSection,
   DashboardDefinition,
+  PivotTableSection,
   TableSection,
   TimeSeriesSection,
 } from './types';
@@ -814,5 +815,134 @@ describe('bars definition rules', () => {
       reduction: 'average',
     });
     expect(violations(keyed)).toEqual([]);
+  });
+});
+
+describe('pivot table rules', () => {
+  const validPivot = () =>
+    ({
+      id: 'pivot',
+      title: 'Pivot',
+      kind: 'pivot-table',
+      source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+      rows: { column: 'category', label: 'Category', order: 'as-provided' },
+      columns: { axis: 'time', window: 12 },
+      value: { column: 'amount', reduction: 'sum' },
+      format: { type: 'number' },
+    }) satisfies PivotTableSection;
+  const violations = (section: PivotTableSection, currency = 'USD') => {
+    const definition = createDefinition();
+    definition.sections = [section];
+    definition.currency = currency || undefined;
+    return validateDefinitionRules(definition);
+  };
+
+  it.each([
+    {
+      name: 'totals',
+      patch: { totals: { column: 'Total' } },
+      message: 'Totals add values up and require the sum reduction',
+    },
+    {
+      name: 'total-desc',
+      patch: {
+        rows: { column: 'category', label: 'Category', order: 'total-desc' },
+      },
+      message:
+        'Ordering rows by total adds values up and requires the sum reduction',
+    },
+    {
+      name: 'topN',
+      patch: {
+        rows: {
+          column: 'category',
+          label: 'Category',
+          order: 'as-provided',
+          topN: { count: 3, otherLabel: 'Other' },
+        },
+      },
+      message: 'A remainder adds values up and requires the sum reduction',
+    },
+  ] as const)('rejects non-sum $name', ({ patch, message }) => {
+    const section: PivotTableSection = {
+      ...validPivot(),
+      ...patch,
+      value: { column: 'amount', reduction: 'average' as const },
+    };
+
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'value', 'reduction'],
+      message,
+    });
+  });
+
+  it('requires a window at the dashboard grain', () => {
+    expect(
+      violations({ ...validPivot(), columns: { axis: 'time' } })
+    ).toContainEqual({
+      path: ['sections', 0, 'columns', 'window'],
+      message: 'A pivot table at the dashboard grain requires window',
+    });
+  });
+
+  it('rejects a coarser column grain', () => {
+    const definition = createDefinition();
+    definition.grain = 'week';
+    definition.sections = [
+      { ...validPivot(), columns: { axis: 'time', grain: 'month', window: 3 } },
+    ];
+
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'columns', 'grain'],
+      message:
+        'Section grain "month" is not supported by dashboard grain "week"',
+    });
+  });
+
+  it('requires different row and column category bindings', () => {
+    expect(
+      violations({
+        ...validPivot(),
+        columns: { axis: 'category', column: 'category' },
+      })
+    ).toContainEqual({
+      path: ['sections', 0, 'columns', 'column'],
+      message:
+        'A category column axis requires a column other than rows.column',
+    });
+  });
+
+  it('requires dashboard currency for a currency pivot', () => {
+    expect(
+      violations({ ...validPivot(), format: { type: 'currency' } }, '')
+    ).toContainEqual({
+      path: ['sections', 0, 'format'],
+      message: 'A currency section requires dashboard currency',
+    });
+  });
+
+  it('accepts a finer day grain and non-sum values without additive features', () => {
+    expect(
+      violations({
+        ...validPivot(),
+        columns: { axis: 'time', grain: 'day' },
+        value: { column: 'amount', reduction: 'average' },
+      })
+    ).toEqual([]);
+  });
+
+  it('accepts additive features with sum values', () => {
+    expect(
+      violations({
+        ...validPivot(),
+        rows: {
+          column: 'category',
+          label: 'Category',
+          order: 'total-desc',
+          topN: { count: 5, otherLabel: 'Other' },
+        },
+        totals: { column: 'Total', row: 'Total' },
+      })
+    ).toEqual([]);
   });
 });

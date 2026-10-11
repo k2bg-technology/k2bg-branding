@@ -5,6 +5,7 @@ import type {
   ControlSelections,
   DashboardDefinition,
   Period,
+  PivotTableSection,
   Section,
   SeriesSlot,
   StatTilesSection,
@@ -21,17 +22,20 @@ import {
 import type {
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchPivotDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   FetchTimeSeriesPivotInput,
   GroupedValues,
   PivotBuckets,
+  PivotCells,
   ResolveSectionGateInput,
   SectionData,
   SectionGate,
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { type BarsChartInput, barsChart } from './barsChart';
+import { type PivotTableInput, pivotTable } from './pivotTable';
 
 interface Input {
   dashboard: DashboardDefinition;
@@ -46,6 +50,7 @@ interface Input {
   fetchTimeSeriesPivot: (
     input: FetchTimeSeriesPivotInput
   ) => Promise<PivotBuckets | null>;
+  fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
   page: number;
   selections: ControlSelections;
 }
@@ -87,6 +92,13 @@ export type SectionState =
       chart: BarsChartInput;
       period: Period;
     }
+  | {
+      status: 'ready';
+      kind: 'pivot-table';
+      section: PivotTableSection;
+      table: PivotTableInput;
+      period: Period;
+    }
   | Exclude<SectionGate, { status: 'open' }>
   | { status: 'too-many-series'; count: number; maximum: number }
   | { status: 'unavailable' };
@@ -100,6 +112,7 @@ export async function loadSectionState({
   fetchTableRows,
   fetchBarsData,
   fetchTimeSeriesPivot,
+  fetchPivotData,
   page,
   selections,
 }: Input): Promise<SectionState> {
@@ -247,6 +260,22 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           chart: barsChart(section, data, period, dashboard),
+          period,
+        };
+      }
+      case SectionKind.PIVOT_TABLE: {
+        const data = await fetchPivotData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          table: pivotTable(section, data, period, dashboard),
           period,
         };
       }

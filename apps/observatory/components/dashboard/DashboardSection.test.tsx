@@ -142,6 +142,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -165,6 +166,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -188,6 +190,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -225,6 +228,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -252,6 +256,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -269,6 +274,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-04')),
@@ -289,6 +295,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -317,6 +324,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-03')),
@@ -336,6 +344,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -370,6 +379,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(selected),
@@ -393,6 +403,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-07')),
@@ -413,6 +424,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -433,6 +445,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-09')),
@@ -454,6 +467,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(null),
@@ -475,6 +489,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -495,6 +510,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -519,6 +535,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.reject(new Error('warehouse failed')),
@@ -541,6 +558,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -562,6 +580,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -586,6 +605,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section: definition.sections[0],
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -617,6 +637,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         dashboard: definition,
         section,
         periodResolution: Promise.resolve(resolution('2026-08')),
@@ -672,6 +693,7 @@ describe('time-series pivot', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot,
+        fetchPivotData: async () => null,
       })
     );
   }
@@ -826,6 +848,7 @@ describe('DashboardSection table', () => {
         fetchSectionData: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         fetchTableRows: async () => ({
           rows: [['2026-08-15', 'Rent', 1786784700000, 1200, null]],
           page: { number: 1, count: 1 },
@@ -858,6 +881,7 @@ describe('DashboardSection table', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -878,6 +902,7 @@ describe('DashboardSection table', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(screen.getByText('No data available.')).toBeInTheDocument();
@@ -895,6 +920,7 @@ describe('DashboardSection table', () => {
         fetchSectionData: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
         fetchTableRows: async () => ({
           rows: [['2026-08-15', 'Rent', 1786784700000, 1200, null]],
           page: { number: 3, count: 3 },
@@ -921,6 +947,7 @@ describe('DashboardSection table', () => {
         fetchTableRows: async () => Promise.reject(new Error('driver failed')),
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(screen.getByRole('alert')).toBeInTheDocument();
@@ -950,6 +977,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -983,6 +1011,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -1007,6 +1036,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -1036,6 +1066,7 @@ describe('DashboardSection gates', () => {
       fetchTableRows: async () => null,
       fetchBarsData: async () => null,
       fetchTimeSeriesPivot: async () => null,
+      fetchPivotData: async () => null,
     };
     const first = render(
       await DashboardSection({
@@ -1092,6 +1123,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(screen.getByText('As of August 15, 2026')).toBeInTheDocument();
@@ -1127,6 +1159,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -1154,6 +1187,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchBarsData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
       })
     );
     expect(
@@ -1183,6 +1217,7 @@ describe('DashboardSection gates', () => {
           fetchTableRows: async () => null,
           fetchBarsData: async () => null,
           fetchTimeSeriesPivot: async () => null,
+          fetchPivotData: async () => null,
         })
       );
     });
@@ -1244,6 +1279,7 @@ describe('bars sections', () => {
       fetchTableRows: async () => null,
       fetchBarsData,
       fetchTimeSeriesPivot: async () => null,
+      fetchPivotData: async () => null,
     });
     return render(view);
   };
@@ -1273,6 +1309,7 @@ describe('bars sections', () => {
         ],
       }),
       fetchTimeSeriesPivot: async () => null,
+      fetchPivotData: async () => null,
     });
     const { container } = render(view);
 
