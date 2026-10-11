@@ -14,8 +14,10 @@ import {
   type SectionQueryPlan,
   type SortKeyType,
   type TableQueryPlan,
+  type TreemapQueryPlan,
 } from '../../../../domain';
 import type {
+  CompositionPart,
   GroupedValues,
   MatrixData,
   MatrixKey,
@@ -31,6 +33,7 @@ import {
   COLUMN_RANK_ALIAS,
   cellColumnAlias,
   distinctCountAlias,
+  GROUP_ALIAS,
   NOT_READY_COUNT_ALIAS,
   PAGE_COUNT_ALIAS,
   PAGE_NUMBER_ALIAS,
@@ -220,11 +223,11 @@ function readGroupedPeriod(row: WarehouseRow, grain: SectionGrain) {
   return period;
 }
 
-function readGroupedCategory(row: WarehouseRow) {
-  const category = row[CATEGORY_ALIAS];
+function readGroupedCategory(row: WarehouseRow, key: string) {
+  const category = row[key];
   if (category === null || typeof category === 'string') return category;
   throw new MappingError(
-    `category must be a string or null, received ${JSON.stringify(category)}`
+    `${key} must be a string or null, received ${JSON.stringify(category)}`
   );
 }
 
@@ -255,7 +258,8 @@ export function toGroupedValues(
   const mapped = rows.map((row) => {
     const period =
       plan.buckets === null ? '' : readGroupedPeriod(row, plan.buckets.grain);
-    const category = plan.category === null ? null : readGroupedCategory(row);
+    const category =
+      plan.category === null ? null : readGroupedCategory(row, CATEGORY_ALIAS);
     const values = plan.measures.map((measure, index) => {
       const value = readNullableNumber(row, valueColumnAlias(index));
       return measure.reduction === Reduction.LATEST
@@ -325,6 +329,20 @@ export function toGroupedValues(
       cells: cells.map(({ category, values }) => ({ category, values })),
     })),
   };
+}
+
+export function toTreemapParts(
+  rows: WarehouseRow[],
+  plan: TreemapQueryPlan
+): CompositionPart[] | null {
+  if (rows.length === 0) return null;
+  return rows.map((row) => ({
+    ...(plan.group === null
+      ? {}
+      : { group: readGroupedCategory(row, GROUP_ALIAS) }),
+    category: readGroupedCategory(row, CATEGORY_ALIAS),
+    value: readNullableNumber(row, valueColumnAlias(0)),
+  }));
 }
 
 function readMatrixKey(row: WarehouseRow, alias: string, axis: MatrixAxisPlan) {

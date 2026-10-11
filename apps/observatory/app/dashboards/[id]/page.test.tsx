@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
   fetchBarsData: vi.fn(),
+  fetchCompositionData: vi.fn(),
   resolveControlOptions: vi.fn(),
   fetchMatrixData: vi.fn(),
   fetchTimeSeriesPivot: vi.fn(),
@@ -33,6 +34,9 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
   createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
   createFetchBarsDataUseCase: () => ({ execute: mocks.fetchBarsData }),
+  createFetchCompositionDataUseCase: () => ({
+    execute: mocks.fetchCompositionData,
+  }),
   createFetchMatrixDataUseCase: () => ({ execute: mocks.fetchMatrixData }),
   createFetchTimeSeriesPivotUseCase: () => ({
     execute: mocks.fetchTimeSeriesPivot,
@@ -383,5 +387,44 @@ describe('dashboard page', () => {
       screen.getByRole('heading', { name: 'Largest categories' })
     ).toBeInTheDocument();
     expect(mocks.fetchBarsData).toHaveBeenCalled();
+  });
+
+  it('fetches and renders a donut section', async () => {
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          sections: [
+            {
+              id: 'share',
+              title: 'Spending share',
+              kind: 'donut',
+              source: {
+                dataset: 'metrics',
+                view: 'entries',
+                time: 'recorded_on',
+              },
+              category: 'category',
+              categoryLabel: 'Category',
+              value: { label: 'Amount', column: 'amount', reduction: 'sum' },
+              order: 'value-desc',
+              format: { type: 'number' },
+            },
+          ],
+        },
+      ],
+      issues: [],
+    });
+    mocks.fetchCompositionData.mockResolvedValue({
+      parts: [{ category: 'Rent', value: 100 }],
+      center: null,
+    });
+
+    await renderPage();
+
+    expect(
+      screen.getByRole('heading', { name: 'Spending share' })
+    ).toBeInTheDocument();
+    expect(mocks.fetchCompositionData).toHaveBeenCalled();
   });
 });

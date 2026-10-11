@@ -7,6 +7,7 @@ import { loadControlOptions } from '../../../components/dashboard/loadControlOpt
 import { SectionSkeleton } from '../../../components/dashboard/SectionSkeleton';
 import {
   createFetchBarsDataUseCase,
+  createFetchCompositionDataUseCase,
   createFetchMatrixDataUseCase,
   createFetchPivotDataUseCase,
   createFetchSectionDataUseCase,
@@ -117,6 +118,9 @@ export default async function Page({ params, searchParams }: Props) {
                 }
                 fetchBarsData={(input) =>
                   createFetchBarsDataUseCase().execute(input)
+                }
+                fetchCompositionData={(input) =>
+                  createFetchCompositionDataUseCase().execute(input)
                 }
                 fetchMatrixData={(input) =>
                   createFetchMatrixDataUseCase().execute(input)

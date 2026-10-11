@@ -6,6 +6,8 @@ export const SectionKind = {
   TABLE: 'table',
   BARS: 'bars',
   CALENDAR_HEATMAP: 'calendar-heatmap',
+  DONUT: 'donut',
+  TREEMAP: 'treemap',
   MATRIX_HEATMAP: 'matrix-heatmap',
   PIVOT_TABLE: 'pivot-table',
 } as const;
@@ -274,6 +276,42 @@ export interface BarsSection extends SectionGateFields {
   controls?: string[];
 }
 
+export interface DonutSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.DONUT;
+  width?: SectionWidth;
+  controls?: string[];
+  category: string;
+  categoryLabel: string;
+  value: ValueBinding & { label: string };
+  order: CategoryOrder;
+  topN?: TopN;
+  centerColumn?: string;
+  centerLabel?: string;
+  format: ValueFormat;
+  unit?: string;
+}
+
+export interface TreemapSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.TREEMAP;
+  width?: SectionWidth;
+  controls?: string[];
+  group?: string;
+  groupLabel?: string;
+  category: string;
+  categoryLabel: string;
+  value: ValueBinding & { label: string };
+  topN?: TopN;
+  format: ValueFormat;
+  unit?: string;
+}
+
+export type CompositionSection = DonutSection | TreemapSection;
 export type MatrixAxis =
   | { axis: 'date' }
   | { axis: 'hour' }
@@ -332,6 +370,7 @@ export type Section =
   | AggregatingSection
   | TableSection
   | BarsSection
+  | CompositionSection
   | MatrixHeatmapSection
   | PivotTableSection;
 
@@ -362,6 +401,8 @@ export interface DashboardDefinition {
     nullCategory?: string;
     missingValue?: string;
     applyControls?: string;
+    negativeComposition?: string;
+    share?: string;
     controlOptionsUnavailable?: string;
     tooManySeries?: string;
     cellBudgetExceeded?: string;

@@ -5,8 +5,10 @@ import type {
 } from '../../modules/dashboard/domain';
 import { SectionKind } from '../../modules/dashboard/domain';
 import type {
+  CompositionData,
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchCompositionDataInput,
   FetchMatrixDataInput,
   FetchPivotDataInput,
   FetchSectionDataInput,
@@ -25,17 +27,20 @@ import { loadSectionState } from './loadSectionState';
 import { SectionAccumulating } from './SectionAccumulating';
 import { SectionAsOf } from './SectionAsOf';
 import { SectionEmpty } from './SectionEmpty';
+import { SectionNegativeComposition } from './SectionNegativeComposition';
 import { SectionNotReady } from './SectionNotReady';
 import { SectionTooLarge } from './SectionTooLarge';
 import { SectionTooManySeries } from './SectionTooManySeries';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
 import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
+import { DonutSection } from './sections/DonutSection';
 import { MatrixHeatmapSection } from './sections/MatrixHeatmapSection';
 import { PivotTableSection } from './sections/PivotTableSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
+import { TreemapSectionChart } from './sections/TreemapSectionChart';
 
 interface Props {
   dashboard: DashboardDefinition;
@@ -47,6 +52,9 @@ interface Props {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchCompositionData: (
+    input: FetchCompositionDataInput
+  ) => Promise<CompositionData | null>;
   fetchMatrixData: (input: FetchMatrixDataInput) => Promise<MatrixData | null>;
   fetchTimeSeriesPivot: (
     input: FetchTimeSeriesPivotInput
@@ -67,6 +75,7 @@ export async function DashboardSection({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchCompositionData,
   fetchMatrixData,
   fetchTimeSeriesPivot,
   fetchPivotData,
@@ -80,6 +89,7 @@ export async function DashboardSection({
     fetchSectionData,
     fetchTableRows,
     fetchBarsData,
+    fetchCompositionData,
     fetchMatrixData,
     fetchTimeSeriesPivot,
     fetchPivotData,
@@ -154,6 +164,28 @@ export async function DashboardSection({
               />
             );
           }
+          if (state.kind === SectionKind.DONUT) {
+            return (
+              <DonutSection
+                dashboard={dashboard}
+                section={state.section}
+                chart={state.chart}
+              />
+            );
+          }
+          if (state.kind === SectionKind.TREEMAP) {
+            return (
+              <TreemapSectionChart
+                label={state.section.title}
+                nodes={state.chart.nodes}
+                tableHeaders={state.chart.tableHeaders}
+                locale={dashboard.locale}
+                currency={dashboard.currency}
+                format={state.section.format}
+                unit={state.section.unit}
+              />
+            );
+          }
           if (state.kind === SectionKind.MATRIX_HEATMAP) {
             return (
               <MatrixHeatmapSection
@@ -198,6 +230,9 @@ export async function DashboardSection({
         }
         if (state.status === 'empty') {
           return <SectionEmpty />;
+        }
+        if (state.status === 'negative') {
+          return <SectionNegativeComposition dashboard={dashboard} />;
         }
         if (state.status === 'too-large') {
           return <SectionTooLarge dashboard={dashboard} />;

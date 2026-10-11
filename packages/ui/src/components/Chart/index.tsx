@@ -36,6 +36,7 @@ export {
   TreemapChart,
   type TreemapChartNode,
   type TreemapChartProps,
+  type TreemapChartTableHeaders,
 } from './TreemapChart';
 export {
   type BarSeries,

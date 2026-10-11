@@ -10,6 +10,7 @@ vi.mock('../../modules/dashboard/adapters/shared', async (importOriginal) => ({
 
 import { dashboardDefinitionSchema } from '../../modules/dashboard/adapters/output/definition-sources/file-system/schemas';
 import { toSectionData } from '../../modules/dashboard/adapters/output/query-services/warehouse/mapper';
+import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
   DashboardDefinition,
   UrlState,
@@ -148,6 +149,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -173,6 +175,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -198,6 +201,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -237,6 +241,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -266,6 +271,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -285,6 +291,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -307,6 +314,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -337,6 +345,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -358,6 +367,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -394,6 +404,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -419,6 +430,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -441,6 +453,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -463,6 +476,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -486,6 +500,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -509,6 +524,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -531,6 +547,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -557,6 +574,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -581,6 +599,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -604,6 +623,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -630,6 +650,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -663,6 +684,7 @@ describe('DashboardSection', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         dashboard: definition,
@@ -680,6 +702,121 @@ describe('DashboardSection', () => {
     );
 
     expect(screen.getAllByText('-10 min')).toHaveLength(2);
+  });
+});
+
+describe('composition sections', () => {
+  const compositionDashboard = (
+    kind: 'donut' | 'treemap'
+  ): DashboardDefinition => {
+    const definition = dashboard();
+    definition.labels = {
+      negativeComposition: 'Parts below zero cannot be drawn',
+    };
+    const fields = {
+      id: 'composition',
+      title: 'Composition',
+      source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+      category: 'category',
+      categoryLabel: 'Category',
+      value: { label: 'Amount', column: 'amount', reduction: 'sum' as const },
+      format: { type: 'number' as const },
+    };
+    definition.sections =
+      kind === 'donut'
+        ? [{ ...fields, kind, order: 'value-desc' }]
+        : [{ ...fields, kind }];
+    return definition;
+  };
+  const show = async (
+    definition: DashboardDefinition,
+    fetchCompositionData: NonNullable<
+      Parameters<typeof DashboardSection>[0]['fetchCompositionData']
+    >
+  ) => {
+    const view = await DashboardSection({
+      dashboard: definition,
+      section: definition.sections[0],
+      urlState,
+      periodResolution: Promise.resolve(resolution('2026-08')),
+      resolveSectionGate: openGate,
+      fetchSectionData: async () => null,
+      fetchTableRows: async () => null,
+      fetchBarsData: async () => null,
+      fetchCompositionData,
+      fetchMatrixData: async () => null,
+      fetchTimeSeriesPivot: async () => null,
+      fetchPivotData: async () => null,
+    });
+    return render(view);
+  };
+
+  it.each(['donut', 'treemap'] as const)(
+    'shows the explanation instead of a %s chart when a part is negative',
+    async (kind) => {
+      const definition = compositionDashboard(kind);
+
+      await show(definition, async () => ({
+        parts: [
+          { category: 'Rent', value: 300 },
+          { category: 'Refund', value: -20 },
+        ],
+        center: null,
+      }));
+
+      expect(
+        screen.getByText('Parts below zero cannot be drawn')
+      ).toBeInTheDocument();
+      expect(screen.queryByRole('application')).toBeNull();
+      expect(screen.queryByRole('alert')).toBeNull();
+    }
+  );
+
+  it.each(['donut', 'treemap'] as const)(
+    'shows empty for a %s whose parts are all zero',
+    async (kind) => {
+      await show(compositionDashboard(kind), async () => ({
+        parts: [
+          { category: 'Rent', value: 0 },
+          { category: 'Food', value: null },
+        ],
+        center: null,
+      }));
+
+      expect(screen.getByText('No data available.')).toBeInTheDocument();
+    }
+  );
+
+  it('shows empty for a donut with no rows', async () => {
+    await show(compositionDashboard('donut'), async () => null);
+
+    expect(screen.getByText('No data available.')).toBeInTheDocument();
+  });
+
+  it('shows unavailable when a composition query fails', async () => {
+    await show(compositionDashboard('donut'), async () => {
+      throw new Error('Warehouse unavailable');
+    });
+
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+  });
+
+  it('shows unavailable when a category is labelled like the remainder', async () => {
+    const definition = compositionDashboard('donut');
+    const section = definition.sections[0];
+    if (section.kind !== 'donut') throw new Error('Expected donut');
+    section.topN = { count: 1, otherLabel: 'Other' };
+
+    await show(definition, async () => ({
+      parts: [
+        { category: 'Other', value: 1 },
+        { category: 'Rent', value: 2 },
+      ],
+      center: null,
+    }));
+
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(dashboardLogger.error).toHaveBeenCalled();
   });
 });
 
@@ -710,6 +847,7 @@ describe('matrix heatmap sections', () => {
       fetchTimeSeriesPivot: async () => null,
       fetchPivotData: async () => null,
       fetchMatrixData,
+      fetchCompositionData: async () => null,
     };
   };
 
@@ -846,6 +984,7 @@ describe('time-series pivot', () => {
         fetchMatrixData: async () => null,
         fetchTimeSeriesPivot,
         fetchPivotData: async () => null,
+        fetchCompositionData: async () => null,
       })
     );
   }
@@ -1000,6 +1139,7 @@ describe('DashboardSection table', () => {
         fetchSectionData: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         fetchTableRows: async () => ({
@@ -1034,6 +1174,7 @@ describe('DashboardSection table', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1056,6 +1197,7 @@ describe('DashboardSection table', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1075,6 +1217,7 @@ describe('DashboardSection table', () => {
         fetchSectionData: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
         fetchTableRows: async () => ({
@@ -1103,6 +1246,7 @@ describe('DashboardSection table', () => {
         fetchTableRows: async () => Promise.reject(new Error('driver failed')),
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1134,6 +1278,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1169,6 +1314,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1195,6 +1341,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1226,6 +1373,7 @@ describe('DashboardSection gates', () => {
       fetchTableRows: async () => null,
       fetchMatrixData: async () => null,
       fetchBarsData: async () => null,
+      fetchCompositionData: async () => null,
       fetchTimeSeriesPivot: async () => null,
       fetchPivotData: async () => null,
     };
@@ -1284,6 +1432,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1321,6 +1470,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1350,6 +1500,7 @@ describe('DashboardSection gates', () => {
         fetchTableRows: async () => null,
         fetchMatrixData: async () => null,
         fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
         fetchPivotData: async () => null,
       })
@@ -1381,6 +1532,7 @@ describe('DashboardSection gates', () => {
           fetchTableRows: async () => null,
           fetchMatrixData: async () => null,
           fetchBarsData: async () => null,
+          fetchCompositionData: async () => null,
           fetchTimeSeriesPivot: async () => null,
           fetchPivotData: async () => null,
         })
@@ -1444,6 +1596,7 @@ describe('bars sections', () => {
       fetchTableRows: async () => null,
       fetchMatrixData: async () => null,
       fetchBarsData,
+      fetchCompositionData: async () => null,
       fetchTimeSeriesPivot: async () => null,
       fetchPivotData: async () => null,
     });
@@ -1475,6 +1628,7 @@ describe('bars sections', () => {
           { category: 'Food', values: [300] },
         ],
       }),
+      fetchCompositionData: async () => null,
       fetchTimeSeriesPivot: async () => null,
       fetchPivotData: async () => null,
     });

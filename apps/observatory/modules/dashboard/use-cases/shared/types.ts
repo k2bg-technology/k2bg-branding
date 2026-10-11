@@ -54,6 +54,18 @@ export type GroupedValues =
       }[];
     };
 
+export interface CompositionPart {
+  group?: CategoryValue;
+  category: CategoryValue;
+  value: number | null;
+  sortKey?: SortKeyValue;
+}
+
+export interface CompositionData {
+  parts: CompositionPart[];
+  center: number | null;
+}
+
 export type MatrixKey = string | null;
 export type MatrixData =
   | { status: 'too-large' }

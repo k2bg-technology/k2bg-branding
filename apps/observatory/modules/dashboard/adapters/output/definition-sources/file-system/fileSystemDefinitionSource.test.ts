@@ -1083,6 +1083,96 @@ describe('FileSystemDefinitionSource', () => {
   });
 });
 
+describe('composition definitions', () => {
+  it('loads the sample donut and treemap sections with their labels', async () => {
+    await withDefinitionDirectory(
+      { 'sample.json': sampleDashboard },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        const definition = result.definitions[0];
+        expect(
+          definition.sections.filter((section) => section.kind === 'donut')
+        ).toMatchObject([
+          {
+            id: 'spending-share',
+            order: 'value-desc',
+            topN: { count: 3, otherLabel: 'Other categories' },
+            value: { reduction: 'sum' },
+          },
+          {
+            id: 'weekday-share',
+            order: { sortKey: { column: 'weekday_number', type: 'number' } },
+            centerColumn: 'running_balance',
+          },
+        ]);
+        expect(
+          definition.sections.filter((section) => section.kind === 'treemap')
+        ).toMatchObject([
+          {
+            id: 'category-tree',
+            group: 'category_group',
+            groupLabel: 'Group',
+            topN: { count: 2 },
+          },
+        ]);
+        expect(definition.labels).toMatchObject({
+          negativeComposition: 'Parts below zero cannot be drawn',
+          share: 'Share of total',
+        });
+      }
+    );
+  });
+
+  it.each([
+    {
+      name: 'missing donut order',
+      section: {
+        ...sampleDashboard.sections.find(
+          (section) => section.id === 'spending-share'
+        ),
+        order: undefined,
+      },
+      path: 'sections[0].order',
+    },
+    {
+      name: 'too many treemap categories',
+      section: {
+        ...sampleDashboard.sections.find(
+          (section) => section.id === 'category-tree'
+        ),
+        topN: { count: 101, otherLabel: 'Other' },
+      },
+      path: 'sections[0].topN.count',
+    },
+    {
+      name: 'donut latest period',
+      section: {
+        ...sampleDashboard.sections.find(
+          (section) => section.id === 'spending-share'
+        ),
+        period: 'latest',
+      },
+      path: 'sections[0]',
+    },
+  ])('rejects $name at its JSON path', async ({ section, path }) => {
+    const definition = { ...sampleDashboard, sections: [section] };
+    await withDefinitionDirectory(
+      { 'invalid.json': definition },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues.map((issue) => issue.path)).toContain(path);
+      }
+    );
+  });
+});
+
 describe('time-series series schema', () => {
   it.each([
     {

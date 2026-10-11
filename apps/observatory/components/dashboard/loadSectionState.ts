@@ -4,6 +4,7 @@ import type {
   CalendarHeatmapSection,
   ControlSelections,
   DashboardDefinition,
+  DonutSection,
   MatrixHeatmapSection,
   Period,
   PivotTableSection,
@@ -12,6 +13,7 @@ import type {
   StatTilesSection,
   TableSection,
   TimeSeriesSection,
+  TreemapSection,
 } from '../../modules/dashboard/domain';
 import {
   DEFAULT_DASHBOARD_LABELS,
@@ -21,8 +23,10 @@ import {
   widenPivot,
 } from '../../modules/dashboard/domain';
 import type {
+  CompositionData,
   DashboardPeriodResolution,
   FetchBarsDataInput,
+  FetchCompositionDataInput,
   FetchMatrixDataInput,
   FetchPivotDataInput,
   FetchSectionDataInput,
@@ -38,6 +42,12 @@ import type {
   TableRows,
 } from '../../modules/dashboard/use-cases';
 import { type BarsChartInput, barsChart } from './barsChart';
+import {
+  type DonutChartInput,
+  donutChart,
+  type TreemapChartInput,
+  treemapChart,
+} from './compositionChart';
 import { type MatrixGridInput, matrixGrid } from './matrixGrid';
 import { type PivotTableInput, pivotTable } from './pivotTable';
 
@@ -51,6 +61,9 @@ interface Input {
   ) => Promise<SectionData | null>;
   fetchTableRows: (input: FetchTableRowsInput) => Promise<TableRows | null>;
   fetchBarsData: (input: FetchBarsDataInput) => Promise<GroupedValues | null>;
+  fetchCompositionData: (
+    input: FetchCompositionDataInput
+  ) => Promise<CompositionData | null>;
   fetchMatrixData: (input: FetchMatrixDataInput) => Promise<MatrixData | null>;
   fetchTimeSeriesPivot: (
     input: FetchTimeSeriesPivotInput
@@ -99,6 +112,21 @@ export type SectionState =
     }
   | {
       status: 'ready';
+      kind: 'donut';
+      section: DonutSection;
+      chart: DonutChartInput;
+      period: Period;
+    }
+  | {
+      status: 'ready';
+      kind: 'treemap';
+      section: TreemapSection;
+      chart: TreemapChartInput;
+      period: Period;
+    }
+  | { status: 'negative' }
+  | {
+      status: 'ready';
       kind: 'matrix-heatmap';
       section: MatrixHeatmapSection;
       grid: MatrixGridInput;
@@ -124,6 +152,7 @@ export async function loadSectionState({
   fetchSectionData,
   fetchTableRows,
   fetchBarsData,
+  fetchCompositionData,
   fetchMatrixData,
   fetchTimeSeriesPivot,
   fetchPivotData,
@@ -275,6 +304,42 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           chart: barsChart(section, data, period, dashboard),
+          period,
+        };
+      }
+      case SectionKind.DONUT: {
+        const data = await fetchCompositionData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        const result = donutChart(section, data, dashboard);
+        if (result.status !== 'ready') return { status: result.status };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          chart: result.chart,
+          period,
+        };
+      }
+      case SectionKind.TREEMAP: {
+        const data = await fetchCompositionData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        const result = treemapChart(section, data, dashboard);
+        if (result.status !== 'ready') return { status: result.status };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          chart: result.chart,
           period,
         };
       }

@@ -37,6 +37,8 @@ function currencyViolations(
 
   return definition.sections.flatMap((section, sectionIndex) => {
     switch (section.kind) {
+      case SectionKind.DONUT:
+      case SectionKind.TREEMAP:
       case SectionKind.CALENDAR_HEATMAP:
       case SectionKind.TIME_SERIES:
       case SectionKind.BARS:
@@ -645,6 +647,40 @@ function historySettingViolations(
   }
 }
 
+function compositionReductionViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    (section.kind === SectionKind.DONUT ||
+      section.kind === SectionKind.TREEMAP) &&
+    section.value.reduction !== Reduction.SUM
+      ? [
+          {
+            path: ['sections', index, 'value', 'reduction'],
+            message:
+              'A composition adds values up and requires the sum reduction',
+          },
+        ]
+      : []
+  );
+}
+
+function treemapGroupViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.TREEMAP &&
+    (section.group === undefined) !== (section.groupLabel === undefined)
+      ? [
+          {
+            path: ['sections', index, 'group'],
+            message: 'A treemap declares group and groupLabel together',
+          },
+        ]
+      : []
+  );
+}
+
 function latestSectionViolations(definition: DashboardDefinition) {
   return definition.sections.flatMap((section, sectionIndex) => {
     if (section.period !== 'latest') {
@@ -779,6 +815,8 @@ export function validateDefinitionRules(
     pivotTableViolations(definition),
     controlDeclarationViolations(definition),
     sectionControlViolations(definition),
+    compositionReductionViolations(definition),
+    treemapGroupViolations(definition),
     distinctControlViolations(definition),
     matrixHeatmapViolations(definition)
   );

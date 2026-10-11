@@ -8,6 +8,7 @@ import {
 } from '../../../../../domain';
 import { barsSectionSchema } from './bars';
 import { calendarHeatmapSectionSchema } from './calendarHeatmap';
+import { donutSectionSchema, treemapSectionSchema } from './composition';
 import { controlSchema } from './controls';
 import { matrixHeatmapSectionSchema } from './matrixHeatmap';
 import { pivotTableSectionSchema } from './pivotTable';
@@ -39,6 +40,8 @@ const sectionSchemasByKind = {
   [SectionKind.TABLE]: tableSectionSchema,
   [SectionKind.BARS]: barsSectionSchema,
   [SectionKind.CALENDAR_HEATMAP]: calendarHeatmapSectionSchema,
+  [SectionKind.DONUT]: donutSectionSchema,
+  [SectionKind.TREEMAP]: treemapSectionSchema,
   [SectionKind.MATRIX_HEATMAP]: matrixHeatmapSectionSchema,
   [SectionKind.PIVOT_TABLE]: pivotTableSectionSchema,
 };
@@ -128,6 +131,8 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       nullCategory: z.string().min(1).optional(),
       missingValue: z.string().min(1).optional(),
       applyControls: z.string().min(1).optional(),
+      negativeComposition: z.string().min(1).optional(),
+      share: z.string().min(1).optional(),
       controlOptionsUnavailable: z.string().min(1).optional(),
       tooManySeries: z.string().min(1).optional(),
       cellBudgetExceeded: z.string().min(1).optional(),

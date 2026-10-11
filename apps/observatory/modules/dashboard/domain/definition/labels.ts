@@ -13,6 +13,8 @@ export interface DashboardLabels {
   nullCategory: string;
   missingValue: string;
   applyControls: string;
+  negativeComposition: string;
+  share: string;
   controlOptionsUnavailable: string;
   tooManySeries: string;
   cellBudgetExceeded: string;
@@ -33,6 +35,8 @@ export const DEFAULT_DASHBOARD_LABELS = {
   nullCategory: 'None',
   missingValue: 'No data',
   applyControls: 'Apply',
+  negativeComposition: 'Negative values cannot be shown as parts of a whole',
+  share: 'Share',
   controlOptionsUnavailable: 'Options could not be loaded',
   tooManySeries: 'Too many series to show',
   cellBudgetExceeded:
