@@ -13,6 +13,7 @@ import type {
   FetchMatrixDataInput,
   FetchPivotDataInput,
   FetchRebaseBaseInput,
+  FetchScatterDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   FetchTimeSeriesPivotInput,
@@ -21,6 +22,7 @@ import type {
   PivotBuckets,
   PivotCells,
   ResolveSectionGateInput,
+  ScatterData,
   SectionData,
   SectionGate,
   TableRows,
@@ -39,6 +41,7 @@ import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
 import { DonutSection } from './sections/DonutSection';
 import { MatrixHeatmapSection } from './sections/MatrixHeatmapSection';
 import { PivotTableSection } from './sections/PivotTableSection';
+import { ScatterSection } from './sections/ScatterSection';
 import { StatTilesSection } from './sections/StatTilesSection';
 import { TableSection } from './sections/TableSection';
 import { TimeSeriesSection } from './sections/TimeSeriesSection';
@@ -63,6 +66,9 @@ interface Props {
   ) => Promise<PivotBuckets | null>;
   fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
   fetchRebaseBase: (input: FetchRebaseBaseInput) => Promise<RebaseBase | null>;
+  fetchScatterData: (
+    input: FetchScatterDataInput
+  ) => Promise<ScatterData | null>;
   urlState: UrlState;
 }
 
@@ -83,6 +89,7 @@ export async function DashboardSection({
   fetchTimeSeriesPivot,
   fetchPivotData,
   fetchRebaseBase,
+  fetchScatterData,
   urlState,
 }: Props) {
   const state = await loadSectionState({
@@ -98,6 +105,7 @@ export async function DashboardSection({
     fetchTimeSeriesPivot,
     fetchPivotData,
     fetchRebaseBase,
+    fetchScatterData,
     page: urlState.pages[section.id] ?? 1,
     selections: urlState.controls,
   });
@@ -206,6 +214,15 @@ export async function DashboardSection({
                 dashboard={dashboard}
                 section={state.section}
                 table={state.table}
+              />
+            );
+          }
+          if (state.kind === SectionKind.SCATTER) {
+            return (
+              <ScatterSection
+                dashboard={dashboard}
+                section={state.section}
+                chart={state.chart}
               />
             );
           }

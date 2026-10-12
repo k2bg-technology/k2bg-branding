@@ -10,6 +10,7 @@ import {
   Reduction,
   resolveLatest,
   resolveSortKey,
+  type ScatterQueryPlan,
   type SectionGrain,
   type SectionQueryPlan,
   type SortKeyType,
@@ -22,6 +23,7 @@ import type {
   MatrixData,
   MatrixKey,
   PivotCells,
+  ScatterPoints,
   SectionData,
   TableCell,
   TableRows,
@@ -39,9 +41,12 @@ import {
   PAGE_NUMBER_ALIAS,
   ROW_KEY_ALIAS,
   ROW_RANK_ALIAS,
+  SERIES_ALIAS,
   SORT_KEY_ALIAS,
   SORT_KEY_DISTINCT_COUNT_ALIAS,
   valueColumnAlias,
+  X_VALUE_ALIAS,
+  Y_VALUE_ALIAS,
 } from './aliases';
 import { FIRST_DATE_ALIAS, LAST_DATE_ALIAS } from './query';
 
@@ -531,4 +536,29 @@ export function toPivotCells(
     });
   }
   return { cells, exceeded: false };
+}
+
+function readCoordinate(row: WarehouseRow, key: string): number {
+  const value = readNullableNumber(row, key);
+  if (value === null) {
+    throw new MappingError(`${key} must be a finite number, received null`);
+  }
+  return value;
+}
+
+export function toScatterPoints(
+  rows: WarehouseRow[],
+  plan: ScatterQueryPlan
+): ScatterPoints | null {
+  if (rows.length === 0) return null;
+  return {
+    truncated: rows.length > plan.limit,
+    points: rows.slice(0, plan.limit).map((row) => ({
+      x: readCoordinate(row, X_VALUE_ALIAS),
+      y: readCoordinate(row, Y_VALUE_ALIAS),
+      ...(plan.series === null
+        ? {}
+        : { series: readGroupedCategory(row, SERIES_ALIAS) }),
+    })),
+  };
 }

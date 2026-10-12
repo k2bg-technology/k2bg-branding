@@ -87,6 +87,17 @@ function currencyViolations(
               ]
             : []
         );
+      case SectionKind.SCATTER:
+        return (['x', 'y'] as const).flatMap((axisKey) =>
+          section[axisKey].format.type === 'currency'
+            ? [
+                {
+                  path: ['sections', sectionIndex, axisKey, 'format'],
+                  message: 'A currency axis requires dashboard currency',
+                },
+              ]
+            : []
+        );
       default:
         throw new Error(`Unsupported section kind: ${JSON.stringify(section)}`);
     }
@@ -796,6 +807,35 @@ function pivotTableViolations(
   });
 }
 
+function scatterCoefficientViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) => {
+    if (
+      section.kind !== SectionKind.SCATTER ||
+      section.trendLine === undefined
+    ) {
+      return [];
+    }
+    const plotted = [
+      section.x.column,
+      section.y.column,
+      section.series?.column,
+    ];
+    return (['slope', 'intercept'] as const).flatMap((coefficient) =>
+      plotted.includes(section.trendLine?.[coefficient])
+        ? [
+            {
+              path: ['sections', index, 'trendLine', coefficient],
+              message:
+                'A coefficient column must differ from the x, y, and series columns',
+            },
+          ]
+        : []
+    );
+  });
+}
+
 export function validateDefinitionRules(
   definition: DashboardDefinition
 ): DefinitionViolation[] {
@@ -821,7 +861,8 @@ export function validateDefinitionRules(
     distinctControlViolations(definition),
     matrixHeatmapViolations(definition),
     derivedSeriesViolations(definition),
-    rebaseViolations(definition)
+    rebaseViolations(definition),
+    scatterCoefficientViolations(definition)
   );
 }
 

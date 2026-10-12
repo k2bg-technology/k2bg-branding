@@ -10,6 +10,7 @@ export const SectionKind = {
   TREEMAP: 'treemap',
   MATRIX_HEATMAP: 'matrix-heatmap',
   PIVOT_TABLE: 'pivot-table',
+  SCATTER: 'scatter',
 } as const;
 export type SectionKind = (typeof SectionKind)[keyof typeof SectionKind];
 
@@ -399,6 +400,27 @@ export interface PivotTableSection extends SectionGateFields {
   totals?: { column?: string; row?: string };
 }
 
+export interface ScatterAxis {
+  column: string;
+  label: string;
+  format: ValueFormat;
+  unit?: string;
+}
+
+export interface ScatterSection extends SectionGateFields {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.SCATTER;
+  width?: SectionWidth;
+  controls?: string[];
+  x: ScatterAxis;
+  y: ScatterAxis;
+  series?: { column: string; label: string };
+  trendLine?: { slope: string; intercept: string };
+  limit: number;
+}
+
 export type AggregatingSection =
   | StatTilesSection
   | TimeSeriesSection
@@ -409,7 +431,8 @@ export type Section =
   | BarsSection
   | CompositionSection
   | MatrixHeatmapSection
-  | PivotTableSection;
+  | PivotTableSection
+  | ScatterSection;
 
 export interface DashboardDefinition {
   id: string;
@@ -443,6 +466,8 @@ export interface DashboardDefinition {
     controlOptionsUnavailable?: string;
     tooManySeries?: string;
     cellBudgetExceeded?: string;
+    pointsTruncated?: string;
+    trendLine?: string;
   };
   sections: Section[];
 }

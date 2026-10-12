@@ -7,6 +7,7 @@ import type {
   DonutSection,
   MatrixHeatmapSection,
   PivotTableSection,
+  ScatterSection,
   TableSection,
   TimeSeriesSection,
   TreemapSection,
@@ -1548,5 +1549,92 @@ describe('derived series rules', () => {
     const result = sut({ ...createDefinition(), sections: [section] });
 
     expect(result).toEqual([]);
+  });
+});
+
+function createScatter(): ScatterSection {
+  return {
+    id: 'correlation',
+    title: 'Correlation',
+    kind: 'scatter',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    x: { column: 'amount', label: 'Amount', format: { type: 'number' } },
+    y: { column: 'balance', label: 'Balance', format: { type: 'number' } },
+    limit: 200,
+  };
+}
+
+describe('scatter rules', () => {
+  it.each([
+    {
+      name: 'the slope names the x column',
+      section: {
+        ...createScatter(),
+        trendLine: { slope: 'amount', intercept: 'balance_intercept' },
+      },
+      coefficient: 'slope',
+    },
+    {
+      name: 'the intercept names the series column',
+      section: {
+        ...createScatter(),
+        series: { column: 'category', label: 'Category' },
+        trendLine: { slope: 'balance_slope', intercept: 'category' },
+      },
+      coefficient: 'intercept',
+    },
+  ])(
+    'rejects a coefficient at its path when $name',
+    ({ section, coefficient }) => {
+      expect(
+        validateDefinitionRules({ ...createDefinition(), sections: [section] })
+      ).toEqual([
+        {
+          path: ['sections', 0, 'trendLine', coefficient],
+          message:
+            'A coefficient column must differ from the x, y, and series columns',
+        },
+      ]);
+    }
+  );
+
+  it('requires dashboard currency for each currency axis', () => {
+    const section = createScatter();
+    section.x.format = { type: 'currency' };
+    section.y.format = { type: 'currency' };
+    expect(
+      validateDefinitionRules({
+        ...createDefinition(),
+        currency: undefined,
+        sections: [section],
+      })
+    ).toEqual([
+      {
+        path: ['sections', 0, 'x', 'format'],
+        message: 'A currency axis requires dashboard currency',
+      },
+      {
+        path: ['sections', 0, 'y', 'format'],
+        message: 'A currency axis requires dashboard currency',
+      },
+    ]);
+  });
+
+  it('accepts a scatter with a series and coefficient columns of its own', () => {
+    expect(
+      validateDefinitionRules({
+        ...createDefinition(),
+        sections: [
+          {
+            ...createScatter(),
+            series: { column: 'category', label: 'Category' },
+            trendLine: {
+              slope: 'balance_slope',
+              intercept: 'balance_intercept',
+            },
+          },
+        ],
+      })
+    ).toEqual([]);
   });
 });

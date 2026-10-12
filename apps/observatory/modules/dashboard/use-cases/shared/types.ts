@@ -91,3 +91,18 @@ export interface PivotCells {
   cells: PivotCell[];
   exceeded: boolean;
 }
+
+export interface ScatterPoint {
+  x: number;
+  y: number;
+  series?: CategoryValue;
+}
+
+export interface ScatterPoints {
+  points: ScatterPoint[];
+  truncated: boolean;
+}
+
+export interface ScatterData extends ScatterPoints {
+  trendLine: { slope: number; intercept: number } | null;
+}

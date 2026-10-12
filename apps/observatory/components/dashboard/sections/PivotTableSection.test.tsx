@@ -81,6 +81,7 @@ async function mountPivot(
     fetchTimeSeriesPivot: async () => null,
     fetchPivotData,
     fetchRebaseBase: async () => null,
+    fetchScatterData: async () => null,
   });
   render(view);
   await act(() => Promise.resolve());

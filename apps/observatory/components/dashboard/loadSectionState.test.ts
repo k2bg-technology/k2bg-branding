@@ -69,6 +69,7 @@ describe('loadSectionState bars ranking', () => {
       fetchTimeSeriesPivot: async () => null,
       fetchRebaseBase: async () => null,
       fetchPivotData: async () => null,
+      fetchScatterData: async () => null,
       page: 1,
       selections: {},
     });
@@ -143,6 +144,7 @@ function timeSeriesInput() {
     }),
     fetchRebaseBase: async () => null,
     fetchPivotData: async () => null,
+    fetchScatterData: async () => null,
     page: 1,
     selections: {},
   } satisfies Parameters<typeof loadSectionState>[0];

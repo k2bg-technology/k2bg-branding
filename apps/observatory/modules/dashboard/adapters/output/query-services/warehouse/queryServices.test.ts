@@ -14,6 +14,7 @@ import {
   planBarsSection,
   planMatrixHeatmapSection,
   planPivotTableSection,
+  planScatterPoints,
 } from '../../../../domain';
 import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 import { MappingError, RepositoryError } from '../../../shared';
@@ -22,6 +23,7 @@ import { WarehouseFetchGroupedValuesQueryService } from './fetchGroupedValuesQue
 import { WarehouseFetchMatrixDataQueryService } from './fetchMatrixDataQueryService';
 import { WarehouseFetchPeriodBoundsQueryService } from './fetchPeriodBoundsQueryService';
 import { WarehouseFetchPivotDataQueryService } from './fetchPivotDataQueryService';
+import { WarehouseFetchScatterPointsQueryService } from './fetchScatterPointsQueryService';
 import { WarehouseFetchSectionDataQueryService } from './fetchSectionDataQueryService';
 import { WarehouseFetchSectionReadinessQueryService } from './fetchSectionReadinessQueryService';
 import { WarehouseFetchTableRowsQueryService } from './fetchTableRowsQueryService';
@@ -450,5 +452,30 @@ describe('WarehouseFetchPivotDataQueryService', () => {
     await expect(sut.fetchPivotCells(plan, options)).rejects.toBeInstanceOf(
       RepositoryError
     );
+  });
+});
+
+describe('WarehouseFetchScatterPointsQueryService', () => {
+  const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+  const section = dashboard.sections.find(
+    (candidate) => candidate.id === 'balance-by-amount'
+  );
+  const period = Period.parse('month', '2026-08');
+  if (section?.kind !== 'scatter' || period === null)
+    throw new Error('Expected scatter fixture');
+  const plan = planScatterPoints(section, period, dashboard.timeZone);
+
+  it('wraps a driver failure with its cause', async () => {
+    const cause = new Error('driver failed');
+    const client: WarehouseClient = {
+      query: async () => Promise.reject(cause),
+    };
+    const sut = new WarehouseFetchScatterPointsQueryService(client);
+    const result = sut.fetchScatterPoints(plan, {
+      name: 'scatter',
+      revalidate: 86_400,
+    });
+    await expect(result).rejects.toBeInstanceOf(RepositoryError);
+    await expect(result).rejects.toMatchObject({ cause });
   });
 });

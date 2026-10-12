@@ -4,6 +4,7 @@ import type {
   GroupedValuesPlan,
   MatrixQueryPlan,
   PivotQueryPlan,
+  ScatterQueryPlan,
   SectionQueryPlan,
   TableQueryPlan,
   TreemapQueryPlan,
@@ -20,6 +21,7 @@ import {
   toGroupedValues,
   toMatrixData,
   toPivotCells,
+  toScatterPoints,
   toSectionData,
   toSectionReadiness,
   toTableRows,
@@ -1101,5 +1103,82 @@ describe('derived series bucket mapping', () => {
         { period: '2025-12', cells: [{ category: 'food', values: [1000] }] },
       ],
     });
+  });
+});
+
+describe('toScatterPoints', () => {
+  const plan: ScatterQueryPlan = {
+    sectionId: 'scatter',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+    x: 'amount',
+    y: 'balance',
+    series: 'category',
+    limit: 2,
+  };
+
+  it.each([
+    {
+      name: 'keeps every point at the limit',
+      rows: [
+        { x_value: 3, y_value: 30, series_key: 'a' },
+        { x_value: 2, y_value: 20, series_key: null },
+      ],
+      expected: {
+        truncated: false,
+        points: [
+          { x: 3, y: 30, series: 'a' },
+          { x: 2, y: 20, series: null },
+        ],
+      },
+    },
+    {
+      name: 'keeps the newest limit points and flags the rest',
+      rows: [
+        { x_value: 3, y_value: 30, series_key: 'a' },
+        { x_value: 2, y_value: 20, series_key: null },
+        { x_value: 1, y_value: 10, series_key: 'b' },
+      ],
+      expected: {
+        truncated: true,
+        points: [
+          { x: 3, y: 30, series: 'a' },
+          { x: 2, y: 20, series: null },
+        ],
+      },
+    },
+  ])('$name', ({ rows, expected }) => {
+    expect(toScatterPoints(rows, plan)).toEqual(expected);
+  });
+
+  it('omits the series property for a plan without series', () => {
+    const result = toScatterPoints([{ x_value: 1, y_value: 2 }], {
+      ...plan,
+      series: null,
+    });
+    expect(result).toEqual({ truncated: false, points: [{ x: 1, y: 2 }] });
+    expect(result?.points[0]).not.toHaveProperty('series');
+  });
+
+  it('returns null for no rows', () => {
+    expect(toScatterPoints([], plan)).toBeNull();
+  });
+
+  it.each([
+    {
+      name: 'a null coordinate',
+      row: { x_value: null, y_value: 1, series_key: 'a' },
+    },
+    {
+      name: 'a text coordinate',
+      row: { x_value: '1', y_value: 1, series_key: 'a' },
+    },
+    {
+      name: 'a numeric series',
+      row: { x_value: 1, y_value: 1, series_key: 5 },
+    },
+  ])('rejects $name', ({ row }) => {
+    expect(() => toScatterPoints([row], plan)).toThrow(MappingError);
   });
 });
