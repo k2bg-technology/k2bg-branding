@@ -9,6 +9,7 @@ import {
 
 import { ChartContainer } from './ChartContainer';
 import { ChartTooltip } from './ChartTooltip';
+import { numericExtent } from './chartExtent';
 import { heatmapCellColor, heatmapLevel } from './chartHeatmapScale';
 import {
   chartAccessibleName,
@@ -366,7 +367,10 @@ export function TreemapChart({
     regionKeys.map((key, index) => [key, index])
   );
 
-  const largestValue = Math.max(0, ...drawableNodes.map((node) => node.value));
+  const largestValue = Math.max(
+    0,
+    numericExtent(drawableNodes.map((node) => node.value))?.maximum ?? 0
+  );
   // Shares and areas are ratios, so they are taken from values measured against
   // the largest one: a sum of finite values then cannot overflow to Infinity.
   const scaled = (value: number) =>

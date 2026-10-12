@@ -7,6 +7,16 @@ export interface CalendarMonthLabel {
   text: string;
 }
 
+export interface CalendarMonthLabelOverhangOptions {
+  labels: CalendarMonthLabel[];
+  /** Number of week columns in the grid. */
+  columnCount: number;
+  /** Width of one week column in px, gap included. */
+  columnWidth: number;
+  /** Gap between two columns in px, which the last column does not have. */
+  cellGap: number;
+}
+
 export interface CalendarMonthLabelOptions {
   /** Every day of the grid in column-major order, as `YYYY-MM-DD`. */
   dates: string[];
@@ -93,10 +103,12 @@ export function weekdayOffset(
   );
 }
 
+function isWideGlyph(character: string) {
+  return (character.codePointAt(0) ?? 0) >= firstWideCodePoint;
+}
+
 function glyphWidth(character: string): number {
-  return (character.codePointAt(0) ?? 0) >= firstWideCodePoint
-    ? wideGlyphWidth
-    : narrowGlyphWidth;
+  return isWideGlyph(character) ? wideGlyphWidth : narrowGlyphWidth;
 }
 
 /** Week columns a label needs before the next one may start. */
@@ -155,4 +167,36 @@ export function calendarMonthLabels({
         textColumns(previous.text, columnWidth);
     return collides ? kept : kept.concat(label);
   }, []);
+}
+
+/**
+ * How far month labels run past the last week column, as a CSS length for the
+ * grid's trailing padding. A label is measured in the caption font itself:
+ * a narrow monospace glyph is exactly `1ch` and a wide one `1em`, where a px
+ * estimate would fall short of the rendered text. Labels that fit even with
+ * every glyph wide are left out; without any left, the grid needs no room.
+ */
+export function calendarMonthLabelOverhang({
+  labels,
+  columnCount,
+  columnWidth,
+  cellGap,
+}: CalendarMonthLabelOverhangOptions): string | undefined {
+  const overhangs = labels.flatMap(({ columnIndex, text }) => {
+    const glyphs = Array.from(text);
+    const room = (columnCount - columnIndex) * columnWidth - cellGap;
+    if (glyphs.length * wideGlyphWidth <= room) {
+      return [];
+    }
+    const wideCount = glyphs.filter(isWideGlyph).length;
+    const narrowCount = glyphs.length - wideCount;
+    const textWidth = [
+      narrowCount > 0 ? `${narrowCount}ch` : undefined,
+      wideCount > 0 ? `${wideCount}em` : undefined,
+    ].filter((term) => term !== undefined);
+    return [`${textWidth.join(' + ')} - ${room}px`];
+  });
+  return overhangs.length === 0
+    ? undefined
+    : `max(0px, ${overhangs.join(', ')})`;
 }

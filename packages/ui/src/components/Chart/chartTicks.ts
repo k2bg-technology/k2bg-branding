@@ -243,3 +243,36 @@ export function getTimeAxisTicks(
 export function defaultValueFormatter(value: number): string {
   return String(value);
 }
+
+/** The value axis never becomes narrower than this, so short labels keep their layout. */
+const minimumValueAxisWidth = 48;
+/** Menlo and its monospace fallbacks advance 0.6em: 7.23px at the 12px caption, plus a margin. */
+const tickCharacterWidth = 7.5;
+/** Recharts' own gap between a tick label and the plot area (tickSize + tickMargin). */
+const tickLabelGap = 14;
+
+/**
+ * Tick labels render at the caption size of the brand's monospace stack. Recharts
+ * measures a tick with an unstyled span before wrapping it at the axis width, so
+ * the size it renders at has to be explicit.
+ */
+export const valueAxisTick = { style: { fontSize: 'var(--text-caption)' } };
+
+/**
+ * Recharts' automatic axis width has no lower bound, so the width is derived from
+ * the widest label the axis can show. Nice ticks stay close to the values the
+ * axis spans, so their formatted bounds stand in for the widest tick label.
+ */
+export function valueAxisWidth(
+  bounds: readonly number[],
+  formatValue: (value: number) => string
+): number {
+  const longestLabelLength = bounds.reduce(
+    (longest, value) => Math.max(longest, formatValue(value).length),
+    0
+  );
+  return Math.max(
+    minimumValueAxisWidth,
+    Math.ceil(longestLabelLength * tickCharacterWidth) + tickLabelGap
+  );
+}

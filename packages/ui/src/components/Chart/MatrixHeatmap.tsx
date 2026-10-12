@@ -4,6 +4,7 @@ import { Fragment, useId } from 'react';
 
 import { cn } from '../../utils/cn';
 import { ScrollArea } from '../ScrollArea';
+import { numericExtent } from './chartExtent';
 import {
   type HeatmapScaleLabels,
   heatmapCellColor,
@@ -77,7 +78,7 @@ export function MatrixHeatmap({
 }: MatrixHeatmapProps) {
   const descriptionId = useId();
   const measured = measuredValues(values);
-  const scaleMax = max ?? (measured.length > 0 ? Math.max(...measured) : 0);
+  const scaleMax = max ?? numericExtent(measured)?.maximum ?? 0;
   const missingCells = missingCellCount(rows, columns, values);
 
   return (
