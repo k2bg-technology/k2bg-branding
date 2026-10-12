@@ -1,5 +1,5 @@
 import type { BarsSection } from '../definition';
-import type { Period } from '../period';
+import { type Period, resolveSectionRange } from '../period';
 import type { GroupedValuesPlan } from './groupedValues';
 import { MAXIMUM_SECTION_BUCKETS } from './timeSeries';
 
@@ -31,21 +31,23 @@ export function planBarsSection(
     section.pivot === undefined
       ? null
       : { column: section.pivot.column, sortKey: null };
+  const grain =
+    section.x.axis === 'time'
+      ? (section.x.grain ?? period.grain)
+      : period.grain;
   return {
     sectionId: section.id,
     source: section.source,
     timeZone,
-    dateRange: {
-      firstDate:
-        section.x.axis === 'time'
-          ? period.shift(-(section.x.window - 1)).firstDate
-          : period.firstDate,
-      lastDate: period.lastDate,
-    },
+    dateRange:
+      section.x.axis === 'time'
+        ? resolveSectionRange({ grain, window: section.x.window }, period)
+            .dateRange
+        : { firstDate: period.firstDate, lastDate: period.lastDate },
     measures,
     buckets:
       section.x.axis === 'time'
-        ? { grain: period.grain, bucketLimit: MAXIMUM_SECTION_BUCKETS }
+        ? { grain, bucketLimit: MAXIMUM_SECTION_BUCKETS }
         : null,
     category: category ?? pivotCategory,
   };

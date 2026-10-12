@@ -659,6 +659,25 @@
       ]
     },
     {
+      "id": "daily-totals",
+      "title": "Daily total",
+      "kind": "bars",
+      "width": "half",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": { "column": "recorded_at", "type": "timestamp" },
+        "filters": [
+          { "column": "category", "operator": "not-equals", "value": "transfer" }
+        ]
+      },
+      "x": { "axis": "time", "grain": "day" },
+      "series": [
+        { "label": "Amount", "column": "amount", "reduction": "sum", "transform": "absolute" }
+      ],
+      "format": { "type": "currency" }
+    },
+    {
       "id": "balance-by-amount",
       "title": "Running balance by amount",
       "kind": "scatter",

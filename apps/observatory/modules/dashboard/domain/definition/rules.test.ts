@@ -942,6 +942,50 @@ describe('bars definition rules', () => {
     return validateDefinitionRules(definition);
   };
 
+  it('requires a window at the dashboard grain', () => {
+    expect(violations({ ...validBars(), x: { axis: 'time' } })).toContainEqual({
+      path: ['sections', 0, 'x', 'window'],
+      message: 'A bars section at the dashboard grain requires window',
+    });
+  });
+
+  it('rejects a coarser axis grain', () => {
+    const definition = createDefinition();
+    definition.grain = 'week';
+    definition.sections = [
+      { ...validBars(), x: { axis: 'time', grain: 'month', window: 3 } },
+    ];
+    const sut = validateDefinitionRules;
+
+    const result = sut(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'x', 'grain'],
+        message:
+          'Section grain "month" is not supported by dashboard grain "week"',
+      },
+    ]);
+  });
+
+  it('accepts a finer day grain without a window', () => {
+    expect(
+      violations({ ...validBars(), x: { axis: 'time', grain: 'day' } })
+    ).toEqual([]);
+  });
+
+  it('reports only the latest-axis violation for latest time bars without a window', () => {
+    expect(
+      violations({ ...validBars(), period: 'latest', x: { axis: 'time' } })
+    ).toEqual([
+      {
+        path: ['sections', 0, 'x'],
+        message:
+          'A latest bars section reads one date and requires the category axis',
+      },
+    ]);
+  });
+
   it('requires exactly one series source', () => {
     const section = validBars();
     expect(violations({ ...section, series: undefined })).toContainEqual({

@@ -1,4 +1,4 @@
-import { SectionGrain } from '../period';
+import { type PeriodGrain, SectionGrain } from '../period';
 import {
   type DashboardDefinition,
   type DefinitionViolation,
@@ -726,14 +726,39 @@ function latestSectionViolations(definition: DashboardDefinition) {
   });
 }
 
-function pivotTableViolations(
-  definition: DashboardDefinition
-): DefinitionViolation[] {
+function trendAxisGrainViolations(
+  dashboardGrain: PeriodGrain,
+  axis: { grain?: PeriodGrain; window?: number },
+  path: (string | number)[],
+  subject: string
+) {
   const allowed = {
     month: ['month', 'day'],
     week: ['week', 'day'],
     day: ['day'],
   } as const;
+  const grain = axis.grain ?? dashboardGrain;
+  if (!(allowed[dashboardGrain] as readonly string[]).includes(grain)) {
+    return [
+      {
+        path: [...path, 'grain'],
+        message: `Section grain "${grain}" is not supported by dashboard grain "${dashboardGrain}"`,
+      },
+    ];
+  }
+  return grain === dashboardGrain && axis.window === undefined
+    ? [
+        {
+          path: [...path, 'window'],
+          message: `A ${subject} at the dashboard grain requires window`,
+        },
+      ]
+    : [];
+}
+
+function pivotTableViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
   return definition.sections.flatMap((section, index) => {
     if (section.kind !== SectionKind.PIVOT_TABLE) return [];
     const reductionPath = ['sections', index, 'value', 'reduction'];
@@ -783,28 +808,31 @@ function pivotTableViolations(
           : []),
       ];
     }
-    const grain = section.columns.grain ?? definition.grain;
-    if (!(allowed[definition.grain] as readonly string[]).includes(grain)) {
-      return [
-        ...addsUp,
-        {
-          path: ['sections', index, 'columns', 'grain'],
-          message: `Section grain "${grain}" is not supported by dashboard grain "${definition.grain}"`,
-        },
-      ];
-    }
     return [
       ...addsUp,
-      ...(grain === definition.grain && section.columns.window === undefined
-        ? [
-            {
-              path: ['sections', index, 'columns', 'window'],
-              message: 'A pivot table at the dashboard grain requires window',
-            },
-          ]
-        : []),
+      ...trendAxisGrainViolations(
+        definition.grain,
+        section.columns,
+        ['sections', index, 'columns'],
+        'pivot table'
+      ),
     ];
   });
+}
+
+function barsTimeAxisViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.BARS &&
+    section.x.axis === 'time' &&
+    section.period !== 'latest'
+      ? trendAxisGrainViolations(
+          definition.grain,
+          section.x,
+          ['sections', index, 'x'],
+          'bars section'
+        )
+      : []
+  );
 }
 
 function scatterCoefficientViolations(
@@ -853,6 +881,7 @@ export function validateDefinitionRules(
     barsRankingViolations(definition),
     barsPivotAxisViolations(definition),
     barsSumViolations(definition),
+    barsTimeAxisViolations(definition),
     pivotTableViolations(definition),
     controlDeclarationViolations(definition),
     sectionControlViolations(definition),

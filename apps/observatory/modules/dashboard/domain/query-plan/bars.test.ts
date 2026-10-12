@@ -24,6 +24,34 @@ describe('planBarsSection', () => {
       measures: [{ column: 'amount', reduction: 'sum', transform: 'absolute' }],
     });
   });
+  it('covers every day of the selected month without a window', () => {
+    const sut = planBarsSection;
+
+    const result = sut(bars('daily-totals'), period, dashboard.timeZone);
+
+    expect(result).toMatchObject({
+      dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+      buckets: { grain: 'day', bucketLimit: 120 },
+      category: null,
+      measures: [{ column: 'amount', reduction: 'sum', transform: 'absolute' }],
+    });
+  });
+
+  it('covers trailing days ending at the selected month end', () => {
+    const section = {
+      ...bars('daily-totals'),
+      x: { axis: 'time' as const, grain: 'day' as const, window: 7 },
+    };
+    const sut = planBarsSection;
+
+    const result = sut(section, period, dashboard.timeZone);
+
+    expect(result.dateRange).toEqual({
+      firstDate: '2026-08-25',
+      lastDate: '2026-08-31',
+    });
+  });
+
   it('covers only the selected period for a category axis', () => {
     expect(
       planBarsSection(bars('category-ranking'), period, dashboard.timeZone)

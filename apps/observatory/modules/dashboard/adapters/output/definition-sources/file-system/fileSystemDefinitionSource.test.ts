@@ -1314,6 +1314,8 @@ describe('bars schema', () => {
       'sections[0].x.axis',
     ],
     [{ x: { axis: 'time' } }, 'sections[0].x.window'],
+    [{ x: { axis: 'time', window: 121 } }, 'sections[0].x.window'],
+    [{ x: { axis: 'time', grain: 'hour' } }, 'sections[0].x.grain'],
     [{ x: { axis: 'category', column: 'category' } }, 'sections[0].x.order'],
     [
       {
@@ -1385,7 +1387,17 @@ describe('bars schema', () => {
           'category-ranking',
           'weekday-totals',
           'latest-day-categories',
+          'daily-totals',
         ]);
+        expect(
+          loaded.definitions[0].sections.find(
+            (section) => section.id === 'daily-totals'
+          )
+        ).toMatchObject({
+          kind: 'bars',
+          x: { axis: 'time', grain: 'day' },
+          stacked: false,
+        });
         expect(loaded.definitions[0].labels?.nullCategory).toBe('No category');
       }
     );

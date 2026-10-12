@@ -39,6 +39,9 @@ function bucketGrain(section: Section, dashboardGrain: PeriodGrain) {
   if (section.kind === SectionKind.CALENDAR_HEATMAP) {
     return PeriodGrain.DAY;
   }
+  if (section.kind === SectionKind.BARS && section.x.axis === 'time') {
+    return section.x.grain ?? dashboardGrain;
+  }
   return section.period === 'latest' ? PeriodGrain.DAY : dashboardGrain;
 }
 

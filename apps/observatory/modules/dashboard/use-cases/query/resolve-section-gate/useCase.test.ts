@@ -97,6 +97,35 @@ describe('ResolveSectionGate', () => {
     });
   });
 
+  it('counts day buckets for time bars with a day grain', async () => {
+    const section: Section = {
+      id: 'daily-bars',
+      title: 'Daily bars',
+      kind: 'bars',
+      source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      x: { axis: 'time', grain: 'day' },
+      series: [{ label: 'Amount', column: 'amount', reduction: 'sum' }],
+      stacked: false,
+      format: { type: 'number' },
+      availability: { since: '2026-08-15', minimumBuckets: 7 },
+    };
+    const sut = sutWithBounds();
+
+    const result = await sut.execute({
+      dashboard: dashboard(section),
+      section,
+      selectedPeriod: month('2026-07'),
+      selections: {},
+    });
+
+    expect(result).toEqual({
+      status: 'accumulating',
+      since: '2026-08-15',
+      availableFrom: { grain: 'day', start: { date: '2026-08-22', hour: 0 } },
+      note: undefined,
+    });
+  });
+
   it('judges a calendar-year heatmap over the whole year it reads', async () => {
     const section: Section = {
       id: 'yearly',
