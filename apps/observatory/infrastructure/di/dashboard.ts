@@ -6,6 +6,7 @@ import {
   WarehouseFetchMatrixDataQueryService,
   WarehouseFetchPeriodBoundsQueryService,
   WarehouseFetchPivotDataQueryService,
+  WarehouseFetchScatterPointsQueryService,
   WarehouseFetchSectionDataQueryService,
   WarehouseFetchSectionReadinessQueryService,
   WarehouseFetchTableRowsQueryService,
@@ -16,6 +17,7 @@ import {
   FetchCompositionData,
   FetchMatrixData,
   FetchPivotData,
+  FetchScatterData,
   FetchSectionData,
   FetchTableRows,
   FetchTimeSeriesPivot,
@@ -97,5 +99,13 @@ export function createFetchTimeSeriesPivotUseCase(): FetchTimeSeriesPivot {
 export function createFetchPivotDataUseCase(): FetchPivotData {
   return new FetchPivotData(
     new WarehouseFetchPivotDataQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchScatterDataUseCase(): FetchScatterData {
+  const client = getWarehouseClient();
+  return new FetchScatterData(
+    new WarehouseFetchScatterPointsQueryService(client),
+    new WarehouseFetchSectionDataQueryService(client)
   );
 }

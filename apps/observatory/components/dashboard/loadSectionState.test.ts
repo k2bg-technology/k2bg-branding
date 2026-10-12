@@ -68,6 +68,7 @@ describe('loadSectionState bars ranking', () => {
       fetchCompositionData: async () => null,
       fetchTimeSeriesPivot: async () => null,
       fetchPivotData: async () => null,
+      fetchScatterData: async () => null,
       page: 1,
       selections: {},
     });
