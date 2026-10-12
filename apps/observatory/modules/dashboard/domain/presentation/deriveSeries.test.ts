@@ -39,6 +39,12 @@ describe('derived series', () => {
       minimumPoints: 2,
       expected: [null, null, 2, 4],
     },
+    {
+      values: [1, 2, null],
+      window: 3,
+      minimumPoints: 2,
+      expected: [null, 1.5, null],
+    },
     { values: [2, 4], window: 5, minimumPoints: 1, expected: [2, 3] },
     { values: [2, 4], window: 5, minimumPoints: 5, expected: [null, null] },
   ])(
@@ -134,7 +140,7 @@ describe('derived series', () => {
         id: 'series-0-moving-average',
         label: 'Smoothed',
         overlay: true,
-        values: [15, 20, 40],
+        values: [15, null, 40],
       },
       {
         id: 'series-0-running',

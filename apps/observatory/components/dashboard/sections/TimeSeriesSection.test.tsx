@@ -346,7 +346,7 @@ describe('derived time-series presentation', () => {
         lineStyle: 'dashed',
         points: [
           { timestamp: 1786546800000, value: 15 },
-          { timestamp: 1786633200000, value: 20 },
+          { timestamp: 1786633200000, value: null },
           { timestamp: 1786719600000, value: 40 },
         ],
       },

@@ -5,11 +5,12 @@ export function movingAverage(
   window: number,
   minimumPoints: number
 ): (number | null)[] {
-  return values.map((_, index) => {
+  return values.map((current, index) => {
     const measured = values
       .slice(Math.max(0, index - window + 1), index + 1)
       .filter((value) => value !== null);
-    return measured.length < minimumPoints
+    // A bucket without a value stays a gap so the overlay never bridges it.
+    return current === null || measured.length < minimumPoints
       ? null
       : measured.reduce((total, value) => total + value, 0) / measured.length;
   });
