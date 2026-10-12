@@ -1,6 +1,7 @@
 import type { BarSeries } from 'ui';
 
 import {
+  type BarsAxis,
   type BarsSection,
   type CategoryItem,
   categoryLabels,
@@ -25,14 +26,15 @@ export interface BarsChartInput {
 }
 
 function timeAxis(
-  window: number,
+  axis: Extract<BarsAxis, { axis: 'time' }>,
   buckets: { period: string; values: (number | null)[] }[],
   measureCount: number,
   truncated: boolean,
   period: Period,
   dashboard: DashboardDefinition
 ) {
-  const range = resolveSectionRange({ window }, period, {
+  const grain = axis.grain ?? period.grain;
+  const range = resolveSectionRange({ grain, window: axis.window }, period, {
     truncated,
     firstBucket: buckets[0]?.period,
   });
@@ -42,14 +44,14 @@ function timeAxis(
     measureCount,
     dashboard.timeZone
   );
-  const first = Period.containing(period.grain, range.display.first.date);
-  const last = Period.containing(period.grain, range.display.last.date);
+  const first = Period.containing(grain, range.display.first.date);
+  const last = Period.containing(grain, range.display.last.date);
   if (first === null || last === null)
     throw new Error('Time bars require a valid range');
   return {
     categories: spine.map(
       (bucket) =>
-        Period.parse(period.grain, bucket.period)?.label(dashboard.locale) ??
+        Period.parse(grain, bucket.period)?.label(dashboard.locale) ??
         bucket.period
     ),
     spine,
@@ -112,7 +114,7 @@ export function barsChart(
     if (section.series === undefined)
       throw new Error('Time bars require series');
     const axis = timeAxis(
-      section.x.window,
+      section.x,
       data.buckets,
       section.series.length,
       data.truncated,
@@ -142,7 +144,7 @@ export function barsChart(
   if (widened.status !== 'ready')
     throw new Error('A bars pivot folds categories into topN');
   const axis = timeAxis(
-    section.x.window,
+    section.x,
     widened.buckets,
     widened.series.length,
     data.truncated,
