@@ -8,6 +8,7 @@ import type {
   MatrixHeatmapSection,
   Period,
   PivotTableSection,
+  RebaseBase,
   Section,
   SeriesSlot,
   StatTilesSection,
@@ -17,10 +18,13 @@ import type {
 } from '../../modules/dashboard/domain';
 import {
   DEFAULT_DASHBOARD_LABELS,
-  layoutWideSeries,
   MAXIMUM_PIVOT_SERIES,
+  pivotBaseBucket,
+  pivotSeriesSlots,
+  rebaseBaseDate,
   SectionKind,
   widenPivot,
+  wideSeriesSlots,
 } from '../../modules/dashboard/domain';
 import type {
   CompositionData,
@@ -29,6 +33,7 @@ import type {
   FetchCompositionDataInput,
   FetchMatrixDataInput,
   FetchPivotDataInput,
+  FetchRebaseBaseInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   FetchTimeSeriesPivotInput,
@@ -69,6 +74,7 @@ interface Input {
     input: FetchTimeSeriesPivotInput
   ) => Promise<PivotBuckets | null>;
   fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
+  fetchRebaseBase: (input: FetchRebaseBaseInput) => Promise<RebaseBase | null>;
   page: number;
   selections: ControlSelections;
 }
@@ -156,6 +162,7 @@ export async function loadSectionState({
   fetchMatrixData,
   fetchTimeSeriesPivot,
   fetchPivotData,
+  fetchRebaseBase,
   page,
   selections,
 }: Input): Promise<SectionState> {
@@ -197,15 +204,17 @@ export async function loadSectionState({
         };
       }
       case SectionKind.TIME_SERIES: {
+        const fixedBase =
+          rebaseBaseDate(section) === null
+            ? undefined
+            : fetchRebaseBase({ dashboard, section, selections });
         if (section.pivot === undefined) {
           if (section.series === undefined)
             throw new Error('A time-series section requires series or pivot');
-          const data = await fetchSectionData({
-            dashboard,
-            section,
-            period,
-            selections,
-          });
+          const [data, base] = await Promise.all([
+            fetchSectionData({ dashboard, section, period, selections }),
+            fixedBase,
+          ]);
           if (data === null || data.buckets.length === 0)
             return { status: 'empty' };
           return {
@@ -213,36 +222,38 @@ export async function loadSectionState({
             kind: section.kind,
             section,
             data,
-            slots: layoutWideSeries(section.series).slots,
+            slots: wideSeriesSlots(section.series, base),
             period,
           };
         }
-        const data = await fetchTimeSeriesPivot({
-          dashboard,
-          section,
-          period,
-          selections,
-        });
-        if (data === null) return { status: 'empty' };
+        const [data, base] = await Promise.all([
+          fetchTimeSeriesPivot({ dashboard, section, period, selections }),
+          fixedBase,
+        ]);
+        if (data === null || data.buckets.length === 0)
+          return { status: 'empty' };
         const widened = widenPivot(
           data.buckets,
-          { topN: section.pivot.topN ?? null, maximum: MAXIMUM_PIVOT_SERIES },
+          {
+            topN: section.pivot.topN ?? null,
+            maximum: MAXIMUM_PIVOT_SERIES,
+            warmUp: data.warmUpBuckets,
+            base: pivotBaseBucket(base),
+          },
           { ...DEFAULT_DASHBOARD_LABELS, ...dashboard.labels },
           { sectionId: section.id }
         );
         if (widened.status === 'too-many-series') return widened;
-        const interpolation = section.pivot.interpolation;
         return {
           status: 'ready',
           kind: section.kind,
           section,
-          data: { buckets: widened.buckets, truncated: data.truncated },
-          slots: widened.series.map((series, index) => ({
-            kind: 'line',
-            ...series,
-            interpolation,
-            valueIndex: index,
-          })),
+          data: {
+            buckets: widened.buckets,
+            truncated: data.truncated,
+            warmUpBuckets: widened.warmUpBuckets,
+          },
+          slots: pivotSeriesSlots(section.pivot, widened),
           period,
         };
       }

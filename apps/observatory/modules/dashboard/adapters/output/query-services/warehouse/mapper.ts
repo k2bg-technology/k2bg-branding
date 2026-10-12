@@ -112,46 +112,58 @@ export function toSectionData(
     return null;
   }
 
-  const includedRows =
-    plan.kind === 'time-series'
-      ? rows.slice(0, plan.bucketLimit).reverse()
-      : rows;
+  const buckets = rows.map((row) => {
+    const period = row.period;
+    if (
+      typeof period !== 'string' ||
+      parseBucketKey(plan.grain, period) === null
+    ) {
+      throw new MappingError(
+        `period must match ${plan.grain} grain, received ${JSON.stringify(period)}`
+      );
+    }
+    return {
+      period,
+      values: plan.measures.map((measure, index) => {
+        if (
+          plan.kind === 'stat-tiles' &&
+          period !== plan.selectedPeriod &&
+          ('firstPeriod' in measure && measure.firstPeriod !== undefined
+            ? period < measure.firstPeriod
+            : !('compares' in measure && measure.compares))
+        ) {
+          return null;
+        }
+        const value = readNullableNumber(row, valueColumnAlias(index));
+        return measure.reduction === Reduction.LATEST
+          ? resolveLatest(
+              value,
+              readDistinctCount(row, distinctCountAlias(index)),
+              {
+                sectionId: plan.sectionId,
+                column: measure.column,
+              }
+            )
+          : value;
+      }),
+    };
+  });
+  if (plan.kind !== 'time-series') {
+    return { truncated: false, buckets };
+  }
+  const displayFrom = plan.warmUp?.displayFrom ?? '';
+  const displayed = buckets.filter((bucket) => bucket.period >= displayFrom);
+  const retained = displayed.slice(0, plan.bucketLimit);
+  const warmUp = buckets.slice(
+    retained.length,
+    retained.length + (plan.warmUp?.lookback ?? 0)
+  );
   return {
-    truncated: plan.kind === 'time-series' && rows.length > plan.bucketLimit,
-    buckets: includedRows.map((row) => {
-      const period = row.period;
-      if (
-        typeof period !== 'string' ||
-        parseBucketKey(plan.grain, period) === null
-      ) {
-        throw new MappingError(
-          `period must match ${plan.grain} grain, received ${JSON.stringify(period)}`
-        );
-      }
-      return {
-        period,
-        values: plan.measures.map((measure, index) => {
-          if (
-            plan.kind === 'stat-tiles' &&
-            period !== plan.selectedPeriod &&
-            !('compares' in measure && measure.compares)
-          ) {
-            return null;
-          }
-          const value = readNullableNumber(row, valueColumnAlias(index));
-          return measure.reduction === Reduction.LATEST
-            ? resolveLatest(
-                value,
-                readDistinctCount(row, distinctCountAlias(index)),
-                {
-                  sectionId: plan.sectionId,
-                  column: measure.column,
-                }
-              )
-            : value;
-        }),
-      };
-    }),
+    truncated: displayed.length > plan.bucketLimit,
+    buckets: [...retained].reverse(),
+    ...(plan.warmUp === undefined
+      ? {}
+      : { warmUpBuckets: [...warmUp].reverse() }),
   };
 }
 
@@ -305,7 +317,13 @@ export function toGroupedValues(
     };
   }
   const periods = Array.from(new Set(mapped.map((row) => row.period)));
-  const includedPeriods = periods.slice(0, plan.buckets.bucketLimit);
+  const displayFrom = plan.buckets.warmUp?.displayFrom ?? '';
+  const displayedPeriods = periods.filter((period) => period >= displayFrom);
+  const includedPeriods = displayedPeriods.slice(0, plan.buckets.bucketLimit);
+  const warmUpPeriods = periods.slice(
+    includedPeriods.length,
+    includedPeriods.length + (plan.buckets.warmUp?.lookback ?? 0)
+  );
   const included = mapped.filter((row) => includedPeriods.includes(row.period));
   const buckets = [...includedPeriods].reverse().map((period) => ({
     period,
@@ -314,7 +332,7 @@ export function toGroupedValues(
   if (plan.category === null) {
     return {
       grouping: 'period',
-      truncated: periods.length > plan.buckets.bucketLimit,
+      truncated: displayedPeriods.length > plan.buckets.bucketLimit,
       buckets: buckets.map(({ period, cells }) => ({
         period,
         values: cells[0].values,
@@ -323,7 +341,17 @@ export function toGroupedValues(
   }
   return {
     grouping: 'period-category',
-    truncated: periods.length > plan.buckets.bucketLimit,
+    ...(plan.buckets.warmUp === undefined
+      ? {}
+      : {
+          warmUpBuckets: [...warmUpPeriods].reverse().map((period) => ({
+            period,
+            cells: mapped
+              .filter((row) => row.period === period)
+              .map(({ category, values }) => ({ category, values })),
+          })),
+        }),
+    truncated: displayedPeriods.length > plan.buckets.bucketLimit,
     buckets: buckets.map(({ period, cells }) => ({
       period,
       cells: cells.map(({ category, values }) => ({ category, values })),

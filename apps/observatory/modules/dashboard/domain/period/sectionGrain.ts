@@ -1,4 +1,8 @@
-import { parseCalendarDate, toEpochMilliseconds } from './calendarDate';
+import {
+  formatCalendarDate,
+  parseCalendarDate,
+  toEpochMilliseconds,
+} from './calendarDate';
 import { Period, PeriodGrain } from './period';
 
 export const SectionGrain = { ...PeriodGrain, HOUR: 'hour' } as const;
@@ -66,4 +70,22 @@ export function formatBucketKey(
     throw new Error('Invalid bucket date');
   }
   return period.toString();
+}
+
+export function shiftBucketStart(
+  grain: SectionGrain,
+  start: BucketStart,
+  offset: number
+): BucketStart {
+  if (grain === SectionGrain.HOUR) {
+    const shifted = new Date(
+      toEpochMilliseconds(start.date) + (start.hour + offset) * 3_600_000
+    );
+    return { date: formatCalendarDate(shifted), hour: shifted.getUTCHours() };
+  }
+  const period = Period.containing(grain, start.date);
+  if (period === null) {
+    throw new Error('Invalid bucket date');
+  }
+  return { date: period.shift(offset).firstDate, hour: 0 };
 }

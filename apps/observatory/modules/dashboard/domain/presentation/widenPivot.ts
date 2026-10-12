@@ -14,6 +14,8 @@ export interface PivotBucket {
 export interface WidenPivotOptions {
   topN: TopN | null;
   maximum: number;
+  warmUp?: PivotBucket[];
+  base?: PivotBucket | null;
 }
 
 export type WidenedPivot =
@@ -21,12 +23,14 @@ export type WidenedPivot =
       status: 'ready';
       series: { id: string; label: string }[];
       buckets: { period: string; values: (number | null)[] }[];
+      warmUpBuckets?: { period: string; values: (number | null)[] }[];
+      baseValues?: (number | null)[];
     }
   | { status: 'too-many-series'; count: number; maximum: number };
 
 export function widenPivot(
   buckets: PivotBucket[],
-  { topN, maximum }: WidenPivotOptions,
+  { topN, maximum, warmUp, base }: WidenPivotOptions,
   labels: { nullCategory: string },
   context: { sectionId: string }
 ): WidenedPivot {
@@ -42,18 +46,57 @@ export function widenPivot(
     labels,
     context
   );
+  const series = names.map((label, index) => ({
+    id: index < kept.length ? `category-${index}` : 'remainder',
+    label,
+  }));
+  const keptCategories = kept.map((item) => item.category);
   return {
     status: 'ready',
-    series: names.map((label, index) => ({
-      id: index < kept.length ? `category-${index}` : 'remainder',
-      label,
-    })),
-    buckets: buckets.map((bucket, index) => ({
-      period: bucket.period,
-      values: [
-        ...kept.map((item) => item.values[index] ?? null),
-        ...(remainder === null ? [] : [remainder[index] ?? null]),
-      ],
-    })),
+    series,
+    buckets: buckets.map((bucket) =>
+      widenBucket(bucket, keptCategories, remainder !== null)
+    ),
+    ...(warmUp === undefined
+      ? {}
+      : {
+          warmUpBuckets: warmUp.map((bucket) =>
+            widenBucket(bucket, keptCategories, remainder !== null)
+          ),
+        }),
+    ...(base === undefined
+      ? {}
+      : {
+          baseValues:
+            base === null
+              ? series.map(() => null)
+              : widenBucket(base, keptCategories, remainder !== null).values,
+        }),
+  };
+}
+
+function widenBucket(
+  bucket: PivotBucket,
+  kept: (string | null)[],
+  hasRemainder: boolean
+) {
+  const measured = bucket.cells
+    .filter((cell) => !kept.includes(cell.category))
+    .map((cell) => cell.values[0] ?? null)
+    .filter((value) => value !== null);
+  const remainder =
+    measured.length === 0
+      ? null
+      : measured.reduce((total, value) => total + value, 0);
+  return {
+    period: bucket.period,
+    values: [
+      ...kept.map(
+        (category) =>
+          bucket.cells.find((cell) => cell.category === category)?.values[0] ??
+          null
+      ),
+      ...(hasRemainder ? [remainder] : []),
+    ],
   };
 }

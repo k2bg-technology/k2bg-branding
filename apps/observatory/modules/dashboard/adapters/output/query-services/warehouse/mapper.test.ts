@@ -12,6 +12,7 @@ import {
   AmbiguousLatestValueError,
   AmbiguousSortKeyError,
   Period,
+  planStatTilesSection,
 } from '../../../../domain';
 import { MappingError } from '../../../shared';
 import {
@@ -191,6 +192,41 @@ function plan(): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
 }
 
 describe('warehouse dashboard mapper', () => {
+  it('keeps sparkline values and nulls a plain tile outside the selected period', () => {
+    const sut = toSectionData;
+    const sparklinePlan: SectionQueryPlan = {
+      ...plan(),
+      measures: [
+        {
+          column: 'total',
+          reduction: 'sum',
+          compares: false,
+          sparkline: { window: 3 },
+          firstPeriod: '2026-06',
+        },
+        {
+          column: 'status',
+          reduction: 'latest',
+          compares: false,
+          firstPeriod: '2026-08',
+        },
+      ],
+    };
+
+    const result = sut(
+      [
+        { period: '2026-07', value_0: 100, value_1: 8, distinct_count_1: 1 },
+        { period: '2026-08', value_0: 120, value_1: 9, distinct_count_1: 1 },
+      ],
+      sparklinePlan
+    );
+
+    expect(result?.buckets.map((bucket) => bucket.values)).toEqual([
+      [100, null],
+      [120, 9],
+    ]);
+  });
+
   it('returns null when no month has a bucket', () => {
     expect(toSectionData([], plan())).toBeNull();
   });
@@ -867,5 +903,203 @@ describe('toPivotCells', () => {
         pivotPlan({ measure: { column: 'balance', reduction: 'latest' } })
       )
     ).toThrow(AmbiguousLatestValueError);
+  });
+});
+
+describe('derived series bucket mapping', () => {
+  it.each([
+    {
+      name: 'a capped range',
+      bucketLimit: 2,
+      rows: [
+        { period: '2026-08-15', value_0: 5 },
+        { period: '2026-08-14', value_0: 4 },
+        { period: '2026-08-13', value_0: 3 },
+        { period: '2026-08-12', value_0: 2 },
+        { period: '2026-08-11', value_0: 1 },
+      ],
+      expected: {
+        truncated: true,
+        buckets: [
+          { period: '2026-08-14', values: [4] },
+          { period: '2026-08-15', values: [5] },
+        ],
+        warmUpBuckets: [
+          { period: '2026-08-12', values: [2] },
+          { period: '2026-08-13', values: [3] },
+        ],
+      },
+    },
+    {
+      name: 'a sparse range',
+      bucketLimit: 120,
+      rows: [
+        { period: '2026-08-15', value_0: 5 },
+        { period: '2026-08-13', value_0: 3 },
+        { period: '2026-08-11', value_0: 1 },
+      ],
+      expected: {
+        truncated: false,
+        buckets: [
+          { period: '2026-08-13', values: [3] },
+          { period: '2026-08-15', values: [5] },
+        ],
+        warmUpBuckets: [{ period: '2026-08-11', values: [1] }],
+      },
+    },
+  ])(
+    'splits warm-up at the retained display for $name',
+    ({ bucketLimit, rows, expected }) => {
+      const sut = toSectionData;
+      const timeSeriesPlan: SectionQueryPlan = {
+        ...plan(),
+        kind: 'time-series',
+        grain: 'day',
+        measures: [{ column: 'total', reduction: 'sum' }],
+        bucketLimit,
+        warmUp: { lookback: 2, displayFrom: '2026-08-13' },
+      };
+
+      const result = sut(rows, timeSeriesPlan);
+
+      expect(result).toEqual(expected);
+    }
+  );
+
+  it('omits warm-up buckets without a derived option', () => {
+    const sut = toSectionData;
+
+    const result = sut([{ period: '2026-08', value_0: 7 }], {
+      ...plan(),
+      kind: 'time-series',
+      measures: [{ column: 'total', reduction: 'sum' }],
+      bucketLimit: 120,
+    });
+
+    expect(result).not.toHaveProperty('warmUpBuckets');
+  });
+
+  it('keeps the previous bucket for a two-bucket sparkline', () => {
+    const sut = toSectionData;
+    const period = Period.parse('month', '2026-08');
+    if (period === null) throw new Error('Expected month');
+    const sectionPlan = planStatTilesSection(
+      {
+        id: 'headline',
+        title: 'Headline',
+        kind: 'stat-tiles',
+        source: plan().source,
+        tiles: [
+          {
+            label: 'Total',
+            column: 'total',
+            reduction: 'sum',
+            format: { type: 'number' },
+            sparkline: { window: 2 },
+          },
+        ],
+      },
+      period,
+      'UTC'
+    );
+
+    const result = sut(
+      [
+        { period: '2026-07', value_0: 5 },
+        { period: '2026-08', value_0: 7 },
+      ],
+      sectionPlan
+    );
+
+    expect(result?.buckets.map((bucket) => bucket.values[0])).toEqual([5, 7]);
+  });
+
+  it('keeps each stat tile to the buckets it reads', () => {
+    const sut = toSectionData;
+    const period = Period.parse('month', '2026-08');
+    if (period === null) throw new Error('Expected month');
+    const sectionPlan = planStatTilesSection(
+      {
+        id: 'headline',
+        title: 'Headline',
+        kind: 'stat-tiles',
+        source: plan().source,
+        tiles: [
+          {
+            label: 'Status',
+            column: 'status',
+            reduction: 'latest',
+            comparison: { direction: 'neutral' },
+            format: { type: 'number' },
+          },
+          {
+            label: 'Total',
+            column: 'total',
+            reduction: 'sum',
+            sparkline: { window: 6 },
+            format: { type: 'number' },
+          },
+        ],
+      },
+      period,
+      'UTC'
+    );
+    const rows = [
+      { period: '2026-03', value_0: 1, distinct_count_0: 2, value_1: 10 },
+      { period: '2026-04', value_0: 2, distinct_count_0: 1, value_1: 20 },
+      { period: '2026-05', value_0: 3, distinct_count_0: 1, value_1: 30 },
+      { period: '2026-06', value_0: 4, distinct_count_0: 1, value_1: 40 },
+      { period: '2026-07', value_0: 5, distinct_count_0: 1, value_1: 50 },
+      { period: '2026-08', value_0: 6, distinct_count_0: 1, value_1: 60 },
+    ];
+
+    const result = sut(rows, sectionPlan);
+
+    expect(result?.buckets.map((bucket) => bucket.values)).toEqual([
+      [null, 10],
+      [null, 20],
+      [null, 30],
+      [null, 40],
+      [5, 50],
+      [6, 60],
+    ]);
+  });
+
+  it('splits pivot warm-up buckets before the displayed selection', () => {
+    const sut = toGroupedValues;
+    const groupedPlan: GroupedValuesPlan = {
+      sectionId: 'trend',
+      source: plan().source,
+      timeZone: 'UTC',
+      dateRange: { firstDate: '2025-12-01', lastDate: '2026-02-28' },
+      measures: [{ column: 'amount', reduction: 'sum' }],
+      buckets: {
+        grain: 'month',
+        bucketLimit: 120,
+        warmUp: { lookback: 1, displayFrom: '2026-01' },
+      },
+      category: { column: 'category', sortKey: null },
+    };
+
+    const result = sut(
+      [
+        { period: '2026-02', category: 'food', value_0: 5 },
+        { period: '2026-01', category: 'rent', value_0: 20 },
+        { period: '2025-12', category: 'food', value_0: 1000 },
+      ],
+      groupedPlan
+    );
+
+    expect(result).toEqual({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        { period: '2026-01', cells: [{ category: 'rent', values: [20] }] },
+        { period: '2026-02', cells: [{ category: 'food', values: [5] }] },
+      ],
+      warmUpBuckets: [
+        { period: '2025-12', cells: [{ category: 'food', values: [1000] }] },
+      ],
+    });
   });
 });

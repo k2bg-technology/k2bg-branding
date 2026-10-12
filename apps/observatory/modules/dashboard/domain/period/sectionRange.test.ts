@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { Period } from './period';
-import { resolveSectionRange } from './sectionRange';
+import { resolveSectionRange, widenRangeBackward } from './sectionRange';
 
 function selected(grain: 'month' | 'week' | 'day', key: string) {
   const period = Period.parse(grain, key);
@@ -113,5 +113,58 @@ describe('resolveSectionRange', () => {
       firstDate: '2026-03-27',
       lastDate: '2026-04-30',
     });
+  });
+});
+
+describe('warm-up ranges', () => {
+  it.each([
+    {
+      grain: 'month',
+      key: '2026-08',
+      section: { grain: 'day' },
+      buckets: 6,
+      expected: { firstDate: '2026-07-26', lastDate: '2026-08-31' },
+      firstHour: undefined,
+    },
+    {
+      grain: 'month',
+      key: '2026-08',
+      section: { window: 12 },
+      buckets: 2,
+      expected: { firstDate: '2025-07-01', lastDate: '2026-08-31' },
+      firstHour: undefined,
+    },
+    {
+      grain: 'day',
+      key: '2026-08-15',
+      section: { grain: 'hour' },
+      buckets: 2,
+      expected: { firstDate: '2026-08-14', lastDate: '2026-08-15' },
+      firstHour: 22,
+    },
+  ] as const)(
+    'widens $section by $buckets buckets while retaining the display',
+    ({ grain, key, section, buckets, expected, firstHour }) => {
+      const sut = widenRangeBackward;
+      const range = resolveSectionRange(section, selected(grain, key));
+
+      const result = sut(range, buckets);
+
+      expect(result.dateRange).toEqual(expected);
+      expect(result.firstHour).toBe(firstHour);
+      expect(result.display).toEqual(range.display);
+    }
+  );
+
+  it('keeps the same range when no warm-up is needed', () => {
+    const sut = widenRangeBackward;
+    const range = resolveSectionRange(
+      { window: 12 },
+      selected('month', '2026-08')
+    );
+
+    const result = sut(range, 0);
+
+    expect(result).toBe(range);
   });
 });

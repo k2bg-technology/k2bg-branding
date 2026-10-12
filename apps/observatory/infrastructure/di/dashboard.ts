@@ -16,6 +16,7 @@ import {
   FetchCompositionData,
   FetchMatrixData,
   FetchPivotData,
+  FetchRebaseBase,
   FetchSectionData,
   FetchTableRows,
   FetchTimeSeriesPivot,
@@ -97,5 +98,13 @@ export function createFetchTimeSeriesPivotUseCase(): FetchTimeSeriesPivot {
 export function createFetchPivotDataUseCase(): FetchPivotData {
   return new FetchPivotData(
     new WarehouseFetchPivotDataQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchRebaseBaseUseCase(): FetchRebaseBase {
+  const client = getWarehouseClient();
+  return new FetchRebaseBase(
+    new WarehouseFetchSectionDataQueryService(client),
+    new WarehouseFetchGroupedValuesQueryService(client)
   );
 }

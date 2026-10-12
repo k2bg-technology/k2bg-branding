@@ -1208,3 +1208,345 @@ describe('pivot table rules', () => {
     ).toEqual([]);
   });
 });
+
+function smoothedSeries() {
+  return {
+    ...pivotSeries(),
+    pivot: undefined,
+    series: [{ label: 'A', column: 'a', reduction: 'sum' }],
+  } satisfies TimeSeriesSection;
+}
+
+describe('derived series rules', () => {
+  const measurement = { label: 'A', column: 'a', reduction: 'sum' } as const;
+  const normalized = { ...measurement, normalize: { kind: 'rebase' } } as const;
+  const pivot = {
+    column: 'category',
+    value: { column: 'amount', reduction: 'sum' },
+  } as const;
+  it.each([
+    {
+      name: 'a non-sum running total',
+      section: {
+        ...smoothedSeries(),
+        series: [
+          {
+            ...measurement,
+            reduction: 'average',
+            running: { kind: 'sum', label: 'To date' },
+          },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'reduction'],
+          message:
+            'A running sum adds values up and requires the sum reduction',
+        },
+      ],
+    },
+    {
+      name: 'a non-sum pivot running total',
+      section: {
+        ...pivotSeries(),
+        pivot: {
+          ...pivot,
+          value: { column: 'amount', reduction: 'average' },
+          running: { kind: 'sum', label: '{category} to date' },
+        },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'pivot', 'value', 'reduction'],
+          message:
+            'A running sum adds values up and requires the sum reduction',
+        },
+      ],
+    },
+    {
+      name: 'a pivot average without its category label',
+      section: {
+        ...pivotSeries(),
+        pivot: { ...pivot, movingAverage: { window: 3, label: 'Average' } },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'pivot', 'movingAverage', 'label'],
+          message: 'A pivot derived label names its category with {category}',
+        },
+      ],
+    },
+    {
+      name: 'a pivot total without its category label',
+      section: {
+        ...pivotSeries(),
+        pivot: { ...pivot, running: { kind: 'sum', label: 'To date' } },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'pivot', 'running', 'label'],
+          message: 'A pivot derived label names its category with {category}',
+        },
+      ],
+    },
+    {
+      name: 'a moving average under stacking',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [
+          { ...measurement, movingAverage: { window: 3, label: 'Average' } },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'movingAverage'],
+          message: 'Stacking does not accept a moving average overlay',
+        },
+      ],
+    },
+    {
+      name: 'a running average under stacking',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [
+          { ...measurement, running: { kind: 'average', label: 'Average' } },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'running', 'kind'],
+          message: 'Stacking adds running totals up and requires running sum',
+        },
+      ],
+    },
+    {
+      name: 'rebasing under stacking',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [normalized],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'normalize'],
+          message:
+            'Stacking needs one common scale and does not accept rebasing',
+        },
+      ],
+    },
+    {
+      name: 'mixed raw and running stacked series',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [
+          { ...measurement, running: { kind: 'sum', label: 'To date' } },
+          { ...measurement, column: 'b' },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1, 'running'],
+          message:
+            'Stacking adds one kind of series up: every series declares running or none does',
+        },
+      ],
+    },
+  ] satisfies {
+    name: string;
+    section: TimeSeriesSection;
+    expected: { path: (string | number)[]; message: string }[];
+  }[])('rejects $name', ({ section, expected }) => {
+    const sut = validateDefinitionRules;
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual(expected);
+  });
+
+  it.each([
+    {
+      name: 'a series without the common base',
+      section: { ...smoothedSeries(), series: [normalized, measurement] },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1, 'normalize'],
+          message:
+            'Rebasing applies to every line series of the section with one base',
+        },
+      ],
+    },
+    {
+      name: 'a different fixed base',
+      section: {
+        ...smoothedSeries(),
+        series: [
+          normalized,
+          {
+            ...measurement,
+            normalize: { kind: 'rebase', base: { date: '2026-01-31' } },
+          },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1, 'normalize'],
+          message:
+            'Rebasing applies to every line series of the section with one base',
+        },
+      ],
+    },
+    {
+      name: 'a band series',
+      section: {
+        ...smoothedSeries(),
+        series: [
+          normalized,
+          { label: 'Range', low: 'low', high: 'high', reduction: 'maximum' },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1],
+          message:
+            'Rebasing indexes measurements and does not accept a band series',
+        },
+      ],
+    },
+    {
+      name: 'thresholds',
+      section: {
+        ...smoothedSeries(),
+        series: [normalized],
+        thresholds: [{ value: 5 }],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'thresholds'],
+          message: 'Rebasing changes the scale and does not accept thresholds',
+        },
+      ],
+    },
+    {
+      name: 'bands',
+      section: {
+        ...smoothedSeries(),
+        series: [normalized],
+        bands: [{ from: 1, to: 2 }],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'bands'],
+          message: 'Rebasing changes the scale and does not accept bands',
+        },
+      ],
+    },
+    {
+      name: 'currency formatting',
+      section: {
+        ...smoothedSeries(),
+        series: [normalized],
+        format: { type: 'currency' },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'format'],
+          message: 'Rebasing shows an index and requires the number format',
+        },
+      ],
+    },
+    {
+      name: 'a measurement unit',
+      section: { ...smoothedSeries(), series: [normalized], unit: '°C' },
+      expected: [
+        {
+          path: ['sections', 0, 'unit'],
+          message: 'Rebasing shows an index and does not take unit',
+        },
+      ],
+    },
+  ] satisfies {
+    name: string;
+    section: TimeSeriesSection;
+    expected: { path: (string | number)[]; message: string }[];
+  }[])('rejects $name when rebasing', ({ section, expected }) => {
+    const sut = validateDefinitionRules;
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual(expected);
+  });
+
+  it('requires a date grain for a fixed base', () => {
+    const sut = validateDefinitionRules;
+    const section: TimeSeriesSection = {
+      ...smoothedSeries(),
+      grain: 'hour',
+      source: {
+        dataset: 'metrics',
+        view: 'readings',
+        time: { date: 'reading_date', hour: 'reading_hour' },
+      },
+      series: [
+        {
+          ...measurement,
+          normalize: { kind: 'rebase', base: { date: '2026-01-31' } },
+        },
+      ],
+    };
+
+    const result = sut({
+      ...createDefinition(),
+      grain: 'day',
+      sections: [section],
+    });
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'series', 0, 'normalize', 'base'],
+        message: 'A fixed base date names one bucket and requires a date grain',
+      },
+    ]);
+  });
+
+  it('accepts a stacked pivot of running sums with a remainder', () => {
+    const sut = validateDefinitionRules;
+    const section: TimeSeriesSection = {
+      ...pivotSeries(),
+      variant: 'area',
+      stacked: true,
+      pivot: {
+        ...pivot,
+        topN: { count: 3, otherLabel: 'Other' },
+        running: { kind: 'sum', label: '{category} to date' },
+      },
+    };
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual([]);
+  });
+
+  it('accepts two latest series rebased to one date', () => {
+    const sut = validateDefinitionRules;
+    const section: TimeSeriesSection = {
+      ...smoothedSeries(),
+      series: ['a', 'b'].map((column) => ({
+        label: column,
+        column,
+        reduction: 'latest',
+        normalize: { kind: 'rebase', base: { date: '2026-01-31' } },
+      })),
+    };
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual([]);
+  });
+});

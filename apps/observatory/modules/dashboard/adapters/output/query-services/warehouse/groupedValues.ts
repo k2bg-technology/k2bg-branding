@@ -133,7 +133,10 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
     ...filters.params,
     ...(plan.buckets === null
       ? {}
-      : { bucket_limit: plan.buckets.bucketLimit + 1 }),
+      : {
+          bucket_limit:
+            plan.buckets.bucketLimit + (plan.buckets.warmUp?.lookback ?? 0) + 1,
+        }),
   };
   return { sql, params };
 }

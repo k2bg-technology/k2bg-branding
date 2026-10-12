@@ -2,6 +2,7 @@ export * from './fetch-bars-data';
 export * from './fetch-composition-data';
 export * from './fetch-matrix-data';
 export * from './fetch-pivot-data';
+export * from './fetch-rebase-base';
 export * from './fetch-section-data';
 export * from './fetch-table-rows';
 export * from './fetch-time-series-pivot';
