@@ -24,7 +24,9 @@
     "share": "Share of total",
     "controlOptionsUnavailable": "Codes could not be loaded",
     "tooManySeries": "Too many categories for one chart",
-    "cellBudgetExceeded": "Too many cells to show. Narrow the filters or shorten the window."
+    "cellBudgetExceeded": "Too many cells to show. Narrow the filters or shorten the window.",
+    "pointsTruncated": "Older entries are not drawn",
+    "trendLine": "Fitted line"
   },
   "currency": "JPY",
   "revalidate": 86400,
@@ -469,6 +471,29 @@
       "columns": { "axis": "category", "column": "weekday_name" },
       "value": { "column": "amount", "reduction": "average" },
       "format": { "type": "currency" }
+    },
+    {
+      "id": "balance-by-amount",
+      "title": "Running balance by amount",
+      "kind": "scatter",
+      "width": "half",
+      "controls": ["category"],
+      "source": { "dataset": "sample_dataset", "view": "entries", "time": { "column": "recorded_at", "type": "timestamp" } },
+      "x": { "column": "amount", "label": "Amount", "format": { "type": "currency" } },
+      "y": { "column": "running_balance", "label": "Running balance", "format": { "type": "currency" } },
+      "series": { "column": "category", "label": "Category" },
+      "trendLine": { "slope": "balance_slope", "intercept": "balance_intercept" },
+      "limit": 200
+    },
+    {
+      "id": "reading-correlation",
+      "title": "Humidity against temperature",
+      "kind": "scatter",
+      "width": "half",
+      "source": { "dataset": "sample_dataset", "view": "daily_readings", "time": { "date": "reading_date", "hour": "reading_hour" } },
+      "x": { "column": "temperature", "label": "Temperature", "format": { "type": "number" }, "unit": "°C" },
+      "y": { "column": "humidity", "label": "Humidity", "format": { "type": "percent", "inputScale": "percent" } },
+      "limit": 100
     }
   ]
 }

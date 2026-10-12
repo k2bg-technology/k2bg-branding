@@ -22,3 +22,6 @@ export const COLUMN_KEY_ALIAS = 'column_key';
 export const ROW_RANK_ALIAS = 'row_rank';
 export const COLUMN_RANK_ALIAS = 'column_rank';
 export const CELL_LIMIT_PARAMETER = 'cell_limit';
+export const X_VALUE_ALIAS = 'x_value';
+export const Y_VALUE_ALIAS = 'y_value';
+export const SERIES_ALIAS = 'series_key';
