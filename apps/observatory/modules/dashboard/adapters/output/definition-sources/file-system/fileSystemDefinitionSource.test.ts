@@ -1660,3 +1660,94 @@ describe('pivot table schema', () => {
     );
   });
 });
+
+describe('scatter definitions', () => {
+  it('loads the sample scatter sections with their labels', async () => {
+    await withDefinitionDirectory(
+      { 'sample.json': sampleDashboard },
+      async (directory) => {
+        const result = await new FileSystemDefinitionSource(directory).load();
+        expect(result.issues).toEqual([]);
+        expect(
+          result.definitions[0].sections.filter(
+            (section) => section.kind === 'scatter'
+          )
+        ).toMatchObject([
+          {
+            id: 'balance-by-amount',
+            controls: ['category'],
+            series: { column: 'category', label: 'Category' },
+            trendLine: {
+              slope: 'balance_slope',
+              intercept: 'balance_intercept',
+            },
+            limit: 200,
+          },
+          {
+            id: 'reading-correlation',
+            x: { unit: '°C' },
+            y: { format: { type: 'percent', inputScale: 'percent' } },
+            limit: 100,
+          },
+        ]);
+        expect(result.definitions[0].labels).toMatchObject({
+          pointsTruncated: 'Older entries are not drawn',
+          trendLine: 'Fitted line',
+        });
+      }
+    );
+  });
+
+  it.each([
+    {
+      name: 'zero scatter limit',
+      override: { limit: 0 },
+      path: 'sections[0].limit',
+    },
+    {
+      name: 'oversize scatter limit',
+      override: { limit: 1001 },
+      path: 'sections[0].limit',
+    },
+    {
+      name: 'missing scatter limit',
+      override: { limit: undefined },
+      path: 'sections[0].limit',
+    },
+    {
+      name: 'scatter axis transform',
+      override: {
+        x: {
+          column: 'amount',
+          label: 'Amount',
+          format: { type: 'number' },
+          transform: 'negate',
+        },
+      },
+      path: 'sections[0].x',
+    },
+    {
+      name: 'scatter latest period',
+      override: { period: 'latest' },
+      path: 'sections[0]',
+    },
+  ])('rejects $name at its JSON path', async ({ override, path }) => {
+    const base = sampleDashboard.sections.find(
+      (section) => section.id === 'balance-by-amount'
+    );
+    if (base === undefined) throw new Error('Expected scatter fixture');
+    await withDefinitionDirectory(
+      {
+        'scatter.json': {
+          ...sampleDashboard,
+          sections: [{ ...base, ...override }],
+        },
+      },
+      async (directory) => {
+        const result = await new FileSystemDefinitionSource(directory).load();
+        expect(result.definitions).toEqual([]);
+        expect(result.issues[0].path).toBe(path);
+      }
+    );
+  });
+});

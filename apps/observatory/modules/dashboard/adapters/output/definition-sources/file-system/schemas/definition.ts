@@ -12,6 +12,7 @@ import { donutSectionSchema, treemapSectionSchema } from './composition';
 import { controlSchema } from './controls';
 import { matrixHeatmapSectionSchema } from './matrixHeatmap';
 import { pivotTableSectionSchema } from './pivotTable';
+import { scatterSectionSchema } from './scatter';
 import { sourceSchema, statTilesSectionSchema } from './statTiles';
 import { tableSectionSchema } from './table';
 import { timeSeriesSectionSchema } from './timeSeries';
@@ -44,6 +45,7 @@ const sectionSchemasByKind = {
   [SectionKind.TREEMAP]: treemapSectionSchema,
   [SectionKind.MATRIX_HEATMAP]: matrixHeatmapSectionSchema,
   [SectionKind.PIVOT_TABLE]: pivotTableSectionSchema,
+  [SectionKind.SCATTER]: scatterSectionSchema,
 };
 
 const sectionSchemaBase = z.unknown().transform((value, context): Section => {
@@ -136,6 +138,8 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       controlOptionsUnavailable: z.string().min(1).optional(),
       tooManySeries: z.string().min(1).optional(),
       cellBudgetExceeded: z.string().min(1).optional(),
+      pointsTruncated: z.string().min(1).optional(),
+      trendLine: z.string().min(1).optional(),
     })
     .optional(),
   sections: z.array(sectionSchema).min(1),

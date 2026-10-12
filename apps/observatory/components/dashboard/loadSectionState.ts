@@ -8,6 +8,7 @@ import type {
   MatrixHeatmapSection,
   Period,
   PivotTableSection,
+  ScatterSection,
   Section,
   SeriesSlot,
   StatTilesSection,
@@ -29,6 +30,7 @@ import type {
   FetchCompositionDataInput,
   FetchMatrixDataInput,
   FetchPivotDataInput,
+  FetchScatterDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
   FetchTimeSeriesPivotInput,
@@ -37,6 +39,7 @@ import type {
   PivotBuckets,
   PivotCells,
   ResolveSectionGateInput,
+  ScatterData,
   SectionData,
   SectionGate,
   TableRows,
@@ -50,6 +53,7 @@ import {
 } from './compositionChart';
 import { type MatrixGridInput, matrixGrid } from './matrixGrid';
 import { type PivotTableInput, pivotTable } from './pivotTable';
+import { type ScatterChartInput, scatterChart } from './scatterChart';
 
 interface Input {
   dashboard: DashboardDefinition;
@@ -69,6 +73,9 @@ interface Input {
     input: FetchTimeSeriesPivotInput
   ) => Promise<PivotBuckets | null>;
   fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
+  fetchScatterData: (
+    input: FetchScatterDataInput
+  ) => Promise<ScatterData | null>;
   page: number;
   selections: ControlSelections;
 }
@@ -140,6 +147,13 @@ export type SectionState =
       table: PivotTableInput;
       period: Period;
     }
+  | {
+      status: 'ready';
+      kind: 'scatter';
+      section: ScatterSection;
+      chart: ScatterChartInput;
+      period: Period;
+    }
   | Exclude<SectionGate, { status: 'open' }>
   | { status: 'too-many-series'; count: number; maximum: number }
   | { status: 'unavailable' };
@@ -156,6 +170,7 @@ export async function loadSectionState({
   fetchMatrixData,
   fetchTimeSeriesPivot,
   fetchPivotData,
+  fetchScatterData,
   page,
   selections,
 }: Input): Promise<SectionState> {
@@ -373,6 +388,22 @@ export async function loadSectionState({
           kind: section.kind,
           section,
           table: pivotTable(section, data, period, dashboard),
+          period,
+        };
+      }
+      case SectionKind.SCATTER: {
+        const data = await fetchScatterData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (data === null) return { status: 'empty' };
+        return {
+          status: 'ready',
+          kind: section.kind,
+          section,
+          chart: scatterChart(section, data, dashboard),
           period,
         };
       }

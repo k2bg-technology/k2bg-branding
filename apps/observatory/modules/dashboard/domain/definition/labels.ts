@@ -18,6 +18,8 @@ export interface DashboardLabels {
   controlOptionsUnavailable: string;
   tooManySeries: string;
   cellBudgetExceeded: string;
+  pointsTruncated: string;
+  trendLine: string;
 }
 
 export const DEFAULT_DASHBOARD_LABELS = {
@@ -41,6 +43,8 @@ export const DEFAULT_DASHBOARD_LABELS = {
   tooManySeries: 'Too many series to show',
   cellBudgetExceeded:
     'Too many cells to show. Narrow the section with a filter, a shorter window, or top-N.',
+  pointsTruncated: 'Older points are not shown',
+  trendLine: 'Trend line',
 };
 
 export const DEFAULT_CONTROL_ALL_LABEL = 'All';

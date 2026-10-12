@@ -80,6 +80,7 @@ async function mountPivot(
     fetchMatrixData: async () => null,
     fetchTimeSeriesPivot: async () => null,
     fetchPivotData,
+    fetchScatterData: async () => null,
   });
   render(view);
   await act(() => Promise.resolve());
