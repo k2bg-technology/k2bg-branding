@@ -253,7 +253,7 @@ export type CategoryOrder =
   | 'value-desc'
   | { sortKey: { column: string; type: SortKeyType } };
 export type BarsAxis =
-  | { axis: 'time'; window: number }
+  | { axis: 'time'; grain?: PeriodGrain; window?: number }
   | {
       axis: 'category';
       column: string;

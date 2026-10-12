@@ -3,6 +3,7 @@ import { z } from 'zod';
 import {
   type BarsSection,
   type CategoryOrder,
+  PeriodGrain,
   SectionKind,
 } from '../../../../../domain';
 import {
@@ -53,7 +54,13 @@ export const orderSchema = z
     return z.NEVER;
   });
 const axisSchema = z.discriminatedUnion('axis', [
-  z.strictObject({ axis: z.literal('time'), window: z.number().int().min(1) }),
+  z.strictObject({
+    axis: z.literal('time'),
+    grain: z
+      .enum([PeriodGrain.MONTH, PeriodGrain.WEEK, PeriodGrain.DAY])
+      .optional(),
+    window: z.number().int().min(1).max(120).optional(),
+  }),
   z.strictObject({
     axis: z.literal('category'),
     column: identifierSchema,

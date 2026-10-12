@@ -1785,6 +1785,78 @@ describe('bars sections', () => {
     expect(screen.getByText('Jan – Mar 2026')).toBeInTheDocument();
   });
 
+  it('draws one bar per day of the selected month and leaves days without rows as gaps', async () => {
+    const definition = makeDashboard();
+    const section = definition.sections.find(
+      (candidate) => candidate.id === 'bars'
+    );
+    if (section?.kind !== 'bars') throw new Error('Expected bars');
+    section.x = { axis: 'time', grain: 'day' };
+
+    const { container } = await renderBars(definition, async () => ({
+      grouping: 'period',
+      truncated: false,
+      buckets: [
+        { period: '2026-08-03', values: [10] },
+        { period: '2026-08-31', values: [20] },
+      ],
+    }));
+
+    const labels = categoryAxisLabels(container);
+    expect(labels).toHaveLength(31);
+    expect(labels[0]).toBe('August 1, 2026');
+    expect(labels[2]).toBe('August 3, 2026');
+    expect(labels[30]).toBe('August 31, 2026');
+    expect(container.querySelectorAll('.recharts-bar-rectangle')).toHaveLength(
+      2
+    );
+    expect(screen.getByText('Aug 1 – 31, 2026')).toBeInTheDocument();
+  });
+
+  it('ranks pivot categories over the displayed days and keeps the remainder last', async () => {
+    const definition = makeDashboard();
+    const section = definition.sections.find(
+      (candidate) => candidate.id === 'bars'
+    );
+    if (section?.kind !== 'bars') throw new Error('Expected bars');
+    section.x = { axis: 'time', grain: 'day', window: 3 };
+    section.series = undefined;
+    section.pivot = {
+      column: 'category',
+      value: { column: 'amount', reduction: 'sum' },
+      topN: { count: 1, otherLabel: 'Other categories' },
+    };
+    section.stacked = true;
+
+    const { container } = await renderBars(definition, async () => ({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        {
+          period: '2026-08-29',
+          cells: [
+            { category: 'food', values: [10] },
+            { category: 'rent', values: [20] },
+          ],
+        },
+        {
+          period: '2026-08-31',
+          cells: [{ category: 'food', values: [5] }],
+        },
+      ],
+    }));
+
+    expect(categoryAxisLabels(container)).toEqual([
+      'August 29, 2026',
+      'August 30, 2026',
+      'August 31, 2026',
+    ]);
+    expect(
+      screen.getAllByRole('listitem').map((item) => item.textContent)
+    ).toEqual(['rent', 'Other categories']);
+    expect(screen.getByText('Aug 29 – 31, 2026')).toBeInTheDocument();
+  });
+
   it('shortens a truncated time window and shows the truncation label', async () => {
     const definition = makeDashboard();
     const section = definition.sections[0];
