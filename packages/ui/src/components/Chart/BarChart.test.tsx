@@ -10,6 +10,8 @@ const missingValueLabel = '—';
 const chartMarginLeft = 12;
 /** Menlo, the first font of the brand stack, advances 0.60205em at the 12px caption. */
 const tickCharacterWidth = 7.23;
+/** A CJK glyph advances the full 1em of the 12px caption. */
+const wideTickCharacterWidth = 12;
 
 function createSeries(overrides: Partial<BarSeries> = {}): BarSeries {
   return {
@@ -469,6 +471,22 @@ describe('BarChart', () => {
 
     expect(valueAxisLabelRoom(container)).toBeGreaterThanOrEqual(
       formatValue(largestValue).length * tickCharacterWidth
+    );
+  });
+
+  it('fits a tick label with wide glyphs in the value axis', () => {
+    const { container } = render(
+      <BarChart
+        label="Savings"
+        categories={weekdayCategories}
+        series={[createSeries({ values: [1500000, 900000, 1200000] })]}
+        valueFormatter={(value) => `${value.toLocaleString('ja-JP')} 日本円`}
+      />
+    );
+
+    // '1,500,000 日本円' is ten narrow glyphs and three wide ones.
+    expect(valueAxisLabelRoom(container)).toBeGreaterThanOrEqual(
+      10 * tickCharacterWidth + 3 * wideTickCharacterWidth
     );
   });
 

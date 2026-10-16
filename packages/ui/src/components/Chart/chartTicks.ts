@@ -1,3 +1,4 @@
+import { isWideGlyph } from './chartCalendarLabels';
 import { ChartPeriod } from './types';
 
 const tickTargetCount: Record<ChartPeriod, number> = {
@@ -248,6 +249,8 @@ export function defaultValueFormatter(value: number): string {
 const minimumValueAxisWidth = 48;
 /** Menlo and its monospace fallbacks advance 0.6em: 7.23px at the 12px caption, plus a margin. */
 const tickCharacterWidth = 7.5;
+/** CJK and other wide glyphs advance the full 1em of the 12px caption. */
+const wideTickCharacterWidth = 12;
 /** Recharts' own gap between a tick label and the plot area (tickSize + tickMargin). */
 const tickLabelGap = 14;
 
@@ -260,19 +263,31 @@ export const valueAxisTick = { style: { fontSize: 'var(--text-caption)' } };
 
 /**
  * Recharts' automatic axis width has no lower bound, so the width is derived from
- * the widest label the axis can show. Nice ticks stay close to the values the
- * axis spans, so their formatted bounds stand in for the widest tick label.
+ * the widest label the axis can show, wide glyphs counted at their full width.
+ * Nice ticks stay close to the values the axis spans, so their formatted bounds
+ * stand in for the widest tick label.
  */
 export function valueAxisWidth(
   bounds: readonly number[],
   formatValue: (value: number) => string
 ): number {
-  const longestLabelLength = bounds.reduce(
-    (longest, value) => Math.max(longest, formatValue(value).length),
+  const widestLabelWidth = bounds.reduce(
+    (widest, value) =>
+      Math.max(
+        widest,
+        Array.from(formatValue(value)).reduce(
+          (total, character) =>
+            total +
+            (isWideGlyph(character)
+              ? wideTickCharacterWidth
+              : tickCharacterWidth),
+          0
+        )
+      ),
     0
   );
   return Math.max(
     minimumValueAxisWidth,
-    Math.ceil(longestLabelLength * tickCharacterWidth) + tickLabelGap
+    Math.ceil(widestLabelWidth) + tickLabelGap
   );
 }

@@ -103,7 +103,7 @@ export function weekdayOffset(
   );
 }
 
-function isWideGlyph(character: string) {
+export function isWideGlyph(character: string) {
   return (character.codePointAt(0) ?? 0) >= firstWideCodePoint;
 }
 
