@@ -11,6 +11,11 @@ overrides:
   '@types/glob>@types/minimatch': '-'
   jest-runtime: 30.4.2
 
+patchedDependencies:
+  '@storybook/nextjs@10.6.1':
+    hash: 47ba23aa2a5e6711ec3dc6d6056d11ff191bcf1839ee930120c91bd2fb498ddc
+    path: patches/@storybook__nextjs@10.6.1.patch
+
 importers:
 
   .:
@@ -141,7 +146,7 @@ importers:
     devDependencies:
       '@storybook/nextjs':
         specifier: ^10.6.1
-        version: 10.6.1(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29))
+        version: 10.6.1(patch_hash=47ba23aa2a5e6711ec3dc6d6056d11ff191bcf1839ee930120c91bd2fb498ddc)(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29))
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
@@ -329,7 +334,7 @@ importers:
         version: 10.6.1(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))
       '@storybook/nextjs':
         specifier: ^10.6.1
-        version: 10.6.1(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sharp@0.35.5(@types/node@17.0.45))(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29)(sharp@0.35.5(@types/node@17.0.45)))
+        version: 10.6.1(patch_hash=47ba23aa2a5e6711ec3dc6d6056d11ff191bcf1839ee930120c91bd2fb498ddc)(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sharp@0.35.5(@types/node@17.0.45))(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29)(sharp@0.35.5(@types/node@17.0.45)))
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.3)
@@ -16080,7 +16085,7 @@ snapshots:
       - '@tmcp/auth'
       - typescript
 
-  '@storybook/nextjs@10.6.1(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sharp@0.35.5(@types/node@17.0.45))(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29)(sharp@0.35.5(@types/node@17.0.45)))':
+  '@storybook/nextjs@10.6.1(patch_hash=47ba23aa2a5e6711ec3dc6d6056d11ff191bcf1839ee930120c91bd2fb498ddc)(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(sharp@0.35.5(@types/node@17.0.45))(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29)(sharp@0.35.5(@types/node@17.0.45)))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.29.7)
@@ -16154,7 +16159,7 @@ snapshots:
       - webpack-hot-middleware
       - webpack-plugin-serve
 
-  '@storybook/nextjs@10.6.1(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29))':
+  '@storybook/nextjs@10.6.1(patch_hash=47ba23aa2a5e6711ec3dc6d6056d11ff191bcf1839ee930120c91bd2fb498ddc)(@rspack/core@1.7.11(@swc/helpers@0.5.23))(@swc/core@1.16.13(@swc/helpers@0.5.23))(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(esbuild@0.28.1)(lightningcss@1.32.0)(next@16.4.0(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.0(react@19.3.0))(react@19.3.0))(react-dom@19.3.0(react@19.3.0))(react@19.3.0)(storybook@10.6.1(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.0))(type-fest@2.19.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.111.1(@swc/core@1.16.13(@swc/helpers@0.5.23))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.29))':
     dependencies:
       '@babel/core': 7.29.7
       '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.29.7)
