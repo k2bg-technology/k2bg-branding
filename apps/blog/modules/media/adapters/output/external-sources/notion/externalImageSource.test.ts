@@ -11,6 +11,11 @@ import { NotionMediaExternalImageSource } from './externalImageSource';
 describe('NotionMediaExternalImageSource', () => {
   const createMockNotionClient = () => ({
     databases: {
+      retrieve: vi.fn().mockResolvedValue({
+        data_sources: [{ id: 'test-data-source-id' }],
+      }),
+    },
+    dataSources: {
       query: vi.fn(),
     },
   });
@@ -18,7 +23,7 @@ describe('NotionMediaExternalImageSource', () => {
   describe('fetchImageSources', () => {
     it('filters by MEDIA_IMAGE type in query', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
       const sut = new NotionMediaExternalImageSource(
         mockClient as never,
         'test-db-id'
@@ -26,8 +31,8 @@ describe('NotionMediaExternalImageSource', () => {
 
       await sut.fetchImageSources();
 
-      expect(mockClient.databases.query).toHaveBeenCalledWith({
-        database_id: 'test-db-id',
+      expect(mockClient.dataSources.query).toHaveBeenCalledWith({
+        data_source_id: 'test-data-source-id',
         filter: {
           property: 'type',
           select: {
@@ -49,7 +54,7 @@ describe('NotionMediaExternalImageSource', () => {
         id: '550e8400-e29b-41d4-a716-446655440002',
         sourceUrl: 'https://example.com/image2.jpg',
       });
-      mockClient.databases.query.mockResolvedValue({
+      mockClient.dataSources.query.mockResolvedValue({
         results: [page1, page2],
       });
       const sut = new NotionMediaExternalImageSource(
@@ -87,7 +92,7 @@ describe('NotionMediaExternalImageSource', () => {
       (pageWithoutImage.properties.sourceUrl as unknown as { url: null }).url =
         null;
 
-      mockClient.databases.query.mockResolvedValue({
+      mockClient.dataSources.query.mockResolvedValue({
         results: [pageWithImage, pageWithoutImage],
       });
       const sut = new NotionMediaExternalImageSource(
@@ -103,7 +108,7 @@ describe('NotionMediaExternalImageSource', () => {
 
     it('returns empty array when no results', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
       const sut = new NotionMediaExternalImageSource(
         mockClient as never,
         'test-db-id'
@@ -116,7 +121,7 @@ describe('NotionMediaExternalImageSource', () => {
 
     it('throws ExternalSourceError on API error', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockRejectedValue(new Error('API Error'));
+      mockClient.dataSources.query.mockRejectedValue(new Error('API Error'));
       const sut = new NotionMediaExternalImageSource(
         mockClient as never,
         'test-db-id'
@@ -130,7 +135,7 @@ describe('NotionMediaExternalImageSource', () => {
     it('identifies Notion as the source and preserves the API failure', async () => {
       const mockClient = createMockNotionClient();
       const apiError = new Error('API Error');
-      mockClient.databases.query.mockRejectedValue(apiError);
+      mockClient.dataSources.query.mockRejectedValue(apiError);
       const sut = new NotionMediaExternalImageSource(
         mockClient as never,
         'test-db-id'

@@ -8,6 +8,11 @@ import { NotionAffiliateExternalImageSource } from './externalImageSource';
 describe('NotionAffiliateExternalImageSource', () => {
   const createMockNotionClient = () => ({
     databases: {
+      retrieve: vi.fn().mockResolvedValue({
+        data_sources: [{ id: 'test-data-source-id' }],
+      }),
+    },
+    dataSources: {
       query: vi.fn(),
     },
   });
@@ -15,7 +20,7 @@ describe('NotionAffiliateExternalImageSource', () => {
   describe('fetchImageSources', () => {
     it('filters by Banner and Product types', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
       const sut = new NotionAffiliateExternalImageSource(
         mockClient as never,
         'test-db-id'
@@ -23,8 +28,8 @@ describe('NotionAffiliateExternalImageSource', () => {
 
       await sut.fetchImageSources();
 
-      expect(mockClient.databases.query).toHaveBeenCalledWith({
-        database_id: 'test-db-id',
+      expect(mockClient.dataSources.query).toHaveBeenCalledWith({
+        data_source_id: 'test-data-source-id',
         filter: {
           or: [
             { property: 'type', select: { equals: 'AFFILIATE_BANNER' } },
@@ -46,7 +51,7 @@ describe('NotionAffiliateExternalImageSource', () => {
         id: '550e8400-e29b-41d4-a716-446655440002',
         imageSourceUrl: 'https://example.com/product.jpg',
       });
-      mockClient.databases.query.mockResolvedValue({
+      mockClient.dataSources.query.mockResolvedValue({
         results: [bannerPage, productPage],
       });
       const sut = new NotionAffiliateExternalImageSource(
@@ -85,7 +90,7 @@ describe('NotionAffiliateExternalImageSource', () => {
         pageWithoutImage.properties.imageSourceUrl as unknown as { url: null }
       ).url = null;
 
-      mockClient.databases.query.mockResolvedValue({
+      mockClient.dataSources.query.mockResolvedValue({
         results: [pageWithImage, pageWithoutImage],
       });
       const sut = new NotionAffiliateExternalImageSource(
@@ -101,7 +106,7 @@ describe('NotionAffiliateExternalImageSource', () => {
 
     it('returns empty array when no results', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
       const sut = new NotionAffiliateExternalImageSource(
         mockClient as never,
         'test-db-id'
@@ -114,7 +119,7 @@ describe('NotionAffiliateExternalImageSource', () => {
 
     it('throws ExternalSourceError on API error', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockRejectedValue(new Error('API Error'));
+      mockClient.dataSources.query.mockRejectedValue(new Error('API Error'));
       const sut = new NotionAffiliateExternalImageSource(
         mockClient as never,
         'test-db-id'
