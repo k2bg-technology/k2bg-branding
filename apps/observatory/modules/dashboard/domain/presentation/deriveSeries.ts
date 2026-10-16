@@ -17,25 +17,29 @@ export function movingAverage(
 }
 
 export function runningSum(values: (number | null)[]): (number | null)[] {
-  return values.reduce<{ total: number | null; out: (number | null)[] }>(
-    ({ total, out }, value) => {
+  return values.reduce<{ total: number | null; output: (number | null)[] }>(
+    ({ total, output }, value) => {
       const next = value === null ? total : (total ?? 0) + value;
-      return { total: next, out: [...out, next] };
+      return { total: next, output: [...output, next] };
     },
-    { total: null, out: [] }
-  ).out;
+    { total: null, output: [] }
+  ).output;
 }
 
 export function runningAverage(values: (number | null)[]): (number | null)[] {
-  return values.reduce<{ sum: number; count: number; out: (number | null)[] }>(
-    ({ sum, count, out }, value) => {
+  return values.reduce<{
+    sum: number;
+    count: number;
+    output: (number | null)[];
+  }>(
+    ({ sum, count, output }, value) => {
       const nextSum = sum + (value ?? 0);
       const nextCount = count + (value === null ? 0 : 1);
       const average = nextCount === 0 ? null : nextSum / nextCount;
-      return { sum: nextSum, count: nextCount, out: [...out, average] };
+      return { sum: nextSum, count: nextCount, output: [...output, average] };
     },
-    { sum: 0, count: 0, out: [] }
-  ).out;
+    { sum: 0, count: 0, output: [] }
+  ).output;
 }
 
 export function rebase(
