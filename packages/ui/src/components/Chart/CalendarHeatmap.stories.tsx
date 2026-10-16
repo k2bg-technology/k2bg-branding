@@ -243,6 +243,32 @@ export const NarrowContainer: Story = {
   },
 };
 
+/** 2026-08-03 is a Monday, and 60 days from it end on 1 October, a Thursday. */
+const daysEndingOnFirstOfMonth = buildStepDays(Date.UTC(2026, 7, 3), 60);
+
+export const MonthStartingInLastColumn: Story = {
+  args: {
+    label: 'Daily step count from August to the first of October',
+    days: daysEndingOnFirstOfMonth,
+    weekdayLabels,
+  },
+  play: async ({ canvas, canvasElement }) => {
+    const octoberLabel = canvas.getByText('10');
+    const viewport = scrollPort(canvasElement);
+
+    // The label of the last week column runs past the cells, so the grid has
+    // to make room for it inside the scroll port instead of being clipped.
+    await waitFor(() =>
+      expect(octoberLabel.getBoundingClientRect().right).toBeLessThanOrEqual(
+        viewport.getBoundingClientRect().right + subpixelTolerance
+      )
+    );
+    await expect(viewport.scrollWidth).toBeLessThanOrEqual(
+      viewport.clientWidth
+    );
+  },
+};
+
 export const SparseData: Story = {
   args: {
     label: 'Days with a recorded long run',

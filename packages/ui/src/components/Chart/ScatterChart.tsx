@@ -15,12 +15,17 @@ import {
 import { ChartContainer } from './ChartContainer';
 import { ChartLegend } from './ChartLegend';
 import { ChartTooltip } from './ChartTooltip';
+import { type NumericExtent, numericExtent } from './chartExtent';
 import {
   chartAccessibleName,
   resolveSeriesColor,
   seriesColorCss,
 } from './chartTheme';
-import { defaultValueFormatter } from './chartTicks';
+import {
+  defaultValueFormatter,
+  valueAxisTick,
+  valueAxisWidth,
+} from './chartTicks';
 import { ChartColor, type ChartHeight, type ChartTooltipData } from './types';
 
 export interface ScatterChartPoint {
@@ -63,30 +68,20 @@ function hoveredRow(
   return undefined;
 }
 
-interface HorizontalExtent {
-  min: number;
-  max: number;
-}
-
-function horizontalExtent(
-  series: ScatterChartSeries[]
-): HorizontalExtent | undefined {
-  const xValues = series.flatMap((seriesItem) =>
-    seriesItem.points.map((point) => point.x)
-  );
-  const min = Math.min(...xValues);
-  const max = Math.max(...xValues);
-  return min <= max ? { min, max } : undefined;
-}
-
 // The trend line spans the plotted data, not the axis domain.
 function trendLineSegment(
   trendLine: ScatterChartTrendLine,
-  extent: HorizontalExtent
+  extent: NumericExtent
 ): ReferenceLineSegment {
   return [
-    { x: extent.min, y: trendLine.slope * extent.min + trendLine.intercept },
-    { x: extent.max, y: trendLine.slope * extent.max + trendLine.intercept },
+    {
+      x: extent.minimum,
+      y: trendLine.slope * extent.minimum + trendLine.intercept,
+    },
+    {
+      x: extent.maximum,
+      y: trendLine.slope * extent.maximum + trendLine.intercept,
+    },
   ];
 }
 
@@ -126,7 +121,14 @@ export function ScatterChart({
   const rowsFor = (seriesItem: ScatterChartSeries): ScatterRow[] =>
     seriesItem.points.map((point) => ({ ...point, seriesId: seriesItem.id }));
 
-  const extent = horizontalExtent(series);
+  const points = series.flatMap((seriesItem) => seriesItem.points);
+  const extent = numericExtent(points.map((point) => point.x));
+  // The trend line is clipped to the plot, so only the points reach the axis.
+  const verticalExtent = numericExtent(points.map((point) => point.y));
+  const verticalBounds =
+    verticalExtent === undefined
+      ? [0]
+      : [verticalExtent.minimum, verticalExtent.maximum];
 
   const toTooltipData = (
     tooltipProps: TooltipContentProps
@@ -188,12 +190,13 @@ export function ScatterChart({
           <YAxis
             dataKey="y"
             type="number"
-            width={48}
+            width={valueAxisWidth(verticalBounds, yValueFormatter)}
             domain={['auto', 'auto']}
             tickLine={false}
             axisLine={false}
             tickMargin={8}
             tickFormatter={yValueFormatter}
+            tick={valueAxisTick}
           />
           <Tooltip
             content={(tooltipProps: TooltipContentProps) => {

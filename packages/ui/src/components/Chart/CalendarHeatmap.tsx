@@ -5,12 +5,14 @@ import { Fragment, useId } from 'react';
 import { cn } from '../../utils/cn';
 import { ScrollArea } from '../ScrollArea';
 import {
+  calendarMonthLabelOverhang,
   calendarMonthLabels,
   localeWeekdayNames,
   resolveWeekStart,
   type WeekStartDay,
   weekdayOffset,
 } from './chartCalendarLabels';
+import { numericExtent } from './chartExtent';
 import {
   type HeatmapScaleLabels,
   heatmapCellColor,
@@ -83,14 +85,13 @@ function buildCells(
   days: CalendarHeatmapDay[],
   weekStart: WeekStartDay
 ): CalendarCell[] {
-  if (days.length === 0) {
+  const dayRange = numericExtent(days.map((day) => toUtcMidnight(day.date)));
+  if (dayRange === undefined) {
     return [];
   }
 
   const valueByDate = new Map(days.map((day) => [day.date, day.value]));
-  const timestamps = days.map((day) => toUtcMidnight(day.date));
-  const firstDay = Math.min(...timestamps);
-  const lastDay = Math.max(...timestamps);
+  const { minimum: firstDay, maximum: lastDay } = dayRange;
   const gridStart = firstDay - weekdayOffset(firstDay, weekStart) * dayMs;
   const gridEnd =
     lastDay + (daysPerWeek - 1 - weekdayOffset(lastDay, weekStart)) * dayMs;
@@ -140,6 +141,14 @@ export function CalendarHeatmap({
         locale,
       })
     : [];
+  // A label in one of the last columns runs past the grid, so the grid makes
+  // room for it rather than letting the scroll port clip it.
+  const monthLabelOverhang = calendarMonthLabelOverhang({
+    labels: monthLabels,
+    columnCount: weeks.length,
+    columnWidth: minimumCellSize + cellGap,
+    cellGap,
+  });
   const monthLabelByColumn = new Map(
     monthLabels.map((monthLabel) => [monthLabel.columnIndex, monthLabel.text])
   );
@@ -147,8 +156,7 @@ export function CalendarHeatmap({
   const measuredValues = days
     .map((day) => day.value)
     .filter((value): value is number => value !== null);
-  const scaleMax =
-    max ?? (measuredValues.length > 0 ? Math.max(...measuredValues) : 0);
+  const scaleMax = max ?? numericExtent(measuredValues)?.maximum ?? 0;
   // Only days the caller asked about: the cells padding the first and last week
   // out to whole weeks are layout, not measurements that went missing.
   const missingDays = cells.filter(
@@ -205,6 +213,7 @@ export function CalendarHeatmap({
               gridAutoFlow: 'column',
               gridTemplateRows: `${showMonthLabels ? `${headerRowHeight}px ` : ''}repeat(${daysPerWeek}, auto)`,
               gridAutoColumns: `minmax(${minimumCellSize}px, ${maximumCellSize}px)`,
+              paddingInlineEnd: monthLabelOverhang,
             }}
           >
             {weeks.map((week, columnIndex) => (

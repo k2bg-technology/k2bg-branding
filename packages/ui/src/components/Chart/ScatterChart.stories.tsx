@@ -132,3 +132,49 @@ export const MultiSeries: Story = {
     ],
   },
 };
+
+export const LargeCurrencyValues: Story = {
+  args: {
+    label: 'Monthly spending against monthly income',
+    xLabel: 'Income',
+    yLabel: 'Spending',
+    xValueFormatter: (value: number) => `¥${value.toLocaleString('ja-JP')}`,
+    yValueFormatter: (value: number) => `¥${value.toLocaleString('ja-JP')}`,
+    series: [
+      {
+        id: 'household',
+        label: 'Household',
+        points: toPoints([
+          [18200000, 9850000],
+          [19400000, 10420000],
+          [20100000, 10180000],
+          [21600000, 11240000],
+          [22300000, 11690000],
+          [23800000, 12345678],
+        ]),
+      },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const ticks = () =>
+      Array.from(
+        canvasElement.querySelectorAll<SVGTextElement>(
+          '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+        )
+      );
+    const surfaceLeft =
+      canvasElement.querySelector('.recharts-surface')?.getBoundingClientRect()
+        .left ?? 0;
+
+    await waitFor(() => expect(ticks().length).toBeGreaterThan(0));
+
+    // A tick label that does not fit the axis width is wrapped onto a second
+    // line, and one that still overflows starts left of the chart surface.
+    await expect(
+      ticks().every((tick) => tick.querySelectorAll('tspan').length === 1)
+    ).toBe(true);
+    await expect(
+      Math.min(...ticks().map((tick) => tick.getBoundingClientRect().left))
+    ).toBeGreaterThanOrEqual(surfaceLeft);
+  },
+};

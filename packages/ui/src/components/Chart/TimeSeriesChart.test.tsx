@@ -1,7 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { TimeSeriesChart, type TimeSeriesSeries } from '.';
+import {
+  TimeSeriesChart,
+  type TimeSeriesChartProps,
+  type TimeSeriesSeries,
+} from '.';
 
 function createSeries(
   overrides: Partial<TimeSeriesSeries> = {}
@@ -24,6 +28,22 @@ function timeAxisLabels(container: HTMLElement) {
     ),
     (tick) => tick.textContent ?? ''
   );
+}
+
+const chartMarginLeft = 12;
+/** Menlo, the first font of the brand stack, advances 0.60205em at the 12px caption. */
+const tickCharacterWidth = 7.23;
+
+function formatYen(value: number) {
+  return `¥${value.toLocaleString('en-US')}`;
+}
+
+/** Tick labels end at the axis width, so their anchor measures the room they get. */
+function valueAxisLabelRoom(container: HTMLElement) {
+  const anchor = container.querySelector(
+    '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+  );
+  return Number(anchor?.getAttribute('x')) - chartMarginLeft;
 }
 
 function valueAxisLabels(container: HTMLElement) {
@@ -198,5 +218,100 @@ describe('TimeSeriesChart', () => {
       'Living room',
       'Bedroom',
     ]);
+  });
+
+  it('fits the widest tick label in the value axis', () => {
+    const widestLabel = '¥12,345,678';
+
+    const { container } = render(
+      <TimeSeriesChart
+        label="Savings"
+        period="month"
+        series={[
+          createSeries({
+            points: [
+              { timestamp: Date.UTC(2026, 0, 1), value: 11_000_000 },
+              { timestamp: Date.UTC(2026, 0, 2), value: 12_345_678 },
+            ],
+          }),
+        ]}
+        valueFormatter={formatYen}
+      />
+    );
+
+    expect(valueAxisLabelRoom(container)).toBeGreaterThanOrEqual(
+      widestLabel.length * tickCharacterWidth
+    );
+  });
+
+  const halfOfTarget = [
+    { timestamp: Date.UTC(2026, 0, 1), value: 6_000_000 },
+    { timestamp: Date.UTC(2026, 0, 2), value: 6_000_000 },
+  ];
+
+  it.each<{
+    reach: string;
+    props: Pick<
+      TimeSeriesChartProps,
+      'series' | 'variant' | 'stacked' | 'thresholds'
+    >;
+  }>([
+    {
+      reach: 'the total of stacked areas',
+      props: {
+        variant: 'area',
+        stacked: true,
+        series: [
+          createSeries({ id: 'cash', label: 'Cash', points: halfOfTarget }),
+          createSeries({ id: 'stocks', label: 'Stocks', points: halfOfTarget }),
+        ],
+      },
+    },
+    {
+      reach: 'a threshold above the data',
+      props: {
+        series: [createSeries()],
+        thresholds: [{ id: 'goal', value: 12_000_000 }],
+      },
+    },
+  ])('fits the tick label of $reach in the value axis', ({ props }) => {
+    const widestLabel = '¥12,000,000';
+
+    const { container } = render(
+      <TimeSeriesChart
+        label="Savings"
+        period="month"
+        valueFormatter={formatYen}
+        {...props}
+      />
+    );
+
+    expect(valueAxisLabelRoom(container)).toBeGreaterThanOrEqual(
+      widestLabel.length * tickCharacterWidth
+    );
+  });
+
+  it('renders a year of half-hourly readings from many series', () => {
+    const halfHourMs = 1_800_000;
+    const readingsPerYear = 17_520;
+    const sensorCount = 8;
+    const series = Array.from({ length: sensorCount }, (_, sensorIndex) =>
+      createSeries({
+        id: `sensor${sensorIndex}`,
+        label: `Sensor ${sensorIndex}`,
+        points: Array.from({ length: readingsPerYear }, (_, index) => ({
+          timestamp: Date.UTC(2025, 0, 1) + index * halfHourMs,
+          value: 20 + sensorIndex,
+        })),
+      })
+    );
+
+    render(
+      <TimeSeriesChart label="Room temperature" period="year" series={series} />
+    );
+
+    expect(
+      screen.getByRole('application', { name: 'Room temperature' })
+    ).toBeInTheDocument();
   });
 });

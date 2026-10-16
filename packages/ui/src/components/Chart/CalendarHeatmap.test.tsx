@@ -335,6 +335,38 @@ describe('CalendarHeatmap', () => {
     expect(screen.getByText('Mar')).toBeInTheDocument();
   });
 
+  it.each([
+    { locale: undefined, expectedRoom: 'max(0px, 2ch - 12px)' },
+    { locale: 'ja-JP', expectedRoom: 'max(0px, 2ch + 1em - 12px)' },
+  ])(
+    'makes room after the grid for a month starting in the last column with locale $locale',
+    async ({ locale, expectedRoom }) => {
+      const days = [
+        createDay({ date: '2026-09-21' }),
+        createDay({ date: '2026-10-01', value: 8 }),
+      ];
+
+      const { container } = await renderHeatmap(
+        <CalendarHeatmap label="Steps" days={days} locale={locale} />
+      );
+
+      expect(heatmapGrid(container)?.style.paddingInlineEnd).toBe(expectedRoom);
+    }
+  );
+
+  it('makes no room after the grid when every month label fits its columns', async () => {
+    const days = [
+      createDay({ date: wednesdayDate }),
+      createDay({ date: nextTuesdayDate, value: 8 }),
+    ];
+
+    const { container } = await renderHeatmap(
+      <CalendarHeatmap label="Steps" days={days} />
+    );
+
+    expect(heatmapGrid(container)?.style.paddingInlineEnd).toBe('');
+  });
+
   it('renders no month labels when they are turned off', async () => {
     const days = [
       createDay({ date: wednesdayDate }),

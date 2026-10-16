@@ -36,6 +36,18 @@ function verticalAxisLabels(container: HTMLElement) {
   );
 }
 
+const chartMarginLeft = 12;
+/** Menlo, the first font of the brand stack, advances 0.60205em at the 12px caption. */
+const tickCharacterWidth = 7.23;
+
+/** Tick labels end at the axis width, so their anchor measures the room they get. */
+function verticalAxisLabelRoom(container: HTMLElement) {
+  const anchor = container.querySelector(
+    '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+  );
+  return Number(anchor?.getAttribute('x')) - chartMarginLeft;
+}
+
 function pointCenterXs(container: HTMLElement) {
   return Array.from(container.querySelectorAll('.recharts-symbols'), (symbol) =>
     Number(symbol.getAttribute('cx'))
@@ -265,5 +277,30 @@ describe('ScatterChart', () => {
       'Nights',
       'Naps',
     ]);
+  });
+
+  it('fits the widest tick label in the vertical axis', () => {
+    const widestLabel = '¥12,345,678';
+
+    const { container } = render(
+      <ScatterChart
+        label="Spending against income"
+        xLabel="Income"
+        yLabel="Spending"
+        series={[
+          createSeries({
+            points: [
+              { x: 1, y: 9_800_000 },
+              { x: 2, y: 12_345_678 },
+            ],
+          }),
+        ]}
+        yValueFormatter={(value) => `¥${value.toLocaleString('en-US')}`}
+      />
+    );
+
+    expect(verticalAxisLabelRoom(container)).toBeGreaterThanOrEqual(
+      widestLabel.length * tickCharacterWidth
+    );
   });
 });
