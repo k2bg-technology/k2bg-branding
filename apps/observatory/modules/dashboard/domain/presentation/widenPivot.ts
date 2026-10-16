@@ -38,7 +38,18 @@ export function widenPivot(
   if (topN === null && items.length > maximum) {
     return { status: 'too-many-series', count: items.length, maximum };
   }
-  categoryLabels(items, topN?.otherLabel ?? null, labels, context);
+  // Every fetched category obeys the naming rule, displayed or not: one only in
+  // the warm-up or base bucket would otherwise fold silently into the remainder.
+  categoryLabels(
+    categoryItemsFromBuckets([
+      ...buckets,
+      ...(warmUp ?? []),
+      ...(base ? [base] : []),
+    ]),
+    topN?.otherLabel ?? null,
+    labels,
+    context
+  );
   const { kept, remainder } = selectTopN(items, topN?.count ?? maximum);
   const names = categoryLabels(
     kept,

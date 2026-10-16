@@ -344,6 +344,35 @@ describe('derived pivot widening', () => {
     });
   });
 
+  it.each([
+    {
+      name: 'a warm-up category named like the remainder',
+      fetched: {
+        warmUp: [
+          { period: '2025-12', cells: [{ category: 'Other', values: [1] }] },
+        ],
+      },
+    },
+    {
+      name: 'a base category named like the null label',
+      fetched: {
+        base: { period: '2025-11', cells: [{ category: 'None', values: [1] }] },
+      },
+    },
+  ])('rejects $name outside the displayed buckets', ({ fetched }) => {
+    const sut = widenPivot;
+
+    const act = () =>
+      sut(
+        buckets,
+        { ...options, ...fetched },
+        { nullCategory: 'None' },
+        { sectionId: 'trend' }
+      );
+
+    expect(act).toThrow(DuplicateCategoryLabelError);
+  });
+
   it("a remainder's running average equals the running average of the folded categories' per-bucket sums", () => {
     const sut = widenPivot;
 
