@@ -10,6 +10,7 @@ export interface QueryOptions {
 }
 
 export interface SectionData {
+  warmUpBuckets?: { period: string; values: (number | null)[] }[];
   buckets: { period: string; values: (number | null)[] }[];
   truncated: boolean;
 }
@@ -39,6 +40,10 @@ export type GroupedValues =
     }
   | {
       grouping: 'period-category';
+      warmUpBuckets?: {
+        period: string;
+        cells: { category: CategoryValue; values: (number | null)[] }[];
+      }[];
       buckets: {
         period: string;
         cells: { category: CategoryValue; values: (number | null)[] }[];

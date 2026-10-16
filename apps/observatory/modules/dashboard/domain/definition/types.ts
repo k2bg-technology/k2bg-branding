@@ -129,6 +129,7 @@ export interface StatTileDefinition {
   transform?: ValueTransform;
   format: ValueFormat;
   unit?: string;
+  sparkline?: SparklineDefinition;
   comparison?: {
     direction: 'higher-is-better' | 'lower-is-better' | 'neutral';
   };
@@ -163,12 +164,45 @@ export interface StatTilesSection extends SectionGateFields {
 
 export type SeriesInterpolation = 'linear' | 'step';
 
+export type RunningAggregateKind = 'sum' | 'average';
+
+export interface MovingAverageDefinition {
+  window: number;
+  label: string;
+  minimumPoints?: number;
+}
+
+export interface RunningAggregateDefinition {
+  kind: RunningAggregateKind;
+  label: string;
+}
+
+export type RebaseBaseDefinition = 'first' | { date: string };
+
+export interface RebaseDefinition {
+  kind: 'rebase';
+  base?: RebaseBaseDefinition;
+}
+
+export interface DerivedSeriesFields {
+  movingAverage?: MovingAverageDefinition;
+  running?: RunningAggregateDefinition;
+  normalize?: RebaseDefinition;
+}
+
+export interface SparklineDefinition {
+  window: number;
+}
+
 export interface LineSeriesDefinition {
   label: string;
   column: string;
   reduction: Reduction;
   transform?: ValueTransform;
   interpolation?: SeriesInterpolation;
+  movingAverage?: MovingAverageDefinition;
+  running?: RunningAggregateDefinition;
+  normalize?: RebaseDefinition;
 }
 
 export interface BandSeriesDefinition {
@@ -188,6 +222,9 @@ export interface TimeSeriesPivot {
   value: ValueBinding;
   topN?: TopN;
   interpolation?: SeriesInterpolation;
+  movingAverage?: MovingAverageDefinition;
+  running?: RunningAggregateDefinition;
+  normalize?: RebaseDefinition;
 }
 
 export interface TimeSeriesSection extends SectionGateFields {

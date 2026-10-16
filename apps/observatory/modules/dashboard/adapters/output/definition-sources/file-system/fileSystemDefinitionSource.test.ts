@@ -96,6 +96,51 @@ describe('FileSystemDefinitionSource', () => {
         expect(result.issues).toEqual([]);
         expect(
           result.definitions[0].sections.filter((section) =>
+            [
+              'daily-smoothed',
+              'category-running-total',
+              'monthly-running-average',
+              'rebased-balances',
+              'headline-trend',
+            ].includes(section.id)
+          )
+        ).toMatchObject([
+          {
+            series: [
+              {
+                movingAverage: {
+                  window: 7,
+                  label: '7-day average',
+                  minimumPoints: 4,
+                },
+              },
+            ],
+          },
+          {
+            stacked: true,
+            pivot: {
+              topN: { count: 3 },
+              running: { kind: 'sum', label: '{category} to date' },
+            },
+          },
+          { series: [{ running: { kind: 'average' } }] },
+          {
+            series: [
+              { normalize: { kind: 'rebase', base: { date: '2026-01-31' } } },
+              { normalize: { base: { date: '2026-01-31' } } },
+            ],
+          },
+          {
+            tiles: [
+              {
+                sparkline: { window: 6 },
+                comparison: { direction: 'higher-is-better' },
+              },
+            ],
+          },
+        ]);
+        expect(
+          result.definitions[0].sections.filter((section) =>
             ['largest-entries', 'entry-details'].includes(section.id)
           )
         ).toMatchObject([
@@ -1656,6 +1701,122 @@ describe('pivot table schema', () => {
         expect(sut.issues).toContainEqual(
           expect.objectContaining({ fileName: 'invalid.json', path })
         );
+      }
+    );
+  });
+});
+
+describe('derived series definitions', () => {
+  it.each([
+    {
+      name: 'a one-bucket moving average',
+      section: createTimeSeries({
+        series: [
+          {
+            label: 'A',
+            column: 'a',
+            movingAverage: { window: 1, label: 'Average' },
+          },
+        ],
+      }),
+      path: 'sections[0].series[0].movingAverage.window',
+    },
+    {
+      name: 'too many minimum points',
+      section: createTimeSeries({
+        series: [
+          {
+            label: 'A',
+            column: 'a',
+            movingAverage: { window: 3, label: 'Average', minimumPoints: 5 },
+          },
+        ],
+      }),
+      path: 'sections[0].series[0].movingAverage.minimumPoints',
+      message: 'minimumPoints must not exceed window',
+    },
+    {
+      name: 'an unknown running kind',
+      section: createTimeSeries({
+        series: [
+          {
+            label: 'A',
+            column: 'a',
+            running: { kind: 'total', label: 'To date' },
+          },
+        ],
+      }),
+      path: 'sections[0].series[0].running.kind',
+    },
+    {
+      name: 'an invalid base date',
+      section: createTimeSeries({
+        series: [
+          {
+            label: 'A',
+            column: 'a',
+            normalize: { kind: 'rebase', base: { date: '2026-13-01' } },
+          },
+        ],
+      }),
+      path: 'sections[0].series[0].normalize.base.date',
+    },
+    {
+      name: 'a derived field on a band',
+      section: createTimeSeries({
+        series: [
+          { label: 'A', column: 'a' },
+          {
+            label: 'Range',
+            low: 'lo',
+            high: 'hi',
+            movingAverage: { window: 3, label: 'Average' },
+          },
+        ],
+      }),
+      path: 'sections[0].series[1]',
+    },
+    {
+      name: 'an empty pivot running label',
+      section: createTimeSeries({
+        series: undefined,
+        pivot: {
+          column: 'category',
+          value: { column: 'amount' },
+          running: { kind: 'sum', label: '' },
+        },
+      }),
+      path: 'sections[0].pivot.running.label',
+    },
+    {
+      name: 'a sparkline beyond the bucket bound',
+      section: createSection({
+        tiles: [
+          {
+            label: 'A',
+            column: 'a',
+            format: { type: 'number' },
+            sparkline: { window: 121 },
+          },
+        ],
+      }),
+      path: 'sections[0].tiles[0].sparkline.window',
+    },
+  ])('rejects $name at its JSON path', async ({ section, path, message }) => {
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions).toEqual([]);
+        expect(result.issues).toEqual([
+          expect.objectContaining({
+            path,
+            ...(message === undefined ? {} : { message }),
+          }),
+        ]);
       }
     );
   });

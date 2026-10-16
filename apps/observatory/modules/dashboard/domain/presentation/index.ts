@@ -2,6 +2,8 @@ export * from './categoryItemsFromBuckets';
 export * from './categoryLabels';
 export * from './categoryValue';
 export * from './cellBudget';
+export * from './deriveSeries';
 export * from './orderCategories';
 export * from './selectTopN';
+export * from './timeSeriesSlots';
 export * from './widenPivot';

@@ -1,5 +1,6 @@
 import type {
   DashboardDefinition,
+  RebaseBase,
   Section,
   UrlState,
 } from '../../modules/dashboard/domain';
@@ -11,6 +12,7 @@ import type {
   FetchCompositionDataInput,
   FetchMatrixDataInput,
   FetchPivotDataInput,
+  FetchRebaseBaseInput,
   FetchScatterDataInput,
   FetchSectionDataInput,
   FetchTableRowsInput,
@@ -63,6 +65,7 @@ interface Props {
     input: FetchTimeSeriesPivotInput
   ) => Promise<PivotBuckets | null>;
   fetchPivotData: (input: FetchPivotDataInput) => Promise<PivotCells | null>;
+  fetchRebaseBase: (input: FetchRebaseBaseInput) => Promise<RebaseBase | null>;
   fetchScatterData: (
     input: FetchScatterDataInput
   ) => Promise<ScatterData | null>;
@@ -85,6 +88,7 @@ export async function DashboardSection({
   fetchMatrixData,
   fetchTimeSeriesPivot,
   fetchPivotData,
+  fetchRebaseBase,
   fetchScatterData,
   urlState,
 }: Props) {
@@ -100,6 +104,7 @@ export async function DashboardSection({
     fetchMatrixData,
     fetchTimeSeriesPivot,
     fetchPivotData,
+    fetchRebaseBase,
     fetchScatterData,
     page: urlState.pages[section.id] ?? 1,
     selections: urlState.controls,

@@ -4,6 +4,7 @@ import {
   type DefinitionViolation,
   Reduction,
   SectionKind,
+  type TimeSeriesSection,
   type TimeSeriesSeriesDefinition,
 } from './types';
 
@@ -888,6 +889,187 @@ export function validateDefinitionRules(
     treemapGroupViolations(definition),
     distinctControlViolations(definition),
     matrixHeatmapViolations(definition),
+    derivedSeriesViolations(definition),
+    rebaseViolations(definition),
     scatterCoefficientViolations(definition)
   );
+}
+
+function lineBindings(section: TimeSeriesSection, sectionIndex: number) {
+  if (section.pivot !== undefined) {
+    return [
+      {
+        binding: { ...section.pivot, reduction: section.pivot.value.reduction },
+        path: ['sections', sectionIndex, 'pivot'],
+      },
+    ];
+  }
+  return (section.series ?? []).flatMap((binding, index) =>
+    'column' in binding
+      ? [{ binding, path: ['sections', sectionIndex, 'series', index] }]
+      : []
+  );
+}
+
+function derivedSeriesViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, sectionIndex) => {
+    if (section.kind !== SectionKind.TIME_SERIES) return [];
+    const bindings = lineBindings(section, sectionIndex);
+    const hasRunning = bindings.some(
+      ({ binding }) => binding.running !== undefined
+    );
+    return bindings.flatMap(({ binding, path }) => [
+      ...(binding.running?.kind === 'sum' && binding.reduction !== Reduction.SUM
+        ? [
+            {
+              path: [
+                ...path,
+                ...(section.pivot === undefined ? [] : ['value']),
+                'reduction',
+              ],
+              message:
+                'A running sum adds values up and requires the sum reduction',
+            },
+          ]
+        : []),
+      ...(section.pivot === undefined
+        ? []
+        : ['movingAverage', 'running'].flatMap((field) => {
+            const derived =
+              field === 'movingAverage'
+                ? binding.movingAverage
+                : binding.running;
+            return derived !== undefined &&
+              !derived.label.includes('{category}')
+              ? [
+                  {
+                    path: [...path, field, 'label'],
+                    message:
+                      'A pivot derived label names its category with {category}',
+                  },
+                ]
+              : [];
+          })),
+      ...(section.stacked && binding.movingAverage !== undefined
+        ? [
+            {
+              path: [...path, 'movingAverage'],
+              message: 'Stacking does not accept a moving average overlay',
+            },
+          ]
+        : []),
+      ...(section.stacked && binding.running?.kind === 'average'
+        ? [
+            {
+              path: [...path, 'running', 'kind'],
+              message:
+                'Stacking adds running totals up and requires running sum',
+            },
+          ]
+        : []),
+      ...(section.stacked && binding.normalize !== undefined
+        ? [
+            {
+              path: [...path, 'normalize'],
+              message:
+                'Stacking needs one common scale and does not accept rebasing',
+            },
+          ]
+        : []),
+      ...(section.stacked &&
+      section.pivot === undefined &&
+      hasRunning &&
+      binding.running === undefined
+        ? [
+            {
+              path: [...path, 'running'],
+              message:
+                'Stacking adds one kind of series up: every series declares running or none does',
+            },
+          ]
+        : []),
+    ]);
+  });
+}
+
+function rebaseViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, sectionIndex) => {
+    if (section.kind !== SectionKind.TIME_SERIES) return [];
+    const bindings = lineBindings(section, sectionIndex);
+    const rebased = bindings.filter(
+      ({ binding }) => binding.normalize !== undefined
+    );
+    if (rebased.length === 0) return [];
+    const base = JSON.stringify(rebased[0].binding.normalize?.base ?? 'first');
+    const path = ['sections', sectionIndex];
+    return [
+      ...bindings.flatMap(({ binding, path: bindingPath }) => [
+        ...(section.pivot === undefined &&
+        (binding.normalize === undefined ||
+          JSON.stringify(binding.normalize.base ?? 'first') !== base)
+          ? [
+              {
+                path: [...bindingPath, 'normalize'],
+                message:
+                  'Rebasing applies to every line series of the section with one base',
+              },
+            ]
+          : []),
+        ...(typeof binding.normalize?.base === 'object' &&
+        (section.grain ?? definition.grain) === SectionGrain.HOUR
+          ? [
+              {
+                path: [...bindingPath, 'normalize', 'base'],
+                message:
+                  'A fixed base date names one bucket and requires a date grain',
+              },
+            ]
+          : []),
+      ]),
+      ...(section.series ?? []).flatMap((series, index) =>
+        'column' in series
+          ? []
+          : [
+              {
+                path: [...path, 'series', index],
+                message:
+                  'Rebasing indexes measurements and does not accept a band series',
+              },
+            ]
+      ),
+      ...(section.thresholds !== undefined
+        ? [
+            {
+              path: [...path, 'thresholds'],
+              message:
+                'Rebasing changes the scale and does not accept thresholds',
+            },
+          ]
+        : []),
+      ...(section.bands !== undefined
+        ? [
+            {
+              path: [...path, 'bands'],
+              message: 'Rebasing changes the scale and does not accept bands',
+            },
+          ]
+        : []),
+      ...(section.format.type !== 'number'
+        ? [
+            {
+              path: [...path, 'format'],
+              message: 'Rebasing shows an index and requires the number format',
+            },
+          ]
+        : []),
+      ...(section.unit !== undefined
+        ? [
+            {
+              path: [...path, 'unit'],
+              message: 'Rebasing shows an index and does not take unit',
+            },
+          ]
+        : []),
+    ];
+  });
 }

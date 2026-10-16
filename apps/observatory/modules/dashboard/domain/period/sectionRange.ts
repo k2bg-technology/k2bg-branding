@@ -6,6 +6,7 @@ import {
   formatBucketKey,
   parseBucketKey,
   type SectionGrain,
+  shiftBucketStart,
 } from './sectionGrain';
 
 interface SectionRangeInput {
@@ -93,4 +94,26 @@ export function resolveSectionRange(
     },
     display: { first: displayFirst, last },
   };
+}
+
+// The displayed window stays as resolved; only the fetched range starts earlier.
+export function widenRangeBackward(
+  range: SectionRange,
+  buckets: number
+): SectionRange {
+  if (buckets === 0) {
+    return range;
+  }
+  const first = shiftBucketStart(
+    range.grain,
+    { date: range.dateRange.firstDate, hour: range.firstHour ?? 0 },
+    -buckets
+  );
+  const dateRange = {
+    firstDate: first.date,
+    lastDate: range.dateRange.lastDate,
+  };
+  return range.grain === 'hour'
+    ? { ...range, firstHour: first.hour, dateRange }
+    : { ...range, dateRange };
 }

@@ -7,10 +7,14 @@ import type {
 } from '../../../modules/dashboard/domain';
 import {
   DEFAULT_DASHBOARD_LABELS,
+  deriveLineSeries,
+  formatBucketKey,
   formatPeriodRange,
   Period,
   resolveSectionRange,
+  shiftBucketStart,
   timeSeriesSpine,
+  warmUpLookback,
 } from '../../../modules/dashboard/domain';
 import type { SectionData } from '../../../modules/dashboard/use-cases';
 import { TimeSeriesSectionChart } from './TimeSeriesSectionChart';
@@ -59,34 +63,63 @@ export function TimeSeriesSection({
     truncated: data.truncated,
     firstBucket: data.buckets[0]?.period,
   });
+  const lookback = warmUpLookback(section);
   const spine = timeSeriesSpine(
-    range,
-    data.buckets,
+    lookback === 0
+      ? range
+      : {
+          ...range,
+          display: {
+            first: shiftBucketStart(
+              range.grain,
+              range.display.first,
+              -lookback
+            ),
+            last: range.display.last,
+          },
+        },
+    [...(data.warmUpBuckets ?? []), ...data.buckets],
     data.buckets[0]?.values.length ?? 0,
     dashboard.timeZone
   );
-  const series: TimeSeriesChartSeries[] = slots.map((slot) =>
-    slot.kind === 'band'
-      ? {
-          kind: 'band',
-          id: slot.id,
-          label: slot.label,
-          interpolation: slot.interpolation,
-          points: spine.map(({ timestamp, values }) => ({
-            timestamp,
-            low: values[slot.lowIndex] ?? null,
-            high: values[slot.highIndex] ?? null,
-          })),
-        }
-      : {
-          id: slot.id,
-          label: slot.label,
-          interpolation: slot.interpolation,
-          points: spine.map(({ timestamp, values }) => ({
-            timestamp,
-            value: values[slot.valueIndex] ?? null,
-          })),
-        }
+  const displayFrom = formatBucketKey(range.grain, range.display.first);
+  const warmUpCount = spine.filter(
+    (bucket) => bucket.period < displayFrom
+  ).length;
+  const displaySpine = spine.slice(warmUpCount);
+  const series: TimeSeriesChartSeries[] = slots.flatMap<TimeSeriesChartSeries>(
+    (slot) => {
+      if (slot.kind === 'band') {
+        return [
+          {
+            kind: 'band',
+            id: slot.id,
+            label: slot.label,
+            interpolation: slot.interpolation,
+            points: displaySpine.map(({ timestamp, values }) => ({
+              timestamp,
+              low: values[slot.lowIndex] ?? null,
+              high: values[slot.highIndex] ?? null,
+            })),
+          },
+        ];
+      }
+      return deriveLineSeries(
+        slot,
+        spine.map(({ values }) => values[slot.valueIndex] ?? null),
+        warmUpCount,
+        section.stacked
+      ).map((derived) => ({
+        id: derived.id,
+        label: derived.label,
+        interpolation: slot.interpolation,
+        ...(derived.overlay ? { lineStyle: 'dashed' as const } : {}),
+        points: displaySpine.map(({ timestamp }, index) => ({
+          timestamp,
+          value: derived.values[index] ?? null,
+        })),
+      }));
+    }
   );
   const thresholds = section.thresholds?.map((threshold, index) => ({
     id: `threshold-${index}`,

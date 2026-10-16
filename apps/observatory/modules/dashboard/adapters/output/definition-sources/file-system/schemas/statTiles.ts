@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import {
+  MAXIMUM_SECTION_BUCKETS,
   PercentInputScale,
   parseCalendarDate,
   Reduction,
@@ -135,6 +136,11 @@ const tileSchemaBase = z.strictObject({
   transform: transformSchema.optional(),
   format: valueFormatSchema,
   unit: z.string().min(1).optional(),
+  sparkline: z
+    .strictObject({
+      window: z.number().int().min(2).max(MAXIMUM_SECTION_BUCKETS),
+    })
+    .optional(),
   comparison: z
     .strictObject({
       direction: z.enum(['higher-is-better', 'lower-is-better', 'neutral']),

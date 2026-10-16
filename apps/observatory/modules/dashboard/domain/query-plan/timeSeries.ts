@@ -1,9 +1,18 @@
 import type {
+  MovingAverageDefinition,
+  RunningAggregateDefinition,
   SeriesInterpolation,
   TimeSeriesSection,
   TimeSeriesSeriesDefinition,
 } from '../definition';
-import { type Period, resolveSectionRange } from '../period';
+import { SectionKind } from '../definition';
+import {
+  formatBucketKey,
+  Period,
+  type PeriodGrain,
+  resolveSectionRange,
+  widenRangeBackward,
+} from '../period';
 import type { GroupedValuesPlan } from './groupedValues';
 import type { MeasureQueryPlan, SectionQueryPlan } from './types';
 
@@ -16,6 +25,9 @@ export type SeriesSlot =
       label: string;
       interpolation?: SeriesInterpolation;
       valueIndex: number;
+      movingAverage?: MovingAverageDefinition;
+      running?: RunningAggregateDefinition;
+      rebase?: RebaseSlot;
     }
   | {
       kind: 'band';
@@ -57,6 +69,8 @@ export function layoutWideSeries(
               label,
               interpolation,
               valueIndex: layout.measures.length,
+              movingAverage: definition.movingAverage,
+              running: definition.running,
             },
           ],
         };
@@ -95,19 +109,31 @@ export function planTimeSeriesSection(
     );
   }
   const range = resolveSectionRange(section, period);
+  const lookback = warmUpLookback(section);
+  const fetchRange = widenRangeBackward(range, lookback);
+  const warmUp =
+    lookback === 0
+      ? {}
+      : {
+          warmUp: {
+            lookback,
+            displayFrom: formatBucketKey(range.grain, range.display.first),
+          },
+        };
   const common = {
     kind: section.kind,
     sectionId: section.id,
     source: section.source,
     timeZone,
     selectedPeriod: period.toString(),
-    dateRange: range.dateRange,
+    dateRange: fetchRange.dateRange,
     measures: layoutWideSeries(section.series).measures,
     bucketLimit: MAXIMUM_SECTION_BUCKETS,
+    ...warmUp,
   };
-  return range.grain === 'hour'
-    ? { ...common, grain: range.grain, firstHour: range.firstHour }
-    : { ...common, grain: range.grain };
+  return fetchRange.grain === 'hour'
+    ? { ...common, grain: fetchRange.grain, firstHour: fetchRange.firstHour }
+    : { ...common, grain: fetchRange.grain };
 }
 
 export function planTimeSeriesPivot(
@@ -119,17 +145,109 @@ export function planTimeSeriesPivot(
     throw new Error('A time-series pivot requires pivot');
   }
   const range = resolveSectionRange(section, period);
+  const lookback = warmUpLookback(section);
+  const fetchRange = widenRangeBackward(range, lookback);
+  const warmUp =
+    lookback === 0
+      ? {}
+      : {
+          warmUp: {
+            lookback,
+            displayFrom: formatBucketKey(range.grain, range.display.first),
+          },
+        };
   const bucketLimit = MAXIMUM_SECTION_BUCKETS;
   return {
     sectionId: section.id,
     source: section.source,
     timeZone,
-    dateRange: range.dateRange,
+    dateRange: fetchRange.dateRange,
     measures: [section.pivot.value],
     buckets:
-      range.grain === 'hour'
-        ? { grain: range.grain, firstHour: range.firstHour, bucketLimit }
-        : { grain: range.grain, bucketLimit },
+      fetchRange.grain === 'hour'
+        ? {
+            grain: fetchRange.grain,
+            firstHour: fetchRange.firstHour,
+            bucketLimit,
+            ...warmUp,
+          }
+        : { grain: fetchRange.grain, bucketLimit, ...warmUp },
     category: { column: section.pivot.column, sortKey: null },
   };
 }
+
+// One source of the warm-up length for the planner and the chart.
+export function warmUpLookback(section: TimeSeriesSection): number {
+  const windows = [
+    ...(section.series ?? []).flatMap((definition) =>
+      'column' in definition && definition.movingAverage !== undefined
+        ? [definition.movingAverage.window]
+        : []
+    ),
+    ...(section.pivot?.movingAverage === undefined
+      ? []
+      : [section.pivot.movingAverage.window]),
+  ];
+  return Math.max(0, ...windows.map((window) => window - 1));
+}
+
+export function rebaseBaseDate(section: TimeSeriesSection): string | null {
+  const bases = [
+    ...(section.series ?? []).map((definition) =>
+      'column' in definition ? definition.normalize?.base : undefined
+    ),
+    section.pivot?.normalize?.base,
+  ];
+  const fixed = bases.find((base) => typeof base === 'object');
+  return fixed === undefined ? null : fixed.date;
+}
+
+export function planWideRebaseBase(
+  section: TimeSeriesSection,
+  grain: PeriodGrain,
+  date: string,
+  timeZone: string
+): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
+  if (section.series === undefined)
+    throw new Error('A wide base requires series');
+  const bucket = Period.containing(grain, date);
+  if (bucket === null) throw new Error('Invalid base date');
+  return {
+    kind: SectionKind.STAT_TILES,
+    sectionId: section.id,
+    grain,
+    source: section.source,
+    timeZone,
+    selectedPeriod: bucket.toString(),
+    dateRange: { firstDate: bucket.firstDate, lastDate: bucket.lastDate },
+    measures: layoutWideSeries(section.series).measures.map((measure) => ({
+      ...measure,
+      compares: false,
+    })),
+  };
+}
+
+export function planPivotRebaseBase(
+  section: TimeSeriesSection,
+  grain: PeriodGrain,
+  date: string,
+  timeZone: string
+): GroupedValuesPlan {
+  if (section.pivot === undefined)
+    throw new Error('A pivot base requires pivot');
+  const bucket = Period.containing(grain, date);
+  if (bucket === null) throw new Error('Invalid base date');
+  return {
+    sectionId: section.id,
+    source: section.source,
+    timeZone,
+    dateRange: { firstDate: bucket.firstDate, lastDate: bucket.lastDate },
+    measures: [section.pivot.value],
+    buckets: { grain, bucketLimit: 1 },
+    category: { column: section.pivot.column, sortKey: null },
+  };
+}
+
+export type RebaseSlot =
+  | { base: 'first' }
+  | { base: 'fixed'; value: number | null };

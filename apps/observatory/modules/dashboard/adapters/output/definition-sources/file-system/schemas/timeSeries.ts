@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 import {
+  MAXIMUM_SECTION_BUCKETS,
+  parseCalendarDate,
   Reduction,
   SectionGrain,
   SectionKind,
@@ -33,8 +35,47 @@ export const pivotTopNSchema = z.strictObject({
   otherLabel: z.string().min(1),
 });
 
+export const movingAverageSchema = z
+  .strictObject({
+    window: z.number().int().min(2).max(MAXIMUM_SECTION_BUCKETS),
+    label: z.string().min(1),
+    minimumPoints: z.number().int().min(1).optional(),
+  })
+  .refine(
+    (definition) =>
+      definition.minimumPoints === undefined ||
+      definition.minimumPoints <= definition.window,
+    { message: 'minimumPoints must not exceed window', path: ['minimumPoints'] }
+  );
+export const runningSchema = z.strictObject({
+  kind: z.enum(['sum', 'average']),
+  label: z.string().min(1),
+});
+export const rebaseSchema = z.strictObject({
+  kind: z.literal('rebase'),
+  base: z
+    .union([
+      z.literal('first'),
+      z.strictObject({
+        date: z
+          .string()
+          .refine(
+            (value) => parseCalendarDate(value) !== null,
+            'must be a calendar date (YYYY-MM-DD)'
+          ),
+      }),
+    ])
+    .optional(),
+});
+export const derivedSeriesFields = {
+  movingAverage: movingAverageSchema.optional(),
+  running: runningSchema.optional(),
+  normalize: rebaseSchema.optional(),
+};
+
 const lineSeriesSchema = seriesSchema.extend({
   interpolation: interpolationSchema.optional(),
+  ...derivedSeriesFields,
 });
 const bandSeriesSchema = z.strictObject({
   label: z.string().min(1),
@@ -91,6 +132,7 @@ const timeSeriesSectionSchemaBase = z.strictObject({
       value: valueBindingSchema,
       topN: pivotTopNSchema.optional(),
       interpolation: interpolationSchema.optional(),
+      ...derivedSeriesFields,
     })
     .optional(),
   thresholds: z

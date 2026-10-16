@@ -473,6 +473,192 @@
       "format": { "type": "currency" }
     },
     {
+      "id": "daily-smoothed",
+      "title": "Daily readings, smoothed",
+      "kind": "time-series",
+      "grain": "day",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "daily_readings",
+        "time": {
+          "date": "reading_date",
+          "hour": "reading_hour"
+        }
+      },
+      "variant": "line",
+      "stacked": false,
+      "format": {
+        "type": "number"
+      },
+      "unit": "°C",
+      "series": [
+        {
+          "label": "Temperature",
+          "column": "temperature",
+          "reduction": "average",
+          "movingAverage": {
+            "window": 7,
+            "label": "7-day average",
+            "minimumPoints": 4
+          }
+        }
+      ]
+    },
+    {
+      "id": "category-running-total",
+      "title": "Running total by category",
+      "kind": "time-series",
+      "grain": "day",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": {
+          "column": "recorded_at",
+          "type": "timestamp"
+        },
+        "filters": [
+          {
+            "column": "category",
+            "operator": "not-equals",
+            "value": "transfer"
+          }
+        ]
+      },
+      "variant": "area",
+      "stacked": true,
+      "format": {
+        "type": "currency"
+      },
+      "pivot": {
+        "column": "category",
+        "value": {
+          "column": "amount",
+          "reduction": "sum",
+          "transform": "absolute"
+        },
+        "topN": {
+          "count": 3,
+          "otherLabel": "Other categories"
+        },
+        "running": {
+          "kind": "sum",
+          "label": "{category} to date"
+        }
+      }
+    },
+    {
+      "id": "monthly-running-average",
+      "title": "Monthly total and running average",
+      "kind": "time-series",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "entries",
+        "time": {
+          "column": "recorded_at",
+          "type": "timestamp"
+        },
+        "filters": [
+          {
+            "column": "category",
+            "operator": "not-equals",
+            "value": "transfer"
+          }
+        ]
+      },
+      "window": 12,
+      "variant": "line",
+      "stacked": false,
+      "format": {
+        "type": "currency"
+      },
+      "series": [
+        {
+          "label": "Total",
+          "column": "amount",
+          "reduction": "sum",
+          "transform": "absolute",
+          "running": {
+            "kind": "average",
+            "label": "Running average"
+          }
+        }
+      ]
+    },
+    {
+      "id": "rebased-balances",
+      "title": "Balances indexed to 31 January 2026",
+      "kind": "time-series",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "monthly_summary",
+        "time": {
+          "column": "recorded_at",
+          "type": "timestamp"
+        }
+      },
+      "window": 12,
+      "variant": "line",
+      "stacked": false,
+      "format": {
+        "type": "number"
+      },
+      "series": [
+        {
+          "label": "First measure",
+          "column": "first_value",
+          "reduction": "latest",
+          "normalize": {
+            "kind": "rebase",
+            "base": {
+              "date": "2026-01-31"
+            }
+          }
+        },
+        {
+          "label": "Second measure",
+          "column": "second_value",
+          "reduction": "latest",
+          "normalize": {
+            "kind": "rebase",
+            "base": {
+              "date": "2026-01-31"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "headline-trend",
+      "title": "Headline with trend",
+      "kind": "stat-tiles",
+      "width": "half",
+      "source": {
+        "dataset": "sample_dataset",
+        "view": "monthly_summary",
+        "time": {
+          "column": "recorded_at",
+          "type": "timestamp"
+        }
+      },
+      "tiles": [
+        {
+          "label": "Total",
+          "column": "total_value",
+          "reduction": "sum",
+          "transform": "absolute",
+          "comparison": {
+            "direction": "higher-is-better"
+          },
+          "format": {
+            "type": "currency"
+          },
+          "sparkline": {
+            "window": 6
+          }
+        }
+      ]
+    },
+    {
       "id": "daily-totals",
       "title": "Daily total",
       "kind": "bars",

@@ -151,6 +151,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -178,6 +179,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -205,6 +207,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -246,6 +249,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -277,6 +281,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -298,6 +303,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -322,6 +328,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -354,6 +361,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -377,6 +385,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -415,6 +424,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -442,6 +452,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -466,6 +477,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -490,6 +502,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -515,6 +528,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -540,6 +554,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -564,6 +579,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -592,6 +608,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -618,6 +635,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -643,6 +661,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -671,6 +690,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -706,6 +726,7 @@ describe('DashboardSection', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         dashboard: definition,
@@ -767,6 +788,7 @@ describe('composition sections', () => {
       fetchCompositionData,
       fetchMatrixData: async () => null,
       fetchTimeSeriesPivot: async () => null,
+      fetchRebaseBase: async () => null,
       fetchPivotData: async () => null,
       fetchScatterData: async () => null,
     });
@@ -867,6 +889,7 @@ describe('matrix heatmap sections', () => {
       fetchTableRows: async () => null,
       fetchBarsData: async () => null,
       fetchTimeSeriesPivot: async () => null,
+      fetchRebaseBase: async () => null,
       fetchPivotData: async () => null,
       fetchScatterData: async () => null,
       fetchMatrixData,
@@ -1006,6 +1029,7 @@ describe('time-series pivot', () => {
         fetchBarsData: async () => null,
         fetchMatrixData: async () => null,
         fetchTimeSeriesPivot,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         fetchCompositionData: async () => null,
@@ -1165,6 +1189,7 @@ describe('DashboardSection table', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         fetchTableRows: async () => ({
@@ -1201,6 +1226,7 @@ describe('DashboardSection table', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1225,6 +1251,7 @@ describe('DashboardSection table', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1246,6 +1273,7 @@ describe('DashboardSection table', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
         fetchTableRows: async () => ({
@@ -1276,6 +1304,7 @@ describe('DashboardSection table', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1309,6 +1338,7 @@ describe('DashboardSection gates', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1346,6 +1376,7 @@ describe('DashboardSection gates', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1374,6 +1405,7 @@ describe('DashboardSection gates', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1407,6 +1439,7 @@ describe('DashboardSection gates', () => {
       fetchBarsData: async () => null,
       fetchCompositionData: async () => null,
       fetchTimeSeriesPivot: async () => null,
+      fetchRebaseBase: async () => null,
       fetchPivotData: async () => null,
       fetchScatterData: async () => null,
     };
@@ -1467,6 +1500,7 @@ describe('DashboardSection gates', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1506,6 +1540,7 @@ describe('DashboardSection gates', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1537,6 +1572,7 @@ describe('DashboardSection gates', () => {
         fetchBarsData: async () => null,
         fetchCompositionData: async () => null,
         fetchTimeSeriesPivot: async () => null,
+        fetchRebaseBase: async () => null,
         fetchPivotData: async () => null,
         fetchScatterData: async () => null,
       })
@@ -1570,6 +1606,7 @@ describe('DashboardSection gates', () => {
           fetchBarsData: async () => null,
           fetchCompositionData: async () => null,
           fetchTimeSeriesPivot: async () => null,
+          fetchRebaseBase: async () => null,
           fetchPivotData: async () => null,
           fetchScatterData: async () => null,
         })
@@ -1635,6 +1672,7 @@ describe('bars sections', () => {
       fetchBarsData,
       fetchCompositionData: async () => null,
       fetchTimeSeriesPivot: async () => null,
+      fetchRebaseBase: async () => null,
       fetchPivotData: async () => null,
       fetchScatterData: async () => null,
     });
@@ -1668,6 +1706,7 @@ describe('bars sections', () => {
       }),
       fetchCompositionData: async () => null,
       fetchTimeSeriesPivot: async () => null,
+      fetchRebaseBase: async () => null,
       fetchPivotData: async () => null,
       fetchScatterData: async () => null,
     });
@@ -1889,6 +1928,100 @@ describe('bars sections', () => {
   });
 });
 
+describe('derived dashboard series', () => {
+  it('labels stacked running totals per category', async () => {
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'category-running-total'
+    );
+    if (section?.kind !== 'time-series' || section.pivot === undefined)
+      throw new Error('Expected running pivot');
+    const sut = DashboardSection;
+
+    render(
+      await sut({
+        dashboard,
+        section: {
+          ...section,
+          grain: undefined,
+          window: 12,
+          pivot: {
+            ...section.pivot,
+            topN: { count: 1, otherLabel: 'Other categories' },
+          },
+        },
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
+        fetchSectionData: async () => null,
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
+        fetchMatrixData: async () => null,
+        fetchTimeSeriesPivot: async () => ({
+          grouping: 'period-category',
+          truncated: false,
+          buckets: [
+            {
+              period: '2026-01',
+              cells: [
+                { category: 'food', values: [10] },
+                { category: 'rent', values: [20] },
+              ],
+            },
+            { period: '2026-03', cells: [{ category: 'food', values: [5] }] },
+          ],
+        }),
+        fetchPivotData: async () => null,
+        fetchScatterData: async () => null,
+        fetchRebaseBase: async () => null,
+      })
+    );
+
+    expect(
+      screen.getAllByRole('listitem').map((item) => item.textContent)
+    ).toEqual(['rent to date', 'Other categories to date']);
+  });
+
+  it('shows unavailable when the base query fails', async () => {
+    vi.clearAllMocks();
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'rebased-balances'
+    );
+    if (section?.kind !== 'time-series')
+      throw new Error('Expected rebased series');
+    const sut = DashboardSection;
+
+    render(
+      await sut({
+        dashboard,
+        section,
+        urlState,
+        periodResolution: Promise.resolve(resolution('2026-08')),
+        resolveSectionGate: openGate,
+        fetchSectionData: async () => ({
+          buckets: [{ period: '2026-08', values: [100, 120] }],
+          truncated: false,
+        }),
+        fetchTableRows: async () => null,
+        fetchBarsData: async () => null,
+        fetchCompositionData: async () => null,
+        fetchMatrixData: async () => null,
+        fetchTimeSeriesPivot: async () => null,
+        fetchPivotData: async () => null,
+        fetchScatterData: async () => null,
+        fetchRebaseBase: async () => {
+          throw new Error('Base query failed');
+        },
+      })
+    );
+
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(dashboardLogger.error).toHaveBeenCalledTimes(1);
+  });
+});
+
 function scatterDashboard(): DashboardDefinition {
   const definition = dashboard();
   definition.sections = [
@@ -1928,6 +2061,7 @@ async function showScatter(
     fetchMatrixData: async () => null,
     fetchTimeSeriesPivot: async () => null,
     fetchPivotData: async () => null,
+    fetchRebaseBase: async () => null,
     fetchScatterData,
   });
   render(view);

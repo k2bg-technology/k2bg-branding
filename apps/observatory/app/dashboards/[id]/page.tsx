@@ -10,6 +10,7 @@ import {
   createFetchCompositionDataUseCase,
   createFetchMatrixDataUseCase,
   createFetchPivotDataUseCase,
+  createFetchRebaseBaseUseCase,
   createFetchScatterDataUseCase,
   createFetchSectionDataUseCase,
   createFetchTableRowsUseCase,
@@ -131,6 +132,9 @@ export default async function Page({ params, searchParams }: Props) {
                 }
                 fetchPivotData={(input) =>
                   createFetchPivotDataUseCase().execute(input)
+                }
+                fetchRebaseBase={(input) =>
+                  createFetchRebaseBaseUseCase().execute(input)
                 }
                 fetchScatterData={(input) =>
                   createFetchScatterDataUseCase().execute(input)

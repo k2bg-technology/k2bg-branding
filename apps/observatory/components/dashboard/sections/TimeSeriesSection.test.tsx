@@ -302,3 +302,206 @@ describe('TimeSeriesSection', () => {
     });
   });
 });
+
+describe('derived time-series presentation', () => {
+  beforeEach(() => chart.mockClear());
+
+  it('draws a moving average and a running total from one source and starts the total at the displayed window', () => {
+    const dashboard = definition('day', 'day', 3);
+    const section = dashboard.sections[0];
+    if (section.kind !== 'time-series') throw new Error('Expected series');
+    section.series = [
+      {
+        label: 'Temperature',
+        column: 'temperature',
+        reduction: 'sum',
+        movingAverage: { window: 2, label: 'Smoothed', minimumPoints: 1 },
+        running: { kind: 'sum', label: 'Total so far' },
+      },
+    ];
+    const sut = renderSeries;
+
+    const result = sut(dashboard, '2026-08-15', [
+      { period: '2026-08-15', value_0: 40 },
+      { period: '2026-08-14', value_0: null },
+      { period: '2026-08-13', value_0: 20 },
+      { period: '2026-08-12', value_0: 10 },
+    ]);
+
+    expect(result.series).toEqual([
+      {
+        id: 'series-0',
+        label: 'Temperature',
+        interpolation: undefined,
+        points: [
+          { timestamp: 1786546800000, value: 20 },
+          { timestamp: 1786633200000, value: null },
+          { timestamp: 1786719600000, value: 40 },
+        ],
+      },
+      {
+        id: 'series-0-moving-average',
+        label: 'Smoothed',
+        interpolation: undefined,
+        lineStyle: 'dashed',
+        points: [
+          { timestamp: 1786546800000, value: 15 },
+          { timestamp: 1786633200000, value: null },
+          { timestamp: 1786719600000, value: 40 },
+        ],
+      },
+      {
+        id: 'series-0-running',
+        label: 'Total so far',
+        interpolation: undefined,
+        lineStyle: 'dashed',
+        points: [
+          { timestamp: 1786546800000, value: 20 },
+          { timestamp: 1786633200000, value: 20 },
+          { timestamp: 1786719600000, value: 60 },
+        ],
+      },
+    ]);
+    expect(screen.getByText('Aug 13 – 15, 2026')).toBeInTheDocument();
+  });
+
+  it('stacks running totals that sum to the running total of every category', () => {
+    const dashboard = definition('day', 'day', 3);
+    const section = dashboard.sections[0];
+    const period = Period.parse('day', '2026-08-15');
+    if (section.kind !== 'time-series' || period === null)
+      throw new Error('Expected series');
+    const sut = (
+      <TimeSeriesSection
+        dashboard={dashboard}
+        section={{
+          ...section,
+          series: undefined,
+          variant: 'area',
+          stacked: true,
+          pivot: {
+            column: 'category',
+            value: { column: 'amount', reduction: 'sum' },
+            running: { kind: 'sum', label: '{category} to date' },
+          },
+        }}
+        period={period}
+        data={{
+          truncated: false,
+          buckets: [
+            { period: '2026-08-13', values: [20, 5] },
+            { period: '2026-08-14', values: [null, 10] },
+            { period: '2026-08-15', values: [30, null] },
+          ],
+        }}
+        slots={[
+          {
+            kind: 'line',
+            id: 'category-0',
+            label: 'rent',
+            valueIndex: 0,
+            running: { kind: 'sum', label: 'rent to date' },
+          },
+          {
+            kind: 'line',
+            id: 'category-1',
+            label: 'food',
+            valueIndex: 1,
+            running: { kind: 'sum', label: 'food to date' },
+          },
+        ]}
+      />
+    );
+
+    render(sut);
+    const result = chart.mock.calls.at(-1)?.[0];
+    if (result === undefined) throw new Error('Expected chart');
+    const measured = result.series.filter((series) => series.kind !== 'band');
+
+    expect(measured.map((series) => series.id)).toEqual([
+      'category-0-running',
+      'category-1-running',
+    ]);
+    expect(
+      measured.map((series) => series.points.map((point) => point.value))
+    ).toEqual([
+      [20, 20, 50],
+      [5, 15, 15],
+    ]);
+    expect(
+      measured[0].points.map(
+        (point, index) =>
+          (point.value ?? 0) + (measured[1].points[index].value ?? 0)
+      )
+    ).toEqual([25, 35, 65]);
+    expect(result.stacked).toBe(true);
+  });
+
+  it("rebases every series to the first measured value and an overlay to its source's base", () => {
+    const dashboard = definition('day', 'day', 3);
+    const sut = renderSeries;
+
+    const result = sut(
+      dashboard,
+      '2026-08-15',
+      [
+        { period: '2026-08-15', value_0: 100 },
+        { period: '2026-08-14', value_0: 80 },
+        { period: '2026-08-13', value_0: null },
+      ],
+      false,
+      [
+        {
+          kind: 'line',
+          id: 'series-0',
+          label: 'Temperature',
+          valueIndex: 0,
+          rebase: { base: 'first' },
+          movingAverage: { window: 2, label: 'Smoothed', minimumPoints: 1 },
+        },
+      ]
+    );
+
+    expect(
+      result.series.map((series) =>
+        series.points.map((point) => ('value' in point ? point.value : null))
+      )
+    ).toEqual([
+      [null, 100, 125],
+      [null, 100, 112.5],
+    ]);
+  });
+
+  it.each([
+    { name: 'a fixed base', value: 80, expected: [125, 150] },
+    { name: 'a missing base', value: null, expected: [null, null] },
+  ])('divides by $name', ({ value, expected }) => {
+    const dashboard = definition('day', 'day', 2);
+    const sut = renderSeries;
+
+    const result = sut(
+      dashboard,
+      '2026-08-15',
+      [
+        { period: '2026-08-15', value_0: 120 },
+        { period: '2026-08-14', value_0: 100 },
+      ],
+      false,
+      [
+        {
+          kind: 'line',
+          id: 'series-0',
+          label: 'Temperature',
+          valueIndex: 0,
+          rebase: { base: 'fixed', value },
+        },
+      ]
+    );
+
+    expect(
+      result.series[0].points.map((point) =>
+        'value' in point ? point.value : null
+      )
+    ).toEqual(expected);
+  });
+});

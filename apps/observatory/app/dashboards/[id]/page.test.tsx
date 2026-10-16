@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
   fetchMatrixData: vi.fn(),
   fetchTimeSeriesPivot: vi.fn(),
   fetchPivotData: vi.fn(),
+  fetchRebaseBase: vi.fn(async () => null),
   fetchScatterData: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
   notFound: vi.fn(() => {
@@ -43,6 +44,7 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
     execute: mocks.fetchTimeSeriesPivot,
   }),
   createFetchPivotDataUseCase: () => ({ execute: mocks.fetchPivotData }),
+  createFetchRebaseBaseUseCase: () => ({ execute: mocks.fetchRebaseBase }),
   createFetchScatterDataUseCase: () => ({ execute: mocks.fetchScatterData }),
 }));
 vi.mock('../../../modules/dashboard/adapters/shared', () => ({
