@@ -37,6 +37,5 @@ const scatterSectionSchemaBase = z.strictObject({
 export const scatterSectionSchema =
   scatterSectionSchemaBase satisfies z.ZodType<
     ScatterSection,
-    z.ZodTypeDef,
     z.input<typeof scatterSectionSchemaBase>
   >;

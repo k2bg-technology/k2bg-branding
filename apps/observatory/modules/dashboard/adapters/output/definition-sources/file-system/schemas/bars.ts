@@ -94,6 +94,5 @@ const barsSectionSchemaBase = z.strictObject({
 
 export const barsSectionSchema = barsSectionSchemaBase satisfies z.ZodType<
   BarsSection,
-  z.ZodTypeDef,
   z.input<typeof barsSectionSchemaBase>
 >;
