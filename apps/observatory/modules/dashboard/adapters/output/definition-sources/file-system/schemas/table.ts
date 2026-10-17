@@ -37,7 +37,6 @@ const columnSchemaBase = z.discriminatedUnion('type', [
 ]);
 const columnSchema = columnSchemaBase satisfies z.ZodType<
   TableColumnDefinition,
-  z.ZodTypeDef,
   z.input<typeof columnSchemaBase>
 >;
 
@@ -65,6 +64,5 @@ const tableSectionSchemaBase = z.strictObject({
 
 export const tableSectionSchema = tableSectionSchemaBase satisfies z.ZodType<
   TableSection,
-  z.ZodTypeDef,
   z.input<typeof tableSectionSchemaBase>
 >;

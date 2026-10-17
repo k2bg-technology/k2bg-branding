@@ -56,6 +56,5 @@ const matrixHeatmapSectionSchemaBase = z.strictObject({
 export const matrixHeatmapSectionSchema =
   matrixHeatmapSectionSchemaBase satisfies z.ZodType<
     MatrixHeatmapSection,
-    z.ZodTypeDef,
     z.input<typeof matrixHeatmapSectionSchemaBase>
   >;

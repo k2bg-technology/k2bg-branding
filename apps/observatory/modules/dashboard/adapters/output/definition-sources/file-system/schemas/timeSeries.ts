@@ -160,6 +160,5 @@ const timeSeriesSectionSchemaBase = z.strictObject({
 export const timeSeriesSectionSchema =
   timeSeriesSectionSchemaBase satisfies z.ZodType<
     TimeSeriesSection,
-    z.ZodTypeDef,
     z.input<typeof timeSeriesSectionSchemaBase>
   >;

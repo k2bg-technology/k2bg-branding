@@ -39,7 +39,6 @@ const donutSectionSchemaBase = z.strictObject({
 });
 export const donutSectionSchema = donutSectionSchemaBase satisfies z.ZodType<
   DonutSection,
-  z.ZodTypeDef,
   z.input<typeof donutSectionSchemaBase>
 >;
 
@@ -52,6 +51,5 @@ const treemapSectionSchemaBase = z.strictObject({
 export const treemapSectionSchema =
   treemapSectionSchemaBase satisfies z.ZodType<
     TreemapSection,
-    z.ZodTypeDef,
     z.input<typeof treemapSectionSchemaBase>
   >;

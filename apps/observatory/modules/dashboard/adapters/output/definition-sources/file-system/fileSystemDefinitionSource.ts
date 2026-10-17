@@ -27,15 +27,15 @@ function describeError(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-function jsonPath(path: (string | number)[]): string {
+function jsonPath(path: PropertyKey[]): string {
   return path.reduce<string>((result, segment) => {
     if (typeof segment === 'number') {
       return `${result}[${segment}]`;
     }
     if (result === '') {
-      return segment;
+      return String(segment);
     }
-    return `${result}.${segment}`;
+    return `${result}.${String(segment)}`;
   }, '');
 }
 

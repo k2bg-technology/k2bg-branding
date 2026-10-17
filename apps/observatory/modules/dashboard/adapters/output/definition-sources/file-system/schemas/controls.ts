@@ -28,7 +28,6 @@ const distinctControlSchemaBase = z.strictObject({
 });
 const distinctControlSchema = distinctControlSchemaBase satisfies z.ZodType<
   DistinctControlDefinition,
-  z.ZodTypeDef,
   z.input<typeof distinctControlSchemaBase>
 >;
 
@@ -54,6 +53,5 @@ const controlSchemaBase = z
   });
 export const controlSchema = controlSchemaBase satisfies z.ZodType<
   ControlDefinition,
-  z.ZodTypeDef,
   z.input<typeof controlSchemaBase>
 >;

@@ -149,7 +149,6 @@ const tileSchemaBase = z.strictObject({
 });
 const tileSchema = tileSchemaBase satisfies z.ZodType<
   StatTileDefinition,
-  z.ZodTypeDef,
   z.input<typeof tileSchemaBase>
 >;
 
@@ -166,6 +165,5 @@ const statTilesSectionSchemaBase = z.strictObject({
 export const statTilesSectionSchema =
   statTilesSectionSchemaBase satisfies z.ZodType<
     StatTilesSection,
-    z.ZodTypeDef,
     z.input<typeof statTilesSectionSchemaBase>
   >;

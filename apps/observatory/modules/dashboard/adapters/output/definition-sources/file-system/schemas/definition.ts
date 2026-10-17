@@ -88,7 +88,6 @@ const sectionSchemaBase = z.unknown().transform((value, context): Section => {
 });
 const sectionSchema = sectionSchemaBase satisfies z.ZodType<
   Section,
-  z.ZodTypeDef,
   z.input<typeof sectionSchemaBase>
 >;
 
@@ -147,6 +146,5 @@ const dashboardDefinitionSchemaBase = z.strictObject({
 export const dashboardDefinitionSchema =
   dashboardDefinitionSchemaBase satisfies z.ZodType<
     DashboardDefinition,
-    z.ZodTypeDef,
     z.input<typeof dashboardDefinitionSchemaBase>
   >;

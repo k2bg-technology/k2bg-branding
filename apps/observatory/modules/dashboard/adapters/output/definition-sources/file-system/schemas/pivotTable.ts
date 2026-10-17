@@ -89,6 +89,5 @@ const pivotTableSectionSchemaBase = z.strictObject({
 export const pivotTableSectionSchema =
   pivotTableSectionSchemaBase satisfies z.ZodType<
     PivotTableSection,
-    z.ZodTypeDef,
     z.input<typeof pivotTableSectionSchemaBase>
   >;
