@@ -43,6 +43,5 @@ const calendarHeatmapSectionSchemaBase = z.strictObject({
 export const calendarHeatmapSectionSchema =
   calendarHeatmapSectionSchemaBase satisfies z.ZodType<
     CalendarHeatmapSection,
-    z.ZodTypeDef,
     z.input<typeof calendarHeatmapSectionSchemaBase>
   >;
