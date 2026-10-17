@@ -5,23 +5,26 @@ import { Button, buttonVariants } from '../Button';
 
 type Props = React.ComponentPropsWithoutRef<typeof Button>;
 
-// Base UI's Button gives a non-<button> render element role="button", so a
-// page link is rendered outside it to keep its link semantics.
 export function Control({
   render,
   variant,
   color,
   size,
   className,
+  style,
+  nativeButton: _nativeButton,
+  focusableWhenDisabled,
   ...rest
 }: Props) {
+  const linkState = { disabled: false };
   const link = useRender({
     render,
-    enabled: render !== undefined,
-    state: { disabled: rest.disabled ?? false },
+    enabled: render !== undefined && !rest.disabled,
+    state: linkState,
     props: {
       ...rest,
       className: cn(buttonVariants({ variant, color, size }), className),
+      style: typeof style === 'function' ? style(linkState) : style,
     },
   });
 
@@ -34,6 +37,8 @@ export function Control({
         color={color}
         size={size}
         className={className}
+        style={style}
+        focusableWhenDisabled={focusableWhenDisabled}
       />
     )
   );
