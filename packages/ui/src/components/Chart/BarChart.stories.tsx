@@ -302,6 +302,44 @@ export const LongAxisLabels: Story = {
   },
 };
 
+export const WideGlyphAxisLabels: Story = {
+  args: {
+    label: 'Household savings per month in Japanese yen',
+    categories: monthCategories,
+    valueFormatter: (value: number) =>
+      `${value.toLocaleString('ja-JP')} 日本円`,
+    series: [
+      {
+        id: 'savings',
+        label: 'Savings',
+        values: [12840000, 11765000, 13428000, 14083000, 15196000, 12471000],
+      },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const ticks = () =>
+      Array.from(
+        canvasElement.querySelectorAll<SVGTextElement>(
+          '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+        )
+      );
+    const surfaceLeft =
+      canvasElement.querySelector('.recharts-surface')?.getBoundingClientRect()
+        .left ?? 0;
+
+    await waitFor(() => expect(ticks().length).toBeGreaterThan(0));
+
+    // A tick label that does not fit the axis width is wrapped onto a second
+    // line, and one that still overflows starts left of the chart surface.
+    await expect(
+      ticks().every((tick) => tick.querySelectorAll('tspan').length === 1)
+    ).toBe(true);
+    await expect(
+      Math.min(...ticks().map((tick) => tick.getBoundingClientRect().left))
+    ).toBeGreaterThanOrEqual(surfaceLeft);
+  },
+};
+
 export const CompactAxisLabels: Story = {
   args: {
     label: 'Energy consumption per month in watt hours',

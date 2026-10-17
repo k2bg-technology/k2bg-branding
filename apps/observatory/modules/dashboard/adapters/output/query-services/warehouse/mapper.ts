@@ -1,19 +1,29 @@
 import type { WarehouseRow } from '../../../../../../infrastructure/warehouse';
 import {
+  AmbiguousSortKeyError,
   type GroupedValuesPlan,
-  Period,
-  type PeriodGrain,
+  type MatrixAxisPlan,
+  type MatrixQueryPlan,
+  type PivotQueryPlan,
   parseBucketKey,
   parseCalendarDate,
   Reduction,
   resolveLatest,
   resolveSortKey,
+  type ScatterQueryPlan,
+  type SectionGrain,
   type SectionQueryPlan,
   type SortKeyType,
   type TableQueryPlan,
+  type TreemapQueryPlan,
 } from '../../../../domain';
 import type {
+  CompositionPart,
   GroupedValues,
+  MatrixData,
+  MatrixKey,
+  PivotCells,
+  ScatterPoints,
   SectionData,
   TableCell,
   TableRows,
@@ -21,14 +31,22 @@ import type {
 import { MappingError } from '../../../shared';
 import {
   CATEGORY_ALIAS,
+  COLUMN_KEY_ALIAS,
+  COLUMN_RANK_ALIAS,
   cellColumnAlias,
   distinctCountAlias,
+  GROUP_ALIAS,
   NOT_READY_COUNT_ALIAS,
   PAGE_COUNT_ALIAS,
   PAGE_NUMBER_ALIAS,
+  ROW_KEY_ALIAS,
+  ROW_RANK_ALIAS,
+  SERIES_ALIAS,
   SORT_KEY_ALIAS,
   SORT_KEY_DISTINCT_COUNT_ALIAS,
   valueColumnAlias,
+  X_VALUE_ALIAS,
+  Y_VALUE_ALIAS,
 } from './aliases';
 import { FIRST_DATE_ALIAS, LAST_DATE_ALIAS } from './query';
 
@@ -99,46 +117,58 @@ export function toSectionData(
     return null;
   }
 
-  const includedRows =
-    plan.kind === 'time-series'
-      ? rows.slice(0, plan.bucketLimit).reverse()
-      : rows;
+  const buckets = rows.map((row) => {
+    const period = row.period;
+    if (
+      typeof period !== 'string' ||
+      parseBucketKey(plan.grain, period) === null
+    ) {
+      throw new MappingError(
+        `period must match ${plan.grain} grain, received ${JSON.stringify(period)}`
+      );
+    }
+    return {
+      period,
+      values: plan.measures.map((measure, index) => {
+        if (
+          plan.kind === 'stat-tiles' &&
+          period !== plan.selectedPeriod &&
+          ('firstPeriod' in measure && measure.firstPeriod !== undefined
+            ? period < measure.firstPeriod
+            : !('compares' in measure && measure.compares))
+        ) {
+          return null;
+        }
+        const value = readNullableNumber(row, valueColumnAlias(index));
+        return measure.reduction === Reduction.LATEST
+          ? resolveLatest(
+              value,
+              readDistinctCount(row, distinctCountAlias(index)),
+              {
+                sectionId: plan.sectionId,
+                column: measure.column,
+              }
+            )
+          : value;
+      }),
+    };
+  });
+  if (plan.kind !== 'time-series') {
+    return { truncated: false, buckets };
+  }
+  const displayFrom = plan.warmUp?.displayFrom ?? '';
+  const displayed = buckets.filter((bucket) => bucket.period >= displayFrom);
+  const retained = displayed.slice(0, plan.bucketLimit);
+  const warmUp = buckets.slice(
+    retained.length,
+    retained.length + (plan.warmUp?.lookback ?? 0)
+  );
   return {
-    truncated: plan.kind === 'time-series' && rows.length > plan.bucketLimit,
-    buckets: includedRows.map((row) => {
-      const period = row.period;
-      if (
-        typeof period !== 'string' ||
-        parseBucketKey(plan.grain, period) === null
-      ) {
-        throw new MappingError(
-          `period must match ${plan.grain} grain, received ${JSON.stringify(period)}`
-        );
-      }
-      return {
-        period,
-        values: plan.measures.map((measure, index) => {
-          if (
-            plan.kind === 'stat-tiles' &&
-            period !== plan.selectedPeriod &&
-            !('compares' in measure && measure.compares)
-          ) {
-            return null;
-          }
-          const value = readNullableNumber(row, valueColumnAlias(index));
-          return measure.reduction === Reduction.LATEST
-            ? resolveLatest(
-                value,
-                readDistinctCount(row, distinctCountAlias(index)),
-                {
-                  sectionId: plan.sectionId,
-                  column: measure.column,
-                }
-              )
-            : value;
-        }),
-      };
-    }),
+    truncated: displayed.length > plan.bucketLimit,
+    buckets: [...retained].reverse(),
+    ...(plan.warmUp === undefined
+      ? {}
+      : { warmUpBuckets: [...warmUp].reverse() }),
   };
 }
 
@@ -200,9 +230,9 @@ export function toTableRows(
   return { rows: cells, page: { number, count } };
 }
 
-function readGroupedPeriod(row: WarehouseRow, grain: PeriodGrain) {
+function readGroupedPeriod(row: WarehouseRow, grain: SectionGrain) {
   const period = row.period;
-  if (typeof period !== 'string' || Period.parse(grain, period) === null) {
+  if (typeof period !== 'string' || parseBucketKey(grain, period) === null) {
     throw new MappingError(
       `period must match ${grain} grain, received ${JSON.stringify(period)}`
     );
@@ -210,11 +240,11 @@ function readGroupedPeriod(row: WarehouseRow, grain: PeriodGrain) {
   return period;
 }
 
-function readGroupedCategory(row: WarehouseRow) {
-  const category = row[CATEGORY_ALIAS];
+function readGroupedCategory(row: WarehouseRow, key: string) {
+  const category = row[key];
   if (category === null || typeof category === 'string') return category;
   throw new MappingError(
-    `category must be a string or null, received ${JSON.stringify(category)}`
+    `${key} must be a string or null, received ${JSON.stringify(category)}`
   );
 }
 
@@ -245,7 +275,8 @@ export function toGroupedValues(
   const mapped = rows.map((row) => {
     const period =
       plan.buckets === null ? '' : readGroupedPeriod(row, plan.buckets.grain);
-    const category = plan.category === null ? null : readGroupedCategory(row);
+    const category =
+      plan.category === null ? null : readGroupedCategory(row, CATEGORY_ALIAS);
     const values = plan.measures.map((measure, index) => {
       const value = readNullableNumber(row, valueColumnAlias(index));
       return measure.reduction === Reduction.LATEST
@@ -291,7 +322,13 @@ export function toGroupedValues(
     };
   }
   const periods = Array.from(new Set(mapped.map((row) => row.period)));
-  const includedPeriods = periods.slice(0, plan.buckets.bucketLimit);
+  const displayFrom = plan.buckets.warmUp?.displayFrom ?? '';
+  const displayedPeriods = periods.filter((period) => period >= displayFrom);
+  const includedPeriods = displayedPeriods.slice(0, plan.buckets.bucketLimit);
+  const warmUpPeriods = periods.slice(
+    includedPeriods.length,
+    includedPeriods.length + (plan.buckets.warmUp?.lookback ?? 0)
+  );
   const included = mapped.filter((row) => includedPeriods.includes(row.period));
   const buckets = [...includedPeriods].reverse().map((period) => ({
     period,
@@ -300,7 +337,7 @@ export function toGroupedValues(
   if (plan.category === null) {
     return {
       grouping: 'period',
-      truncated: periods.length > plan.buckets.bucketLimit,
+      truncated: displayedPeriods.length > plan.buckets.bucketLimit,
       buckets: buckets.map(({ period, cells }) => ({
         period,
         values: cells[0].values,
@@ -309,10 +346,219 @@ export function toGroupedValues(
   }
   return {
     grouping: 'period-category',
-    truncated: periods.length > plan.buckets.bucketLimit,
+    ...(plan.buckets.warmUp === undefined
+      ? {}
+      : {
+          warmUpBuckets: [...warmUpPeriods].reverse().map((period) => ({
+            period,
+            cells: mapped
+              .filter((row) => row.period === period)
+              .map(({ category, values }) => ({ category, values })),
+          })),
+        }),
+    truncated: displayedPeriods.length > plan.buckets.bucketLimit,
     buckets: buckets.map(({ period, cells }) => ({
       period,
       cells: cells.map(({ category, values }) => ({ category, values })),
+    })),
+  };
+}
+
+export function toTreemapParts(
+  rows: WarehouseRow[],
+  plan: TreemapQueryPlan
+): CompositionPart[] | null {
+  if (rows.length === 0) return null;
+  return rows.map((row) => ({
+    ...(plan.group === null
+      ? {}
+      : { group: readGroupedCategory(row, GROUP_ALIAS) }),
+    category: readGroupedCategory(row, CATEGORY_ALIAS),
+    value: readNullableNumber(row, valueColumnAlias(0)),
+  }));
+}
+
+function readMatrixKey(row: WarehouseRow, alias: string, axis: MatrixAxisPlan) {
+  const value = row[alias];
+  if (axis.axis === 'date') {
+    if (typeof value === 'string' && parseCalendarDate(value) !== null)
+      return value;
+    throw new MappingError(
+      `${alias} must be a calendar date, received ${JSON.stringify(value)}`
+    );
+  }
+  if (axis.axis === 'hour') {
+    if (typeof value === 'string' && /^(?:[01]\d|2[0-3])$/.test(value))
+      return value;
+    throw new MappingError(
+      `${alias} must be an hour from 00 through 23, received ${JSON.stringify(value)}`
+    );
+  }
+  if (value === null || typeof value === 'string') return value;
+  throw new MappingError(
+    `${alias} must be a string or null, received ${JSON.stringify(value)}`
+  );
+}
+
+function matrixCategories(
+  rows: WarehouseRow[],
+  keys: MatrixKey[],
+  rankAlias: string
+) {
+  const ranked = rows.map((row, index) => ({
+    key: keys[index],
+    rank: readMatrixRank(row, rankAlias),
+  }));
+  const distinct = Array.from(
+    new Map(ranked.map(({ key, rank }) => [key, { key, rank }])).values()
+  ).sort((first, second) => first.rank - second.rank);
+  const valid =
+    distinct.length === new Set(ranked.map(({ rank }) => rank)).size &&
+    distinct.every(
+      ({ key, rank }, index) =>
+        rank === index + 1 &&
+        ranked.every((item) => item.key !== key || item.rank === rank)
+    );
+  if (!valid) {
+    throw new MappingError(`${rankAlias} must number the distinct keys from 1`);
+  }
+  return distinct.map(({ key }) => key);
+}
+
+function readMatrixRank(row: WarehouseRow, alias: string) {
+  const rank = row[alias];
+  if (typeof rank !== 'number' || !Number.isInteger(rank) || rank < 1) {
+    throw new MappingError(
+      `${alias} must be a positive integer, received ${JSON.stringify(rank)}`
+    );
+  }
+  return rank;
+}
+
+export function toMatrixData(
+  rows: WarehouseRow[],
+  plan: MatrixQueryPlan
+): MatrixData | null {
+  if (rows.length === 0) return null;
+  if (rows.length > plan.cellLimit) return { status: 'too-large' };
+  const cells = rows.map((row) => ({
+    row: readMatrixKey(row, ROW_KEY_ALIAS, plan.rows),
+    column: readMatrixKey(row, COLUMN_KEY_ALIAS, plan.columns),
+    value: readNullableNumber(row, valueColumnAlias(0)),
+  }));
+  const rowCategories =
+    plan.rows.axis === 'category'
+      ? matrixCategories(
+          rows,
+          cells.map((cell) => cell.row),
+          ROW_RANK_ALIAS
+        )
+      : null;
+  const columnCategories =
+    plan.columns.axis === 'category'
+      ? matrixCategories(
+          rows,
+          cells.map((cell) => cell.column),
+          COLUMN_RANK_ALIAS
+        )
+      : null;
+  const rowLength =
+    rowCategories?.length ??
+    (plan.rows.axis === 'category' ? 0 : plan.rows.length);
+  const columnLength =
+    columnCategories?.length ??
+    (plan.columns.axis === 'category' ? 0 : plan.columns.length);
+  if (rowLength * columnLength > plan.cellLimit) return { status: 'too-large' };
+  return { status: 'ready', rowCategories, columnCategories, cells };
+}
+
+export function toPivotCells(
+  rows: WarehouseRow[],
+  plan: PivotQueryPlan
+): PivotCells | null {
+  if (rows.length === 0) return null;
+  if (rows.length > plan.cellLimit) return { cells: [], exceeded: true };
+  const cells = rows.map((row) => {
+    const rowKey = row[ROW_KEY_ALIAS];
+    if (rowKey !== null && typeof rowKey !== 'string') {
+      throw new MappingError(
+        `${ROW_KEY_ALIAS} must be a string or null, received ${JSON.stringify(rowKey)}`
+      );
+    }
+    const columnKey = row[COLUMN_KEY_ALIAS];
+    if (plan.columnKey.kind === 'period') {
+      if (
+        typeof columnKey !== 'string' ||
+        parseBucketKey(plan.columnKey.grain, columnKey) === null
+      ) {
+        throw new MappingError(
+          `${COLUMN_KEY_ALIAS} must match ${plan.columnKey.grain} grain, received ${JSON.stringify(columnKey)}`
+        );
+      }
+    } else if (columnKey !== null && typeof columnKey !== 'string') {
+      throw new MappingError(
+        `${COLUMN_KEY_ALIAS} must be a string or null, received ${JSON.stringify(columnKey)}`
+      );
+    }
+    const value = readNullableNumber(row, valueColumnAlias(0));
+    const resolvedValue =
+      plan.measure.reduction === Reduction.LATEST
+        ? resolveLatest(value, readDistinctCount(row, distinctCountAlias(0)), {
+            sectionId: plan.sectionId,
+            column: plan.measure.column,
+          })
+        : value;
+    const sortKeyPlan = plan.rowKey.sortKey;
+    const sortKey =
+      sortKeyPlan === null
+        ? null
+        : resolveSortKey(
+            readGroupedSortKey(row, sortKeyPlan.type),
+            readDistinctCount(row, SORT_KEY_DISTINCT_COUNT_ALIAS),
+            { sectionId: plan.sectionId, column: sortKeyPlan.column }
+          );
+    return {
+      row: rowKey,
+      column: columnKey,
+      value: resolvedValue,
+      ...(sortKeyPlan === null ? {} : { sortKey }),
+    };
+  });
+  const rowSortKey = plan.rowKey.sortKey;
+  if (rowSortKey !== null) {
+    const sortKeys = new Map<string | null, string | number | null>();
+    cells.forEach((cell) => {
+      const sortKey = cell.sortKey ?? null;
+      if (sortKeys.has(cell.row) && sortKeys.get(cell.row) !== sortKey) {
+        throw new AmbiguousSortKeyError(plan.sectionId, rowSortKey.column);
+      }
+      sortKeys.set(cell.row, sortKey);
+    });
+  }
+  return { cells, exceeded: false };
+}
+
+function readCoordinate(row: WarehouseRow, key: string): number {
+  const value = readNullableNumber(row, key);
+  if (value === null) {
+    throw new MappingError(`${key} must be a finite number, received null`);
+  }
+  return value;
+}
+
+export function toScatterPoints(
+  rows: WarehouseRow[],
+  plan: ScatterQueryPlan
+): ScatterPoints | null {
+  if (rows.length === 0) return null;
+  return {
+    truncated: rows.length > plan.limit,
+    points: rows.slice(0, plan.limit).map((row) => ({
+      x: readCoordinate(row, X_VALUE_ALIAS),
+      y: readCoordinate(row, Y_VALUE_ALIAS),
+      ...(plan.series === null
+        ? {}
+        : { series: readGroupedCategory(row, SERIES_ALIAS) }),
     })),
   };
 }

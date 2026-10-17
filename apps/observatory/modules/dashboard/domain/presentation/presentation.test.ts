@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
-
 import { DuplicateCategoryLabelError } from '../errors';
 import { categoryItemsFromBuckets } from './categoryItemsFromBuckets';
 import { categoryLabels } from './categoryLabels';
 import type { CategoryItem } from './categoryValue';
+import { runningAverage } from './deriveSeries';
 import { orderCategories } from './orderCategories';
 import { selectTopN } from './selectTopN';
+import { widenPivot } from './widenPivot';
 
 const items: CategoryItem[] = [
   { category: 'A', rank: 10, values: [10, 1], sortKey: 2 },
@@ -13,6 +14,132 @@ const items: CategoryItem[] = [
   { category: 'C', rank: 3, values: [3, 2], sortKey: 3 },
   { category: 'D', rank: null, values: [null, 4], sortKey: null },
 ];
+
+describe('widenPivot', () => {
+  const buckets = [
+    {
+      period: '2026-01',
+      cells: [
+        { category: 'food', values: [10] },
+        { category: 'rent', values: [20] },
+      ],
+    },
+    { period: '2026-03', cells: [{ category: 'food', values: [5] }] },
+  ];
+  const labels = { nullCategory: 'None' };
+  const context = { sectionId: 'trend' };
+
+  it.each([
+    {
+      topN: { count: 1, otherLabel: 'Other' },
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'remainder', label: 'Other' },
+      ],
+    },
+    {
+      topN: null,
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'category-1', label: 'food' },
+      ],
+    },
+    {
+      topN: { count: 5, otherLabel: 'Other' },
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'category-1', label: 'food' },
+      ],
+    },
+  ])('orders and folds categories for $topN', ({ topN, series }) => {
+    expect(widenPivot(buckets, { topN, maximum: 12 }, labels, context)).toEqual(
+      {
+        status: 'ready',
+        series,
+        buckets: [
+          { period: '2026-01', values: [20, 10] },
+          { period: '2026-03', values: [null, 5] },
+        ],
+      }
+    );
+  });
+
+  it('reports thirteen categories without topN and keeps twelve', () => {
+    const cells = Array.from({ length: 13 }, (_, index) => ({
+      category: `c${String(index + 1).padStart(2, '0')}`,
+      values: [1],
+    }));
+    expect(
+      widenPivot(
+        [{ period: '2026-01', cells }],
+        { topN: null, maximum: 12 },
+        labels,
+        context
+      )
+    ).toEqual({
+      status: 'too-many-series',
+      count: 13,
+      maximum: 12,
+    });
+    const twelve = widenPivot(
+      [{ period: '2026-01', cells: cells.slice(0, 12) }],
+      { topN: null, maximum: 12 },
+      labels,
+      context
+    );
+    expect(twelve.status).toBe('ready');
+    if (twelve.status === 'ready') expect(twelve.series).toHaveLength(12);
+    const folded = widenPivot(
+      [{ period: '2026-01', cells }],
+      { topN: { count: 2, otherLabel: 'Other' }, maximum: 12 },
+      labels,
+      context
+    );
+    expect(folded.status).toBe('ready');
+    if (folded.status === 'ready')
+      expect(folded.series.map(({ id }) => id)).toEqual([
+        'category-0',
+        'category-1',
+        'remainder',
+      ]);
+  });
+
+  it('labels null and rejects a folded category with the remainder name', () => {
+    const named = widenPivot(
+      [
+        {
+          period: '2026-01',
+          cells: [
+            { category: null, values: [20] },
+            { category: 'food', values: [10] },
+          ],
+        },
+      ],
+      { topN: null, maximum: 12 },
+      labels,
+      context
+    );
+    expect(named.status).toBe('ready');
+    if (named.status === 'ready')
+      expect(named.series.map(({ label }) => label)).toEqual(['None', 'food']);
+    expect(() =>
+      widenPivot(
+        [
+          {
+            period: '2026-01',
+            cells: [
+              { category: 'food', values: [20] },
+              { category: 'Other', values: [10] },
+            ],
+          },
+        ],
+        { topN: { count: 1, otherLabel: 'Other' }, maximum: 12 },
+        labels,
+        context
+      )
+    ).toThrow(DuplicateCategoryLabelError);
+  });
+});
 
 describe('category presentation', () => {
   it('keeps the largest categories and folds every other value into a last remainder', () => {
@@ -142,5 +269,145 @@ describe('category presentation', () => {
     expect(() =>
       categoryLabels([{ ...items[0], category: 'None' }], null, labels, context)
     ).toThrow(DuplicateCategoryLabelError);
+  });
+});
+
+describe('derived pivot widening', () => {
+  const buckets = [
+    {
+      period: '2026-01',
+      cells: [
+        { category: 'food', values: [10] },
+        { category: 'rent', values: [20] },
+      ],
+    },
+  ];
+  const options = { topN: { count: 1, otherLabel: 'Other' }, maximum: 12 };
+  it('ranks displayed buckets and widens warm-up buckets with that selection', () => {
+    const sut = widenPivot;
+
+    const result = sut(
+      buckets,
+      {
+        ...options,
+        warmUp: [
+          { period: '2025-12', cells: [{ category: 'food', values: [1000] }] },
+        ],
+      },
+      { nullCategory: 'None' },
+      { sectionId: 'trend' }
+    );
+
+    expect(result).toEqual({
+      status: 'ready',
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'remainder', label: 'Other' },
+      ],
+      buckets: [{ period: '2026-01', values: [20, 10] }],
+      warmUpBuckets: [{ period: '2025-12', values: [null, 1000] }],
+    });
+  });
+
+  it.each([
+    {
+      name: 'a measured base',
+      base: {
+        period: '2025-11',
+        cells: [
+          { category: 'rent', values: [50] },
+          { category: 'food', values: [4] },
+          { category: 'fun', values: [6] },
+        ],
+      },
+      expected: [50, 10],
+    },
+    { name: 'a missing base', base: null, expected: [null, null] },
+  ])('folds $name with the displayed selection', ({ base, expected }) => {
+    const sut = widenPivot;
+
+    const result = sut(
+      buckets,
+      { ...options, base },
+      { nullCategory: 'None' },
+      { sectionId: 'trend' }
+    );
+
+    expect(result).toEqual({
+      status: 'ready',
+      series: [
+        { id: 'category-0', label: 'rent' },
+        { id: 'remainder', label: 'Other' },
+      ],
+      buckets: [{ period: '2026-01', values: [20, 10] }],
+      baseValues: expected,
+    });
+  });
+
+  it.each([
+    {
+      name: 'a warm-up category named like the remainder',
+      fetched: {
+        warmUp: [
+          { period: '2025-12', cells: [{ category: 'Other', values: [1] }] },
+        ],
+      },
+    },
+    {
+      name: 'a base category named like the null label',
+      fetched: {
+        base: { period: '2025-11', cells: [{ category: 'None', values: [1] }] },
+      },
+    },
+  ])('rejects $name outside the displayed buckets', ({ fetched }) => {
+    const sut = widenPivot;
+
+    const act = () =>
+      sut(
+        buckets,
+        { ...options, ...fetched },
+        { nullCategory: 'None' },
+        { sectionId: 'trend' }
+      );
+
+    expect(act).toThrow(DuplicateCategoryLabelError);
+  });
+
+  it("a remainder's running average equals the running average of the folded categories' per-bucket sums", () => {
+    const sut = widenPivot;
+
+    const result = sut(
+      [
+        {
+          period: '2026-01',
+          cells: [
+            { category: 'food', values: [10] },
+            { category: 'rent', values: [20] },
+            { category: 'fun', values: [4] },
+          ],
+        },
+        {
+          period: '2026-02',
+          cells: [
+            { category: 'food', values: [6] },
+            { category: 'fun', values: [2] },
+          ],
+        },
+        { period: '2026-03', cells: [{ category: 'rent', values: [20] }] },
+      ],
+      options,
+      { nullCategory: 'None' },
+      { sectionId: 'trend' }
+    );
+    if (result.status !== 'ready') throw new Error('Expected pivot series');
+
+    expect(result.buckets.map((bucket) => bucket.values[1])).toEqual([
+      14,
+      8,
+      null,
+    ]);
+    expect(
+      runningAverage(result.buckets.map((bucket) => bucket.values[1]))
+    ).toEqual([14, 11, 11]);
   });
 });

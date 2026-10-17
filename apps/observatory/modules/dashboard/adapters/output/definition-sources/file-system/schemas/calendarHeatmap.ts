@@ -9,6 +9,7 @@ import {
   identifierSchema,
   reductionSchema,
   sectionControlsSchema,
+  sectionGateFields,
   sectionIdSchema,
   sectionWidthSchema,
   sourceSchema,
@@ -22,6 +23,7 @@ const calendarHeatmapSectionSchemaBase = z.strictObject({
   source: sourceSchema,
   kind: z.literal(SectionKind.CALENDAR_HEATMAP),
   width: sectionWidthSchema.optional(),
+  ...sectionGateFields,
   range: z.enum(['trailing', 'calendar-year']).default('trailing'),
   window: z.number().int().min(1).max(366).optional(),
   value: z.strictObject({
@@ -41,6 +43,5 @@ const calendarHeatmapSectionSchemaBase = z.strictObject({
 export const calendarHeatmapSectionSchema =
   calendarHeatmapSectionSchemaBase satisfies z.ZodType<
     CalendarHeatmapSection,
-    z.ZodTypeDef,
     z.input<typeof calendarHeatmapSectionSchemaBase>
   >;

@@ -1,9 +1,11 @@
-import { SectionGrain } from '../period';
+import { type PeriodGrain, SectionGrain } from '../period';
 import {
   type DashboardDefinition,
   type DefinitionViolation,
   Reduction,
   SectionKind,
+  type TimeSeriesSection,
+  type TimeSeriesSeriesDefinition,
 } from './types';
 
 const HOUR_BINDING_MESSAGE =
@@ -36,9 +38,13 @@ function currencyViolations(
 
   return definition.sections.flatMap((section, sectionIndex) => {
     switch (section.kind) {
+      case SectionKind.DONUT:
+      case SectionKind.TREEMAP:
       case SectionKind.CALENDAR_HEATMAP:
       case SectionKind.TIME_SERIES:
       case SectionKind.BARS:
+      case SectionKind.MATRIX_HEATMAP:
+      case SectionKind.PIVOT_TABLE:
         return section.format.type === 'currency'
           ? [
               {
@@ -77,6 +83,17 @@ function currencyViolations(
                     'format',
                   ],
                   message: 'A currency tile requires dashboard currency',
+                },
+              ]
+            : []
+        );
+      case SectionKind.SCATTER:
+        return (['x', 'y'] as const).flatMap((axisKey) =>
+          section[axisKey].format.type === 'currency'
+            ? [
+                {
+                  path: ['sections', sectionIndex, axisKey, 'format'],
+                  message: 'A currency axis requires dashboard currency',
                 },
               ]
             : []
@@ -296,25 +313,84 @@ function stackingViolations(
             },
           ]
         : []),
-      ...section.series.flatMap((series, seriesIndex) =>
-        series.reduction === Reduction.SUM
-          ? []
-          : [
-              {
-                path: [
-                  'sections',
-                  sectionIndex,
-                  'series',
-                  seriesIndex,
-                  'reduction',
-                ],
-                message:
-                  'Stacking adds values up and requires the sum reduction',
-              },
-            ]
+      ...(section.series ?? []).flatMap((series, seriesIndex) =>
+        stackedSeriesViolations(series, [
+          'sections',
+          sectionIndex,
+          'series',
+          seriesIndex,
+        ])
       ),
+      ...(section.pivot === undefined ||
+      section.pivot.value.reduction === Reduction.SUM
+        ? []
+        : [
+            {
+              path: ['sections', sectionIndex, 'pivot', 'value', 'reduction'],
+              message: 'Stacking adds values up and requires the sum reduction',
+            },
+          ]),
     ];
   });
+}
+
+function stackedSeriesViolations(
+  series: TimeSeriesSeriesDefinition,
+  path: (string | number)[]
+): DefinitionViolation[] {
+  if ('low' in series) {
+    return [
+      {
+        path,
+        message:
+          'Stacking adds measurements up and does not accept a band series',
+      },
+    ];
+  }
+  if (series.reduction === Reduction.SUM) {
+    return [];
+  }
+  return [
+    {
+      path: [...path, 'reduction'],
+      message: 'Stacking adds values up and requires the sum reduction',
+    },
+  ];
+}
+
+function timeSeriesSeriesSourceViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.TIME_SERIES &&
+    (section.series === undefined) === (section.pivot === undefined)
+      ? [
+          {
+            path: ['sections', index, 'series'],
+            message:
+              'A time-series section declares exactly one of series and pivot',
+          },
+        ]
+      : []
+  );
+}
+
+function timeSeriesPivotViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.TIME_SERIES &&
+    section.pivot?.topN !== undefined &&
+    section.pivot.value.reduction !== Reduction.SUM
+      ? [
+          {
+            path: ['sections', index, 'pivot', 'value', 'reduction'],
+            message:
+              'A remainder adds values up and requires the sum reduction',
+          },
+        ]
+      : []
+  );
 }
 
 function sectionGrainViolations(
@@ -379,15 +455,16 @@ function controlDeclarationViolations(definition: DashboardDefinition) {
             message: `Duplicate control id "${control.id}"`,
           },
         ]),
-    ...control.options.flatMap((option, optionIndex) =>
-      control.options.indexOf(option) === optionIndex
-        ? []
-        : [
-            {
-              path: ['controls', index, 'options', optionIndex],
-              message: `Duplicate option "${option}"`,
-            },
-          ]
+    ...(control.options === 'distinct' ? [] : control.options).flatMap(
+      (option, optionIndex) =>
+        control.options.indexOf(option) === optionIndex
+          ? []
+          : [
+              {
+                path: ['controls', index, 'options', optionIndex],
+                message: `Duplicate option "${option}"`,
+              },
+            ]
     ),
     ...(usedIds.has(control.id)
       ? []
@@ -417,6 +494,41 @@ function sectionControlViolations(definition: DashboardDefinition) {
   );
 }
 
+function distinctControlViolations(definition: DashboardDefinition) {
+  return (definition.controls ?? []).flatMap((control, index) => {
+    if (control.options !== 'distinct') {
+      return [];
+    }
+    if (control.order !== 'value-desc') {
+      return control.value === undefined
+        ? []
+        : [
+            {
+              path: ['controls', index, 'value'],
+              message: 'A sortKey order does not take value',
+            },
+          ];
+    }
+    if (control.value === undefined) {
+      return [
+        {
+          path: ['controls', index, 'value'],
+          message: 'Ranking by value requires value',
+        },
+      ];
+    }
+    return control.value.reduction === Reduction.SUM
+      ? []
+      : [
+          {
+            path: ['controls', index, 'value', 'reduction'],
+            message:
+              'Ranking by value adds values up and requires the sum reduction',
+          },
+        ];
+  });
+}
+
 function calendarRangeViolations(
   definition: DashboardDefinition
 ): DefinitionViolation[] {
@@ -441,6 +553,58 @@ function calendarRangeViolations(
       ];
     }
     return [];
+  });
+}
+
+function matrixHeatmapViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) => {
+    if (section.kind !== SectionKind.MATRIX_HEATMAP) return [];
+    const { rows, columns } = section;
+    const sameAxis =
+      rows.axis === columns.axis &&
+      (rows.axis !== 'category' ||
+        columns.axis !== 'category' ||
+        rows.column === columns.column);
+    const hasHourAxis = rows.axis === 'hour' || columns.axis === 'hour';
+    const hasDateAxis = rows.axis === 'date' || columns.axis === 'date';
+    const lacksHourBinding =
+      typeof section.source.time === 'string' ||
+      !('date' in section.source.time);
+    return [
+      ...(sameAxis
+        ? [
+            {
+              path: ['sections', index, 'columns'],
+              message: 'A matrix heatmap requires two different axes',
+            },
+          ]
+        : []),
+      ...(hasHourAxis && lacksHourBinding
+        ? [
+            {
+              path: ['sections', index, 'source', 'time'],
+              message: HOUR_BINDING_MESSAGE,
+            },
+          ]
+        : []),
+      ...(section.window !== undefined && !hasDateAxis
+        ? [
+            {
+              path: ['sections', index, 'window'],
+              message: 'window counts trailing days and requires a date axis',
+            },
+          ]
+        : []),
+      ...(section.maximum !== undefined &&
+      (section.minimum ?? 0) >= section.maximum
+        ? [
+            {
+              path: ['sections', index, 'maximum'],
+              message: 'A matrix heatmap requires maximum above minimum',
+            },
+          ]
+        : []),
+    ];
   });
 }
 
@@ -472,9 +636,61 @@ function historySettingViolations(
       );
     case SectionKind.TABLE:
       return [];
+    case SectionKind.BARS:
+      return section.x.axis === 'time'
+        ? [
+            {
+              path: ['x'],
+              message:
+                'A latest bars section reads one date and requires the category axis',
+            },
+          ]
+        : [];
+    case SectionKind.CALENDAR_HEATMAP:
+      return [
+        {
+          path: ['period'],
+          message:
+            'A calendar heatmap reads a range of days and does not accept period "latest"',
+        },
+      ];
     default:
       throw new Error(`Unsupported section kind: ${JSON.stringify(section)}`);
   }
+}
+
+function compositionReductionViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    (section.kind === SectionKind.DONUT ||
+      section.kind === SectionKind.TREEMAP) &&
+    section.value.reduction !== Reduction.SUM
+      ? [
+          {
+            path: ['sections', index, 'value', 'reduction'],
+            message:
+              'A composition adds values up and requires the sum reduction',
+          },
+        ]
+      : []
+  );
+}
+
+function treemapGroupViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.TREEMAP &&
+    (section.group === undefined) !== (section.groupLabel === undefined)
+      ? [
+          {
+            path: ['sections', index, 'group'],
+            message: 'A treemap declares group and groupLabel together',
+          },
+        ]
+      : []
+  );
 }
 
 function latestSectionViolations(definition: DashboardDefinition) {
@@ -510,12 +726,152 @@ function latestSectionViolations(definition: DashboardDefinition) {
   });
 }
 
+function trendAxisGrainViolations(
+  dashboardGrain: PeriodGrain,
+  axis: { grain?: PeriodGrain; window?: number },
+  path: (string | number)[],
+  subject: string
+) {
+  const allowed = {
+    month: ['month', 'day'],
+    week: ['week', 'day'],
+    day: ['day'],
+  } as const;
+  const grain = axis.grain ?? dashboardGrain;
+  if (!(allowed[dashboardGrain] as readonly string[]).includes(grain)) {
+    return [
+      {
+        path: [...path, 'grain'],
+        message: `Section grain "${grain}" is not supported by dashboard grain "${dashboardGrain}"`,
+      },
+    ];
+  }
+  return grain === dashboardGrain && axis.window === undefined
+    ? [
+        {
+          path: [...path, 'window'],
+          message: `A ${subject} at the dashboard grain requires window`,
+        },
+      ]
+    : [];
+}
+
+function pivotTableViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) => {
+    if (section.kind !== SectionKind.PIVOT_TABLE) return [];
+    const reductionPath = ['sections', index, 'value', 'reduction'];
+    const addsUp =
+      section.value.reduction === Reduction.SUM
+        ? []
+        : [
+            ...(section.totals === undefined
+              ? []
+              : [
+                  {
+                    path: reductionPath,
+                    message:
+                      'Totals add values up and require the sum reduction',
+                  },
+                ]),
+            ...(section.rows.order === 'total-desc'
+              ? [
+                  {
+                    path: reductionPath,
+                    message:
+                      'Ordering rows by total adds values up and requires the sum reduction',
+                  },
+                ]
+              : []),
+            ...(section.rows.topN === undefined
+              ? []
+              : [
+                  {
+                    path: reductionPath,
+                    message:
+                      'A remainder adds values up and requires the sum reduction',
+                  },
+                ]),
+          ];
+    if (section.columns.axis === 'category') {
+      return [
+        ...addsUp,
+        ...(section.columns.column === section.rows.column
+          ? [
+              {
+                path: ['sections', index, 'columns', 'column'],
+                message:
+                  'A category column axis requires a column other than rows.column',
+              },
+            ]
+          : []),
+      ];
+    }
+    return [
+      ...addsUp,
+      ...trendAxisGrainViolations(
+        definition.grain,
+        section.columns,
+        ['sections', index, 'columns'],
+        'pivot table'
+      ),
+    ];
+  });
+}
+
+function barsTimeAxisViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.BARS &&
+    section.x.axis === 'time' &&
+    section.period !== 'latest'
+      ? trendAxisGrainViolations(
+          definition.grain,
+          section.x,
+          ['sections', index, 'x'],
+          'bars section'
+        )
+      : []
+  );
+}
+
+function scatterCoefficientViolations(
+  definition: DashboardDefinition
+): DefinitionViolation[] {
+  return definition.sections.flatMap((section, index) => {
+    if (
+      section.kind !== SectionKind.SCATTER ||
+      section.trendLine === undefined
+    ) {
+      return [];
+    }
+    const plotted = [
+      section.x.column,
+      section.y.column,
+      section.series?.column,
+    ];
+    return (['slope', 'intercept'] as const).flatMap((coefficient) =>
+      plotted.includes(section.trendLine?.[coefficient])
+        ? [
+            {
+              path: ['sections', index, 'trendLine', coefficient],
+              message:
+                'A coefficient column must differ from the x, y, and series columns',
+            },
+          ]
+        : []
+    );
+  });
+}
+
 export function validateDefinitionRules(
   definition: DashboardDefinition
 ): DefinitionViolation[] {
   return duplicateSectionViolations(definition).concat(
     currencyViolations(definition),
     stackingViolations(definition),
+    timeSeriesSeriesSourceViolations(definition),
+    timeSeriesPivotViolations(definition),
     sectionGrainViolations(definition),
     calendarRangeViolations(definition),
     latestSectionViolations(definition),
@@ -525,7 +881,195 @@ export function validateDefinitionRules(
     barsRankingViolations(definition),
     barsPivotAxisViolations(definition),
     barsSumViolations(definition),
+    barsTimeAxisViolations(definition),
+    pivotTableViolations(definition),
     controlDeclarationViolations(definition),
-    sectionControlViolations(definition)
+    sectionControlViolations(definition),
+    compositionReductionViolations(definition),
+    treemapGroupViolations(definition),
+    distinctControlViolations(definition),
+    matrixHeatmapViolations(definition),
+    derivedSeriesViolations(definition),
+    rebaseViolations(definition),
+    scatterCoefficientViolations(definition)
   );
+}
+
+function lineBindings(section: TimeSeriesSection, sectionIndex: number) {
+  if (section.pivot !== undefined) {
+    return [
+      {
+        binding: { ...section.pivot, reduction: section.pivot.value.reduction },
+        path: ['sections', sectionIndex, 'pivot'],
+      },
+    ];
+  }
+  return (section.series ?? []).flatMap((binding, index) =>
+    'column' in binding
+      ? [{ binding, path: ['sections', sectionIndex, 'series', index] }]
+      : []
+  );
+}
+
+function derivedSeriesViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, sectionIndex) => {
+    if (section.kind !== SectionKind.TIME_SERIES) return [];
+    const bindings = lineBindings(section, sectionIndex);
+    const hasRunning = bindings.some(
+      ({ binding }) => binding.running !== undefined
+    );
+    return bindings.flatMap(({ binding, path }) => [
+      ...(binding.running?.kind === 'sum' && binding.reduction !== Reduction.SUM
+        ? [
+            {
+              path: [
+                ...path,
+                ...(section.pivot === undefined ? [] : ['value']),
+                'reduction',
+              ],
+              message:
+                'A running sum adds values up and requires the sum reduction',
+            },
+          ]
+        : []),
+      ...(section.pivot === undefined
+        ? []
+        : ['movingAverage', 'running'].flatMap((field) => {
+            const derived =
+              field === 'movingAverage'
+                ? binding.movingAverage
+                : binding.running;
+            return derived !== undefined &&
+              !derived.label.includes('{category}')
+              ? [
+                  {
+                    path: [...path, field, 'label'],
+                    message:
+                      'A pivot derived label names its category with {category}',
+                  },
+                ]
+              : [];
+          })),
+      ...(section.stacked && binding.movingAverage !== undefined
+        ? [
+            {
+              path: [...path, 'movingAverage'],
+              message: 'Stacking does not accept a moving average overlay',
+            },
+          ]
+        : []),
+      ...(section.stacked && binding.running?.kind === 'average'
+        ? [
+            {
+              path: [...path, 'running', 'kind'],
+              message:
+                'Stacking adds running totals up and requires running sum',
+            },
+          ]
+        : []),
+      ...(section.stacked && binding.normalize !== undefined
+        ? [
+            {
+              path: [...path, 'normalize'],
+              message:
+                'Stacking needs one common scale and does not accept rebasing',
+            },
+          ]
+        : []),
+      ...(section.stacked &&
+      section.pivot === undefined &&
+      hasRunning &&
+      binding.running === undefined
+        ? [
+            {
+              path: [...path, 'running'],
+              message:
+                'Stacking adds one kind of series up: every series declares running or none does',
+            },
+          ]
+        : []),
+    ]);
+  });
+}
+
+function rebaseViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, sectionIndex) => {
+    if (section.kind !== SectionKind.TIME_SERIES) return [];
+    const bindings = lineBindings(section, sectionIndex);
+    const rebased = bindings.filter(
+      ({ binding }) => binding.normalize !== undefined
+    );
+    if (rebased.length === 0) return [];
+    const base = JSON.stringify(rebased[0].binding.normalize?.base ?? 'first');
+    const path = ['sections', sectionIndex];
+    return [
+      ...bindings.flatMap(({ binding, path: bindingPath }) => [
+        ...(section.pivot === undefined &&
+        (binding.normalize === undefined ||
+          JSON.stringify(binding.normalize.base ?? 'first') !== base)
+          ? [
+              {
+                path: [...bindingPath, 'normalize'],
+                message:
+                  'Rebasing applies to every line series of the section with one base',
+              },
+            ]
+          : []),
+        ...(typeof binding.normalize?.base === 'object' &&
+        (section.grain ?? definition.grain) === SectionGrain.HOUR
+          ? [
+              {
+                path: [...bindingPath, 'normalize', 'base'],
+                message:
+                  'A fixed base date names one bucket and requires a date grain',
+              },
+            ]
+          : []),
+      ]),
+      ...(section.series ?? []).flatMap((series, index) =>
+        'column' in series
+          ? []
+          : [
+              {
+                path: [...path, 'series', index],
+                message:
+                  'Rebasing indexes measurements and does not accept a band series',
+              },
+            ]
+      ),
+      ...(section.thresholds !== undefined
+        ? [
+            {
+              path: [...path, 'thresholds'],
+              message:
+                'Rebasing changes the scale and does not accept thresholds',
+            },
+          ]
+        : []),
+      ...(section.bands !== undefined
+        ? [
+            {
+              path: [...path, 'bands'],
+              message: 'Rebasing changes the scale and does not accept bands',
+            },
+          ]
+        : []),
+      ...(section.format.type !== 'number'
+        ? [
+            {
+              path: [...path, 'format'],
+              message: 'Rebasing shows an index and requires the number format',
+            },
+          ]
+        : []),
+      ...(section.unit !== undefined
+        ? [
+            {
+              path: [...path, 'unit'],
+              message: 'Rebasing shows an index and does not take unit',
+            },
+          ]
+        : []),
+    ];
+  });
 }

@@ -1,0 +1,16 @@
+diff --git a/dist/_browser-chunks/chunk-MPD4I4WS.js b/dist/_browser-chunks/chunk-MPD4I4WS.js
+index 2012291..0bed533 100644
+--- a/dist/_browser-chunks/chunk-MPD4I4WS.js
++++ b/dist/_browser-chunks/chunk-MPD4I4WS.js
+@@ -118,6 +118,11 @@ var getParallelRoutes = (segmentsList) => {
+           // @ts-ignore Only available in Next.js >= v15.1.1
+           parentCacheNode: newLazyCacheNode,
+           // END
++          // START Next.js v16 support
++          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
++          // @ts-ignore Only available in Next.js >= v16.0.0
++          parentRenderTree: { data: { bfcacheId: 0 } },
++          // END
+           url: pathname,
+           loading: null
+         }

@@ -5,6 +5,9 @@ import {
   type GroupedValuesPlan,
   Period,
   planBarsSection,
+  planPivotRebaseBase,
+  planTimeSeriesPivot,
+  type TimeSeriesSection,
 } from '../../../../domain';
 import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 import { RepositoryError } from '../../../shared';
@@ -210,5 +213,256 @@ describe('buildGroupedValuesQuery', () => {
     expect(() => buildGroupedValuesQuery({ ...plan, category: null })).toThrow(
       'Grouped values require a period or category key'
     );
+  });
+});
+
+describe('time-series pivot SQL', () => {
+  function pivotSection(
+    overrides: Partial<TimeSeriesSection> = {}
+  ): TimeSeriesSection {
+    return {
+      id: 'by-room',
+      title: 'By room',
+      kind: 'time-series',
+      source: {
+        dataset: 'home',
+        view: 'readings',
+        time: { date: 'reading_date', hour: 'reading_hour' },
+      },
+      grain: 'hour',
+      window: 30,
+      variant: 'line',
+      stacked: false,
+      format: { type: 'number' },
+      pivot: {
+        column: 'room',
+        value: { column: 'temperature', reduction: 'average' },
+      },
+      ...overrides,
+    };
+  }
+
+  it('binds the first hour and groups date-hour category values', () => {
+    const day = Period.parse('day', '2026-08-15');
+    if (day === null) throw new Error('Expected day');
+    const plan = planTimeSeriesPivot(pivotSection(), day, 'Asia/Tokyo');
+
+    const result = buildGroupedValuesQuery(plan);
+
+    const validatedHour =
+      "IF(`reading_hour` BETWEEN 0 AND 23, `reading_hour`, ERROR('source.time.hour must be an integer from 0 through 23'))";
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        `SELECT FORMAT('%sT%02d', FORMAT_DATE('%F', \`reading_date\`), ${validatedHour}) AS period, CAST(\`room\` AS STRING) AS category, CAST(\`temperature\` AS FLOAT64) AS value_0`,
+        'FROM `home.readings`',
+        'WHERE `reading_date` >= CAST(@period_start AS DATE)',
+        'AND `reading_date` <= CAST(@period_end AS DATE)',
+        `AND ${validatedHour} IS NOT NULL`,
+        `AND (\`reading_date\` > CAST(@period_start AS DATE) OR ${validatedHour} >= @first_hour)`,
+        '),',
+        'periods AS (SELECT DISTINCT period FROM filtered ORDER BY period DESC LIMIT @bucket_limit)',
+        'SELECT period, category, CAST(AVG(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN periods USING (period)',
+        'GROUP BY period, category',
+        'ORDER BY period DESC, category',
+      ].join('\n'),
+      params: {
+        period_start: '2026-08-14',
+        period_end: '2026-08-15',
+        time_zone: 'Asia/Tokyo',
+        first_hour: 18,
+        bucket_limit: 121,
+      },
+    });
+    expect(result.params.first_hour).toBe(18);
+  });
+
+  it('keeps the month pivot SQL and parameters exact', () => {
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'category-series'
+    );
+    if (section?.kind !== 'time-series')
+      throw new Error('Expected pivot fixture');
+
+    expect(
+      buildGroupedValuesQuery(
+        planTimeSeriesPivot(section, period, dashboard.timeZone)
+      )
+    ).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%Y-%m', DATE(`recorded_at`, @time_zone)) AS period, CAST(`category` AS STRING) AS category, ABS(CAST(`amount` AS FLOAT64)) AS value_0",
+        'FROM `sample_dataset.entries`',
+        ...bounds,
+        'AND `category` != @filter_0',
+        '),',
+        'periods AS (SELECT DISTINCT period FROM filtered ORDER BY period DESC LIMIT @bucket_limit)',
+        'SELECT period, category, CAST(SUM(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN periods USING (period)',
+        'GROUP BY period, category',
+        'ORDER BY period DESC, category',
+      ].join('\n'),
+      params: {
+        period_start: '2025-09-01',
+        period_end: '2026-08-31',
+        time_zone: 'Asia/Tokyo',
+        filter_0: 'transfer',
+        bucket_limit: 121,
+      },
+    });
+  });
+
+  it('groups daily values inside a month without a first-hour condition', () => {
+    const section = pivotSection({
+      source: {
+        dataset: 'sample_dataset',
+        view: 'entries',
+        time: { column: 'recorded_at', type: 'timestamp' },
+      },
+      grain: 'day',
+      window: undefined,
+      pivot: {
+        column: 'category',
+        value: { column: 'amount', reduction: 'sum', transform: 'absolute' },
+      },
+    });
+
+    expect(
+      buildGroupedValuesQuery(
+        planTimeSeriesPivot(section, period, 'Asia/Tokyo')
+      )
+    ).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%F', DATE(`recorded_at`, @time_zone)) AS period, CAST(`category` AS STRING) AS category, ABS(CAST(`amount` AS FLOAT64)) AS value_0",
+        'FROM `sample_dataset.entries`',
+        ...bounds,
+        '),',
+        'periods AS (SELECT DISTINCT period FROM filtered ORDER BY period DESC LIMIT @bucket_limit)',
+        'SELECT period, category, CAST(SUM(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN periods USING (period)',
+        'GROUP BY period, category',
+        'ORDER BY period DESC, category',
+      ].join('\n'),
+      params: {
+        period_start: '2026-08-01',
+        period_end: '2026-08-31',
+        time_zone: 'Asia/Tokyo',
+        bucket_limit: 121,
+      },
+    });
+  });
+
+  it('requires a date-and-hour binding for hour buckets', () => {
+    const day = Period.parse('day', '2026-08-15');
+    if (day === null) throw new Error('Expected day');
+    const plan = planTimeSeriesPivot(pivotSection(), day, 'Asia/Tokyo');
+
+    expect(() =>
+      buildGroupedValuesQuery({
+        ...plan,
+        source: { ...plan.source, time: 'reading_date' },
+      })
+    ).toThrow('An hour plan requires a date-and-hour binding');
+  });
+});
+
+describe('derived pivot SQL', () => {
+  it('warms up a pivot with the existing category-trend SQL and a widened range and cap', () => {
+    const sut = buildGroupedValuesQuery;
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'category-series'
+    );
+    const period = Period.parse('month', '2026-08');
+    if (
+      section?.kind !== 'time-series' ||
+      section.pivot === undefined ||
+      period === null
+    )
+      throw new Error('Expected category series');
+
+    const result = sut(
+      planTimeSeriesPivot(
+        {
+          ...section,
+          pivot: {
+            ...section.pivot,
+            movingAverage: { window: 3, label: '{category} (3-month average)' },
+          },
+        },
+        period,
+        dashboard.timeZone
+      )
+    );
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%Y-%m', DATE(`recorded_at`, @time_zone)) AS period, CAST(`category` AS STRING) AS category, ABS(CAST(`amount` AS FLOAT64)) AS value_0",
+        'FROM `sample_dataset.entries`',
+        ...bounds,
+        'AND `category` != @filter_0',
+        '),',
+        'periods AS (SELECT DISTINCT period FROM filtered ORDER BY period DESC LIMIT @bucket_limit)',
+        'SELECT period, category, CAST(SUM(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN periods USING (period)',
+        'GROUP BY period, category',
+        'ORDER BY period DESC, category',
+      ].join('\n'),
+      params: {
+        period_start: '2025-07-01',
+        period_end: '2026-08-31',
+        time_zone: 'Asia/Tokyo',
+        filter_0: 'transfer',
+        bucket_limit: 123,
+      },
+    });
+  });
+
+  it('reads a pivot base in one date bucket', () => {
+    const sut = buildGroupedValuesQuery;
+    const section: TimeSeriesSection = {
+      id: 'base',
+      title: 'Base',
+      kind: 'time-series',
+      source: {
+        dataset: 'sample_dataset',
+        view: 'entries',
+        time: { column: 'recorded_at', type: 'timestamp' },
+      },
+      variant: 'line',
+      stacked: false,
+      format: { type: 'number' },
+      pivot: {
+        column: 'category',
+        value: { column: 'amount', reduction: 'sum', transform: 'absolute' },
+      },
+    };
+
+    const result = sut(
+      planPivotRebaseBase(section, 'day', '2026-01-15', 'Asia/Tokyo')
+    );
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%F', DATE(`recorded_at`, @time_zone)) AS period, CAST(`category` AS STRING) AS category, ABS(CAST(`amount` AS FLOAT64)) AS value_0",
+        'FROM `sample_dataset.entries`',
+        ...bounds,
+        '),',
+        'periods AS (SELECT DISTINCT period FROM filtered ORDER BY period DESC LIMIT @bucket_limit)',
+        'SELECT period, category, CAST(SUM(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN periods USING (period)',
+        'GROUP BY period, category',
+        'ORDER BY period DESC, category',
+      ].join('\n'),
+      params: {
+        period_start: '2026-01-15',
+        period_end: '2026-01-15',
+        time_zone: 'Asia/Tokyo',
+        bucket_limit: 2,
+      },
+    });
   });
 });

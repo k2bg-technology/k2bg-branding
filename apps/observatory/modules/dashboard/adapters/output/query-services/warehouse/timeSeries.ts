@@ -5,5 +5,9 @@ import { buildGroupedSectionQuery } from './statTiles';
 export function buildTimeSeriesQuery(
   plan: Extract<SectionQueryPlan, { kind: 'time-series' }>
 ): BuiltQuery {
-  return buildGroupedSectionQuery(plan, 'DESC', plan.bucketLimit);
+  return buildGroupedSectionQuery(
+    plan,
+    'DESC',
+    plan.bucketLimit + (plan.warmUp?.lookback ?? 0)
+  );
 }

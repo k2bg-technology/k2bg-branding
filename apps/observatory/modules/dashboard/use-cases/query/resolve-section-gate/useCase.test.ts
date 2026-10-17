@@ -57,6 +57,106 @@ function month(value: string) {
 }
 
 describe('ResolveSectionGate', () => {
+  it('counts calendar heatmap availability in days on a month dashboard', async () => {
+    const section: Section = {
+      id: 'daily',
+      title: 'Daily',
+      kind: 'calendar-heatmap',
+      source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      range: 'trailing',
+      window: 91,
+      value: { column: 'temperature', reduction: 'maximum' },
+      format: { type: 'number' },
+      availability: { since: '2026-08-15', minimumBuckets: 30 },
+    };
+    const sut = sutWithBounds();
+
+    expect(
+      await sut.execute({
+        dashboard: dashboard(section),
+        section,
+        selectedPeriod: month('2026-08'),
+        selections: {},
+      })
+    ).toEqual({
+      status: 'accumulating',
+      since: '2026-08-15',
+      availableFrom: { grain: 'day', start: { date: '2026-09-14', hour: 0 } },
+      note: undefined,
+    });
+    expect(
+      await sut.execute({
+        dashboard: dashboard(section),
+        section,
+        selectedPeriod: month('2026-09'),
+        selections: {},
+      })
+    ).toEqual({
+      status: 'open',
+      period: month('2026-09'),
+    });
+  });
+
+  it('counts day buckets for time bars with a day grain', async () => {
+    const section: Section = {
+      id: 'daily-bars',
+      title: 'Daily bars',
+      kind: 'bars',
+      source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      x: { axis: 'time', grain: 'day' },
+      series: [{ label: 'Amount', column: 'amount', reduction: 'sum' }],
+      stacked: false,
+      format: { type: 'number' },
+      availability: { since: '2026-08-15', minimumBuckets: 7 },
+    };
+    const sut = sutWithBounds();
+
+    const result = await sut.execute({
+      dashboard: dashboard(section),
+      section,
+      selectedPeriod: month('2026-07'),
+      selections: {},
+    });
+
+    expect(result).toEqual({
+      status: 'accumulating',
+      since: '2026-08-15',
+      availableFrom: { grain: 'day', start: { date: '2026-08-22', hour: 0 } },
+      note: undefined,
+    });
+  });
+
+  it('judges a calendar-year heatmap over the whole year it reads', async () => {
+    const section: Section = {
+      id: 'yearly',
+      title: 'Yearly',
+      kind: 'calendar-heatmap',
+      source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      range: 'calendar-year',
+      value: { column: 'temperature', reduction: 'maximum' },
+      format: { type: 'number' },
+      availability: { since: '2026-08-15', minimumBuckets: 30 },
+      readiness: { column: 'is_complete' },
+    };
+    const sut = new ResolveSectionGate(
+      { fetchPeriodBounds: async () => null },
+      {
+        fetchSectionReadiness: async (plan) =>
+          plan.dateRange.firstDate === '2026-01-01' &&
+          plan.dateRange.lastDate === '2026-12-31',
+      }
+    );
+
+    const result = await sut.execute({
+      dashboard: dashboard(section),
+      section,
+      selectedPeriod: month('2026-08'),
+      selections: {},
+    });
+
+    expect(result).toEqual({ status: 'open', period: month('2026-08') });
+  });
+
   it('opens a following section at the selected period', async () => {
     const section = tiles();
     const sut = sutWithBounds();

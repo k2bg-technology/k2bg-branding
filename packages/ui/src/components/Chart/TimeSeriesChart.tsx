@@ -19,13 +19,19 @@ import {
 import { ChartContainer } from './ChartContainer';
 import { ChartLegend } from './ChartLegend';
 import { ChartTooltip } from './ChartTooltip';
+import { numericExtent } from './chartExtent';
 import { seriesDataKey } from './chartSeries';
 import {
   chartAccessibleName,
   resolveSeriesColor,
   seriesColorCss,
 } from './chartTheme';
-import { defaultValueFormatter, getTimeAxisTicks } from './chartTicks';
+import {
+  defaultValueFormatter,
+  getTimeAxisTicks,
+  valueAxisTick,
+  valueAxisWidth,
+} from './chartTicks';
 import {
   ChartColor,
   type ChartHeight,
@@ -116,6 +122,52 @@ function isolatedTimestamps(rows: TimeSeriesRow[], dataKey: string) {
   return isolated;
 }
 
+interface StackScan {
+  /** Where the next stacked layer starts. */
+  stackTop: number;
+  values: number[];
+}
+
+/**
+ * Every value the value axis has to reach: the plotted measurements, the running
+ * totals of a stack, and the references that extend the domain.
+ */
+function valueAxisBounds(
+  rows: TimeSeriesRow[],
+  series: TimeSeriesChartSeries[],
+  isStacked: boolean,
+  references: number[]
+) {
+  const dataKeys = series.map((seriesItem) => ({
+    dataKey: seriesDataKey(seriesItem.id),
+    isStackLayer: isStacked && !isBandSeries(seriesItem),
+  }));
+  const plottedValues = rows.flatMap(
+    (row) =>
+      dataKeys.reduce<StackScan>(
+        ({ stackTop, values }, { dataKey, isStackLayer }) => {
+          const value = row[dataKey];
+          if (Array.isArray(value)) {
+            return { stackTop, values: [...values, ...value] };
+          }
+          if (typeof value !== 'number') {
+            return { stackTop, values };
+          }
+          if (!isStackLayer) {
+            return { stackTop, values: [...values, value] };
+          }
+          return {
+            stackTop: stackTop + value,
+            values: [...values, stackTop + value],
+          };
+        },
+        { stackTop: 0, values: [] }
+      ).values
+  );
+  const extent = numericExtent([...plottedValues, ...references]);
+  return extent === undefined ? [0] : [extent.minimum, extent.maximum];
+}
+
 function formatTooltipValue(
   value: TooltipValueType | undefined,
   valueFormatter: (value: number) => string
@@ -195,6 +247,15 @@ export function TimeSeriesChart({
     period,
     timeZone,
     locale
+  );
+  const axisBounds = valueAxisBounds(
+    rows,
+    series,
+    variant === 'area' && stacked,
+    [
+      ...(thresholds ?? []).map((threshold) => threshold.value),
+      ...(bands ?? []).flatMap((band) => [band.from, band.to]),
+    ]
   );
   const seriesInfoByDataKey = new Map(
     series.map((seriesItem, index) => [
@@ -300,12 +361,13 @@ export function TimeSeriesChart({
           {/* Lines may sit far from zero; fit the domain to the data
               (bars keep the mandatory zero baseline in BarChart). */}
           <YAxis
-            width={48}
+            width={valueAxisWidth(axisBounds, valueFormatter)}
             domain={['auto', 'auto']}
             tickLine={false}
             axisLine={false}
             tickMargin={8}
             tickFormatter={valueFormatter}
+            tick={valueAxisTick}
           />
           <Tooltip
             content={(tooltipProps: TooltipContentProps) => {

@@ -1,18 +1,20 @@
 import type { BarSeries } from 'ui';
 
 import {
+  type BarsAxis,
   type BarsSection,
   type CategoryItem,
-  categoryItemsFromBuckets,
   categoryLabels,
   type DashboardDefinition,
   DEFAULT_DASHBOARD_LABELS,
   formatPeriodRange,
+  MAXIMUM_PIVOT_SERIES,
   orderCategories,
   Period,
   resolveSectionRange,
   selectTopN,
   timeSeriesSpine,
+  widenPivot,
 } from '../../modules/dashboard/domain';
 import type { GroupedValues } from '../../modules/dashboard/use-cases';
 
@@ -24,14 +26,15 @@ export interface BarsChartInput {
 }
 
 function timeAxis(
-  window: number,
+  axis: Extract<BarsAxis, { axis: 'time' }>,
   buckets: { period: string; values: (number | null)[] }[],
   measureCount: number,
   truncated: boolean,
   period: Period,
   dashboard: DashboardDefinition
 ) {
-  const range = resolveSectionRange({ window }, period, {
+  const grain = axis.grain ?? period.grain;
+  const range = resolveSectionRange({ grain, window: axis.window }, period, {
     truncated,
     firstBucket: buckets[0]?.period,
   });
@@ -41,14 +44,14 @@ function timeAxis(
     measureCount,
     dashboard.timeZone
   );
-  const first = Period.containing(period.grain, range.display.first.date);
-  const last = Period.containing(period.grain, range.display.last.date);
+  const first = Period.containing(grain, range.display.first.date);
+  const last = Period.containing(grain, range.display.last.date);
   if (first === null || last === null)
     throw new Error('Time bars require a valid range');
   return {
     categories: spine.map(
       (bucket) =>
-        Period.parse(period.grain, bucket.period)?.label(dashboard.locale) ??
+        Period.parse(grain, bucket.period)?.label(dashboard.locale) ??
         bucket.period
     ),
     spine,
@@ -111,7 +114,7 @@ export function barsChart(
     if (section.series === undefined)
       throw new Error('Time bars require series');
     const axis = timeAxis(
-      section.x.window,
+      section.x,
       data.buckets,
       section.series.length,
       data.truncated,
@@ -132,36 +135,26 @@ export function barsChart(
 
   if (section.pivot === undefined)
     throw new Error('Pivot bars require a pivot');
-  const items = categoryItemsFromBuckets(data.buckets);
-  categoryLabels(items, section.pivot.topN.otherLabel, labels, {
-    sectionId: section.id,
-  });
-  const { kept, remainder } = selectTopN(items, section.pivot.topN.count);
-  const seriesLabels = categoryLabels(
-    kept,
-    remainder === null ? null : section.pivot.topN.otherLabel,
+  const widened = widenPivot(
+    data.buckets,
+    { topN: section.pivot.topN, maximum: MAXIMUM_PIVOT_SERIES },
     labels,
     { sectionId: section.id }
   );
-  const wideBuckets = data.buckets.map((bucket, index) => ({
-    period: bucket.period,
-    values: [
-      ...kept.map((item) => item.values[index] ?? null),
-      ...(remainder === null ? [] : [remainder[index] ?? null]),
-    ],
-  }));
+  if (widened.status !== 'ready')
+    throw new Error('A bars pivot folds categories into topN');
   const axis = timeAxis(
-    section.x.window,
-    wideBuckets,
-    seriesLabels.length,
+    section.x,
+    widened.buckets,
+    widened.series.length,
     data.truncated,
     period,
     dashboard
   );
   return {
     categories: axis.categories,
-    series: seriesLabels.map((label, index) => ({
-      id: index < kept.length ? `category-${index}` : 'remainder',
+    series: widened.series.map(({ id, label }, index) => ({
+      id,
       label,
       values: axis.spine.map((bucket) => bucket.values[index] ?? null),
     })),

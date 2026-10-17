@@ -1,3 +1,6 @@
 packages:
   - "apps/*"
   - "packages/*"
+
+patchedDependencies:
+  "@storybook/nextjs@10.6.1": patches/@storybook__nextjs@10.6.1.patch

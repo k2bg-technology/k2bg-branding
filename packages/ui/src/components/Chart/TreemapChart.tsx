@@ -9,6 +9,7 @@ import {
 
 import { ChartContainer } from './ChartContainer';
 import { ChartTooltip } from './ChartTooltip';
+import { numericExtent } from './chartExtent';
 import { heatmapCellColor, heatmapLevel } from './chartHeatmapScale';
 import {
   chartAccessibleName,
@@ -31,6 +32,13 @@ export interface TreemapChartNode {
   value: number;
   /** One optional level of grouping; the parts of a group tile the group's area. */
   group?: string;
+}
+
+export interface TreemapChartTableHeaders {
+  group?: string;
+  label?: string;
+  value?: string;
+  share?: string;
 }
 
 /** What the treemap reads: `value` and `name`; the key rides along to the shapes. */
@@ -310,6 +318,7 @@ function TreemapNodeShape({ node, tiles, groups }: NodeShapeProps) {
 export interface TreemapChartProps {
   label: string;
   nodes: TreemapChartNode[];
+  tableHeaders?: TreemapChartTableHeaders;
   /** Tile color: one per group from the palette, or the value on a scale. */
   colorBy?: 'group' | 'value';
   height?: ChartHeight;
@@ -320,11 +329,18 @@ export interface TreemapChartProps {
 export function TreemapChart({
   label,
   nodes,
+  tableHeaders,
   colorBy = 'group',
   height,
   valueFormatter = defaultValueFormatter,
   className,
 }: TreemapChartProps) {
+  const headers = {
+    group: tableHeaders?.group ?? 'Group',
+    label: tableHeaders?.label ?? 'Label',
+    value: tableHeaders?.value ?? 'Value',
+    share: tableHeaders?.share ?? 'Share',
+  };
   const drawableNodes = nodes.filter((node) => isDrawableValue(node.value));
   if (isDevelopment && drawableNodes.length < nodes.length) {
     const droppedIds = nodes
@@ -351,7 +367,10 @@ export function TreemapChart({
     regionKeys.map((key, index) => [key, index])
   );
 
-  const largestValue = Math.max(0, ...drawableNodes.map((node) => node.value));
+  const largestValue = Math.max(
+    0,
+    numericExtent(drawableNodes.map((node) => node.value))?.maximum ?? 0
+  );
   // Shares and areas are ratios, so they are taken from values measured against
   // the largest one: a sum of finite values then cannot overflow to Infinity.
   const scaled = (value: number) =>
@@ -521,10 +540,10 @@ export function TreemapChart({
           <caption>{label}</caption>
           <thead>
             <tr>
-              {isGrouped && <th scope="col">Group</th>}
-              <th scope="col">Label</th>
-              <th scope="col">Value</th>
-              <th scope="col">Share</th>
+              {isGrouped && <th scope="col">{headers.group}</th>}
+              <th scope="col">{headers.label}</th>
+              <th scope="col">{headers.value}</th>
+              <th scope="col">{headers.share}</th>
             </tr>
           </thead>
           <tbody>

@@ -1,4 +1,5 @@
 import { cn } from '../../utils/cn';
+import { numericExtent } from './chartExtent';
 import { seriesColorCss } from './chartTheme';
 import { ChartColor } from './types';
 
@@ -22,13 +23,14 @@ interface SparklinePoint {
 }
 
 function buildRuns(values: (number | null)[]) {
-  const measured = values.filter((value): value is number => value !== null);
-  if (measured.length === 0) {
+  const extent = numericExtent(
+    values.filter((value): value is number => value !== null)
+  );
+  if (extent === undefined) {
     return [];
   }
 
-  const min = Math.min(...measured);
-  const max = Math.max(...measured);
+  const { minimum: min, maximum: max } = extent;
   const span = max - min;
   const xStep = values.length > 1 ? viewBoxSize / (values.length - 1) : 0;
 

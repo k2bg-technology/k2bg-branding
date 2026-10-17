@@ -708,3 +708,55 @@ export const InterpolationComparison: Story = {
     await waitFor(() => expect(tooltip()).toBeInTheDocument());
   },
 };
+
+export const LargeCurrencyValues: Story = {
+  args: {
+    label: 'Household savings over January 2026',
+    variant: 'area',
+    stacked: true,
+    valueFormatter: (value: number) => `¥${value.toLocaleString('ja-JP')}`,
+    series: [
+      {
+        id: 'cash',
+        label: 'Cash',
+        points: toPoints([
+          6120000, 6185000, 6240000, 6310000, 6295000, 6380000, 6420000,
+          6475000, 6530000, 6590000, 6640000, 6705000, 6760000, 6815000,
+          6870000,
+        ]),
+      },
+      {
+        id: 'stocks',
+        label: 'Stocks',
+        color: ChartColor.CHART_3,
+        points: toPoints([
+          5480000, 5520000, 5610000, 5580000, 5690000, 5750000, 5720000,
+          5810000, 5880000, 5940000, 5910000, 6020000, 6080000, 6150000,
+          6210000,
+        ]),
+      },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const ticks = () =>
+      Array.from(
+        canvasElement.querySelectorAll<SVGTextElement>(
+          '.recharts-yAxis-tick-labels .recharts-cartesian-axis-tick-value'
+        )
+      );
+    const surfaceLeft =
+      canvasElement.querySelector('.recharts-surface')?.getBoundingClientRect()
+        .left ?? 0;
+
+    await waitFor(() => expect(ticks().length).toBeGreaterThan(0));
+
+    // A tick label that does not fit the axis width is wrapped onto a second
+    // line, and one that still overflows starts left of the chart surface.
+    await expect(
+      ticks().every((tick) => tick.querySelectorAll('tspan').length === 1)
+    ).toBe(true);
+    await expect(
+      Math.min(...ticks().map((tick) => tick.getBoundingClientRect().left))
+    ).toBeGreaterThanOrEqual(surfaceLeft);
+  },
+};

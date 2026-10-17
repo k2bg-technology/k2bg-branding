@@ -1,4 +1,4 @@
-import { StatTile, type StatTileDelta, StatTileSentiment } from 'ui';
+import { Sparkline, StatTile, type StatTileDelta, StatTileSentiment } from 'ui';
 
 import type {
   DashboardDefinition,
@@ -7,7 +7,11 @@ import type {
   StatTileDefinition,
   StatTilesSection as StatTilesSectionDefinition,
 } from '../../../modules/dashboard/domain';
-import { comparePreviousPeriod } from '../../../modules/dashboard/domain';
+import {
+  comparePreviousPeriod,
+  resolveSectionRange,
+  timeSeriesSpine,
+} from '../../../modules/dashboard/domain';
 import type { SectionData } from '../../../modules/dashboard/use-cases';
 import { formatValue, NULL_VALUE } from '../formatValue';
 
@@ -62,12 +66,26 @@ export function StatTilesSection({ dashboard, section, data, period }: Props) {
                 previous?.values[index] ?? null,
                 tile.comparison.direction
               );
+        const sparkline =
+          tile.sparkline === undefined
+            ? undefined
+            : timeSeriesSpine(
+                resolveSectionRange({ window: tile.sparkline.window }, period),
+                data.buckets,
+                section.tiles.length,
+                dashboard.timeZone
+              ).map((bucket) => bucket.values[index] ?? null);
         const delta = deltaFor(comparison, tile, dashboard);
         return (
           <StatTile
             key={`${tile.column}-${tile.label}`}
             label={tile.label}
             delta={delta}
+            chart={
+              sparkline === undefined ? undefined : (
+                <Sparkline label={tile.label} values={sparkline} />
+              )
+            }
             value={
               value === null ? NULL_VALUE : formatValue(value, tile, dashboard)
             }

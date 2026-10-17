@@ -29,7 +29,11 @@ export type SectionQueryPlan =
   | (BaseSectionQueryPlan & {
       kind: typeof SectionKind.STAT_TILES;
       grain: PeriodGrain;
-      measures: (MeasureQueryPlan & { compares: boolean })[];
+      measures: (MeasureQueryPlan & {
+        compares: boolean;
+        sparkline?: { window: number };
+        firstPeriod?: string;
+      })[];
     })
   | (BaseSectionQueryPlan &
       (
@@ -39,9 +43,17 @@ export type SectionQueryPlan =
         kind: typeof SectionKind.TIME_SERIES;
         measures: MeasureQueryPlan[];
         bucketLimit: number;
+        warmUp?: WarmUpPlan;
       })
   | (BaseSectionQueryPlan & {
       kind: typeof SectionKind.CALENDAR_HEATMAP;
       grain: 'day';
       measures: MeasureQueryPlan[];
     });
+
+export interface WarmUpPlan {
+  /** Buckets read before the displayed window for a trailing computation. */
+  lookback: number;
+  /** Bucket key of the first displayed bucket; earlier returned buckets are warm-up. */
+  displayFrom: string;
+}

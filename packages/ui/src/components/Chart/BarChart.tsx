@@ -17,7 +17,11 @@ import { ChartLegend } from './ChartLegend';
 import { ChartTooltip } from './ChartTooltip';
 import { seriesDataKey } from './chartSeries';
 import { chartAccessibleName, resolveSeriesColor } from './chartTheme';
-import { defaultValueFormatter } from './chartTicks';
+import {
+  defaultValueFormatter,
+  valueAxisTick,
+  valueAxisWidth,
+} from './chartTicks';
 import type { BarSeries, ChartHeight, ChartTooltipData } from './types';
 
 type BarRow = Record<string, string | number | null>;
@@ -29,14 +33,6 @@ interface ValueExtent {
 
 /** Stands in for a value the tooltip cannot format because it was never measured. */
 const missingValueLabel = '—';
-/** The value axis never becomes narrower than this, so short labels keep their layout. */
-const minimumValueAxisWidth = 48;
-/** Tick labels render at the caption size of the brand's monospace stack. */
-const tickFontSize = 'var(--text-caption)';
-/** Menlo and its monospace fallbacks advance 0.6em: 7.23px at the 12px caption, plus a margin. */
-const tickCharacterWidth = 7.5;
-/** Recharts' own gap between a tick label and the plot area (tickSize + tickMargin). */
-const tickLabelGap = 14;
 
 function seriesValue(seriesItem: BarSeries, categoryIndex: number) {
   return seriesItem.values[categoryIndex] ?? null;
@@ -85,25 +81,6 @@ function valueExtent(
       };
     },
     { minimum: 0, maximum: 0 }
-  );
-}
-
-/**
- * Recharts' automatic axis width has no lower bound, so the width is derived from
- * the widest label the axis can show. Nice ticks stay close to the measured
- * extent, so its formatted bounds stand in for the widest tick label.
- */
-function valueAxisWidth(
-  extent: ValueExtent,
-  formatValue: (value: number) => string
-) {
-  const longestLabelLength = Math.max(
-    formatValue(extent.minimum).length,
-    formatValue(extent.maximum).length
-  );
-  return Math.max(
-    minimumValueAxisWidth,
-    Math.ceil(longestLabelLength * tickCharacterWidth) + tickLabelGap
   );
 }
 
@@ -219,15 +196,16 @@ export function BarChart({
             tickMargin={8}
           />
           <YAxis
-            width={valueAxisWidth(extent, formatAxisValue)}
+            width={valueAxisWidth(
+              [extent.minimum, extent.maximum],
+              formatAxisValue
+            )}
             domain={valueDomain}
             tickLine={false}
             axisLine={false}
             tickMargin={8}
             tickFormatter={formatAxisValue}
-            // Recharts measures a tick with an unstyled span before wrapping it
-            // at the axis width, so the size it renders at has to be explicit.
-            tick={{ style: { fontSize: tickFontSize } }}
+            tick={valueAxisTick}
           />
           {/* A category the reader can land on always answers, so the missing
               measurements stay in the payload instead of emptying it. */}

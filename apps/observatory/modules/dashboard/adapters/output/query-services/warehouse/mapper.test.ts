@@ -2,21 +2,30 @@ import { describe, expect, it } from 'vitest';
 
 import type {
   GroupedValuesPlan,
+  MatrixQueryPlan,
+  PivotQueryPlan,
+  ScatterQueryPlan,
   SectionQueryPlan,
   TableQueryPlan,
+  TreemapQueryPlan,
 } from '../../../../domain';
 import {
   AmbiguousLatestValueError,
   AmbiguousSortKeyError,
   Period,
+  planStatTilesSection,
 } from '../../../../domain';
 import { MappingError } from '../../../shared';
 import {
   toDateBounds,
   toGroupedValues,
+  toMatrixData,
+  toPivotCells,
+  toScatterPoints,
   toSectionData,
   toSectionReadiness,
   toTableRows,
+  toTreemapParts,
 } from './mapper';
 
 describe('toSectionReadiness', () => {
@@ -38,6 +47,136 @@ describe('toSectionReadiness', () => {
   });
 });
 
+describe('toTreemapParts', () => {
+  const plan: TreemapQueryPlan = {
+    sectionId: 'tree',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+    measure: { column: 'amount' },
+    group: 'category_group',
+    category: 'category',
+  };
+
+  it('maps grouped values and preserves a null group and null sum', () => {
+    const result = toTreemapParts(
+      [
+        { group_key: 'Home', category: 'Rent', value_0: 600 },
+        { group_key: null, category: 'Misc', value_0: null },
+      ],
+      plan
+    );
+
+    expect(result).toEqual([
+      { group: 'Home', category: 'Rent', value: 600 },
+      { group: null, category: 'Misc', value: null },
+    ]);
+  });
+
+  it('omits the group property for an ungrouped plan', () => {
+    const result = toTreemapParts([{ category: 'Rent', value_0: 600 }], {
+      ...plan,
+      group: null,
+    });
+
+    expect(result).toEqual([{ category: 'Rent', value: 600 }]);
+    expect(result?.[0]).not.toHaveProperty('group');
+  });
+
+  it('returns null for no rows', () => {
+    expect(toTreemapParts([], plan)).toBeNull();
+  });
+
+  it('rejects a group that is not text or null', () => {
+    expect(() =>
+      toTreemapParts([{ group_key: 5, category: 'Rent', value_0: 600 }], plan)
+    ).toThrow(MappingError);
+  });
+});
+
+function matrixPlan(overrides: Partial<MatrixQueryPlan> = {}) {
+  return {
+    sectionId: 'matrix',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-03' },
+    rows: { axis: 'category', column: 'category' },
+    columns: { axis: 'date', length: 3 },
+    measure: { column: 'amount', reduction: 'sum' },
+    cellLimit: 6,
+    ...overrides,
+  } satisfies MatrixQueryPlan;
+}
+
+const matrixRows = [
+  { row_key: '10', row_rank: 2, column_key: '2026-08-01', value_0: 0 },
+  { row_key: '9', row_rank: 1, column_key: '2026-08-02', value_0: 5 },
+  { row_key: null, row_rank: 3, column_key: '2026-08-01', value_0: null },
+];
+
+describe('toMatrixData', () => {
+  it('orders categories by rank with NULL last and keeps zero apart from missing', () => {
+    const sut = toMatrixData;
+
+    const result = sut(matrixRows, matrixPlan({ cellLimit: 9 }));
+
+    expect(result).toEqual({
+      status: 'ready',
+      rowCategories: ['9', '10', null],
+      columnCategories: null,
+      cells: [
+        { row: '10', column: '2026-08-01', value: 0 },
+        { row: '9', column: '2026-08-02', value: 5 },
+        { row: null, column: '2026-08-01', value: null },
+      ],
+    });
+  });
+
+  it('returns null for no rows', () => {
+    expect(toMatrixData([], matrixPlan())).toBeNull();
+  });
+
+  it('reports too large when more cells return than the budget', () => {
+    expect(toMatrixData(matrixRows, matrixPlan({ cellLimit: 2 }))).toEqual({
+      status: 'too-large',
+    });
+  });
+
+  it('reports too large when sparse cells span a grid above the budget', () => {
+    const sut = toMatrixData;
+
+    const above = sut(matrixRows, matrixPlan());
+    const boundary = sut(matrixRows, matrixPlan({ cellLimit: 9 }));
+
+    expect(above).toEqual({ status: 'too-large' });
+    expect(boundary?.status).toBe('ready');
+  });
+
+  it.each([
+    {
+      name: 'an hour key outside 00–23',
+      rows: [{ row_key: '24', column_key: '2026-08-01', value_0: 1 }],
+      plan: matrixPlan({ rows: { axis: 'hour', length: 24 } }),
+    },
+    {
+      name: 'a non-calendar date key',
+      rows: [
+        { row_key: 'food', row_rank: 1, column_key: '2026-13-01', value_0: 1 },
+      ],
+      plan: matrixPlan(),
+    },
+    {
+      name: 'a rank below one',
+      rows: [
+        { row_key: 'food', row_rank: 0, column_key: '2026-08-01', value_0: 1 },
+      ],
+      plan: matrixPlan(),
+    },
+  ])('rejects $name', ({ rows, plan }) => {
+    expect(() => toMatrixData(rows, plan)).toThrow(MappingError);
+  });
+});
+
 function plan(): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
   return {
     kind: 'stat-tiles',
@@ -55,6 +194,41 @@ function plan(): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
 }
 
 describe('warehouse dashboard mapper', () => {
+  it('keeps sparkline values and nulls a plain tile outside the selected period', () => {
+    const sut = toSectionData;
+    const sparklinePlan: SectionQueryPlan = {
+      ...plan(),
+      measures: [
+        {
+          column: 'total',
+          reduction: 'sum',
+          compares: false,
+          sparkline: { window: 3 },
+          firstPeriod: '2026-06',
+        },
+        {
+          column: 'status',
+          reduction: 'latest',
+          compares: false,
+          firstPeriod: '2026-08',
+        },
+      ],
+    };
+
+    const result = sut(
+      [
+        { period: '2026-07', value_0: 100, value_1: 8, distinct_count_1: 1 },
+        { period: '2026-08', value_0: 120, value_1: 9, distinct_count_1: 1 },
+      ],
+      sparklinePlan
+    );
+
+    expect(result?.buckets.map((bucket) => bucket.values)).toEqual([
+      [100, null],
+      [120, 9],
+    ]);
+  });
+
   it('returns null when no month has a bucket', () => {
     expect(toSectionData([], plan())).toBeNull();
   });
@@ -377,6 +551,41 @@ function groupedPlan(): GroupedValuesPlan {
 }
 
 describe('toGroupedValues', () => {
+  it('maps hour keys oldest first and rejects a date-only key', () => {
+    const plan: GroupedValuesPlan = {
+      ...groupedPlan(),
+      measures: [{ column: 'temperature', reduction: 'average' }],
+      buckets: { grain: 'hour', firstHour: 0, bucketLimit: 120 },
+      category: { column: 'room', sortKey: null },
+    };
+
+    expect(
+      toGroupedValues(
+        [
+          { period: '2026-08-15T06', category: 'kitchen', value_0: 24 },
+          { period: '2026-08-15T05', category: null, value_0: 20 },
+        ],
+        plan
+      )
+    ).toEqual({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        { period: '2026-08-15T05', cells: [{ category: null, values: [20] }] },
+        {
+          period: '2026-08-15T06',
+          cells: [{ category: 'kitchen', values: [24] }],
+        },
+      ],
+    });
+    expect(() =>
+      toGroupedValues(
+        [{ period: '2026-08-15', category: 'kitchen', value_0: 24 }],
+        plan
+      )
+    ).toThrow(MappingError);
+  });
+
   it('preserves NULL categories and groups pivot cells oldest first', () => {
     expect(
       toGroupedValues(
@@ -499,5 +708,477 @@ describe('toGroupedValues', () => {
         plan
       )
     ).toThrow(AmbiguousLatestValueError);
+  });
+});
+
+describe('toPivotCells', () => {
+  const pivotPlan = (overrides: Partial<PivotQueryPlan> = {}) =>
+    ({
+      sectionId: 'pivot',
+      source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+      timeZone: 'UTC',
+      dateRange: { firstDate: '2025-09-01', lastDate: '2026-08-31' },
+      rowKey: { column: 'category', sortKey: null },
+      columnKey: { kind: 'period', grain: 'month' },
+      measure: { column: 'amount', reduction: 'sum' },
+      cellLimit: 10_000,
+      ...overrides,
+    }) satisfies PivotQueryPlan;
+
+  it('maps nullable keys and values without a sort key', () => {
+    const sut = toPivotCells(
+      [
+        { row_key: 'food', column_key: '2026-08', value_0: 300 },
+        { row_key: null, column_key: '2026-07', value_0: 20 },
+      ],
+      pivotPlan()
+    );
+
+    expect(sut).toEqual({
+      exceeded: false,
+      cells: [
+        { row: 'food', column: '2026-08', value: 300 },
+        { row: null, column: '2026-07', value: 20 },
+      ],
+    });
+    expect(toPivotCells([], pivotPlan())).toBeNull();
+  });
+
+  it('reports the source-cell limit before mapping any row', () => {
+    const rows = [
+      { row_key: 5, column_key: 'bad', value_0: 'bad' },
+      { row_key: 5, column_key: 'bad', value_0: 'bad' },
+      { row_key: 5, column_key: 'bad', value_0: 'bad' },
+    ];
+
+    expect(toPivotCells(rows, pivotPlan({ cellLimit: 2 }))).toEqual({
+      cells: [],
+      exceeded: true,
+    });
+    expect(
+      toPivotCells(
+        rows.slice(0, 2).map((_, index) => ({
+          row_key: 'food',
+          column_key: `2026-0${index + 1}`,
+          value_0: 1,
+        })),
+        pivotPlan({ cellLimit: 2 })
+      )?.exceeded
+    ).toBe(false);
+  });
+
+  it.each([
+    {
+      name: 'a period key of the wrong grain',
+      rows: [{ row_key: 'food', column_key: '2026-08-01', value_0: 1 }],
+      plan: pivotPlan(),
+    },
+    {
+      name: 'a non-string row key',
+      rows: [{ row_key: 5, column_key: 'Mon', value_0: 1 }],
+      plan: pivotPlan({ columnKey: { kind: 'category', column: 'weekday' } }),
+    },
+  ])('rejects $name', ({ rows, plan }) => {
+    expect(() => toPivotCells(rows, plan)).toThrow(MappingError);
+  });
+
+  it('keeps a null category column key', () => {
+    expect(
+      toPivotCells(
+        [{ row_key: 'food', column_key: null, value_0: 1 }],
+        pivotPlan({ columnKey: { kind: 'category', column: 'weekday' } })
+      )
+    ).toEqual({
+      exceeded: false,
+      cells: [{ row: 'food', column: null, value: 1 }],
+    });
+  });
+
+  it('keeps a consistent sort key across cells', () => {
+    const plan = pivotPlan({
+      rowKey: {
+        column: 'category',
+        sortKey: { column: 'weekday_number', type: 'number' },
+      },
+    });
+    const sut = toPivotCells(
+      [
+        {
+          row_key: 'Mon',
+          column_key: '2026-07',
+          value_0: 10,
+          sort_key: 1,
+          sort_key_distinct_count: 1,
+        },
+        {
+          row_key: 'Mon',
+          column_key: '2026-08',
+          value_0: 20,
+          sort_key: 1,
+          sort_key_distinct_count: 1,
+        },
+      ],
+      plan
+    );
+
+    expect(sut?.cells.map((cell) => cell.sortKey)).toEqual([1, 1]);
+  });
+
+  it('rejects sort keys that disagree across cells', () => {
+    const plan = pivotPlan({
+      rowKey: {
+        column: 'category',
+        sortKey: { column: 'weekday_number', type: 'number' },
+      },
+    });
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'Mon',
+            column_key: '2026-07',
+            value_0: 10,
+            sort_key: 1,
+            sort_key_distinct_count: 1,
+          },
+          {
+            row_key: 'Mon',
+            column_key: '2026-08',
+            value_0: 20,
+            sort_key: 2,
+            sort_key_distinct_count: 1,
+          },
+        ],
+        plan
+      )
+    ).toThrow(AmbiguousSortKeyError);
+  });
+
+  it('rejects ambiguous or malformed sort keys inside a cell', () => {
+    const plan = pivotPlan({
+      rowKey: {
+        column: 'category',
+        sortKey: { column: 'weekday_number', type: 'number' },
+      },
+    });
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'Mon',
+            column_key: '2026-08',
+            value_0: 1,
+            sort_key: 1,
+            sort_key_distinct_count: 2,
+          },
+        ],
+        plan
+      )
+    ).toThrow(AmbiguousSortKeyError);
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'Mon',
+            column_key: '2026-08',
+            value_0: 1,
+            sort_key: 'x',
+            sort_key_distinct_count: 1,
+          },
+        ],
+        plan
+      )
+    ).toThrow(MappingError);
+  });
+
+  it('rejects ambiguous latest values', () => {
+    expect(() =>
+      toPivotCells(
+        [
+          {
+            row_key: 'food',
+            column_key: '2026-08',
+            value_0: 1,
+            distinct_count_0: 2,
+          },
+        ],
+        pivotPlan({ measure: { column: 'balance', reduction: 'latest' } })
+      )
+    ).toThrow(AmbiguousLatestValueError);
+  });
+});
+
+describe('derived series bucket mapping', () => {
+  it.each([
+    {
+      name: 'a capped range',
+      bucketLimit: 2,
+      rows: [
+        { period: '2026-08-15', value_0: 5 },
+        { period: '2026-08-14', value_0: 4 },
+        { period: '2026-08-13', value_0: 3 },
+        { period: '2026-08-12', value_0: 2 },
+        { period: '2026-08-11', value_0: 1 },
+      ],
+      expected: {
+        truncated: true,
+        buckets: [
+          { period: '2026-08-14', values: [4] },
+          { period: '2026-08-15', values: [5] },
+        ],
+        warmUpBuckets: [
+          { period: '2026-08-12', values: [2] },
+          { period: '2026-08-13', values: [3] },
+        ],
+      },
+    },
+    {
+      name: 'a sparse range',
+      bucketLimit: 120,
+      rows: [
+        { period: '2026-08-15', value_0: 5 },
+        { period: '2026-08-13', value_0: 3 },
+        { period: '2026-08-11', value_0: 1 },
+      ],
+      expected: {
+        truncated: false,
+        buckets: [
+          { period: '2026-08-13', values: [3] },
+          { period: '2026-08-15', values: [5] },
+        ],
+        warmUpBuckets: [{ period: '2026-08-11', values: [1] }],
+      },
+    },
+  ])(
+    'splits warm-up at the retained display for $name',
+    ({ bucketLimit, rows, expected }) => {
+      const sut = toSectionData;
+      const timeSeriesPlan: SectionQueryPlan = {
+        ...plan(),
+        kind: 'time-series',
+        grain: 'day',
+        measures: [{ column: 'total', reduction: 'sum' }],
+        bucketLimit,
+        warmUp: { lookback: 2, displayFrom: '2026-08-13' },
+      };
+
+      const result = sut(rows, timeSeriesPlan);
+
+      expect(result).toEqual(expected);
+    }
+  );
+
+  it('omits warm-up buckets without a derived option', () => {
+    const sut = toSectionData;
+
+    const result = sut([{ period: '2026-08', value_0: 7 }], {
+      ...plan(),
+      kind: 'time-series',
+      measures: [{ column: 'total', reduction: 'sum' }],
+      bucketLimit: 120,
+    });
+
+    expect(result).not.toHaveProperty('warmUpBuckets');
+  });
+
+  it('keeps the previous bucket for a two-bucket sparkline', () => {
+    const sut = toSectionData;
+    const period = Period.parse('month', '2026-08');
+    if (period === null) throw new Error('Expected month');
+    const sectionPlan = planStatTilesSection(
+      {
+        id: 'headline',
+        title: 'Headline',
+        kind: 'stat-tiles',
+        source: plan().source,
+        tiles: [
+          {
+            label: 'Total',
+            column: 'total',
+            reduction: 'sum',
+            format: { type: 'number' },
+            sparkline: { window: 2 },
+          },
+        ],
+      },
+      period,
+      'UTC'
+    );
+
+    const result = sut(
+      [
+        { period: '2026-07', value_0: 5 },
+        { period: '2026-08', value_0: 7 },
+      ],
+      sectionPlan
+    );
+
+    expect(result?.buckets.map((bucket) => bucket.values[0])).toEqual([5, 7]);
+  });
+
+  it('keeps each stat tile to the buckets it reads', () => {
+    const sut = toSectionData;
+    const period = Period.parse('month', '2026-08');
+    if (period === null) throw new Error('Expected month');
+    const sectionPlan = planStatTilesSection(
+      {
+        id: 'headline',
+        title: 'Headline',
+        kind: 'stat-tiles',
+        source: plan().source,
+        tiles: [
+          {
+            label: 'Status',
+            column: 'status',
+            reduction: 'latest',
+            comparison: { direction: 'neutral' },
+            format: { type: 'number' },
+          },
+          {
+            label: 'Total',
+            column: 'total',
+            reduction: 'sum',
+            sparkline: { window: 6 },
+            format: { type: 'number' },
+          },
+        ],
+      },
+      period,
+      'UTC'
+    );
+    const rows = [
+      { period: '2026-03', value_0: 1, distinct_count_0: 2, value_1: 10 },
+      { period: '2026-04', value_0: 2, distinct_count_0: 1, value_1: 20 },
+      { period: '2026-05', value_0: 3, distinct_count_0: 1, value_1: 30 },
+      { period: '2026-06', value_0: 4, distinct_count_0: 1, value_1: 40 },
+      { period: '2026-07', value_0: 5, distinct_count_0: 1, value_1: 50 },
+      { period: '2026-08', value_0: 6, distinct_count_0: 1, value_1: 60 },
+    ];
+
+    const result = sut(rows, sectionPlan);
+
+    expect(result?.buckets.map((bucket) => bucket.values)).toEqual([
+      [null, 10],
+      [null, 20],
+      [null, 30],
+      [null, 40],
+      [5, 50],
+      [6, 60],
+    ]);
+  });
+
+  it('splits pivot warm-up buckets before the displayed selection', () => {
+    const sut = toGroupedValues;
+    const groupedPlan: GroupedValuesPlan = {
+      sectionId: 'trend',
+      source: plan().source,
+      timeZone: 'UTC',
+      dateRange: { firstDate: '2025-12-01', lastDate: '2026-02-28' },
+      measures: [{ column: 'amount', reduction: 'sum' }],
+      buckets: {
+        grain: 'month',
+        bucketLimit: 120,
+        warmUp: { lookback: 1, displayFrom: '2026-01' },
+      },
+      category: { column: 'category', sortKey: null },
+    };
+
+    const result = sut(
+      [
+        { period: '2026-02', category: 'food', value_0: 5 },
+        { period: '2026-01', category: 'rent', value_0: 20 },
+        { period: '2025-12', category: 'food', value_0: 1000 },
+      ],
+      groupedPlan
+    );
+
+    expect(result).toEqual({
+      grouping: 'period-category',
+      truncated: false,
+      buckets: [
+        { period: '2026-01', cells: [{ category: 'rent', values: [20] }] },
+        { period: '2026-02', cells: [{ category: 'food', values: [5] }] },
+      ],
+      warmUpBuckets: [
+        { period: '2025-12', cells: [{ category: 'food', values: [1000] }] },
+      ],
+    });
+  });
+});
+
+describe('toScatterPoints', () => {
+  const plan: ScatterQueryPlan = {
+    sectionId: 'scatter',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    timeZone: 'UTC',
+    dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
+    x: 'amount',
+    y: 'balance',
+    series: 'category',
+    limit: 2,
+  };
+
+  it.each([
+    {
+      name: 'keeps every point at the limit',
+      rows: [
+        { x_value: 3, y_value: 30, series_key: 'a' },
+        { x_value: 2, y_value: 20, series_key: null },
+      ],
+      expected: {
+        truncated: false,
+        points: [
+          { x: 3, y: 30, series: 'a' },
+          { x: 2, y: 20, series: null },
+        ],
+      },
+    },
+    {
+      name: 'keeps the newest limit points and flags the rest',
+      rows: [
+        { x_value: 3, y_value: 30, series_key: 'a' },
+        { x_value: 2, y_value: 20, series_key: null },
+        { x_value: 1, y_value: 10, series_key: 'b' },
+      ],
+      expected: {
+        truncated: true,
+        points: [
+          { x: 3, y: 30, series: 'a' },
+          { x: 2, y: 20, series: null },
+        ],
+      },
+    },
+  ])('$name', ({ rows, expected }) => {
+    expect(toScatterPoints(rows, plan)).toEqual(expected);
+  });
+
+  it('omits the series property for a plan without series', () => {
+    const result = toScatterPoints([{ x_value: 1, y_value: 2 }], {
+      ...plan,
+      series: null,
+    });
+    expect(result).toEqual({ truncated: false, points: [{ x: 1, y: 2 }] });
+    expect(result?.points[0]).not.toHaveProperty('series');
+  });
+
+  it('returns null for no rows', () => {
+    expect(toScatterPoints([], plan)).toBeNull();
+  });
+
+  it.each([
+    {
+      name: 'a null coordinate',
+      row: { x_value: null, y_value: 1, series_key: 'a' },
+    },
+    {
+      name: 'a text coordinate',
+      row: { x_value: '1', y_value: 1, series_key: 'a' },
+    },
+    {
+      name: 'a numeric series',
+      row: { x_value: 1, y_value: 1, series_key: 5 },
+    },
+  ])('rejects $name', ({ row }) => {
+    expect(() => toScatterPoints([row], plan)).toThrow(MappingError);
   });
 });

@@ -10,6 +10,7 @@ export interface QueryOptions {
 }
 
 export interface SectionData {
+  warmUpBuckets?: { period: string; values: (number | null)[] }[];
   buckets: { period: string; values: (number | null)[] }[];
   truncated: boolean;
 }
@@ -39,6 +40,10 @@ export type GroupedValues =
     }
   | {
       grouping: 'period-category';
+      warmUpBuckets?: {
+        period: string;
+        cells: { category: CategoryValue; values: (number | null)[] }[];
+      }[];
       buckets: {
         period: string;
         cells: { category: CategoryValue; values: (number | null)[] }[];
@@ -53,3 +58,51 @@ export type GroupedValues =
         sortKey?: SortKeyValue;
       }[];
     };
+
+export interface CompositionPart {
+  group?: CategoryValue;
+  category: CategoryValue;
+  value: number | null;
+  sortKey?: SortKeyValue;
+}
+
+export interface CompositionData {
+  parts: CompositionPart[];
+  center: number | null;
+}
+
+export type MatrixKey = string | null;
+export type MatrixData =
+  | { status: 'too-large' }
+  | {
+      status: 'ready';
+      rowCategories: CategoryValue[] | null;
+      columnCategories: CategoryValue[] | null;
+      cells: { row: MatrixKey; column: MatrixKey; value: number | null }[];
+    };
+export interface PivotCell {
+  row: CategoryValue;
+  column: CategoryValue;
+  value: number | null;
+  sortKey?: SortKeyValue;
+}
+
+export interface PivotCells {
+  cells: PivotCell[];
+  exceeded: boolean;
+}
+
+export interface ScatterPoint {
+  x: number;
+  y: number;
+  series?: CategoryValue;
+}
+
+export interface ScatterPoints {
+  points: ScatterPoint[];
+  truncated: boolean;
+}
+
+export interface ScatterData extends ScatterPoints {
+  trendLine: { slope: number; intercept: number } | null;
+}

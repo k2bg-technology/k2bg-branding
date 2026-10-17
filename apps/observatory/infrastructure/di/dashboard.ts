@@ -3,16 +3,27 @@ import {
   FileSystemDefinitionSource,
   systemClock,
   WarehouseFetchGroupedValuesQueryService,
+  WarehouseFetchMatrixDataQueryService,
   WarehouseFetchPeriodBoundsQueryService,
+  WarehouseFetchPivotDataQueryService,
+  WarehouseFetchScatterPointsQueryService,
   WarehouseFetchSectionDataQueryService,
   WarehouseFetchSectionReadinessQueryService,
   WarehouseFetchTableRowsQueryService,
+  WarehouseFetchTreemapPartsQueryService,
 } from '../../modules/dashboard/adapters';
 import {
   FetchBarsData,
+  FetchCompositionData,
+  FetchMatrixData,
+  FetchPivotData,
+  FetchRebaseBase,
+  FetchScatterData,
   FetchSectionData,
   FetchTableRows,
+  FetchTimeSeriesPivot,
   LoadDashboards,
+  ResolveControlOptions,
   ResolveDashboardPeriod,
   ResolveSectionGate,
 } from '../../modules/dashboard/use-cases';
@@ -28,6 +39,14 @@ export function createResolveDashboardPeriodUseCase(): ResolveDashboardPeriod {
   return new ResolveDashboardPeriod(
     new WarehouseFetchPeriodBoundsQueryService(getWarehouseClient()),
     systemClock
+  );
+}
+
+export function createResolveControlOptionsUseCase(): ResolveControlOptions {
+  const client = getWarehouseClient();
+  return new ResolveControlOptions(
+    new WarehouseFetchPeriodBoundsQueryService(client),
+    new WarehouseFetchGroupedValuesQueryService(client)
   );
 }
 
@@ -54,5 +73,48 @@ export function createFetchTableRowsUseCase(): FetchTableRows {
 export function createFetchBarsDataUseCase(): FetchBarsData {
   return new FetchBarsData(
     new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchCompositionDataUseCase(): FetchCompositionData {
+  const client = getWarehouseClient();
+  return new FetchCompositionData(
+    new WarehouseFetchGroupedValuesQueryService(client),
+    new WarehouseFetchTreemapPartsQueryService(client),
+    new WarehouseFetchSectionDataQueryService(client)
+  );
+}
+
+export function createFetchMatrixDataUseCase(): FetchMatrixData {
+  return new FetchMatrixData(
+    new WarehouseFetchMatrixDataQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchTimeSeriesPivotUseCase(): FetchTimeSeriesPivot {
+  return new FetchTimeSeriesPivot(
+    new WarehouseFetchGroupedValuesQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchPivotDataUseCase(): FetchPivotData {
+  return new FetchPivotData(
+    new WarehouseFetchPivotDataQueryService(getWarehouseClient())
+  );
+}
+
+export function createFetchRebaseBaseUseCase(): FetchRebaseBase {
+  const client = getWarehouseClient();
+  return new FetchRebaseBase(
+    new WarehouseFetchSectionDataQueryService(client),
+    new WarehouseFetchGroupedValuesQueryService(client)
+  );
+}
+
+export function createFetchScatterDataUseCase(): FetchScatterData {
+  const client = getWarehouseClient();
+  return new FetchScatterData(
+    new WarehouseFetchScatterPointsQueryService(client),
+    new WarehouseFetchSectionDataQueryService(client)
   );
 }

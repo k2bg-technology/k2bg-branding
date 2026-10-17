@@ -9,6 +9,13 @@ const mocks = vi.hoisted(() => ({
   fetchSectionData: vi.fn(),
   fetchTableRows: vi.fn(),
   fetchBarsData: vi.fn(),
+  fetchCompositionData: vi.fn(),
+  resolveControlOptions: vi.fn(),
+  fetchMatrixData: vi.fn(),
+  fetchTimeSeriesPivot: vi.fn(),
+  fetchPivotData: vi.fn(),
+  fetchRebaseBase: vi.fn(async () => null),
+  fetchScatterData: vi.fn(),
   createResolveDashboardPeriodUseCase: vi.fn(),
   notFound: vi.fn(() => {
     throw new Error('not-found');
@@ -18,6 +25,9 @@ const mocks = vi.hoisted(() => ({
 vi.mock('next/navigation', () => ({ notFound: mocks.notFound }));
 vi.mock('../../../infrastructure/di/dashboard', () => ({
   createLoadDashboardsUseCase: () => ({ execute: mocks.loadDashboards }),
+  createResolveControlOptionsUseCase: () => ({
+    execute: mocks.resolveControlOptions,
+  }),
   createResolveDashboardPeriodUseCase:
     mocks.createResolveDashboardPeriodUseCase,
   createResolveSectionGateUseCase: () => ({
@@ -26,6 +36,16 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createFetchSectionDataUseCase: () => ({ execute: mocks.fetchSectionData }),
   createFetchTableRowsUseCase: () => ({ execute: mocks.fetchTableRows }),
   createFetchBarsDataUseCase: () => ({ execute: mocks.fetchBarsData }),
+  createFetchCompositionDataUseCase: () => ({
+    execute: mocks.fetchCompositionData,
+  }),
+  createFetchMatrixDataUseCase: () => ({ execute: mocks.fetchMatrixData }),
+  createFetchTimeSeriesPivotUseCase: () => ({
+    execute: mocks.fetchTimeSeriesPivot,
+  }),
+  createFetchPivotDataUseCase: () => ({ execute: mocks.fetchPivotData }),
+  createFetchRebaseBaseUseCase: () => ({ execute: mocks.fetchRebaseBase }),
+  createFetchScatterDataUseCase: () => ({ execute: mocks.fetchScatterData }),
 }));
 vi.mock('../../../modules/dashboard/adapters/shared', () => ({
   dashboardLogger: { error: vi.fn(), warn: vi.fn() },
@@ -75,6 +95,7 @@ async function renderPage(
 describe('dashboard page', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mocks.fetchTimeSeriesPivot.mockResolvedValue(null);
     mocks.loadDashboards.mockResolvedValue({
       definitions: [dashboard()],
       issues: [],
@@ -155,6 +176,43 @@ describe('dashboard page', () => {
       Page({
         params: Promise.resolve({ id: 'summary' }),
         searchParams: Promise.resolve({ 'control.category': 'drink' }),
+      })
+    ).rejects.toThrow('not-found');
+
+    expect(mocks.createResolveDashboardPeriodUseCase).not.toHaveBeenCalled();
+  });
+
+  it('rejects a value outside the resolved distinct options before resolving the period', async () => {
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          controls: [
+            {
+              id: 'region',
+              label: 'Region',
+              column: 'region',
+              options: 'distinct',
+              order: { sortKey: { column: 'region', type: 'text' } },
+            },
+          ],
+          sections: dashboard().sections.map((section) =>
+            section.id === 'first'
+              ? { ...section, controls: ['region'] }
+              : section
+          ),
+        },
+      ],
+      issues: [],
+    });
+    mocks.resolveControlOptions.mockResolvedValue({
+      region: { status: 'ready', options: ['east'], truncated: false },
+    });
+
+    await expect(
+      Page({
+        params: Promise.resolve({ id: 'summary' }),
+        searchParams: Promise.resolve({ 'control.region': 'west' }),
       })
     ).rejects.toThrow('not-found');
 
@@ -333,5 +391,107 @@ describe('dashboard page', () => {
       screen.getByRole('heading', { name: 'Largest categories' })
     ).toBeInTheDocument();
     expect(mocks.fetchBarsData).toHaveBeenCalled();
+  });
+
+  it('fetches and renders a donut section', async () => {
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          sections: [
+            {
+              id: 'share',
+              title: 'Spending share',
+              kind: 'donut',
+              source: {
+                dataset: 'metrics',
+                view: 'entries',
+                time: 'recorded_on',
+              },
+              category: 'category',
+              categoryLabel: 'Category',
+              value: { label: 'Amount', column: 'amount', reduction: 'sum' },
+              order: 'value-desc',
+              format: { type: 'number' },
+            },
+          ],
+        },
+      ],
+      issues: [],
+    });
+    mocks.fetchCompositionData.mockResolvedValue({
+      parts: [{ category: 'Rent', value: 100 }],
+      center: null,
+    });
+
+    await renderPage();
+
+    expect(
+      screen.getByRole('heading', { name: 'Spending share' })
+    ).toBeInTheDocument();
+    expect(mocks.fetchCompositionData).toHaveBeenCalled();
+  });
+});
+
+describe('scatter page wiring', () => {
+  it('calls the scatter use case for a scatter section', async () => {
+    vi.clearAllMocks();
+    mocks.loadDashboards.mockResolvedValue({
+      definitions: [
+        {
+          ...dashboard(),
+          sections: [
+            {
+              id: 'correlation',
+              title: 'Correlation',
+              kind: 'scatter',
+              source: {
+                dataset: 'metrics',
+                view: 'entries',
+                time: 'recorded_on',
+              },
+              x: {
+                column: 'amount',
+                label: 'Amount',
+                format: { type: 'number' },
+              },
+              y: {
+                column: 'balance',
+                label: 'Balance',
+                format: { type: 'number' },
+              },
+              series: { column: 'category', label: 'Category' },
+              limit: 10,
+            },
+          ],
+        },
+      ],
+      issues: [],
+    });
+    mocks.createResolveDashboardPeriodUseCase.mockReturnValue({
+      execute: mocks.resolvePeriod,
+    });
+    mocks.resolvePeriod.mockResolvedValue({
+      period: Period.parse('month', '2026-09'),
+      bounds: { firstDate: '2026-08-01', lastDate: '2026-09-30' },
+      previousTarget: Period.parse('month', '2026-08'),
+      nextTarget: null,
+    });
+    mocks.resolveSectionGate.mockImplementation(async ({ selectedPeriod }) => ({
+      status: 'open',
+      period: selectedPeriod,
+    }));
+    mocks.fetchScatterData.mockResolvedValue({
+      points: [{ x: 1, y: 2, series: 'a' }],
+      truncated: false,
+      trendLine: null,
+    });
+
+    await renderPage();
+
+    expect(
+      screen.getByRole('heading', { name: 'Correlation' })
+    ).toBeInTheDocument();
+    expect(mocks.fetchScatterData).toHaveBeenCalled();
   });
 });

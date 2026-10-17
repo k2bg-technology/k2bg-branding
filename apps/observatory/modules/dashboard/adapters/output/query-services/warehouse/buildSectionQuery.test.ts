@@ -1,7 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
 import type { SectionQueryPlan, SourceFilter } from '../../../../domain';
-import { Period, planSection, Reduction } from '../../../../domain';
+import {
+  Period,
+  planSection,
+  planWideRebaseBase,
+  Reduction,
+} from '../../../../domain';
 import sampleDashboard from '../../../../fixtures/sample-dashboard.json';
 import { RepositoryError } from '../../../shared';
 import { dashboardDefinitionSchema } from '../../definition-sources/file-system/schemas';
@@ -565,6 +570,122 @@ describe('date-and-hour binding', () => {
         'HAVING COUNT(*) > 0',
       ].join('\n'),
       params: { time_zone: 'Asia/Tokyo' },
+    });
+  });
+});
+
+describe('derived series SQL', () => {
+  it('builds the fixture smoothed daily series with six warm-up days', () => {
+    const sut = buildSectionQuery;
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'daily-smoothed'
+    );
+    const period = Period.parse('month', '2026-08');
+    if (section?.kind !== 'time-series' || period === null)
+      throw new Error('Expected smoothed series');
+
+    const result = sut(planSection(section, period, dashboard.timeZone));
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%F', `reading_date`) AS period, DATETIME(`reading_date`, TIME(IF(`reading_hour` BETWEEN 0 AND 23, `reading_hour`, ERROR('source.time.hour must be an integer from 0 through 23')), 0, 0)) AS source_time, CAST(`temperature` AS FLOAT64) AS value_0",
+        'FROM `sample_dataset.daily_readings`',
+        'WHERE `reading_date` >= CAST(@period_start AS DATE)',
+        'AND `reading_date` <= CAST(@period_end AS DATE)',
+        "AND IF(`reading_hour` BETWEEN 0 AND 23, `reading_hour`, ERROR('source.time.hour must be an integer from 0 through 23')) IS NOT NULL",
+        '),',
+        'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+        'SELECT filtered.period, CAST(AVG(value_0) AS FLOAT64) AS value_0',
+        'FROM filtered JOIN bucket_times USING (period)',
+        'GROUP BY filtered.period',
+        'ORDER BY filtered.period DESC',
+        'LIMIT @bucket_limit',
+      ].join('\n'),
+      params: {
+        period_start: '2026-07-26',
+        period_end: '2026-08-31',
+        time_zone: 'Asia/Tokyo',
+        bucket_limit: 127,
+      },
+    });
+  });
+
+  it('reads one month for a wide rebase base', () => {
+    const sut = buildSectionQuery;
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'rebased-balances'
+    );
+    if (section?.kind !== 'time-series')
+      throw new Error('Expected rebased series');
+
+    const result = sut(
+      planWideRebaseBase(section, 'month', '2026-01-31', dashboard.timeZone)
+    );
+
+    expect(result).toEqual({
+      sql: [
+        'WITH filtered AS (',
+        "SELECT FORMAT_DATE('%Y-%m', DATE(`recorded_at`, @time_zone)) AS period, `recorded_at` AS source_time, CAST(`first_value` AS FLOAT64) AS value_0, CAST(`second_value` AS FLOAT64) AS value_1",
+        'FROM `sample_dataset.monthly_summary`',
+        'WHERE DATE(`recorded_at`, @time_zone) >= CAST(@period_start AS DATE)',
+        'AND DATE(`recorded_at`, @time_zone) <= CAST(@period_end AS DATE)',
+        '),',
+        'bucket_times AS (SELECT period, MAX(source_time) AS latest_time FROM filtered GROUP BY period)',
+        'SELECT filtered.period, CAST( ARRAY_AGG(STRUCT(source_time, value_0) ORDER BY source_time DESC LIMIT 1)[SAFE_OFFSET(0)].value_0 AS FLOAT64) AS value_0,',
+        'CAST(COUNT(DISTINCT IF(source_time = latest_time, TO_JSON_STRING(value_0), NULL)) AS FLOAT64) AS distinct_count_0,',
+        'CAST( ARRAY_AGG(STRUCT(source_time, value_1) ORDER BY source_time DESC LIMIT 1)[SAFE_OFFSET(0)].value_1 AS FLOAT64) AS value_1,',
+        'CAST(COUNT(DISTINCT IF(source_time = latest_time, TO_JSON_STRING(value_1), NULL)) AS FLOAT64) AS distinct_count_1',
+        'FROM filtered JOIN bucket_times USING (period)',
+        'GROUP BY filtered.period',
+        'ORDER BY filtered.period',
+      ].join('\n'),
+      params: {
+        period_start: '2026-01-01',
+        period_end: '2026-01-31',
+        time_zone: 'Asia/Tokyo',
+      },
+    });
+  });
+
+  it('widens the limit and first-hour bound for an hourly moving average', () => {
+    const sut = buildSectionQuery;
+    const dashboard = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = dashboard.sections.find(
+      (candidate) => candidate.id === 'daily-smoothed'
+    );
+    const period = Period.parse('day', '2026-08-15');
+    if (section?.kind !== 'time-series' || period === null)
+      throw new Error('Expected smoothed series');
+
+    const result = sut(
+      planSection(
+        {
+          ...section,
+          grain: 'hour',
+          window: 24,
+          series: [
+            {
+              label: 'Temperature',
+              column: 'temperature',
+              reduction: 'average',
+              movingAverage: { window: 3, label: '3-hour average' },
+            },
+          ],
+        },
+        period,
+        dashboard.timeZone
+      )
+    );
+
+    expect(result.params).toEqual({
+      period_start: '2026-08-14',
+      period_end: '2026-08-15',
+      time_zone: 'Asia/Tokyo',
+      first_hour: 22,
+      bucket_limit: 123,
     });
   });
 });

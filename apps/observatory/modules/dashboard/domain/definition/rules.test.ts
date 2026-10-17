@@ -4,8 +4,28 @@ import { validateDefinitionRules } from './rules';
 import type {
   CalendarHeatmapSection,
   DashboardDefinition,
+  DonutSection,
+  MatrixHeatmapSection,
+  PivotTableSection,
+  ScatterSection,
   TableSection,
+  TimeSeriesSection,
+  TreemapSection,
 } from './types';
+
+function pivotSeries(): TimeSeriesSection {
+  return {
+    id: 'trend',
+    title: 'Trend',
+    kind: 'time-series',
+    source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+    window: 12,
+    variant: 'line',
+    stacked: false,
+    format: { type: 'number' },
+    pivot: { column: 'category', value: { column: 'value', reduction: 'sum' } },
+  };
+}
 
 function createDefinition(): DashboardDefinition {
   return {
@@ -37,6 +57,59 @@ function createDefinition(): DashboardDefinition {
 }
 
 describe('validateDefinitionRules', () => {
+  it.each([
+    {
+      name: 'missing ranking value',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+        order: 'value-desc',
+      },
+      path: ['controls', 0, 'value'],
+      message: 'Ranking by value requires value',
+    },
+    {
+      name: 'non-sum ranking value',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+        order: 'value-desc',
+        value: { column: 'amount', reduction: 'average' },
+      },
+      path: ['controls', 0, 'value', 'reduction'],
+      message: 'Ranking by value adds values up and requires the sum reduction',
+    },
+    {
+      name: 'value with a sort key',
+      control: {
+        id: 'category',
+        label: 'Category',
+        column: 'category',
+        options: 'distinct',
+        order: { sortKey: { column: 'category', type: 'text' } },
+        value: { column: 'amount', reduction: 'sum' },
+      },
+      path: ['controls', 0, 'value'],
+      message: 'A sortKey order does not take value',
+    },
+  ] as const)(
+    'reports $name at its JSON path',
+    ({ control, path, message }) => {
+      const definition = createDefinition();
+      definition.controls = [control];
+      definition.sections[0].controls = ['category'];
+
+      expect(validateDefinitionRules(definition)).toContainEqual({
+        path: [...path],
+        message,
+      });
+    }
+  );
+
   it.each([
     {
       name: 'duplicate control ids',
@@ -207,6 +280,345 @@ describe('validateDefinitionRules', () => {
       path: ['sections', 0, 'tiles', 0, 'format'],
       message: 'A currency tile requires dashboard currency',
     });
+  });
+});
+
+describe('composition rules', () => {
+  const createDonut = (): DonutSection => ({
+    id: 'share',
+    title: 'Share',
+    kind: 'donut',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    category: 'category',
+    categoryLabel: 'Category',
+    value: { label: 'Amount', column: 'amount', reduction: 'sum' },
+    order: 'value-desc',
+    format: { type: 'number' },
+  });
+  const createTreemap = (): TreemapSection => ({
+    id: 'tree',
+    title: 'Tree',
+    kind: 'treemap',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    category: 'category',
+    categoryLabel: 'Category',
+    value: { label: 'Amount', column: 'amount', reduction: 'sum' },
+    format: { type: 'number' },
+  });
+
+  it.each([
+    { name: 'donut', section: createDonut() },
+    { name: 'treemap', section: createTreemap() },
+  ])(
+    'rejects a non-sum reduction on a $name at its reduction path',
+    ({ section }) => {
+      const definition = createDefinition();
+      definition.sections = [
+        { ...section, value: { ...section.value, reduction: 'average' } },
+      ];
+
+      const result = validateDefinitionRules(definition);
+
+      expect(result).toEqual([
+        {
+          path: ['sections', 0, 'value', 'reduction'],
+          message:
+            'A composition adds values up and requires the sum reduction',
+        },
+      ]);
+    }
+  );
+
+  it.each([
+    { name: 'group only', overrides: { group: 'category_group' } },
+    { name: 'groupLabel only', overrides: { groupLabel: 'Group' } },
+  ])('requires group and groupLabel together ($name)', ({ overrides }) => {
+    const definition = createDefinition();
+    definition.sections = [{ ...createTreemap(), ...overrides }];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'group'],
+        message: 'A treemap declares group and groupLabel together',
+      },
+    ]);
+  });
+
+  it('requires dashboard currency for a currency donut', () => {
+    const definition = createDefinition();
+    definition.currency = undefined;
+    definition.sections = [{ ...createDonut(), format: { type: 'currency' } }];
+
+    const result = validateDefinitionRules(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'format'],
+        message: 'A currency section requires dashboard currency',
+      },
+    ]);
+  });
+
+  it('accepts a sum donut with a sort key and a grouped sum treemap', () => {
+    const definition = createDefinition();
+    definition.sections = [
+      {
+        ...createDonut(),
+        order: { sortKey: { column: 'weekday_number', type: 'number' } },
+      },
+      { ...createTreemap(), group: 'category_group', groupLabel: 'Group' },
+    ];
+
+    expect(validateDefinitionRules(definition)).toEqual([]);
+  });
+});
+
+function createMatrixHeatmap() {
+  return {
+    id: 'matrix',
+    title: 'Matrix',
+    kind: 'matrix-heatmap',
+    source: {
+      dataset: 'metrics',
+      view: 'readings',
+      time: { date: 'reading_date', hour: 'reading_hour' },
+    },
+    rows: { axis: 'hour' },
+    columns: { axis: 'date' },
+    value: { column: 'value', reduction: 'sum' },
+    format: { type: 'number' },
+  } satisfies MatrixHeatmapSection;
+}
+
+describe('matrix heatmap rules', () => {
+  it.each([
+    {
+      name: 'the same date axis on both sides',
+      overrides: { rows: { axis: 'date' }, columns: { axis: 'date' } },
+      path: ['sections', 0, 'columns'],
+      message: 'A matrix heatmap requires two different axes',
+    },
+    {
+      name: 'the same category column on both sides',
+      overrides: {
+        rows: { axis: 'category', column: 'room' },
+        columns: { axis: 'category', column: 'room' },
+      },
+      path: ['sections', 0, 'columns'],
+      message: 'A matrix heatmap requires two different axes',
+    },
+    {
+      name: 'an hour axis without a date-and-hour binding',
+      overrides: {
+        source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      },
+      path: ['sections', 0, 'source', 'time'],
+      message:
+        'An hour section requires source.time with date and hour columns',
+    },
+    {
+      name: 'window without a date axis',
+      overrides: { columns: { axis: 'category', column: 'room' }, window: 7 },
+      path: ['sections', 0, 'window'],
+      message: 'window counts trailing days and requires a date axis',
+    },
+    {
+      name: 'maximum at the default minimum',
+      overrides: { maximum: 0 },
+      path: ['sections', 0, 'maximum'],
+      message: 'A matrix heatmap requires maximum above minimum',
+    },
+    {
+      name: 'minimum above maximum',
+      overrides: { minimum: 10, maximum: 5 },
+      path: ['sections', 0, 'maximum'],
+      message: 'A matrix heatmap requires maximum above minimum',
+    },
+  ] satisfies {
+    name: string;
+    overrides: Partial<MatrixHeatmapSection>;
+    path: (string | number)[];
+    message: string;
+  }[])('rejects $name at its path', ({ overrides, path, message }) => {
+    const section: MatrixHeatmapSection = {
+      ...createMatrixHeatmap(),
+      ...overrides,
+    };
+    const definition = { ...createDefinition(), sections: [section] };
+    const sut = validateDefinitionRules;
+
+    const result = sut(definition);
+
+    expect(result).toEqual([{ path, message }]);
+  });
+
+  it('requires dashboard currency for a currency matrix heatmap', () => {
+    const section = {
+      ...createMatrixHeatmap(),
+      format: { type: 'currency' as const },
+    };
+    const definition = {
+      ...createDefinition(),
+      currency: undefined,
+      sections: [section],
+    };
+
+    expect(validateDefinitionRules(definition)).toEqual([
+      {
+        path: ['sections', 0, 'format'],
+        message: 'A currency section requires dashboard currency',
+      },
+    ]);
+  });
+
+  it('accepts different category columns and an hour by date grid with a window', () => {
+    const categories = {
+      ...createMatrixHeatmap(),
+      rows: { axis: 'category' as const, column: 'room' },
+      columns: { axis: 'category' as const, column: 'sensor' },
+    };
+    const withWindow = { ...createMatrixHeatmap(), id: 'windowed', window: 7 };
+    const definition = {
+      ...createDefinition(),
+      sections: [categories, withWindow],
+    };
+
+    expect(validateDefinitionRules(definition)).toEqual([]);
+  });
+});
+
+describe('time-series series rules', () => {
+  function violations(section: DashboardDefinition['sections'][number]) {
+    const definition = createDefinition();
+    definition.sections = [section];
+    return validateDefinitionRules(definition);
+  }
+
+  it.each([
+    { name: 'neither', section: { ...pivotSeries(), pivot: undefined } },
+    {
+      name: 'both',
+      section: {
+        ...pivotSeries(),
+        series: [
+          { label: 'Value', column: 'value', reduction: 'sum' as const },
+        ],
+      },
+    },
+  ])('rejects $name series sources', ({ section }) => {
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'series'],
+      message: 'A time-series section declares exactly one of series and pivot',
+    });
+  });
+
+  it('requires sum when a pivot has a remainder', () => {
+    const section = pivotSeries();
+    if (section.pivot === undefined) throw new Error('Expected pivot');
+    section.pivot = {
+      ...section.pivot,
+      value: { column: 'value', reduction: 'average' },
+      topN: { count: 1, otherLabel: 'Other' },
+    };
+
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'pivot', 'value', 'reduction'],
+      message: 'A remainder adds values up and requires the sum reduction',
+    });
+  });
+
+  it('rejects a stacked band and a non-sum stacked pivot', () => {
+    const band = {
+      ...pivotSeries(),
+      pivot: undefined,
+      stacked: true,
+      variant: 'area' as const,
+    };
+    band.series = [
+      { label: 'Value', column: 'value', reduction: 'sum' },
+      { label: 'Range', low: 'low', high: 'high', reduction: 'sum' },
+    ];
+    const pivot = { ...pivotSeries(), stacked: true, variant: 'area' as const };
+    if (pivot.pivot === undefined) throw new Error('Expected pivot');
+    pivot.pivot = {
+      ...pivot.pivot,
+      value: { column: 'value', reduction: 'average' },
+    };
+
+    expect(violations(band)).toContainEqual({
+      path: ['sections', 0, 'series', 1],
+      message:
+        'Stacking adds measurements up and does not accept a band series',
+    });
+    expect(violations(pivot)).toContainEqual({
+      path: ['sections', 0, 'pivot', 'value', 'reduction'],
+      message: 'Stacking adds values up and requires the sum reduction',
+    });
+  });
+
+  it('accepts an unstacked average pivot and a latest hour pivot', () => {
+    const average = pivotSeries();
+    if (average.pivot === undefined) throw new Error('Expected pivot');
+    average.pivot = {
+      ...average.pivot,
+      value: { column: 'value', reduction: 'average' },
+    };
+    const hour = {
+      ...average,
+      period: 'latest' as const,
+      grain: 'hour' as const,
+      window: undefined,
+      source: {
+        ...average.source,
+        time: { date: 'reading_date', hour: 'reading_hour' },
+      },
+    };
+
+    expect(violations(average)).toEqual([]);
+    expect(violations(hour)).toEqual([]);
+  });
+
+  it('accepts latest category bars but rejects time bars and calendars', () => {
+    const bars: DashboardDefinition['sections'][number] = {
+      id: 'bars',
+      title: 'Bars',
+      kind: 'bars',
+      period: 'latest',
+      source: { dataset: 'metrics', view: 'readings', time: 'recorded_on' },
+      x: { axis: 'category', column: 'category', order: 'value-desc' },
+      series: [{ label: 'Value', column: 'value', reduction: 'sum' }],
+      stacked: false,
+      format: { type: 'number' },
+    };
+    const calendar: CalendarHeatmapSection = {
+      id: 'calendar',
+      title: 'Calendar',
+      kind: 'calendar-heatmap',
+      period: 'latest',
+      source: bars.source,
+      range: 'trailing',
+      window: 30,
+      value: { column: 'value', reduction: 'sum' },
+      format: { type: 'number' },
+    };
+
+    expect(violations(bars)).toEqual([]);
+    expect(violations({ ...bars, x: { axis: 'time', window: 12 } })).toEqual([
+      {
+        path: ['sections', 0, 'x'],
+        message:
+          'A latest bars section reads one date and requires the category axis',
+      },
+    ]);
+    expect(violations(calendar)).toEqual([
+      {
+        path: ['sections', 0, 'period'],
+        message:
+          'A calendar heatmap reads a range of days and does not accept period "latest"',
+      },
+    ]);
   });
 });
 
@@ -530,6 +942,50 @@ describe('bars definition rules', () => {
     return validateDefinitionRules(definition);
   };
 
+  it('requires a window at the dashboard grain', () => {
+    expect(violations({ ...validBars(), x: { axis: 'time' } })).toContainEqual({
+      path: ['sections', 0, 'x', 'window'],
+      message: 'A bars section at the dashboard grain requires window',
+    });
+  });
+
+  it('rejects a coarser axis grain', () => {
+    const definition = createDefinition();
+    definition.grain = 'week';
+    definition.sections = [
+      { ...validBars(), x: { axis: 'time', grain: 'month', window: 3 } },
+    ];
+    const sut = validateDefinitionRules;
+
+    const result = sut(definition);
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'x', 'grain'],
+        message:
+          'Section grain "month" is not supported by dashboard grain "week"',
+      },
+    ]);
+  });
+
+  it('accepts a finer day grain without a window', () => {
+    expect(
+      violations({ ...validBars(), x: { axis: 'time', grain: 'day' } })
+    ).toEqual([]);
+  });
+
+  it('reports only the latest-axis violation for latest time bars without a window', () => {
+    expect(
+      violations({ ...validBars(), period: 'latest', x: { axis: 'time' } })
+    ).toEqual([
+      {
+        path: ['sections', 0, 'x'],
+        message:
+          'A latest bars section reads one date and requires the category axis',
+      },
+    ]);
+  });
+
   it('requires exactly one series source', () => {
     const section = validBars();
     expect(violations({ ...section, series: undefined })).toContainEqual({
@@ -666,5 +1122,563 @@ describe('bars definition rules', () => {
       reduction: 'average',
     });
     expect(violations(keyed)).toEqual([]);
+  });
+});
+
+describe('pivot table rules', () => {
+  const validPivot = () =>
+    ({
+      id: 'pivot',
+      title: 'Pivot',
+      kind: 'pivot-table',
+      source: { dataset: 'metrics', view: 'monthly', time: 'recorded_on' },
+      rows: { column: 'category', label: 'Category', order: 'as-provided' },
+      columns: { axis: 'time', window: 12 },
+      value: { column: 'amount', reduction: 'sum' },
+      format: { type: 'number' },
+    }) satisfies PivotTableSection;
+  const violations = (section: PivotTableSection, currency = 'USD') => {
+    const definition = createDefinition();
+    definition.sections = [section];
+    definition.currency = currency || undefined;
+    return validateDefinitionRules(definition);
+  };
+
+  it.each([
+    {
+      name: 'totals',
+      patch: { totals: { column: 'Total' } },
+      message: 'Totals add values up and require the sum reduction',
+    },
+    {
+      name: 'total-desc',
+      patch: {
+        rows: { column: 'category', label: 'Category', order: 'total-desc' },
+      },
+      message:
+        'Ordering rows by total adds values up and requires the sum reduction',
+    },
+    {
+      name: 'topN',
+      patch: {
+        rows: {
+          column: 'category',
+          label: 'Category',
+          order: 'as-provided',
+          topN: { count: 3, otherLabel: 'Other' },
+        },
+      },
+      message: 'A remainder adds values up and requires the sum reduction',
+    },
+  ] as const)('rejects non-sum $name', ({ patch, message }) => {
+    const section: PivotTableSection = {
+      ...validPivot(),
+      ...patch,
+      value: { column: 'amount', reduction: 'average' as const },
+    };
+
+    expect(violations(section)).toContainEqual({
+      path: ['sections', 0, 'value', 'reduction'],
+      message,
+    });
+  });
+
+  it('requires a window at the dashboard grain', () => {
+    expect(
+      violations({ ...validPivot(), columns: { axis: 'time' } })
+    ).toContainEqual({
+      path: ['sections', 0, 'columns', 'window'],
+      message: 'A pivot table at the dashboard grain requires window',
+    });
+  });
+
+  it('rejects a coarser column grain', () => {
+    const definition = createDefinition();
+    definition.grain = 'week';
+    definition.sections = [
+      { ...validPivot(), columns: { axis: 'time', grain: 'month', window: 3 } },
+    ];
+
+    expect(validateDefinitionRules(definition)).toContainEqual({
+      path: ['sections', 0, 'columns', 'grain'],
+      message:
+        'Section grain "month" is not supported by dashboard grain "week"',
+    });
+  });
+
+  it('requires different row and column category bindings', () => {
+    expect(
+      violations({
+        ...validPivot(),
+        columns: { axis: 'category', column: 'category' },
+      })
+    ).toContainEqual({
+      path: ['sections', 0, 'columns', 'column'],
+      message:
+        'A category column axis requires a column other than rows.column',
+    });
+  });
+
+  it('requires dashboard currency for a currency pivot', () => {
+    expect(
+      violations({ ...validPivot(), format: { type: 'currency' } }, '')
+    ).toContainEqual({
+      path: ['sections', 0, 'format'],
+      message: 'A currency section requires dashboard currency',
+    });
+  });
+
+  it('accepts a finer day grain and non-sum values without additive features', () => {
+    expect(
+      violations({
+        ...validPivot(),
+        columns: { axis: 'time', grain: 'day' },
+        value: { column: 'amount', reduction: 'average' },
+      })
+    ).toEqual([]);
+  });
+
+  it('accepts additive features with sum values', () => {
+    expect(
+      violations({
+        ...validPivot(),
+        rows: {
+          column: 'category',
+          label: 'Category',
+          order: 'total-desc',
+          topN: { count: 5, otherLabel: 'Other' },
+        },
+        totals: { column: 'Total', row: 'Total' },
+      })
+    ).toEqual([]);
+  });
+});
+
+function smoothedSeries() {
+  return {
+    ...pivotSeries(),
+    pivot: undefined,
+    series: [{ label: 'A', column: 'a', reduction: 'sum' }],
+  } satisfies TimeSeriesSection;
+}
+
+describe('derived series rules', () => {
+  const measurement = { label: 'A', column: 'a', reduction: 'sum' } as const;
+  const normalized = { ...measurement, normalize: { kind: 'rebase' } } as const;
+  const pivot = {
+    column: 'category',
+    value: { column: 'amount', reduction: 'sum' },
+  } as const;
+  it.each([
+    {
+      name: 'a non-sum running total',
+      section: {
+        ...smoothedSeries(),
+        series: [
+          {
+            ...measurement,
+            reduction: 'average',
+            running: { kind: 'sum', label: 'To date' },
+          },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'reduction'],
+          message:
+            'A running sum adds values up and requires the sum reduction',
+        },
+      ],
+    },
+    {
+      name: 'a non-sum pivot running total',
+      section: {
+        ...pivotSeries(),
+        pivot: {
+          ...pivot,
+          value: { column: 'amount', reduction: 'average' },
+          running: { kind: 'sum', label: '{category} to date' },
+        },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'pivot', 'value', 'reduction'],
+          message:
+            'A running sum adds values up and requires the sum reduction',
+        },
+      ],
+    },
+    {
+      name: 'a pivot average without its category label',
+      section: {
+        ...pivotSeries(),
+        pivot: { ...pivot, movingAverage: { window: 3, label: 'Average' } },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'pivot', 'movingAverage', 'label'],
+          message: 'A pivot derived label names its category with {category}',
+        },
+      ],
+    },
+    {
+      name: 'a pivot total without its category label',
+      section: {
+        ...pivotSeries(),
+        pivot: { ...pivot, running: { kind: 'sum', label: 'To date' } },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'pivot', 'running', 'label'],
+          message: 'A pivot derived label names its category with {category}',
+        },
+      ],
+    },
+    {
+      name: 'a moving average under stacking',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [
+          { ...measurement, movingAverage: { window: 3, label: 'Average' } },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'movingAverage'],
+          message: 'Stacking does not accept a moving average overlay',
+        },
+      ],
+    },
+    {
+      name: 'a running average under stacking',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [
+          { ...measurement, running: { kind: 'average', label: 'Average' } },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'running', 'kind'],
+          message: 'Stacking adds running totals up and requires running sum',
+        },
+      ],
+    },
+    {
+      name: 'rebasing under stacking',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [normalized],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 0, 'normalize'],
+          message:
+            'Stacking needs one common scale and does not accept rebasing',
+        },
+      ],
+    },
+    {
+      name: 'mixed raw and running stacked series',
+      section: {
+        ...smoothedSeries(),
+        variant: 'area',
+        stacked: true,
+        series: [
+          { ...measurement, running: { kind: 'sum', label: 'To date' } },
+          { ...measurement, column: 'b' },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1, 'running'],
+          message:
+            'Stacking adds one kind of series up: every series declares running or none does',
+        },
+      ],
+    },
+  ] satisfies {
+    name: string;
+    section: TimeSeriesSection;
+    expected: { path: (string | number)[]; message: string }[];
+  }[])('rejects $name', ({ section, expected }) => {
+    const sut = validateDefinitionRules;
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual(expected);
+  });
+
+  it.each([
+    {
+      name: 'a series without the common base',
+      section: { ...smoothedSeries(), series: [normalized, measurement] },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1, 'normalize'],
+          message:
+            'Rebasing applies to every line series of the section with one base',
+        },
+      ],
+    },
+    {
+      name: 'a different fixed base',
+      section: {
+        ...smoothedSeries(),
+        series: [
+          normalized,
+          {
+            ...measurement,
+            normalize: { kind: 'rebase', base: { date: '2026-01-31' } },
+          },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1, 'normalize'],
+          message:
+            'Rebasing applies to every line series of the section with one base',
+        },
+      ],
+    },
+    {
+      name: 'a band series',
+      section: {
+        ...smoothedSeries(),
+        series: [
+          normalized,
+          { label: 'Range', low: 'low', high: 'high', reduction: 'maximum' },
+        ],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'series', 1],
+          message:
+            'Rebasing indexes measurements and does not accept a band series',
+        },
+      ],
+    },
+    {
+      name: 'thresholds',
+      section: {
+        ...smoothedSeries(),
+        series: [normalized],
+        thresholds: [{ value: 5 }],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'thresholds'],
+          message: 'Rebasing changes the scale and does not accept thresholds',
+        },
+      ],
+    },
+    {
+      name: 'bands',
+      section: {
+        ...smoothedSeries(),
+        series: [normalized],
+        bands: [{ from: 1, to: 2 }],
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'bands'],
+          message: 'Rebasing changes the scale and does not accept bands',
+        },
+      ],
+    },
+    {
+      name: 'currency formatting',
+      section: {
+        ...smoothedSeries(),
+        series: [normalized],
+        format: { type: 'currency' },
+      },
+      expected: [
+        {
+          path: ['sections', 0, 'format'],
+          message: 'Rebasing shows an index and requires the number format',
+        },
+      ],
+    },
+    {
+      name: 'a measurement unit',
+      section: { ...smoothedSeries(), series: [normalized], unit: '°C' },
+      expected: [
+        {
+          path: ['sections', 0, 'unit'],
+          message: 'Rebasing shows an index and does not take unit',
+        },
+      ],
+    },
+  ] satisfies {
+    name: string;
+    section: TimeSeriesSection;
+    expected: { path: (string | number)[]; message: string }[];
+  }[])('rejects $name when rebasing', ({ section, expected }) => {
+    const sut = validateDefinitionRules;
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual(expected);
+  });
+
+  it('requires a date grain for a fixed base', () => {
+    const sut = validateDefinitionRules;
+    const section: TimeSeriesSection = {
+      ...smoothedSeries(),
+      grain: 'hour',
+      source: {
+        dataset: 'metrics',
+        view: 'readings',
+        time: { date: 'reading_date', hour: 'reading_hour' },
+      },
+      series: [
+        {
+          ...measurement,
+          normalize: { kind: 'rebase', base: { date: '2026-01-31' } },
+        },
+      ],
+    };
+
+    const result = sut({
+      ...createDefinition(),
+      grain: 'day',
+      sections: [section],
+    });
+
+    expect(result).toEqual([
+      {
+        path: ['sections', 0, 'series', 0, 'normalize', 'base'],
+        message: 'A fixed base date names one bucket and requires a date grain',
+      },
+    ]);
+  });
+
+  it('accepts a stacked pivot of running sums with a remainder', () => {
+    const sut = validateDefinitionRules;
+    const section: TimeSeriesSection = {
+      ...pivotSeries(),
+      variant: 'area',
+      stacked: true,
+      pivot: {
+        ...pivot,
+        topN: { count: 3, otherLabel: 'Other' },
+        running: { kind: 'sum', label: '{category} to date' },
+      },
+    };
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual([]);
+  });
+
+  it('accepts two latest series rebased to one date', () => {
+    const sut = validateDefinitionRules;
+    const section: TimeSeriesSection = {
+      ...smoothedSeries(),
+      series: ['a', 'b'].map((column) => ({
+        label: column,
+        column,
+        reduction: 'latest',
+        normalize: { kind: 'rebase', base: { date: '2026-01-31' } },
+      })),
+    };
+
+    const result = sut({ ...createDefinition(), sections: [section] });
+
+    expect(result).toEqual([]);
+  });
+});
+
+function createScatter(): ScatterSection {
+  return {
+    id: 'correlation',
+    title: 'Correlation',
+    kind: 'scatter',
+    source: { dataset: 'metrics', view: 'entries', time: 'recorded_on' },
+    x: { column: 'amount', label: 'Amount', format: { type: 'number' } },
+    y: { column: 'balance', label: 'Balance', format: { type: 'number' } },
+    limit: 200,
+  };
+}
+
+describe('scatter rules', () => {
+  it.each([
+    {
+      name: 'the slope names the x column',
+      section: {
+        ...createScatter(),
+        trendLine: { slope: 'amount', intercept: 'balance_intercept' },
+      },
+      coefficient: 'slope',
+    },
+    {
+      name: 'the intercept names the series column',
+      section: {
+        ...createScatter(),
+        series: { column: 'category', label: 'Category' },
+        trendLine: { slope: 'balance_slope', intercept: 'category' },
+      },
+      coefficient: 'intercept',
+    },
+  ])(
+    'rejects a coefficient at its path when $name',
+    ({ section, coefficient }) => {
+      expect(
+        validateDefinitionRules({ ...createDefinition(), sections: [section] })
+      ).toEqual([
+        {
+          path: ['sections', 0, 'trendLine', coefficient],
+          message:
+            'A coefficient column must differ from the x, y, and series columns',
+        },
+      ]);
+    }
+  );
+
+  it('requires dashboard currency for each currency axis', () => {
+    const section = createScatter();
+    section.x.format = { type: 'currency' };
+    section.y.format = { type: 'currency' };
+    expect(
+      validateDefinitionRules({
+        ...createDefinition(),
+        currency: undefined,
+        sections: [section],
+      })
+    ).toEqual([
+      {
+        path: ['sections', 0, 'x', 'format'],
+        message: 'A currency axis requires dashboard currency',
+      },
+      {
+        path: ['sections', 0, 'y', 'format'],
+        message: 'A currency axis requires dashboard currency',
+      },
+    ]);
+  });
+
+  it('accepts a scatter with a series and coefficient columns of its own', () => {
+    expect(
+      validateDefinitionRules({
+        ...createDefinition(),
+        sections: [
+          {
+            ...createScatter(),
+            series: { column: 'category', label: 'Category' },
+            trendLine: {
+              slope: 'balance_slope',
+              intercept: 'balance_intercept',
+            },
+          },
+        ],
+      })
+    ).toEqual([]);
   });
 });

@@ -3,33 +3,35 @@ import { z } from 'zod';
 import {
   type BarsSection,
   type CategoryOrder,
+  PeriodGrain,
   SectionKind,
 } from '../../../../../domain';
 import {
   identifierSchema,
+  sectionControlsSchema,
+  sectionGateFields,
   sectionIdSchema,
   sectionWidthSchema,
   sourceSchema,
   valueFormatSchema,
 } from './statTiles';
-import { seriesSchema } from './timeSeries';
+import {
+  pivotTopNSchema,
+  seriesSchema,
+  valueBindingSchema,
+} from './timeSeries';
 
-const valueBindingSchema = seriesSchema.omit({ label: true });
-const pivotTopNSchema = z.strictObject({
-  count: z.number().int().min(1).max(11),
-  otherLabel: z.string().min(1),
-});
-const axisTopNSchema = z.strictObject({
+export const axisTopNSchema = z.strictObject({
   count: z.number().int().min(1).max(100),
   otherLabel: z.string().min(1),
 });
-const sortKeyOrderSchema = z.strictObject({
+export const sortKeyOrderSchema = z.strictObject({
   sortKey: z.strictObject({
     column: identifierSchema,
     type: z.enum(['text', 'number']),
   }),
 });
-const orderSchema = z
+export const orderSchema = z
   .unknown()
   .transform((value, context): CategoryOrder | typeof z.NEVER => {
     if (value === 'value-desc') return value;
@@ -52,7 +54,13 @@ const orderSchema = z
     return z.NEVER;
   });
 const axisSchema = z.discriminatedUnion('axis', [
-  z.strictObject({ axis: z.literal('time'), window: z.number().int().min(1) }),
+  z.strictObject({
+    axis: z.literal('time'),
+    grain: z
+      .enum([PeriodGrain.MONTH, PeriodGrain.WEEK, PeriodGrain.DAY])
+      .optional(),
+    window: z.number().int().min(1).max(120).optional(),
+  }),
   z.strictObject({
     axis: z.literal('category'),
     column: identifierSchema,
@@ -68,6 +76,7 @@ const barsSectionSchemaBase = z.strictObject({
   source: sourceSchema,
   kind: z.literal(SectionKind.BARS),
   width: sectionWidthSchema.optional(),
+  ...sectionGateFields,
   x: axisSchema,
   series: z.array(seriesSchema).min(1).max(12).optional(),
   pivot: z
@@ -80,10 +89,10 @@ const barsSectionSchemaBase = z.strictObject({
   stacked: z.boolean().default(false),
   format: valueFormatSchema,
   unit: z.string().min(1).optional(),
+  controls: sectionControlsSchema,
 });
 
 export const barsSectionSchema = barsSectionSchemaBase satisfies z.ZodType<
   BarsSection,
-  z.ZodTypeDef,
   z.input<typeof barsSectionSchemaBase>
 >;
