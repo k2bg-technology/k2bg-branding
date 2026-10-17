@@ -1,5 +1,6 @@
-import { Button } from '../Button';
+import type { Button } from '../Button';
 import { Icon } from '../Icon';
+import { Control } from './Control';
 import { Item } from './Item';
 import { usePagination } from './usePagination';
 
@@ -21,16 +22,15 @@ export function Pagination(props: PaginationProps) {
 
   return (
     <nav {...rest} className="flex gap-normal">
-      <Button
+      <Control
         aria-label="Previous page"
         {...prevProps}
-        type={prevProps.render ? undefined : 'button'}
         color="inherit"
         size="icon"
         disabled={currentIndex === 1}
       >
         <Icon name="chevron-left" width={20} height={20} />
-      </Button>
+      </Control>
       <ul className="flex gap-4">
         {itemList.map((item) => (
           <li key={item} className=" flex items-center">
@@ -42,16 +42,15 @@ export function Pagination(props: PaginationProps) {
           </li>
         ))}
       </ul>
-      <Button
+      <Control
         aria-label="Next page"
         {...nextProps}
-        type={nextProps.render ? undefined : 'button'}
         color="inherit"
         size="icon"
         disabled={currentIndex === count}
       >
         <Icon name="chevron-right" width={20} height={20} />
-      </Button>
+      </Control>
     </nav>
   );
 }
