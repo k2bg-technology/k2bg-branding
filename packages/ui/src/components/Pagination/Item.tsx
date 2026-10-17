@@ -1,4 +1,5 @@
-import { Button } from '../Button';
+import type { Button } from '../Button';
+import { Control } from './Control';
 
 export interface PaginationItemProps
   extends React.ComponentPropsWithoutRef<typeof Button> {
@@ -9,15 +10,14 @@ export function Item(props: PaginationItemProps) {
   const { selected, render, children, ...rest } = props;
 
   return (
-    <Button
+    <Control
       {...rest}
       render={render}
-      type={render ? undefined : 'button'}
       aria-current={selected ? 'page' : undefined}
       color={selected ? 'main' : 'dark'}
       variant={selected ? 'default' : 'outline'}
     >
       {children}
-    </Button>
+    </Control>
   );
 }
