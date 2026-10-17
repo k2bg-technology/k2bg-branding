@@ -19,7 +19,7 @@
     "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
-    "@turbo/gen": "^1.13.4",
+    "@turbo/gen": "^2.11.8",
     "@types/webpack-env": "^1.18.8",
     "tsup": "^8.5.1",
     "turbo": "2.11.7",
