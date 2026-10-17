@@ -1,6 +1,7 @@
 export { Avatar } from './src/components/Avatar';
 export { Badge } from './src/components/Badge';
 export { Button, buttonVariants } from './src/components/Button';
+export { Card } from './src/components/Card';
 export {
   BarChart,
   type BarChartProps,

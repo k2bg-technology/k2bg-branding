@@ -1001,6 +1001,40 @@
         }
       ]
     },
+    "card": {
+      "description": "関連する内容を、細い枠線とごく弱い影の白いカードにまとめます。",
+      "overview": "Card が外枠で、Card.Header、Card.Title、Card.Description、Card.Content を組み合わせます。Content は Header と同じ左右の余白を持ちます。",
+      "usage": "タイトルと任意の説明を Card.Header に、主な内容を Card.Content に置きます。各パーツはネイティブの div の props を受け取り、className を既定のスタイルとマージします。",
+      "accessibility": "Card の各パーツは div 要素を描画します。見出しの階層を保つため、Card.Title の中に h2 などの適切な見出し要素を置きます。操作要素やチャートにはそれぞれアクセシブルな名前を付けます。セクションとしての意味が必要な場合は、カードを section で囲みます。",
+      "doList": [
+        "1つの問いに答える内容をまとめる",
+        "カードがセクションを導入する場合は Card.Title の中に見出し要素を使う"
+      ],
+      "dontList": [
+        "Card.Title だけで見出しになると考える",
+        "リンクで囲んだカードの中にボタンを入れる"
+      ],
+      "relatedComponents": [
+        {
+          "name": "StatTile",
+          "path": "/?path=/docs/components-stattile--docs",
+          "description": "1つの主要数値を任意のトレンドバッジとともに表示します"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "reason": "ネイティブ要素とその子要素を描画します"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Card",
+          "url": "https://ui.shadcn.com/docs/components/card",
+          "description": "カードの構成とスロットの参考"
+        }
+      ]
+    },
     "statTile": {
       "description": "1つの主要数値をラベル、トレンド矢印付きの変化バッジ、補足行、任意の小さなチャートとともに表示します。",
       "overview": "StatTileはダッシュボードのヒーロー数値パターンで、時間的な変化の形ではなく「現在の大きさ」を1つ示すことが役割の値に使います。小さなラベルの下に等幅数字の大きな値を置き、値が上昇・下降・横ばいのどれかを矢印で示す任意の変化バッジを右上に、比較対象の期間などの任意の説明文を値の下に並べます。任意のchartスロットには、Sparklineのような小さな可視化を1つだけタイルの下端に固定して置けるため、タイルを横に並べても下端がそろいます。スロットは任意の要素を受け取り、要素でない値の場合は何も描画しないため、チャートのないタイルは余白を確保せずレイアウトを保ちます。タイルが担うのはレイアウトと強調だけで、値と変化のテキストは整形済みで受け取るため、単位・通貨・ロケールの制御はアプリ側に残ります。",
