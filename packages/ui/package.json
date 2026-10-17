@@ -28,7 +28,7 @@
     "@heroicons/react": "^2.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "i18next": "^23.16.8",
+    "i18next": "^26.4.4",
     "i18next-browser-languagedetector": "^7.2.2",
     "i18next-http-backend": "^4.0.2",
     "react": "^19.3.0",
