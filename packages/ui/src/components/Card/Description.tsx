@@ -1,0 +1,17 @@
+import type { ComponentProps } from 'react';
+
+import { cn } from '../../utils/cn';
+
+type Props = ComponentProps<'div'>;
+
+export function Description({ className, ...rest }: Props) {
+  return (
+    <div
+      data-slot="card-description"
+      {...rest}
+      className={cn('text-body-r-sm text-base-black/70', className)}
+    />
+  );
+}
+
+Description.displayName = 'Card.Description';

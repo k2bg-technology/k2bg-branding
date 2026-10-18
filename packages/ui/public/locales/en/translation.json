@@ -1001,6 +1001,40 @@
         }
       ]
     },
+    "card": {
+      "description": "Groups related content in a white card with a thin border and a subtle shadow.",
+      "overview": "Card is the outer frame and composes Card.Header, Card.Title, Card.Description, and Card.Content. Content shares horizontal padding with Header.",
+      "usage": "Place a title and optional description in Card.Header and the main content in Card.Content. Each part accepts native div props and merges className with its default styles.",
+      "accessibility": "Card parts render div elements. Place an h2 or another appropriate heading inside Card.Title to preserve the page heading outline. Name interactive controls and charts independently. Use a section around the card when the content needs section semantics.",
+      "doList": [
+        "Group content that answers one question",
+        "Use a heading element inside Card.Title when the card introduces a section"
+      ],
+      "dontList": [
+        "Rely on Card.Title alone to create a heading",
+        "Nest buttons inside a card that is already wrapped in a link"
+      ],
+      "relatedComponents": [
+        {
+          "name": "StatTile",
+          "path": "/?path=/docs/components-stattile--docs",
+          "description": "Presents a single headline number with an optional trend badge"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "reason": "Renders native elements and their children"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Card",
+          "url": "https://ui.shadcn.com/docs/components/card",
+          "description": "Reference for the card composition and slots"
+        }
+      ]
+    },
     "statTile": {
       "description": "Presents one headline number with its label, an optional change badge with a trend arrow, a short supporting line, and an optional compact chart.",
       "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. A small label sits above a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat sits in the top-right corner, and an optional description such as the comparison period follows beneath the value. An optional chart slot holds one compact visualization, such as a Sparkline, pinned to the bottom edge so a row of tiles keeps a common baseline. The slot accepts any element and renders nothing for a value that is not one, so a tile without a chart keeps its layout instead of reserving empty space. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
