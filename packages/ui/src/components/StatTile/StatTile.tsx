@@ -95,22 +95,22 @@ export function StatTile({
     <div
       data-slot="stat-tile"
       className={cn(
-        'flex flex-col gap-spacious rounded-xl border border-base-default/15 bg-white p-6 shadow-xs text-base-black',
+        '@container flex flex-col gap-spacious rounded-xl border border-base-default/15 bg-white p-6 shadow-xs text-base-black',
         className
       )}
       {...rest}
     >
       <div className="grid grid-cols-[1fr_auto] grid-rows-[auto_auto] items-start gap-x-normal gap-y-condensed">
-        <span className="col-start-1 row-start-1 text-body-r-sm text-base-black/70">
+        <span className="col-start-1 row-start-1 text-body-r-sm text-base-black/80">
           {label}
         </span>
-        <span className="col-start-1 row-start-2 text-heading-1 font-semibold tabular-nums">
+        <span className="col-start-1 row-start-2 text-heading-2 font-semibold @xs:text-heading-1 tabular-nums">
           {value}
         </span>
         {delta && <DeltaChip delta={delta} />}
       </div>
       {description && (
-        <span className="block text-body-r-sm text-base-black/70">
+        <span className="block text-body-r-sm text-base-black/80">
           {description}
         </span>
       )}
