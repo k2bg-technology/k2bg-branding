@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Card } from 'ui';
 
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type { DefinitionSourceResult } from '../../modules/dashboard/use-cases';
@@ -16,18 +17,26 @@ export async function DashboardIndex({ loadDashboards }: Props) {
         {definitions.length === 0 ? (
           <p className="text-body-r-md">No dashboard definitions were found.</p>
         ) : (
-          <ul className="flex flex-col gap-normal">
+          <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 lg:gap-6">
             {definitions.map((definition) => (
-              <li key={definition.id} className="flex flex-col gap-condensed">
-                <Link
-                  href={`/dashboards/${definition.id}`}
-                  className="text-body-b-md underline-offset-4 hover:underline"
-                >
-                  {definition.title}
-                </Link>
-                {definition.description && (
-                  <p className="text-body-r-sm">{definition.description}</p>
-                )}
+              <li key={definition.id}>
+                <Card className="relative h-full hover:border-base-default/30 hover:shadow-sm">
+                  <Card.Header>
+                    <Card.Title>
+                      <Link
+                        href={`/dashboards/${definition.id}`}
+                        className="after:absolute after:inset-0 after:rounded-xl"
+                      >
+                        {definition.title}
+                      </Link>
+                    </Card.Title>
+                    {definition.description && (
+                      <Card.Description>
+                        {definition.description}
+                      </Card.Description>
+                    )}
+                  </Card.Header>
+                </Card>
               </li>
             ))}
           </ul>
@@ -55,7 +64,7 @@ export async function DashboardIndex({ loadDashboards }: Props) {
     return (
       <section
         role="alert"
-        className="flex flex-col gap-condensed rounded-md border border-accent-default bg-base-light p-normal"
+        className="flex flex-col gap-condensed rounded-lg border border-accent-default/50 bg-accent-light/15 p-4"
       >
         <h2 className="text-heading-5">Dashboards unavailable</h2>
         <p className="text-body-r-sm">

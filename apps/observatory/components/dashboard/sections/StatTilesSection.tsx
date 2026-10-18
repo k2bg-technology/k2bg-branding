@@ -55,7 +55,7 @@ export function StatTilesSection({ dashboard, section, data, period }: Props) {
     (bucket) => bucket.period === period.shift(-1).toString()
   );
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(16rem,100%),1fr))] gap-spacious">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(min(16rem,100%),1fr))] gap-4 md:gap-6 xl:gap-8">
       {section.tiles.map((tile, index) => {
         const value = current?.values[index] ?? null;
         const comparison =

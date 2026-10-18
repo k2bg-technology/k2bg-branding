@@ -5,6 +5,7 @@ import { DashboardPeriodNavigation } from '../../../components/dashboard/Dashboa
 import { DashboardSection } from '../../../components/dashboard/DashboardSection';
 import { loadControlOptions } from '../../../components/dashboard/loadControlOptions';
 import { SectionSkeleton } from '../../../components/dashboard/SectionSkeleton';
+import { PageLayout } from '../../../components/page-layout';
 import {
   createFetchBarsDataUseCase,
   createFetchCompositionDataUseCase,
@@ -37,9 +38,9 @@ interface Props {
 }
 
 const sectionWidthClassNames = {
-  [SectionWidth.FULL]: 'lg:col-span-6',
-  [SectionWidth.HALF]: 'lg:col-span-3',
-  [SectionWidth.THIRD]: 'lg:col-span-2',
+  [SectionWidth.FULL]: undefined,
+  [SectionWidth.HALF]: 'lg:col-span-3 xl:col-span-6',
+  [SectionWidth.THIRD]: 'lg:col-span-2 xl:col-span-4',
 } as const;
 
 // Keep this async so synchronous factory failures reject the shared promise, rendering unavailable sections and disabled navigation.
@@ -77,74 +78,72 @@ export default async function Page({ params, searchParams }: Props) {
   const periodResolution = loadPeriodResolution(dashboard, parsed.state.period);
 
   return (
-    <main className="flex min-h-screen flex-col gap-spacious bg-base-white p-spacious text-base-black">
-      <header className="flex flex-col gap-condensed">
-        <h1 className="text-heading-1">{dashboard.title}</h1>
-        {dashboard.description && (
-          <p className="text-body-r-md">{dashboard.description}</p>
-        )}
-        <Suspense fallback={null}>
-          <DashboardPeriodNavigation
-            dashboard={dashboard}
-            state={parsed.state}
-            periodResolution={periodResolution}
-          />
-        </Suspense>
-        <DashboardControls
-          dashboard={dashboard}
-          state={parsed.state}
-          controlOptions={controlOptions}
-        />
-      </header>
-      <div className="grid grid-cols-1 gap-spacious lg:grid-cols-6">
-        {dashboard.sections.map((section) => (
-          <div
-            key={section.id}
-            className={
-              sectionWidthClassNames[section.width ?? SectionWidth.FULL]
-            }
-          >
-            <Suspense fallback={<SectionSkeleton />}>
-              <DashboardSection
+    <PageLayout>
+      <PageLayout.Header
+        title={dashboard.title}
+        description={dashboard.description}
+        actions={
+          <>
+            <Suspense fallback={null}>
+              <DashboardPeriodNavigation
                 dashboard={dashboard}
-                section={section}
+                state={parsed.state}
                 periodResolution={periodResolution}
-                resolveSectionGate={(input) =>
-                  createResolveSectionGateUseCase().execute(input)
-                }
-                fetchSectionData={(input) =>
-                  createFetchSectionDataUseCase().execute(input)
-                }
-                fetchTableRows={(input) =>
-                  createFetchTableRowsUseCase().execute(input)
-                }
-                fetchBarsData={(input) =>
-                  createFetchBarsDataUseCase().execute(input)
-                }
-                fetchCompositionData={(input) =>
-                  createFetchCompositionDataUseCase().execute(input)
-                }
-                fetchMatrixData={(input) =>
-                  createFetchMatrixDataUseCase().execute(input)
-                }
-                fetchTimeSeriesPivot={(input) =>
-                  createFetchTimeSeriesPivotUseCase().execute(input)
-                }
-                fetchPivotData={(input) =>
-                  createFetchPivotDataUseCase().execute(input)
-                }
-                fetchRebaseBase={(input) =>
-                  createFetchRebaseBaseUseCase().execute(input)
-                }
-                fetchScatterData={(input) =>
-                  createFetchScatterDataUseCase().execute(input)
-                }
-                urlState={parsed.state}
               />
             </Suspense>
-          </div>
-        ))}
-      </div>
-    </main>
+            <DashboardControls
+              dashboard={dashboard}
+              state={parsed.state}
+              controlOptions={controlOptions}
+            />
+          </>
+        }
+      />
+      {dashboard.sections.map((section) => (
+        <PageLayout.Content
+          key={section.id}
+          className={sectionWidthClassNames[section.width ?? SectionWidth.FULL]}
+        >
+          <Suspense fallback={<SectionSkeleton />}>
+            <DashboardSection
+              dashboard={dashboard}
+              section={section}
+              periodResolution={periodResolution}
+              resolveSectionGate={(input) =>
+                createResolveSectionGateUseCase().execute(input)
+              }
+              fetchSectionData={(input) =>
+                createFetchSectionDataUseCase().execute(input)
+              }
+              fetchTableRows={(input) =>
+                createFetchTableRowsUseCase().execute(input)
+              }
+              fetchBarsData={(input) =>
+                createFetchBarsDataUseCase().execute(input)
+              }
+              fetchCompositionData={(input) =>
+                createFetchCompositionDataUseCase().execute(input)
+              }
+              fetchMatrixData={(input) =>
+                createFetchMatrixDataUseCase().execute(input)
+              }
+              fetchTimeSeriesPivot={(input) =>
+                createFetchTimeSeriesPivotUseCase().execute(input)
+              }
+              fetchPivotData={(input) =>
+                createFetchPivotDataUseCase().execute(input)
+              }
+              fetchRebaseBase={(input) =>
+                createFetchRebaseBaseUseCase().execute(input)
+              }
+              fetchScatterData={(input) =>
+                createFetchScatterDataUseCase().execute(input)
+              }
+              urlState={parsed.state}
+            />
+          </Suspense>
+        </PageLayout.Content>
+      ))}
+    </PageLayout>
   );
 }

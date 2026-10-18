@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import { PageLayout } from '../../components/page-layout';
 import { TableCatalog } from '../../components/table-catalog/TableCatalog';
 import {
   createFetchTableCatalogUseCase,
@@ -27,13 +28,15 @@ export default function Page() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col gap-spacious bg-base-white p-spacious text-base-black">
-      <h1 className="text-heading-1">Table catalog</h1>
-      <Suspense
-        fallback={<p className="text-body-r-md">Loading table catalog…</p>}
-      >
-        <TableCatalog fetchTableCatalog={fetchTableCatalog} />
-      </Suspense>
-    </main>
+    <PageLayout>
+      <PageLayout.Header title="Table catalog" />
+      <PageLayout.Content>
+        <Suspense
+          fallback={<p className="text-body-r-md">Loading table catalog…</p>}
+        >
+          <TableCatalog fetchTableCatalog={fetchTableCatalog} />
+        </Suspense>
+      </PageLayout.Content>
+    </PageLayout>
   );
 }
