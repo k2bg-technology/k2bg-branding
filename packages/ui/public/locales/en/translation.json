@@ -660,6 +660,72 @@
         }
       ]
     },
+    "select": {
+      "description": "Lets the user choose one value from a list in a styled popup, and submits the chosen value with the surrounding form.",
+      "overview": "Select is a single-value picker built on the Base UI Select. Select is the root and holds the value; Select.Label names the trigger; Select.Trigger is the button that shows the selected item and a chevron; Select.Popup is the list that opens below the trigger, at least as wide as it, and scrolls when the list is long; Select.Item is one option with a check mark while it is selected. Given a name, Select renders a hidden input so the chosen value is submitted with a form, which keeps a plain GET form working without client state. An item whose value is an empty string or null counts as the empty state: it submits an empty field and the trigger shows its placeholder.",
+      "usage": "Use Select when the user picks one value from a known list, such as a dashboard filter or a form field with more options than radio buttons comfortably hold. Pass name and defaultValue to Select for a form field, and pass items (an array of value and label pairs) whenever an item label differs from its value so the trigger shows the label instead of the raw value. For an \"all\" or \"none\" choice, add an item with an empty-string value and give Select.Trigger the same text as its placeholder. Use DropdownMenu instead when the list holds actions rather than a value.",
+      "accessibility": "The trigger has the combobox role and the popup the listbox role, and Select.Label names the trigger through aria-labelledby without htmlFor. Tab focuses the trigger, Enter, Space, or the arrow keys open the list, the arrow keys move the highlight, typing a letter jumps to a matching item, Enter selects, and Escape closes the list and returns focus to the trigger. The selected item is announced as selected, and a disabled select is removed from the tab order. The check mark and the highlight tint are visual only; the selection is exposed through aria-selected.",
+      "doList": [
+        "Name every select with Select.Label or an aria-label on the trigger",
+        "Pass items when item labels differ from their values",
+        "Give the trigger a placeholder that matches the empty item text",
+        "Pass name so the value is submitted with the form",
+        "Keep item labels short enough to fit the trigger"
+      ],
+      "dontList": [
+        "Use it for a list of actions",
+        "Use it for two or three options that fit as radio buttons",
+        "Rely on the placeholder as the only label",
+        "Put interactive content inside an item",
+        "Mix empty-string and null values for the same empty choice"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Form",
+          "path": "/?path=/docs/components-form--docs",
+          "description": "Text fields and labels that sit beside a select in a form"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "Use DropdownMenu for a list of actions instead of a value"
+        },
+        {
+          "name": "ScrollArea",
+          "path": "/?path=/docs/components-scrollarea--docs",
+          "description": "Scrolls the popup when the list is long"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.3.0",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@base-ui/react",
+          "version": "^1.8.0",
+          "reason": "Provides the accessible select primitive with positioning, keyboard support, and form submission"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Select (Base UI)",
+          "url": "https://ui.shadcn.com/docs/components/base/select",
+          "description": "Reference design whose trigger, popup, and item styling this component mirrors"
+        },
+        {
+          "linkText": "Base UI Select Documentation",
+          "url": "https://base-ui.com/react/components/select",
+          "description": "Official documentation for the underlying select primitive"
+        },
+        {
+          "linkText": "WAI-ARIA Select-Only Combobox Pattern",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/",
+          "description": "Accessibility pattern for a combobox that only selects from a list"
+        }
+      ]
+    },
     "skeleton": {
       "description": "Displays animated placeholder content while the actual content is loading, providing visual feedback to users.",
       "overview": "Skeleton is a loading state component that shows placeholder shapes mimicking the layout of content being loaded. It consists of three sub-components: Line for text placeholders, Box for rectangular content areas like images, and Round for circular elements like avatars. The root component wraps all skeleton elements and applies a pulsing animation to indicate loading state. Each sub-component accepts className props for customizing dimensions and spacing.",
