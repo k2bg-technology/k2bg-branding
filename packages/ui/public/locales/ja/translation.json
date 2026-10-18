@@ -660,6 +660,72 @@
         }
       ]
     },
+    "select": {
+      "description": "整えた見た目のリストから値を1つ選び、選んだ値を外側のフォームと一緒に送信します。",
+      "overview": "SelectはBase UIのSelectをもとにした、値を1つ選ぶ部品です。Selectは全体をまとめて値を持ち、Select.Labelはトリガーに名前を付け、Select.Triggerは選択中の項目と下向きの矢印を表示するボタン、Select.Popupはトリガーの下に開くリストで、トリガー以上の幅を持ち、項目が多いときはスクロールします。Select.Itemは1つの選択肢で、選択中はチェックが付きます。nameを渡すと見えないinputが描画され、選んだ値がフォームと一緒に送信されるので、クライアント側の状態を持たない素のGETフォームでもそのまま使えます。値が空文字またはnullの項目は空の状態として扱われ、空の値が送信され、トリガーにはplaceholderが表示されます。",
+      "usage": "ダッシュボードの絞り込みや、ラジオボタンでは収まらない数の選択肢を持つフォーム項目など、決まったリストから値を1つ選ぶときに使います。フォームの項目にするときはSelectにnameとdefaultValueを渡し、項目の表示名が値と異なる場合はitems（値と表示名の組の配列）も渡して、トリガーに値ではなく表示名が出るようにします。「すべて」や「なし」の選択肢は値が空文字の項目として追加し、同じ文字をSelect.Triggerのplaceholderに渡します。リストが値ではなく操作の一覧のときはDropdownMenuを使います。",
+      "accessibility": "トリガーはcomboboxロール、ポップアップはlistboxロールを持ち、Select.LabelはhtmlForなしでaria-labelledbyによりトリガーに名前を付けます。Tabでトリガーにフォーカスし、Enter、Space、矢印キーでリストを開き、矢印キーでハイライトを移動し、文字を入力すると一致する項目に移り、Enterで選択し、Escapeでリストを閉じてトリガーにフォーカスを戻します。選択中の項目は選択済みとして読み上げられ、無効なSelectはTabの順番から外れます。チェックとハイライトの色は見た目だけで、選択状態はaria-selectedで伝わります。",
+      "doList": [
+        "すべてのSelectにSelect.Labelまたはトリガーのaria-labelで名前を付ける",
+        "項目の表示名が値と異なるときはitemsを渡す",
+        "空の項目と同じ文字をトリガーのplaceholderに渡す",
+        "フォームで値を送信するためにnameを渡す",
+        "項目の表示名はトリガーに収まる長さにする"
+      ],
+      "dontList": [
+        "操作の一覧に使う",
+        "ラジオボタンで足りる2〜3個の選択肢に使う",
+        "placeholderだけをラベル代わりにする",
+        "項目の中に操作できる要素を入れる",
+        "同じ空の選択肢に空文字とnullを混ぜて使う"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Form",
+          "path": "/?path=/docs/components-form--docs",
+          "description": "フォームでSelectと並べるテキスト入力とラベル"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "値ではなく操作の一覧にはDropdownMenuを使います"
+        },
+        {
+          "name": "ScrollArea",
+          "path": "/?path=/docs/components-scrollarea--docs",
+          "description": "項目が多いときにポップアップをスクロールさせます"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.3.0",
+          "reason": "コンポーネント機能のためのコアReactライブラリ"
+        },
+        {
+          "package": "@base-ui/react",
+          "version": "^1.8.0",
+          "reason": "位置決め、キーボード操作、フォーム送信を備えたアクセシブルなSelectの土台を提供します"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Select (Base UI)",
+          "url": "https://ui.shadcn.com/docs/components/base/select",
+          "description": "トリガー、ポップアップ、項目の見た目の参考にしたデザイン"
+        },
+        {
+          "linkText": "Base UI Select Documentation",
+          "url": "https://base-ui.com/react/components/select",
+          "description": "土台となるSelectの公式ドキュメント"
+        },
+        {
+          "linkText": "WAI-ARIA Select-Only Combobox Pattern",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/",
+          "description": "リストから選ぶだけのcomboboxのアクセシビリティパターン"
+        }
+      ]
+    },
     "skeleton": {
       "description": "実際のコンテンツが読み込まれる間、アニメーション付きのプレースホルダーコンテンツを表示し、ユーザーに視覚的なフィードバックを提供します。",
       "overview": "Skeletonは読み込み中のコンテンツのレイアウトを模倣したプレースホルダー形状を表示するローディング状態コンポーネントです。3つのサブコンポーネントで構成されます。テキストプレースホルダー用のLine、画像などの矩形コンテンツエリア用のBox、アバターなどの円形要素用のRoundです。ルートコンポーネントはすべてのスケルトン要素をラップし、ローディング状態を示すパルスアニメーションを適用します。各サブコンポーネントはサイズや間隔をカスタマイズするためのclassNameプロップを受け入れます。",
