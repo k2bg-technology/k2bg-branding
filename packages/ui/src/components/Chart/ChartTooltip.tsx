@@ -8,7 +8,7 @@ export function ChartTooltip({ data }: Props) {
   return (
     <div
       data-slot="chart-tooltip"
-      className="grid min-w-32 gap-1.5 rounded-lg border border-base-light/50 bg-base-white px-2.5 py-1.5 text-caption shadow-xl"
+      className="grid min-w-32 gap-1.5 rounded-lg border border-base-default/15 bg-white px-2.5 py-1.5 text-caption shadow-md"
     >
       <p className="font-medium text-base-black">{data.heading}</p>
       {data.items.map((item) => (
@@ -19,7 +19,7 @@ export function ChartTooltip({ data }: Props) {
             style={{ backgroundColor: item.color }}
           />
           <div className="flex flex-1 items-center justify-between gap-4 leading-none">
-            <span className="text-base-black/80">{item.label}</span>
+            <span className="text-base-black/70">{item.label}</span>
             <span className="font-medium text-base-black tabular-nums">
               {item.value}
             </span>

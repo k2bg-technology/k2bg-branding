@@ -53,11 +53,7 @@ const emphasisClassName = 'border-l border-base-default/20 font-bold';
  * underneath it — otherwise the frozen label touches the first number still on screen.
  */
 const stickyCellClassName =
-  'sticky left-0 z-10 border-r border-base-default/20 bg-base-white pr-spacious';
-
-/** The footer tint is translucent, so the sticky footer cell repeats it opaquely. */
-const stickyFooterCellClassName =
-  'sticky left-0 z-10 border-r border-base-default/20 bg-base-light pr-spacious';
+  'sticky left-0 z-10 border-r border-base-default/20 bg-white pr-spacious';
 
 /** A row header in the body or the footer keeps the metrics of a data cell. */
 const rowHeaderClassName = 'h-auto p-2 font-normal';
@@ -69,7 +65,7 @@ const rowHeaderClassName = 'h-auto p-2 font-normal';
  * is opened up so a second scroll port cannot swallow the horizontal offset.
  */
 const frameClassName =
-  "@container rounded-lg border border-base-default/20 has-[:focus-visible]:border-main-default has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-main-default/30 [&_[data-slot='table-container']]:overflow-visible";
+  "@container rounded-xl border border-base-default/15 bg-white shadow-xs has-[:focus-visible]:border-main-default has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-main-default/30 [&_[data-slot='table-container']]:overflow-visible";
 
 /*
  * The caption box is as wide as the table, so a visible caption would scroll away with it.
@@ -114,7 +110,7 @@ export function DataTable({
             )}
           </Table.Caption>
           <Table.Header>
-            <Table.Row>
+            <Table.Row className="bg-base-light/40">
               {columns.map((column, index) => {
                 const isStickyCell = stickyFirstColumn && index === 0;
 
@@ -127,7 +123,11 @@ export function DataTable({
                     className={cn(
                       alignClassNames[column.align ?? 'start'],
                       column.emphasis && emphasisClassName,
-                      isStickyCell && stickyCellClassName
+                      isStickyCell &&
+                        cn(
+                          stickyCellClassName,
+                          'bg-linear-to-r from-base-light/40 to-base-light/40'
+                        )
                     )}
                   >
                     {column.header}
@@ -189,7 +189,7 @@ export function DataTable({
                   const cellClassName = cn(
                     alignClassNames[column.align ?? 'start'],
                     column.emphasis && emphasisClassName,
-                    isStickyCell && stickyFooterCellClassName
+                    isStickyCell && stickyCellClassName
                   );
 
                   return index === 0 && firstColumnIsRowLabel ? (

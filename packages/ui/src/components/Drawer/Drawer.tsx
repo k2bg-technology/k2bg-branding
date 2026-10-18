@@ -33,7 +33,7 @@ export function Drawer({
           <DrawerPrimitive.Popup
             {...rest}
             className={twMerge(
-              'grid auto-rows-max gap-5 fixed top-0 right-0 w-max h-full rounded-xl bg-base-white drop-shadow-xl',
+              'grid auto-rows-max gap-5 fixed top-0 right-0 w-max h-full rounded-xl bg-white drop-shadow-xl',
               styles.popup,
               className
             )}
