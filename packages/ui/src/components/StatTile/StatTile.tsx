@@ -53,14 +53,7 @@ const trendSentiments = {
   flat: StatTileSentiment.NEUTRAL,
 } as const;
 
-// Text stays base-black: status colors are too light for 12px text on the
-// tinted chip, so the tint and the icon carry the sentiment instead.
-const sentimentClassNames = {
-  positive: 'bg-success/15',
-  negative: 'bg-error/15',
-  neutral: 'bg-base-light',
-} as const;
-
+// Text stays base-black for contrast; only the icon color carries sentiment.
 const sentimentIconColors = {
   positive: 'var(--color-success-dark)',
   negative: 'var(--color-error-dark)',
@@ -75,10 +68,7 @@ function DeltaChip({ delta }: { delta: StatTileDelta }) {
       data-slot="stat-tile-delta"
       data-trend={delta.trend}
       data-sentiment={sentiment}
-      className={cn(
-        'col-start-2 row-span-2 row-start-1 inline-flex items-center gap-condensed self-start justify-self-end rounded-md px-2 py-0.5 text-caption font-medium',
-        sentimentClassNames[sentiment]
-      )}
+      className="col-start-2 row-span-2 row-start-1 inline-flex items-center gap-condensed self-start justify-self-end rounded-md border border-base-default/20 bg-white px-2 py-0.5 text-caption font-medium"
     >
       <Icon
         aria-hidden
@@ -105,7 +95,7 @@ export function StatTile({
     <div
       data-slot="stat-tile"
       className={cn(
-        'flex flex-col gap-spacious rounded-lg border border-base-default/20 p-6 text-base-black',
+        '@container flex flex-col gap-spacious rounded-xl border border-base-default/15 bg-white p-6 shadow-xs text-base-black',
         className
       )}
       {...rest}
@@ -114,7 +104,7 @@ export function StatTile({
         <span className="col-start-1 row-start-1 text-body-r-sm text-base-black/80">
           {label}
         </span>
-        <span className="col-start-1 row-start-2 text-heading-2 font-semibold tabular-nums">
+        <span className="col-start-1 row-start-2 text-heading-2 font-semibold @xs:text-heading-1 tabular-nums">
           {value}
         </span>
         {delta && <DeltaChip delta={delta} />}

@@ -9,7 +9,7 @@ export function Description({ className, ...rest }: Props) {
     <div
       data-slot="card-description"
       {...rest}
-      className={cn('text-body-r-sm text-base-black/70', className)}
+      className={cn('text-body-r-sm text-base-black/80', className)}
     />
   );
 }

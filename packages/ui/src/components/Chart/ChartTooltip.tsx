@@ -8,7 +8,7 @@ export function ChartTooltip({ data }: Props) {
   return (
     <div
       data-slot="chart-tooltip"
-      className="grid min-w-32 gap-1.5 rounded-lg border border-base-light/50 bg-base-white px-2.5 py-1.5 text-caption shadow-xl"
+      className="grid min-w-32 gap-1.5 rounded-lg border border-base-default/15 bg-white px-2.5 py-1.5 text-caption shadow-md"
     >
       <p className="font-medium text-base-black">{data.heading}</p>
       {data.items.map((item) => (
