@@ -25,7 +25,7 @@
     "ui": "workspace:*"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "^1.20.11",
+    "@opennextjs/cloudflare": "^1.20.12",
     "@storybook/addon-a11y": "^10.6.2",
     "@storybook/addon-docs": "^10.6.2",
     "@storybook/addon-onboarding": "^10.6.2",
