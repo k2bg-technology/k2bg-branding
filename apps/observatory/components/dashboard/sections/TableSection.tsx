@@ -90,7 +90,7 @@ export function TableSection({ dashboard, section, data, urlState }: Props) {
   const labels = { ...DEFAULT_DASHBOARD_LABELS, ...dashboard.labels };
   const query = serializeUrlState(withPage(urlState, section.id, 1));
   return (
-    <>
+    <div className="flex flex-col gap-normal">
       <DataTable
         caption={section.title}
         visuallyHiddenCaption
@@ -99,19 +99,21 @@ export function TableSection({ dashboard, section, data, urlState }: Props) {
         emptyMessage={section.emptyMessage}
       />
       {data.page !== null && data.page.count > 1 && (
-        <TablePagination
-          pageCount={data.page.count}
-          currentPage={data.page.number}
-          path={`/dashboards/${dashboard.id}`}
-          query={query}
-          pageKey={`page.${section.id}`}
-          labels={{
-            previousPage: labels.previousPage,
-            nextPage: labels.nextPage,
-            pagination: labels.pagination,
-          }}
-        />
+        <div className="self-end">
+          <TablePagination
+            pageCount={data.page.count}
+            currentPage={data.page.number}
+            path={`/dashboards/${dashboard.id}`}
+            query={query}
+            pageKey={`page.${section.id}`}
+            labels={{
+              previousPage: labels.previousPage,
+              nextPage: labels.nextPage,
+              pagination: labels.pagination,
+            }}
+          />
+        </div>
       )}
-    </>
+    </div>
   );
 }

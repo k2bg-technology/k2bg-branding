@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
-
-import { SiteHeader } from '../components/site-header/SiteHeader';
-import type { NavigationLink } from '../components/site-header/SiteNavigation';
+import type { NavigationLink } from '../components/site-sidebar/SiteNavigation';
+import { SiteSidebar } from '../components/site-sidebar/SiteSidebar';
 import { createLoadDashboardsUseCase } from '../infrastructure';
 import { dashboardLogger } from '../modules/dashboard/adapters/shared';
 
@@ -38,9 +37,11 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body>
-        <SiteHeader links={links} />
-        {children}
+      <body className="bg-white">
+        <div className="flex min-h-dvh flex-col lg:flex-row">
+          <SiteSidebar links={links} />
+          <div className="min-w-0 flex-1">{children}</div>
+        </div>
       </body>
     </html>
   );
