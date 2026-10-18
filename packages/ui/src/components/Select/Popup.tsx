@@ -20,7 +20,8 @@ export function Popup({
             className
           )}
         >
-          <ScrollArea>
+          {/* The listbox owns keyboard focus, so its scroller must stay out of the tab order. */}
+          <ScrollArea viewportTabIndex={-1}>
             <SelectPrimitive.List className="p-1">
               {children}
             </SelectPrimitive.List>

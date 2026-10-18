@@ -125,10 +125,18 @@ export const LongList: Story = {
     ),
   },
   play: async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole('combobox', { name: 'Account' }));
+    const trigger = canvas.getByRole('combobox', { name: 'Account' });
+
+    await userEvent.click(trigger);
+    const listbox = await within(document.body).findByRole('listbox');
+    await waitFor(() => expect(listbox).toBeVisible());
+    await userEvent.tab();
 
     await waitFor(() =>
-      expect(within(document.body).getByRole('listbox')).toBeVisible()
+      expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    );
+    await expect(listbox).not.toContainElement(
+      document.activeElement as HTMLElement
     );
   },
 };
