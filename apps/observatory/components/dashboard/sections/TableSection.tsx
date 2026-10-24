@@ -18,6 +18,7 @@ import type {
 } from '../../../modules/dashboard/use-cases';
 import { formatValue, NULL_VALUE } from '../formatValue';
 import { TablePagination } from '../TablePagination';
+import { TABLE_MAX_HEIGHT } from '../tableMaxHeight';
 
 interface Props {
   dashboard: DashboardDefinition;
@@ -77,6 +78,7 @@ export function TableSection({ dashboard, section, data, urlState }: Props) {
     id: `column-${index}`,
     header: column.header,
     align: column.alignment ?? defaultAlignmentByType[column.type],
+    wrap: column.type === 'text',
   }));
   const rows: DataTableRow[] = data.rows.map((cells, rowIndex) => ({
     id: `row-${rowIndex}`,
@@ -91,9 +93,12 @@ export function TableSection({ dashboard, section, data, urlState }: Props) {
   const query = serializeUrlState(withPage(urlState, section.id, 1));
   return (
     <div className="flex flex-col gap-normal">
+      {/* A new page remounts the table, so its own scroll starts at the first row. */}
       <DataTable
+        key={data.page?.number ?? 1}
         caption={section.title}
         visuallyHiddenCaption
+        maxHeight={TABLE_MAX_HEIGHT}
         columns={columns}
         rows={rows}
         emptyMessage={section.emptyMessage}

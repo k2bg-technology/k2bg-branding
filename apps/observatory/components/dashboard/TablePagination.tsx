@@ -39,19 +39,21 @@ export function TablePagination({
       prevProps={{
         'aria-label': labels.previousPage,
         render:
-          currentPage > 1 ? <Link href={href(currentPage - 1)} /> : undefined,
+          currentPage > 1 ? (
+            <Link href={href(currentPage - 1)} scroll={false} />
+          ) : undefined,
       }}
       nextProps={{
         'aria-label': labels.nextPage,
         render:
           currentPage < pageCount ? (
-            <Link href={href(currentPage + 1)} />
+            <Link href={href(currentPage + 1)} scroll={false} />
           ) : undefined,
       }}
       renderItem={(index) => (
         <Pagination.Item
           selected={index === currentPage}
-          render={<Link href={href(index)} />}
+          render={<Link href={href(index)} scroll={false} />}
         >
           {index}
         </Pagination.Item>
