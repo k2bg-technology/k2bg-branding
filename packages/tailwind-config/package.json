@@ -8,6 +8,6 @@
     "generate:style": "node styleDictionaryConfig.js"
   },
   "devDependencies": {
-    "style-dictionary": "^3.9.2"
+    "style-dictionary": "^5.7.0"
   }
 }
