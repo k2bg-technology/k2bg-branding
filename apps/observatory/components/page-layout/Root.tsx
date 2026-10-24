@@ -10,7 +10,7 @@ export function Root({
     <main
       {...rest}
       className={cn(
-        'grid grid-cols-4 content-start gap-4 p-4 text-base-black md:grid-cols-6 md:gap-6 xl:grid-cols-12 xl:gap-8 xl:p-8',
+        'mx-auto grid w-full max-w-7xl grid-cols-4 content-start gap-4 p-4 text-base-black md:grid-cols-6 md:gap-6 xl:grid-cols-12 xl:gap-8 xl:p-8',
         className
       )}
     >
