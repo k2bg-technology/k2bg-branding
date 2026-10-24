@@ -36,7 +36,11 @@
       "@floating-ui/utils": "^0.2.11",
       "tmp": ">=0.2.6",
       "@types/glob>@types/minimatch": "-",
-      "jest-runtime": "30.4.2"
+      "jest-runtime": "30.4.2",
+      "@bundled-es-modules/glob>path": "-",
+      "@bundled-es-modules/glob>stream": "-",
+      "@bundled-es-modules/memfs>path": "-",
+      "@bundled-es-modules/memfs>stream": "-"
     },
     "onlyBuiltDependencies": [
       "@swc/core",
