@@ -31,7 +31,7 @@ export function SiteNavigation({ links }: Props) {
               <Link
                 href={link.href}
                 aria-current={pathname === link.href ? 'page' : undefined}
-                className="flex rounded-md px-3 py-2 text-body-r-sm text-base-black/80 hover:bg-base-light/50 aria-[current=page]:bg-base-light/70 aria-[current=page]:font-semibold aria-[current=page]:text-base-black"
+                className="flex rounded-md px-3 py-2 text-body-r-sm focus-visible:-outline-offset-2 text-base-black/80 hover:bg-base-light/50 aria-[current=page]:bg-base-light/70 aria-[current=page]:font-semibold aria-[current=page]:text-base-black"
               >
                 {link.label}
               </Link>
