@@ -5,9 +5,10 @@
   "main": "./index.js",
   "license": "MIT",
   "scripts": {
-    "generate:style": "node styleDictionaryConfig.js"
+    "generate:style": "node styleDictionaryConfig.mjs",
+    "test": "node --test styleDictionaryConfig.test.mjs"
   },
   "devDependencies": {
-    "style-dictionary": "^3.9.2"
+    "style-dictionary": "^5.7.0"
   }
 }

@@ -1,4 +1,5 @@
-const StyleDictionary = require('style-dictionary');
+import StyleDictionary from 'style-dictionary';
+import { fileHeader } from 'style-dictionary/utils';
 
 /**
  * @see https://amzn.github.io/style-dictionary/#/README
@@ -6,10 +7,19 @@ const StyleDictionary = require('style-dictionary');
 
 /* -------------------------- custom transform -------------------------- */
 
+// The source dimensions are pixels. v4+ applies size/rem by token type,
+// before our px-to-rem transform, whereas v3 only applied it to category size.
+StyleDictionary.registerTransformGroup({
+  name: 'css',
+  transforms: StyleDictionary.hooks.transformGroups.css.filter(
+    (transform) => transform !== 'size/rem'
+  ),
+});
+
 StyleDictionary.registerTransform({
   name: 'transform/typography/pxToRem',
   type: 'value',
-  matcher(token) {
+  filter(token) {
     const necessaryTypographyType = ['fontSize', 'lineHeight'];
 
     return (
@@ -17,7 +27,7 @@ StyleDictionary.registerTransform({
       necessaryTypographyType.includes(token.path.slice(-1)[0])
     );
   },
-  transformer(token) {
+  transform(token) {
     return typeof token.value === 'number'
       ? `${token.value / 16}rem`
       : token.value;
@@ -27,7 +37,7 @@ StyleDictionary.registerTransform({
 StyleDictionary.registerTransformGroup({
   name: 'transformGroup/css/typography',
   transforms: [
-    ...StyleDictionary.transformGroup.css,
+    ...StyleDictionary.hooks.transformGroups.css,
     'transform/typography/pxToRem',
   ],
 });
@@ -35,10 +45,10 @@ StyleDictionary.registerTransformGroup({
 StyleDictionary.registerTransform({
   name: 'transform/spacing/pxToRem',
   type: 'value',
-  matcher(token) {
+  filter(token) {
     return token.attributes.category === 'spacing';
   },
-  transformer(token) {
+  transform(token) {
     return typeof token.value === 'number'
       ? `${token.value / 16}rem`
       : token.value;
@@ -48,7 +58,7 @@ StyleDictionary.registerTransform({
 StyleDictionary.registerTransformGroup({
   name: 'transformGroup/css/spacing',
   transforms: [
-    ...StyleDictionary.transformGroup.css,
+    ...StyleDictionary.hooks.transformGroups.css,
     'transform/spacing/pxToRem',
   ],
 });
@@ -57,8 +67,8 @@ StyleDictionary.registerTransformGroup({
 
 StyleDictionary.registerFormat({
   name: 'format/css/index',
-  formatter(_, file) {
-    return `${StyleDictionary.formatHelpers.fileHeader({
+  async format({ file }) {
+    return `${await fileHeader({
       file,
     })}\n@import './color.css';\n@import './typography.css';\n@import './spacing.css';\n@import './tailwind-theme-color.css';\n@import './tailwind-theme-typography.css';\n`;
   },
@@ -66,10 +76,10 @@ StyleDictionary.registerFormat({
 
 StyleDictionary.registerFormat({
   name: 'format/css/description/color',
-  formatter(dictionary, file) {
-    return `${StyleDictionary.formatHelpers.fileHeader({
+  async format({ dictionary, file }) {
+    return `${await fileHeader({
       file,
-    })}:root {\n${dictionary.allProperties
+    })}:root {\n${dictionary.allTokens
       .map((token) => {
         const description = token.description
           ? ` /* ${token.description} */`
@@ -83,10 +93,10 @@ StyleDictionary.registerFormat({
 
 StyleDictionary.registerFormat({
   name: 'format/css/description/tailwind-theme-color',
-  formatter(dictionary, file) {
-    return `${StyleDictionary.formatHelpers.fileHeader({
+  async format({ dictionary, file }) {
+    return `${await fileHeader({
       file,
-    })}@theme {\n${dictionary.allProperties
+    })}@theme {\n${dictionary.allTokens
       .map((token) => {
         const description = token.description
           ? ` /* ${token.description} */`
@@ -100,10 +110,10 @@ StyleDictionary.registerFormat({
 
 StyleDictionary.registerFormat({
   name: 'format/css/description/rem',
-  formatter(dictionary, file) {
-    return `${StyleDictionary.formatHelpers.fileHeader({
+  async format({ dictionary, file }) {
+    return `${await fileHeader({
       file,
-    })}:root {\n${dictionary.allProperties
+    })}:root {\n${dictionary.allTokens
       .map((token) => {
         const description = token.value.includes?.('rem')
           ? ` /* original -> ${token.original.value}px */`
@@ -117,10 +127,10 @@ StyleDictionary.registerFormat({
 
 StyleDictionary.registerFormat({
   name: 'format/css/description/tailwind-theme-typography',
-  formatter(dictionary, file) {
-    return `${StyleDictionary.formatHelpers.fileHeader({
+  async format({ dictionary, file }) {
+    return `${await fileHeader({
       file,
-    })}@theme {\n${dictionary.allProperties
+    })}@theme {\n${dictionary.allTokens
       .flatMap((token) => {
         const description = token.value.includes?.('rem')
           ? ` /* original -> ${token.original.value}px */`
@@ -152,8 +162,8 @@ StyleDictionary.registerFormat({
 
 StyleDictionary.registerFormat({
   name: 'format/json/color',
-  formatter(dictionary) {
-    return `{\n${dictionary.allProperties
+  format({ dictionary }) {
+    return `{\n${dictionary.allTokens
       .map(
         (token, index) =>
           `  "${token.path
@@ -162,7 +172,7 @@ StyleDictionary.registerFormat({
             token.name
           })",\n    "value": "${token.value}",\n    "description": "${
             token.description
-          }"\n  }${dictionary.allProperties.length - 1 === index ? '' : ','}`
+          }"\n  }${dictionary.allTokens.length - 1 === index ? '' : ','}`
       )
       .join('\n')}\n}`;
   },
@@ -170,8 +180,8 @@ StyleDictionary.registerFormat({
 
 StyleDictionary.registerFormat({
   name: 'format/json/typography',
-  formatter(dictionary) {
-    return `{\n${dictionary.allProperties
+  format({ dictionary }) {
+    return `{\n${dictionary.allTokens
       .map(
         (token, index) =>
           `  "${token.name}": {\n    "customVariable": "var(--${
@@ -181,14 +191,14 @@ StyleDictionary.registerFormat({
           }",\n    "group": "${token.path
             .slice(1, -1)
             .join('-')}",\n    "property": "${token.path.slice(-1)[0]}"\n  }${
-            dictionary.allProperties.length - 1 === index ? '' : ','
+            dictionary.allTokens.length - 1 === index ? '' : ','
           }`
       )
       .join('\n')}\n}`;
   },
 });
 
-StyleDictionary.extend({
+const dictionary = new StyleDictionary({
   source: ['design-token/**/*.json'],
   platforms: {
     indexCssVariables: {
@@ -280,4 +290,6 @@ StyleDictionary.extend({
       ],
     },
   },
-}).buildAllPlatforms();
+});
+
+await dictionary.buildAllPlatforms();
