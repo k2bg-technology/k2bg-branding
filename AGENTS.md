@@ -255,6 +255,8 @@ Strict mode, composite projects, path mapping via workspace resolution.
 - Use dot notation for compound components; set `displayName`.
 - Component slot props: keep a permissive `ReactNode` type and render nothing for invalid
   (non-element) values — do not narrow the type or add a default fallback.
+- Styling rules (Tailwind utilities, CSS Modules, layout, spacing, tokens, selectors, motion):
+  see the `k2bg-css-guidelines` skill.
 
 ## State Management
 
