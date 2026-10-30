@@ -202,22 +202,7 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 
 ### Component Patterns
 
-- Always name the main props interface `Props`; compose with `extends` for HTML props.
-
-```typescript
-interface Props
-  extends Omit<React.ComponentPropsWithRef<'button'>, 'color'>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
-```
-
-```
-components/component-name/
-├── ComponentName.tsx
-├── ComponentName.stories.tsx   # if UI component
-└── componentName.test.ts
-```
+Component placement, splitting, props, composition, state, accessibility, and page conventions: see the `k2bg-component-guidelines` skill.
 
 ### Import / Export Patterns
 
@@ -251,12 +236,7 @@ Strict mode, composite projects, path mapping via workspace resolution.
 
 ### Design System (UI Package)
 
-- Use Class Variance Authority (CVA) for component variants.
-- Use dot notation for compound components; set `displayName`.
-- Component slot props: keep a permissive `ReactNode` type and render nothing for invalid
-  (non-element) values — do not narrow the type or add a default fallback.
-- Styling rules (Tailwind utilities, CSS Modules, layout, spacing, tokens, selectors, motion):
-  see the `k2bg-css-guidelines` skill.
+Component APIs, variants, and headless wrappers: see the `k2bg-component-guidelines` skill; styling rules: see the `k2bg-css-guidelines` skill.
 
 ## State Management
 
