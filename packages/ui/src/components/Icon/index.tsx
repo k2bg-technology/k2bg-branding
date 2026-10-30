@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, memo } from 'react';
+import type { CSSProperties } from 'react';
 
 import type { ICON_NAMES } from './const';
 import {
@@ -29,7 +29,7 @@ export interface IconProps extends React.HTMLAttributes<HTMLElement> {
   originalColor?: boolean;
 }
 
-function IconInner(props: IconProps) {
+export function Icon(props: IconProps) {
   const {
     name,
     appearance = 'outline',
@@ -64,5 +64,3 @@ function IconInner(props: IconProps) {
     />
   );
 }
-
-export const Icon = memo(IconInner);
