@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { cacheLife } from 'next/cache';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AffiliateType } from '../../modules/affiliate/domain';
@@ -58,7 +59,14 @@ describe('AffiliateEmb', () => {
 
     expect(container).toBeEmptyDOMElement();
     expect(mockLoggerError).toHaveBeenCalledWith(
-      { err: fetchError, id },
+      {
+        err: expect.objectContaining({
+          name: fetchError.name,
+          message: fetchError.message,
+          stack: fetchError.stack,
+        }),
+        id,
+      },
       'Failed to fetch affiliate embed'
     );
   });
@@ -71,6 +79,30 @@ describe('AffiliateEmb', () => {
 
     expect(screen.getByTestId('affiliate-text')).toBeInTheDocument();
     expect(mockLoggerError).not.toHaveBeenCalled();
+  });
+
+  it('omits the product when its sub-provider fetch fails', async () => {
+    mockFetchAffiliate.mockResolvedValue({
+      affiliate: {
+        id: 'product-1',
+        type: AffiliateType.PRODUCT,
+        subProviderIds: ['sub-1'],
+      },
+    });
+    mockFetchAffiliatesByIds.mockRejectedValue(
+      new Error('Sub-provider unavailable')
+    );
+
+    const { container } = render(await AffiliateEmb({ id: 'product-1' }));
+
+    expect(container).toBeEmptyDOMElement();
+    expect(mockLoggerError).toHaveBeenCalledWith(
+      {
+        err: expect.objectContaining({ message: 'Sub-provider unavailable' }),
+        id: 'product-1',
+      },
+      expect.any(String)
+    );
   });
 
   it('renders the fetched sub-provider link with its provider name and destination', async () => {
@@ -111,4 +143,74 @@ describe('AffiliateEmb', () => {
     const subProviderLink = screen.getByRole('link', { name: 'Rakuten' });
     expect(subProviderLink).toHaveAttribute('href', subProviderUrl);
   });
+
+  it('uses a short cache lifetime and never hours when the dependency fails', async () => {
+    mockFetchAffiliate.mockRejectedValue(new Error('Source unavailable'));
+    const sut = AffiliateEmb;
+
+    await sut({ id: 'affiliate-1' });
+
+    expect(cacheLife).toHaveBeenCalledWith(
+      expect.objectContaining({ revalidate: 60, expire: 300 })
+    );
+    expect(cacheLife).not.toHaveBeenCalledWith('hours');
+  });
+
+  it('uses hours when the dependency succeeds', async () => {
+    mockFetchAffiliate.mockResolvedValue({
+      affiliate: createTextAffiliateFixture(),
+    });
+    const sut = AffiliateEmb;
+
+    await sut({ id: 'affiliate-1' });
+
+    expect(cacheLife).toHaveBeenCalledWith('hours');
+  });
+
+  it('uses a short cache lifetime and never hours for the failed sub-provider read', async () => {
+    mockFetchAffiliate.mockResolvedValue({
+      affiliate: {
+        id: 'product-1',
+        type: AffiliateType.PRODUCT,
+        subProviderIds: ['sub-1'],
+      },
+    });
+    mockFetchAffiliatesByIds.mockRejectedValue(new Error('Source unavailable'));
+    const sut = AffiliateEmb;
+
+    await sut({ id: 'product-1' });
+
+    expect(vi.mocked(cacheLife).mock.calls).toEqual([
+      ['hours'],
+      [expect.objectContaining({ revalidate: 60, expire: 300 })],
+    ]);
+    expect(vi.mocked(cacheLife).mock.calls.slice(1)).not.toContainEqual([
+      'hours',
+    ]);
+  });
+
+  it('uses hours for both the successful affiliate and sub-provider reads', async () => {
+    mockFetchAffiliate.mockResolvedValue({
+      affiliate: {
+        id: 'product-1',
+        type: AffiliateType.PRODUCT,
+        subProviderIds: ['sub-1'],
+      },
+    });
+    mockFetchAffiliatesByIds.mockResolvedValue({ affiliates: new Map() });
+    const sut = AffiliateEmb;
+
+    await sut({ id: 'product-1' });
+
+    expect(vi.mocked(cacheLife).mock.calls).toEqual([['hours'], ['hours']]);
+  });
 });
+
+vi.mock('next/cache', () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+}));
+
+vi.mock('next/server', () => ({
+  after: (callback: () => void) => callback(),
+}));

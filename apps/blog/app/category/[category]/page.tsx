@@ -1,17 +1,12 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
-import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkeleton } from '../../../components/articles/ArticlesSkeleton';
+import { CategoryArticles } from '../../../components/articles/CategoryArticles';
 import { PageLayout } from '../../../components/page-layout';
 import { ScrollToTopButton } from '../../../components/scroll-to-top-button/ScrollToTopButton';
-import {
-  createFetchPostSummariesByCategoryUseCase,
-  getDefaultOgImageUrl,
-} from '../../../infrastructure/di';
-import { postLogger } from '../../../modules/post/adapters/shared/logger';
+import { getDefaultOgImageUrl } from '../../../infrastructure/di';
 import { getCategoryDisplayName } from '../../../modules/post/domain';
-import { UseCaseError } from '../../../modules/post/use-cases/shared';
 import {
   BLOG_CATEGORY_DESCRIPTIONS,
   BLOG_SITE_NAME,
@@ -19,10 +14,6 @@ import {
   LISTED_CATEGORIES,
   type ListedCategory,
 } from '../../siteMetadata';
-
-const PAGE_SIZE = 6;
-
-export const revalidate = 3600;
 
 type Params = Promise<{ category: string }>;
 type SearchParams = Promise<{
@@ -86,35 +77,6 @@ export default async function Page({ params, searchParams }: Props) {
   }
   const listedCategory = category;
 
-  const { page = '1' } = await searchParams;
-  const currentPage = Number(page);
-
-  const fetchPostSummariesByCategory =
-    createFetchPostSummariesByCategoryUseCase();
-
-  async function fetchArticles() {
-    return fetchPostSummariesByCategory
-      .execute({
-        category: listedCategory,
-        page: currentPage,
-        pageSize: PAGE_SIZE,
-      })
-      .catch((error) => {
-        if (error instanceof UseCaseError) {
-          postLogger.warn(
-            { err: error, category: listedCategory, page: currentPage },
-            'Invalid category page request'
-          );
-        } else {
-          postLogger.error(
-            { err: error, category: listedCategory, page: currentPage },
-            'Failed to fetch post summaries by category'
-          );
-        }
-        notFound();
-      });
-  }
-
   return (
     <PageLayout
       fab={
@@ -126,8 +88,11 @@ export default async function Page({ params, searchParams }: Props) {
       <h1 className="col-span-full text-heading-1 font-bold">
         {getCategoryDisplayName(listedCategory)}
       </h1>
-      <Suspense key={currentPage} fallback={<ArticlesSkeleton />}>
-        <Articles fetchArticles={fetchArticles} />
+      <Suspense fallback={<ArticlesSkeleton />}>
+        <CategoryArticles
+          category={listedCategory}
+          searchParams={searchParams}
+        />
       </Suspense>
     </PageLayout>
   );

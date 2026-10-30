@@ -1,11 +1,14 @@
 import { format } from 'date-fns';
+import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 import { buttonVariants, Icon } from 'ui';
 
 import { Category, getCategoryDisplayName } from '../../modules/post/domain';
 import { CompanyLogo } from '../company-logo/CompanyLogo';
 
-export function Footer() {
+export async function Footer() {
+  'use cache';
+  cacheLife('hours');
   return (
     <footer className="col-span-full grid grid-cols-[subgrid]">
       <div className="col-span-full grid grid-cols-[subgrid] relative mt-[65px] bg-base-black h-full">

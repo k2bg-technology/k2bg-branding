@@ -83,3 +83,8 @@ describe('post page metadata', () => {
     expect(result.twitter).toMatchObject({ images: [expectedImageUrl] });
   });
 });
+
+vi.mock('next/cache', () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+}));

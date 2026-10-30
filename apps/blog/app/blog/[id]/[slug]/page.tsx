@@ -9,14 +9,12 @@ import {
   TableOfContents,
 } from '../../../../components/table-of-contents';
 import {
-  createFetchAllSlugsUseCase,
-  createFetchPostUseCase,
-  getDefaultOgImageUrl,
-} from '../../../../infrastructure/di';
+  fetchAllSlugs,
+  fetchPost,
+} from '../../../../infrastructure/cache/posts';
+import { getDefaultOgImageUrl } from '../../../../infrastructure/di';
 import { BLOG_SITE_NAME } from '../../../siteMetadata';
 import { handlePostFetchError } from './handlePostFetchError';
-
-export const revalidate = 3600;
 
 type Params = Promise<{ id: string; slug: string }>;
 
@@ -32,8 +30,7 @@ export interface BlogPostStaticParameter {
 export async function generateStaticParams(): Promise<
   BlogPostStaticParameter[]
 > {
-  const fetchAllSlugs = createFetchAllSlugsUseCase();
-  const { slugs } = await fetchAllSlugs.execute();
+  const { slugs } = await fetchAllSlugs();
 
   return slugs.map((slug) => ({
     id: slug.id,
@@ -44,10 +41,9 @@ export async function generateStaticParams(): Promise<
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
 
-  const fetchPost = createFetchPostUseCase();
-  const { post: article } = await fetchPost
-    .execute({ id })
-    .catch((error) => handlePostFetchError(error, id));
+  const { post: article } = await fetchPost(id).catch((error) =>
+    handlePostFetchError(error, id)
+  );
 
   const ogImageUrl = article.ogImageUrl ?? getDefaultOgImageUrl();
 
@@ -80,11 +76,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { id } = await params;
 
-  const fetchPost = createFetchPostUseCase();
-
-  const { post: article } = await fetchPost
-    .execute({ id })
-    .catch((error) => handlePostFetchError(error, id));
+  const { post: article } = await fetchPost(id).catch((error) =>
+    handlePostFetchError(error, id)
+  );
 
   return (
     <PageLayout

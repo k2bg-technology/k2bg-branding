@@ -1,21 +1,16 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-
 import { AuthorAvatar } from '../../components/author-avatar/AuthorAvatar';
 import { BlogCard } from '../../components/blog-card';
 import { CloudinaryImage } from '../../components/cloudinary-image/CloudinaryImage';
 import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
-import {
-  createFetchPostSummariesUseCase,
-  getDefaultOgImageUrl,
-} from '../../infrastructure/di';
+import { fetchPostSummaries } from '../../infrastructure/cache/posts';
+import { getDefaultOgImageUrl } from '../../infrastructure/di';
 import { BLOG_SITE_DESCRIPTION, BLOG_SITE_NAME } from '../siteMetadata';
 
 const PAGE_SIZE = 8;
-
-export const revalidate = 3600;
 
 const defaultOgImageUrl = getDefaultOgImageUrl();
 
@@ -53,8 +48,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const fetchPostSummaries = createFetchPostSummariesUseCase();
-  const { items: articles } = await fetchPostSummaries.execute({
+  const { items: articles } = await fetchPostSummaries({
     pageSize: PAGE_SIZE,
   });
 

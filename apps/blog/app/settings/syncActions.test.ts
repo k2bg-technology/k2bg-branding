@@ -20,11 +20,11 @@ vi.mock('../../infrastructure/di', () => ({
 }));
 
 vi.mock('next/cache', () => ({
-  revalidatePath: vi.fn(),
+  updateTag: vi.fn(),
   revalidateTag: vi.fn(),
 }));
 
-import { revalidatePath } from 'next/cache';
+import { updateTag } from 'next/cache';
 import {
   createSyncHeroImagesUseCase,
   createSyncPostsFromExternalUseCase,
@@ -78,7 +78,7 @@ describe('syncPostsAction', () => {
 
     await syncPostsAction();
 
-    expect(revalidatePath).toHaveBeenCalled();
+    expect(updateTag).toHaveBeenCalledWith('blog');
   });
 
   it('rejects without running the use case when there is no session', async () => {
@@ -127,7 +127,7 @@ describe('syncHeroImagesAction', () => {
 
     await syncHeroImagesAction();
 
-    expect(revalidatePath).toHaveBeenCalled();
+    expect(updateTag).toHaveBeenCalledWith('blog');
   });
 
   it('rejects without running the use case when there is no session', async () => {

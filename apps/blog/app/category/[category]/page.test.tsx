@@ -31,8 +31,8 @@ vi.mock('../../../infrastructure/di', () => ({
   createFetchPostSummariesByCategoryUseCase: mockCreateUseCase,
 }));
 
-vi.mock('../../../components/articles/Articles', () => ({
-  Articles: () => <div data-testid="articles" />,
+vi.mock('../../../components/articles/CategoryArticles', () => ({
+  CategoryArticles: () => <div data-testid="articles" />,
 }));
 
 describe('category page', () => {
@@ -111,3 +111,5 @@ describe('category page', () => {
     });
   });
 });
+
+vi.mock('../../../components/footer/Footer', () => ({ Footer: () => null }));

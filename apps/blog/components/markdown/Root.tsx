@@ -1,4 +1,5 @@
 import type { Root as MdastRoot } from 'mdast';
+import { cacheLife } from 'next/cache';
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
@@ -131,26 +132,7 @@ export async function Root(props: Props) {
 
           const html =
             typeof children === 'string'
-              ? await codeToHtml(children, {
-                  lang: language || '',
-                  theme: 'kanagawa-wave',
-                  /** @see {@link https://shiki.matsu.io/guide/transformers} */
-                  transformers: [
-                    {
-                      pre(node) {
-                        this.addClassToHast(
-                          node,
-                          `${styles.codeSnippet} p-6 whitespace-pre-wrap rounded-lg relative before:content-[attr(data-language)] overflow-hidden before:absolute before:bottom-0 before:right-0 before:px-3 before:py-1 before:text-caption before:bg-white/20 before:text-white text-body-r-sm font-original`
-                        );
-
-                        node.properties['data-language'] = language;
-                      },
-                    },
-                    addCopyButton({
-                      toggle: 2000,
-                    }),
-                  ],
-                })
+              ? await highlightCode(children, language)
               : null;
 
           if (html) return <div dangerouslySetInnerHTML={{ __html: html }} />;
@@ -227,4 +209,33 @@ export async function Root(props: Props) {
         )}
     </ReactMarkdown>
   );
+}
+
+// Shiki's tokenizer reads the clock, so prerendering caches its HTML by source and language.
+async function highlightCode(
+  content: string,
+  language: string | undefined
+): Promise<string> {
+  'use cache';
+  cacheLife('hours');
+  return codeToHtml(content, {
+    lang: language || '',
+    theme: 'kanagawa-wave',
+    /** @see {@link https://shiki.matsu.io/guide/transformers} */
+    transformers: [
+      {
+        pre(node) {
+          this.addClassToHast(
+            node,
+            `${styles.codeSnippet} p-6 whitespace-pre-wrap rounded-lg relative before:content-[attr(data-language)] overflow-hidden before:absolute before:bottom-0 before:right-0 before:px-3 before:py-1 before:text-caption before:bg-white/20 before:text-white text-body-r-sm font-original`
+          );
+
+          node.properties['data-language'] = language;
+        },
+      },
+      addCopyButton({
+        toggle: 2000,
+      }),
+    ],
+  });
 }

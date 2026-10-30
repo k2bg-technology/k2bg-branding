@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-import { createFetchAllSlugsUseCase } from '../infrastructure/di';
+import { fetchAllSlugs } from '../infrastructure/cache/posts';
 import { LISTED_CATEGORIES } from './siteMetadata';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -25,8 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const fetchAllSlugs = createFetchAllSlugsUseCase();
-    const { slugs } = await fetchAllSlugs.execute();
+    const { slugs } = await fetchAllSlugs();
     const newestRevisionDate =
       slugs.length > 0
         ? new Date(

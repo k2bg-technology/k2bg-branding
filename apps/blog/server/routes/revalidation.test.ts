@@ -1,11 +1,10 @@
 import { Hono } from 'hono';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { describe, expect, it, vi } from 'vitest';
 import { errorHandler } from '../middleware/errorHandler';
 import { revalidationRoutes } from './revalidation';
 
 vi.mock('next/cache', () => ({
-  revalidatePath: vi.fn(),
   revalidateTag: vi.fn(),
 }));
 
@@ -15,7 +14,6 @@ vi.mock('logger', () => ({
   },
 }));
 
-const mockRevalidatePath = vi.mocked(revalidatePath);
 const mockRevalidateTag = vi.mocked(revalidateTag);
 
 function createApp() {
@@ -36,7 +34,7 @@ function postRevalidate(app: Hono, body?: Record<string, string>) {
 describe('revalidationRoutes', () => {
   describe('POST /revalidate', () => {
     it('revalidates all blog pages and returns revalidated true when no body is given', async () => {
-      mockRevalidatePath.mockClear();
+      mockRevalidateTag.mockClear();
       const app = createApp();
 
       const res = await postRevalidate(app);
@@ -45,16 +43,11 @@ describe('revalidationRoutes', () => {
       expect(res.status).toBe(statusOk);
       const body = await res.json();
       expect(body.revalidated).toBe(true);
-      expect(mockRevalidatePath.mock.calls).toEqual([
-        ['/blog', 'page'],
-        ['/blog/[id]/[slug]', 'page'],
-        ['/category/[category]', 'page'],
-        ['/concept', 'page'],
-      ]);
+      expect(mockRevalidateTag.mock.calls).toEqual([['blog', 'max']]);
     });
 
     it('returns 500 with the shared error shape when revalidation fails', async () => {
-      mockRevalidatePath.mockImplementationOnce(() => {
+      mockRevalidateTag.mockImplementationOnce(() => {
         throw new Error('Revalidation failed');
       });
       const app = createApp();
@@ -83,7 +76,7 @@ describe('revalidationRoutes', () => {
     });
 
     it('revalidates a specific path when a path is given', async () => {
-      mockRevalidatePath.mockClear();
+      mockRevalidateTag.mockClear();
       const app = createApp();
       const path = '/blog/my-post';
 
@@ -91,11 +84,11 @@ describe('revalidationRoutes', () => {
 
       const statusOk = 200;
       expect(res.status).toBe(statusOk);
-      expect(mockRevalidatePath).toHaveBeenCalledWith(path);
+      expect(mockRevalidateTag).toHaveBeenCalledWith(path, 'max');
     });
 
     it('returns 500 when revalidating a specific path fails', async () => {
-      mockRevalidatePath.mockImplementationOnce(() => {
+      mockRevalidateTag.mockImplementationOnce(() => {
         throw new Error('Revalidation failed');
       });
       const app = createApp();
