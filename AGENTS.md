@@ -356,7 +356,10 @@ Rules for editing `AGENTS.md`, `CLAUDE.md`, and `.claude/**` documentation:
 
 - Never pin exact dependency versions in docs (write "Storybook 10.x" or nothing) —
   `package.json` is the source of truth.
-- Code examples must reference real repository files by path, not invented ones.
+- Illustrate rules with generic, invented examples that name no app component, file, or line,
+  so a code change never requires a doc edit. Reference a real path only for a stable entry
+  point the rule is about (a config file, a shared utility, another doc). Write invented
+  examples as identifiers, not file paths, since `pnpm docs:check` rejects missing paths.
 - Shared cross-agent rules live only in `AGENTS.md`; deep dives go to `.claude/rules/`
   (path-scoped) or `.claude/skills/` (on-demand), with a one-line pointer from `AGENTS.md`.
 - Run `pnpm docs:check` after editing agent docs — it verifies referenced paths exist and
