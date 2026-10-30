@@ -1,4 +1,4 @@
-import { Card, ScrollArea } from 'ui';
+import { Card, ScrollArea, Table } from 'ui';
 
 import type { TableSummaryOutput } from '../../modules/catalog/use-cases';
 
@@ -37,57 +37,78 @@ export function TableCatalogTable({ tables }: Props) {
   return (
     <Card>
       <Card.Content>
+        {/* Table's wrapper stays open so ScrollArea owns horizontal scrolling. */}
         <ScrollArea
+          className="[&_[data-slot=table-container]]:overflow-visible"
           scrollbar={<ScrollArea.ScrollBar orientation="horizontal" />}
         >
-          <table className="w-full border-collapse whitespace-nowrap text-body-r-sm">
-            <thead className="text-base-black/80 [&_th]:font-medium">
-              <tr className="border-b border-base-default/15 text-left">
-                <th scope="col" className="py-condensed pr-normal">
-                  Dataset
-                </th>
-                <th scope="col" className="py-condensed pr-normal">
-                  Table
-                </th>
-                <th scope="col" className="py-condensed pr-normal">
-                  Type
-                </th>
-                <th scope="col" className="py-condensed pr-normal text-right">
-                  Rows
-                </th>
-                <th scope="col" className="py-condensed pr-normal text-right">
-                  Size
-                </th>
-                <th scope="col" className="py-condensed">
-                  Last modified
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {tables.map((table) => (
-                <tr
-                  key={`${table.datasetId}.${table.name}`}
-                  className="border-b border-base-default/15"
+          <Table className="border-collapse border-b border-base-default/15 whitespace-nowrap">
+            <Table.Header className="text-base-black/80">
+              <Table.Row className="border-base-default/15 text-left hover:bg-transparent">
+                <Table.Head
+                  scope="col"
+                  className="h-auto py-condensed pr-normal pl-0"
                 >
-                  <td className="py-condensed pr-normal">{table.datasetId}</td>
-                  <th
+                  Dataset
+                </Table.Head>
+                <Table.Head
+                  scope="col"
+                  className="h-auto py-condensed pr-normal pl-0"
+                >
+                  Table
+                </Table.Head>
+                <Table.Head
+                  scope="col"
+                  className="h-auto py-condensed pr-normal pl-0"
+                >
+                  Type
+                </Table.Head>
+                <Table.Head
+                  scope="col"
+                  className="h-auto py-condensed pr-normal pl-0 text-right"
+                >
+                  Rows
+                </Table.Head>
+                <Table.Head
+                  scope="col"
+                  className="h-auto py-condensed pr-normal pl-0 text-right"
+                >
+                  Size
+                </Table.Head>
+                <Table.Head scope="col" className="h-auto px-0 py-condensed">
+                  Last modified
+                </Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {tables.map((table) => (
+                <Table.Row
+                  key={`${table.datasetId}.${table.name}`}
+                  className="border-base-default/15 hover:bg-transparent"
+                >
+                  <Table.Cell className="py-condensed pr-normal pl-0">
+                    {table.datasetId}
+                  </Table.Cell>
+                  <Table.Head
                     scope="row"
-                    className="py-condensed pr-normal text-left font-normal"
+                    className="h-auto py-condensed pr-normal pl-0 text-left font-normal"
                   >
                     {table.name}
-                  </th>
-                  <td className="py-condensed pr-normal">{table.type}</td>
-                  <td className="py-condensed pr-normal text-right tabular-nums">
+                  </Table.Head>
+                  <Table.Cell className="py-condensed pr-normal pl-0">
+                    {table.type}
+                  </Table.Cell>
+                  <Table.Cell className="py-condensed pr-normal pl-0 text-right tabular-nums">
                     {table.rowCount === null
                       ? '—'
                       : integerFormat.format(table.rowCount)}
-                  </td>
-                  <td className="py-condensed pr-normal text-right tabular-nums">
+                  </Table.Cell>
+                  <Table.Cell className="py-condensed pr-normal pl-0 text-right tabular-nums">
                     {table.sizeInBytes === null
                       ? '—'
                       : formatBytes(table.sizeInBytes)}
-                  </td>
-                  <td className="py-condensed tabular-nums">
+                  </Table.Cell>
+                  <Table.Cell className="px-0 py-condensed tabular-nums">
                     {table.lastModifiedAt === null ? (
                       '—'
                     ) : (
@@ -95,11 +116,11 @@ export function TableCatalogTable({ tables }: Props) {
                         {table.lastModifiedAt.slice(0, 10)}
                       </time>
                     )}
-                  </td>
-                </tr>
+                  </Table.Cell>
+                </Table.Row>
               ))}
-            </tbody>
-          </table>
+            </Table.Body>
+          </Table>
         </ScrollArea>
       </Card.Content>
     </Card>
