@@ -18,12 +18,6 @@ import { handlePostFetchError } from './handlePostFetchError';
 
 export const revalidate = 3600;
 
-type Params = Promise<{ id: string; slug: string }>;
-
-interface Props {
-  params: Params;
-}
-
 export interface BlogPostStaticParameter {
   id: string;
   slug: string;
@@ -41,7 +35,9 @@ export async function generateStaticParams(): Promise<
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<'/blog/[id]/[slug]'>): Promise<Metadata> {
   const { id } = await params;
 
   const fetchPost = createFetchPostUseCase();
@@ -77,7 +73,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params }: PageProps<'/blog/[id]/[slug]'>) {
   const { id } = await params;
 
   const fetchPost = createFetchPostUseCase();

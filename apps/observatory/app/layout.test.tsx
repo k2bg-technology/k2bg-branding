@@ -35,7 +35,10 @@ describe('root layout', () => {
     });
 
     const markup = renderToStaticMarkup(
-      await RootLayout({ children: <p>Page content</p> })
+      await RootLayout({
+        children: <p>Page content</p>,
+        params: Promise.resolve({}),
+      })
     );
 
     expect(markup).toContain('href="/dashboards/summary"');
@@ -49,7 +52,10 @@ describe('root layout', () => {
     loadDashboardsMock.mockRejectedValue(new Error('read failed'));
 
     const markup = renderToStaticMarkup(
-      await RootLayout({ children: <p>Page content</p> })
+      await RootLayout({
+        children: <p>Page content</p>,
+        params: Promise.resolve({}),
+      })
     );
 
     expect(markup).toContain('Overview');

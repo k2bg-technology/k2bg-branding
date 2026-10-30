@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { z } from 'zod';
 import { Articles } from '../../components/articles/Articles';
 import { ArticlesSkeleton } from '../../components/articles/ArticlesSkeleton';
 import { PageLayout } from '../../components/page-layout';
@@ -11,10 +12,10 @@ import { UseCaseError } from '../../modules/post/use-cases/shared';
 
 const PAGE_SIZE = 6;
 
-type SearchParams = Promise<{
-  page?: string;
-  query?: string;
-}>;
+const searchParamsSchema = z.object({
+  page: z.union([z.string(), z.array(z.string())]).default('1'),
+  query: z.union([z.string(), z.array(z.string())]).default(''),
+});
 
 export const metadata: Metadata = {
   title: '検索ページ',
@@ -23,37 +24,33 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
-  const { query = '', page = '1' } = await searchParams;
+export default async function Page({ searchParams }: PageProps<'/search'>) {
+  const { query, page } = searchParamsSchema.parse(await searchParams);
   const currentPage = Number(page);
 
   const searchPostSummaries = createSearchPostSummariesUseCase();
 
   async function fetchArticles() {
-    return searchPostSummaries
-      .execute({
-        query,
+    try {
+      return await searchPostSummaries.execute({
+        query: z.string().parse(query),
         page: currentPage,
         pageSize: PAGE_SIZE,
-      })
-      .catch((error) => {
-        if (error instanceof UseCaseError) {
-          postLogger.warn(
-            { err: error, page: currentPage },
-            'Invalid search request'
-          );
-        } else {
-          postLogger.error(
-            { err: error, page: currentPage },
-            'Failed to search post summaries'
-          );
-        }
-        notFound();
       });
+    } catch (error) {
+      if (error instanceof UseCaseError) {
+        postLogger.warn(
+          { err: error, page: currentPage },
+          'Invalid search request'
+        );
+      } else {
+        postLogger.error(
+          { err: error, page: currentPage },
+          'Failed to search post summaries'
+        );
+      }
+      notFound();
+    }
   }
 
   return (

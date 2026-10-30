@@ -12,16 +12,12 @@ import { Slider } from '../../components/Slider';
 import { getDictionary } from '../../i18n/dictionaries';
 import { resolveLanguage } from '../../i18n/settings';
 
-type PageProps = {
-  params: Promise<{ lang: string }>;
-};
-
 /**
  * Stays synchronous so the fallback streams before the dictionary resolves;
  * a route-level `loading.tsx` would do the same, but it also wraps the
  * catch-all segment and turns its `notFound()` into a streamed 200.
  */
-export default function Page({ params }: PageProps) {
+export default function Page({ params }: PageProps<'/[lang]'>) {
   return (
     <Suspense fallback={<PortfolioLoading />}>
       <PortfolioPageContent params={params} />
@@ -29,7 +25,9 @@ export default function Page({ params }: PageProps) {
   );
 }
 
-async function PortfolioPageContent({ params }: PageProps) {
+async function PortfolioPageContent({
+  params,
+}: Pick<PageProps<'/[lang]'>, 'params'>) {
   const { lang } = await params;
   const language = resolveLanguage(lang);
   const dictionary = await getDictionary(language);
