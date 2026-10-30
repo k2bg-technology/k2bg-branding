@@ -1,7 +1,9 @@
 'use server';
 
 import { logger } from 'logger';
+import { updateTag } from 'next/cache';
 import { getSession } from '../../infrastructure/auth/getSession';
+import { BLOG_CACHE_TAG } from '../../infrastructure/cache/tags';
 import {
   createSyncHeroImagesUseCase,
   createSyncPostsFromExternalUseCase,
@@ -10,7 +12,6 @@ import type {
   SyncHeroImagesOutput,
   SyncPostsFromExternalOutput,
 } from '../../modules/post/use-cases';
-import { revalidateBlogPages } from '../../server/lib/revalidation';
 
 const syncLogger = logger.child({ module: 'settings-sync' });
 
@@ -29,7 +30,7 @@ export async function syncPostsAction(): Promise<SyncPostsFromExternalOutput> {
 
   try {
     const result = await createSyncPostsFromExternalUseCase().execute();
-    revalidateBlogPages();
+    updateTag(BLOG_CACHE_TAG);
     syncLogger.info(
       { action: 'syncPostsAction', count: result.count },
       'Synced posts from external source'
@@ -49,7 +50,7 @@ export async function syncHeroImagesAction(): Promise<SyncHeroImagesOutput> {
 
   try {
     const result = await createSyncHeroImagesUseCase().execute();
-    revalidateBlogPages();
+    updateTag(BLOG_CACHE_TAG);
     syncLogger.info(
       {
         action: 'syncHeroImagesAction',

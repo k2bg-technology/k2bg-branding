@@ -1,18 +1,16 @@
-import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
+import { SettingsSession } from '../../components/settings-session/SettingsSession';
 
-import { getSession } from '../../infrastructure/auth/getSession';
-
-// Authoritative security boundary for the whole /settings subtree: a forged or
-// expired cookie passes the optimistic middleware but is rejected here.
 export default async function SettingsLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getSession();
-  if (!session) {
-    redirect('/login');
-  }
-
-  return <main className="min-h-dvh bg-base-white px-4 py-8">{children}</main>;
+  return (
+    <main className="min-h-dvh bg-base-white px-4 py-8">
+      <Suspense>
+        <SettingsSession>{children}</SettingsSession>
+      </Suspense>
+    </main>
+  );
 }

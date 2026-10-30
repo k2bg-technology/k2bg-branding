@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import SettingsLayout from './layout';
+import { SettingsSession } from './SettingsSession';
 
 const { mockGetSession, mockRedirect } = vi.hoisted(() => ({
   mockGetSession: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock('next/navigation', () => ({
   redirect: mockRedirect,
 }));
 
-describe('SettingsLayout', () => {
+describe('SettingsSession', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -27,7 +27,7 @@ describe('SettingsLayout', () => {
     });
     mockGetSession.mockResolvedValue(null);
 
-    await expect(SettingsLayout({ children: <div /> })).rejects.toThrow(
+    await expect(SettingsSession({ children: <div /> })).rejects.toThrow(
       'NEXT_REDIRECT'
     );
     expect(mockRedirect).toHaveBeenCalledWith('/login');
@@ -36,7 +36,7 @@ describe('SettingsLayout', () => {
   it('renders children when a session exists', async () => {
     mockGetSession.mockResolvedValue({ user: { id: 'user-1' } });
 
-    render(await SettingsLayout({ children: <div data-testid="content" /> }));
+    render(await SettingsSession({ children: <div data-testid="content" /> }));
 
     expect(mockRedirect).not.toHaveBeenCalled();
     expect(screen.getByTestId('content')).toBeInTheDocument();

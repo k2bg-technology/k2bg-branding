@@ -71,3 +71,7 @@ describe('handlePostFetchError', () => {
     expect(mockNotFound).toHaveBeenCalledTimes(1);
   });
 });
+
+vi.mock('next/server', () => ({
+  after: (callback: () => void) => callback(),
+}));

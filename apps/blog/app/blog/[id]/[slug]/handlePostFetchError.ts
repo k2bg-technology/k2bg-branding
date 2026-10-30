@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { after } from 'next/server';
 import { postLogger } from '../../../../modules/post/adapters/shared/logger';
 import { UseCaseError } from '../../../../modules/post/use-cases/shared';
 
@@ -12,11 +13,14 @@ import { UseCaseError } from '../../../../modules/post/use-cases/shared';
  * @see .claude/rules/error-handling-guidelines.md (Next.js Page Boundary)
  */
 export function handlePostFetchError(error: unknown, id: string): never {
-  if (error instanceof UseCaseError) {
-    postLogger.warn({ err: error, id }, 'Post not found');
-  } else {
-    postLogger.error({ err: error, id }, 'Failed to fetch post');
-  }
+  // Pino's timestamp reads the clock, so logging runs after prerendering.
+  after(() => {
+    if (error instanceof UseCaseError) {
+      postLogger.warn({ err: error, id }, 'Post not found');
+    } else {
+      postLogger.error({ err: error, id }, 'Failed to fetch post');
+    }
+  });
 
   notFound();
 }

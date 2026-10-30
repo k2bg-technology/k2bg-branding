@@ -1,6 +1,14 @@
+import { cacheLife, cacheTag } from 'next/cache';
 import Image, { type ImageProps } from 'next/image';
 import { Icon, Skeleton } from 'ui';
 
+import {
+  type CachedReadResult,
+  RECOVERABLE_FAILURE_CACHE_LIFE,
+  restoreCacheError,
+  serializeCacheError,
+} from '../../infrastructure/cache/readResult';
+import { BLOG_CACHE_TAG } from '../../infrastructure/cache/tags';
 import {
   getOptimizedImageUrl,
   getPlaceholderImageUrl,
@@ -17,12 +25,10 @@ export async function CloudinaryImage(props: CloudinaryImageProps) {
   try {
     const optimizedImageUrl = getOptimizedImageUrl(publicId);
     const placeholderImageUrl = getPlaceholderImageUrl(publicId);
-    const placeholderImageBase64 = await fetch(placeholderImageUrl).then(
-      async (res) =>
-        `data:image/webp;base64,${Buffer.from(await res.arrayBuffer()).toString(
-          'base64'
-        )}`
-    );
+    const placeholder = await fetchPlaceholderImage(placeholderImageUrl);
+    if ('error' in placeholder) {
+      throw restoreCacheError(placeholder.error);
+    }
 
     return (
       <Image
@@ -30,7 +36,7 @@ export async function CloudinaryImage(props: CloudinaryImageProps) {
         src={optimizedImageUrl}
         alt={alt}
         placeholder="blur"
-        blurDataURL={placeholderImageBase64}
+        blurDataURL={placeholder.data}
       />
     );
   } catch {
@@ -46,5 +52,24 @@ export async function CloudinaryImage(props: CloudinaryImageProps) {
         </Skeleton.Box>
       </Skeleton>
     );
+  }
+}
+
+// Cache the network read so images prerender, with short-lived data for recoverable failures.
+async function fetchPlaceholderImage(
+  url: string
+): Promise<CachedReadResult<string>> {
+  'use cache';
+  cacheTag(BLOG_CACHE_TAG);
+  try {
+    const response = await fetch(url);
+    const data = `data:image/webp;base64,${Buffer.from(
+      await response.arrayBuffer()
+    ).toString('base64')}`;
+    cacheLife('hours');
+    return { data };
+  } catch (error) {
+    cacheLife(RECOVERABLE_FAILURE_CACHE_LIFE);
+    return { error: serializeCacheError(error) };
   }
 }

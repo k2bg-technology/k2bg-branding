@@ -76,3 +76,8 @@ describe('GET', () => {
     );
   });
 });
+
+vi.mock('next/cache', () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+}));

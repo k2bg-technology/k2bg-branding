@@ -1,10 +1,8 @@
 import { getSessionCookie } from 'better-auth/cookies';
 import { type NextRequest, NextResponse } from 'next/server';
 
-// Next.js 16 renamed `middleware` to `proxy` (nodejs runtime). Optimistic
-// redirect based on session-cookie presence only — this is an optimization, not
-// the security boundary. app/settings/layout.tsx performs the authoritative
-// getSession check that rejects forged or expired cookies.
+// Every /settings route segment and Server Action authorizes itself.
+// This cookie-presence redirect and the layout's session guard are defense in depth.
 export function proxy(request: NextRequest): NextResponse {
   if (!getSessionCookie(request)) {
     return NextResponse.redirect(new URL('/login', request.url));

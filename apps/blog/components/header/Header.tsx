@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 import {
   Button,
   buttonVariants,
@@ -123,7 +124,9 @@ export function Header() {
                 />
                 <Popover.Positioner align="end">
                   <Popover.Popup>
-                    <Search placeholder="検索" />
+                    <Suspense>
+                      <Search placeholder="検索" />
+                    </Suspense>
                   </Popover.Popup>
                 </Popover.Positioner>
               </Popover>

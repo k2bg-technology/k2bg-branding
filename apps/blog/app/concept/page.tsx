@@ -1,21 +1,16 @@
 import type { Metadata } from 'next';
-
 import { Markdown } from '../../components/markdown';
 import { PageHeading } from '../../components/page-heading/PageHeading';
 import { PageLayout } from '../../components/page-layout';
 import { ScrollToTopButton } from '../../components/scroll-to-top-button/ScrollToTopButton';
 import { Sidebar } from '../../components/sidebar/Sidebar';
-import {
-  createFetchPostUseCase,
-  getDefaultOgImageUrl,
-} from '../../infrastructure/di';
+import { fetchPost } from '../../infrastructure/cache/posts';
+import { getDefaultOgImageUrl } from '../../infrastructure/di';
 import { BLOG_SITE_NAME } from '../siteMetadata';
 
 const CONCEPT_PAGE_ID = process.env.NOTION_CONCEPT_PAGE_ID ?? '';
 const conceptDescription = `${BLOG_SITE_NAME} のコンセプトを紹介します。`;
 const defaultOgImageUrl = getDefaultOgImageUrl();
-
-export const revalidate = 3600;
 
 export const metadata: Metadata = {
   title: 'コンセプトページ',
@@ -41,8 +36,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const fetchPost = createFetchPostUseCase();
-  const { post: article } = await fetchPost.execute({ id: CONCEPT_PAGE_ID });
+  const { post: article } = await fetchPost(CONCEPT_PAGE_ID);
 
   return (
     <PageLayout

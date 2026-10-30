@@ -1,20 +1,12 @@
 import { logger } from 'logger';
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
+import { BLOG_CACHE_TAG } from '../../infrastructure/cache/tags';
 
 const revalidationLogger = logger.child({ module: 'revalidation' });
 
-const BLOG_PATHS = [
-  '/blog',
-  '/blog/[id]/[slug]',
-  '/category/[category]',
-  '/concept',
-] as const;
-
 export function revalidateBlogPages(): void {
   try {
-    for (const path of BLOG_PATHS) {
-      revalidatePath(path, 'page');
-    }
+    revalidateTag(BLOG_CACHE_TAG, 'max');
     revalidationLogger.info('Revalidated all blog pages');
   } catch (error) {
     revalidationLogger.error({ error }, 'Failed to revalidate blog pages');
@@ -24,7 +16,8 @@ export function revalidateBlogPages(): void {
 
 export function revalidateBlogPath(path: string): void {
   try {
-    revalidatePath(path);
+    revalidateTag(path, 'max');
+    revalidateTag(BLOG_CACHE_TAG, 'max');
     revalidationLogger.info({ path }, 'Revalidated path');
   } catch (error) {
     revalidationLogger.error({ error, path }, 'Failed to revalidate path');

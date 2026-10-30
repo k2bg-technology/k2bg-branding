@@ -146,3 +146,8 @@ describe('sitemap', () => {
     expect(categoryUrls).not.toContain(`${configuredBaseUrl}/category/OTHER`);
   });
 });
+
+vi.mock('next/cache', () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+}));

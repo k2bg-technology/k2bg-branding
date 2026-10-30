@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { cacheLife } from 'next/cache';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MediaType } from '../../modules/social-feed/domain';
@@ -50,7 +51,13 @@ describe('InstagramTimeline', () => {
 
     expect(container).toBeEmptyDOMElement();
     expect(mockLoggerError).toHaveBeenCalledWith(
-      { err: fetchError },
+      {
+        err: expect.objectContaining({
+          name: fetchError.name,
+          message: fetchError.message,
+          stack: fetchError.stack,
+        }),
+      },
       'Failed to fetch Instagram feed'
     );
   });
@@ -73,4 +80,34 @@ describe('InstagramTimeline', () => {
     expect(screen.getAllByRole('link')).toHaveLength(posts.length);
     expect(mockLoggerError).not.toHaveBeenCalled();
   });
+
+  it('uses a short cache lifetime and never hours when the dependency fails', async () => {
+    mockExecute.mockRejectedValue(new Error('Source unavailable'));
+    const sut = InstagramTimeline;
+
+    await sut();
+
+    expect(cacheLife).toHaveBeenCalledWith(
+      expect.objectContaining({ revalidate: 60, expire: 300 })
+    );
+    expect(cacheLife).not.toHaveBeenCalledWith('hours');
+  });
+
+  it('uses hours when the dependency succeeds', async () => {
+    mockExecute.mockResolvedValue([]);
+    const sut = InstagramTimeline;
+
+    await sut();
+
+    expect(cacheLife).toHaveBeenCalledWith('hours');
+  });
 });
+
+vi.mock('next/cache', () => ({
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
+}));
+
+vi.mock('next/server', () => ({
+  after: (callback: () => void) => callback(),
+}));

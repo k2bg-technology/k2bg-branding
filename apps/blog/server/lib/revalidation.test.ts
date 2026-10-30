@@ -1,9 +1,9 @@
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 import { describe, expect, it, vi } from 'vitest';
 import { revalidateBlogPages, revalidateBlogPath } from './revalidation';
 
 vi.mock('next/cache', () => ({
-  revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
 }));
 
 vi.mock('logger', () => ({
@@ -12,25 +12,20 @@ vi.mock('logger', () => ({
   },
 }));
 
-const mockRevalidatePath = vi.mocked(revalidatePath);
+const mockRevalidateTag = vi.mocked(revalidateTag);
 
 describe('revalidateBlogPages', () => {
-  it('revalidates every blog page path', () => {
-    mockRevalidatePath.mockClear();
+  it('marks all blog data stale with stale-while-revalidate', () => {
+    mockRevalidateTag.mockClear();
 
     revalidateBlogPages();
 
-    expect(mockRevalidatePath.mock.calls).toEqual([
-      ['/blog', 'page'],
-      ['/blog/[id]/[slug]', 'page'],
-      ['/category/[category]', 'page'],
-      ['/concept', 'page'],
-    ]);
+    expect(mockRevalidateTag.mock.calls).toEqual([['blog', 'max']]);
   });
 
-  it('rethrows when revalidatePath fails', () => {
+  it('rethrows when revalidateTag fails', () => {
     const revalidationError = new Error('Revalidation failed');
-    mockRevalidatePath.mockImplementationOnce(() => {
+    mockRevalidateTag.mockImplementationOnce(() => {
       throw revalidationError;
     });
 
@@ -40,17 +35,20 @@ describe('revalidateBlogPages', () => {
 
 describe('revalidateBlogPath', () => {
   it('revalidates the given path', () => {
-    mockRevalidatePath.mockClear();
+    mockRevalidateTag.mockClear();
     const path = '/blog/my-post';
 
     revalidateBlogPath(path);
 
-    expect(mockRevalidatePath).toHaveBeenCalledWith(path);
+    expect(mockRevalidateTag.mock.calls).toEqual([
+      [path, 'max'],
+      ['blog', 'max'],
+    ]);
   });
 
-  it('rethrows when revalidatePath fails', () => {
+  it('rethrows when revalidateTag fails', () => {
     const revalidationError = new Error('Revalidation failed');
-    mockRevalidatePath.mockImplementationOnce(() => {
+    mockRevalidateTag.mockImplementationOnce(() => {
       throw revalidationError;
     });
 
