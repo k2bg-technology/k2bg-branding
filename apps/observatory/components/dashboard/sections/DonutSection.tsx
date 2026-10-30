@@ -1,3 +1,5 @@
+import { Table } from 'ui';
+
 import type {
   DashboardDefinition,
   DonutSection as DonutSectionDefinition,
@@ -28,26 +30,28 @@ export function DonutSection({ dashboard, section, chart }: Props) {
         format={section.format}
         unit={section.unit}
       />
-      <div className="sr-only">
-        <table>
-          <caption>{section.title}</caption>
-          <thead>
-            <tr>
-              <th scope="col">{section.categoryLabel}</th>
-              <th scope="col">{section.value.label}</th>
-              <th scope="col">{labels.share}</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="sr-only [&_[data-slot=table-container]]:overflow-visible">
+        <Table>
+          <Table.Caption>{section.title}</Table.Caption>
+          <Table.Header>
+            <Table.Row>
+              <Table.Head scope="col">{section.categoryLabel}</Table.Head>
+              <Table.Head scope="col">{section.value.label}</Table.Head>
+              <Table.Head scope="col">{labels.share}</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
             {chart.slices.map((slice) => (
-              <tr key={slice.id}>
-                <th scope="row">{slice.label}</th>
-                <td>{formatValue(slice.value, section, dashboard)}</td>
-                <td>{`${Math.round((slice.value / total) * 100)}%`}</td>
-              </tr>
+              <Table.Row key={slice.id}>
+                <Table.Head scope="row">{slice.label}</Table.Head>
+                <Table.Cell>
+                  {formatValue(slice.value, section, dashboard)}
+                </Table.Cell>
+                <Table.Cell>{`${Math.round((slice.value / total) * 100)}%`}</Table.Cell>
+              </Table.Row>
             ))}
-          </tbody>
-        </table>
+          </Table.Body>
+        </Table>
       </div>
     </div>
   );

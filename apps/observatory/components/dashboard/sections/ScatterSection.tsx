@@ -1,3 +1,5 @@
+import { Table } from 'ui';
+
 import type {
   DashboardDefinition,
   ScatterSection as ScatterSectionDefinition,
@@ -32,33 +34,37 @@ export function ScatterSection({ dashboard, section, chart }: Props) {
         locale={dashboard.locale}
         currency={dashboard.currency}
       />
-      <div className="sr-only">
-        <table>
-          <caption>{section.title}</caption>
-          <thead>
-            <tr>
+      <div className="sr-only [&_[data-slot=table-container]]:overflow-visible">
+        <Table>
+          <Table.Caption>{section.title}</Table.Caption>
+          <Table.Header>
+            <Table.Row>
               {section.series !== undefined && (
-                <th scope="col">{section.series.label}</th>
+                <Table.Head scope="col">{section.series.label}</Table.Head>
               )}
-              <th scope="col">{section.x.label}</th>
-              <th scope="col">{section.y.label}</th>
-            </tr>
-          </thead>
-          <tbody>
+              <Table.Head scope="col">{section.x.label}</Table.Head>
+              <Table.Head scope="col">{section.y.label}</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
             {chart.series.flatMap((series) =>
               series.points.map((point, index) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: duplicate coordinates are valid and rows have no local state.
-                <tr key={`${series.id}-${index}`}>
+                <Table.Row key={`${series.id}-${index}`}>
                   {section.series !== undefined && (
-                    <th scope="row">{series.label}</th>
+                    <Table.Head scope="row">{series.label}</Table.Head>
                   )}
-                  <td>{formatValue(point.x, section.x, dashboard)}</td>
-                  <td>{formatValue(point.y, section.y, dashboard)}</td>
-                </tr>
+                  <Table.Cell>
+                    {formatValue(point.x, section.x, dashboard)}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {formatValue(point.y, section.y, dashboard)}
+                  </Table.Cell>
+                </Table.Row>
               ))
             )}
-          </tbody>
-        </table>
+          </Table.Body>
+        </Table>
       </div>
       {trendLine !== null && (
         <p className="text-body-r-sm text-base-black/80">
