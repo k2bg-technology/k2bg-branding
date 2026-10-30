@@ -6,6 +6,10 @@ const { loadDashboardsMock } = vi.hoisted(() => ({
   loadDashboardsMock: vi.fn(),
 }));
 
+vi.mock('next/server', () => ({
+  connection: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('../infrastructure', () => ({
   createLoadDashboardsUseCase: () => ({ execute: loadDashboardsMock }),
 }));

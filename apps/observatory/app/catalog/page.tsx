@@ -9,8 +9,6 @@ import {
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import { collectDatasetIds } from '../../modules/dashboard/domain/definition';
 
-export const dynamic = 'force-dynamic';
-
 export default function Page() {
   const fetchTableCatalog = async () => {
     const { definitions, issues } =

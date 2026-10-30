@@ -22,8 +22,12 @@ const mocks = vi.hoisted(() => ({
   }),
 }));
 
+vi.mock('next/server', () => ({
+  connection: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('next/navigation', () => ({ notFound: mocks.notFound }));
-vi.mock('../../../infrastructure/di/dashboard', () => ({
+vi.mock('../../infrastructure/di/dashboard', () => ({
   createLoadDashboardsUseCase: () => ({ execute: mocks.loadDashboards }),
   createResolveControlOptionsUseCase: () => ({
     execute: mocks.resolveControlOptions,
@@ -47,12 +51,12 @@ vi.mock('../../../infrastructure/di/dashboard', () => ({
   createFetchRebaseBaseUseCase: () => ({ execute: mocks.fetchRebaseBase }),
   createFetchScatterDataUseCase: () => ({ execute: mocks.fetchScatterData }),
 }));
-vi.mock('../../../modules/dashboard/adapters/shared', () => ({
+vi.mock('../../modules/dashboard/adapters/shared', () => ({
   dashboardLogger: { error: vi.fn(), warn: vi.fn() },
 }));
 
-import { Period } from '../../../modules/dashboard/domain';
-import Page from './page';
+import { Period } from '../../modules/dashboard/domain';
+import { DashboardPage as Page } from './DashboardPage';
 
 function dashboard(locale = 'en-US') {
   return {

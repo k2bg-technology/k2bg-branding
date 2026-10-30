@@ -1,3 +1,5 @@
+import { connection } from 'next/server';
+
 import { catalogLogger } from '../../modules/catalog/adapters';
 import type { TableSummaryOutput } from '../../modules/catalog/use-cases';
 import { TableCatalogTable } from './TableCatalogTable';
@@ -8,6 +10,7 @@ interface Props {
 }
 
 export async function TableCatalog({ fetchTableCatalog }: Props) {
+  await connection();
   try {
     const tables = await fetchTableCatalog();
     return <TableCatalogTable tables={tables} />;

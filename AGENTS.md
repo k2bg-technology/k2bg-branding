@@ -132,15 +132,16 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   factories live in `apps/observatory/infrastructure/di/`.
 - Warehouse reads: `apps/observatory/infrastructure/warehouse/` wraps the data
   warehouse SDK (BigQuery) behind the app-owned `WarehouseClient` interface. Every
-  read goes through `WarehouseClient.query()`, which caches rows in the Next.js data
-  cache (`unstable_cache`) under the `warehouse` tag for the `revalidate` window each
+  read goes through `WarehouseClient.query()`, which caches rows with `'use cache'`,
+  `cacheLife`, and the `warehouse` tag for the `revalidate` window each
   query declares (warehouse data changes at most daily — long windows bound scan
   costs); rows are normalized to plain JSON so cache hits and misses match. Query
   services receive the client (plus the location or dataset id they need) via
   constructor injection and wrap driver failures in `RepositoryError`.
 - The warehouse SDK is Node-only: query code stays in server components and
-  `server-only` modules, and dashboard pages export `dynamic = 'force-dynamic'` so
-  `next build` never queries the warehouse.
+  `server-only` modules. Cache Components and Partial Prefetching are enabled;
+  request-time data reads await `connection()` inside `<Suspense>` so the page shell
+  renders immediately and `next build` never queries the warehouse.
 - A failed warehouse read renders an inline unavailable state (canonical:
   `apps/observatory/components/table-catalog/TableCatalog.tsx`) after `logger.error`;
   dashboards never `notFound()` on data failures.

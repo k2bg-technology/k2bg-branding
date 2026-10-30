@@ -1,9 +1,6 @@
 import 'server-only';
 
-import { BigQuery } from '@google-cloud/bigquery';
-import { logger } from 'logger';
-
-import { readThroughDataCache, WAREHOUSE_CACHE_TAG } from './dataCache';
+import { readThroughDataCache } from './dataCache';
 
 export type WarehouseRow = Record<string, unknown>;
 export type WarehouseQueryParams = Record<string, string | number | boolean>;
@@ -29,11 +26,6 @@ export interface WarehouseClientConfig {
   location: string;
 }
 
-/** Bounds the bytes a single query may scan (1 GiB) so a dashboard never runs an unbounded scan. */
-const DEFAULT_MAXIMUM_BYTES_BILLED = 1024 ** 3;
-
-const warehouseLogger = logger.child({ module: 'warehouse' });
-
 // biome-ignore lint/plugin/noLet: The lazy warehouse client persists across server requests.
 let warehouseClientInstance: WarehouseClient | null = null;
 
@@ -54,58 +46,11 @@ function readConfigFromEnvironment(): WarehouseClientConfig {
   };
 }
 
-/**
- * Normalize driver rows to plain JSON so a cache hit (JSON-parsed) and a
- * cache miss (live driver objects) have an identical shape.
- */
-function toPlainRows(rows: unknown[]): WarehouseRow[] {
-  return JSON.parse(JSON.stringify(rows));
-}
-
-function buildCacheKey(
-  config: WarehouseClientConfig,
-  request: WarehouseQueryRequest
-) {
-  return [
-    JSON.stringify({
-      scope: WAREHOUSE_CACHE_TAG,
-      projectId: config.projectId,
-      name: request.name,
-      sql: request.sql,
-      params: request.params ?? {},
-    }),
-  ];
-}
-
 export function createWarehouseClient(
   config: WarehouseClientConfig = readConfigFromEnvironment()
 ): WarehouseClient {
-  const bigquery = new BigQuery({
-    projectId: config.projectId,
-    location: config.location,
-  });
-
   return {
-    query(request) {
-      return readThroughDataCache(
-        buildCacheKey(config, request),
-        request.revalidate,
-        async () => {
-          warehouseLogger.info(
-            { name: request.name },
-            'Executing warehouse query'
-          );
-          const [rows] = await bigquery.query({
-            query: request.sql,
-            params: request.params,
-            maximumBytesBilled: String(
-              request.maximumBytesBilled ?? DEFAULT_MAXIMUM_BYTES_BILLED
-            ),
-          });
-          return toPlainRows(rows);
-        }
-      );
-    },
+    query: (request) => readThroughDataCache(config, request),
   };
 }
 
