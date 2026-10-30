@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
-import jaTranslation from '../i18n/locales/ja/translation.json';
+import jaTranslation from '../../i18n/locales/ja/translation.json';
 
 import { ScrollHelper } from './ScrollHelper';
 

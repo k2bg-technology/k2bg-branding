@@ -5,10 +5,10 @@ import { Hero } from '../../components/contents/Hero';
 import { Portfolio } from '../../components/contents/Portfolio';
 import { Skill } from '../../components/contents/Skill';
 import { Footer } from '../../components/footer/Footer';
-import { LanguageSelector } from '../../components/LanguageSelector';
-import { PortfolioLoading } from '../../components/PortfolioLoading';
-import { ScrollHelper } from '../../components/ScrollHelper';
-import { Slider } from '../../components/Slider';
+import { LanguageSelector } from '../../components/language-selector/LanguageSelector';
+import { PortfolioLoading } from '../../components/portfolio-loading/PortfolioLoading';
+import { ScrollHelper } from '../../components/scroll-helper/ScrollHelper';
+import { Slider } from '../../components/slider/Slider';
 import { getDictionary } from '../../i18n/dictionaries';
 import { resolveLanguage } from '../../i18n/settings';
 

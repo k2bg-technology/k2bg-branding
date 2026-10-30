@@ -3,8 +3,8 @@
 import { useLayoutEffect, useState } from 'react';
 import { cn, Icon } from 'ui';
 
-import { useMatchMedia } from '../hooks/useMatchMedia';
-import type { Dictionary } from '../i18n/dictionaries';
+import { useMatchMedia } from '../../hooks/useMatchMedia';
+import type { Dictionary } from '../../i18n/dictionaries';
 
 import styles from './ScrollHelper.module.css';
 
