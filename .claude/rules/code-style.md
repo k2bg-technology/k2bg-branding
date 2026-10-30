@@ -33,7 +33,7 @@ paths: apps/**/*.{ts,tsx}, packages/**/*.{ts,tsx}
 - **Use Unambiguous Names**:
   - When indicating ranges, use `min` or `max`, `first` and `last` when limits are inclusive.
   - Use `begin` and `end` for inclusive/exclusive ranges.
-  - For boolean values, clarify meaning using prefixes like `is_`, `has_`, `can_`.
+  - Boolean variables, internal parameters, and data fields use prefixes such as `is`, `has`, and `can`.
   - **Avoid negative names (e.g., `disable_ssl`)**, use affirmative forms (e.g., `use_ssl`).
 - **Match User Expectations**: Don't use names that contradict conventions or expectations readers are familiar with (e.g., `get` should be a lightweight accessor).
 
@@ -55,8 +55,6 @@ paths: apps/**/*.{ts,tsx}, packages/**/*.{ts,tsx}
   - it is a tested public unit (domain rule, use case, adapter mapper, DI factory);
   - the Control Flow rules require it (an early-return function for a multi-way expression, a child component for JSX branching);
   - it changes behavior at a boundary, such as an `async` wrapper that turns a synchronous throw into a rejected promise, or a `'use client'` or Suspense boundary. Such a function carries a one-line why-comment.
-- **Component Placement**: A Next.js page or layout file defines no component other than its default export; route configuration exports such as `dynamic` and `metadata` stay. A component that a page or layout needs lives in `apps/<app>/components/<kebab-case-directory>/<PascalCase>.tsx`. Each component file holds one component.
-- **No Derived Props**: A component does not receive a prop that it already derives from another prop.
 - **One Thing at a Time**: Design functions and code blocks to perform **one task at a time**.
 - **Single Level of Abstraction Principle (SLAP)**: Maintain all processing within a function at the **same level of abstraction**.
 
