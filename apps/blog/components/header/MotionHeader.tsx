@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 
-type Props = React.ComponentPropsWithoutRef<'header'>;
+interface Props extends React.ComponentPropsWithoutRef<'header'> {}
 
 export function MotionHeader(props: Props) {
   const { children } = props;

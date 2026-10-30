@@ -6,12 +6,11 @@ import {
   getPlaceholderImageUrl,
 } from '../../infrastructure/cloudinary';
 
-interface CloudinaryImageProps
-  extends Omit<ImageProps, 'placeholder' | 'blurDataURL'> {
+interface Props extends Omit<ImageProps, 'placeholder' | 'blurDataURL'> {
   publicId: string;
 }
 
-export async function CloudinaryImage(props: CloudinaryImageProps) {
+export async function CloudinaryImage(props: Props) {
   const { publicId, alt, ...rest } = props;
 
   try {

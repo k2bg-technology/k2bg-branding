@@ -2,7 +2,7 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
-type Props = PopoverPrimitive.Positioner.Props;
+interface Props extends PopoverPrimitive.Positioner.Props {}
 
 export function Positioner({
   children,

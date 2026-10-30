@@ -6,7 +6,7 @@ interface Provider {
   color: string;
 }
 
-interface ProductPromotionProps extends React.ComponentPropsWithoutRef<'div'> {
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
   linkText: string;
   linkUrl: string;
   image: React.ReactNode;
@@ -14,7 +14,7 @@ interface ProductPromotionProps extends React.ComponentPropsWithoutRef<'div'> {
   imagePlaceholder?: string;
 }
 
-export function ProductPromotion(props: ProductPromotionProps) {
+export function ProductPromotion(props: Props) {
   const { linkText, linkUrl, image, providers, ...rest } = props;
 
   return (

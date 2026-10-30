@@ -20,7 +20,7 @@ function resolveIconSrc(value: IconUrl | undefined) {
   return value?.default?.src;
 }
 
-export interface IconProps extends React.HTMLAttributes<HTMLElement> {
+interface Props extends React.HTMLAttributes<HTMLElement> {
   name: (typeof ICON_NAMES)[number];
   appearance?: 'outline' | 'solid';
   color?: CSSProperties['backgroundColor'];
@@ -29,7 +29,7 @@ export interface IconProps extends React.HTMLAttributes<HTMLElement> {
   originalColor?: boolean;
 }
 
-function IconInner(props: IconProps) {
+function IconInner(props: Props) {
   const {
     name,
     appearance = 'outline',
@@ -66,3 +66,5 @@ function IconInner(props: IconProps) {
 }
 
 export const Icon = memo(IconInner);
+
+export type { Props as IconProps };

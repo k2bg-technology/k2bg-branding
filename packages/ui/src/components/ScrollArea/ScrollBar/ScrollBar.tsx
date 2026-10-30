@@ -6,13 +6,13 @@ import { cn } from '../../../utils/cn';
 
 import styles from './ScrollBar.module.css';
 
-type ScrollBarProps = ScrollAreaPrimitive.Scrollbar.Props;
+interface Props extends ScrollAreaPrimitive.Scrollbar.Props {}
 
 export function ScrollBar({
   className,
   orientation = 'vertical',
   ...rest
-}: ScrollBarProps) {
+}: Props) {
   return (
     <ScrollAreaPrimitive.Scrollbar
       {...rest}

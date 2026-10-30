@@ -1,8 +1,8 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from 'ui';
 import styles from './page-layout.module.css';
 import type { GridColumn } from './types';
 
-interface AsideProps extends React.ComponentPropsWithRef<'aside'> {
+interface Props extends React.ComponentPropsWithRef<'aside'> {
   colStart?: GridColumn;
   colEnd?: GridColumn;
 }
@@ -14,11 +14,11 @@ export function Aside({
   style,
   children,
   ...rest
-}: AsideProps) {
+}: Props) {
   return (
     <aside
       {...rest}
-      className={twMerge(
+      className={cn(
         'hidden xl:flex',
         colStart && styles.colStart,
         colEnd && styles.colEnd,

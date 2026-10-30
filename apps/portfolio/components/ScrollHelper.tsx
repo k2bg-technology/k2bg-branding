@@ -1,7 +1,7 @@
 'use client';
 
 import { useLayoutEffect, useState } from 'react';
-import { Icon, twMerge } from 'ui';
+import { cn, Icon } from 'ui';
 
 import { useMatchMedia } from '../hooks/useMatchMedia';
 import type { Dictionary } from '../i18n/dictionaries';
@@ -10,11 +10,11 @@ import styles from './ScrollHelper.module.css';
 
 type ScrollHelperDictionary = Dictionary['scrollHelper'];
 
-export function ScrollHelper({
-  dictionary,
-}: {
+interface Props {
   dictionary: ScrollHelperDictionary;
-}) {
+}
+
+export function ScrollHelper({ dictionary }: Props) {
   const [isShow, setIsShow] = useState(false);
   const isDesktopLayout = useMatchMedia('(min-width: 768px)');
 
@@ -51,7 +51,7 @@ export function ScrollHelper({
     >
       <div className="fixed left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
         <div
-          className={twMerge(
+          className={cn(
             `inline-flex items-center gap-condensed rounded-sm px-5 py-normal bg-black/50 text-white`,
             styles.ScrollHelp
           )}

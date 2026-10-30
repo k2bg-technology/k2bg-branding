@@ -3,7 +3,7 @@ import { useRender } from '@base-ui/react/use-render';
 import { cn } from '../../utils/cn';
 import { Button, buttonVariants } from '../Button';
 
-type Props = React.ComponentPropsWithoutRef<typeof Button>;
+interface Props extends React.ComponentPropsWithoutRef<typeof Button> {}
 
 export function Control({
   render,

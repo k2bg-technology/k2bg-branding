@@ -6,7 +6,11 @@ import { ContactForm } from './ContactForm';
 
 type ContactDictionary = Dictionary['contact'];
 
-export function Contact({ dictionary }: { dictionary: ContactDictionary }) {
+interface Props {
+  dictionary: ContactDictionary;
+}
+
+export function Contact({ dictionary }: Props) {
   return (
     <section>
       <div className="flex flex-col relative md:flex-row md:h-[37.5rem]">

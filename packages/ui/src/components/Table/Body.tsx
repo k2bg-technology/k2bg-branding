@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '../../utils/cn';
 
-type Props = ComponentProps<'tbody'>;
+interface Props extends ComponentProps<'tbody'> {}
 
 export function Body({ className, ...rest }: Props) {
   return (

@@ -1,6 +1,6 @@
-import { twMerge } from '../../utils/extendTailwindMerge';
+import { cn } from '../../utils/cn';
 
-type Props = React.ComponentPropsWithoutRef<'div'>;
+interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 
 export function Skeleton(props: Props) {
   const { children, className, ...rest } = props;
@@ -9,7 +9,7 @@ export function Skeleton(props: Props) {
     <div
       {...rest}
       aria-hidden="true"
-      className={twMerge('animate-pulse', className)}
+      className={cn('animate-pulse', className)}
     >
       {children}
     </div>

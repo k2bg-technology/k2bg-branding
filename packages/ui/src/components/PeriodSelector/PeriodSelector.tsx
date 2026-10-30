@@ -5,8 +5,7 @@ import { cn } from '../../utils/cn';
 import { Button, buttonVariants } from '../Button';
 import { Icon, type IconProps } from '../Icon';
 
-export interface PeriodSelectorProps
-  extends Omit<ComponentPropsWithoutRef<'fieldset'>, 'children'> {
+interface Props extends Omit<ComponentPropsWithoutRef<'fieldset'>, 'children'> {
   /** Current period as display text, already localized by the consuming app. */
   label: string;
   /** Action of the previous step; without it and `previousHref` the step is disabled. */
@@ -102,7 +101,7 @@ export function PeriodSelector({
   nextLabel,
   className,
   ...rest
-}: PeriodSelectorProps) {
+}: Props) {
   return (
     // A disabled fieldset disables descendant form controls but not anchors, so
     // each step is told about it rather than relying on the fieldset alone.
@@ -140,3 +139,5 @@ export function PeriodSelector({
     </fieldset>
   );
 }
+
+export type { Props as PeriodSelectorProps };

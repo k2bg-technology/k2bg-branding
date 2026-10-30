@@ -77,7 +77,7 @@ function textAdvance(text: string) {
   return Math.round(advance * 100) / 100;
 }
 
-export interface DonutChartProps {
+interface Props {
   label: string;
   slices: DonutChartSlice[];
   centerValue?: string;
@@ -99,7 +99,7 @@ export function DonutChart({
   showLegend,
   animated = false,
   className,
-}: DonutChartProps) {
+}: Props) {
   const sliceColorById = new Map(
     slices.map((slice, index) => [slice.id, resolveSeriesColor(slice, index)])
   );
@@ -208,3 +208,5 @@ export function DonutChart({
     </div>
   );
 }
+
+export type { Props as DonutChartProps };

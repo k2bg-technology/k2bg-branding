@@ -117,7 +117,7 @@ function SankeyNodeShape({ nodes, index, ...rect }: NodeShapeProps) {
   );
 }
 
-export interface SankeyChartProps {
+interface Props {
   label: string;
   nodes: SankeyChartNode[];
   links: SankeyChartLink[];
@@ -133,7 +133,7 @@ export function SankeyChart({
   height,
   valueFormatter = defaultValueFormatter,
   className,
-}: SankeyChartProps) {
+}: Props) {
   const nodeIndexById = new Map(nodes.map((node, index) => [node.id, index]));
   const nodeColorByName = new Map(
     nodes.map((node, index) => [node.label, resolveSeriesColor(node, index)])
@@ -209,3 +209,5 @@ export function SankeyChart({
     </div>
   );
 }
+
+export type { Props as SankeyChartProps };

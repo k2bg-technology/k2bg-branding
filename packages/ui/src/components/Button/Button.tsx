@@ -184,8 +184,9 @@ export const buttonVariants = cva(
   }
 );
 
-export type Props = Omit<ButtonPrimitive.Props, 'color'> &
-  VariantProps<typeof buttonVariants>;
+interface Props
+  extends Omit<ButtonPrimitive.Props, 'color'>,
+    VariantProps<typeof buttonVariants> {}
 
 export function Button({
   variant,

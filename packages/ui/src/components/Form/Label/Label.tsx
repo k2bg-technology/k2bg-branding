@@ -1,7 +1,7 @@
 'use client';
 
 import { cva } from 'class-variance-authority';
-import { twMerge } from '../../../utils/extendTailwindMerge';
+import { cn } from '../../../utils/cn';
 import { type FormProps, useFormContext } from '../Control/Context';
 
 // `text-neutral-300` (disabled) is a deliberate exception: no base-* token is
@@ -26,7 +26,7 @@ const labelVariants = cva('text-body-b-sm font-bold', {
   },
 });
 
-export interface Props
+interface Props
   extends Omit<React.ComponentPropsWithoutRef<'label'>, 'color'>,
     FormProps {}
 
@@ -46,7 +46,7 @@ export function Label(props: Props) {
     // biome-ignore lint/a11y/noLabelWithoutControl: this label is always used with input
     <label
       {...rest}
-      className={twMerge(labelVariants({ color, error, disabled }), className)}
+      className={cn(labelVariants({ color, error, disabled }), className)}
     >
       {children}
     </label>

@@ -1,4 +1,8 @@
-export function Footer({ copyright }: { copyright: string }) {
+interface Props {
+  copyright: string;
+}
+
+export function Footer({ copyright }: Props) {
   return (
     <footer>
       <p className="text-body-r-sm leading-body-r-sm text-right">

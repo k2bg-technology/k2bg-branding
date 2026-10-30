@@ -1,12 +1,11 @@
 import type { Button } from '../Button';
 import { Control } from './Control';
 
-export interface PaginationItemProps
-  extends React.ComponentPropsWithoutRef<typeof Button> {
+interface Props extends React.ComponentPropsWithoutRef<typeof Button> {
   selected?: boolean;
 }
 
-export function Item(props: PaginationItemProps) {
+export function Item(props: Props) {
   const { selected, render, children, ...rest } = props;
 
   return (
@@ -21,3 +20,5 @@ export function Item(props: PaginationItemProps) {
     </Control>
   );
 }
+
+export type { Props as PaginationItemProps };

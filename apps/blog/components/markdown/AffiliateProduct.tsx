@@ -9,12 +9,12 @@ interface SubProvider {
   color: string;
 }
 
-interface AffiliateProductProps {
+interface Props {
   affiliateProduct: AffiliateProductOutput;
   affiliateSubProviders: SubProvider[];
 }
 
-export function AffiliateProduct(props: AffiliateProductProps) {
+export function AffiliateProduct(props: Props) {
   const { affiliateProduct, affiliateSubProviders } = props;
 
   return (

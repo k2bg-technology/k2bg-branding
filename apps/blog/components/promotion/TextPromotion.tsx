@@ -1,6 +1,6 @@
-type TextPromotionProps = React.ComponentPropsWithoutRef<'a'>;
+interface Props extends React.ComponentPropsWithoutRef<'a'> {}
 
-export function TextPromotion(props: TextPromotionProps) {
+export function TextPromotion(props: Props) {
   const { children, ...rest } = props;
 
   return (

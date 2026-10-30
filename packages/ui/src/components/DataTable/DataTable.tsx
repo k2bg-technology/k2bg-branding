@@ -25,8 +25,7 @@ export interface DataTableRow {
   cells: Record<string, ReactNode>;
 }
 
-export interface DataTableProps
-  extends Omit<ComponentPropsWithoutRef<'table'>, 'children'> {
+interface Props extends Omit<ComponentPropsWithoutRef<'table'>, 'children'> {
   /** Accessible name of the table, already localized by the consuming app. */
   caption: string;
   columns: DataTableColumn[];
@@ -117,7 +116,7 @@ export function DataTable({
   emptyMessage,
   className,
   ...rest
-}: DataTableProps) {
+}: Props) {
   // A right-aligned first column holds numbers, so only a left-aligned one labels its row.
   const firstColumnIsRowLabel = columns[0]?.align !== 'end';
   const isStickyLastCell = (index: number) =>
@@ -276,3 +275,5 @@ export function DataTable({
     </section>
   );
 }
+
+export type { Props as DataTableProps };

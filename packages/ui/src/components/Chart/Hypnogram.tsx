@@ -20,7 +20,7 @@ export interface HypnogramSegment {
   stage: HypnogramStage;
 }
 
-export interface HypnogramProps {
+interface Props {
   label: string;
   segments: HypnogramSegment[];
   stageLabels: Record<HypnogramStage, string>;
@@ -157,7 +157,7 @@ export function Hypnogram({
   timeZone = 'UTC',
   stageColors,
   className,
-}: HypnogramProps) {
+}: Props) {
   const sortedSegments = [...segments].sort(
     (first, second) => first.start - second.start
   );
@@ -258,3 +258,5 @@ export function Hypnogram({
     </svg>
   );
 }
+
+export type { Props as HypnogramProps };

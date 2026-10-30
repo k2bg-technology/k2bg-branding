@@ -2,7 +2,7 @@
 
 import { Dialog as DialogPrimitive } from '@base-ui/react/dialog';
 import { isValidElement } from 'react';
-import { twMerge } from '../../utils/extendTailwindMerge';
+import { cn } from '../../utils/cn';
 import { Button } from '../Button';
 import { Icon } from '../Icon';
 
@@ -29,7 +29,7 @@ export function Dialog({
         <DialogPrimitive.Backdrop className="fixed bg-base-black/50 inset-0" />
         <DialogPrimitive.Popup className="flex flex-col gap-6 fixed top-[50%] left-[50%] w-max max-w-[calc(100%-2rem)] h-max max-h-[calc(100%-4rem)] translate-x-[-50%] translate-y-[-50%] rounded-xl p-normal bg-base-white focus:outline-hidden md:p-6">
           <DialogPrimitive.Title
-            className={twMerge(
+            className={cn(
               'text-body-r-sm leading-body-r-sm font-bold',
               isTitleHidden && 'sr-only'
             )}

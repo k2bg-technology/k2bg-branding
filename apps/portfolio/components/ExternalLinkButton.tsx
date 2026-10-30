@@ -1,6 +1,6 @@
 import { buttonVariants, Icon } from 'ui';
 
-type Props = React.ComponentPropsWithoutRef<'a'>;
+interface Props extends React.ComponentPropsWithoutRef<'a'> {}
 
 export function ExternalLinkButton({ children, className, ...rest }: Props) {
   return (

@@ -7,7 +7,7 @@ import { cn } from '../../utils/cn';
 
 import { ScrollBar } from './ScrollBar/ScrollBar';
 
-interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
+interface Props extends ScrollAreaPrimitive.Root.Props {
   scrollbar?: React.ReactElement<
     React.ComponentPropsWithoutRef<typeof ScrollBar>
   > | null;
@@ -22,7 +22,7 @@ export function ScrollArea({
   viewportTabIndex,
   ref,
   ...rest
-}: ScrollAreaProps) {
+}: Props) {
   return (
     <ScrollAreaPrimitive.Root
       {...rest}

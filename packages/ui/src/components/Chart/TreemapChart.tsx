@@ -315,7 +315,7 @@ function TreemapNodeShape({ node, tiles, groups }: NodeShapeProps) {
   );
 }
 
-export interface TreemapChartProps {
+interface Props {
   label: string;
   nodes: TreemapChartNode[];
   tableHeaders?: TreemapChartTableHeaders;
@@ -334,7 +334,7 @@ export function TreemapChart({
   height,
   valueFormatter = defaultValueFormatter,
   className,
-}: TreemapChartProps) {
+}: Props) {
   const headers = {
     group: tableHeaders?.group ?? 'Group',
     label: tableHeaders?.label ?? 'Label',
@@ -561,3 +561,5 @@ export function TreemapChart({
     </div>
   );
 }
+
+export type { Props as TreemapChartProps };

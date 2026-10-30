@@ -2,11 +2,11 @@ import type { AffiliateBannerOutput } from '../../modules/affiliate/use-cases';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 import { BannerPromotion } from '../promotion';
 
-interface AffiliateBannerProps {
+interface Props {
   affiliateBanner: AffiliateBannerOutput;
 }
 
-export function AffiliateBanner(props: AffiliateBannerProps) {
+export function AffiliateBanner(props: Props) {
   const { affiliateBanner } = props;
 
   return (

@@ -6,7 +6,7 @@ import { cn } from '../../utils/cn';
 
 // `border-slate-100` is a deliberate exception: base-light's warm tint
 // differs enough from slate-100's cool tint that it is not a reasonable match.
-type Props = MenuPrimitive.Popup.Props;
+interface Props extends MenuPrimitive.Popup.Props {}
 
 export function Popup({ children, className, ...rest }: Props) {
   return (

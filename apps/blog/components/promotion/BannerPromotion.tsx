@@ -1,9 +1,9 @@
-interface BannerPromotionProps extends React.ComponentPropsWithoutRef<'a'> {
+interface Props extends React.ComponentPropsWithoutRef<'a'> {
   linkUrl: string;
   image?: React.ReactNode;
 }
 
-export function BannerPromotion(props: BannerPromotionProps) {
+export function BannerPromotion(props: Props) {
   const { linkUrl, image, ...rest } = props;
   props;
 
