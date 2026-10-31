@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Icon, Popover, ScrollArea } from 'ui';
 import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 import type { TocHeading } from './extractHeadings';
@@ -14,8 +14,7 @@ export function TableOfContents({ headings }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = usePageScrollAreaStore((state) => state.ref);
 
-  const headingIds = useMemo(() => headings.map((h) => h.id), [headings]);
-  const activeId = useActiveHeading(headingIds);
+  const activeId = useActiveHeading(headings);
 
   useEffect(() => {
     setIsOpen(window.matchMedia('(min-width: 768px)').matches);
