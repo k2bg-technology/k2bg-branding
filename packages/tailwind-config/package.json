@@ -9,6 +9,6 @@
     "test": "node --test styleDictionaryConfig.test.mjs"
   },
   "devDependencies": {
-    "style-dictionary": "^5.7.0"
+    "style-dictionary": "^5.7.1"
   }
 }
