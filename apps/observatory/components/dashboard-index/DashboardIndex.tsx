@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { connection } from 'next/server';
 import { Card } from 'ui';
 
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export async function DashboardIndex({ loadDashboards }: Props) {
+  await connection();
   try {
     const { definitions, issues } = await loadDashboards();
 

@@ -47,6 +47,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const monorepoRoot = resolve(__dirname, '..', '..');
 
 const config = {
+  cacheComponents: true,
+  partialPrefetching: true,
   reactStrictMode: true,
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config', 'logger'],

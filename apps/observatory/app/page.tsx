@@ -5,8 +5,6 @@ import { DashboardIndex } from '../components/dashboard-index/DashboardIndex';
 import { PageLayout } from '../components/page-layout';
 import { createLoadDashboardsUseCase } from '../infrastructure';
 
-export const dynamic = 'force-dynamic';
-
 export default function Page() {
   const loadDashboards = () => createLoadDashboardsUseCase().execute();
 

@@ -7,6 +7,10 @@ const { loadDashboardsMock, fetchCatalogMock } = vi.hoisted(() => ({
   fetchCatalogMock: vi.fn(),
 }));
 
+vi.mock('next/server', () => ({
+  connection: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('../../infrastructure', () => ({
   createLoadDashboardsUseCase: () => ({ execute: loadDashboardsMock }),
   createFetchTableCatalogUseCase: () => ({ execute: fetchCatalogMock }),

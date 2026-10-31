@@ -1,8 +1,12 @@
-import { renderToStaticMarkup } from 'react-dom/server';
+import { renderToReadableStream } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { loadDashboardsMock } = vi.hoisted(() => ({
   loadDashboardsMock: vi.fn(),
+}));
+
+vi.mock('next/server', () => ({
+  connection: vi.fn().mockResolvedValue(undefined),
 }));
 
 vi.mock('../infrastructure', () => ({
@@ -10,17 +14,6 @@ vi.mock('../infrastructure', () => ({
 }));
 vi.mock('../modules/dashboard/adapters/shared', () => ({
   dashboardLogger: { error: vi.fn() },
-}));
-vi.mock('../components/site-header/SiteHeader', () => ({
-  SiteHeader: ({ links }: { links: { href: string; label: string }[] }) => (
-    <header>
-      {links.map((link) => (
-        <a href={link.href} key={link.href}>
-          {link.label}
-        </a>
-      ))}
-    </header>
-  ),
 }));
 
 import RootLayout from './layout';
@@ -34,12 +27,14 @@ describe('root layout', () => {
       issues: [],
     });
 
-    const markup = renderToStaticMarkup(
-      await RootLayout({
+    const stream = await renderToReadableStream(
+      RootLayout({
         children: <p>Page content</p>,
         params: Promise.resolve({}),
       })
     );
+    await stream.allReady;
+    const markup = await new Response(stream).text();
 
     expect(markup).toContain('href="/dashboards/summary"');
     expect(markup.indexOf('Overview')).toBeLessThan(markup.indexOf('Summary'));
@@ -51,12 +46,14 @@ describe('root layout', () => {
   it('renders fixed navigation and children when definition loading fails', async () => {
     loadDashboardsMock.mockRejectedValue(new Error('read failed'));
 
-    const markup = renderToStaticMarkup(
-      await RootLayout({
+    const stream = await renderToReadableStream(
+      RootLayout({
         children: <p>Page content</p>,
         params: Promise.resolve({}),
       })
     );
+    await stream.allReady;
+    const markup = await new Response(stream).text();
 
     expect(markup).toContain('Overview');
     expect(markup).toContain('Table catalog');
