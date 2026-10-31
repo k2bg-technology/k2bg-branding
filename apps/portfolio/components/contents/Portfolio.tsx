@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Button, Dialog } from 'ui';
 import type { Dictionary } from '../../i18n/dictionaries';
 
-import { ExternalLinkButton } from '../ExternalLinkButton';
+import { ExternalLinkButton } from '../external-link-button/ExternalLinkButton';
 
 type PortfolioDictionary = Dictionary['portfolio'];
 
