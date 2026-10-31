@@ -652,8 +652,8 @@ importers:
         specifier: workspace:*
         version: link:../biome-config
       chromatic:
-        specifier: ^11.29.0
-        version: 11.29.0
+        specifier: ^18.13.3
+        version: 18.13.3
       concurrently:
         specifier: ^10.0.6
         version: 10.0.6
@@ -6370,20 +6370,8 @@ packages:
   chownr@1.1.4:
     resolution: {integrity: sha512-jJ0bqzaylmJtVnNgzTeSOs8DPavpbYgEr/b0YL8/2GO3xJEhInFmhKMUnEJQjZumK7KXGFhUy89PrsJWlakBVg==}
 
-  chromatic@11.29.0:
-    resolution: {integrity: sha512-yisBlntp9hHVj19lIQdpTlcYIXuU9H/DbFuu6tyWHmj6hWT2EtukCCcxYXL78XdQt1vm2GfIrtgtKpj/Rzmo4A==}
-    hasBin: true
-    peerDependencies:
-      '@chromatic-com/cypress': ^0.*.* || ^1.0.0
-      '@chromatic-com/playwright': ^0.*.* || ^1.0.0
-    peerDependenciesMeta:
-      '@chromatic-com/cypress':
-        optional: true
-      '@chromatic-com/playwright':
-        optional: true
-
-  chromatic@18.13.0:
-    resolution: {integrity: sha512-AdN6tHB9anx/sdJKIMQ7JkQQV2RhVe1iTvXOFLlwFBRecbl9rp50h/25N0sZJDdpx22gG7Y81HoUALOORfMuxQ==}
+  chromatic@18.13.3:
+    resolution: {integrity: sha512-86wzIxGIdDMBvyYWCXF+V0RyckI+3kl6ki9lJoZem6a0UfwHtEEg5ruORpryTpu6c9dVtBk2qSTX4xtkz3gwsA==}
     engines: {node: '>=22.0.0'}
     hasBin: true
     peerDependencies:
@@ -13105,7 +13093,7 @@ snapshots:
   '@chromatic-com/storybook@5.6.0(storybook@10.6.3(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.1))':
     dependencies:
       '@neoconfetti/react': 1.0.0
-      chromatic: 18.13.0
+      chromatic: 18.13.3
       jsonfile: 6.2.1
       storybook: 10.6.3(@types/react@19.3.0)(prettier@3.8.1)(react@19.3.1)
       strip-ansi: 7.2.0
@@ -17960,9 +17948,7 @@ snapshots:
 
   chownr@1.1.4: {}
 
-  chromatic@11.29.0: {}
-
-  chromatic@18.13.0:
+  chromatic@18.13.3:
     dependencies:
       semver: 7.8.5
 
