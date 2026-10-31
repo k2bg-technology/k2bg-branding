@@ -26,7 +26,7 @@ const fetchAffiliatesByIds = cache(async (ids: readonly string[]) => {
   return useCase.execute({ ids });
 });
 
-interface AffiliateEmbProps {
+interface Props {
   id: string;
 }
 
@@ -36,7 +36,7 @@ interface SubProvider {
   color: string;
 }
 
-export async function AffiliateEmb(props: AffiliateEmbProps) {
+export async function AffiliateEmb(props: Props) {
   const { id } = props;
 
   const data = await loadAffiliateEmbData(id).catch((error) => {

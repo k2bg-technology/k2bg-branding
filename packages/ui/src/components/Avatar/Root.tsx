@@ -2,7 +2,9 @@ import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 
 import { cn } from '../../utils/cn';
 
-export function Root({ className, ...rest }: AvatarPrimitive.Root.Props) {
+interface Props extends AvatarPrimitive.Root.Props {}
+
+export function Root({ className, ...rest }: Props) {
   return (
     <AvatarPrimitive.Root
       {...rest}

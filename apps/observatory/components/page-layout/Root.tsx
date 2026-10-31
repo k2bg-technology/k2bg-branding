@@ -1,11 +1,9 @@
 import type { ComponentPropsWithRef } from 'react';
 import { cn } from 'ui';
 
-export function Root({
-  className,
-  children,
-  ...rest
-}: ComponentPropsWithRef<'main'>) {
+interface Props extends ComponentPropsWithRef<'main'> {}
+
+export function Root({ className, children, ...rest }: Props) {
   return (
     <main
       {...rest}

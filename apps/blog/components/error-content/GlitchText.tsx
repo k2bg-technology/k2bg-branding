@@ -2,17 +2,17 @@
 
 import { motion } from 'motion/react';
 import { type ReactNode, useEffect, useState } from 'react';
-import { twMerge } from 'ui';
+import { cn } from 'ui';
 
 import styles from './GlitchText.module.css';
 
-interface GlitchTextProps {
+interface Props {
   children: string;
   className?: string;
   intensity?: 'low' | 'medium' | 'high';
 }
 
-type GlitchIntensity = NonNullable<GlitchTextProps['intensity']>;
+type GlitchIntensity = NonNullable<Props['intensity']>;
 
 const glitchIntervalByIntensity: Record<GlitchIntensity, number> = {
   low: 10000,
@@ -24,7 +24,7 @@ export function GlitchText({
   children,
   className,
   intensity = 'medium',
-}: GlitchTextProps) {
+}: Props) {
   const [isGlitching, setIsGlitching] = useState(false);
 
   useEffect(() => {
@@ -46,12 +46,9 @@ export function GlitchText({
   };
 
   return (
-    <div className={twMerge('relative inline-block', className)}>
+    <div className={cn('relative inline-block', className)}>
       <motion.span
-        className={twMerge(
-          'relative z-10 block',
-          isGlitching && styles.textShadow
-        )}
+        className={cn('relative z-10 block', isGlitching && styles.textShadow)}
         animate={isGlitching ? 'glitch' : 'normal'}
         variants={glitchVariants}
       >
@@ -119,7 +116,7 @@ function GhostLayer({
 }: GhostLayerProps) {
   return (
     <motion.span
-      className={twMerge(
+      className={cn(
         'pointer-events-none absolute left-0 top-0 block size-full select-none',
         styles.ghostLayer
       )}

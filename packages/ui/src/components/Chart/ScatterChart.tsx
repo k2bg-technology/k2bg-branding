@@ -85,7 +85,7 @@ function trendLineSegment(
   ];
 }
 
-export interface ScatterChartProps {
+interface Props {
   label: string;
   xLabel: string;
   yLabel: string;
@@ -111,7 +111,7 @@ export function ScatterChart({
   showLegend,
   animated = false,
   className,
-}: ScatterChartProps) {
+}: Props) {
   const seriesColorById = new Map(
     series.map((seriesItem, index) => [
       seriesItem.id,
@@ -230,3 +230,5 @@ export function ScatterChart({
     </div>
   );
 }
+
+export type { Props as ScatterChartProps };

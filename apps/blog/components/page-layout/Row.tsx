@@ -1,12 +1,12 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from 'ui';
 
-interface RowProps extends React.ComponentPropsWithRef<'div'> {}
+interface Props extends React.ComponentPropsWithRef<'div'> {}
 
-export function Row({ className, style, children, ...rest }: RowProps) {
+export function Row({ className, style, children, ...rest }: Props) {
   return (
     <div
       {...rest}
-      className={twMerge('col-span-full grid grid-cols-[subgrid]', className)}
+      className={cn('col-span-full grid grid-cols-[subgrid]', className)}
     >
       {children}
     </div>

@@ -2,7 +2,7 @@
 
 import { cva } from 'class-variance-authority';
 import type React from 'react';
-import { twMerge } from '../../../utils/extendTailwindMerge';
+import { cn } from '../../../utils/cn';
 import {
   type FormProps,
   resolveAriaDescribedBy,
@@ -44,7 +44,7 @@ const inputVariants = cva(
   }
 );
 
-export interface Props
+interface Props
   extends Omit<React.ComponentPropsWithRef<'input'>, 'children' | 'color'>,
     FormProps {
   startAdornment?: React.ReactNode;
@@ -65,7 +65,7 @@ export function Input(props: Props) {
     useFormContext(formProps);
 
   return (
-    <div className={twMerge('relative', disabled && '[&_i]:bg-neutral-300')}>
+    <div className={cn('relative', disabled && '[&_i]:bg-neutral-300')}>
       {startAdornment && (
         <div className="absolute top-1/2 left-3 -translate-y-1/2 flex align-middle">
           {startAdornment}
@@ -78,7 +78,7 @@ export function Input(props: Props) {
           explicitAriaDescribedBy,
           error ? helperTextId : undefined
         )}
-        className={twMerge(
+        className={cn(
           inputVariants({
             color,
             error,

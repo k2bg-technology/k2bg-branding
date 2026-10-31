@@ -1,7 +1,7 @@
 'use client';
 
 import { cva } from 'class-variance-authority';
-import { twMerge } from '../../../utils/extendTailwindMerge';
+import { cn } from '../../../utils/cn';
 import {
   type FormProps,
   resolveAriaDescribedBy,
@@ -65,7 +65,7 @@ export function Textarea(props: Props) {
         explicitAriaDescribedBy,
         error ? helperTextId : undefined
       )}
-      className={twMerge(
+      className={cn(
         inputVariants({
           color,
           error,

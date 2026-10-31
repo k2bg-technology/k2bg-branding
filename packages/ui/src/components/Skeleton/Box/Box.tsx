@@ -1,18 +1,18 @@
-import { twMerge } from '../../../utils/extendTailwindMerge';
+import { cn } from '../../../utils/cn';
 
 // `bg-gray-300` is a deliberate exception to the design-token color rule: no
 // base-* token is a visually reasonable match (base-light is much lighter,
 // base-default/base-dark are much darker/warmer). See packages/ui/src/components/Skelton/Round/Round.tsx
 // for the same exception.
-type LineProps = React.ComponentPropsWithoutRef<'div'>;
+interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 
-export function Box(props: LineProps) {
+export function Box(props: Props) {
   const { children, className = 'py-24' } = props;
 
   return (
     <div
       {...props}
-      className={twMerge(
+      className={cn(
         'relative flex justify-center align-middle bg-gray-300 rounded-sm',
         className
       )}

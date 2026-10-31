@@ -5,11 +5,9 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { cn } from '../../utils/cn';
 import { Icon } from '../Icon';
 
-export function Item({
-  children,
-  className,
-  ...rest
-}: SelectPrimitive.Item.Props) {
+interface Props extends SelectPrimitive.Item.Props {}
+
+export function Item({ children, className, ...rest }: Props) {
   return (
     <SelectPrimitive.Item
       {...rest}

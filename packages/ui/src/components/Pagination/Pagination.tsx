@@ -6,7 +6,7 @@ import { usePagination } from './usePagination';
 
 type PrevNextButtonProps = React.ComponentPropsWithoutRef<typeof Button>;
 
-export interface PaginationProps extends React.ComponentPropsWithoutRef<'nav'> {
+interface Props extends React.ComponentPropsWithoutRef<'nav'> {
   count: number;
   currentIndex: number;
   prevProps: PrevNextButtonProps;
@@ -14,7 +14,7 @@ export interface PaginationProps extends React.ComponentPropsWithoutRef<'nav'> {
   renderItem: (index: number) => React.ReactNode;
 }
 
-export function Pagination(props: PaginationProps) {
+export function Pagination(props: Props) {
   const { count, currentIndex, prevProps, nextProps, renderItem, ...rest } =
     props;
 
@@ -54,3 +54,5 @@ export function Pagination(props: PaginationProps) {
     </nav>
   );
 }
+
+export type { Props as PaginationProps };

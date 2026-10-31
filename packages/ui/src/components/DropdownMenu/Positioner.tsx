@@ -2,7 +2,7 @@
 
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 
-type Props = MenuPrimitive.Positioner.Props;
+interface Props extends MenuPrimitive.Positioner.Props {}
 
 export function Positioner({
   children,

@@ -1,12 +1,12 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from 'ui';
 
-type FabProps = React.ComponentPropsWithRef<'div'>;
+interface Props extends React.ComponentPropsWithRef<'div'> {}
 
-export function Fab({ className, children, ...rest }: FabProps) {
+export function Fab({ className, children, ...rest }: Props) {
   return (
     <div
       {...rest}
-      className={twMerge(
+      className={cn(
         'fixed bottom-6 right-6 z-50 flex flex-row-reverse gap-4',
         className
       )}

@@ -14,7 +14,7 @@ export const usePageScrollAreaStore = create<PageScrollAreaStore>((set) => ({
   setRef: (ref) => set({ ref }),
 }));
 
-type Props = React.ComponentProps<typeof ScrollArea>;
+interface Props extends React.ComponentProps<typeof ScrollArea> {}
 
 export function PageScrollArea(props: Props) {
   const setRef = usePageScrollAreaStore((state) => state.setRef);

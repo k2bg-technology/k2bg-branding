@@ -1,15 +1,12 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from 'ui';
 
-type DividerProps = React.ComponentPropsWithRef<'div'>;
+interface Props extends React.ComponentPropsWithRef<'div'> {}
 
-export function Divider({ className, ...rest }: DividerProps) {
+export function Divider({ className, ...rest }: Props) {
   return (
     <div
       {...rest}
-      className={twMerge(
-        'col-span-full border-b-1 border-slate-200',
-        className
-      )}
+      className={cn('col-span-full border-b-1 border-slate-200', className)}
     />
   );
 }

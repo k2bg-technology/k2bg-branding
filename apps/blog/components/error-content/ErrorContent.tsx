@@ -15,7 +15,7 @@ import {
 import { CrtTvIcon } from './CrtTvIcon';
 import { GlitchText } from './GlitchText';
 
-interface ErrorContentProps {
+interface Props {
   statusCode: string;
   title: string;
   description: string;
@@ -29,7 +29,7 @@ export function ErrorContent({
   description,
   error,
   reset,
-}: ErrorContentProps) {
+}: Props) {
   return (
     <>
       <StaticNoise opacity={0.04} />

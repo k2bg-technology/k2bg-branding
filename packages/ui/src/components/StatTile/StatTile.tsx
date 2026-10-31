@@ -29,8 +29,7 @@ export interface StatTileDelta {
   sentiment?: StatTileSentiment;
 }
 
-export interface StatTileProps
-  extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
+interface Props extends Omit<ComponentPropsWithoutRef<'div'>, 'children'> {
   /** Name of the measurement, already localized by the consuming app. */
   label: string;
   /** Headline value, already formatted by the consuming app. */
@@ -90,7 +89,7 @@ export function StatTile({
   chart,
   className,
   ...rest
-}: StatTileProps) {
+}: Props) {
   return (
     <div
       data-slot="stat-tile"
@@ -122,3 +121,5 @@ export function StatTile({
     </div>
   );
 }
+
+export type { Props as StatTileProps };

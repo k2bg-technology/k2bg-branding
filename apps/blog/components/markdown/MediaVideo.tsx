@@ -2,11 +2,11 @@ import { VideoFilePlayer, VideoStreamingPlayer } from 'ui';
 
 import type { MediaOutput } from '../../modules/media/use-cases';
 
-interface MediaVideoProps {
+interface Props {
   media: MediaOutput;
 }
 
-export function MediaVideo({ media }: MediaVideoProps) {
+export function MediaVideo({ media }: Props) {
   if (media.width == null || media.height == null) {
     return null;
   }

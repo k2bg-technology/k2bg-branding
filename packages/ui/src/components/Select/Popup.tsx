@@ -5,11 +5,9 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 import { cn } from '../../utils/cn';
 import { ScrollArea } from '../ScrollArea';
 
-export function Popup({
-  children,
-  className,
-  ...rest
-}: SelectPrimitive.Popup.Props) {
+interface Props extends SelectPrimitive.Popup.Props {}
+
+export function Popup({ children, className, ...rest }: Props) {
   return (
     <SelectPrimitive.Portal>
       <SelectPrimitive.Positioner sideOffset={4} alignItemWithTrigger={false}>

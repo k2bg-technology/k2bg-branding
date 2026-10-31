@@ -24,10 +24,9 @@ const FormContext = createContext<FormContextValue>({
   color: 'dark',
 });
 
-export function FormProvider({
-  children,
-  ...formContextValue
-}: React.PropsWithChildren<FormContextValue>) {
+interface Props extends React.PropsWithChildren<FormContextValue> {}
+
+export function FormProvider({ children, ...formContextValue }: Props) {
   return <FormContext value={formContextValue}>{children}</FormContext>;
 }
 

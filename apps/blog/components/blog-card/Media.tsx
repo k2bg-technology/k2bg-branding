@@ -1,10 +1,10 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from 'ui';
 
-type Props = React.ComponentPropsWithoutRef<'div'>;
+interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 
 export function Media({ className, children, ...rest }: Props) {
   return (
-    <div {...rest} className={twMerge('overflow-hidden rounded-xl', className)}>
+    <div {...rest} className={cn('overflow-hidden rounded-xl', className)}>
       {children}
     </div>
   );

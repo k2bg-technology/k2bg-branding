@@ -1,4 +1,4 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from 'ui';
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
   category?: React.ReactNode;
@@ -18,7 +18,7 @@ export function Content({
   ...rest
 }: Props) {
   return (
-    <div {...rest} className={twMerge('flex flex-col gap-normal', className)}>
+    <div {...rest} className={cn('flex flex-col gap-normal', className)}>
       {category && (
         <p className="text-body-r-sm font-bold capitalize bg-gradient-to-r from-main-default to-main-dark inline-block text-transparent bg-clip-text">
           {category}

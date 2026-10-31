@@ -2,10 +2,9 @@ import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 
 import { cn } from '../../utils/cn';
 
-export function Fallback({
-  className,
-  ...rest
-}: AvatarPrimitive.Fallback.Props) {
+interface Props extends AvatarPrimitive.Fallback.Props {}
+
+export function Fallback({ className, ...rest }: Props) {
   return (
     <AvatarPrimitive.Fallback
       {...rest}

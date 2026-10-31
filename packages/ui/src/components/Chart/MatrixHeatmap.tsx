@@ -20,7 +20,7 @@ const defaultMaximumCellSize = 64;
 /** One height for the column-header row on both sides, so the rows below it line up. */
 const headerRowHeight = 20;
 
-export interface MatrixHeatmapProps {
+interface Props {
   label: string;
   rows: string[];
   columns: string[];
@@ -75,7 +75,7 @@ export function MatrixHeatmap({
   maximumCellSize = defaultMaximumCellSize,
   scaleLabels,
   className,
-}: MatrixHeatmapProps) {
+}: Props) {
   const descriptionId = useId();
   const measured = measuredValues(values);
   const scaleMax = max ?? numericExtent(measured)?.maximum ?? 0;
@@ -189,3 +189,5 @@ export function MatrixHeatmap({
     </div>
   );
 }
+
+export type { Props as MatrixHeatmapProps };

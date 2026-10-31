@@ -9,7 +9,7 @@ const viewBoxSize = 100;
 const topY = 5;
 const bottomY = 95;
 
-export interface SparklineProps {
+interface Props {
   label: string;
   /** null breaks the line instead of interpolating across the gap. */
   values: (number | null)[];
@@ -67,7 +67,7 @@ export function Sparkline({
   values,
   color = ChartColor.CHART_1,
   className,
-}: SparklineProps) {
+}: Props) {
   const runs = buildRuns(values);
   const strokeColor = seriesColorCss(color);
 
@@ -96,3 +96,5 @@ export function Sparkline({
     </svg>
   );
 }
+
+export type { Props as SparklineProps };

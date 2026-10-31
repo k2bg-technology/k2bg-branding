@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '../../utils/cn';
 
-type Props = ComponentProps<'td'>;
+interface Props extends ComponentProps<'td'> {}
 
 export function Cell({ className, ...rest }: Props) {
   return (

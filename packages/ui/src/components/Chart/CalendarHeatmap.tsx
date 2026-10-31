@@ -41,7 +41,7 @@ export interface CalendarHeatmapDay {
   value: number | null;
 }
 
-export interface CalendarHeatmapProps {
+interface Props {
   label: string;
   days: CalendarHeatmapDay[];
   color?: ChartColor;
@@ -123,7 +123,7 @@ export function CalendarHeatmap({
   maximumCellSize = defaultCellSize,
   scaleLabels,
   className,
-}: CalendarHeatmapProps) {
+}: Props) {
   const descriptionId = useId();
   const weekStart = resolveWeekStart({ locale, weekStartsOn });
   const cells = buildCells(days, weekStart);
@@ -288,3 +288,5 @@ export function CalendarHeatmap({
     </div>
   );
 }
+
+export type { Props as CalendarHeatmapProps };

@@ -1,11 +1,11 @@
-import { twMerge } from '../../../utils/extendTailwindMerge';
+import { cn } from '../../../utils/cn';
 
-type Props = React.ComponentPropsWithoutRef<'div'>;
+interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 
 export function Line(props: Props) {
   const { className = 'py-0.5' } = props;
 
   return (
-    <div {...props} className={twMerge('bg-base-light rounded-5', className)} />
+    <div {...props} className={cn('bg-base-light rounded-5', className)} />
   );
 }

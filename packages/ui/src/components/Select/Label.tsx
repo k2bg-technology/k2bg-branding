@@ -4,7 +4,9 @@ import { Select as SelectPrimitive } from '@base-ui/react/select';
 
 import { cn } from '../../utils/cn';
 
-export function Label({ className, ...rest }: SelectPrimitive.Label.Props) {
+interface Props extends SelectPrimitive.Label.Props {}
+
+export function Label({ className, ...rest }: Props) {
   return (
     <SelectPrimitive.Label
       {...rest}

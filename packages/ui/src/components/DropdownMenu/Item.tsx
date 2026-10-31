@@ -4,7 +4,9 @@ import { Menu as MenuPrimitive } from '@base-ui/react/menu';
 
 import { cn } from '../../utils/cn';
 
-export function Item({ className, ...rest }: MenuPrimitive.Item.Props) {
+interface Props extends MenuPrimitive.Item.Props {}
+
+export function Item({ className, ...rest }: Props) {
   return (
     <MenuPrimitive.Item
       {...rest}
