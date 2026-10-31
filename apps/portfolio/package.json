@@ -7,7 +7,7 @@
     "build": "node scripts/generateImageVariants.mjs && next build",
     "start": "next start",
     "lint": "biome check .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "next typegen && tsc --noEmit",
     "format": "biome format --write .",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",

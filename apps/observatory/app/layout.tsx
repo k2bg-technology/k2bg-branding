@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
 import type { NavigationLink } from '../components/site-sidebar/SiteNavigation';
 import { SiteSidebar } from '../components/site-sidebar/SiteSidebar';
 import { createLoadDashboardsUseCase } from '../infrastructure';
@@ -12,11 +11,7 @@ export const metadata: Metadata = {
   description: 'A dashboard for observing accumulated personal data',
 };
 
-export default async function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default async function RootLayout({ children }: LayoutProps<'/'>) {
   const { definitions } = await createLoadDashboardsUseCase()
     .execute()
     .catch((error: unknown) => {

@@ -1,17 +1,11 @@
 import { GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata } from 'next';
-import type { ReactNode } from 'react';
 import { ErrorBoundaryDictionaryProvider } from '../../components/providers/ErrorBoundaryDictionaryProvider';
 import { getDictionary } from '../../i18n/dictionaries';
 import { type Language, languages, resolveLanguage } from '../../i18n/settings';
 import { getLocalizedUrl, siteBaseUrl } from '../site';
 
 import '../globals.css';
-
-type LayoutProps = {
-  children: ReactNode;
-  params: Promise<{ lang: string }>;
-};
 
 export interface PortfolioStaticParameter {
   lang: Language;
@@ -25,7 +19,7 @@ export async function generateStaticParams(): Promise<
 
 export async function generateMetadata({
   params,
-}: LayoutProps): Promise<Metadata> {
+}: LayoutProps<'/[lang]'>): Promise<Metadata> {
   const { lang: languageParameter } = await params;
   const language = resolveLanguage(languageParameter);
   const dictionary = await getDictionary(language);
@@ -80,7 +74,10 @@ export async function generateMetadata({
   } satisfies Metadata;
 }
 
-export default async function RootLayout({ children, params }: LayoutProps) {
+export default async function RootLayout({
+  children,
+  params,
+}: LayoutProps<'/[lang]'>) {
   const { lang: languageParameter } = await params;
   const language = resolveLanguage(languageParameter);
   const dictionary = await getDictionary(language);

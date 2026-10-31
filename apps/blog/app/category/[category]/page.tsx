@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
+import { z } from 'zod';
 import { Articles } from '../../../components/articles/Articles';
 import { ArticlesSkeleton } from '../../../components/articles/ArticlesSkeleton';
 import { PageLayout } from '../../../components/page-layout';
@@ -24,15 +25,9 @@ const PAGE_SIZE = 6;
 
 export const revalidate = 3600;
 
-type Params = Promise<{ category: string }>;
-type SearchParams = Promise<{
-  page?: string;
-}>;
-
-interface Props {
-  params: Params;
-  searchParams: SearchParams;
-}
+const searchParamsSchema = z.object({
+  page: z.union([z.string(), z.array(z.string())]).default('1'),
+});
 
 export interface CategoryStaticParameter {
   category: ListedCategory;
@@ -46,7 +41,9 @@ export async function generateStaticParams(): Promise<
   }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps<'/category/[category]'>): Promise<Metadata> {
   const { category } = await params;
   if (!isListedCategory(category)) {
     notFound();
@@ -79,14 +76,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params, searchParams }: Props) {
+export default async function Page({
+  params,
+  searchParams,
+}: PageProps<'/category/[category]'>) {
   const { category } = await params;
   if (!isListedCategory(category)) {
     notFound();
   }
   const listedCategory = category;
 
-  const { page = '1' } = await searchParams;
+  const { page } = searchParamsSchema.parse(await searchParams);
   const currentPage = Number(page);
 
   const fetchPostSummariesByCategory =

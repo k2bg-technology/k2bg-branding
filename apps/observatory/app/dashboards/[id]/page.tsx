@@ -26,16 +26,10 @@ import {
   type DashboardDefinition,
   type Period,
   parseUrlState,
-  type SearchParameters,
   SectionWidth,
 } from '../../../modules/dashboard/domain';
 
 export const dynamic = 'force-dynamic';
-
-interface Props {
-  params: Promise<{ id: string }>;
-  searchParams: Promise<SearchParameters>;
-}
 
 const sectionWidthClassNames = {
   [SectionWidth.FULL]: undefined,
@@ -54,7 +48,10 @@ async function loadPeriodResolution(
   });
 }
 
-export default async function Page({ params, searchParams }: Props) {
+export default async function Page({
+  params,
+  searchParams,
+}: PageProps<'/dashboards/[id]'>) {
   const { id } = await params;
   const { definitions, issues } = await createLoadDashboardsUseCase().execute();
   issues.forEach((issue) => {
