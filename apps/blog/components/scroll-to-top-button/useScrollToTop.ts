@@ -13,10 +13,12 @@ export interface ScrollToTopState {
 }
 
 export function useScrollToTop(): ScrollToTopState {
-  const ref = usePageScrollAreaStore((state) => state.ref);
+  const scrollContainerRef = usePageScrollAreaStore(
+    (state) => state.scrollContainerRef
+  );
 
   const [isVisible, setIsVisible] = useState(false);
-  const { scrollY } = useScroll({ container: ref ?? undefined });
+  const { scrollY } = useScroll({ container: scrollContainerRef ?? undefined });
 
   useEffect(() => {
     const unsubscribe = scrollY.on('change', (latest) => {
@@ -29,7 +31,7 @@ export function useScrollToTop(): ScrollToTopState {
   }, [scrollY]);
 
   const scrollToTop = () => {
-    ref?.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollContainerRef?.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return { isVisible, scrollToTop };

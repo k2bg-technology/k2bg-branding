@@ -9,15 +9,17 @@ import type { TocHeading } from './extractHeadings';
 const OFFSET_THRESHOLD = 100;
 
 export function useActiveHeading(headings: TocHeading[]): string {
-  const ref = usePageScrollAreaStore((state) => state.ref);
+  const scrollContainerRef = usePageScrollAreaStore(
+    (state) => state.scrollContainerRef
+  );
   const [activeId, setActiveId] = useState('');
-  const { scrollY } = useScroll({ container: ref ?? undefined });
+  const { scrollY } = useScroll({ container: scrollContainerRef ?? undefined });
 
   useEffect(() => {
     if (headings.length === 0) return;
 
     const unsubscribe = scrollY.on('change', () => {
-      const container = ref?.current;
+      const container = scrollContainerRef?.current;
       if (!container) return;
 
       const containerTop = container.getBoundingClientRect().top;
@@ -36,7 +38,7 @@ export function useActiveHeading(headings: TocHeading[]): string {
     return () => {
       unsubscribe();
     };
-  }, [scrollY, headings, ref]);
+  }, [scrollY, headings, scrollContainerRef]);
 
   return activeId;
 }

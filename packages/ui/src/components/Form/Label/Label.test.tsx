@@ -4,29 +4,29 @@ import { describe, expect, it } from 'vitest';
 
 import { Form } from '..';
 
-type ControlProps = React.ComponentProps<typeof Form.Control>;
+type FieldProps = React.ComponentProps<typeof Form.Field>;
 type LabelProps = React.ComponentProps<typeof Form.Label>;
 
 const labelText = 'Email';
 const helperTextContent = 'Enter a valid email address';
 
-interface ControlOptions {
-  controlProps?: ControlProps;
+interface FieldOptions {
+  fieldProps?: FieldProps;
   labelProps?: LabelProps;
 }
 
-function renderInControl({
-  controlProps = {},
+function renderInField({
+  fieldProps = {},
   labelProps = {},
-}: ControlOptions = {}) {
+}: FieldOptions = {}) {
   return render(
-    <Form.Control {...controlProps}>
+    <Form.Field {...fieldProps}>
       <Form.Label htmlFor="email" {...labelProps}>
         {labelText}
       </Form.Label>
       <Form.Input id="email" />
       <Form.HelperText>{helperTextContent}</Form.HelperText>
-    </Form.Control>
+    </Form.Field>
   );
 }
 
@@ -36,7 +36,7 @@ function getLabel() {
 
 describe('Form.Label', () => {
   it('names the associated control', () => {
-    renderInControl();
+    renderInField();
 
     expect(screen.getByLabelText(labelText)).toBe(
       screen.getByRole('textbox', { name: labelText })
@@ -46,7 +46,7 @@ describe('Form.Label', () => {
   it.each(['helpertextid', 'required'])(
     'keeps the form context value "%s" off the label element',
     (leakedAttribute) => {
-      renderInControl({ controlProps: { required: true } });
+      renderInField({ fieldProps: { required: true } });
 
       expect(getLabel()).not.toHaveAttribute(leakedAttribute);
     }

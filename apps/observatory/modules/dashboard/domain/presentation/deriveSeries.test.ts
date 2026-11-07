@@ -133,19 +133,19 @@ describe('derived series', () => {
       {
         id: 'series-0',
         label: 'Total',
-        overlay: false,
+        isOverlay: false,
         values: [20, null, 40],
       },
       {
         id: 'series-0-moving-average',
         label: 'Smoothed',
-        overlay: true,
+        isOverlay: true,
         values: [15, null, 40],
       },
       {
         id: 'series-0-running',
         label: 'To date',
-        overlay: true,
+        isOverlay: true,
         values: [20, 20, 60],
       },
     ]);
@@ -165,13 +165,13 @@ describe('derived series', () => {
       {
         id: 'series-0',
         label: 'Total',
-        overlay: false,
+        isOverlay: false,
         values: [null, 100, 125],
       },
       {
         id: 'series-0-moving-average',
         label: 'Smoothed',
-        overlay: true,
+        isOverlay: true,
         values: [null, 100, 112.5],
       },
     ]);
@@ -196,7 +196,7 @@ describe('derived series', () => {
     );
 
     expect(result).toEqual([
-      { id: 'series-0', label: 'Total', overlay: false, values: expected },
+      { id: 'series-0', label: 'Total', isOverlay: false, values: expected },
     ]);
   });
 
@@ -219,7 +219,7 @@ describe('derived series', () => {
       {
         id: 'category-0-running',
         label: 'rent to date',
-        overlay: false,
+        isOverlay: false,
         values: [20, 20, 50],
       },
     ]);

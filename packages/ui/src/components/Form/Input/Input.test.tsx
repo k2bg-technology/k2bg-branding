@@ -4,30 +4,30 @@ import { describe, expect, it } from 'vitest';
 
 import { Form } from '..';
 
-type ControlProps = React.ComponentProps<typeof Form.Control>;
+type FieldProps = React.ComponentProps<typeof Form.Field>;
 type InputProps = React.ComponentProps<typeof Form.Input>;
 type HelperTextProps = React.ComponentProps<typeof Form.HelperText>;
 
 const labelText = 'Email';
 const helperTextContent = 'Enter a valid email address';
 
-function renderInControl({
-  controlProps = {},
+function renderInField({
+  fieldProps = {},
   inputProps = {},
   helperTextProps = {},
 }: {
-  controlProps?: ControlProps;
+  fieldProps?: FieldProps;
   inputProps?: InputProps;
   helperTextProps?: HelperTextProps;
 } = {}) {
   return render(
-    <Form.Control {...controlProps}>
+    <Form.Field {...fieldProps}>
       <Form.Label htmlFor="email">{labelText}</Form.Label>
       <Form.Input id="email" {...inputProps} />
       <Form.HelperText {...helperTextProps}>
         {helperTextContent}
       </Form.HelperText>
-    </Form.Control>
+    </Form.Field>
   );
 }
 
@@ -49,13 +49,13 @@ const explicitAriaInvalidCases: ReadonlyArray<{
 
 describe('Input', () => {
   it('marks the input as invalid when the control has an error', () => {
-    renderInControl({ controlProps: { error: true } });
+    renderInField({ fieldProps: { error: true } });
 
     expect(getInput()).toHaveAttribute('aria-invalid', 'true');
   });
 
   it('describes the input with the helper text when the control has an error', () => {
-    renderInControl({ controlProps: { error: true } });
+    renderInField({ fieldProps: { error: true } });
 
     const describedBy = getInput().getAttribute('aria-describedby');
     expect(describedBy).toBe(getHelperText().id);
@@ -63,7 +63,7 @@ describe('Input', () => {
   });
 
   it('leaves the input unmarked and undescribed without an error', () => {
-    renderInControl();
+    renderInField();
 
     expect(getInput()).not.toHaveAttribute('aria-invalid');
     expect(getInput()).not.toHaveAttribute('aria-describedby');
@@ -72,8 +72,8 @@ describe('Input', () => {
   it('keeps a consumer-provided aria-describedby before the helper text id', () => {
     const extraDescriptionId = 'extra';
 
-    renderInControl({
-      controlProps: { error: true },
+    renderInField({
+      fieldProps: { error: true },
       inputProps: { 'aria-describedby': extraDescriptionId },
     });
 
@@ -86,8 +86,8 @@ describe('Input', () => {
   it.each(explicitAriaInvalidCases)(
     'keeps the consumer-provided aria-invalid "$expected" over the error state',
     ({ explicitAriaInvalid, expected }) => {
-      renderInControl({
-        controlProps: { error: true },
+      renderInField({
+        fieldProps: { error: true },
         inputProps: { 'aria-invalid': explicitAriaInvalid },
       });
 
@@ -98,8 +98,8 @@ describe('Input', () => {
   it('describes the input with the helper text id given to the control', () => {
     const customHelperTextId = 'custom-helper';
 
-    renderInControl({
-      controlProps: { error: true, helperTextId: customHelperTextId },
+    renderInField({
+      fieldProps: { error: true, helperTextId: customHelperTextId },
     });
 
     expect(getHelperText()).toHaveAttribute('id', customHelperTextId);
@@ -112,7 +112,7 @@ describe('Input', () => {
     // consumer smuggling it through an untyped spread.
     const strayProps = { helperTextId: strayHelperTextId } as InputProps;
 
-    renderInControl({ controlProps: { error: true }, inputProps: strayProps });
+    renderInField({ fieldProps: { error: true }, inputProps: strayProps });
 
     expect(getInput()).toHaveAttribute('aria-describedby', getHelperText().id);
     expect(getInput()).not.toHaveAttribute(
@@ -122,14 +122,14 @@ describe('Input', () => {
   });
 
   it('rejects a helper text id at the type level', () => {
-    // @ts-expect-error -- only Form.Control can keep both sides in sync.
+    // @ts-expect-error -- only Form.Field can keep both sides in sync.
     const element = <Form.Input helperTextId="custom-helper" />;
 
     expect(element).toBeDefined();
   });
 
   it('disables the input when the control is disabled', () => {
-    renderInControl({ controlProps: { disabled: true } });
+    renderInField({ fieldProps: { disabled: true } });
 
     expect(getInput()).toBeDisabled();
   });

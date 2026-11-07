@@ -1,4 +1,4 @@
-import { VideoFilePlayer, VideoStreamingPlayer } from 'ui';
+import { EmbeddedVideoPlayer, VideoPlayer } from 'ui';
 
 import type { MediaOutput } from '../../modules/media/use-cases';
 
@@ -13,7 +13,7 @@ export function MediaVideo({ media }: Props) {
 
   if (media.sourceFile) {
     return (
-      <VideoFilePlayer
+      <VideoPlayer
         id={media.id}
         file={media.sourceFile}
         width={media.width}
@@ -24,7 +24,7 @@ export function MediaVideo({ media }: Props) {
 
   if (media.sourceUrl) {
     return (
-      <VideoStreamingPlayer
+      <EmbeddedVideoPlayer
         id={media.id}
         url={media.sourceUrl}
         width={media.width}

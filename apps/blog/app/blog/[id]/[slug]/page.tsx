@@ -84,11 +84,11 @@ export default async function Page({ params }: PageProps<'/blog/[id]/[slug]'>) {
 
   return (
     <PageLayout
-      fab={
-        <PageLayout.Fab>
+      floatingActions={
+        <PageLayout.FloatingActions>
           <TableOfContents headings={extractHeadings(article.content)} />
           <ScrollToTopButton />
-        </PageLayout.Fab>
+        </PageLayout.FloatingActions>
       }
     >
       <PageLayout.Row>

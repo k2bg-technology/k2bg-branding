@@ -5,24 +5,30 @@ import { ScrollArea } from 'ui';
 import { create } from 'zustand';
 
 type PageScrollAreaStore = {
-  ref: React.RefObject<HTMLDivElement | null> | null;
-  setRef: (ref: React.RefObject<HTMLDivElement | null>) => void;
+  scrollContainerRef: React.RefObject<HTMLDivElement | null> | null;
+  setScrollContainerRef: (
+    scrollContainerRef: React.RefObject<HTMLDivElement | null>
+  ) => void;
 };
 
 export const usePageScrollAreaStore = create<PageScrollAreaStore>((set) => ({
-  ref: null,
-  setRef: (ref) => set({ ref }),
+  scrollContainerRef: null,
+  setScrollContainerRef: (scrollContainerRef) => set({ scrollContainerRef }),
 }));
 
 interface Props extends React.ComponentProps<typeof ScrollArea> {}
 
 export function PageScrollArea(props: Props) {
-  const setRef = usePageScrollAreaStore((state) => state.setRef);
-  const ref = useRef(null);
+  const setScrollContainerRef = usePageScrollAreaStore(
+    (state) => state.setScrollContainerRef
+  );
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-    setRef(ref);
-  }, [setRef]);
+    setScrollContainerRef(scrollContainerRef);
+  }, [setScrollContainerRef]);
 
-  return <ScrollArea {...props} ref={ref} className="max-h-dvh" />;
+  return (
+    <ScrollArea {...props} ref={scrollContainerRef} className="max-h-dvh" />
+  );
 }

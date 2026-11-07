@@ -112,11 +112,11 @@ export const ContentOnly: Story = {
   ),
 };
 
-export const WithFab: Story = {
+export const WithFloatingActions: Story = {
   render: () => (
     <PageLayout
-      fab={
-        <PageLayout.Fab>
+      floatingActions={
+        <PageLayout.FloatingActions>
           <button
             type="button"
             className="w-12 h-12 bg-slate-800 text-white rounded-full flex items-center justify-center shadow-lg"
@@ -129,7 +129,7 @@ export const WithFab: Story = {
           >
             Index
           </button>
-        </PageLayout.Fab>
+        </PageLayout.FloatingActions>
       }
     >
       <PageLayout.Row>

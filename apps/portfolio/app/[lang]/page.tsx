@@ -5,10 +5,9 @@ import { Hero } from '../../components/contents/Hero';
 import { Portfolio } from '../../components/contents/Portfolio';
 import { Skill } from '../../components/contents/Skill';
 import { Footer } from '../../components/footer/Footer';
+import { HorizontalScroll } from '../../components/horizontal-scroll/HorizontalScroll';
 import { LanguageSelector } from '../../components/language-selector/LanguageSelector';
 import { PortfolioLoading } from '../../components/portfolio-loading/PortfolioLoading';
-import { ScrollHelper } from '../../components/scroll-helper/ScrollHelper';
-import { Slider } from '../../components/slider/Slider';
 import { getDictionary } from '../../i18n/dictionaries';
 import { resolveLanguage } from '../../i18n/settings';
 
@@ -36,7 +35,7 @@ async function PortfolioPageContent({
     <>
       <div className="flex flex-col gap-condensed md:absolute md:top-1/2 md:-translate-y-1/2 md:px-20">
         <main>
-          <Slider className="contents md:block">
+          <div className="contents md:block animate-slide-in">
             <div className="grid grid-flow-row auto-cols-fr overflow-hidden md:grid-flow-col md:auto-cols-max md:rounded-3xl md:shadow-2xl md:max-h-[37.5rem]">
               <Hero dictionary={dictionary.hero} />
               <Background dictionary={dictionary.background} />
@@ -44,12 +43,12 @@ async function PortfolioPageContent({
               <Portfolio dictionary={dictionary.portfolio} />
               <Contact dictionary={dictionary.contact} />
             </div>
-          </Slider>
+          </div>
         </main>
         <Footer copyright={dictionary.footer.copyright} />
       </div>
       <LanguageSelector />
-      <ScrollHelper dictionary={dictionary.scrollHelper} />
+      <HorizontalScroll dictionary={dictionary.horizontalScrollHint} />
     </>
   );
 }

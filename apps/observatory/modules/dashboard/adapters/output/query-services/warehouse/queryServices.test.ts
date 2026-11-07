@@ -39,7 +39,7 @@ function createPlan(
     timeZone: 'UTC',
     selectedPeriod: '2026-09',
     dateRange: { firstDate: '2026-09-01', lastDate: '2026-09-30' },
-    measures: [{ column: 'amount', reduction, compares: false }],
+    measures: [{ column: 'amount', reduction, hasComparison: false }],
   } satisfies SectionQueryPlan;
 }
 
@@ -434,7 +434,7 @@ describe('WarehouseFetchPivotDataQueryService', () => {
     const sut = new WarehouseFetchPivotDataQueryService(client);
 
     expect(await sut.fetchPivotCells(plan, options)).toEqual({
-      exceeded: false,
+      isCellLimitExceeded: false,
       cells: [{ row: 'food', column: '2026-08', value: 10 }],
     });
   });

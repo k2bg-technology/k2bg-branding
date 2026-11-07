@@ -28,12 +28,12 @@ export function GlitchText({
   const [isGlitching, setIsGlitching] = useState(false);
 
   useEffect(() => {
-    const interval = glitchIntervalByIntensity[intensity];
-    const glitchInterval = setInterval(() => {
+    const intervalMs = glitchIntervalByIntensity[intensity];
+    const glitchTimerId = setInterval(() => {
       setIsGlitching(true);
       setTimeout(() => setIsGlitching(false), 250);
-    }, interval);
-    return () => clearInterval(glitchInterval);
+    }, intervalMs);
+    return () => clearInterval(glitchTimerId);
   }, [intensity]);
 
   const glitchVariants = {
@@ -59,7 +59,7 @@ export function GlitchText({
         color="#ffffff"
         baseOpacity={0.4}
         glitchX={[-4, 5, -3, 4, -4]}
-        isGlitching={isGlitching}
+        glitching={isGlitching}
       >
         {children}
       </GhostLayer>
@@ -68,7 +68,7 @@ export function GlitchText({
         color="#000000"
         baseOpacity={0.3}
         glitchX={[4, -5, 3, -4, 4]}
-        isGlitching={isGlitching}
+        glitching={isGlitching}
       >
         {children}
       </GhostLayer>
@@ -104,7 +104,7 @@ interface GhostLayerProps {
   color: string;
   baseOpacity: number;
   glitchX: number[];
-  isGlitching: boolean;
+  glitching: boolean;
 }
 
 function GhostLayer({
@@ -112,7 +112,7 @@ function GhostLayer({
   color,
   baseOpacity,
   glitchX,
-  isGlitching,
+  glitching,
 }: GhostLayerProps) {
   return (
     <motion.span
@@ -123,7 +123,7 @@ function GhostLayer({
       style={{ '--ghost-color': color }}
       initial={{ opacity: baseOpacity }}
       animate={
-        isGlitching
+        glitching
           ? {
               x: glitchX,
               opacity: glitchX.map((_, i) =>

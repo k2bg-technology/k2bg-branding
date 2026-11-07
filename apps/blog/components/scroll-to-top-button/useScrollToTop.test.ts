@@ -35,9 +35,10 @@ describe('useScrollToTop', () => {
     mockUseScroll.mockReset();
     scrollToMock.mockClear();
 
-    const ref = { current: { scrollTo: scrollToMock } };
+    const scrollContainerRef = { current: { scrollTo: scrollToMock } };
     usePageScrollAreaStore.setState({
-      ref: ref as unknown as React.RefObject<HTMLDivElement | null>,
+      scrollContainerRef:
+        scrollContainerRef as unknown as React.RefObject<HTMLDivElement | null>,
     });
   });
 

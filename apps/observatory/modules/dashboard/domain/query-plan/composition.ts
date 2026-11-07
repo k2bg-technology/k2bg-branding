@@ -69,7 +69,7 @@ export function planDonutCenter(
       {
         column: section.centerColumn,
         reduction: Reduction.LATEST,
-        compares: false,
+        hasComparison: false,
       },
     ],
   };

@@ -46,10 +46,10 @@ export default async function Page() {
 
   return (
     <PageLayout
-      fab={
-        <PageLayout.Fab>
+      floatingActions={
+        <PageLayout.FloatingActions>
           <ScrollToTopButton />
-        </PageLayout.Fab>
+        </PageLayout.FloatingActions>
       }
     >
       <PageLayout.Row>

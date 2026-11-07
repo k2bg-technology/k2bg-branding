@@ -66,7 +66,11 @@ describe('composition query plans', () => {
       selectedPeriod: '2026-08',
       dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
       measures: [
-        { column: 'running_balance', reduction: 'latest', compares: false },
+        {
+          column: 'running_balance',
+          reduction: 'latest',
+          hasComparison: false,
+        },
       ],
     });
     expect(

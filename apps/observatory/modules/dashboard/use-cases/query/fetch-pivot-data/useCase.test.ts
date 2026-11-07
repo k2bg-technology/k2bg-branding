@@ -16,7 +16,7 @@ describe('FetchPivotData', () => {
   it('passes selected controls, period, and cache options to the query service', async () => {
     const expected = {
       cells: [{ row: 'reporting', column: 'Mon', value: 10 }],
-      exceeded: false,
+      isCellLimitExceeded: false,
     };
     const sut = new FetchPivotData({
       fetchPivotCells: async (plan, options) => {

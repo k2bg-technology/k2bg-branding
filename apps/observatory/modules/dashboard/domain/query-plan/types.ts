@@ -30,7 +30,7 @@ export type SectionQueryPlan =
       kind: typeof SectionKind.STAT_TILES;
       grain: PeriodGrain;
       measures: (MeasureQueryPlan & {
-        compares: boolean;
+        hasComparison: boolean;
         sparkline?: { window: number };
         firstPeriod?: string;
       })[];

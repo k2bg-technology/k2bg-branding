@@ -89,7 +89,7 @@ export interface PivotCell {
 
 export interface PivotCells {
   cells: PivotCell[];
-  exceeded: boolean;
+  isCellLimitExceeded: boolean;
 }
 
 export interface ScatterPoint {

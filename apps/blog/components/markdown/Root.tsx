@@ -10,8 +10,8 @@ import { addCopyButton } from 'shiki-transformer-copy-button';
 import { visit } from 'unist-util-visit';
 import { EmbedType } from '../../modules/post/domain';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
-import { AffiliateEmb } from './AffiliateEmb';
-import { MediaEmb } from './MediaEmb';
+import { AffiliateEmbed } from './AffiliateEmbed';
+import { MediaEmbed } from './MediaEmbed';
 import styles from './Root.module.css';
 
 function remarkEmbed() {
@@ -206,11 +206,11 @@ export async function Root(props: Props) {
             case EmbedType.AFFILIATE_TEXT:
             case EmbedType.AFFILIATE_BANNER:
             case EmbedType.AFFILIATE_PRODUCT:
-              return <AffiliateEmb id={id} />;
+              return <AffiliateEmbed id={id} />;
             case EmbedType.MEDIA_AUDIO:
             case EmbedType.MEDIA_VIDEO:
             case EmbedType.MEDIA_IMAGE:
-              return <MediaEmb id={id} />;
+              return <MediaEmbed id={id} />;
             default:
               return null;
           }

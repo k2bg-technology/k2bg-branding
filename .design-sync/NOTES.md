@@ -19,14 +19,14 @@
 
 ## Component surface / overrides
 
-- Barrel `index.ts` public exports: Avatar, Button, Dialog, Drawer, DropdownMenu, Form (namespace), Icon, Media (ImageViewer/MusicStreamingPlayer/VideoFilePlayer/VideoStreamingPlayer), Pagination, Popover, ScrollArea, Skeleton, Toaster + utils.
+- Barrel `index.ts` public exports: Avatar, Button, Dialog, Drawer, DropdownMenu, Form (namespace), Icon, Media (LinkableImage/EmbeddedMusicPlayer/VideoPlayer/EmbeddedVideoPlayer), Pagination, Popover, ScrollArea, Skeleton, Toaster + utils.
 - **Badge** has a story + component but is NOT exported from the barrel → deliberately excluded from the sync (`[TITLE_UNMAPPED]`). Add it to `index.ts` if it should ship.
-- `cfg.overrides`: Pagination / ScrollArea / VideoStreamingPlayer → `cardMode: "column"` (stories wider than a grid cell).
+- `cfg.overrides`: Pagination / ScrollArea / EmbeddedVideoPlayer → `cardMode: "column"` (stories wider than a grid cell).
 - i18n decorator (`.storybook/preview.tsx`) does NOT bundle (esbuild can't load its `.mdx` import) — but NO `components/` component uses `useTranslation`, so no `cfg.provider` is needed; previews render correctly unwrapped.
 
 ## Re-sync risks
 
 - The `.ds-sync/storybook/http-serve.mjs` `.svg` MIME patch is non-persistent (see above) — re-apply on re-sync if the storybook oracle blanks icons.
-- `MusicStreamingPlayer` (Spotify) and other Media players embed remote iframes/images — capture errors / blank-on-both are expected for remote content; grade the component shell, skip unrenderable remote stories with a note.
+- `EmbeddedMusicPlayer` (Spotify) and other Media players embed remote iframes/images — capture errors / blank-on-both are expected for remote content; grade the component shell, skip unrenderable remote stories with a note.
 - `Form` has 21 stories; compare caps at 6 (`[STORY_CAP]`) — tail stories verified-by-upload, not individually graded.
 - Icon set is the curated `ICON_NAMES` (38) only; the full hero set (296×2) is NOT synced.

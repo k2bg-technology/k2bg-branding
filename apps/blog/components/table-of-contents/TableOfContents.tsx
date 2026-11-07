@@ -12,7 +12,9 @@ interface Props {
 
 export function TableOfContents({ headings }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = usePageScrollAreaStore((state) => state.ref);
+  const scrollContainerRef = usePageScrollAreaStore(
+    (state) => state.scrollContainerRef
+  );
 
   const activeId = useActiveHeading(headings);
 
@@ -24,13 +26,13 @@ export function TableOfContents({ headings }: Props) {
 
   const handleHeadingClick = (id: string) => {
     const element = document.getElementById(id);
-    if (!element || !ref?.current) return;
+    if (!element || !scrollContainerRef?.current) return;
 
-    const containerTop = ref.current.getBoundingClientRect().top;
+    const containerTop = scrollContainerRef.current.getBoundingClientRect().top;
     const elementTop = element.getBoundingClientRect().top - containerTop;
-    const scrollTop = ref.current.scrollTop + elementTop;
+    const scrollTop = scrollContainerRef.current.scrollTop + elementTop;
 
-    ref.current.scrollTo({ top: scrollTop, behavior: 'smooth' });
+    scrollContainerRef.current.scrollTo({ top: scrollTop, behavior: 'smooth' });
   };
 
   return (

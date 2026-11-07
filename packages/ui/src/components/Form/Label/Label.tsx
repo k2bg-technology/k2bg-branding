@@ -2,7 +2,7 @@
 
 import { cva } from 'class-variance-authority';
 import { cn } from '../../../utils/cn';
-import { type FormProps, useFormContext } from '../Control/Context';
+import { type FormProps, useFieldContext } from '../Field/FieldProvider';
 
 // `text-neutral-300` (disabled) is a deliberate exception: no base-* token is
 // a visually reasonable match for this disabled-state gray.
@@ -40,7 +40,7 @@ export function Label(props: Props) {
     required: _required,
     helperTextId: _helperTextId,
     ...rest
-  } = useFormContext(formProps);
+  } = useFieldContext(formProps);
 
   return (
     // biome-ignore lint/a11y/noLabelWithoutControl: this label is always used with input

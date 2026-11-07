@@ -1,7 +1,7 @@
 import { Aside } from './Aside';
 import { Content } from './Content';
 import { Divider } from './Divider';
-import { Fab } from './Fab';
+import { FloatingActions } from './FloatingActions';
 import { Root } from './Root';
 import { Row } from './Row';
 
@@ -10,7 +10,7 @@ const PageLayout = Object.assign(Root, {
   Content,
   Aside,
   Divider,
-  Fab,
+  FloatingActions,
 });
 
 export { PageLayout };

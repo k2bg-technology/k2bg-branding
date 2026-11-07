@@ -12,6 +12,6 @@
   "overrides": {
     "Pagination": { "cardMode": "column" },
     "ScrollArea": { "cardMode": "column" },
-    "VideoStreamingPlayer": { "cardMode": "column" }
+    "EmbeddedVideoPlayer": { "cardMode": "column" }
   }
 }

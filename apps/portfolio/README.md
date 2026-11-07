@@ -52,12 +52,16 @@ apps/portfolio/
 |       `-- loading.tsx
 |-- components/
 |   |-- contents/
+|   |-- external-link/
+|   |   `-- ExternalLink.tsx
 |   |-- footer/
-|   |-- ExternalLinkButton.tsx
-|   |-- LanguageSelector.tsx
-|   |-- ScrollHelper.tsx
-|   `-- Slider.tsx
+|   |-- horizontal-scroll/
+|   |   `-- HorizontalScroll.tsx
+|   |-- horizontal-scroll-hint/
+|   |   `-- HorizontalScrollHint.tsx
+|   `-- language-selector/
 |-- hooks/
+|   `-- useWheelToHorizontalScroll.ts
 |-- i18n/
 |   |-- dictionaries.ts
 |   |-- settings.ts

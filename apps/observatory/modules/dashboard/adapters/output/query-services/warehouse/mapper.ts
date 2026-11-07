@@ -135,7 +135,7 @@ export function toSectionData(
           period !== plan.selectedPeriod &&
           ('firstPeriod' in measure && measure.firstPeriod !== undefined
             ? period < measure.firstPeriod
-            : !('compares' in measure && measure.compares))
+            : !('hasComparison' in measure && measure.hasComparison))
         ) {
           return null;
         }
@@ -412,14 +412,14 @@ function matrixCategories(
   const distinct = Array.from(
     new Map(ranked.map(({ key, rank }) => [key, { key, rank }])).values()
   ).sort((first, second) => first.rank - second.rank);
-  const valid =
+  const isRankSequenceValid =
     distinct.length === new Set(ranked.map(({ rank }) => rank)).size &&
     distinct.every(
       ({ key, rank }, index) =>
         rank === index + 1 &&
         ranked.every((item) => item.key !== key || item.rank === rank)
     );
-  if (!valid) {
+  if (!isRankSequenceValid) {
     throw new MappingError(`${rankAlias} must number the distinct keys from 1`);
   }
   return distinct.map(({ key }) => key);
@@ -477,7 +477,8 @@ export function toPivotCells(
   plan: PivotQueryPlan
 ): PivotCells | null {
   if (rows.length === 0) return null;
-  if (rows.length > plan.cellLimit) return { cells: [], exceeded: true };
+  if (rows.length > plan.cellLimit)
+    return { cells: [], isCellLimitExceeded: true };
   const cells = rows.map((row) => {
     const rowKey = row[ROW_KEY_ALIAS];
     if (rowKey !== null && typeof rowKey !== 'string') {
@@ -535,7 +536,7 @@ export function toPivotCells(
       sortKeys.set(cell.row, sortKey);
     });
   }
-  return { cells, exceeded: false };
+  return { cells, isCellLimitExceeded: false };
 }
 
 function readCoordinate(row: WarehouseRow, key: string): number {

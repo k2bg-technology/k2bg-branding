@@ -118,12 +118,12 @@ export function DataTable({
   ...rest
 }: Props) {
   // A right-aligned first column holds numbers, so only a left-aligned one labels its row.
-  const firstColumnIsRowLabel = columns[0]?.align !== 'end';
-  const isStickyLastCell = (index: number) =>
+  const isFirstColumnRowLabel = columns[0]?.align !== 'end';
+  const isStickyLastColumn = (index: number) =>
     stickyLastColumn && index > 0 && index === columns.length - 1;
   const stickySide = (index: number) => {
     if (stickyFirstColumn && index === 0) return 'start';
-    if (isStickyLastCell(index)) return 'end';
+    if (isStickyLastColumn(index)) return 'end';
     return undefined;
   };
   const isHeightCapped = maxHeight !== undefined;
@@ -137,8 +137,8 @@ export function DataTable({
         style={isHeightCapped ? { maxHeight } : undefined}
         scrollbar={
           <>
-            <ScrollArea.ScrollBar orientation="horizontal" />
-            {isHeightCapped && <ScrollArea.ScrollBar />}
+            <ScrollArea.Scrollbar orientation="horizontal" />
+            {isHeightCapped && <ScrollArea.Scrollbar />}
           </>
         }
       >
@@ -158,8 +158,8 @@ export function DataTable({
           <Table.Header className={cn(isHeightCapped && stickyHeaderClassName)}>
             <Table.Row className="bg-base-light/40">
               {columns.map((column, index) => {
-                const isStickyCell = stickyFirstColumn && index === 0;
-                const isStickyLast = isStickyLastCell(index);
+                const isStickyFirstCell = stickyFirstColumn && index === 0;
+                const isStickyLastCell = isStickyLastColumn(index);
 
                 return (
                   <Table.Head
@@ -170,9 +170,9 @@ export function DataTable({
                     className={cn(
                       alignClassNames[column.align ?? 'start'],
                       column.emphasis && emphasisClassName,
-                      isStickyCell &&
+                      isStickyFirstCell &&
                         cn(stickyCellClassName, stickyHeadClassName),
-                      isStickyLast &&
+                      isStickyLastCell &&
                         cn(stickyLastCellClassName, stickyHeadClassName)
                     )}
                   >
@@ -186,17 +186,17 @@ export function DataTable({
             {rows.map((row) => (
               <Table.Row key={row.id}>
                 {columns.map((column, index) => {
-                  const isStickyCell = stickyFirstColumn && index === 0;
-                  const isStickyLast = isStickyLastCell(index);
+                  const isStickyFirstCell = stickyFirstColumn && index === 0;
+                  const isStickyLastCell = isStickyLastColumn(index);
                   const cellClassName = cn(
                     alignClassNames[column.align ?? 'start'],
                     column.emphasis && emphasisClassName,
                     column.wrap && wrapClassName,
-                    isStickyCell && stickyCellClassName,
-                    isStickyLast && stickyLastCellClassName
+                    isStickyFirstCell && stickyCellClassName,
+                    isStickyLastCell && stickyLastCellClassName
                   );
 
-                  return isStickyCell && firstColumnIsRowLabel ? (
+                  return isStickyFirstCell && isFirstColumnRowLabel ? (
                     <Table.Head
                       key={column.id}
                       scope="row"
@@ -236,17 +236,17 @@ export function DataTable({
             >
               <Table.Row>
                 {columns.map((column, index) => {
-                  const isStickyCell = stickyFirstColumn && index === 0;
-                  const isStickyLast = isStickyLastCell(index);
+                  const isStickyFirstCell = stickyFirstColumn && index === 0;
+                  const isStickyLastCell = isStickyLastColumn(index);
                   const cellClassName = cn(
                     alignClassNames[column.align ?? 'start'],
                     column.emphasis && emphasisClassName,
                     column.wrap && wrapClassName,
-                    isStickyCell && stickyCellClassName,
-                    isStickyLast && stickyLastCellClassName
+                    isStickyFirstCell && stickyCellClassName,
+                    isStickyLastCell && stickyLastCellClassName
                   );
 
-                  return index === 0 && firstColumnIsRowLabel ? (
+                  return index === 0 && isFirstColumnRowLabel ? (
                     <Table.Head
                       key={column.id}
                       scope="row"

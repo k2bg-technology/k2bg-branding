@@ -560,18 +560,17 @@ function matrixHeatmapViolations(definition: DashboardDefinition) {
   return definition.sections.flatMap((section, index) => {
     if (section.kind !== SectionKind.MATRIX_HEATMAP) return [];
     const { rows, columns } = section;
-    const sameAxis =
+    const hasSameAxis =
       rows.axis === columns.axis &&
       (rows.axis !== 'category' ||
         columns.axis !== 'category' ||
         rows.column === columns.column);
     const hasHourAxis = rows.axis === 'hour' || columns.axis === 'hour';
     const hasDateAxis = rows.axis === 'date' || columns.axis === 'date';
-    const lacksHourBinding =
-      typeof section.source.time === 'string' ||
-      !('date' in section.source.time);
+    const hasHourBinding =
+      typeof section.source.time !== 'string' && 'date' in section.source.time;
     return [
-      ...(sameAxis
+      ...(hasSameAxis
         ? [
             {
               path: ['sections', index, 'columns'],
@@ -579,7 +578,7 @@ function matrixHeatmapViolations(definition: DashboardDefinition) {
             },
           ]
         : []),
-      ...(hasHourAxis && lacksHourBinding
+      ...(hasHourAxis && !hasHourBinding
         ? [
             {
               path: ['sections', index, 'source', 'time'],
@@ -762,7 +761,7 @@ function pivotTableViolations(
   return definition.sections.flatMap((section, index) => {
     if (section.kind !== SectionKind.PIVOT_TABLE) return [];
     const reductionPath = ['sections', index, 'value', 'reduction'];
-    const addsUp =
+    const sumReductionViolations =
       section.value.reduction === Reduction.SUM
         ? []
         : [
@@ -796,7 +795,7 @@ function pivotTableViolations(
           ];
     if (section.columns.axis === 'category') {
       return [
-        ...addsUp,
+        ...sumReductionViolations,
         ...(section.columns.column === section.rows.column
           ? [
               {
@@ -809,7 +808,7 @@ function pivotTableViolations(
       ];
     }
     return [
-      ...addsUp,
+      ...sumReductionViolations,
       ...trendAxisGrainViolations(
         definition.grain,
         section.columns,
@@ -915,7 +914,7 @@ function derivedSeriesViolations(definition: DashboardDefinition) {
   return definition.sections.flatMap((section, sectionIndex) => {
     if (section.kind !== SectionKind.TIME_SERIES) return [];
     const bindings = lineBindings(section, sectionIndex);
-    const hasRunning = bindings.some(
+    const hasRunningBinding = bindings.some(
       ({ binding }) => binding.running !== undefined
     );
     return bindings.flatMap(({ binding, path }) => [
@@ -978,7 +977,7 @@ function derivedSeriesViolations(definition: DashboardDefinition) {
         : []),
       ...(section.stacked &&
       section.pivot === undefined &&
-      hasRunning &&
+      hasRunningBinding &&
       binding.running === undefined
         ? [
             {

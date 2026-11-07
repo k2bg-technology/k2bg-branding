@@ -107,7 +107,7 @@ describe('pivot table sections', () => {
       fixtureSection('category-pivot'),
       '2026-08',
       async () => ({
-        exceeded: false,
+        isCellLimitExceeded: false,
         cells: [
           { row: 'food', column: '2026-08', value: 1200 },
           { row: 'food', column: '2026-07', value: 300 },
@@ -182,7 +182,7 @@ describe('pivot table sections', () => {
       totals: { column: 'Total', row: 'Total' },
     };
     await mountPivot(plainDashboard(section), section, '2026-03', async () => ({
-      exceeded: false,
+      isCellLimitExceeded: false,
       cells: [
         { row: 'rent', column: '2026-01', value: 20 },
         { row: 'b', column: '2026-01', value: 10 },
@@ -215,7 +215,7 @@ describe('pivot table sections', () => {
       fixtureSection('category-by-weekday'),
       '2026-08',
       async () => ({
-        exceeded: false,
+        isCellLimitExceeded: false,
         cells: [
           { row: 'reporting', column: 'Mon', value: 100 },
           { row: 'reporting', column: 'Tue', value: 25 },
@@ -249,7 +249,7 @@ describe('pivot table sections', () => {
       format: { type: 'number' },
     };
     await mountPivot(plainDashboard(section), section, '2026-08', async () => ({
-      exceeded: false,
+      isCellLimitExceeded: false,
       cells: [
         { row: 'Tue', column: 'food', value: 20, sortKey: 2 },
         { row: 'Mon', column: 'food', value: 10, sortKey: 1 },
@@ -273,7 +273,7 @@ describe('pivot table sections', () => {
       },
       columns: { axis: 'time' as const, window: 120 },
       data: {
-        exceeded: false,
+        isCellLimitExceeded: false,
         cells: Array.from({ length: 17 }, (_, index) => ({
           row: `row-${index}`,
           column: '2026-08',
@@ -285,7 +285,7 @@ describe('pivot table sections', () => {
       name: 'a capped fetch',
       rows: fixtureSection('category-pivot').rows,
       columns: fixtureSection('category-pivot').columns,
-      data: { exceeded: true, cells: [] },
+      data: { isCellLimitExceeded: true, cells: [] },
     },
   ])('shows the budget message for $name', async ({ rows, columns, data }) => {
     const section = { ...fixtureSection('category-pivot'), rows, columns };
@@ -320,7 +320,7 @@ describe('pivot table sections', () => {
         value: 1,
       }));
       await mountPivot(fixtureDashboard, section, '2026-08', async () => ({
-        exceeded: false,
+        isCellLimitExceeded: false,
         cells,
       }));
 
@@ -352,7 +352,7 @@ describe('pivot table sections', () => {
     vi.mocked(dashboardLogger.error).mockClear();
     const section = fixtureSection('category-by-weekday');
     await mountPivot(fixtureDashboard, section, '2026-08', async () => ({
-      exceeded: false,
+      isCellLimitExceeded: false,
       cells: [{ row: 'reporting', column: section.rows.label, value: 1 }],
     }));
 
@@ -398,7 +398,7 @@ describe('pivot table sections', () => {
     vi.mocked(dashboardLogger.error).mockClear();
     const section = { ...fixtureSection('category-pivot'), totals };
     await mountPivot(fixtureDashboard, section, '2026-08', async () => ({
-      exceeded: false,
+      isCellLimitExceeded: false,
       cells: rows.map((row, index) => ({
         row,
         column: '2026-08',
