@@ -1,2 +1,19 @@
 @import 'tailwind-config/design-token/variables.css';
 @import 'ui/src/globals.css';
+
+/*
+ * The browser's `outline: auto` ring, and `-webkit-focus-ring-color` in some Chromium
+ * builds, take the OS accent colour. A solid outline in Chrome's default focus-ring blue
+ * keeps that colour on every OS setting. Chrome also rings a focused SVG — a chart
+ * surface — on plain `:focus`, so a mouse click would still draw the accent ring without
+ * the first rule.
+ */
+@layer base {
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid #005fcc;
+    outline-offset: 2px;
+  }
+}

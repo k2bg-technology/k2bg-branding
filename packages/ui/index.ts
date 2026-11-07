@@ -1,6 +1,7 @@
 export { Avatar } from './src/components/Avatar';
 export { Badge } from './src/components/Badge';
 export { Button, buttonVariants } from './src/components/Button';
+export { Card } from './src/components/Card';
 export {
   BarChart,
   type BarChartProps,
@@ -59,10 +60,10 @@ export { DropdownMenu } from './src/components/DropdownMenu';
 export { Form } from './src/components/Form';
 export { Icon, type IconProps } from './src/components/Icon';
 export {
-  ImageViewer,
-  MusicStreamingPlayer,
-  VideoFilePlayer,
-  VideoStreamingPlayer,
+  EmbeddedMusicPlayer,
+  EmbeddedVideoPlayer,
+  LinkableImage,
+  VideoPlayer,
 } from './src/components/Media';
 export { Pagination } from './src/components/Pagination';
 export {
@@ -71,11 +72,8 @@ export {
 } from './src/components/PeriodSelector';
 export { Popover } from './src/components/Popover';
 export { ScrollArea } from './src/components/ScrollArea';
-export {
-  Skeleton,
-  /** @deprecated Use `Skeleton` instead. */
-  Skeleton as Skelton,
-} from './src/components/Skeleton';
+export { Select } from './src/components/Select';
+export { Skeleton } from './src/components/Skeleton';
 export {
   StatTile,
   type StatTileDelta,

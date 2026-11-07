@@ -2,6 +2,7 @@ import { act, cleanup, renderHook } from '@testing-library/react';
 import { motionValue } from 'motion';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { TocHeading } from './extractHeadings';
 import { useActiveHeading } from './useActiveHeading';
 
 const scrollY = motionValue(0);
@@ -28,7 +29,10 @@ describe('useActiveHeading', () => {
   });
 
   it('returns empty string initially', () => {
-    const { result } = renderHook(() => useActiveHeading(['heading-1']));
+    const headings: TocHeading[] = [
+      { id: 'heading-1', text: 'Heading 1', level: 2 },
+    ];
+    const { result } = renderHook(() => useActiveHeading(headings));
 
     expect(result.current).toBe('');
   });
@@ -49,8 +53,11 @@ describe('useActiveHeading', () => {
     vi.spyOn(conclusion, 'getBoundingClientRect').mockImplementation(
       () => new DOMRect(0, 500 - scrollY.get(), 600, 40)
     );
-    const headingIds = [introduction.id, conclusion.id];
-    const { result } = renderHook(() => useActiveHeading(headingIds));
+    const headings: TocHeading[] = [
+      { id: introduction.id, text: 'Introduction', level: 2 },
+      { id: conclusion.id, text: 'Conclusion', level: 2 },
+    ];
+    const { result } = renderHook(() => useActiveHeading(headings));
 
     act(() => scrollY.set(50));
 
@@ -61,7 +68,7 @@ describe('useActiveHeading', () => {
     expect(result.current).toBe(conclusion.id);
   });
 
-  it('returns empty string when headingIds is empty', () => {
+  it('returns empty string when headings is empty', () => {
     const { result } = renderHook(() => useActiveHeading([]));
 
     expect(result.current).toBe('');

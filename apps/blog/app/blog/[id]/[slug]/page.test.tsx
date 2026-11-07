@@ -30,7 +30,10 @@ describe('post page metadata', () => {
     const params = Promise.resolve({ id: post.id, slug: post.slug });
     const expectedTitle = post.title;
 
-    const result = await generateMetadata({ params });
+    const result = await generateMetadata({
+      params,
+      searchParams: Promise.resolve({}),
+    });
 
     expect(result.title).toBe(expectedTitle);
   });
@@ -44,7 +47,10 @@ describe('post page metadata', () => {
       siteName: BLOG_SITE_NAME,
     };
 
-    const result = await generateMetadata({ params });
+    const result = await generateMetadata({
+      params,
+      searchParams: Promise.resolve({}),
+    });
 
     expect(result.openGraph).toMatchObject(expectedOpenGraph);
   });
@@ -55,7 +61,10 @@ describe('post page metadata', () => {
     const params = Promise.resolve({ id: post.id, slug: post.slug });
     const expectedCanonical = `/blog/${post.slug}`;
 
-    const result = await generateMetadata({ params });
+    const result = await generateMetadata({
+      params,
+      searchParams: Promise.resolve({}),
+    });
 
     expect(result.alternates?.canonical).toBe(expectedCanonical);
   });
@@ -77,7 +86,10 @@ describe('post page metadata', () => {
     const params = Promise.resolve({ id: post.id, slug: post.slug });
     const expectedImages = [{ url: expectedImageUrl }];
 
-    const result = await generateMetadata({ params });
+    const result = await generateMetadata({
+      params,
+      searchParams: Promise.resolve({}),
+    });
 
     expect(result.openGraph).toMatchObject({ images: expectedImages });
     expect(result.twitter).toMatchObject({ images: [expectedImageUrl] });

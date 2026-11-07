@@ -1,5 +1,7 @@
 import { Avatar as AvatarPrimitive } from '@base-ui/react/avatar';
 
-export function Image(props: AvatarPrimitive.Image.Props) {
+interface Props extends AvatarPrimitive.Image.Props {}
+
+export function Image(props: Props) {
   return <AvatarPrimitive.Image {...props} />;
 }

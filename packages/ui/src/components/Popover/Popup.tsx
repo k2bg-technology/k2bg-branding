@@ -20,7 +20,9 @@ const variants = cva(
   }
 );
 
-type Props = PopoverPrimitive.Popup.Props & VariantProps<typeof variants>;
+interface Props
+  extends PopoverPrimitive.Popup.Props,
+    VariantProps<typeof variants> {}
 
 export function Popup({ children, className, color, ...rest }: Props) {
   return (

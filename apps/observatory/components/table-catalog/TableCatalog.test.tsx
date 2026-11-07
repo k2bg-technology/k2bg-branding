@@ -10,6 +10,10 @@ import { TableCatalog } from './TableCatalog';
 
 const { errorMock } = vi.hoisted(() => ({ errorMock: vi.fn() }));
 
+vi.mock('next/server', () => ({
+  connection: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('../../modules/catalog/adapters/shared/logger', () => ({
   catalogLogger: { error: errorMock },
 }));

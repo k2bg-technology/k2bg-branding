@@ -1,6 +1,6 @@
 import { useRender } from '@base-ui/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
+import { cn } from '../../utils/cn';
 
 const badgeVariants = cva(
   'inline-flex items-center justify-center rounded-md border px-2 py-0.5 text-xs w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-main-default focus-visible:ring-main-default/30 focus-visible:ring-[3px] aria-invalid:border-error aria-invalid:ring-error/20 transition-[color,box-shadow] overflow-hidden',
@@ -121,8 +121,9 @@ const badgeVariants = cva(
   }
 );
 
-type BadgeProps = Omit<useRender.ComponentProps<'span'>, 'color'> &
-  VariantProps<typeof badgeVariants>;
+interface Props
+  extends Omit<useRender.ComponentProps<'span'>, 'color'>,
+    VariantProps<typeof badgeVariants> {}
 
 export function Badge({
   className,
@@ -131,12 +132,12 @@ export function Badge({
   render,
   children,
   ...rest
-}: BadgeProps) {
+}: Props) {
   return useRender({
     defaultTagName: 'span',
     render,
     props: {
-      className: twMerge(badgeVariants({ variant, color }), className),
+      className: cn(badgeVariants({ variant, color }), className),
       children,
       ...rest,
     },

@@ -2,11 +2,11 @@ import { extendTailwindMerge } from 'tailwind-merge';
 
 export const twMerge = extendTailwindMerge({
   /**
-   * WARNING: wrong merge of classes with text-prefix
+   * Register brand typography as font sizes so text colors remain independent.
    *
    * @see https://github.com/dcastil/tailwind-merge/issues/368
    */
-  override: {
+  extend: {
     classGroups: {
       'font-size': [
         'text-advert',

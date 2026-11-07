@@ -55,7 +55,7 @@ const fullWidthRanges = [
 /** Advance of a half-width character in the brand font stack, as an upper bound. */
 const halfWidthAdvance = 0.62;
 
-function isFullWidth(character: string) {
+function isWideGlyph(character: string) {
   // Outside the BMP `Array.from` yields a two-unit string, and such a character
   // in a value is always a wide ideograph or an emoji.
   if (character.length > 1) {
@@ -71,13 +71,13 @@ function isFullWidth(character: string) {
 function textAdvance(text: string) {
   const advance = Array.from(text).reduce(
     (total, character) =>
-      total + (isFullWidth(character) ? 1 : halfWidthAdvance),
+      total + (isWideGlyph(character) ? 1 : halfWidthAdvance),
     0
   );
   return Math.round(advance * 100) / 100;
 }
 
-export interface DonutChartProps {
+interface Props {
   label: string;
   slices: DonutChartSlice[];
   centerValue?: string;
@@ -99,7 +99,7 @@ export function DonutChart({
   showLegend,
   animated = false,
   className,
-}: DonutChartProps) {
+}: Props) {
   const sliceColorById = new Map(
     slices.map((slice, index) => [slice.id, resolveSeriesColor(slice, index)])
   );
@@ -208,3 +208,5 @@ export function DonutChart({
     </div>
   );
 }
+
+export type { Props as DonutChartProps };

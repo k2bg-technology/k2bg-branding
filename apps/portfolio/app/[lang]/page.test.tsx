@@ -18,7 +18,7 @@ import Page from './page';
 // build. Stub it so the page can load the real translation files.
 vi.mock('server-only', () => ({}));
 
-type RouteParams = { lang: string };
+type RouteParams = Awaited<PageProps<'/[lang]'>['params']>;
 
 const spinnerClassName = 'animate-spin';
 const decoder = new TextDecoder();
@@ -46,7 +46,7 @@ async function renderPageStream(
   const stream = await renderToReadableStream(
     <html lang={language}>
       <body>
-        <Page params={params} />
+        <Page params={params} searchParams={Promise.resolve({})} />
       </body>
     </html>
   );

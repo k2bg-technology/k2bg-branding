@@ -1,6 +1,6 @@
 'use client';
 
-import { type CSSProperties, memo } from 'react';
+import type { CSSProperties } from 'react';
 
 import type { ICON_NAMES } from './const';
 import {
@@ -20,7 +20,7 @@ function resolveIconSrc(value: IconUrl | undefined) {
   return value?.default?.src;
 }
 
-export interface IconProps extends React.HTMLAttributes<HTMLElement> {
+interface Props extends React.HTMLAttributes<HTMLElement> {
   name: (typeof ICON_NAMES)[number];
   appearance?: 'outline' | 'solid';
   color?: CSSProperties['backgroundColor'];
@@ -29,7 +29,7 @@ export interface IconProps extends React.HTMLAttributes<HTMLElement> {
   originalColor?: boolean;
 }
 
-function IconInner(props: IconProps) {
+export function Icon(props: Props) {
   const {
     name,
     appearance = 'outline',
@@ -65,4 +65,4 @@ function IconInner(props: IconProps) {
   );
 }
 
-export const Icon = memo(IconInner);
+export type { Props as IconProps };

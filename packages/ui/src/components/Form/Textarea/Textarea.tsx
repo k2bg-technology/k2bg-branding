@@ -1,13 +1,13 @@
 'use client';
 
 import { cva } from 'class-variance-authority';
-import { twMerge } from '../../../utils/extendTailwindMerge';
+import { cn } from '../../../utils/cn';
 import {
   type FormProps,
   resolveAriaDescribedBy,
   resolveAriaInvalid,
-  useFormContext,
-} from '../Control/Context';
+  useFieldContext,
+} from '../Field/FieldProvider';
 
 // `neutral-300` (disabled) is a deliberate exception: no base-* token is a
 // visually reasonable match for this disabled-state gray.
@@ -54,7 +54,7 @@ export function Textarea(props: Props) {
     disabled,
     helperTextId,
     ...rest
-  } = useFormContext(formProps);
+  } = useFieldContext(formProps);
 
   return (
     <textarea
@@ -65,7 +65,7 @@ export function Textarea(props: Props) {
         explicitAriaDescribedBy,
         error ? helperTextId : undefined
       )}
-      className={twMerge(
+      className={cn(
         inputVariants({
           color,
           error,

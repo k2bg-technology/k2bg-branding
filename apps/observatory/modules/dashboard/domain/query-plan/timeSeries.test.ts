@@ -326,13 +326,13 @@ describe('derived time-series plans', () => {
           column: 'first_value',
           reduction: 'latest',
           transform: undefined,
-          compares: false,
+          hasComparison: false,
         },
         {
           column: 'second_value',
           reduction: 'latest',
           transform: undefined,
-          compares: false,
+          hasComparison: false,
         },
       ],
     });

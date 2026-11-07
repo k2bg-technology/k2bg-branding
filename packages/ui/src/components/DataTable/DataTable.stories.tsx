@@ -126,6 +126,28 @@ const pivotFooter: DataTableRow['cells'] = {
   total: formatYen(grandTotal),
 };
 
+/** Thirty days of readings: taller than any height cap a dashboard panel would set. */
+const dailyColumns: DataTableColumn[] = [
+  { id: 'date', header: 'Date' },
+  { id: 'steps', header: 'Steps', align: 'end' },
+  { id: 'distance', header: 'Distance', align: 'end' },
+];
+
+const dailyRows: DataTableRow[] = Array.from({ length: 30 }, (_, dayIndex) => ({
+  id: `day-${dayIndex + 1}`,
+  cells: {
+    date: `9/${dayIndex + 1}`,
+    steps: (6000 + dayIndex * 150).toLocaleString('en-US'),
+    distance: `${(4.2 + dayIndex * 0.1).toFixed(1)} km`,
+  },
+}));
+
+const dailyFooter: DataTableRow['cells'] = {
+  date: 'Total',
+  steps: (6000 * 30 + 150 * 435).toLocaleString('en-US'),
+  distance: `${(4.2 * 30 + 0.1 * 435).toFixed(1)} km`,
+};
+
 /** A fixed-width host, so a wide table overflows at every viewport the tests run in. */
 const narrowHost: Decorator = (Story) => (
   <div className="w-[640px]">
@@ -152,6 +174,8 @@ const meta = {
     visuallyHiddenCaption: { control: 'boolean' },
     emptyMessage: { control: 'text' },
     stickyFirstColumn: { control: 'boolean' },
+    stickyLastColumn: { control: 'boolean' },
+    maxHeight: { control: 'text' },
     footer: { control: 'object' },
   },
   parameters: {
@@ -252,15 +276,23 @@ export const PivotLayout: Story = {
     rows: pivotRows,
     footer: pivotFooter,
     stickyFirstColumn: true,
+    stickyLastColumn: true,
   },
   decorators: [narrowHost],
   play: async ({ args, canvas }) => {
     const scrollRegion = canvas.getByRole('region', { name: args.caption });
     const scrollPort = scrollPortOf(scrollRegion);
     const [firstRowHeader] = canvas.getAllByRole('rowheader');
+    const totalHeader = canvas.getByRole('columnheader', { name: 'Total' });
 
     await waitFor(() => {
       expect(scrollPort.scrollWidth).toBeGreaterThan(scrollPort.clientWidth);
+      expect(
+        Math.abs(
+          totalHeader.getBoundingClientRect().right -
+            scrollPort.getBoundingClientRect().right
+        )
+      ).toBeLessThan(1);
     });
 
     const restingLeft = firstRowHeader.getBoundingClientRect().left;
@@ -272,8 +304,80 @@ export const PivotLayout: Story = {
         Math.abs(firstRowHeader.getBoundingClientRect().left - restingLeft)
       ).toBeLessThan(1);
       expect(
+        Math.abs(
+          totalHeader.getBoundingClientRect().right -
+            scrollPort.getBoundingClientRect().right
+        )
+      ).toBeLessThan(1);
+      expect(
         scrollPort.getBoundingClientRect().left -
           canvas.getByText(args.caption).getBoundingClientRect().left
+      ).toBeLessThan(1);
+    });
+  },
+};
+
+export const WrappedText: Story = {
+  args: {
+    caption: 'Transactions, September 2026',
+    columns: [
+      { id: 'date', header: 'Date' },
+      { id: 'description', header: 'Description', wrap: true },
+      { id: 'amount', header: 'Amount', align: 'end' },
+    ],
+    rows: [
+      {
+        id: '1',
+        cells: {
+          date: '9/30',
+          description:
+            'Monthly accumulation: global equity index fund, all-country, purchased through the tax-advantaged account',
+          amount: '¥33,333',
+        },
+      },
+      {
+        id: '2',
+        cells: { date: '9/29', description: 'Groceries', amount: '¥4,820' },
+      },
+    ],
+  },
+  decorators: [narrowHost],
+};
+
+export const HeightCapped: Story = {
+  args: {
+    caption: 'Daily steps, September 2026',
+    columns: dailyColumns,
+    rows: dailyRows,
+    footer: dailyFooter,
+    stickyFirstColumn: true,
+    maxHeight: '20rem',
+  },
+  play: async ({ args, canvas }) => {
+    const scrollRegion = canvas.getByRole('region', { name: args.caption });
+    const scrollPort = scrollPortOf(scrollRegion);
+    const dateHeader = canvas.getByRole('columnheader', { name: 'Date' });
+    const totalRowHeader = canvas.getByRole('rowheader', { name: 'Total' });
+
+    await waitFor(() => {
+      expect(scrollPort.scrollHeight).toBeGreaterThan(scrollPort.clientHeight);
+      expect(
+        Math.abs(
+          totalRowHeader.getBoundingClientRect().bottom -
+            scrollPort.getBoundingClientRect().bottom
+        )
+      ).toBeLessThan(1);
+    });
+
+    scrollPort.scrollTop = scrollPort.scrollHeight;
+
+    await waitFor(() => {
+      expect(scrollPort.scrollTop).toBeGreaterThan(0);
+      expect(
+        Math.abs(
+          dateHeader.getBoundingClientRect().top -
+            scrollPort.getBoundingClientRect().top
+        )
       ).toBeLessThan(1);
     });
   },

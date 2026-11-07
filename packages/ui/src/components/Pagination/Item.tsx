@@ -1,23 +1,24 @@
-import { Button } from '../Button';
+import type { Button } from '../Button';
+import { Control } from './Control';
 
-export interface PaginationItemProps
-  extends React.ComponentPropsWithoutRef<typeof Button> {
+interface Props extends React.ComponentPropsWithoutRef<typeof Button> {
   selected?: boolean;
 }
 
-export function Item(props: PaginationItemProps) {
+export function Item(props: Props) {
   const { selected, render, children, ...rest } = props;
 
   return (
-    <Button
+    <Control
       {...rest}
       render={render}
-      type={render ? undefined : 'button'}
       aria-current={selected ? 'page' : undefined}
       color={selected ? 'main' : 'dark'}
       variant={selected ? 'default' : 'outline'}
     >
       {children}
-    </Button>
+    </Control>
   );
 }
+
+export type { Props as PaginationItemProps };

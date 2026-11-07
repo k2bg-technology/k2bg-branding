@@ -50,7 +50,7 @@ exact names, values, and props against these files, and design against what they
   `design-tokens.tokens.json` (kept in sync with the Figma variables), plus `color.json` and
   `typography.json`. The CSS custom properties consumers actually use (`color.css`, `spacing.css`,
   `typography.css`, `variables.css`) are generated from these via Style Dictionary
-  (`styleDictionaryConfig.js`). These files are the authority on which tokens exist and their values.
+  (`styleDictionaryConfig.mjs`). These files are the authority on which tokens exist and their values.
 - **Components** — `packages/ui/src/components/`: the `ui` package, imported as
   `import { Button } from 'ui'`. Each Figma component maps to an implementation here (`Button`,
   `Form`, `Avatar`, `Icon`, …); read the component for its real prop / variant API before mirroring

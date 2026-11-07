@@ -51,7 +51,7 @@ describe('FetchCompositionData', () => {
               {
                 column: 'running_balance',
                 reduction: 'latest',
-                compares: false,
+                hasComparison: false,
               },
             ]) &&
           options.name ===

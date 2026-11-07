@@ -1,59 +1,41 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { readThroughDataCache, WAREHOUSE_CACHE_TAG } from './dataCache';
+import { readThroughDataCache } from './dataCache';
 
-const { unstableCacheMock } = vi.hoisted(() => ({
-  unstableCacheMock: vi.fn(
-    (load: () => Promise<unknown>, _keyParts: string[], _options: unknown) =>
-      load
-  ),
+const { cacheLifeMock, cacheTagMock } = vi.hoisted(() => ({
+  cacheLifeMock: vi.fn(),
+  cacheTagMock: vi.fn(),
 }));
 
+vi.mock('server-only', () => ({}));
+vi.mock('@google-cloud/bigquery', () => ({
+  BigQuery: class {
+    async query() {
+      return [[]];
+    }
+  },
+}));
 vi.mock('next/cache', () => ({
-  unstable_cache: unstableCacheMock,
+  cacheLife: cacheLifeMock,
+  cacheTag: cacheTagMock,
+}));
+vi.mock('logger', () => ({
+  logger: { child: () => ({ info: vi.fn() }) },
 }));
 
 describe('readThroughDataCache', () => {
-  beforeEach(() => {
-    unstableCacheMock.mockReset();
-    unstableCacheMock.mockImplementation((load) => load);
-  });
+  beforeEach(() => vi.clearAllMocks());
 
-  it('registers the loader under the key parts with the revalidate window and warehouse tag', async () => {
-    const keyParts = ['warehouse', 'sample'];
-    const revalidateSeconds = 3600;
-    const load = vi.fn().mockResolvedValue(['row']);
+  it.each([3600, 86_400])(
+    'sets the declared %i-second refresh window and warehouse invalidation tag',
+    async (revalidate) => {
+      await readThroughDataCache(
+        { projectId: 'test-project', location: 'asia-northeast1' },
+        { name: 'sample-query', sql: 'SELECT 1 AS value', revalidate }
+      );
 
-    await readThroughDataCache(keyParts, revalidateSeconds, load);
-
-    expect(unstableCacheMock).toHaveBeenCalledWith(load, keyParts, {
-      revalidate: revalidateSeconds,
-      tags: [WAREHOUSE_CACHE_TAG],
-    });
-  });
-
-  it('reuses results for the same key and loads distinct keys separately', async () => {
-    const cachedResults = new Map<string, Promise<unknown>>();
-    unstableCacheMock.mockImplementation((load, keyParts) => () => {
-      const key = JSON.stringify(keyParts);
-      const cachedResult = cachedResults.get(key);
-      if (cachedResult) {
-        return cachedResult;
-      }
-      const result = load();
-      cachedResults.set(key, result);
-      return result;
-    });
-    const firstLoad = vi.fn().mockResolvedValue([{ id: 1 }]);
-    const repeatLoad = vi.fn().mockResolvedValue([{ id: 99 }]);
-    const otherLoad = vi.fn().mockResolvedValue([{ id: 2 }]);
-
-    const firstRead = await readThroughDataCache(['first'], 60, firstLoad);
-    const repeatRead = await readThroughDataCache(['first'], 60, repeatLoad);
-    const otherRead = await readThroughDataCache(['other'], 60, otherLoad);
-
-    expect(firstRead).toEqual([{ id: 1 }]);
-    expect(repeatRead).toEqual([{ id: 1 }]);
-    expect(otherRead).toEqual([{ id: 2 }]);
-  });
+      expect(cacheLifeMock).toHaveBeenCalledWith({ revalidate });
+      expect(cacheTagMock).toHaveBeenCalledWith('warehouse');
+    }
+  );
 });

@@ -332,8 +332,8 @@
     },
     "pagination": {
       "description": "Provides pagination controls for navigating multi-page content with previous/next buttons and page numbers.",
-      "overview": "Pagination provides an interface for navigating through large amounts of content split across multiple pages. It consists of a previous button, a list of page numbers, and a next button. When there are many pages, the usePagination hook automatically optimizes the displayed page numbers using ellipsis (...). Each page number is rendered as a Pagination.Item component, with the current page visually highlighted. The renderItem prop enables flexible customization of each page item.",
-      "usage": "Use Pagination for navigating content divided into multiple pages such as blog post lists, search results, or data tables. For basic usage, specify the count prop for total pages and currentIndex prop for the current page number. Set click handlers via prevProps and nextProps, and define how each page number renders with the renderItem prop. The Pagination.Item component highlights the current page with the selected prop. When pages change, smoothly scroll content to the top of the page.",
+      "overview": "Pagination provides an interface for navigating through large amounts of content split across multiple pages. It consists of a previous button, a list of page numbers, and a next button. When there are many pages, the getPaginationItems function automatically optimizes the displayed page numbers using ellipsis (...). Each page number is rendered as a Pagination.Item component, with the current page visually highlighted. The renderItem prop enables flexible customization of each page item.",
+      "usage": "Use Pagination for navigating content divided into multiple pages such as blog post lists, search results, or data tables. For basic usage, specify the count prop for total pages and currentPage prop for the current page number. Set click handlers via prevProps and nextProps, and define how each page number renders with the renderItem prop. The Pagination.Item component highlights the current page with the selected prop. When pages change, smoothly scroll content to the top of the page.",
       "accessibility": "This component meets the following accessibility requirements. For semantic HTML, the component renders as a nav element indicating it is pagination navigation. Regarding keyboard navigation, all page numbers and previous/next buttons are focusable via Tab and activated with Enter or Space keys. For disabled states, the previous button is automatically disabled on the first page and the next button on the last page. The current page is communicated to screen readers via appropriate ARIA attributes in addition to visual highlighting. Focus indicators are displayed with ring styles meeting WCAG requirements.",
       "doList": [
         "Clearly distinguish the current page visually",
@@ -365,7 +365,7 @@
         {
           "package": "react",
           "version": "^19.0.1",
-          "reason": "Core React library for component functionality and hooks (usePagination)"
+          "reason": "Core React library for component functionality"
         }
       ],
       "references": [
@@ -380,9 +380,9 @@
           "description": "Official WCAG documentation on keyboard accessibility requirements"
         },
         {
-          "linkText": "Material-UI usePagination Hook",
-          "url": "https://github.com/mui/material-ui/blob/master/packages/mui-material/src/usePagination/usePagination.js",
-          "description": "Source code of Material-UI's usePagination hook that inspired this implementation"
+          "linkText": "Material UI pagination",
+          "url": "https://mui.com/material-ui/react-pagination/",
+          "description": "Material UI pagination documentation that informs this pagination algorithm"
         }
       ]
     },
@@ -520,8 +520,8 @@
     },
     "form": {
       "description": "Provides a structured container for form inputs with shared state management for labels, inputs, helper text, and validation states.",
-      "overview": "Form is a compound component system that manages form field state through React Context. It consists of five sub-components: Control for state management, Label for field labels, Input for text input fields, Textarea for multi-line text input, and HelperText for supplementary information or error messages. The Control component provides shared state including error, disabled, required, and color theme that automatically propagates to all child components. This architecture ensures consistent styling and behavior across form elements without manual prop drilling.",
-      "usage": "Use Form to create accessible form fields with consistent styling and state management. Wrap form elements with Form.Control to share state across Label, Input, Textarea, and HelperText components. For basic usage, nest Form.Label, Form.Input, and Form.HelperText within Form.Control. Apply the error prop to Form.Control to display error styling on all child elements simultaneously. Use the disabled prop to disable the entire form field group. The color prop switches between dark and light themes for different background contexts. For multi-line input, replace Form.Input with Form.Textarea. Input supports startAdornment and endAdornment props for icons or decorative elements.",
+      "overview": "Form is a compound component system that manages form field state through React Context. It consists of five sub-components: Field for state management, Label for field labels, Input for text input fields, Textarea for multi-line text input, and HelperText for supplementary information or error messages. The Field component provides shared state including error, disabled, required, and color theme that automatically propagates to all child components. This architecture ensures consistent styling and behavior across form elements without manual prop drilling.",
+      "usage": "Use Form to create accessible form fields with consistent styling and state management. Wrap form elements with Form.Field to share state across Label, Input, Textarea, and HelperText components. For basic usage, nest Form.Label, Form.Input, and Form.HelperText within Form.Field. Apply the error prop to Form.Field to display error styling on all child elements simultaneously. Use the disabled prop to disable the entire form field group. The color prop switches between dark and light themes for different background contexts. For multi-line input, replace Form.Input with Form.Textarea. Input supports startAdornment and endAdornment props for icons or decorative elements.",
       "accessibility": "This component meets the following accessibility requirements. For semantic HTML, Form.Label renders as a native label element that should be associated with inputs using htmlFor and id attributes. Form.Input and Form.Textarea render as native input and textarea elements with proper disabled states. For error states, visual styling changes are accompanied by color contrast that meets WCAG 4.5:1 requirements. Screen readers can identify disabled fields through the native disabled attribute. Focus indicators are visible with ring styles that meet WCAG requirements. Helper text provides additional context that should be linked to inputs using aria-describedby for screen reader support.",
       "doList": [
         "Associate labels with inputs using htmlFor and id attributes",
@@ -592,7 +592,7 @@
     "scrollArea": {
       "description": "Provides a scrollable container with styled scrollbars for overflow content management.",
       "overview": "ScrollArea creates a scrollable viewport for content that exceeds its container dimensions. The component consists of a root container that manages overflow behavior, a viewport that contains the scrollable content, and a scrollbar that appears when content overflows. By default, a vertical scrollbar is displayed, but you can configure horizontal scrollbars or custom scrollbars through the scrollbar prop. The scrollbar uses a semi-transparent thumb indicator that transitions smoothly on interaction. The viewport automatically inherits border-radius from its parent for consistent visual appearance.",
-      "usage": "Use ScrollArea to contain content that may exceed available space such as lists, articles, code blocks, or any overflow content. For basic usage, wrap content inside the ScrollArea component and set height constraints via className prop. When the scrollbar prop is not specified, the component automatically displays a vertical scrollbar when content overflows the container boundaries. Customize the container appearance by passing Tailwind classes for padding, borders, and background styles. Combine with responsive height classes to adapt scroll areas to different viewport sizes. To enable horizontal scrolling, pass <ScrollArea.ScrollBar orientation=\"horizontal\" /> to the scrollbar prop and ensure child content has a width greater than the container. To hide the scrollbar, set scrollbar={null}, though normally omitting the scrollbar prop will display the default vertical scrollbar.",
+      "usage": "Use ScrollArea to contain content that may exceed available space such as lists, articles, code blocks, or any overflow content. For basic usage, wrap content inside the ScrollArea component and set height constraints via className prop. When the scrollbar prop is not specified, the component automatically displays a vertical scrollbar when content overflows the container boundaries. Customize the container appearance by passing Tailwind classes for padding, borders, and background styles. Combine with responsive height classes to adapt scroll areas to different viewport sizes. To enable horizontal scrolling, pass <ScrollArea.Scrollbar orientation=\"horizontal\" /> to the scrollbar prop and ensure child content has a width greater than the container. To hide the scrollbar, set scrollbar={null}, though normally omitting the scrollbar prop will display the default vertical scrollbar.",
       "accessibility": "This component meets the following accessibility requirements. For keyboard support, the scroll area supports native keyboard scrolling with arrow keys, Page Up, Page Down, Home, and End keys when focused. Regarding focus management, the viewport element accepts a ref for programmatic focus control. Touch interaction is disabled on the scrollbar to prevent accidental scrolling on mobile devices, while the content area remains fully touch-scrollable. The component uses semantic overflow behavior that screen readers understand natively. Visible scrollbars provide clear indication of scrollable content without requiring hover interaction.",
       "doList": [
         "Set explicit height constraints on the ScrollArea container",
@@ -657,6 +657,72 @@
           "linkText": "MDN CSS Overflow Reference",
           "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/overflow",
           "description": "MDN documentation on CSS overflow property and scrolling behavior"
+        }
+      ]
+    },
+    "select": {
+      "description": "Lets the user choose one value from a list in a styled popup, and submits the chosen value with the surrounding form.",
+      "overview": "Select is a single-value picker built on the Base UI Select. Select is the root and holds the value; Select.Label names the trigger; Select.Trigger is the button that shows the selected item and a chevron; Select.Popup is the list that opens below the trigger, at least as wide as it, and scrolls when the list is long; Select.Item is one option with a check mark while it is selected. Given a name, Select renders a hidden input so the chosen value is submitted with a form, which keeps a plain GET form working without client state. An item whose value is an empty string or null counts as the empty state: it submits an empty field and the trigger shows its placeholder.",
+      "usage": "Use Select when the user picks one value from a known list, such as a dashboard filter or a form field with more options than radio buttons comfortably hold. Pass name and defaultValue to Select for a form field, and pass items (an array of value and label pairs) whenever an item label differs from its value so the trigger shows the label instead of the raw value. For an \"all\" or \"none\" choice, add an item with an empty-string value and give Select.Trigger the same text as its placeholder. Use DropdownMenu instead when the list holds actions rather than a value.",
+      "accessibility": "The trigger has the combobox role and the popup the listbox role, and Select.Label names the trigger through aria-labelledby without htmlFor. Tab focuses the trigger, Enter, Space, or the arrow keys open the list, the arrow keys move the highlight, typing a letter jumps to a matching item, Enter selects, and Escape closes the list and returns focus to the trigger. The selected item is announced as selected, and a disabled select is removed from the tab order. The check mark and the highlight tint are visual only; the selection is exposed through aria-selected.",
+      "doList": [
+        "Name every select with Select.Label or an aria-label on the trigger",
+        "Pass items when item labels differ from their values",
+        "Give the trigger a placeholder that matches the empty item text",
+        "Pass name so the value is submitted with the form",
+        "Keep item labels short enough to fit the trigger"
+      ],
+      "dontList": [
+        "Use it for a list of actions",
+        "Use it for two or three options that fit as radio buttons",
+        "Rely on the placeholder as the only label",
+        "Put interactive content inside an item",
+        "Mix empty-string and null values for the same empty choice"
+      ],
+      "relatedComponents": [
+        {
+          "name": "Form",
+          "path": "/?path=/docs/components-form--docs",
+          "description": "Text fields and labels that sit beside a select in a form"
+        },
+        {
+          "name": "DropdownMenu",
+          "path": "/?path=/docs/components-dropdownmenu--docs",
+          "description": "Use DropdownMenu for a list of actions instead of a value"
+        },
+        {
+          "name": "ScrollArea",
+          "path": "/?path=/docs/components-scrollarea--docs",
+          "description": "Scrolls the popup when the list is long"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "version": "^19.3.0",
+          "reason": "Core React library for component functionality"
+        },
+        {
+          "package": "@base-ui/react",
+          "version": "^1.8.0",
+          "reason": "Provides the accessible select primitive with positioning, keyboard support, and form submission"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Select (Base UI)",
+          "url": "https://ui.shadcn.com/docs/components/base/select",
+          "description": "Reference design whose trigger, popup, and item styling this component mirrors"
+        },
+        {
+          "linkText": "Base UI Select Documentation",
+          "url": "https://base-ui.com/react/components/select",
+          "description": "Official documentation for the underlying select primitive"
+        },
+        {
+          "linkText": "WAI-ARIA Select-Only Combobox Pattern",
+          "url": "https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/",
+          "description": "Accessibility pattern for a combobox that only selects from a list"
         }
       ]
     },
@@ -1001,11 +1067,45 @@
         }
       ]
     },
+    "card": {
+      "description": "Groups related content in a white card with a thin border and a subtle shadow.",
+      "overview": "Card is the outer frame and composes Card.Header, Card.Title, Card.Description, and Card.Content. Content shares horizontal padding with Header.",
+      "usage": "Place a title and optional description in Card.Header and the main content in Card.Content. Each part accepts native div props and merges className with its default styles.",
+      "accessibility": "Card parts render div elements. Place an h2 or another appropriate heading inside Card.Title to preserve the page heading outline. Name interactive controls and charts independently. Use a section around the card when the content needs section semantics.",
+      "doList": [
+        "Group content that answers one question",
+        "Use a heading element inside Card.Title when the card introduces a section"
+      ],
+      "dontList": [
+        "Rely on Card.Title alone to create a heading",
+        "Nest buttons inside a card that is already wrapped in a link"
+      ],
+      "relatedComponents": [
+        {
+          "name": "StatTile",
+          "path": "/?path=/docs/components-stattile--docs",
+          "description": "Presents a single headline number with an optional trend badge"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "react",
+          "reason": "Renders native elements and their children"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "shadcn/ui Card",
+          "url": "https://ui.shadcn.com/docs/components/card",
+          "description": "Reference for the card composition and slots"
+        }
+      ]
+    },
     "statTile": {
       "description": "Presents one headline number with its label, an optional change badge with a trend arrow, a short supporting line, and an optional compact chart.",
       "overview": "StatTile is the hero-number pattern for dashboards: values whose job is to state a single current magnitude rather than a shape over time. A small label sits above a large tabular-figure value, an optional delta badge whose arrow shows whether the value moved up, down, or stayed flat sits in the top-right corner, and an optional description such as the comparison period follows beneath the value. An optional chart slot holds one compact visualization, such as a Sparkline, pinned to the bottom edge so a row of tiles keeps a common baseline. The slot accepts any element and renders nothing for a value that is not one, so a tile without a chart keeps its layout instead of reserving empty space. The tile owns only layout and emphasis; the value and the delta text arrive already formatted so the app keeps full control over units, currency, and locale.",
-      "usage": "Use StatTile for the key figures at the top of a dashboard page, typically in a row of two to four tiles: total portfolio value, period return, dividends received, overall yield. Pass a short label that names the measurement, the formatted value, and a delta whose label includes its sign so the direction is readable as text. The delta chip is tinted by direction, up as positive and down as negative; when a falling number is good news, such as a drop in expenses, set the delta sentiment to positive so the color matches the meaning. Reserve the description for context the reader needs to interpret the number, such as the comparison period. Put a Sparkline in the chart slot when the recent shape of the number helps read it, and give that sparkline its own label, because the tile label does not describe it. When the question is how a value changed over time or how categories compare, use a chart beside the tiles instead.",
-      "accessibility": "The label, value, delta text, and description are all rendered as plain text in reading order, so screen readers announce the tile as a short sentence. The trend arrow is decorative and hidden from assistive technology; the direction must be carried by the delta text itself, for example with a leading plus or minus sign. The delta chip keeps its text in the default ink color and conveys sentiment only through its tint and icon, so the chip meets contrast requirements while never relying on color alone. A visualization placed in the chart slot carries its own accessible name, which the tile neither supplies nor overrides. The tile has no interactive parts of its own.",
+      "usage": "Use StatTile for the key figures at the top of a dashboard page, typically in a row of two to four tiles: total portfolio value, period return, dividends received, overall yield. Pass a short label that names the measurement, the formatted value, and a delta whose label includes its sign so the direction is readable as text. The delta chip uses an outline badge with an icon colored by direction, up as positive and down as negative; when a falling number is good news, such as a drop in expenses, set the delta sentiment to positive so the color matches the meaning. Reserve the description for context the reader needs to interpret the number, such as the comparison period. Put a Sparkline in the chart slot when the recent shape of the number helps read it, and give that sparkline its own label, because the tile label does not describe it. When the question is how a value changed over time or how categories compare, use a chart beside the tiles instead.",
+      "accessibility": "The label, value, delta text, and description are all rendered as plain text in reading order, so screen readers announce the tile as a short sentence. The trend arrow is decorative and hidden from assistive technology; the direction must be carried by the delta text itself, for example with a leading plus or minus sign. The delta chip keeps its text in the default ink color and conveys sentiment only through its icon color, so the chip meets contrast requirements while never relying on color alone. A visualization placed in the chart slot carries its own accessible name, which the tile neither supplies nor overrides. The tile has no interactive parts of its own.",
       "doList": [
         "Keep the label to a few words that name the measurement",
         "Format the value and the delta in the consuming app, including units and sign",

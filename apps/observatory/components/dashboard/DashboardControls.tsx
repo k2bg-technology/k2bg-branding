@@ -1,6 +1,6 @@
 import Form from 'next/form';
 import { useId } from 'react';
-import { Button, Form as UiForm } from 'ui';
+import { Button, Select } from 'ui';
 
 import {
   type DashboardDefinition,
@@ -42,35 +42,37 @@ export function DashboardControls({ dashboard, state, controlOptions }: Props) {
             : [selected].filter(
                 (value): value is string => value !== undefined
               );
-        const selectId = `${idPrefix}${control.id}`;
+        const allLabel = control.allLabel ?? DEFAULT_CONTROL_ALL_LABEL;
+        const items = [
+          { value: '', label: allLabel },
+          ...options.map((option) => ({ value: option, label: option })),
+        ];
+        const noteId = `${idPrefix}${control.id}-note`;
         return (
           <div key={control.id} className="flex flex-col gap-condensed">
-            <UiForm.Label htmlFor={selectId}>{control.label}</UiForm.Label>
-            <select
-              id={selectId}
+            <Select
               name={`control.${control.id}`}
               defaultValue={selected ?? ''}
-              aria-describedby={
-                resolved.status === 'unavailable'
-                  ? `${selectId}-note`
-                  : undefined
-              }
-              className="h-8 rounded-md border border-base-default/50 bg-base-white px-2 text-base-default text-body-r-sm focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-base-default/30"
+              items={items}
             >
-              <option value="">
-                {control.allLabel ?? DEFAULT_CONTROL_ALL_LABEL}
-              </option>
-              {options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+              <Select.Label>{control.label}</Select.Label>
+              <Select.Trigger
+                placeholder={allLabel}
+                aria-describedby={
+                  resolved.status === 'unavailable' ? noteId : undefined
+                }
+                className="min-w-40"
+              />
+              <Select.Popup>
+                {items.map((item) => (
+                  <Select.Item key={item.value} value={item.value}>
+                    {item.label}
+                  </Select.Item>
+                ))}
+              </Select.Popup>
+            </Select>
             {resolved.status === 'unavailable' && (
-              <p
-                id={`${selectId}-note`}
-                className="text-body-r-sm text-base-black/80"
-              >
+              <p id={noteId} className="text-body-r-sm text-base-black/80">
                 {labels.controlOptionsUnavailable}
               </p>
             )}

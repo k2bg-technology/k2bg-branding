@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Icon, Popover, ScrollArea } from 'ui';
 import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 import type { TocHeading } from './extractHeadings';
@@ -12,10 +12,11 @@ interface Props {
 
 export function TableOfContents({ headings }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const ref = usePageScrollAreaStore((state) => state.ref);
+  const scrollContainerRef = usePageScrollAreaStore(
+    (state) => state.scrollContainerRef
+  );
 
-  const headingIds = useMemo(() => headings.map((h) => h.id), [headings]);
-  const activeId = useActiveHeading(headingIds);
+  const activeId = useActiveHeading(headings);
 
   useEffect(() => {
     setIsOpen(window.matchMedia('(min-width: 768px)').matches);
@@ -25,13 +26,13 @@ export function TableOfContents({ headings }: Props) {
 
   const handleHeadingClick = (id: string) => {
     const element = document.getElementById(id);
-    if (!element || !ref?.current) return;
+    if (!element || !scrollContainerRef?.current) return;
 
-    const containerTop = ref.current.getBoundingClientRect().top;
+    const containerTop = scrollContainerRef.current.getBoundingClientRect().top;
     const elementTop = element.getBoundingClientRect().top - containerTop;
-    const scrollTop = ref.current.scrollTop + elementTop;
+    const scrollTop = scrollContainerRef.current.scrollTop + elementTop;
 
-    ref.current.scrollTo({ top: scrollTop, behavior: 'smooth' });
+    scrollContainerRef.current.scrollTo({ top: scrollTop, behavior: 'smooth' });
   };
 
   return (

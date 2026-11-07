@@ -51,7 +51,7 @@ describe('stat tile plans', () => {
           column: 'total_value',
           reduction: 'sum',
           transform: 'absolute',
-          compares: true,
+          hasComparison: true,
           sparkline: { window: 6 },
           firstPeriod: '2026-03',
         },

@@ -5,23 +5,18 @@ import { Hero } from '../../components/contents/Hero';
 import { Portfolio } from '../../components/contents/Portfolio';
 import { Skill } from '../../components/contents/Skill';
 import { Footer } from '../../components/footer/Footer';
-import { LanguageSelector } from '../../components/LanguageSelector';
-import { PortfolioLoading } from '../../components/PortfolioLoading';
-import { ScrollHelper } from '../../components/ScrollHelper';
-import { Slider } from '../../components/Slider';
+import { HorizontalScroll } from '../../components/horizontal-scroll/HorizontalScroll';
+import { LanguageSelector } from '../../components/language-selector/LanguageSelector';
+import { PortfolioLoading } from '../../components/portfolio-loading/PortfolioLoading';
 import { getDictionary } from '../../i18n/dictionaries';
 import { resolveLanguage } from '../../i18n/settings';
-
-type PageProps = {
-  params: Promise<{ lang: string }>;
-};
 
 /**
  * Stays synchronous so the fallback streams before the dictionary resolves;
  * a route-level `loading.tsx` would do the same, but it also wraps the
  * catch-all segment and turns its `notFound()` into a streamed 200.
  */
-export default function Page({ params }: PageProps) {
+export default function Page({ params }: PageProps<'/[lang]'>) {
   return (
     <Suspense fallback={<PortfolioLoading />}>
       <PortfolioPageContent params={params} />
@@ -29,7 +24,9 @@ export default function Page({ params }: PageProps) {
   );
 }
 
-async function PortfolioPageContent({ params }: PageProps) {
+async function PortfolioPageContent({
+  params,
+}: Pick<PageProps<'/[lang]'>, 'params'>) {
   const { lang } = await params;
   const language = resolveLanguage(lang);
   const dictionary = await getDictionary(language);
@@ -38,7 +35,7 @@ async function PortfolioPageContent({ params }: PageProps) {
     <>
       <div className="flex flex-col gap-condensed md:absolute md:top-1/2 md:-translate-y-1/2 md:px-20">
         <main>
-          <Slider className="contents md:block">
+          <div className="contents md:block animate-slide-in">
             <div className="grid grid-flow-row auto-cols-fr overflow-hidden md:grid-flow-col md:auto-cols-max md:rounded-3xl md:shadow-2xl md:max-h-[37.5rem]">
               <Hero dictionary={dictionary.hero} />
               <Background dictionary={dictionary.background} />
@@ -46,12 +43,12 @@ async function PortfolioPageContent({ params }: PageProps) {
               <Portfolio dictionary={dictionary.portfolio} />
               <Contact dictionary={dictionary.contact} />
             </div>
-          </Slider>
+          </div>
         </main>
         <Footer copyright={dictionary.footer.copyright} />
       </div>
       <LanguageSelector />
-      <ScrollHelper dictionary={dictionary.scrollHelper} />
+      <HorizontalScroll dictionary={dictionary.horizontalScrollHint} />
     </>
   );
 }

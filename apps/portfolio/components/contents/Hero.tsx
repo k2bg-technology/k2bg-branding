@@ -3,7 +3,11 @@ import type { Dictionary } from '../../i18n/dictionaries';
 
 type HeroDictionary = Dictionary['hero'];
 
-export function Hero({ dictionary }: { dictionary: HeroDictionary }) {
+interface Props {
+  dictionary: HeroDictionary;
+}
+
+export function Hero({ dictionary }: Props) {
   return (
     <section>
       <div className="grid grid-rows-[max(22rem)_1fr] grid-cols-full h-full md:grid-rows-1 md:grid-cols-[max(22rem)_max(50rem)]">

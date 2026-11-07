@@ -7,16 +7,10 @@ import {
   type WarehouseQueryRequest,
 } from './client';
 
-const { bigQueryConstructorMock, queryMock, unstableCacheMock } = vi.hoisted(
-  () => ({
-    bigQueryConstructorMock: vi.fn(),
-    queryMock: vi.fn(),
-    unstableCacheMock: vi.fn(
-      (load: () => Promise<unknown>, _keyParts: string[], _options: unknown) =>
-        load
-    ),
-  })
-);
+const { bigQueryConstructorMock, queryMock } = vi.hoisted(() => ({
+  bigQueryConstructorMock: vi.fn(),
+  queryMock: vi.fn(),
+}));
 
 vi.mock('server-only', () => ({}));
 
@@ -30,7 +24,8 @@ vi.mock('@google-cloud/bigquery', () => ({
 }));
 
 vi.mock('next/cache', () => ({
-  unstable_cache: unstableCacheMock,
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
 }));
 
 vi.mock('logger', () => ({
@@ -61,7 +56,6 @@ describe('warehouse/client', () => {
     bigQueryConstructorMock.mockClear();
     queryMock.mockReset();
     queryMock.mockResolvedValue([[]]);
-    unstableCacheMock.mockClear();
     process.env.WAREHOUSE_PROJECT_ID = TEST_PROJECT_ID;
     process.env.WAREHOUSE_LOCATION = TEST_LOCATION;
   });
@@ -72,8 +66,10 @@ describe('warehouse/client', () => {
   });
 
   describe('createWarehouseClient', () => {
-    it('initialises the driver with the configured project id and location', () => {
-      createWarehouseClient();
+    it('initialises the driver with the configured project id and location when querying', async () => {
+      const sut = createWarehouseClient();
+
+      await sut.query(createRequest());
 
       expect(bigQueryConstructorMock).toHaveBeenCalledWith({
         projectId: TEST_PROJECT_ID,
@@ -108,7 +104,6 @@ describe('warehouse/client', () => {
       const client2 = getWarehouseClient();
 
       expect(client1).toBe(client2);
-      expect(bigQueryConstructorMock).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -148,26 +143,6 @@ describe('warehouse/client', () => {
       const rows = await sut.query(createRequest());
 
       expect(rows).toEqual([{ id: 1, createdAt: '2026-01-01T00:00:00.000Z' }]);
-    });
-
-    it('caches under a key that identifies the project, query name, sql and params', async () => {
-      const sut = createWarehouseClient();
-      const params = { year: 2026 };
-
-      await sut.query(createRequest({ params }));
-
-      const [, keyParts, options] = unstableCacheMock.mock.calls[0];
-      expect(JSON.parse(keyParts[0])).toEqual({
-        scope: 'warehouse',
-        projectId: TEST_PROJECT_ID,
-        name: 'sample-query',
-        sql: 'SELECT 1 AS value',
-        params,
-      });
-      expect(options).toEqual({
-        revalidate: ONE_HOUR_IN_SECONDS,
-        tags: ['warehouse'],
-      });
     });
 
     it('propagates driver failures', async () => {

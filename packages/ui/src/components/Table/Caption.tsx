@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '../../utils/cn';
 
-type Props = ComponentProps<'caption'>;
+interface Props extends ComponentProps<'caption'> {}
 
 export function Caption({ className, ...rest }: Props) {
   return (

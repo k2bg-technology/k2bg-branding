@@ -59,6 +59,32 @@ describe('Pagination.Item', () => {
     );
   });
 
+  it('renders a disabled button instead of the given element when disabled', () => {
+    render(
+      <Pagination.Item disabled render={<a href={itemHref} />}>
+        {itemLabel}
+      </Pagination.Item>
+    );
+
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: itemLabel })).toBeDisabled();
+  });
+
+  it('applies a style function to a rendered anchor', () => {
+    render(
+      <Pagination.Item
+        render={<a href={itemHref} />}
+        style={() => ({ marginTop: '4px' })}
+      >
+        {itemLabel}
+      </Pagination.Item>
+    );
+
+    expect(screen.getByRole('link', { name: itemLabel })).toHaveStyle({
+      marginTop: '4px',
+    });
+  });
+
   it('disables the item when disabled', () => {
     render(<Pagination.Item disabled>{itemLabel}</Pagination.Item>);
 

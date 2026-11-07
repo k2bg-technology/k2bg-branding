@@ -49,8 +49,12 @@ describe('scatter query plans', () => {
       selectedPeriod: '2026-08',
       dateRange: { firstDate: '2026-08-01', lastDate: '2026-08-31' },
       measures: [
-        { column: 'balance_slope', reduction: 'latest', compares: false },
-        { column: 'balance_intercept', reduction: 'latest', compares: false },
+        { column: 'balance_slope', reduction: 'latest', hasComparison: false },
+        {
+          column: 'balance_intercept',
+          reduction: 'latest',
+          hasComparison: false,
+        },
       ],
     });
     expect(

@@ -3,11 +3,11 @@ import type { Dictionary } from '../../i18n/dictionaries';
 
 type BackgroundDictionary = Dictionary['background'];
 
-export function Background({
-  dictionary,
-}: {
+interface Props {
   dictionary: BackgroundDictionary;
-}) {
+}
+
+export function Background({ dictionary }: Props) {
   return (
     <section>
       <div className="flex flex-col gap-spacious relative p-6 w-full text-white md:p-12 md:w-[56rem] md:h-[37.5rem]">

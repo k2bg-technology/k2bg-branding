@@ -82,7 +82,7 @@ export const WithHiddenTitle: Story = {
     trigger: <Button>Open Dialog</Button>,
     title: 'Video Preview',
     description: undefined,
-    isTitleHidden: true,
+    visuallyHiddenTitle: true,
     content: (
       <div className="pt-6 flex flex-col gap-normal">
         <div className="w-96 aspect-video bg-gray-500" />

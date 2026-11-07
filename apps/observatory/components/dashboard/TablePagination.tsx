@@ -22,38 +22,40 @@ export function TablePagination({
   pageKey,
   labels,
 }: Props) {
-  const href = (page: number) => {
-    const nextQuery =
+  const createPageHref = (page: number) => {
+    const pageQuery =
       page === 1
         ? query
         : [query, `${encodeURIComponent(pageKey)}=${page}`]
             .filter(Boolean)
             .join('&');
-    return nextQuery === '' ? path : `${path}?${nextQuery}`;
+    return pageQuery === '' ? path : `${path}?${pageQuery}`;
   };
   return (
     <Pagination
       aria-label={labels.pagination}
       count={pageCount}
-      currentIndex={currentPage}
+      currentPage={currentPage}
       prevProps={{
         'aria-label': labels.previousPage,
         render:
-          currentPage > 1 ? <Link href={href(currentPage - 1)} /> : undefined,
+          currentPage > 1 ? (
+            <Link href={createPageHref(currentPage - 1)} scroll={false} />
+          ) : undefined,
       }}
       nextProps={{
         'aria-label': labels.nextPage,
         render:
           currentPage < pageCount ? (
-            <Link href={href(currentPage + 1)} />
+            <Link href={createPageHref(currentPage + 1)} scroll={false} />
           ) : undefined,
       }}
-      renderItem={(index) => (
+      renderItem={(page) => (
         <Pagination.Item
-          selected={index === currentPage}
-          render={<Link href={href(index)} />}
+          selected={page === currentPage}
+          render={<Link href={createPageHref(page)} scroll={false} />}
         >
-          {index}
+          {page}
         </Pagination.Item>
       )}
     />

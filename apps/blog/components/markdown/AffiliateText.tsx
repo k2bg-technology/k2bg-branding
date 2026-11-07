@@ -1,11 +1,11 @@
 import type { AffiliateTextOutput } from '../../modules/affiliate/use-cases';
 import { TextPromotion } from '../promotion';
 
-interface AffiliateTextProps {
+interface Props {
   affiliateText: AffiliateTextOutput;
 }
 
-export function AffiliateText(props: AffiliateTextProps) {
+export function AffiliateText(props: Props) {
   const { affiliateText } = props;
 
   return (

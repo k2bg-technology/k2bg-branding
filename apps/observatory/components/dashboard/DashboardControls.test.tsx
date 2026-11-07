@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 
 import type {
@@ -42,8 +43,24 @@ const emptyState: UrlState = {
   foreign: [],
 };
 
+async function openOptions(name: string): Promise<(string | null)[]> {
+  await userEvent.click(screen.getByRole('combobox', { name }));
+  const options = await screen.findAllByRole('option');
+  return options.map((option) => option.textContent);
+}
+
+function submittedQuery(): string {
+  const form = screen.getByRole('button', { name: 'Apply' }).closest('form');
+  if (form === null) {
+    throw new Error('Expected controls form');
+  }
+  return new URLSearchParams(
+    Array.from(new FormData(form), ([key, value]) => [key, String(value)])
+  ).toString();
+}
+
 describe('DashboardControls', () => {
-  it('keeps resolved distinct options in their provided order', () => {
+  it('keeps resolved distinct options in their provided order', async () => {
     render(
       <DashboardControls
         dashboard={{ ...dashboard, controls: [regionControl] }}
@@ -54,14 +71,10 @@ describe('DashboardControls', () => {
       />
     );
 
-    expect(
-      within(screen.getByRole('combobox', { name: 'Region' }))
-        .getAllByRole('option')
-        .map((option) => option.textContent)
-    ).toEqual(['All', 'west', 'east']);
+    expect(await openOptions('Region')).toEqual(['All', 'west', 'east']);
   });
 
-  it('keeps the selected value and describes an unavailable control', () => {
+  it('keeps the selected value and describes an unavailable control', async () => {
     render(
       <DashboardControls
         dashboard={{ ...dashboard, controls: [regionControl] }}
@@ -71,23 +84,13 @@ describe('DashboardControls', () => {
     );
 
     const select = screen.getByRole('combobox', { name: 'Region' });
-    expect(
-      within(select)
-        .getAllByRole('option')
-        .map((option) => option.textContent)
-    ).toEqual(['All', 'east']);
-    expect(select).toHaveValue('east');
+    expect(select).toHaveTextContent('east');
     expect(select).toHaveAccessibleDescription('Options could not be loaded');
-    const form = select.closest('form');
-    if (form === null) throw new Error('Expected controls form');
-    expect(
-      new URLSearchParams(
-        Array.from(new FormData(form), ([key, value]) => [key, String(value)])
-      ).toString()
-    ).toBe('control.region=east');
+    expect(submittedQuery()).toBe('control.region=east');
+    expect(await openOptions('Region')).toEqual(['All', 'east']);
   });
 
-  it('shows only all when unavailable without a selection', () => {
+  it('shows only all when unavailable without a selection', async () => {
     render(
       <DashboardControls
         dashboard={{ ...dashboard, controls: [regionControl] }}
@@ -96,11 +99,7 @@ describe('DashboardControls', () => {
       />
     );
 
-    expect(
-      within(screen.getByRole('combobox', { name: 'Region' })).getAllByRole(
-        'option'
-      )
-    ).toHaveLength(1);
+    expect(await openOptions('Region')).toEqual(['All']);
   });
 
   it('uses the dashboard unavailable label as the select description', () => {
@@ -121,7 +120,7 @@ describe('DashboardControls', () => {
     ).toHaveAccessibleDescription('選択肢を読み込めません');
   });
 
-  it('labels the select and lists all before the fixed options', () => {
+  it('labels the select and lists all before the fixed options', async () => {
     render(
       <DashboardControls
         controlOptions={{}}
@@ -130,16 +129,13 @@ describe('DashboardControls', () => {
       />
     );
 
-    const select = screen.getByRole('combobox', { name: 'Category' });
     expect(
-      within(select)
-        .getAllByRole('option')
-        .map((option) => option.textContent)
-    ).toEqual(['All', 'food', 'drink']);
-    expect(select).toHaveValue('');
+      screen.getByRole('combobox', { name: 'Category' })
+    ).toHaveTextContent('All');
+    expect(await openOptions('Category')).toEqual(['All', 'food', 'drink']);
   });
 
-  it('uses the custom all label as the empty option', () => {
+  it('uses the custom all label as the empty option', async () => {
     render(
       <DashboardControls
         controlOptions={{}}
@@ -151,11 +147,11 @@ describe('DashboardControls', () => {
       />
     );
 
-    const firstOption = within(
+    expect(
       screen.getByRole('combobox', { name: 'Category' })
-    ).getAllByRole('option')[0];
-    expect(firstOption).toHaveTextContent('All categories');
-    expect(firstOption).toHaveValue('');
+    ).toHaveTextContent('All categories');
+    expect(submittedQuery()).toBe('control.category=');
+    expect((await openOptions('Category'))[0]).toBe('All categories');
   });
 
   it('shows the selected option', () => {
@@ -167,9 +163,9 @@ describe('DashboardControls', () => {
       />
     );
 
-    expect(screen.getByRole('combobox', { name: 'Category' })).toHaveValue(
-      'drink'
-    );
+    expect(
+      screen.getByRole('combobox', { name: 'Category' })
+    ).toHaveTextContent('drink');
   });
 
   it.each([
@@ -197,16 +193,10 @@ describe('DashboardControls', () => {
       />
     );
 
-    const form = screen.getByRole('button', { name: 'Apply' }).closest('form');
-    if (form === null) {
-      throw new Error('Expected controls form');
-    }
-    expect(form).toHaveAttribute('action', '/dashboards/summary');
     expect(
-      new URLSearchParams(
-        Array.from(new FormData(form), ([key, value]) => [key, String(value)])
-      ).toString()
-    ).toBe(query);
+      screen.getByRole('button', { name: 'Apply' }).closest('form')
+    ).toHaveAttribute('action', '/dashboards/summary');
+    expect(submittedQuery()).toBe(query);
   });
 
   it('uses the dashboard apply label on a submit button', () => {
@@ -236,7 +226,7 @@ describe('DashboardControls', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it('replaces an unsubmitted choice when the URL state changes and changes back', () => {
+  it('replaces an unsubmitted choice when the URL state changes and changes back', async () => {
     const { rerender } = render(
       <DashboardControls
         controlOptions={{}}
@@ -244,9 +234,8 @@ describe('DashboardControls', () => {
         state={{ ...emptyState, controls: { category: 'food' } }}
       />
     );
-    fireEvent.change(screen.getByRole('combobox', { name: 'Category' }), {
-      target: { value: 'drink' },
-    });
+    await openOptions('Category');
+    await userEvent.click(screen.getByRole('option', { name: 'drink' }));
 
     rerender(
       <DashboardControls
@@ -263,17 +252,9 @@ describe('DashboardControls', () => {
       />
     );
 
-    expect(screen.getByRole('combobox', { name: 'Category' })).toHaveValue(
-      'food'
-    );
-    const form = screen.getByRole('button', { name: 'Apply' }).closest('form');
-    if (form === null) {
-      throw new Error('Expected controls form');
-    }
     expect(
-      new URLSearchParams(
-        Array.from(new FormData(form), ([key, value]) => [key, String(value)])
-      ).toString()
-    ).toBe('control.category=food');
+      screen.getByRole('combobox', { name: 'Category' })
+    ).toHaveTextContent('food');
+    expect(submittedQuery()).toBe('control.category=food');
   });
 });

@@ -31,7 +31,7 @@ export function planStatTilesSection(
       column: tile.column,
       reduction: tile.reduction,
       transform: tile.transform,
-      compares: tile.comparison !== undefined,
+      hasComparison: tile.comparison !== undefined,
       ...(tile.sparkline === undefined ? {} : { sparkline: tile.sparkline }),
       ...(section.tiles.every((candidate) => candidate.sparkline === undefined)
         ? {}

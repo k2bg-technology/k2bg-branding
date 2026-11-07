@@ -1,36 +1,36 @@
-import { Button } from '../Button';
+import type { Button } from '../Button';
 import { Icon } from '../Icon';
+import { Control } from './Control';
+import { getPaginationItems } from './getPaginationItems';
 import { Item } from './Item';
-import { usePagination } from './usePagination';
 
 type PrevNextButtonProps = React.ComponentPropsWithoutRef<typeof Button>;
 
-export interface PaginationProps extends React.ComponentPropsWithoutRef<'nav'> {
+interface Props extends React.ComponentPropsWithoutRef<'nav'> {
   count: number;
-  currentIndex: number;
+  currentPage: number;
   prevProps: PrevNextButtonProps;
   nextProps: PrevNextButtonProps;
-  renderItem: (index: number) => React.ReactNode;
+  renderItem: (page: number) => React.ReactNode;
 }
 
-export function Pagination(props: PaginationProps) {
-  const { count, currentIndex, prevProps, nextProps, renderItem, ...rest } =
+export function Pagination(props: Props) {
+  const { count, currentPage, prevProps, nextProps, renderItem, ...rest } =
     props;
 
-  const itemList = usePagination({ count, currentIndex });
+  const itemList = getPaginationItems({ count, currentPage });
 
   return (
     <nav {...rest} className="flex gap-normal">
-      <Button
+      <Control
         aria-label="Previous page"
         {...prevProps}
-        type={prevProps.render ? undefined : 'button'}
         color="inherit"
         size="icon"
-        disabled={currentIndex === 1}
+        disabled={currentPage === 1}
       >
         <Icon name="chevron-left" width={20} height={20} />
-      </Button>
+      </Control>
       <ul className="flex gap-4">
         {itemList.map((item) => (
           <li key={item} className=" flex items-center">
@@ -42,16 +42,17 @@ export function Pagination(props: PaginationProps) {
           </li>
         ))}
       </ul>
-      <Button
+      <Control
         aria-label="Next page"
         {...nextProps}
-        type={nextProps.render ? undefined : 'button'}
         color="inherit"
         size="icon"
-        disabled={currentIndex === count}
+        disabled={currentPage === count}
       >
         <Icon name="chevron-right" width={20} height={20} />
-      </Button>
+      </Control>
     </nav>
   );
 }
+
+export type { Props as PaginationProps };

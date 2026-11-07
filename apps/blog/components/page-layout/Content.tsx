@@ -1,8 +1,8 @@
-import { twMerge } from 'tailwind-merge';
+import { cn } from 'ui';
 import styles from './page-layout.module.css';
 import type { GridColumn } from './types';
 
-interface ContentProps extends React.ComponentPropsWithRef<'div'> {
+interface Props extends React.ComponentPropsWithRef<'div'> {
   colStart?: GridColumn;
   colEnd?: GridColumn;
 }
@@ -14,11 +14,11 @@ export function Content({
   style,
   children,
   ...rest
-}: ContentProps) {
+}: Props) {
   return (
     <div
       {...rest}
-      className={twMerge(
+      className={cn(
         'col-span-full',
         colStart && styles.colStart,
         colEnd && styles.colEnd,

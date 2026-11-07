@@ -41,7 +41,7 @@ export interface CalendarHeatmapDay {
   value: number | null;
 }
 
-export interface CalendarHeatmapProps {
+interface Props {
   label: string;
   days: CalendarHeatmapDay[];
   color?: ChartColor;
@@ -78,7 +78,7 @@ function toIsoDate(timestamp: number) {
 
 interface CalendarCell extends CalendarHeatmapDay {
   /** A day outside the requested range, there only to complete a week column. */
-  isPadding: boolean;
+  isPaddingDay: boolean;
 }
 
 function buildCells(
@@ -103,7 +103,7 @@ function buildCells(
     return {
       date,
       value: valueByDate.get(date) ?? null,
-      isPadding: timestamp < firstDay || timestamp > lastDay,
+      isPaddingDay: timestamp < firstDay || timestamp > lastDay,
     };
   });
 }
@@ -123,7 +123,7 @@ export function CalendarHeatmap({
   maximumCellSize = defaultCellSize,
   scaleLabels,
   className,
-}: CalendarHeatmapProps) {
+}: Props) {
   const descriptionId = useId();
   const weekStart = resolveWeekStart({ locale, weekStartsOn });
   const cells = buildCells(days, weekStart);
@@ -160,7 +160,7 @@ export function CalendarHeatmap({
   // Only days the caller asked about: the cells padding the first and last week
   // out to whole weeks are layout, not measurements that went missing.
   const missingDays = cells.filter(
-    (cell) => !cell.isPadding && cell.value === null
+    (cell) => !cell.isPaddingDay && cell.value === null
   ).length;
 
   return (
@@ -200,7 +200,7 @@ export function CalendarHeatmap({
         <ScrollArea
           className="min-w-0"
           data-slot="calendar-heatmap-scroll"
-          scrollbar={<ScrollArea.ScrollBar orientation="horizontal" />}
+          scrollbar={<ScrollArea.Scrollbar orientation="horizontal" />}
         >
           {/* `justify-start` keeps spare width on the trailing side. */}
           <div
@@ -226,7 +226,7 @@ export function CalendarHeatmap({
                 {week.map((cell) => {
                   // A day outside the range holds its place and shows nothing,
                   // so the hatch means "a day in the range without data".
-                  if (cell.isPadding) {
+                  if (cell.isPaddingDay) {
                     return (
                       <span
                         key={cell.date}
@@ -288,3 +288,5 @@ export function CalendarHeatmap({
     </div>
   );
 }
+
+export type { Props as CalendarHeatmapProps };

@@ -53,7 +53,7 @@ export function pivotTable(
   period: Period,
   dashboard: DashboardDefinition
 ): PivotTableInput {
-  if (data.exceeded) return { status: 'over-budget' };
+  if (data.isCellLimitExceeded) return { status: 'over-budget' };
   const labels = { ...DEFAULT_DASHBOARD_LABELS, ...dashboard.labels };
   const context = { sectionId: section.id };
   const grain =

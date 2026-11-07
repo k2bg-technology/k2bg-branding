@@ -161,11 +161,11 @@ export function calendarMonthLabels({
 
   return candidates.reduce<CalendarMonthLabel[]>((kept, label) => {
     const previous = kept[kept.length - 1];
-    const collides =
+    const isColliding =
       previous !== undefined &&
       label.columnIndex - previous.columnIndex <
         textColumns(previous.text, columnWidth);
-    return collides ? kept : kept.concat(label);
+    return isColliding ? kept : kept.concat(label);
   }, []);
 }
 

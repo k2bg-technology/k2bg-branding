@@ -11,7 +11,7 @@ import { contactSchema } from './contactSchema';
 
 export function ContactForm() {
   const captchaRef = useRef<HCaptcha>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const { toast } = useToast();
 
   const defaultValues = {
@@ -31,7 +31,7 @@ export function ContactForm() {
     mode: 'onChange',
   });
 
-  const mutation = useMutation({
+  const sendContact = useMutation({
     mutationKey: ['contact'],
     mutationFn: contactFormAction,
     onSuccess: () => {
@@ -46,7 +46,7 @@ export function ContactForm() {
     },
     onSettled: () => {
       if (captchaRef.current) {
-        setToken(null);
+        setCaptchaToken(null);
         captchaRef.current.resetCaptcha();
       }
 
@@ -54,12 +54,8 @@ export function ContactForm() {
     },
   });
 
-  function onExpire() {
-    setToken(null);
-  }
-
-  function onError() {
-    setToken(null);
+  function clearCaptchaToken() {
+    setCaptchaToken(null);
   }
 
   return (
@@ -67,21 +63,21 @@ export function ContactForm() {
       noValidate
       className="flex flex-col gap-spacious h-full md:gap-spacious"
       onSubmit={handleSubmit((visitor) => {
-        if (!token) {
+        if (!captchaToken) {
           alert('認証を完了してください。');
 
           return;
         }
 
-        mutation.mutate({
+        sendContact.mutate({
           ...visitor,
-          token: token || '',
+          token: captchaToken || '',
         });
       })}
     >
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="flex flex-col gap-2 w-full">
-          <Form.Control>
+          <Form.Field>
             <Form.Label
               className="text-body-r-md leading-body-r-md text-base-black font-bold"
               htmlFor="name"
@@ -100,10 +96,10 @@ export function ContactForm() {
             {errors.name?.message && (
               <Form.HelperText error>{errors.name?.message}</Form.HelperText>
             )}
-          </Form.Control>
+          </Form.Field>
         </div>
         <div className="flex flex-col gap-2 w-full">
-          <Form.Control>
+          <Form.Field>
             <Form.Label
               className="text-body-r-md leading-body-r-md text-base-black font-bold"
               htmlFor="email"
@@ -122,11 +118,11 @@ export function ContactForm() {
             {errors.email?.message && (
               <Form.HelperText error>{errors.email?.message}</Form.HelperText>
             )}
-          </Form.Control>
+          </Form.Field>
         </div>
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <Form.Control>
+        <Form.Field>
           <Form.Label
             className="text-body-r-md leading-body-r-md text-base-black font-bold"
             htmlFor="message"
@@ -146,14 +142,14 @@ export function ContactForm() {
           {errors.message?.message && (
             <Form.HelperText error>{errors.message?.message}</Form.HelperText>
           )}
-        </Form.Control>
+        </Form.Field>
       </div>
       <HCaptcha
         ref={captchaRef}
         sitekey={process.env.NEXT_PUBLIC_H_CAPTCHA_SITE_KEY || ''}
-        onVerify={setToken}
-        onExpire={() => onExpire()}
-        onError={() => onError()}
+        onVerify={setCaptchaToken}
+        onExpire={() => clearCaptchaToken()}
+        onError={() => clearCaptchaToken()}
       />
       <ul className="flex flex-col gap-spacious md:flex-row">
         <li>
@@ -161,7 +157,7 @@ export function ContactForm() {
             type="submit"
             color="dark"
             variant="outline"
-            disabled={mutation.isPending || !token}
+            disabled={sendContact.isPending || !captchaToken}
           >
             送信
           </Button>

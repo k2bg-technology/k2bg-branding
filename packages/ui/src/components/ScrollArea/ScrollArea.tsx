@@ -5,21 +5,24 @@ import type * as React from 'react';
 
 import { cn } from '../../utils/cn';
 
-import { ScrollBar } from './ScrollBar/ScrollBar';
+import { Scrollbar } from './Scrollbar/Scrollbar';
 
-interface ScrollAreaProps extends ScrollAreaPrimitive.Root.Props {
+interface Props extends ScrollAreaPrimitive.Root.Props {
   scrollbar?: React.ReactElement<
-    React.ComponentPropsWithoutRef<typeof ScrollBar>
+    React.ComponentPropsWithoutRef<typeof Scrollbar>
   > | null;
+  /** Overrides the viewport tabIndex, which Base UI sets to 0 while the content overflows. */
+  viewportTabIndex?: number;
 }
 
 export function ScrollArea({
   className,
   children,
   scrollbar,
+  viewportTabIndex,
   ref,
   ...rest
-}: ScrollAreaProps) {
+}: Props) {
   return (
     <ScrollAreaPrimitive.Root
       {...rest}
@@ -28,10 +31,14 @@ export function ScrollArea({
       <ScrollAreaPrimitive.Viewport
         ref={ref}
         className="flex-grow w-full rounded-[inherit]"
+        // An explicit undefined would erase the tabIndex Base UI computes from overflow.
+        {...(viewportTabIndex === undefined
+          ? {}
+          : { tabIndex: viewportTabIndex })}
       >
         <ScrollAreaPrimitive.Content>{children}</ScrollAreaPrimitive.Content>
       </ScrollAreaPrimitive.Viewport>
-      {scrollbar || <ScrollBar />}
+      {scrollbar || <Scrollbar />}
       <ScrollAreaPrimitive.Corner />
     </ScrollAreaPrimitive.Root>
   );

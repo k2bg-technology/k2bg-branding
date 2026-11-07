@@ -2,9 +2,9 @@ import { Toaster as Sonner } from 'sonner';
 
 import { Icon } from '../Icon';
 
-type ToasterProps = React.ComponentProps<typeof Sonner>;
+interface Props extends React.ComponentProps<typeof Sonner> {}
 
-export function Toaster(props: ToasterProps) {
+export function Toaster(props: Props) {
   return (
     <Sonner
       {...props}

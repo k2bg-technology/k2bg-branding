@@ -54,11 +54,15 @@ describe('FetchScatterData', () => {
           ]) &&
         JSON.stringify(plan.measures) ===
           JSON.stringify([
-            { column: 'balance_slope', reduction: 'latest', compares: false },
+            {
+              column: 'balance_slope',
+              reduction: 'latest',
+              hasComparison: false,
+            },
             {
               column: 'balance_intercept',
               reduction: 'latest',
-              compares: false,
+              hasComparison: false,
             },
           ]) &&
         options.name ===

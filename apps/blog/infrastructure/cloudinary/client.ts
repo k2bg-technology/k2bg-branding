@@ -71,7 +71,7 @@ export async function uploadImage(
 /**
  * Get resource information from Cloudinary.
  */
-export async function getResource(
+export async function fetchResource(
   publicId: string
 ): Promise<Awaited<ReturnType<typeof cloudinary.api.resource>>> {
   ensureConfigured();

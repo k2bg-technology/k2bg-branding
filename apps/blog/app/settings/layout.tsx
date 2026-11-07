@@ -6,9 +6,7 @@ import { getSession } from '../../infrastructure/auth/getSession';
 // expired cookie passes the optimistic middleware but is rejected here.
 export default async function SettingsLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: LayoutProps<'/settings'>) {
   const session = await getSession();
   if (!session) {
     redirect('/login');

@@ -222,7 +222,7 @@ export function planWideRebaseBase(
     dateRange: { firstDate: bucket.firstDate, lastDate: bucket.lastDate },
     measures: layoutWideSeries(section.series).measures.map((measure) => ({
       ...measure,
-      compares: false,
+      hasComparison: false,
     })),
   };
 }

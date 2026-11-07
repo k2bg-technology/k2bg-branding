@@ -7,6 +7,7 @@ import {
 } from '../../../modules/dashboard/domain';
 import { formatValue, NULL_VALUE } from '../formatValue';
 import type { PivotTableInput } from '../pivotTable';
+import { TABLE_MAX_HEIGHT } from '../tableMaxHeight';
 
 interface Props {
   dashboard: DashboardDefinition;
@@ -74,6 +75,8 @@ export function PivotTableSection({ dashboard, section, table }: Props) {
       caption={section.title}
       visuallyHiddenCaption
       stickyFirstColumn
+      stickyLastColumn={totalsColumn !== undefined}
+      maxHeight={TABLE_MAX_HEIGHT}
       columns={columns}
       rows={rows}
       footer={footer}

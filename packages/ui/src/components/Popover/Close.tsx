@@ -2,6 +2,8 @@
 
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
-export function Close(props: PopoverPrimitive.Close.Props) {
+interface Props extends PopoverPrimitive.Close.Props {}
+
+export function Close(props: Props) {
   return <PopoverPrimitive.Close {...props} />;
 }

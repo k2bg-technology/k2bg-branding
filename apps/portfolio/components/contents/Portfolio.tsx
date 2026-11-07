@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Button, Dialog } from 'ui';
 import type { Dictionary } from '../../i18n/dictionaries';
 
-import { ExternalLinkButton } from '../ExternalLinkButton';
+import { ExternalLink } from '../external-link/ExternalLink';
 
 type PortfolioDictionary = Dictionary['portfolio'];
 
@@ -77,14 +77,18 @@ function Document(props: DocumentProps) {
           </div>
         }
         title={title}
-        isTitleHidden
+        visuallyHiddenTitle
       />
       {siteLink}
     </div>
   );
 }
 
-export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
+interface Props {
+  dictionary: PortfolioDictionary;
+}
+
+export function Portfolio({ dictionary }: Props) {
   return (
     <section>
       <div className="flex flex-col md:flex-row md:h-[37.5rem]">
@@ -124,18 +128,18 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               videoFallback={dictionary.videoFallback}
               siteLink={
                 <>
-                  <ExternalLinkButton
+                  <ExternalLink
                     href="https://github.com/k2bg-technology/trading-dashboard"
                     data-gtm="portfolio_click_web_app_github"
                   >
                     {dictionary.githubApp}
-                  </ExternalLinkButton>
-                  <ExternalLinkButton
+                  </ExternalLink>
+                  <ExternalLink
                     href="https://github.com/k2bg-technology/ml-playground-api"
                     data-gtm="portfolio_click_web_app_api_github"
                   >
                     {dictionary.githubApi}
-                  </ExternalLinkButton>
+                  </ExternalLink>
                 </>
               }
             />
@@ -162,18 +166,18 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               videoFallback={dictionary.videoFallback}
               siteLink={
                 <>
-                  <ExternalLinkButton
+                  <ExternalLink
                     href="https://github.com/k2bg-technology/merchandise_control_system_native_app"
                     data-gtm="portfolio_click_mobile_app_github"
                   >
                     {dictionary.githubApp}
-                  </ExternalLinkButton>
-                  <ExternalLinkButton
+                  </ExternalLink>
+                  <ExternalLink
                     href="https://github.com/k2bg-technology/merchandise_control_system"
                     data-gtm="portfolio_click_mobile_app_api"
                   >
                     {dictionary.githubApi}
-                  </ExternalLinkButton>
+                  </ExternalLink>
                 </>
               }
             />
@@ -199,12 +203,12 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               previewVideo="/videos/scrapy.mp4"
               videoFallback={dictionary.videoFallback}
               siteLink={
-                <ExternalLinkButton
+                <ExternalLink
                   href="https://github.com/krd-knt/scrapy_snippets"
                   data-gtm="portfolio_click_scraping_app_github"
                 >
                   {dictionary.github}
-                </ExternalLinkButton>
+                </ExternalLink>
               }
             />
           </article>
@@ -229,12 +233,12 @@ export function Portfolio({ dictionary }: { dictionary: PortfolioDictionary }) {
               previewVideo="/videos/blog.mp4"
               videoFallback={dictionary.videoFallback}
               siteLink={
-                <ExternalLinkButton
+                <ExternalLink
                   href="https://blog.k2bg.technology"
                   data-gtm="portfolio_click_blog_app_url"
                 >
                   {dictionary.siteURL}
-                </ExternalLinkButton>
+                </ExternalLink>
               }
             />
           </article>

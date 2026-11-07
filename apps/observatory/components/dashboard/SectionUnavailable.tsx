@@ -2,7 +2,7 @@ export function SectionUnavailable() {
   return (
     <p
       role="alert"
-      className="rounded-md border border-accent-default bg-base-light p-normal text-body-r-sm"
+      className="rounded-lg border border-accent-default/50 bg-accent-light/15 p-4 text-body-r-sm"
     >
       This section could not be loaded. Check the warehouse configuration and
       the server logs.

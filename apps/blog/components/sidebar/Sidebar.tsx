@@ -1,12 +1,12 @@
 import Image from 'next/image';
-import { SideBarAd } from '../google-adsense/SideBarAd';
+import { SidebarAd } from '../google-adsense/SidebarAd';
 import { InstagramTimeline } from '../instagram-timeline/InstagramTimeline';
 import { ProfileCard } from '../profile-card/ProfileCard';
-import { FacebookShareButton } from '../sns-share-button/FacebookShareButton';
-import { HatenaShareButton } from '../sns-share-button/HatenaShareButton';
-import { LineShareButton } from '../sns-share-button/LineShareButton';
-import { PinterestShareButton } from '../sns-share-button/PinterestShareButton';
-import { XShareButton } from '../sns-share-button/XShareButton';
+import { FacebookShareLink } from '../sns-share-link/FacebookShareLink';
+import { HatenaShareLink } from '../sns-share-link/HatenaShareLink';
+import { LineShareLink } from '../sns-share-link/LineShareLink';
+import { PinterestShareLink } from '../sns-share-link/PinterestShareLink';
+import { XShareLink } from '../sns-share-link/XShareLink';
 
 import { SidebarItem } from './SidebarItem';
 
@@ -23,15 +23,15 @@ export function Sidebar() {
         <div className="self-start sticky top-[3rem] flex flex-col gap-6">
           <SidebarItem title="SNSシェア">
             <div className="flex flex-row gap-normal">
-              <XShareButton />
-              <LineShareButton />
-              <FacebookShareButton />
-              <PinterestShareButton />
-              <HatenaShareButton />
+              <XShareLink />
+              <LineShareLink />
+              <FacebookShareLink />
+              <PinterestShareLink />
+              <HatenaShareLink />
             </div>
           </SidebarItem>
           {process.env.NODE_ENV === 'production' ? (
-            <SideBarAd />
+            <SidebarAd />
           ) : (
             <div className="h-[18.125rem] relative">
               <Image

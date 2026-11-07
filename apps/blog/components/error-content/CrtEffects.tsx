@@ -1,18 +1,18 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { twMerge } from 'ui';
+import { cn } from 'ui';
 
 import styles from './CrtEffects.module.css';
 
-interface OpacityProps {
+interface Props {
   opacity?: number;
 }
 
-export function StaticNoise({ opacity = 0.05 }: OpacityProps) {
+export function StaticNoise({ opacity = 0.05 }: Props) {
   return (
     <motion.div
-      className={twMerge(
+      className={cn(
         'pointer-events-none fixed inset-0 z-40',
         styles.staticNoise
       )}
@@ -39,13 +39,10 @@ export function StaticNoise({ opacity = 0.05 }: OpacityProps) {
   );
 }
 
-export function Scanline({ opacity = 0.1 }: OpacityProps) {
+export function Scanline({ opacity = 0.1 }: Props) {
   return (
     <motion.div
-      className={twMerge(
-        'pointer-events-none fixed inset-0 z-50',
-        styles.scanline
-      )}
+      className={cn('pointer-events-none fixed inset-0 z-50', styles.scanline)}
       aria-hidden="true"
       style={{ '--scanline-opacity': opacity }}
       initial={{ opacity }}
@@ -59,7 +56,7 @@ export function GlitchScanline() {
   return (
     <>
       <motion.div
-        className={twMerge(
+        className={cn(
           'pointer-events-none fixed left-0 right-0 z-50 h-[3px] bg-white opacity-40',
           styles.rollingLine
         )}
@@ -68,7 +65,7 @@ export function GlitchScanline() {
         transition={{ duration: 5, repeat: Infinity, ease: 'linear' }}
       />
       <motion.div
-        className={twMerge(
+        className={cn(
           'pointer-events-none fixed left-0 right-0 z-50 h-[80px]',
           styles.flickerBand
         )}

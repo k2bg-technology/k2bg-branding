@@ -7,6 +7,8 @@ describe('typography class merging', () => {
     ['text-heading-1 text-heading-2', 'text-heading-2'],
     ['text-body-r-md text-button-b-sm', 'text-button-b-sm'],
     ['text-caption text-subtitle-lg text-body-b-lg', 'text-body-b-lg'],
+    ['text-xs text-heading-1', 'text-heading-1'],
+    ['text-heading-1 text-sm', 'text-sm'],
   ])('keeps the final typography token for "%s"', (className, expected) => {
     const sut = twMerge(className);
 
@@ -17,5 +19,11 @@ describe('typography class merging', () => {
     const sut = twMerge('text-main-default text-heading-1 text-heading-2');
 
     expect(sut).toBe('text-main-default text-heading-2');
+  });
+
+  it('keeps standard font sizes alongside text colors', () => {
+    const sut = twMerge('text-xs text-white');
+
+    expect(sut).toBe('text-xs text-white');
   });
 });

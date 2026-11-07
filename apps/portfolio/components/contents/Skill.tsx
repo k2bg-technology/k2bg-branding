@@ -4,7 +4,11 @@ import type { Dictionary } from '../../i18n/dictionaries';
 
 type SkillDictionary = Dictionary['skill'];
 
-export function Skill({ dictionary }: { dictionary: SkillDictionary }) {
+interface Props {
+  dictionary: SkillDictionary;
+}
+
+export function Skill({ dictionary }: Props) {
   return (
     <section>
       <div className="relative p-6 w-full md:p-12 md:w-[68rem] md:h-[37.5rem]">

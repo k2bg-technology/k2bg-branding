@@ -1,4 +1,6 @@
-export function CompanyLogo(props: React.ComponentPropsWithRef<'svg'>) {
+interface Props extends React.ComponentPropsWithRef<'svg'> {}
+
+export function CompanyLogo(props: Props) {
   return (
     <svg
       {...props}

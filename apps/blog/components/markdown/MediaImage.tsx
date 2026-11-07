@@ -1,11 +1,11 @@
 import type { MediaOutput } from '../../modules/media/use-cases';
 import { CloudinaryImage } from '../cloudinary-image/CloudinaryImage';
 
-interface MediaImageProps {
+interface Props {
   media: MediaOutput;
 }
 
-export function MediaImage({ media }: MediaImageProps) {
+export function MediaImage({ media }: Props) {
   if (!media.effectiveSource || media.width == null || media.height == null) {
     return null;
   }

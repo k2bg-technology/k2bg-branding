@@ -14,23 +14,23 @@ const nextControlName = 'Next page';
 
 interface RenderOptions {
   count: number;
-  currentIndex: number;
+  currentPage: number;
   prevProps?: PrevNextProps;
   nextProps?: PrevNextProps;
 }
 
 function renderPagination(options: RenderOptions) {
-  const { count, currentIndex, prevProps = {}, nextProps = {} } = options;
+  const { count, currentPage, prevProps = {}, nextProps = {} } = options;
 
   return render(
     <Pagination
       count={count}
-      currentIndex={currentIndex}
+      currentPage={currentPage}
       prevProps={prevProps}
       nextProps={nextProps}
-      renderItem={(index) => (
-        <Pagination.Item selected={index === currentIndex}>
-          {index}
+      renderItem={(page) => (
+        <Pagination.Item selected={page === currentPage}>
+          {page}
         </Pagination.Item>
       )}
     />
@@ -57,19 +57,19 @@ function getPageLabels() {
 
 describe('Pagination', () => {
   it('groups the controls in a navigation landmark', () => {
-    renderPagination({ count: 5, currentIndex: 1 });
+    renderPagination({ count: 5, currentPage: 1 });
 
     expect(screen.getByRole('navigation')).toBeInTheDocument();
   });
 
   it('renders every page as an item when they all fit', () => {
-    renderPagination({ count: 5, currentIndex: 3 });
+    renderPagination({ count: 5, currentPage: 3 });
 
     expect(getPageLabels()).toEqual(['1', '2', '3', '4', '5']);
   });
 
   it('collapses the skipped pages into an ellipsis item when there are many pages', () => {
-    renderPagination({ count: 10, currentIndex: 1 });
+    renderPagination({ count: 10, currentPage: 1 });
 
     expect(getPageLabels()).toEqual([
       '1',
@@ -83,13 +83,13 @@ describe('Pagination', () => {
   });
 
   it('renders the ellipsis item as a disabled control', () => {
-    renderPagination({ count: 10, currentIndex: 1 });
+    renderPagination({ count: 10, currentPage: 1 });
 
     expect(screen.getByRole('button', { name: ellipsisLabel })).toBeDisabled();
   });
 
   it('marks the current page item with aria-current', () => {
-    renderPagination({ count: 5, currentIndex: 3 });
+    renderPagination({ count: 5, currentPage: 3 });
 
     expect(screen.getByRole('button', { name: '3' })).toHaveAttribute(
       'aria-current',
@@ -100,7 +100,7 @@ describe('Pagination', () => {
   it('leaves a non-selected page without aria-current', () => {
     const pageLabel = '1';
 
-    renderPagination({ count: 5, currentIndex: 3 });
+    renderPagination({ count: 5, currentPage: 3 });
 
     expect(screen.getByRole('button', { name: pageLabel })).not.toHaveAttribute(
       'aria-current'
@@ -108,21 +108,21 @@ describe('Pagination', () => {
   });
 
   it('disables the previous control on the first page', () => {
-    renderPagination({ count: 5, currentIndex: 1 });
+    renderPagination({ count: 5, currentPage: 1 });
 
     expect(getPreviousControl()).toBeDisabled();
     expect(getNextControl()).not.toBeDisabled();
   });
 
   it('disables the next control on the last page', () => {
-    renderPagination({ count: 5, currentIndex: 5 });
+    renderPagination({ count: 5, currentPage: 5 });
 
     expect(getNextControl()).toBeDisabled();
     expect(getPreviousControl()).not.toBeDisabled();
   });
 
   it('leaves both controls enabled on a middle page', () => {
-    renderPagination({ count: 5, currentIndex: 3 });
+    renderPagination({ count: 5, currentPage: 3 });
 
     expect(getPreviousControl()).not.toBeDisabled();
     expect(getNextControl()).not.toBeDisabled();
@@ -134,7 +134,7 @@ describe('Pagination', () => {
   ])(
     'renders the $controlName control as a native button of type button by default',
     ({ getControl }) => {
-      renderPagination({ count: 5, currentIndex: 3 });
+      renderPagination({ count: 5, currentPage: 3 });
 
       const control = getControl();
 
@@ -159,7 +159,7 @@ describe('Pagination', () => {
     ({ getControl, href }) => {
       renderPagination({
         count: 5,
-        currentIndex: 3,
+        currentPage: 3,
         // biome-ignore lint/a11y/useAnchorContent: the control renders its icon into this anchor
         prevProps: { render: <a href={previousHref} /> },
         // biome-ignore lint/a11y/useAnchorContent: the control renders its icon into this anchor

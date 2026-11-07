@@ -4,29 +4,32 @@ import { useScroll } from 'motion/react';
 import { useEffect, useState } from 'react';
 
 import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
+import type { TocHeading } from './extractHeadings';
 
 const OFFSET_THRESHOLD = 100;
 
-export function useActiveHeading(headingIds: string[]): string {
-  const ref = usePageScrollAreaStore((state) => state.ref);
+export function useActiveHeading(headings: TocHeading[]): string {
+  const scrollContainerRef = usePageScrollAreaStore(
+    (state) => state.scrollContainerRef
+  );
   const [activeId, setActiveId] = useState('');
-  const { scrollY } = useScroll({ container: ref ?? undefined });
+  const { scrollY } = useScroll({ container: scrollContainerRef ?? undefined });
 
   useEffect(() => {
-    if (headingIds.length === 0) return;
+    if (headings.length === 0) return;
 
     const unsubscribe = scrollY.on('change', () => {
-      const container = ref?.current;
+      const container = scrollContainerRef?.current;
       if (!container) return;
 
       const containerTop = container.getBoundingClientRect().top;
 
-      const currentId = headingIds.reduce((acc, id) => {
+      const currentId = headings.reduce((activeHeadingId, { id }) => {
         const element = document.getElementById(id);
-        if (!element) return acc;
+        if (!element) return activeHeadingId;
 
         const elementTop = element.getBoundingClientRect().top - containerTop;
-        return elementTop <= OFFSET_THRESHOLD ? id : acc;
+        return elementTop <= OFFSET_THRESHOLD ? id : activeHeadingId;
       }, '');
 
       setActiveId(currentId);
@@ -35,7 +38,7 @@ export function useActiveHeading(headingIds: string[]): string {
     return () => {
       unsubscribe();
     };
-  }, [scrollY, headingIds, ref]);
+  }, [scrollY, headings, scrollContainerRef]);
 
   return activeId;
 }

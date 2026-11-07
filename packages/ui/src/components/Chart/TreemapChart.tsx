@@ -80,7 +80,7 @@ const scaleColor = ChartColor.CHART_1;
 
 // Bundlers replace this expression, so the report leaves production builds.
 declare const process: { env: { NODE_ENV?: string } };
-const isDevelopment = process.env.NODE_ENV !== 'production';
+const isNonProduction = process.env.NODE_ENV !== 'production';
 
 function isDrawableValue(value: number) {
   return Number.isFinite(value) && value >= 0;
@@ -111,10 +111,10 @@ function labelPlate(
   }
   const width = estimateTextWidth(text) + labelPlatePaddingX * 2;
   const height = labelFontSize + labelPlatePaddingY * 2;
-  const fits =
+  const doesPlateFit =
     area.width >= width + labelInset * 2 &&
     area.height >= height + labelInset * 2;
-  if (!fits) {
+  if (!doesPlateFit) {
     return undefined;
   }
   return {
@@ -315,7 +315,7 @@ function TreemapNodeShape({ node, tiles, groups }: NodeShapeProps) {
   );
 }
 
-export interface TreemapChartProps {
+interface Props {
   label: string;
   nodes: TreemapChartNode[];
   tableHeaders?: TreemapChartTableHeaders;
@@ -334,7 +334,7 @@ export function TreemapChart({
   height,
   valueFormatter = defaultValueFormatter,
   className,
-}: TreemapChartProps) {
+}: Props) {
   const headers = {
     group: tableHeaders?.group ?? 'Group',
     label: tableHeaders?.label ?? 'Label',
@@ -342,7 +342,7 @@ export function TreemapChart({
     share: tableHeaders?.share ?? 'Share',
   };
   const drawableNodes = nodes.filter((node) => isDrawableValue(node.value));
-  if (isDevelopment && drawableNodes.length < nodes.length) {
+  if (isNonProduction && drawableNodes.length < nodes.length) {
     const droppedIds = nodes
       .filter((node) => !isDrawableValue(node.value))
       .map((node) => node.id);
@@ -561,3 +561,5 @@ export function TreemapChart({
     </div>
   );
 }
+
+export type { Props as TreemapChartProps };

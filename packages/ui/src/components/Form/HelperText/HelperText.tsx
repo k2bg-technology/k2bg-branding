@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
-import { twMerge } from '../../../utils/extendTailwindMerge';
-import { type FormProps, useFormContext } from '../Control/Context';
+import { cn } from '../../../utils/cn';
+import { type FormProps, useFieldContext } from '../Field/FieldProvider';
 
 // `text-neutral-300` (disabled) is a deliberate exception: no base-* token is
 // a visually reasonable match for this disabled-state gray.
@@ -24,13 +24,11 @@ const helperTextVariants = cva('text-caption leading-none', {
   },
 });
 
-// The id comes from Control (`helperTextId`) so the control's
+// The id comes from Field (`helperTextId`) so the control's
 // `aria-describedby` and this element agree in server-rendered HTML.
-export type Props = Omit<
-  React.ComponentPropsWithoutRef<'span'>,
-  'color' | 'id'
-> &
-  FormProps;
+interface Props
+  extends Omit<React.ComponentPropsWithoutRef<'span'>, 'color' | 'id'>,
+    FormProps {}
 
 export function HelperText(props: React.PropsWithChildren<Props>) {
   const { children, className, ...formProps } = props;
@@ -41,16 +39,13 @@ export function HelperText(props: React.PropsWithChildren<Props>) {
     disabled,
     helperTextId,
     ...rest
-  } = useFormContext(formProps);
+  } = useFieldContext(formProps);
 
   return (
     <span
       {...rest}
       id={helperTextId}
-      className={twMerge(
-        helperTextVariants({ color, error, disabled }),
-        className
-      )}
+      className={cn(helperTextVariants({ color, error, disabled }), className)}
     >
       {children}
     </span>

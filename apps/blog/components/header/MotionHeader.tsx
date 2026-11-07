@@ -5,16 +5,18 @@ import { useEffect, useState } from 'react';
 
 import { usePageScrollAreaStore } from '../page-scroll-area/PageScrollArea';
 
-type Props = React.ComponentPropsWithoutRef<'header'>;
+interface Props extends React.ComponentPropsWithoutRef<'header'> {}
 
 export function MotionHeader(props: Props) {
   const { children } = props;
 
-  const ref = usePageScrollAreaStore((state) => state.ref);
+  const scrollContainerRef = usePageScrollAreaStore(
+    (state) => state.scrollContainerRef
+  );
 
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  const { scrollY } = useScroll({ container: ref ?? undefined });
+  const { scrollY } = useScroll({ container: scrollContainerRef ?? undefined });
 
   useEffect(() => {
     const handleScroll = () => {

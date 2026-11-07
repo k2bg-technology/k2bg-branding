@@ -2,7 +2,7 @@ import type { ComponentProps } from 'react';
 
 import { cn } from '../../utils/cn';
 
-type Props = ComponentProps<'tfoot'>;
+interface Props extends ComponentProps<'tfoot'> {}
 
 export function Footer({ className, ...rest }: Props) {
   return (

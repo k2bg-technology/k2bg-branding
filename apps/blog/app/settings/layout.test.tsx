@@ -27,16 +27,21 @@ describe('SettingsLayout', () => {
     });
     mockGetSession.mockResolvedValue(null);
 
-    await expect(SettingsLayout({ children: <div /> })).rejects.toThrow(
-      'NEXT_REDIRECT'
-    );
+    await expect(
+      SettingsLayout({ children: <div />, params: Promise.resolve({}) })
+    ).rejects.toThrow('NEXT_REDIRECT');
     expect(mockRedirect).toHaveBeenCalledWith('/login');
   });
 
   it('renders children when a session exists', async () => {
     mockGetSession.mockResolvedValue({ user: { id: 'user-1' } });
 
-    render(await SettingsLayout({ children: <div data-testid="content" /> }));
+    render(
+      await SettingsLayout({
+        children: <div data-testid="content" />,
+        params: Promise.resolve({}),
+      })
+    );
 
     expect(mockRedirect).not.toHaveBeenCalled();
     expect(screen.getByTestId('content')).toBeInTheDocument();

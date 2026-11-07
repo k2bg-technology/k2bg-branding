@@ -113,7 +113,7 @@ export function TimeSeriesSection({
         id: derived.id,
         label: derived.label,
         interpolation: slot.interpolation,
-        ...(derived.overlay ? { lineStyle: 'dashed' as const } : {}),
+        ...(derived.isOverlay ? { lineStyle: 'dashed' as const } : {}),
         points: displaySpine.map(({ timestamp }, index) => ({
           timestamp,
           value: derived.values[index] ?? null,

@@ -108,7 +108,7 @@
   "footer": {
     "copyright": "\u00A9 K2.B.G. Technology Design: "
   },
-  "scrollHelper": {
+  "horizontalScrollHint": {
     "label": "スクロール"
   }
 }

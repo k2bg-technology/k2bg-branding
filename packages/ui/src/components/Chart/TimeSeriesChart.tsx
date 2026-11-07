@@ -197,7 +197,7 @@ function renderIsolatedPointDot(timestamps: Set<number>, color: string) {
     ) : null;
 }
 
-export interface TimeSeriesChartProps {
+interface Props {
   /** Accessible name of the chart, already localized by the consuming app. */
   label: string;
   series: TimeSeriesChartSeries[];
@@ -235,7 +235,7 @@ export function TimeSeriesChart({
   showLegend,
   animated = false,
   className,
-}: TimeSeriesChartProps) {
+}: Props) {
   // Gradient defs need a document-unique id per chart instance.
   const gradientIdPrefix = useId().replace(/[^a-zA-Z0-9-]/g, '');
   const gradientId = (seriesId: string) =>
@@ -470,3 +470,5 @@ export function TimeSeriesChart({
     </div>
   );
 }
+
+export type { Props as TimeSeriesChartProps };

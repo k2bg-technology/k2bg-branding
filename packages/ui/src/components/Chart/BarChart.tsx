@@ -84,7 +84,7 @@ function valueExtent(
   );
 }
 
-export interface BarChartProps {
+interface Props {
   /** Accessible name of the chart, already localized by the consuming app. */
   label: string;
   categories: string[];
@@ -110,7 +110,7 @@ export function BarChart({
   showLegend,
   animated = false,
   className,
-}: BarChartProps) {
+}: Props) {
   const rows = buildRows(categories, series);
   const extent = valueExtent(categories, series, stacked);
   const formatAxisValue = axisValueFormatter ?? valueFormatter;
@@ -233,3 +233,5 @@ export function BarChart({
     </div>
   );
 }
+
+export type { Props as BarChartProps };

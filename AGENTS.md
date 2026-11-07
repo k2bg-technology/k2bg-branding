@@ -132,15 +132,16 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
   factories live in `apps/observatory/infrastructure/di/`.
 - Warehouse reads: `apps/observatory/infrastructure/warehouse/` wraps the data
   warehouse SDK (BigQuery) behind the app-owned `WarehouseClient` interface. Every
-  read goes through `WarehouseClient.query()`, which caches rows in the Next.js data
-  cache (`unstable_cache`) under the `warehouse` tag for the `revalidate` window each
+  read goes through `WarehouseClient.query()`, which caches rows with `'use cache'`,
+  `cacheLife`, and the `warehouse` tag for the `revalidate` window each
   query declares (warehouse data changes at most daily — long windows bound scan
   costs); rows are normalized to plain JSON so cache hits and misses match. Query
   services receive the client (plus the location or dataset id they need) via
   constructor injection and wrap driver failures in `RepositoryError`.
 - The warehouse SDK is Node-only: query code stays in server components and
-  `server-only` modules, and dashboard pages export `dynamic = 'force-dynamic'` so
-  `next build` never queries the warehouse.
+  `server-only` modules. Cache Components and Partial Prefetching are enabled;
+  request-time data reads await `connection()` inside `<Suspense>` so the page shell
+  renders immediately and `next build` never queries the warehouse.
 - A failed warehouse read renders an inline unavailable state (canonical:
   `apps/observatory/components/table-catalog/TableCatalog.tsx`) after `logger.error`;
   dashboards never `notFound()` on data failures.
@@ -202,22 +203,7 @@ A Hono-based REST API is integrated into Next.js via a catch-all route handler
 
 ### Component Patterns
 
-- Always name the main props interface `Props`; compose with `extends` for HTML props.
-
-```typescript
-interface Props
-  extends Omit<React.ComponentPropsWithRef<'button'>, 'color'>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
-```
-
-```
-components/component-name/
-├── ComponentName.tsx
-├── ComponentName.stories.tsx   # if UI component
-└── componentName.test.ts
-```
+Component placement, splitting, props, composition, state, accessibility, and page conventions: see the `k2bg-component-guidelines` skill.
 
 ### Import / Export Patterns
 
@@ -251,10 +237,7 @@ Strict mode, composite projects, path mapping via workspace resolution.
 
 ### Design System (UI Package)
 
-- Use Class Variance Authority (CVA) for component variants.
-- Use dot notation for compound components; set `displayName`.
-- Component slot props: keep a permissive `ReactNode` type and render nothing for invalid
-  (non-element) values — do not narrow the type or add a default fallback.
+Component APIs, variants, and headless wrappers: see the `k2bg-component-guidelines` skill; styling rules: see the `k2bg-css-guidelines` skill.
 
 ## State Management
 
@@ -354,7 +337,10 @@ Rules for editing `AGENTS.md`, `CLAUDE.md`, and `.claude/**` documentation:
 
 - Never pin exact dependency versions in docs (write "Storybook 10.x" or nothing) —
   `package.json` is the source of truth.
-- Code examples must reference real repository files by path, not invented ones.
+- Illustrate rules with generic, invented examples that name no app component, file, or line,
+  so a code change never requires a doc edit. Reference a real path only for a stable entry
+  point the rule is about (a config file, a shared utility, another doc). Write invented
+  examples as identifiers, not file paths, since `pnpm docs:check` rejects missing paths.
 - Shared cross-agent rules live only in `AGENTS.md`; deep dives go to `.claude/rules/`
   (path-scoped) or `.claude/skills/` (on-demand), with a one-line pointer from `AGENTS.md`.
 - Run `pnpm docs:check` after editing agent docs — it verifies referenced paths exist and
