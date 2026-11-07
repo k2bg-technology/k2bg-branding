@@ -1,19 +1,19 @@
 import { isFullPage } from '@notionhq/client';
 import type {
   PageObjectResponse,
-  QueryDatabaseResponse,
+  QueryDataSourceResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
-type QueryDatabaseResult = QueryDatabaseResponse['results'][number];
+type QueryDataSourceResult = QueryDataSourceResponse['results'][number];
 
 export function isFullPageObjectResponse(
-  result: QueryDatabaseResult
+  result: QueryDataSourceResult
 ): result is PageObjectResponse {
   return isFullPage(result);
 }
 
 export function filterFullPageObjectResponses(
-  results: QueryDatabaseResponse['results']
+  results: QueryDataSourceResponse['results']
 ): PageObjectResponse[] {
   return results.filter(isFullPageObjectResponse);
 }

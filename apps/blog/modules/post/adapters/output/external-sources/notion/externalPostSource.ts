@@ -1,7 +1,10 @@
 import type { Client } from '@notionhq/client';
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 import type { NotionToMarkdown } from 'notion-to-md';
-import { filterFullPageObjectResponses } from '../../../../../../infrastructure/notion';
+import {
+  filterFullPageObjectResponses,
+  queryDatabase,
+} from '../../../../../../infrastructure/notion';
 import type {
   AuthorRecord,
   ExternalPostBatch,
@@ -52,7 +55,7 @@ export class NotionExternalPostSource implements ExternalPostSource {
 
   async fetchAll(): Promise<ExternalPostBatch> {
     try {
-      const database = await this.notionClient.databases.query({
+      const database = await queryDatabase(this.notionClient, {
         database_id: this.databaseId,
         filter: {
           property: 'status',

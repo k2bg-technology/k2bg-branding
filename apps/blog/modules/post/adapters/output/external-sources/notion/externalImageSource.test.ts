@@ -5,6 +5,11 @@ import { NotionExternalImageSource } from './externalImageSource';
 describe('NotionExternalImageSource', () => {
   const createMockNotionClient = () => ({
     databases: {
+      retrieve: vi.fn().mockResolvedValue({
+        data_sources: [{ id: 'test-data-source-id' }],
+      }),
+    },
+    dataSources: {
       query: vi.fn(),
     },
   });
@@ -20,7 +25,7 @@ describe('NotionExternalImageSource', () => {
           id: '00000000-0000-4000-a000-000000000002',
         }),
       ];
-      mockClient.databases.query.mockResolvedValue({ results: notionPages });
+      mockClient.dataSources.query.mockResolvedValue({ results: notionPages });
 
       const sut = new NotionExternalImageSource(
         mockClient as never,
@@ -38,7 +43,7 @@ describe('NotionExternalImageSource', () => {
 
     it('filters by PUBLISHED status', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
 
       const sut = new NotionExternalImageSource(
         mockClient as never,
@@ -47,9 +52,9 @@ describe('NotionExternalImageSource', () => {
 
       await sut.fetchImageSources();
 
-      expect(mockClient.databases.query).toHaveBeenCalledWith(
+      expect(mockClient.dataSources.query).toHaveBeenCalledWith(
         expect.objectContaining({
-          database_id: 'test-database-id',
+          data_source_id: 'test-data-source-id',
           filter: {
             property: 'status',
             status: { equals: 'PUBLISHED' },
@@ -70,7 +75,7 @@ describe('NotionExternalImageSource', () => {
           imageUrl: { type: 'files', files: [] },
         },
       });
-      mockClient.databases.query.mockResolvedValue({
+      mockClient.dataSources.query.mockResolvedValue({
         results: [pageWithImage, pageWithoutImage],
       });
 
@@ -87,7 +92,7 @@ describe('NotionExternalImageSource', () => {
 
     it('returns empty array when no posts exist', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
 
       const sut = new NotionExternalImageSource(
         mockClient as never,
@@ -101,7 +106,7 @@ describe('NotionExternalImageSource', () => {
 
     it('throws ExternalSourceError on Notion API error', async () => {
       const mockClient = createMockNotionClient();
-      mockClient.databases.query.mockRejectedValue(new Error('API Error'));
+      mockClient.dataSources.query.mockRejectedValue(new Error('API Error'));
 
       const sut = new NotionExternalImageSource(
         mockClient as never,

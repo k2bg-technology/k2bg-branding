@@ -5,6 +5,11 @@ import { NotionExternalPostSource } from './externalPostSource';
 describe('NotionExternalPostSource', () => {
   const createMockNotionClient = () => ({
     databases: {
+      retrieve: vi.fn().mockResolvedValue({
+        data_sources: [{ id: 'test-data-source-id' }],
+      }),
+    },
+    dataSources: {
       query: vi.fn(),
     },
     pages: {
@@ -185,7 +190,7 @@ describe('NotionExternalPostSource', () => {
           id: '00000000-0000-4000-a000-000000000002',
         }),
       ];
-      mockClient.databases.query.mockResolvedValue({ results: notionPages });
+      mockClient.dataSources.query.mockResolvedValue({ results: notionPages });
       mockN2M.pageToMarkdown.mockResolvedValue([]);
       mockN2M.toMarkdownString.mockReturnValue({ parent: 'Markdown content' });
 
@@ -198,9 +203,9 @@ describe('NotionExternalPostSource', () => {
       const result = await sut.fetchAll();
 
       expect(result.posts).toHaveLength(2);
-      expect(mockClient.databases.query).toHaveBeenCalledWith(
+      expect(mockClient.dataSources.query).toHaveBeenCalledWith(
         expect.objectContaining({
-          database_id: 'test-database-id',
+          data_source_id: 'test-data-source-id',
         })
       );
     });
@@ -208,7 +213,7 @@ describe('NotionExternalPostSource', () => {
     it('filters by PUBLISHED status', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
 
       const sut = new NotionExternalPostSource(
         mockClient as never,
@@ -218,7 +223,7 @@ describe('NotionExternalPostSource', () => {
 
       await sut.fetchAll();
 
-      expect(mockClient.databases.query).toHaveBeenCalledWith(
+      expect(mockClient.dataSources.query).toHaveBeenCalledWith(
         expect.objectContaining({
           filter: {
             property: 'status',
@@ -231,7 +236,7 @@ describe('NotionExternalPostSource', () => {
     it('sorts by releaseDate descending', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
 
       const sut = new NotionExternalPostSource(
         mockClient as never,
@@ -241,7 +246,7 @@ describe('NotionExternalPostSource', () => {
 
       await sut.fetchAll();
 
-      expect(mockClient.databases.query).toHaveBeenCalledWith(
+      expect(mockClient.dataSources.query).toHaveBeenCalledWith(
         expect.objectContaining({
           sorts: [{ property: 'releaseDate', direction: 'descending' }],
         })
@@ -254,7 +259,7 @@ describe('NotionExternalPostSource', () => {
       const notionPage = createNotionPageResponse({
         id: '00000000-0000-4000-a000-000000000001',
       });
-      mockClient.databases.query.mockResolvedValue({ results: [notionPage] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [notionPage] });
       mockN2M.pageToMarkdown.mockResolvedValue([{ type: 'paragraph' }]);
       mockN2M.toMarkdownString.mockReturnValue({ parent: 'Test content' });
 
@@ -272,7 +277,7 @@ describe('NotionExternalPostSource', () => {
     it('returns an empty batch when no posts exist', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
-      mockClient.databases.query.mockResolvedValue({ results: [] });
+      mockClient.dataSources.query.mockResolvedValue({ results: [] });
 
       const sut = new NotionExternalPostSource(
         mockClient as never,
@@ -296,7 +301,7 @@ describe('NotionExternalPostSource', () => {
           id: '00000000-0000-4000-a000-000000000002',
         }),
       ];
-      mockClient.databases.query.mockResolvedValue({ results: notionPages });
+      mockClient.dataSources.query.mockResolvedValue({ results: notionPages });
       mockN2M.pageToMarkdown.mockResolvedValue([]);
       mockN2M.toMarkdownString.mockReturnValue({ parent: 'Markdown content' });
 
@@ -329,7 +334,7 @@ describe('NotionExternalPostSource', () => {
           },
         },
       });
-      mockClient.databases.query.mockResolvedValue({
+      mockClient.dataSources.query.mockResolvedValue({
         results: [pageWithPartialPerson],
       });
       mockN2M.pageToMarkdown.mockResolvedValue([]);
@@ -349,7 +354,7 @@ describe('NotionExternalPostSource', () => {
     it('throws ExternalSourceError on Notion API error', async () => {
       const mockClient = createMockNotionClient();
       const mockN2M = createMockN2M();
-      mockClient.databases.query.mockRejectedValue(new Error('API Error'));
+      mockClient.dataSources.query.mockRejectedValue(new Error('API Error'));
 
       const sut = new NotionExternalPostSource(
         mockClient as never,

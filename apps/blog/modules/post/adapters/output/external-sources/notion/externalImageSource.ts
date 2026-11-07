@@ -1,5 +1,8 @@
 import type { Client } from '@notionhq/client';
-import { filterFullPageObjectResponses } from '../../../../../../infrastructure/notion';
+import {
+  filterFullPageObjectResponses,
+  queryDatabase,
+} from '../../../../../../infrastructure/notion';
 import type {
   ExternalImageSource,
   ImageSourceRecord,
@@ -17,7 +20,7 @@ export class NotionExternalImageSource implements ExternalImageSource {
 
   async fetchImageSources(): Promise<ImageSourceRecord[]> {
     try {
-      const database = await this.notionClient.databases.query({
+      const database = await queryDatabase(this.notionClient, {
         database_id: this.databaseId,
         filter: {
           property: 'status',

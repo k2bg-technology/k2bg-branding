@@ -1,10 +1,15 @@
 import { Client } from '@notionhq/client';
 import type {
   GetPageResponse,
-  QueryDatabaseParameters,
-  QueryDatabaseResponse,
+  QueryDataSourceParameters,
+  QueryDataSourceResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 import { NotionToMarkdown } from 'notion-to-md';
+
+export type QueryDatabaseParameters = Omit<
+  QueryDataSourceParameters,
+  'data_source_id'
+> & { database_id: string };
 
 export interface NotionClientConfig {
   auth?: string;
@@ -66,8 +71,17 @@ export function resetNotionClient(): void {
 export async function queryDatabase(
   client: Client,
   params: QueryDatabaseParameters
-): Promise<QueryDatabaseResponse> {
-  return client.databases.query(params);
+): Promise<QueryDataSourceResponse> {
+  const { database_id: databaseId, ...query } = params;
+  const database = await client.databases.retrieve({ database_id: databaseId });
+  if (!('data_sources' in database) || database.data_sources.length !== 1) {
+    throw new Error('Expected exactly one data source in the Notion database');
+  }
+
+  return client.dataSources.query({
+    ...query,
+    data_source_id: database.data_sources[0].id,
+  });
 }
 
 /**
@@ -92,4 +106,4 @@ export async function pageToMarkdownString(
   return mdString.parent;
 }
 
-export type { Client, NotionToMarkdown, QueryDatabaseParameters };
+export type { Client, NotionToMarkdown };

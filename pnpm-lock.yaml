@@ -59,13 +59,13 @@ importers:
         version: 1.6.3(hono@4.13.16)(zod@4.6.7)
       '@hookform/resolvers':
         specifier: ^7.0.2
-        version: 7.0.2(@standard-schema/spec@1.1.0)(ajv@6.15.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)
+        version: 7.0.2(@standard-schema/spec@1.1.0)(ajv@8.20.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)
       '@next/third-parties':
         specifier: ^16.4.5
         version: 16.4.5(next@16.4.5(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
       '@notionhq/client':
-        specifier: ^2.3.0
-        version: 2.3.0
+        specifier: ^5.27.0
+        version: 5.31.1
       '@tanstack/react-query':
         specifier: ^5.105.3
         version: 5.105.3(@types/react@19.3.0)(react@19.3.1)
@@ -3369,9 +3369,9 @@ packages:
     resolution: {integrity: sha512-aC1+mhKTP3IMa2VcuGl3ui92LO/7CPQWldNGzu3BVGKiMNJ70AKJW/R6huuYCSuQyHDGM9oFwiVClsZnFxn67g==}
     engines: {node: '>=18.0.0'}
 
-  '@notionhq/client@2.3.0':
-    resolution: {integrity: sha512-l7WqTCpQqC+HibkB9chghONQTYcxNQT0/rOJemBfmuKQRTu2vuV8B3yA395iKaUdDo7HI+0KvQaz9687Xskzkw==}
-    engines: {node: '>=12'}
+  '@notionhq/client@5.31.1':
+    resolution: {integrity: sha512-LuVlgHTkHPZf0LOILKVaDboYOyIXNHP9x2DSMhrJzUJjB7GzWjves1OA+8iqJxn1QPW6OqXdp0sS/z0Vh+JACA==}
+    engines: {node: '>=22'}
 
   '@open-draft/deferred-promise@2.2.0':
     resolution: {integrity: sha512-CecwLWx3rhxVQF6V4bAgPS5t+So2sTbPgAzafKkVizyi7tlwpcFpdFqq+wqF2OwNBmqFuu6tOyouTuxgpMfzmA==}
@@ -13814,13 +13814,13 @@ snapshots:
       hono: 4.13.16
       zod: 4.6.7
 
-  '@hookform/resolvers@7.0.2(@standard-schema/spec@1.1.0)(ajv@6.15.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)':
+  '@hookform/resolvers@7.0.2(@standard-schema/spec@1.1.0)(ajv@8.20.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)':
     dependencies:
       '@standard-schema/utils': 0.3.0
       react-hook-form: 7.91.0(@types/react@19.3.0)(react@19.3.1)
     optionalDependencies:
       '@standard-schema/spec': 1.1.0
-      ajv: 6.15.0
+      ajv: 8.20.0
       joi: 17.13.8
       valibot: 1.5.0(typescript@5.9.3)
       zod: 4.6.7
@@ -14757,12 +14757,7 @@ snapshots:
     dependencies:
       gzip-size: 6.0.0
 
-  '@notionhq/client@2.3.0':
-    dependencies:
-      '@types/node-fetch': 2.6.13
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
+  '@notionhq/client@5.31.1': {}
 
   '@open-draft/deferred-promise@2.2.0': {}
 

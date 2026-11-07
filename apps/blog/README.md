@@ -402,6 +402,12 @@ H_CAPTCHA_SECRET=
 GOOGLE_TAG_MANAGER_ID=
 ```
 
+The `NOTION_*_DATABASE_ID` values remain database IDs. Each configured database
+must expose exactly one data source to the integration; queries resolve that source
+through the database metadata before calling the data source API. Missing, partial,
+or multiple-source metadata fails explicitly instead of selecting an arbitrary source.
+Existing single-source databases need no ID or content migration.
+
 ## Deployment
 
 The blog is hosted on **AWS Amplify Hosting** (`WEB_COMPUTE`, Next.js SSR).
