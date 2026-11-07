@@ -12,8 +12,6 @@ const carbonDioxideValues = [
   [520, 610],
 ];
 const defaultEmptyLabel = 'No data';
-const defaultMinimumCellSize = 12;
-const defaultMaximumCellSize = 64;
 
 /** The scroll area measures itself in a microtask, after the mount effects. */
 async function renderHeatmap(ui: ReactElement): Promise<RenderResult> {
@@ -32,6 +30,14 @@ function heatmapGrid(container: HTMLElement) {
   return container.querySelector<HTMLElement>(
     '[data-slot="matrix-heatmap-grid"]'
   );
+}
+
+function columnLabelMinimumWidths(container: HTMLElement) {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      '[data-slot="matrix-heatmap-column-label"]'
+    )
+  ).map((label) => label.style.minWidth);
 }
 
 function cellBackgrounds(container: HTMLElement) {
@@ -219,8 +225,9 @@ describe('MatrixHeatmap', () => {
     );
 
     expect(heatmapGrid(container)?.style.gridTemplateColumns).toBe(
-      `repeat(${weekdayColumns.length}, minmax(${minimumCellSize}px, ${maximumCellSize}px))`
+      'repeat(2, minmax(min-content, 40px))'
     );
+    expect(columnLabelMinimumWidths(container)).toEqual(['20px', '20px']);
   });
 
   it('sizes the cells between 12 and 64 pixels by default', async () => {
@@ -233,9 +240,10 @@ describe('MatrixHeatmap', () => {
       />
     );
 
-    expect(heatmapGrid(container)?.style.gridTemplateColumns).toContain(
-      `minmax(${defaultMinimumCellSize}px, ${defaultMaximumCellSize}px)`
+    expect(heatmapGrid(container)?.style.gridTemplateColumns).toBe(
+      'repeat(2, minmax(min-content, 64px))'
     );
+    expect(columnLabelMinimumWidths(container)).toEqual(['12px', '12px']);
   });
 
   it('puts the grid inside the design system scroll area', async () => {
