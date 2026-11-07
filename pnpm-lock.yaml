@@ -59,7 +59,7 @@ importers:
         version: 1.6.3(hono@4.13.16)(zod@4.6.7)
       '@hookform/resolvers':
         specifier: ^5.9.1
-        version: 5.9.1(@sinclair/typebox@0.34.52)(@standard-schema/spec@1.1.0)(ajv@6.15.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)
+        version: 5.9.1(@sinclair/typebox@0.34.52)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)
       '@next/third-parties':
         specifier: ^16.4.5
         version: 16.4.5(next@16.4.5(@babel/core@7.29.7)(@types/node@17.0.45)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react@19.3.1)
@@ -543,8 +543,8 @@ importers:
         specifier: ^7.3.6
         version: 7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
       vitest:
-        specifier: ^5.0.5
-        version: 5.0.5(@types/node@26.6.6)(jsdom@30.1.3(@noble/hashes@2.4.0))(msw@2.15.0(@types/node@26.6.6)(typescript@5.9.3))(vite@7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
+        specifier: ^5.1.0
+        version: 5.1.0(@types/node@26.6.6)(jsdom@30.1.3(@noble/hashes@2.4.0))(msw@2.15.0(@types/node@26.6.6)(typescript@5.9.3))(vite@7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
     devDependencies:
       biome-config:
         specifier: workspace:*
@@ -5760,17 +5760,6 @@ packages:
   '@vitest/expect@3.2.4':
     resolution: {integrity: sha512-Io0yyORnB6sikFlt8QW5K7slY4OjqNX9jmJQ02QDda8lyM6B5oNgVWoSoKPac8/kgnCUzuHQKrSLtu/uOqqrig==}
 
-  '@vitest/mocker@5.0.5':
-    resolution: {integrity: sha512-xLL3lkDegJZw+MGoGaCCsFayDZthGgpAtr3Vziyfc4p7xH89K7KRPcRBBh/kEYm0Aqkt5DtTmkYpBtRV/FrHZg==}
-    peerDependencies:
-      msw: ^2.4.9 || ^3.0.0
-      vite: ^6.0.0 || ^7.0.0 || ^8.0.0
-    peerDependenciesMeta:
-      msw:
-        optional: true
-      vite:
-        optional: true
-
   '@vitest/mocker@5.1.0':
     resolution: {integrity: sha512-5umB9/jlWcqVS6fsrFmv5Gdnpu6wAUio/lEOwAmvB7v+lFo/IW2B9FhAD0p19GCULTgMzLCdUmuCDCnAzWgppQ==}
     peerDependencies:
@@ -5787,9 +5776,6 @@ packages:
 
   '@vitest/spy@3.2.4':
     resolution: {integrity: sha512-vAfasCOe6AIK70iP5UD11Ac4siNUNJ9i/9PZ3NKx07sG6sUxeag1LWdNrMWeKKYBLlzuK+Gn65Yd5nyL6ds+nw==}
-
-  '@vitest/spy@5.0.5':
-    resolution: {integrity: sha512-lwJRExuH417257Q5wv9QYugN9IMJkoxcrKrYxGPQkBzl7wlNpTUxD/5yNX4ESKVUIShKPgkGchYPFMWOOk0wzw==}
 
   '@vitest/spy@5.1.0':
     resolution: {integrity: sha512-2DPO5OMHWKrBngC+fCmTQqemNF0gidRhp3lxbBmRhW+M1XJrfgPpqNqWVevXtn2f2ufD5ZaR1B6B641aAlcX5A==}
@@ -10858,10 +10844,6 @@ packages:
   tiny-invariant@1.3.3:
     resolution: {integrity: sha512-+FbBPE1o9QAYvviau/qC5SE3caw21q3xkvWKBtja5vgqOWIHHJ3ioaq1VPfn/Szqctz2bU/oYeKd9/z5BL+PVg==}
 
-  tinybench@6.2.2:
-    resolution: {integrity: sha512-nIZ2N2dFpjBsg2hgitKu7mA+FvsIJuGJOwysRngmVRRmWgR/UyPjwJj8c/fT/dhm8EkHnF5EOogRf+0Z2qrimA==}
-    engines: {node: '>=20.0.0'}
-
   tinybench@6.2.3:
     resolution: {integrity: sha512-Al01C2JIBnO2CXCAPbpAl6sUiOZHeThGtHYNTa51JRw9PyWOCdr+9Ong05R4qg/Sk3+H645E8ov1h2c58ityNw==}
     engines: {node: '>=20.0.0'}
@@ -11272,47 +11254,6 @@ packages:
       tsx:
         optional: true
       yaml:
-        optional: true
-
-  vitest@5.0.5:
-    resolution: {integrity: sha512-cPODOMF8YnkiiYtDdHo6n4wWmBrOBBbOIYH2d33M4l3CdNn72h+qMmO6uXffUN6A5AZFXNND/d+krS9mgkXRfg==}
-    engines: {node: ^22.12.0 || ^24.0.0 || >=26.0.0}
-    hasBin: true
-    peerDependencies:
-      '@edge-runtime/vm': '*'
-      '@opentelemetry/api': ^1.9.0
-      '@types/node': ^22.0.0 || >=24.0.0
-      '@vitest/browser-playwright': 5.0.5
-      '@vitest/browser-preview': 5.0.5
-      '@vitest/browser-webdriverio': ^5.0.0-beta.5 || >=5.0.0
-      '@vitest/coverage-istanbul': 5.0.5
-      '@vitest/coverage-v8': 5.0.5
-      '@vitest/ui': 5.0.5
-      happy-dom: '*'
-      jsdom: '*'
-      vite: ^6.4.0 || ^7.0.0 || ^8.0.0
-    peerDependenciesMeta:
-      '@edge-runtime/vm':
-        optional: true
-      '@opentelemetry/api':
-        optional: true
-      '@types/node':
-        optional: true
-      '@vitest/browser-playwright':
-        optional: true
-      '@vitest/browser-preview':
-        optional: true
-      '@vitest/browser-webdriverio':
-        optional: true
-      '@vitest/coverage-istanbul':
-        optional: true
-      '@vitest/coverage-v8':
-        optional: true
-      '@vitest/ui':
-        optional: true
-      happy-dom:
-        optional: true
-      jsdom:
         optional: true
 
   vitest@5.1.0:
@@ -13887,14 +13828,14 @@ snapshots:
       hono: 4.13.16
       zod: 4.6.7
 
-  '@hookform/resolvers@5.9.1(@sinclair/typebox@0.34.52)(@standard-schema/spec@1.1.0)(ajv@6.15.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)':
+  '@hookform/resolvers@5.9.1(@sinclair/typebox@0.34.52)(@standard-schema/spec@1.1.0)(ajv@8.20.0)(joi@17.13.8)(react-hook-form@7.91.0(@types/react@19.3.0)(react@19.3.1))(valibot@1.5.0(typescript@5.9.3))(zod@4.6.7)':
     dependencies:
       '@standard-schema/utils': 0.3.0
       react-hook-form: 7.91.0(@types/react@19.3.0)(react@19.3.1)
     optionalDependencies:
       '@sinclair/typebox': 0.34.52
       '@standard-schema/spec': 1.1.0
-      ajv: 6.15.0
+      ajv: 8.20.0
       joi: 17.13.8
       valibot: 1.5.0(typescript@5.9.3)
       zod: 4.6.7
@@ -17421,16 +17362,6 @@ snapshots:
       chai: 5.3.3
       tinyrainbow: 2.0.0
 
-  '@vitest/mocker@5.0.5(msw@2.15.0(@types/node@26.6.6)(typescript@5.9.3))(vite@7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))':
-    dependencies:
-      '@jridgewell/trace-mapping': 0.3.31
-      '@vitest/spy': 5.0.5
-      estree-walker: 3.0.3
-      magic-string: 1.4.5
-    optionalDependencies:
-      msw: 2.15.0(@types/node@26.6.6)(typescript@5.9.3)
-      vite: 7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
-
   '@vitest/mocker@5.1.0(msw@2.15.0(@types/node@17.0.45)(typescript@5.9.3))(vite@7.3.6(@types/node@17.0.45)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
@@ -17458,8 +17389,6 @@ snapshots:
   '@vitest/spy@3.2.4':
     dependencies:
       tinyspy: 4.0.6
-
-  '@vitest/spy@5.0.5': {}
 
   '@vitest/spy@5.1.0': {}
 
@@ -23570,8 +23499,6 @@ snapshots:
 
   tiny-invariant@1.3.3: {}
 
-  tinybench@6.2.2: {}
-
   tinybench@6.2.3: {}
 
   tinycolor2@1.6.0: {}
@@ -24013,28 +23940,6 @@ snapshots:
       terser: 5.51.2
       tsx: 4.23.15
       yaml: 2.9.1
-
-  vitest@5.0.5(@types/node@26.6.6)(jsdom@30.1.3(@noble/hashes@2.4.0))(msw@2.15.0(@types/node@26.6.6)(typescript@5.9.3))(vite@7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)):
-    dependencies:
-      '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.5(msw@2.15.0(@types/node@26.6.6)(typescript@5.9.3))(vite@7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1))
-      chai: 6.3.0
-      es-module-lexer: 2.3.2
-      expect-type: 1.4.0
-      magic-string: 1.4.3
-      obug: 3.0.0
-      picomatch: 4.0.7
-      std-env: 4.3.0
-      tinybench: 6.2.2
-      tinyexec: 1.3.1
-      tinyglobby: 0.2.17
-      vite: 7.3.6(@types/node@26.6.6)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)
-      why-is-node-running: 3.2.1
-    optionalDependencies:
-      '@types/node': 26.6.6
-      jsdom: 30.1.3(@noble/hashes@2.4.0)
-    transitivePeerDependencies:
-      - msw
 
   vitest@5.1.0(@types/node@17.0.45)(jsdom@30.1.3(@noble/hashes@2.4.0))(msw@2.15.0(@types/node@17.0.45)(typescript@5.9.3))(vite@7.3.6(@types/node@17.0.45)(jiti@2.7.0)(lightningcss@1.33.0)(terser@5.51.2)(tsx@4.23.15)(yaml@2.9.1)):
     dependencies:
