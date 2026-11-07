@@ -36,7 +36,10 @@ interface Props {
   emptyLabel?: string;
   /** Smallest cell edge in px; the grid scrolls rather than going below it. */
   minimumCellSize?: number;
-  /** Largest cell edge in px; the grid stops growing there in a wide container. */
+  /**
+   * Largest cell edge in px; the grid stops growing there in a wide container.
+   * A column label wider than this widens its column to fit.
+   */
   maximumCellSize?: number;
   scaleLabels?: HeatmapScaleLabels;
   className?: string;
@@ -124,12 +127,20 @@ export function MatrixHeatmap({
             data-slot="matrix-heatmap-grid"
             className="grid justify-start gap-0.5 text-caption text-base-black/80"
             style={{
-              gridTemplateColumns: `repeat(${columns.length}, minmax(${minimumCellSize}px, ${maximumCellSize}px))`,
+              // A column is never narrower than its label, so long labels
+              // (dates) widen the cells and scroll instead of overlapping.
+              gridTemplateColumns: `repeat(${columns.length}, minmax(min-content, ${maximumCellSize}px))`,
               gridTemplateRows: `${headerRowHeight}px repeat(${rows.length}, auto)`,
             }}
           >
             {columns.map((column) => (
-              <span key={column} className="text-center leading-normal">
+              <span
+                key={column}
+                data-slot="matrix-heatmap-column-label"
+                className="whitespace-nowrap px-0.5 text-center leading-normal"
+                // The label sets each column's minimum, so it carries the cell floor.
+                style={{ minWidth: minimumCellSize }}
+              >
                 {column}
               </span>
             ))}

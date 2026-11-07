@@ -265,6 +265,45 @@ export const TwentyFourColumnsNarrow: Story = {
   },
 };
 
+/** Five characters per date, wider than a cell at the size 21 columns get in this card. */
+const dateColumns = Array.from({ length: 21 }, (_, day) => `10/${day + 10}`);
+const deviceRows = ['Kitchen', 'Bedroom', 'Study'];
+
+export const DateColumnsNarrow: Story = {
+  args: {
+    label: 'Lowest battery level by device and day, last 21 days',
+    rows: deviceRows,
+    columns: dateColumns,
+    values: deviceRows.map((_, device) =>
+      dateColumns.map((__, day) =>
+        Math.round(40 + pseudoRandom(device * dateColumns.length + day) * 60)
+      )
+    ),
+    valueFormatter: (value: number) => `${value}%`,
+  },
+  play: async ({ canvasElement }) => {
+    const columnLabels = Array.from(
+      canvasElement.querySelectorAll<HTMLElement>(
+        '[data-slot="matrix-heatmap-column-label"]'
+      )
+    );
+
+    // Every date fits its column, so no two labels run into each other.
+    await waitFor(() => {
+      for (const columnLabel of columnLabels) {
+        expect(columnLabel.scrollWidth).toBeLessThanOrEqual(
+          columnLabel.clientWidth
+        );
+      }
+      for (const [index, columnLabel] of columnLabels.slice(1).entries()) {
+        expect(columnLabel.getBoundingClientRect().left).toBeGreaterThanOrEqual(
+          columnLabels[index].getBoundingClientRect().right - subpixelTolerance
+        );
+      }
+    });
+  },
+};
+
 export const WideContainer: Story = {
   args: {
     label:
