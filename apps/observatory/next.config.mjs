@@ -47,6 +47,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const monorepoRoot = resolve(__dirname, '..', '..');
 
 const config = {
+  agentRules: false,
   cacheComponents: true,
   partialPrefetching: true,
   reactStrictMode: true,

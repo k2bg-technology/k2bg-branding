@@ -38,6 +38,7 @@ const securityHeaders = [
 ];
 
 module.exports = {
+  agentRules: false,
   reactStrictMode: true,
   reactCompiler: true,
   transpilePackages: ['ui', 'tailwind-config'],
