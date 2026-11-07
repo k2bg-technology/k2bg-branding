@@ -21,19 +21,19 @@ export function Pagination(props: Props) {
     return `${pathname}?${params.toString()}`;
   };
 
-  const hasPrevPage = currentPage > 1;
+  const hasPreviousPage = currentPage > 1;
   const hasNextPage = currentPage < count;
 
   return (
     <UIPagination
       count={count}
-      currentIndex={currentPage}
+      currentPage={currentPage}
       prevProps={{
         'aria-label': '前のページ',
         // Disabled prev/next stay plain <button>s — an <a> can't express the
         // disabled state (no `:disabled` pseudo-class), so only wire a Link
         // render when the control is actually enabled.
-        render: hasPrevPage ? (
+        render: hasPreviousPage ? (
           <Link href={createPageURL(currentPage - 1)} />
         ) : undefined,
       }}
@@ -43,13 +43,13 @@ export function Pagination(props: Props) {
           <Link href={createPageURL(currentPage + 1)} />
         ) : undefined,
       }}
-      renderItem={(index) => (
+      renderItem={(page) => (
         <UIPagination.Item
-          selected={index === currentPage}
-          render={<Link href={createPageURL(index)} />}
-          data-gtm={`article_click_pagination_${index}`}
+          selected={page === currentPage}
+          render={<Link href={createPageURL(page)} />}
+          data-gtm={`article_click_pagination_${page}`}
         >
-          {index}
+          {page}
         </UIPagination.Item>
       )}
     />

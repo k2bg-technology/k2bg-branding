@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { X_TIMELINE_URL } from './const';
-import { useTimeline } from './useTimeline';
+import { useXWidgetsScript } from './useXWidgetsScript';
 
 export function XTimeline() {
-  useTimeline();
+  useXWidgetsScript();
 
   return (
     <div>

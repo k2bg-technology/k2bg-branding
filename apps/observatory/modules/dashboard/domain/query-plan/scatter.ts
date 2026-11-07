@@ -58,8 +58,8 @@ export function planScatterTrend(
     selectedPeriod: period.toString(),
     dateRange: { firstDate: period.firstDate, lastDate: period.lastDate },
     measures: [
-      { column: slope, reduction: Reduction.LATEST, compares: false },
-      { column: intercept, reduction: Reduction.LATEST, compares: false },
+      { column: slope, reduction: Reduction.LATEST, hasComparison: false },
+      { column: intercept, reduction: Reduction.LATEST, hasComparison: false },
     ],
   };
 }

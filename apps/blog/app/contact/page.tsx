@@ -37,10 +37,10 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <PageLayout
-      fab={
-        <PageLayout.Fab>
+      floatingActions={
+        <PageLayout.FloatingActions>
           <ScrollToTopButton />
-        </PageLayout.Fab>
+        </PageLayout.FloatingActions>
       }
     >
       <PageLayout.Row>

@@ -1,7 +1,7 @@
 import { cn } from '../../../utils/cn';
 
 // `bg-gray-300` is a deliberate exception to the design-token color rule: no
-// base-* token is a visually reasonable match. See Skelton/Box/Box.tsx.
+// base-* token is a visually reasonable match. See Skeleton/Box/Box.tsx.
 interface Props
   extends React.PropsWithChildren,
     React.HTMLAttributes<HTMLDivElement> {}

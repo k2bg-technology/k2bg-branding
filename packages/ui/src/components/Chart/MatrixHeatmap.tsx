@@ -114,7 +114,7 @@ export function MatrixHeatmap({
         <ScrollArea
           className="min-w-0"
           data-slot="matrix-heatmap-scroll"
-          scrollbar={<ScrollArea.ScrollBar orientation="horizontal" />}
+          scrollbar={<ScrollArea.Scrollbar orientation="horizontal" />}
         >
           {/* `justify-start` keeps spare width on the trailing side. */}
           <div

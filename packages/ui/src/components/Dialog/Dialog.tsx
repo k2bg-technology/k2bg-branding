@@ -10,14 +10,14 @@ export interface Props extends DialogPrimitive.Root.Props {
   trigger: React.ReactNode;
   content: React.ReactNode;
   title: string;
-  isTitleHidden?: boolean;
+  visuallyHiddenTitle?: boolean;
   description?: string;
 }
 
 export function Dialog({
   trigger,
   title,
-  isTitleHidden = false,
+  visuallyHiddenTitle = false,
   description,
   content,
   ...rest
@@ -31,7 +31,7 @@ export function Dialog({
           <DialogPrimitive.Title
             className={cn(
               'text-body-r-sm leading-body-r-sm font-bold',
-              isTitleHidden && 'sr-only'
+              visuallyHiddenTitle && 'sr-only'
             )}
           >
             {title}

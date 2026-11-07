@@ -60,7 +60,7 @@ export interface DerivedLineSeries {
   id: string;
   label: string;
   /** Drawn dashed: a line read against its source, not a measurement of its own. */
-  overlay: boolean;
+  isOverlay: boolean;
   values: (number | null)[];
 }
 
@@ -92,14 +92,14 @@ export function deriveLineSeries(
   })();
   const scale = (series: (number | null)[]) =>
     slot.rebase === undefined ? series : rebase(series, base);
-  const drawsSource = !(stacked && slot.running !== undefined);
+  const isSourceDrawn = !(stacked && slot.running !== undefined);
   return [
-    ...(drawsSource
+    ...(isSourceDrawn
       ? [
           {
             id: slot.id,
             label: slot.label,
-            overlay: false,
+            isOverlay: false,
             values: scale(displayed),
           },
         ]
@@ -110,7 +110,7 @@ export function deriveLineSeries(
           {
             id: `${slot.id}-moving-average`,
             label: slot.movingAverage.label,
-            overlay: true,
+            isOverlay: true,
             values: scale(average),
           },
         ]),
@@ -120,7 +120,7 @@ export function deriveLineSeries(
           {
             id: `${slot.id}-running`,
             label: slot.running.label,
-            overlay: !stacked,
+            isOverlay: !stacked,
             values: scale(running),
           },
         ]),

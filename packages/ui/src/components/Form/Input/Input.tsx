@@ -7,8 +7,8 @@ import {
   type FormProps,
   resolveAriaDescribedBy,
   resolveAriaInvalid,
-  useFormContext,
-} from '../Control/Context';
+  useFieldContext,
+} from '../Field/FieldProvider';
 
 // `neutral-300` (disabled) is a deliberate exception: no base-* token is a
 // visually reasonable match for this disabled-state gray.
@@ -62,7 +62,7 @@ export function Input(props: Props) {
     ...formProps
   } = props;
   const { color, error, disabled, helperTextId, ...rest } =
-    useFormContext(formProps);
+    useFieldContext(formProps);
 
   return (
     <div className={cn('relative', disabled && '[&_i]:bg-neutral-300')}>

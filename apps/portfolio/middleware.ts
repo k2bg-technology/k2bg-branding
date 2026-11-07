@@ -50,11 +50,11 @@ export function middleware(request: NextRequest): NextResponse {
   }
 
   const { pathname } = request.nextUrl;
-  const pathnameHasLocale = languages.some(
+  const hasLocalePrefix = languages.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
-  if (!pathnameHasLocale) {
+  if (!hasLocalePrefix) {
     const locale = getLocale(request);
     return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
   }

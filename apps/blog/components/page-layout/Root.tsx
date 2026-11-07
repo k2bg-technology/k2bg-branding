@@ -4,11 +4,11 @@ import { Header } from '../header/Header';
 
 interface Props {
   children: React.ReactNode;
-  fab?: React.ReactNode;
+  floatingActions?: React.ReactNode;
   className?: string;
 }
 
-export function Root({ children, fab, className }: Props) {
+export function Root({ children, floatingActions, className }: Props) {
   return (
     <div className="min-h-screen grid grid-rows-[3rem_1fr_18.75rem] grid-cols-[1fr_calc(100%-3rem)_1fr] md:grid-cols-[1fr_46rem_1fr] xl:grid-cols-[1fr_77rem_1fr]">
       <main
@@ -21,7 +21,7 @@ export function Root({ children, fab, className }: Props) {
       </main>
       <Footer />
       <Header />
-      {fab}
+      {floatingActions}
     </div>
   );
 }

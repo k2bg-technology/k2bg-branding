@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Suspense } from 'react';
 
-import { DashboardIndex } from '../components/dashboard-index/DashboardIndex';
+import { DashboardList } from '../components/dashboard-list/DashboardList';
 import { PageLayout } from '../components/page-layout';
 import { createLoadDashboardsUseCase } from '../infrastructure';
 
@@ -15,7 +15,7 @@ export default function Page() {
         <Suspense
           fallback={<p className="text-body-r-md">Loading dashboards…</p>}
         >
-          <DashboardIndex loadDashboards={loadDashboards} />
+          <DashboardList loadDashboards={loadDashboards} />
         </Suspense>
       </PageLayout.Content>
       <PageLayout.Content>

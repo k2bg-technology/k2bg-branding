@@ -187,8 +187,8 @@ function plan(): Extract<SectionQueryPlan, { kind: 'stat-tiles' }> {
     selectedPeriod: '2026-08',
     dateRange: { firstDate: '2026-07-01', lastDate: '2026-08-31' },
     measures: [
-      { column: 'total', reduction: 'sum', compares: true },
-      { column: 'status', reduction: 'latest', compares: false },
+      { column: 'total', reduction: 'sum', hasComparison: true },
+      { column: 'status', reduction: 'latest', hasComparison: false },
     ],
   };
 }
@@ -202,14 +202,14 @@ describe('warehouse dashboard mapper', () => {
         {
           column: 'total',
           reduction: 'sum',
-          compares: false,
+          hasComparison: false,
           sparkline: { window: 3 },
           firstPeriod: '2026-06',
         },
         {
           column: 'status',
           reduction: 'latest',
-          compares: false,
+          hasComparison: false,
           firstPeriod: '2026-08',
         },
       ],
@@ -287,7 +287,7 @@ describe('warehouse dashboard mapper', () => {
   it('checks a comparing latest value in the previous bucket', () => {
     const comparing = plan();
     if (comparing.kind === 'stat-tiles') {
-      comparing.measures[1].compares = true;
+      comparing.measures[1].hasComparison = true;
     }
 
     const action = () =>
@@ -735,7 +735,7 @@ describe('toPivotCells', () => {
     );
 
     expect(sut).toEqual({
-      exceeded: false,
+      isCellLimitExceeded: false,
       cells: [
         { row: 'food', column: '2026-08', value: 300 },
         { row: null, column: '2026-07', value: 20 },
@@ -753,7 +753,7 @@ describe('toPivotCells', () => {
 
     expect(toPivotCells(rows, pivotPlan({ cellLimit: 2 }))).toEqual({
       cells: [],
-      exceeded: true,
+      isCellLimitExceeded: true,
     });
     expect(
       toPivotCells(
@@ -763,7 +763,7 @@ describe('toPivotCells', () => {
           value_0: 1,
         })),
         pivotPlan({ cellLimit: 2 })
-      )?.exceeded
+      )?.isCellLimitExceeded
     ).toBe(false);
   });
 
@@ -789,7 +789,7 @@ describe('toPivotCells', () => {
         pivotPlan({ columnKey: { kind: 'category', column: 'weekday' } })
       )
     ).toEqual({
-      exceeded: false,
+      isCellLimitExceeded: false,
       cells: [{ row: 'food', column: null, value: 1 }],
     });
   });

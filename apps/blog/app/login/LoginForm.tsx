@@ -23,7 +23,7 @@ export function LoginForm() {
     mode: 'onChange',
   });
 
-  const mutation = useMutation({
+  const login = useMutation({
     mutationKey: ['login'],
     mutationFn: async ({ email, password }: LoginInput) => {
       // signIn.email resolves with { error } instead of throwing, so surface
@@ -56,11 +56,11 @@ export function LoginForm() {
       <form
         noValidate
         className="flex flex-col gap-6"
-        onSubmit={handleSubmit((credentials) => mutation.mutate(credentials))}
+        onSubmit={handleSubmit((credentials) => login.mutate(credentials))}
       >
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-normal">
-            <Form.Control error={!!errors.email}>
+            <Form.Field error={!!errors.email}>
               <Form.Label htmlFor="email">メールアドレス</Form.Label>
               <Form.Input
                 {...register('email')}
@@ -72,10 +72,10 @@ export function LoginForm() {
               {errors.email?.message && (
                 <Form.HelperText>{errors.email.message}</Form.HelperText>
               )}
-            </Form.Control>
+            </Form.Field>
           </div>
           <div className="flex flex-col gap-normal">
-            <Form.Control error={!!errors.password}>
+            <Form.Field error={!!errors.password}>
               <Form.Label htmlFor="password">パスワード</Form.Label>
               <Form.Input
                 {...register('password')}
@@ -86,7 +86,7 @@ export function LoginForm() {
               {errors.password?.message && (
                 <Form.HelperText>{errors.password.message}</Form.HelperText>
               )}
-            </Form.Control>
+            </Form.Field>
           </div>
         </div>
         <Button
@@ -94,7 +94,7 @@ export function LoginForm() {
           color="main"
           size="lg"
           className="w-full"
-          disabled={mutation.isPending}
+          disabled={login.isPending}
         >
           ログイン
         </Button>

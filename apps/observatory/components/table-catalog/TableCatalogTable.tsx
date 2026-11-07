@@ -40,7 +40,7 @@ export function TableCatalogTable({ tables }: Props) {
         {/* Table's wrapper stays open so ScrollArea owns horizontal scrolling. */}
         <ScrollArea
           className="[&_[data-slot=table-container]]:overflow-visible"
-          scrollbar={<ScrollArea.ScrollBar orientation="horizontal" />}
+          scrollbar={<ScrollArea.Scrollbar orientation="horizontal" />}
         >
           <Table className="border-collapse border-b border-base-default/15 whitespace-nowrap">
             <Table.Header className="text-base-black/80">

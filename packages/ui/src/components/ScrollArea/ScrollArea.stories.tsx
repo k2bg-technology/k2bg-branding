@@ -62,7 +62,7 @@ export const HorizontalScroll: Story = {
         ))}
       </div>
     ),
-    scrollbar: <ScrollArea.ScrollBar orientation="horizontal" />,
+    scrollbar: <ScrollArea.Scrollbar orientation="horizontal" />,
   },
 };
 

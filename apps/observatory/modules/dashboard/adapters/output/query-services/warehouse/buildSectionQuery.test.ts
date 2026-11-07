@@ -15,7 +15,7 @@ import { buildPeriodBoundsQuery } from './query';
 
 function plan(
   reduction: Reduction = Reduction.SUM,
-  compares = false
+  hasComparison = false
 ): SectionQueryPlan {
   return {
     kind: 'stat-tiles',
@@ -25,10 +25,10 @@ function plan(
     timeZone: 'Asia/Tokyo',
     selectedPeriod: '2026-09',
     dateRange: {
-      firstDate: compares ? '2026-08-01' : '2026-09-01',
+      firstDate: hasComparison ? '2026-08-01' : '2026-09-01',
       lastDate: '2026-09-30',
     },
-    measures: [{ column: 'amount', reduction, compares }],
+    measures: [{ column: 'amount', reduction, hasComparison }],
   };
 }
 
@@ -405,13 +405,13 @@ describe('buildSectionQuery', () => {
         column: 'amount',
         reduction: 'sum',
         transform: 'absolute',
-        compares: false,
+        hasComparison: false,
       },
       {
         column: 'amount',
         reduction: 'latest',
         transform: 'negate',
-        compares: false,
+        hasComparison: false,
       },
     ];
 

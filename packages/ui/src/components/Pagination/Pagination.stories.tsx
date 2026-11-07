@@ -8,21 +8,21 @@ const meta = {
   component: Pagination,
   args: {
     count: 10,
-    currentIndex: 1,
+    currentPage: 1,
     prevProps: {
       onClick: fn(),
     },
     nextProps: {
       onClick: fn(),
     },
-    renderItem: (index) => <Pagination.Item>{index}</Pagination.Item>,
+    renderItem: (page) => <Pagination.Item>{page}</Pagination.Item>,
   },
   argTypes: {
     count: {
       control: 'number',
       description: 'Total number of pages',
     },
-    currentIndex: {
+    currentPage: {
       control: 'number',
       description: 'Current active page index',
     },
@@ -55,30 +55,30 @@ const meta = {
     },
   },
   render: function Render(args) {
-    const [currentIndex, setCurrentIndex] = useState(args.currentIndex);
+    const [currentPage, setCurrentPage] = useState(args.currentPage);
 
     return (
       <Pagination
         count={args.count}
-        currentIndex={currentIndex}
+        currentPage={currentPage}
         prevProps={{
           onClick: () => {
-            setCurrentIndex(currentIndex - 1);
+            setCurrentPage(currentPage - 1);
           },
         }}
         nextProps={{
           onClick: () => {
-            setCurrentIndex(currentIndex + 1);
+            setCurrentPage(currentPage + 1);
           },
         }}
-        renderItem={(index) => (
+        renderItem={(page) => (
           <Pagination.Item
-            selected={index === currentIndex}
+            selected={page === currentPage}
             onClick={() => {
-              setCurrentIndex(index);
+              setCurrentPage(page);
             }}
           >
-            {index}
+            {page}
           </Pagination.Item>
         )}
       />
@@ -106,13 +106,13 @@ export const ManyPages: Story = {
 export const MiddlePage: Story = {
   args: {
     count: 30,
-    currentIndex: 15,
+    currentPage: 15,
   },
 };
 
 export const LastPage: Story = {
   args: {
     count: 10,
-    currentIndex: 10,
+    currentPage: 10,
   },
 };

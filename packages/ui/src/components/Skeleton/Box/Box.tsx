@@ -2,7 +2,7 @@ import { cn } from '../../../utils/cn';
 
 // `bg-gray-300` is a deliberate exception to the design-token color rule: no
 // base-* token is a visually reasonable match (base-light is much lighter,
-// base-default/base-dark are much darker/warmer). See packages/ui/src/components/Skelton/Round/Round.tsx
+// base-default/base-dark are much darker/warmer). See packages/ui/src/components/Skeleton/Round/Round.tsx
 // for the same exception.
 interface Props extends React.ComponentPropsWithoutRef<'div'> {}
 

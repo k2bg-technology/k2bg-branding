@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Form } from '.';
 
 const meta = {
-  component: Form.Control,
+  component: Form.Field,
   args: {
     children: (
       <div className="flex flex-col gap-normal">
@@ -43,7 +43,7 @@ const meta = {
       references: 'components.form.references',
     },
   },
-} satisfies Meta<typeof Form.Control>;
+} satisfies Meta<typeof Form.Field>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

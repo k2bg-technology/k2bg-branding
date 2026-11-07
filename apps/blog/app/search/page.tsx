@@ -55,10 +55,10 @@ export default async function Page({ searchParams }: PageProps<'/search'>) {
 
   return (
     <PageLayout
-      fab={
-        <PageLayout.Fab>
+      floatingActions={
+        <PageLayout.FloatingActions>
           <ScrollToTopButton />
-        </PageLayout.Fab>
+        </PageLayout.FloatingActions>
       }
     >
       <h1 className="col-span-full text-heading-1 font-bold capitalize py-4">

@@ -1,0 +1,32 @@
+declare module 'react' {
+  interface IframeHTMLAttributes<T> extends React.HTMLAttributes<T> {
+    title?: string;
+  }
+}
+
+interface Props
+  /** https://developer.mozilla.org/ja/docs/Web/HTML/Element/iframe */
+  extends React.ComponentPropsWithoutRef<'iframe'> {
+  url: string;
+  width: number | '100%';
+  height: number | '100%';
+  name?: string;
+}
+
+export function EmbeddedMusicPlayer({
+  url,
+  width,
+  height,
+  name,
+  ...rest
+}: Props) {
+  return (
+    <iframe
+      title={name ?? 'Embedded music player'}
+      {...rest}
+      src={url}
+      width={width}
+      height={height}
+    />
+  );
+}

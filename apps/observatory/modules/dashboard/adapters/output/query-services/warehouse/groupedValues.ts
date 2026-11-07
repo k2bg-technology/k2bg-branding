@@ -50,7 +50,7 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
     ...(plan.buckets === null ? [] : ['period']),
     ...(plan.category === null ? [] : [CATEGORY_ALIAS]),
   ];
-  const hasLatest = plan.measures.some(
+  const usesLatestReduction = plan.measures.some(
     (measure) => measure.reduction === Reduction.LATEST
   );
   const filteredSelections = [
@@ -64,7 +64,7 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
       : [
           `CAST(${quoteIdentifier(plan.category.column)} AS STRING) AS ${CATEGORY_ALIAS}`,
         ]),
-    ...(hasLatest
+    ...(usesLatestReduction
       ? [`${sourceTimeExpression(plan.source.time)} AS source_time`]
       : []),
     ...(plan.category?.sortKey === null || plan.category?.sortKey === undefined
@@ -107,8 +107,8 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
         ]
       : []),
     ...filters.clauses.map((clause) => `AND ${clause}`),
-    ...(hasLatest || plan.buckets !== null ? [')' + ','] : [')']),
-    ...(hasLatest
+    ...(usesLatestReduction || plan.buckets !== null ? [')' + ','] : [')']),
+    ...(usesLatestReduction
       ? [
           `keyed AS (SELECT *, MAX(source_time) OVER (PARTITION BY ${keys.join(', ')}) AS latest_time FROM filtered)${plan.buckets === null ? '' : ','}`,
         ]
@@ -119,7 +119,7 @@ export function buildGroupedValuesQuery(plan: GroupedValuesPlan): BuiltQuery {
           'periods AS (SELECT DISTINCT period FROM filtered ORDER BY period DESC LIMIT @bucket_limit)',
         ]),
     `SELECT ${keys.join(', ')}, ${projections.join(',\n')}`,
-    `FROM ${hasLatest ? 'keyed' : 'filtered'}${plan.buckets === null ? '' : ' JOIN periods USING (period)'}`,
+    `FROM ${usesLatestReduction ? 'keyed' : 'filtered'}${plan.buckets === null ? '' : ' JOIN periods USING (period)'}`,
     `GROUP BY ${keys.join(', ')}`,
     `ORDER BY ${keys.map((key) => (key === 'period' ? 'period DESC' : key)).join(', ')}`,
   ].join('\n');

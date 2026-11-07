@@ -60,7 +60,7 @@ export function ContactForm({ dictionary, actionUrl }: Props) {
       onSubmit={handleSubmit}
     >
       <div className="flex flex-col gap-spacious md:flex-row">
-        <Form.Control color="light" disabled={isSubmitting}>
+        <Form.Field color="light" disabled={isSubmitting}>
           <div className="flex flex-col gap-normal w-full">
             <Form.Label htmlFor="name" data-gtm="contact_click_name_label">
               {dictionary.nameLabel}
@@ -74,8 +74,8 @@ export function ContactForm({ dictionary, actionUrl }: Props) {
               data-gtm="contact_focus_name_field"
             />
           </div>
-        </Form.Control>
-        <Form.Control color="light" disabled={isSubmitting}>
+        </Form.Field>
+        <Form.Field color="light" disabled={isSubmitting}>
           <div className="flex flex-col gap-normal w-full">
             <Form.Label htmlFor="email" data-gtm="contact_click_email_label">
               {dictionary.emailLabel}
@@ -89,9 +89,9 @@ export function ContactForm({ dictionary, actionUrl }: Props) {
               data-gtm="contact_focus_email_field"
             />
           </div>
-        </Form.Control>
+        </Form.Field>
       </div>
-      <Form.Control color="light" disabled={isSubmitting}>
+      <Form.Field color="light" disabled={isSubmitting}>
         <div className="flex flex-col gap-normal w-full">
           <Form.Label htmlFor="message" data-gtm="contact_click_message_label">
             {dictionary.messageLabel}
@@ -106,7 +106,7 @@ export function ContactForm({ dictionary, actionUrl }: Props) {
             data-gtm="contact_focus_message_field"
           />
         </div>
-      </Form.Control>
+      </Form.Field>
       <div
         role="status"
         aria-live="polite"

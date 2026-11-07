@@ -5,29 +5,29 @@ import { describe, expect, it } from 'vitest';
 
 import { Form } from '..';
 
-type ControlProps = React.ComponentProps<typeof Form.Control>;
+type FieldProps = React.ComponentProps<typeof Form.Field>;
 type HelperTextProps = React.ComponentProps<typeof Form.HelperText>;
 
 const labelText = 'Email';
 const helperTextContent = 'Enter a valid email address';
 
-interface ControlOptions {
-  controlProps?: ControlProps;
+interface FieldOptions {
+  fieldProps?: FieldProps;
   helperTextProps?: HelperTextProps;
 }
 
-function buildControl({
-  controlProps = {},
+function createField({
+  fieldProps = {},
   helperTextProps = {},
-}: ControlOptions = {}) {
+}: FieldOptions = {}) {
   return (
-    <Form.Control {...controlProps}>
+    <Form.Field {...fieldProps}>
       <Form.Label htmlFor="email">{labelText}</Form.Label>
       <Form.Input id="email" />
       <Form.HelperText {...helperTextProps}>
         {helperTextContent}
       </Form.HelperText>
-    </Form.Control>
+    </Form.Field>
   );
 }
 
@@ -41,13 +41,13 @@ function getHelperText() {
 
 describe('Form.HelperText', () => {
   it('renders the helper text content', () => {
-    render(buildControl());
+    render(createField());
 
     expect(getHelperText()).toBeInTheDocument();
   });
 
   it('identifies itself with the id the control describes the input with', () => {
-    render(buildControl({ controlProps: { error: true } }));
+    render(createField({ fieldProps: { error: true } }));
 
     expect(getHelperText().id).not.toBe('');
     expect(getInput()).toHaveAttribute('aria-describedby', getHelperText().id);
@@ -57,8 +57,8 @@ describe('Form.HelperText', () => {
     const customHelperTextId = 'custom-helper';
 
     render(
-      buildControl({
-        controlProps: { error: true, helperTextId: customHelperTextId },
+      createField({
+        fieldProps: { error: true, helperTextId: customHelperTextId },
       })
     );
 
@@ -70,8 +70,8 @@ describe('Form.HelperText', () => {
     const customHelperTextId = 'custom-helper';
 
     const html = renderToString(
-      buildControl({
-        controlProps: { error: true, helperTextId: customHelperTextId },
+      createField({
+        fieldProps: { error: true, helperTextId: customHelperTextId },
       })
     );
 
@@ -86,8 +86,8 @@ describe('Form.HelperText', () => {
     const strayProps = { helperTextId: strayHelperTextId } as HelperTextProps;
 
     render(
-      buildControl({
-        controlProps: { error: true },
+      createField({
+        fieldProps: { error: true },
         helperTextProps: strayProps,
       })
     );
@@ -97,7 +97,7 @@ describe('Form.HelperText', () => {
   });
 
   it('rejects a helper text id at the type level', () => {
-    // @ts-expect-error -- only Form.Control can keep both sides in sync.
+    // @ts-expect-error -- only Form.Field can keep both sides in sync.
     const element = <Form.HelperText helperTextId="custom-helper" />;
 
     expect(element).toBeDefined();

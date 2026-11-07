@@ -91,10 +91,10 @@ function collectDefinitions(
         };
       }
 
-      const duplicate = result.definitions.some(
+      const isDuplicateId = result.definitions.some(
         (definition) => definition.id === loaded.definition?.id
       );
-      return duplicate
+      return isDuplicateId
         ? {
             definitions: result.definitions,
             issues: result.issues.concat(loaded.issues, {

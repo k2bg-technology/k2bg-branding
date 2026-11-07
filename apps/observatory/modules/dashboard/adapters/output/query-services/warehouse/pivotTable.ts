@@ -63,7 +63,7 @@ export function buildPivotQuery(plan: PivotQueryPlan): BuiltQuery {
           `CAST(COUNT(DISTINCT TO_JSON_STRING(${SORT_KEY_ALIAS})) AS FLOAT64) AS ${SORT_KEY_DISTINCT_COUNT_ALIAS}`,
         ]),
   ];
-  const hasLatest = plan.measure.reduction === Reduction.LATEST;
+  const usesLatestReduction = plan.measure.reduction === Reduction.LATEST;
   const sql = [
     'WITH filtered AS (',
     `SELECT ${filteredSelections.join(', ')}`,
@@ -72,14 +72,14 @@ export function buildPivotQuery(plan: PivotQueryPlan): BuiltQuery {
     `AND ${calendarDate} <= CAST(@${PERIOD_END_PARAMETER} AS DATE)`,
     ...(validatedHour === null ? [] : [`AND ${validatedHour} IS NOT NULL`]),
     ...filters.clauses.map((clause) => `AND ${clause}`),
-    hasLatest ? '),' : ')',
-    ...(hasLatest
+    usesLatestReduction ? '),' : ')',
+    ...(usesLatestReduction
       ? [
           `keyed AS (SELECT *, MAX(source_time) OVER (PARTITION BY ${ROW_KEY_ALIAS}, ${COLUMN_KEY_ALIAS}) AS latest_time FROM filtered)`,
         ]
       : []),
     `SELECT ${ROW_KEY_ALIAS}, ${COLUMN_KEY_ALIAS}, ${projections.join(',\n')}`,
-    `FROM ${hasLatest ? 'keyed' : 'filtered'}`,
+    `FROM ${usesLatestReduction ? 'keyed' : 'filtered'}`,
     `GROUP BY ${ROW_KEY_ALIAS}, ${COLUMN_KEY_ALIAS}`,
     `ORDER BY ${ROW_KEY_ALIAS}, ${COLUMN_KEY_ALIAS}`,
     `LIMIT @${CELL_LIMIT_PARAMETER}`,
