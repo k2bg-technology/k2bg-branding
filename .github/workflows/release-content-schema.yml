@@ -1,0 +1,74 @@
+name: Release Content Schema
+
+on:
+  push:
+    tags: ['content-schema@*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify tag version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          version=$(node -p "require('./packages/content-schema/package.json').version")
+          if [ "${TAG#content-schema@}" != "$version" ]; then
+            echo "::error::Tag version does not match packages/content-schema/package.json"
+            exit 1
+          fi
+
+      - name: Test content schema
+        run: pnpm -F content-schema test
+
+      - name: Build content schema
+        run: pnpm -F content-schema build
+
+      - name: Pack content schema
+        run: pnpm -F content-schema pack --pack-destination "$RUNNER_TEMP/pack"
+
+      - name: Verify tarball contents
+        run: |
+          for tarball in "$RUNNER_TEMP"/pack/*.tgz; do
+            tar -tzf "$tarball" > "$RUNNER_TEMP/tarball-entries.txt"
+            while IFS= read -r entry; do
+              case "$entry" in
+                package/package.json|package/README.md|package/dist/*) ;;
+                *)
+                  echo "::error::Unexpected tarball entry: $entry"
+                  exit 1
+                  ;;
+              esac
+            done < "$RUNNER_TEMP/tarball-entries.txt"
+          done
+
+      - name: Create GitHub Release
+        env:
+          TAG: ${{ github.ref_name }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$TAG" "$RUNNER_TEMP"/pack/*.tgz \
+            --title "$TAG" \
+            --notes "Content bundle schemas and validation for a client. See the packaged README for the contract and usage."

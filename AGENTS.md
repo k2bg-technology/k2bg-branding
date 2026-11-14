@@ -19,7 +19,9 @@ selection, engineering trade-offs, writing tone).
 - Packages: `packages/ui` (shared React components + Storybook), `packages/test-utils`
   (Vitest helpers), `packages/logger` (pino root logger with PII redaction; apps create
   module loggers via `logger.child({ module })`), `packages/tailwind-config` (design
-  tokens), `packages/biome-config`, `packages/tsconfig`.
+  tokens), `packages/biome-config`, `packages/tsconfig`, and `packages/content-schema`
+  (Zod schemas and cross-reference checks for the blog content bundle, released as a
+  GitHub Release tarball).
 - CI, templates, and bots live under `.github/`. See `.github/PULL_REQUEST_TEMPLATE.md`.
 - Tech stack: Next.js 16 (Turbopack, React Compiler), Remotion, TypeScript (strict,
   100%), Tailwind CSS v4, Turborepo, pnpm 10+.
