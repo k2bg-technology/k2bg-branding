@@ -21,6 +21,7 @@ export const affiliateTypeSchema = z.enum(AffiliateType);
 const uuidSchema = z
   .string()
   .regex(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+const httpsUrlSchema = z.url({ protocol: /^https$/ });
 const slugSchema = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/);
 
 export const postSchema = z.strictObject({
@@ -35,7 +36,7 @@ export const postSchema = z.strictObject({
   author: z.string().optional(),
   releaseDate: z.iso.date(),
   revisionDate: z.iso.date(),
-  heroImage: z.url().startsWith('https://').optional(),
+  heroImage: httpsUrlSchema.optional(),
   content: z.string(),
   createdAt: z.iso.datetime({ offset: true }),
   updatedAt: z.iso.datetime({ offset: true }),
@@ -48,9 +49,9 @@ export const mediaSchema = z
     id: uuidSchema,
     type: mediaTypeSchema,
     name: z.string().min(1),
-    sourceFile: z.url().optional(),
-    sourceUrl: z.url().optional(),
-    targetUrl: z.url().optional(),
+    sourceFile: httpsUrlSchema.optional(),
+    sourceUrl: httpsUrlSchema.optional(),
+    targetUrl: httpsUrlSchema.optional(),
     width: z.int().positive(),
     height: z.int().positive(),
     extension: z
@@ -85,11 +86,11 @@ export type Media = z.infer<typeof mediaSchema>;
 const affiliateFields = {
   id: uuidSchema,
   name: z.string().min(1),
-  targetUrl: z.url(),
+  targetUrl: httpsUrlSchema,
   provider: z.string().min(1).max(50),
 };
 const imageSchema = z.strictObject({
-  src: z.url(),
+  src: httpsUrlSchema,
   width: z.int().positive(),
   height: z.int().positive(),
 });
@@ -124,7 +125,7 @@ export type Affiliate = z.infer<typeof affiliateSchema>;
 export const authorSchema = z.strictObject({
   id: uuidSchema,
   name: z.string().min(1),
-  avatarUrl: z.url().optional(),
+  avatarUrl: httpsUrlSchema.optional(),
 });
 
 export type Author = z.infer<typeof authorSchema>;

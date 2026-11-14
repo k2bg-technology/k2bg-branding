@@ -56,7 +56,8 @@ bundle type is `ContentBundle`.
 Every object is strict: unknown keys are rejected, including nested image and
 author objects. All listed fields are required unless marked optional. IDs use
 lowercase canonical UUID text:
-`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`.
+`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`. Every URL field
+accepts only `https:` URLs.
 
 ### Top-level fields
 
@@ -84,7 +85,7 @@ lowercase canonical UUID text:
 | `tags` | At most 20 strings, each non-empty and at most 10 characters |
 | `author` | Optional key into `authors` |
 | `releaseDate`, `revisionDate` | Valid calendar dates in `YYYY-MM-DD` format |
-| `heroImage` | Optional URL starting with `https://` |
+| `heroImage` | Optional URL |
 | `content` | Markdown body string |
 | `createdAt`, `updatedAt` | ISO 8601 datetimes with a timezone offset or `Z` |
 
