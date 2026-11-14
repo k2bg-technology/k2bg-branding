@@ -350,6 +350,23 @@ describe('validateContentBundle', () => {
       field: 'id',
     },
     {
+      scenario: 'a javascript: target URL',
+      change: (bundle) => {
+        bundle.affiliates[0].targetUrl = 'javascript:alert(1)';
+      },
+      item: 'affiliates/dddddddd-dddd-dddd-dddd-ddddddddddd1',
+      field: 'targetUrl',
+    },
+    {
+      scenario: 'an http image URL',
+      change: (bundle) => {
+        if (bundle.affiliates[0].type === 'PRODUCT')
+          bundle.affiliates[0].image.src = 'http://example.com/image.png';
+      },
+      item: 'affiliates/dddddddd-dddd-dddd-dddd-ddddddddddd1',
+      field: 'image.src',
+    },
+    {
       scenario: 'an invalid nested image width',
       change: (bundle) => {
         if (bundle.affiliates[0].type === 'PRODUCT')

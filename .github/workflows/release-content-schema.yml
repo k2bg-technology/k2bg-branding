@@ -4,19 +4,23 @@ on:
   push:
     tags: ['content-schema@*']
 
-permissions:
-  contents: write
+permissions: {}
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  release:
+  build:
+    name: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Install pnpm
         uses: pnpm/action-setup@v6
@@ -64,11 +68,35 @@ jobs:
             done < "$RUNNER_TEMP/tarball-entries.txt"
           done
 
+      - name: Upload tarball
+        uses: actions/upload-artifact@v7
+        with:
+          name: content-schema-tarball
+          path: ${{ runner.temp }}/pack/*.tgz
+          if-no-files-found: error
+          retention-days: 1
+
+  # Holds the only write token and runs only GitHub-owned actions: no checkout, no dependency install.
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download tarball
+        uses: actions/download-artifact@v8
+        with:
+          name: content-schema-tarball
+          path: pack
+
       - name: Create GitHub Release
         env:
           TAG: ${{ github.ref_name }}
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
         run: |
-          gh release create "$TAG" "$RUNNER_TEMP"/pack/*.tgz \
+          gh release create "$TAG" pack/*.tgz \
+            --verify-tag \
             --title "$TAG" \
             --notes "Content bundle schemas and validation for a client. See the packaged README for the contract and usage."
