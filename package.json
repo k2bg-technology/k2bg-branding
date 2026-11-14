@@ -23,7 +23,7 @@
     "@types/webpack-env": "^1.18.8",
     "tsup": "^8.5.1",
     "turbo": "2.11.10",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "packageManager": "pnpm@10.33.2",
   "engines": {
