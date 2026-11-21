@@ -22,7 +22,7 @@
     "@turbo/gen": "^2.11.10",
     "@types/webpack-env": "^1.18.8",
     "ajv": "^8.20.0",
-    "tsup": "^8.5.1",
+    "tsup": "^9.0.0",
     "turbo": "2.11.10",
     "typescript": "^5.9.3"
   },
