@@ -116,6 +116,9 @@ const meta = {
     stacked: {
       control: 'boolean',
     },
+    connectGaps: {
+      control: 'boolean',
+    },
     period: {
       control: 'select',
       options: ['day', 'week', 'month', 'quarter', 'year'],
@@ -260,6 +263,13 @@ export const WithGaps: Story = {
       },
       bedroomSeries,
     ],
+  },
+};
+
+export const ConnectedGaps: Story = {
+  args: {
+    ...WithGaps.args,
+    connectGaps: true,
   },
 };
 

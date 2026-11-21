@@ -295,6 +295,8 @@ filter → transform → reduce → top-N and remainder → fill missing periods
 
 **Display.** A section declares a shared `format` and optional `unit`. Its `variant` is `line` by default or `area`; `stacked` defaults to `false`.
 
+**Gaps.** `gaps` defaults to `break`, which breaks lines, areas, and bands at missing buckets. Set `gaps: "connect"` to draw across missing buckets while keeping their values missing. A section with `stacked: true` must use `break`.
+
 **Series.** A section declares exactly one of `series` and `pivot`.
 
 - `series` holds 1–12 elements, each one of:

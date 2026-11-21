@@ -242,6 +242,7 @@ export interface TimeSeriesSection extends SectionGateFields {
   window?: number;
   variant: 'line' | 'area';
   stacked: boolean;
+  gaps?: 'break' | 'connect';
   format: ValueFormat;
   unit?: string;
   series?: TimeSeriesSeriesDefinition[];

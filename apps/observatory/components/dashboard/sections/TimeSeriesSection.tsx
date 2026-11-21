@@ -160,6 +160,7 @@ export function TimeSeriesSection({
         bands={bands}
         variant={section.variant}
         stacked={section.stacked}
+        connectGaps={section.gaps === 'connect'}
         locale={dashboard.locale}
         timeZone={dashboard.timeZone}
         currency={dashboard.currency}

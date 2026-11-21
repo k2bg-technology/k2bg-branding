@@ -241,18 +241,52 @@ describe('TimeSeriesChart interpolation', () => {
   });
 });
 
+describe.each([
+  { variant: 'line' as const, selector: lineCurve },
+  { variant: 'area' as const, selector: 'path.recharts-area-area' },
+])('TimeSeriesChart $variant gaps', ({ variant, selector }) => {
+  it.each([
+    { name: 'breaks the path by default', connectGaps: undefined, subPaths: 2 },
+    { name: 'bridges the gap when enabled', connectGaps: true, subPaths: 1 },
+  ])('$name', ({ connectGaps, subPaths }) => {
+    const sut = (
+      <TimeSeriesChart
+        label="Room temperature"
+        period="month"
+        variant={variant}
+        connectGaps={connectGaps}
+        series={[
+          {
+            id: 'room',
+            label: 'Room',
+            points: januaryPoints([20, 22, null, 21, 23]),
+          },
+        ]}
+      />
+    );
+
+    const { container } = render(sut);
+
+    expect(curvePathData(container, selector).map(subPathCount)).toEqual([
+      subPaths,
+    ]);
+  });
+});
+
 describe('TimeSeriesChart band series', () => {
   it.each`
-    bounds               | points                    | expectedSubPaths
-    ${'a half-measured'} | ${halfMeasuredBandPoints} | ${2}
-    ${'only measured'}   | ${completeBandPoints}     | ${1}
+    bounds               | points                    | connectGaps  | expectedSubPaths
+    ${'a half-measured'} | ${halfMeasuredBandPoints} | ${undefined} | ${2}
+    ${'only measured'}   | ${completeBandPoints}     | ${undefined} | ${1}
+    ${'a bridged'}       | ${halfMeasuredBandPoints} | ${true}      | ${1}
   `(
     'draws $expectedSubPaths band sub-paths with $bounds point',
-    ({ points, expectedSubPaths }) => {
+    ({ points, connectGaps, expectedSubPaths }) => {
       const { container } = render(
         <TimeSeriesChart
           label="Resting heart rate"
           period="month"
+          connectGaps={connectGaps}
           series={[bandSeries(points)]}
         />
       );
@@ -328,6 +362,25 @@ describe('TimeSeriesChart stacking', () => {
       ).toBe(expectedSubPaths);
     }
   );
+
+  it('keeps a break at a missing bucket in a stacked area with connectGaps enabled', () => {
+    const sut = (
+      <TimeSeriesChart
+        label="Power draw per room"
+        period="month"
+        variant="area"
+        stacked
+        connectGaps
+        series={stackableSeries}
+      />
+    );
+
+    const { container } = render(sut);
+
+    expect(curvePathData(container, areaCurve).map(subPathCount)).toEqual([
+      2, 1,
+    ]);
+  });
 
   it('draws the line variant unstacked even when stacking is asked for', () => {
     const { container } = render(

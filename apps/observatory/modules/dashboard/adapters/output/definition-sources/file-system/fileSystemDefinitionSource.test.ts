@@ -729,8 +729,74 @@ describe('FileSystemDefinitionSource', () => {
         ).toMatchObject({
           variant: 'line',
           stacked: false,
+          gaps: 'break',
           series: [{ reduction: 'sum' }],
         });
+      }
+    );
+  });
+
+  it('loads a time series configured to connect gaps', async () => {
+    const section = createTimeSeries({ gaps: 'connect' });
+    await withDefinitionDirectory(
+      { 'series.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0].sections[0]).toMatchObject({
+          gaps: 'connect',
+        });
+      }
+    );
+  });
+
+  it('loads a stacked area time series configured to break at gaps', async () => {
+    const section = createTimeSeries({
+      variant: 'area',
+      stacked: true,
+      gaps: 'break',
+    });
+    await withDefinitionDirectory(
+      { 'series.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0].sections[0]).toMatchObject({
+          variant: 'area',
+          stacked: true,
+          gaps: 'break',
+        });
+      }
+    );
+  });
+
+  it('rejects connected gaps in a stacked time series', async () => {
+    const section = createTimeSeries({
+      variant: 'area',
+      stacked: true,
+      gaps: 'connect',
+    });
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions).toHaveLength(0);
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({
+            fileName: 'invalid.json',
+            path: 'sections[0].gaps',
+            message: 'gaps cannot be "connect" when stacked is true',
+          })
+        );
       }
     );
   });
