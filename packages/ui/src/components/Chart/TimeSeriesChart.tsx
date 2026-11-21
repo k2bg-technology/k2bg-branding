@@ -205,6 +205,11 @@ interface Props {
   variant?: 'line' | 'area';
   /** Stacks the area variant's series, first series at the bottom; the line variant ignores it. */
   stacked?: boolean;
+  /**
+   * Draws across missing buckets in line, unstacked area, and band series.
+   * Stacked area series always break at missing buckets.
+   */
+  connectGaps?: boolean;
   thresholds?: ChartThreshold[];
   bands?: ChartReferenceBand[];
   /** IANA time zone name, e.g. 'Asia/Tokyo'. */
@@ -225,6 +230,7 @@ export function TimeSeriesChart({
   period,
   variant = 'line',
   stacked = false,
+  connectGaps = false,
   thresholds,
   bands,
   timeZone = 'UTC',
@@ -248,15 +254,11 @@ export function TimeSeriesChart({
     timeZone,
     locale
   );
-  const axisBounds = valueAxisBounds(
-    rows,
-    series,
-    variant === 'area' && stacked,
-    [
-      ...(thresholds ?? []).map((threshold) => threshold.value),
-      ...(bands ?? []).flatMap((band) => [band.from, band.to]),
-    ]
-  );
+  const isStackedArea = variant === 'area' && stacked;
+  const axisBounds = valueAxisBounds(rows, series, isStackedArea, [
+    ...(thresholds ?? []).map((threshold) => threshold.value),
+    ...(bands ?? []).flatMap((band) => [band.from, band.to]),
+  ]);
   const seriesInfoByDataKey = new Map(
     series.map((seriesItem, index) => [
       seriesDataKey(seriesItem.id),
@@ -423,7 +425,7 @@ export function TimeSeriesChart({
                   fillOpacity={seriesItem.fillOpacity ?? 0.2}
                   stroke="none"
                   activeDot={false}
-                  connectNulls={false}
+                  connectNulls={connectGaps}
                   isAnimationActive={animated}
                 />
               );
@@ -434,7 +436,7 @@ export function TimeSeriesChart({
                   key={seriesItem.id}
                   dataKey={seriesDataKey(seriesItem.id)}
                   type={curveType(seriesItem)}
-                  stackId={stacked ? seriesStackId : undefined}
+                  stackId={isStackedArea ? seriesStackId : undefined}
                   fill={`url(#${gradientId(seriesItem.id)})`}
                   fillOpacity={areaFillOpacity * (seriesItem.opacity ?? 1)}
                   stroke={seriesColor(seriesItem.id)}
@@ -443,7 +445,7 @@ export function TimeSeriesChart({
                   strokeOpacity={seriesItem.opacity}
                   dot={isolatedPointDot(seriesItem.id)}
                   activeDot={{ r: 4 }}
-                  connectNulls={false}
+                  connectNulls={connectGaps && !isStackedArea}
                   isAnimationActive={animated}
                 />
               );
@@ -459,7 +461,7 @@ export function TimeSeriesChart({
                 strokeOpacity={seriesItem.opacity}
                 dot={isolatedPointDot(seriesItem.id)}
                 activeDot={{ r: 4 }}
-                connectNulls={false}
+                connectNulls={connectGaps}
                 isAnimationActive={animated}
               />
             );

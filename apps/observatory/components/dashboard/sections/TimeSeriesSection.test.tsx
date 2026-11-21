@@ -248,6 +248,35 @@ describe('TimeSeriesSection', () => {
     expect(props.bands).toBeUndefined();
   });
 
+  it.each([
+    { gaps: 'connect' as const, connectGaps: true },
+    { gaps: 'break' as const, connectGaps: false },
+    { gaps: undefined, connectGaps: false },
+  ])(
+    'connects gaps $connectGaps for gaps $gaps while keeping the missing bucket empty',
+    ({ gaps, connectGaps }) => {
+      const dashboard = definition('day', 'day', 3);
+      const section = dashboard.sections[0];
+      if (section.kind !== 'time-series')
+        throw new Error('Expected time series');
+      section.gaps = gaps;
+
+      const props = renderSeries(dashboard, '2026-08-15', [
+        { period: '2026-08-15', value_0: 21 },
+        { period: '2026-08-13', value_0: 19 },
+      ]);
+
+      expect(props.connectGaps).toBe(connectGaps);
+      expect(props.series[0]).toMatchObject({
+        points: [
+          { timestamp: 1786546800000, value: 19 },
+          { timestamp: 1786633200000, value: null },
+          { timestamp: 1786719600000, value: 21 },
+        ],
+      });
+    }
+  );
+
   it('fills missing Tokyo hours for pivot slots', () => {
     const dashboard = definition('day', 'hour');
     const section = dashboard.sections[0];

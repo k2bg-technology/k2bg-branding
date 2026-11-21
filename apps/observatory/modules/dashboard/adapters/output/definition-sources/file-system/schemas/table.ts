@@ -6,6 +6,7 @@ import {
   type TableSection,
 } from '../../../../../domain';
 import {
+  dashboardIdSchema,
   identifierSchema,
   sectionControlsSchema,
   sectionGateFields,
@@ -25,7 +26,14 @@ const columnBase = {
 const columnSchemaBase = z.discriminatedUnion('type', [
   z.strictObject({
     ...columnBase,
-    type: z.enum(['text', 'date', 'timestamp']),
+    type: z.literal('text'),
+    link: z
+      .strictObject({ dashboard: dashboardIdSchema, control: sectionIdSchema })
+      .optional(),
+  }),
+  z.strictObject({
+    ...columnBase,
+    type: z.enum(['date', 'timestamp']),
   }),
   z.strictObject({
     ...columnBase,

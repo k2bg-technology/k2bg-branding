@@ -123,6 +123,7 @@ const timeSeriesSectionSchemaBase = z.strictObject({
   window: z.number().int().min(1).optional(),
   variant: z.enum(['line', 'area']).default('line'),
   stacked: z.boolean().default(false),
+  gaps: z.enum(['break', 'connect']).default('break'),
   format: valueFormatSchema,
   unit: z.string().min(1).optional(),
   series: z.array(timeSeriesSeriesSchema).min(1).max(12).optional(),
@@ -157,8 +158,10 @@ const timeSeriesSectionSchemaBase = z.strictObject({
     .optional(),
 });
 
-export const timeSeriesSectionSchema =
-  timeSeriesSectionSchemaBase satisfies z.ZodType<
-    TimeSeriesSection,
-    z.input<typeof timeSeriesSectionSchemaBase>
-  >;
+export const timeSeriesSectionSchema = timeSeriesSectionSchemaBase.refine(
+  ({ gaps, stacked }) => gaps !== 'connect' || !stacked,
+  { message: 'gaps cannot be "connect" when stacked is true', path: ['gaps'] }
+) satisfies z.ZodType<
+  TimeSeriesSection,
+  z.input<typeof timeSeriesSectionSchemaBase>
+>;

@@ -88,7 +88,11 @@ interface TableColumnBase {
 }
 
 export type TableColumnDefinition =
-  | (TableColumnBase & { type: 'text' | 'date' | 'timestamp' })
+  | (TableColumnBase & {
+      type: 'text';
+      link?: { dashboard: string; control: string };
+    })
+  | (TableColumnBase & { type: 'date' | 'timestamp' })
   | (TableColumnBase & {
       type: 'number';
       format: ValueFormat;
@@ -238,6 +242,7 @@ export interface TimeSeriesSection extends SectionGateFields {
   window?: number;
   variant: 'line' | 'area';
   stacked: boolean;
+  gaps?: 'break' | 'connect';
   format: ValueFormat;
   unit?: string;
   series?: TimeSeriesSeriesDefinition[];

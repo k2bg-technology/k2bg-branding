@@ -19,6 +19,7 @@ interface Props {
   bands?: ChartReferenceBand[];
   variant: 'line' | 'area';
   stacked: boolean;
+  connectGaps: boolean;
   locale: string;
   timeZone: string;
   currency?: string;
@@ -35,6 +36,7 @@ export function TimeSeriesSectionChart({
   bands,
   variant,
   stacked,
+  connectGaps,
   locale,
   timeZone,
   currency,
@@ -50,6 +52,7 @@ export function TimeSeriesSectionChart({
       period={chartPeriod}
       variant={variant}
       stacked={stacked}
+      connectGaps={connectGaps}
       timeZone={timeZone}
       locale={locale}
       valueFormatter={(value) =>
