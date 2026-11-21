@@ -99,6 +99,7 @@ export const reductionSchema = z.enum([
 ]);
 export const transformSchema = z.enum(['negate', 'absolute']);
 
+export const dashboardIdSchema = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/);
 export const sectionIdSchema = z.string().regex(/^[a-z0-9][a-z0-9-]{0,63}$/);
 export const sectionWidthSchema = z.enum([
   SectionWidth.FULL,

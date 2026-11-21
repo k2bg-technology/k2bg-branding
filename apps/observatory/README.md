@@ -374,12 +374,13 @@ A `table` section reads the view's rows within the selected period without aggre
 
 | `type` | Column | Display |
 | --- | --- | --- |
-| `text` | — | — |
+| `text` | — | accepts `link` |
 | `number` | — | accepts `format` (default `number`), `unit`, and `transform` |
 | `date` | DATE | medium date formatting |
 | `timestamp` | — | medium date and time in the dashboard time zone |
 
 - Optional `alignment` is `start` or `end`; numbers default to `end`, while other columns default to `start`.
+- A `text` column can set `link: { dashboard, control }` with the target dashboard ID and control ID. Each nonempty, non-NULL cell links to `/dashboards/<dashboard>?control.<control>=<value>` using its displayed text as the URL-encoded value. NULL and empty cells remain plain text.
 - A column type that does not match its view column renders the unavailable state.
 
 **Sort.** Optional `sort { column, direction }` uses `ascending` or `descending` on the displayed, transformed value, with NULL last and remaining columns as tie-breakers. The default order puts the newest source time first.

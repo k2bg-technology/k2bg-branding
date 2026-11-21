@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import type { ReactNode } from 'react';
 import { DataTable, type DataTableColumn, type DataTableRow } from 'ui';
 
 import {
@@ -38,7 +40,7 @@ function formatCell(
   cell: TableCell,
   column: TableColumnDefinition,
   dashboard: DashboardDefinition
-): string {
+): ReactNode {
   if (cell === null) {
     return NULL_VALUE;
   }
@@ -69,6 +71,22 @@ function formatCell(
   }
   if (typeof cell !== 'string') {
     throw new Error('Text column requires a string cell');
+  }
+  if (column.type === 'text' && column.link !== undefined && cell !== '') {
+    const query = serializeUrlState({
+      period: null,
+      controls: { [column.link.control]: cell },
+      pages: {},
+      foreign: [],
+    });
+    return (
+      <Link
+        className="underline underline-offset-4"
+        href={`/dashboards/${column.link.dashboard}?${query}`}
+      >
+        {cell}
+      </Link>
+    );
   }
   return cell;
 }

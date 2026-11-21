@@ -453,6 +453,74 @@ describe('FileSystemDefinitionSource', () => {
     );
   });
 
+  it('loads a text column link to another dashboard', async () => {
+    const column = {
+      header: 'Category',
+      column: 'category',
+      type: 'text',
+      link: { dashboard: 'category-detail', control: 'selected-category' },
+    };
+    const section = createTable({ columns: [column] });
+    await withDefinitionDirectory(
+      { 'table.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0].sections[0]).toMatchObject({
+          columns: [
+            {
+              link: {
+                dashboard: 'category-detail',
+                control: 'selected-category',
+              },
+            },
+          ],
+        });
+      }
+    );
+  });
+
+  it.each([
+    {
+      name: 'a link on a non-text column',
+      type: 'date',
+      link: { dashboard: 'category-detail', control: 'selected-category' },
+      path: 'sections[0].columns[0]',
+    },
+    {
+      name: 'an invalid link dashboard ID',
+      type: 'text',
+      link: { dashboard: 'category--detail', control: 'selected-category' },
+      path: 'sections[0].columns[0].link.dashboard',
+    },
+    {
+      name: 'an invalid link control ID',
+      type: 'text',
+      link: { dashboard: 'category-detail', control: 'selected.category' },
+      path: 'sections[0].columns[0].link.control',
+    },
+  ])('rejects $name', async ({ type, link, path }) => {
+    const section = createTable({
+      columns: [{ header: 'Category', column: 'category', type, link }],
+    });
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions).toHaveLength(0);
+        expect(result.issues).toContainEqual(
+          expect.objectContaining({ fileName: 'invalid.json', path })
+        );
+      }
+    );
+  });
+
   it.each([
     {
       name: 'zero limit',

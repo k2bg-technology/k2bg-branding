@@ -88,7 +88,11 @@ interface TableColumnBase {
 }
 
 export type TableColumnDefinition =
-  | (TableColumnBase & { type: 'text' | 'date' | 'timestamp' })
+  | (TableColumnBase & {
+      type: 'text';
+      link?: { dashboard: string; control: string };
+    })
+  | (TableColumnBase & { type: 'date' | 'timestamp' })
   | (TableColumnBase & {
       type: 'number';
       format: ValueFormat;

@@ -13,7 +13,11 @@ import { controlSchema } from './controls';
 import { matrixHeatmapSectionSchema } from './matrixHeatmap';
 import { pivotTableSectionSchema } from './pivotTable';
 import { scatterSectionSchema } from './scatter';
-import { sourceSchema, statTilesSectionSchema } from './statTiles';
+import {
+  dashboardIdSchema,
+  sourceSchema,
+  statTilesSectionSchema,
+} from './statTiles';
 import { tableSectionSchema } from './table';
 import { timeSeriesSectionSchema } from './timeSeries';
 
@@ -92,7 +96,7 @@ const sectionSchema = sectionSchemaBase satisfies z.ZodType<
 >;
 
 const dashboardDefinitionSchemaBase = z.strictObject({
-  id: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+  id: dashboardIdSchema,
   title: z.string().min(1),
   description: z.string().min(1).optional(),
   grain: z.enum([PeriodGrain.MONTH, PeriodGrain.WEEK, PeriodGrain.DAY]),
