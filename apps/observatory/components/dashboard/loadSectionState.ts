@@ -2,6 +2,7 @@ import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
   BarsSection,
   CalendarHeatmapSection,
+  CandlestickSection,
   ControlSelections,
   DashboardDefinition,
   DonutSection,
@@ -104,6 +105,14 @@ export type SectionState =
     }
   | {
       status: 'ready';
+      kind: 'candlestick';
+      section: CandlestickSection;
+      data: SectionData;
+      period: Period;
+    }
+  | { status: 'selection-required' }
+  | {
+      status: 'ready';
       kind: 'calendar-heatmap';
       section: CalendarHeatmapSection;
       data: SectionData;
@@ -182,6 +191,14 @@ export async function loadSectionState({
   selections,
 }: Input): Promise<SectionState> {
   try {
+    if (
+      section.kind === SectionKind.CANDLESTICK &&
+      section.requiredControl !== undefined &&
+      (!Object.hasOwn(selections, section.requiredControl) ||
+        selections[section.requiredControl] === undefined)
+    ) {
+      return { status: 'selection-required' };
+    }
     const resolution =
       section.period === 'latest' ? null : await periodResolution;
     const gate = await resolveSectionGate({
@@ -217,6 +234,21 @@ export async function loadSectionState({
           data,
           period,
         };
+      }
+      case SectionKind.CANDLESTICK: {
+        const data = await fetchSectionData({
+          dashboard,
+          section,
+          period,
+          selections,
+        });
+        if (
+          data === null ||
+          !data.buckets.some(({ values }) => values[3] != null)
+        ) {
+          return { status: 'empty' };
+        }
+        return { status: 'ready', kind: section.kind, section, data, period };
       }
       case SectionKind.TIME_SERIES: {
         const fixedBase =

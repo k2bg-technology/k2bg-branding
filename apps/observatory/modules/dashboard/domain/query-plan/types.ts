@@ -17,6 +17,11 @@ export interface MeasureQueryPlan {
   transform?: ValueTransform;
 }
 
+export interface CandleMeasure {
+  column: string;
+  reduction: 'earliest' | 'maximum' | 'minimum' | 'latest';
+}
+
 interface BaseSectionQueryPlan {
   sectionId: string;
   source: SourceDefinition;
@@ -46,10 +51,21 @@ export type SectionQueryPlan =
         warmUp?: WarmUpPlan;
       })
   | (BaseSectionQueryPlan & {
+      kind: typeof SectionKind.CANDLESTICK;
+      grain: PeriodGrain;
+      measures: [CandleMeasure, CandleMeasure, CandleMeasure, CandleMeasure];
+      bucketLimit: number;
+    })
+  | (BaseSectionQueryPlan & {
       kind: typeof SectionKind.CALENDAR_HEATMAP;
       grain: 'day';
       measures: MeasureQueryPlan[];
     });
+
+export type GroupedSectionQueryPlan = Exclude<
+  SectionQueryPlan,
+  { kind: typeof SectionKind.CANDLESTICK }
+>;
 
 export interface WarmUpPlan {
   /** Buckets read before the displayed window for a trailing computation. */

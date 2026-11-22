@@ -89,7 +89,7 @@ Every warehouse read goes through `WarehouseClient.query()`, which caches rows i
 
 Dashboard routes read strict JSON definitions from `OBSERVATORY_DASHBOARDS_DIR`. Files with definition issues are skipped and logged without hiding valid dashboards.
 
-The [sample dashboard](modules/dashboard/fixtures/sample-dashboard.json) is a working reference. It documents `stat-tiles`, `time-series`, `table`, `bars`, `calendar-heatmap`, `matrix-heatmap`, `pivot-table`, `donut`, `treemap`, and `scatter` sections, including:
+The [sample dashboard](modules/dashboard/fixtures/sample-dashboard.json) is a working reference. It documents `stat-tiles`, `time-series`, `candlestick`, `table`, `bars`, `calendar-heatmap`, `matrix-heatmap`, `pivot-table`, `donut`, `treemap`, and `scatter` sections, including:
 
 - a finer daily series on a monthly dashboard, and a `latest` day with its hourly shape;
 - long-form series split by a category column, and band series;
@@ -230,11 +230,12 @@ A section may set `period: "latest"` to read its source's own latest date instea
 
 - A `bars` section accepts `period: "latest"` on the category axis only (a time axis window reads history).
 - A `calendar-heatmap` accepts `availability` and `readiness`, counts `minimumBuckets` in days, and does not accept `period: "latest"`.
+- A `candlestick` accepts `availability` and `readiness` and counts `minimumBuckets` in its own grain. Its definition rejects `period`.
 - `pivot-table`, `donut`, `treemap`, `matrix-heatmap`, and `scatter` sections do not take `period`, `availability`, or `readiness`.
 
 #### Missing Buckets and Time Zones
 
-- Missing buckets throughout the requested range receive null values and appear as gaps.
+- Missing buckets throughout the requested range receive null values and appear as gaps. A candlestick omits missing buckets.
 - Chart points use local midnight for date buckets and local hours for hour buckets in the dashboard time zone.
 - If local midnight does not exist, a date bucket uses that date's first existing hour. A nonexistent spring hour is omitted; a repeated fall hour uses its earlier occurrence.
 - A query reads at most 121 complete returned buckets to detect the 120-bucket cap. Synthetic null points do not count toward that cap. If more returned buckets exist, the oldest are omitted and `labels.truncated` (default: “Older periods are not shown”) accompanies the shortened displayed range.
@@ -266,6 +267,7 @@ filter → transform → reduce → top-N and remainder → fill missing periods
 | --- | --- |
 | [`stat-tiles`](#stat-tiles) | Tiles with an optional comparison and sparkline |
 | [`time-series`](#time-series) | Lines or areas over time buckets |
+| [`candlestick`](#candlestick) | Open, high, low, and close values for one series |
 | [`bars`](#bars) | One bar per time bucket or category |
 | [`table`](#table) | The view's rows, unaggregated |
 | [`calendar-heatmap`](#calendar-heatmap) | One value per calendar day |
@@ -337,6 +339,15 @@ A measurement series and a `pivot` may add derived series. Each is computed from
 **Stacking.** With `variant: "area"` and `stacked: true`, a binding with `running { kind: "sum" }` draws only its running totals, stacked, and not its raw values. Stacking does not accept `movingAverage`, `running { kind: "average" }` or `normalize`, and either every stacked series declares `running` or none does.
 
 **On a pivot,** the derived labels are templates in which `{category}` is replaced by the category's label (`labels.nullCategory` for NULL, `otherLabel` for the remainder) and must contain `{category}`. The remainder's derived series are computed from its folded values.
+
+#### Candlestick
+
+A `candlestick` source must yield one series for the section. The source can provide one series by construction, through `source.filters`, or through a control that filters the series column. Set `requiredControl` to an ID listed in the section's `controls` to require a selection before checking readiness or reading candles. Until a selection is made, the section shows `labels.selectionRequired` (default “Make a selection to show this section”).
+
+- **Bindings.** Supply `open`, `high`, `low`, and `close`, each with a `column` and `label`, plus a shared `format` and optional `unit`. The fixed reductions use the earliest row's open, maximum high, minimum low, and latest row's close.
+- **Incomplete data.** A bucket shows a full candle when every contributing row has all four values. If any row is incomplete, the bucket shows only the latest row's close. A null final close leaves the slot unmarked. Rows sharing a source time within a bucket make the section unavailable.
+- **Grain and window.** A month dashboard allows `month` or `day`, a week dashboard allows `week` or `day`, and a day dashboard allows `day`. The section defaults to the dashboard grain. A positive integer `window` is required at that grain and counts trailing calendar buckets ending at the selected period's last bucket. A finer grain without `window` covers the selected period.
+- **Display.** The axis gives one slot to each returned bucket. Non-trading days with no source row take no space, so a 120-day window contains only the sessions within those 120 calendar days. The display caps returned buckets at 120 and shows `labels.truncated` when older buckets are omitted. Set `colors` to `green-up` (default) for green rises and red falls, or to `red-up` for red rises and the primary chart color for falls.
 
 #### Bars
 

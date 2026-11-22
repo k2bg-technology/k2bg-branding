@@ -9,6 +9,7 @@ vi.mock('../../modules/dashboard/adapters/shared', async (importOriginal) => ({
 }));
 
 import { dashboardDefinitionSchema } from '../../modules/dashboard/adapters/output/definition-sources/file-system/schemas';
+import { WarehouseFetchSectionDataQueryService } from '../../modules/dashboard/adapters/output/query-services/warehouse/fetchSectionDataQueryService';
 import { toSectionData } from '../../modules/dashboard/adapters/output/query-services/warehouse/mapper';
 import { dashboardLogger } from '../../modules/dashboard/adapters/shared';
 import type {
@@ -27,6 +28,7 @@ import type {
   PivotBuckets,
   SectionData,
 } from '../../modules/dashboard/use-cases';
+import { FetchSectionData } from '../../modules/dashboard/use-cases';
 import { DashboardSection } from './DashboardSection';
 
 const openGate = async ({
@@ -2089,5 +2091,98 @@ describe('scatter sections', () => {
     }));
     expect(screen.getByRole('alert')).toBeInTheDocument();
     expect(dashboardLogger.error).toHaveBeenCalled();
+  });
+});
+
+describe('candlestick DashboardSection', () => {
+  function sampleCandlestickInput() {
+    const definition = dashboardDefinitionSchema.parse(sampleDashboard);
+    const section = definition.sections.at(-1);
+    if (section?.kind !== 'candlestick') {
+      throw new Error('Expected a sample candlestick section');
+    }
+    return {
+      dashboard: definition,
+      section,
+      urlState,
+      periodResolution: Promise.resolve(resolution('2026-08')),
+      resolveSectionGate: openGate,
+      fetchTableRows: async () => null,
+      fetchMatrixData: async () => null,
+      fetchBarsData: async () => null,
+      fetchCompositionData: async () => null,
+      fetchTimeSeriesPivot: async () => null,
+      fetchRebaseBase: async () => null,
+      fetchPivotData: async () => null,
+      fetchScatterData: async () => null,
+    } satisfies Omit<
+      Parameters<typeof DashboardSection>[0],
+      'fetchSectionData'
+    >;
+  }
+
+  it.each([
+    {
+      labels: undefined,
+      message: 'Make a selection to show this section',
+    },
+    {
+      labels: { selectionRequired: 'Choose a code to see prices' },
+      message: 'Choose a code to see prices',
+    },
+  ])(
+    'renders the selection-required label "$message"',
+    async ({ labels, message }) => {
+      const input = sampleCandlestickInput();
+      const sut = DashboardSection;
+
+      render(
+        await sut({
+          ...input,
+          dashboard: { ...input.dashboard, labels },
+          fetchSectionData: async () => null,
+        })
+      );
+
+      expect(screen.getByText(message)).toBeInTheDocument();
+    }
+  );
+
+  it('renders the sample chart with rows filtered by the selected code', async () => {
+    const input = sampleCandlestickInput();
+    const service = new FetchSectionData(
+      new WarehouseFetchSectionDataQueryService({
+        query: async ({ sql, params }) =>
+          sql.includes('`code` = @filter_0') && params?.filter_0 === 'A'
+            ? [
+                {
+                  period: '2026-08-28',
+                  value_0: 95,
+                  value_1: 115,
+                  value_2: 90,
+                  value_3: 105,
+                  distinct_count_0: 1,
+                  distinct_count_3: 1,
+                  incomplete_row_count: 0,
+                  time_count: 1,
+                  row_count: 1,
+                },
+              ]
+            : [],
+      })
+    );
+    const sut = DashboardSection;
+
+    const { container } = render(
+      await sut({
+        ...input,
+        urlState: { ...urlState, controls: { code: 'A' } },
+        fetchSectionData: (request) => service.execute(request),
+      })
+    );
+
+    expect(
+      container.querySelector('[data-slot="candlestick-chart"]')
+    ).toBeInTheDocument();
   });
 });

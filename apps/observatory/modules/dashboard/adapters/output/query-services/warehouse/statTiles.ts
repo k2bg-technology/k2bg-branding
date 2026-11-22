@@ -1,5 +1,9 @@
 import type { WarehouseQueryParams } from '../../../../../../infrastructure/warehouse';
-import { Reduction, type SectionQueryPlan } from '../../../../domain';
+import {
+  type GroupedSectionQueryPlan,
+  Reduction,
+  type SectionQueryPlan,
+} from '../../../../domain';
 import { distinctCountAlias, valueColumnAlias } from './aliases';
 import { qualifiedView } from './identifier';
 import {
@@ -39,7 +43,7 @@ export function latestDistinctCountProjection(
 }
 
 export function buildGroupedSectionQuery(
-  plan: SectionQueryPlan,
+  plan: GroupedSectionQueryPlan,
   order: 'ASC' | 'DESC',
   bucketLimit?: number
 ): BuiltQuery {

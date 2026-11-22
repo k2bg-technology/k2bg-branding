@@ -1,6 +1,7 @@
 import { type AggregatingSection, SectionKind } from '../definition';
 import type { Period } from '../period';
 import { planCalendarHeatmapSection } from './calendarHeatmap';
+import { planCandlestickSection } from './candlestick';
 import { planStatTilesSection } from './statTiles';
 import { planTimeSeriesSection } from './timeSeries';
 import type { SectionQueryPlan } from './types';
@@ -19,6 +20,8 @@ export function planSection(
       return planStatTilesSection(section, period, timeZone);
     case SectionKind.TIME_SERIES:
       return planTimeSeriesSection(section, period, timeZone);
+    case SectionKind.CANDLESTICK:
+      return planCandlestickSection(section, period, timeZone);
     case SectionKind.CALENDAR_HEATMAP:
       return planCalendarHeatmapSection(section, period, timeZone);
     default:

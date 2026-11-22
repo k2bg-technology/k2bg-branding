@@ -12,6 +12,7 @@ import type {
 import {
   AmbiguousLatestValueError,
   AmbiguousSortKeyError,
+  DuplicateCandleTimeError,
   Period,
   planStatTilesSection,
 } from '../../../../domain';
@@ -1180,5 +1181,134 @@ describe('toScatterPoints', () => {
     },
   ])('rejects $name', ({ row }) => {
     expect(() => toScatterPoints([row], plan)).toThrow(MappingError);
+  });
+});
+
+describe('candlestick warehouse mapping', () => {
+  const plan: Extract<SectionQueryPlan, { kind: 'candlestick' }> = {
+    kind: 'candlestick',
+    sectionId: 'quotes',
+    grain: 'month',
+    source: {
+      dataset: 'sample_dataset',
+      view: 'daily_quotes',
+      time: 'quote_date',
+    },
+    timeZone: 'Asia/Tokyo',
+    selectedPeriod: '2026-08',
+    dateRange: { firstDate: '2026-06-01', lastDate: '2026-08-31' },
+    measures: [
+      { column: 'opening_value', reduction: 'earliest' },
+      { column: 'highest_value', reduction: 'maximum' },
+      { column: 'lowest_value', reduction: 'minimum' },
+      { column: 'closing_value', reduction: 'latest' },
+    ],
+    bucketLimit: 120,
+  };
+
+  function warehouseBucket(period: string) {
+    return {
+      period,
+      value_0: 12,
+      value_1: 39,
+      value_2: 8,
+      value_3: 28,
+      distinct_count_0: 1,
+      distinct_count_3: 1,
+      incomplete_row_count: 0,
+      time_count: 3,
+      row_count: 3,
+    };
+  }
+
+  it('keeps the earliest available session open and all reduced values in a complete month', () => {
+    // August 2026 starts on a weekend. The earliest source row is August 3.
+    const firstSessionOpen = 17;
+    const row = { ...warehouseBucket('2026-08'), value_0: firstSessionOpen };
+    const sut = toSectionData;
+
+    const result = sut([row], plan);
+
+    expect(result).toEqual({
+      truncated: false,
+      buckets: [{ period: '2026-08', values: [17, 39, 8, 28] }],
+    });
+  });
+
+  it.each([
+    { session: 'first', openingValue: null, finalClose: 28, incompleteRows: 1 },
+    {
+      session: 'interior',
+      openingValue: 12,
+      finalClose: 28,
+      incompleteRows: 1,
+    },
+    { session: 'last', openingValue: 12, finalClose: 31, incompleteRows: 1 },
+    {
+      session: 'an interior FX conversion day with all four values null',
+      openingValue: 12,
+      finalClose: 37,
+      incompleteRows: 1,
+    },
+  ])(
+    'keeps the final close when the incomplete session is $session',
+    ({ openingValue, finalClose, incompleteRows }) => {
+      const row = {
+        ...warehouseBucket('2026-08'),
+        value_0: openingValue,
+        value_3: finalClose,
+        incomplete_row_count: incompleteRows,
+      };
+      const sut = toSectionData;
+
+      const result = sut([row], plan);
+
+      expect(result?.buckets).toEqual([
+        { period: '2026-08', values: [null, null, null, finalClose] },
+      ]);
+    }
+  );
+
+  it('maps a null close in the final session to an unmarked slot', () => {
+    const row = {
+      ...warehouseBucket('2026-08'),
+      value_3: null,
+      incomplete_row_count: 1,
+    };
+    const sut = toSectionData;
+
+    const result = sut([row], plan);
+
+    expect(result?.buckets).toEqual([
+      { period: '2026-08', values: [null, null, null, null] },
+    ]);
+  });
+
+  it('rejects two source rows sharing one time even with identical opens and closes', () => {
+    const row = { ...warehouseBucket('2026-08'), row_count: 4 };
+    const sut = toSectionData;
+
+    const act = () => sut([row], plan);
+
+    expect(act).toThrow(DuplicateCandleTimeError);
+  });
+
+  it('retains the newest buckets up to the cap in ascending order without warm-up', () => {
+    const rows = [
+      warehouseBucket('2026-08'),
+      warehouseBucket('2026-07'),
+      warehouseBucket('2026-06'),
+    ];
+    const sut = toSectionData;
+
+    const result = sut(rows, { ...plan, bucketLimit: 2 });
+
+    expect(result).toEqual({
+      truncated: true,
+      buckets: [
+        { period: '2026-07', values: [12, 39, 8, 28] },
+        { period: '2026-08', values: [12, 39, 8, 28] },
+      ],
+    });
   });
 });

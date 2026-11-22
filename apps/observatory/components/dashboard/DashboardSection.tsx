@@ -35,11 +35,13 @@ import { SectionAsOf } from './SectionAsOf';
 import { SectionEmpty } from './SectionEmpty';
 import { SectionNegativeComposition } from './SectionNegativeComposition';
 import { SectionNotReady } from './SectionNotReady';
+import { SectionSelectionRequired } from './SectionSelectionRequired';
 import { SectionTooLarge } from './SectionTooLarge';
 import { SectionTooManySeries } from './SectionTooManySeries';
 import { SectionUnavailable } from './SectionUnavailable';
 import { BarsSection } from './sections/BarsSection';
 import { CalendarHeatmapSection } from './sections/CalendarHeatmapSection';
+import { CandlestickSection } from './sections/CandlestickSection';
 import { DonutSection } from './sections/DonutSection';
 import { MatrixHeatmapSection } from './sections/MatrixHeatmapSection';
 import { PivotTableSection } from './sections/PivotTableSection';
@@ -156,6 +158,16 @@ export async function DashboardSection({
           />
         );
       }
+      if (state.kind === SectionKind.CANDLESTICK) {
+        return (
+          <CandlestickSection
+            dashboard={dashboard}
+            section={state.section}
+            data={state.data}
+            period={state.period}
+          />
+        );
+      }
       if (state.kind === SectionKind.CALENDAR_HEATMAP) {
         return (
           <CalendarHeatmapSection
@@ -248,6 +260,9 @@ export async function DashboardSection({
     }
     if (state.status === 'not-ready') {
       return <SectionNotReady dashboard={dashboard} note={state.note} />;
+    }
+    if (state.status === 'selection-required') {
+      return <SectionSelectionRequired dashboard={dashboard} />;
     }
     if (state.status === 'too-many-series') {
       return (

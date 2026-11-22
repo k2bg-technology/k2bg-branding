@@ -33,7 +33,10 @@ export type SectionGate =
   | { status: 'not-ready'; note?: string };
 
 function bucketGrain(section: Section, dashboardGrain: PeriodGrain) {
-  if (section.kind === SectionKind.TIME_SERIES) {
+  if (
+    section.kind === SectionKind.TIME_SERIES ||
+    section.kind === SectionKind.CANDLESTICK
+  ) {
     return section.grain ?? dashboardGrain;
   }
   if (section.kind === SectionKind.CALENDAR_HEATMAP) {

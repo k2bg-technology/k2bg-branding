@@ -699,6 +699,22 @@
       "x": { "column": "temperature", "label": "Temperature", "format": { "type": "number" }, "unit": "°C" },
       "y": { "column": "humidity", "label": "Humidity", "format": { "type": "percent", "inputScale": "percent" } },
       "limit": 100
+    },
+    {
+      "id": "daily-candles",
+      "title": "Daily price range",
+      "kind": "candlestick",
+      "source": { "dataset": "sample_dataset", "view": "daily_quotes", "time": "quote_date" },
+      "controls": ["code"],
+      "requiredControl": "code",
+      "grain": "day",
+      "window": 120,
+      "format": { "type": "currency" },
+      "open": { "column": "opening_value", "label": "Open" },
+      "high": { "column": "highest_value", "label": "High" },
+      "low": { "column": "lowest_value", "label": "Low" },
+      "close": { "column": "closing_value", "label": "Close" },
+      "colors": "green-up"
     }
   ]
 }

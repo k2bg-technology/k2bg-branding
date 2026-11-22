@@ -3,6 +3,7 @@ import type { CalendarRange, PeriodGrain, SectionGrain } from '../period';
 export const SectionKind = {
   STAT_TILES: 'stat-tiles',
   TIME_SERIES: 'time-series',
+  CANDLESTICK: 'candlestick',
   TABLE: 'table',
   BARS: 'bars',
   CALENDAR_HEATMAP: 'calendar-heatmap',
@@ -251,6 +252,31 @@ export interface TimeSeriesSection extends SectionGateFields {
   bands?: { from: number; to: number }[];
 }
 
+interface CandleBinding {
+  column: string;
+  label: string;
+}
+
+export interface CandlestickSection extends Omit<SectionGateFields, 'period'> {
+  id: string;
+  title: string;
+  source: SourceDefinition;
+  kind: typeof SectionKind.CANDLESTICK;
+  width?: SectionWidth;
+  controls?: string[];
+  period?: never;
+  requiredControl?: string;
+  grain?: PeriodGrain;
+  window?: number;
+  format: ValueFormat;
+  unit?: string;
+  open: CandleBinding;
+  high: CandleBinding;
+  low: CandleBinding;
+  close: CandleBinding;
+  colors?: 'green-up' | 'red-up';
+}
+
 export interface CalendarHeatmapSection extends SectionGateFields {
   id: string;
   title: string;
@@ -429,6 +455,7 @@ export interface ScatterSection extends SectionGateFields {
 export type AggregatingSection =
   | StatTilesSection
   | TimeSeriesSection
+  | CandlestickSection
   | CalendarHeatmapSection;
 export type Section =
   | AggregatingSection
@@ -463,6 +490,7 @@ export interface DashboardDefinition {
     accumulatingSince?: string;
     availableFrom?: string;
     notReady?: string;
+    selectionRequired?: string;
     nullCategory?: string;
     missingValue?: string;
     applyControls?: string;

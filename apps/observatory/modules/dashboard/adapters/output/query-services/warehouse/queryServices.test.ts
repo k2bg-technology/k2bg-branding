@@ -6,6 +6,7 @@ import type {
 } from '../../../../../../infrastructure/warehouse';
 import type {
   ReadinessQueryPlan,
+  Reduction,
   SectionQueryPlan,
   TableQueryPlan,
 } from '../../../../domain';
@@ -28,9 +29,7 @@ import { WarehouseFetchSectionDataQueryService } from './fetchSectionDataQuerySe
 import { WarehouseFetchSectionReadinessQueryService } from './fetchSectionReadinessQueryService';
 import { WarehouseFetchTableRowsQueryService } from './fetchTableRowsQueryService';
 
-function createPlan(
-  reduction: SectionQueryPlan['measures'][number]['reduction']
-) {
+function createPlan(reduction: Reduction) {
   return {
     kind: 'stat-tiles',
     sectionId: 'headline',

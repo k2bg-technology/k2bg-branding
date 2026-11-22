@@ -5,9 +5,14 @@ vi.mock('../../modules/dashboard/adapters/shared', () => ({
 }));
 
 import {
+  type CandlestickSection,
   type DashboardDefinition,
   Period,
 } from '../../modules/dashboard/domain';
+import type {
+  SectionData,
+  SectionGate,
+} from '../../modules/dashboard/use-cases';
 import { loadSectionState } from './loadSectionState';
 
 describe('loadSectionState bars ranking', () => {
@@ -256,6 +261,89 @@ describe('derived time-series loading', () => {
           { period: '2025-12', cells: [{ category: 'rent', values: [20] }] },
         ],
       }),
+    });
+
+    expect(state).toEqual({ status: 'empty' });
+  });
+});
+
+describe('loadSectionState candlesticks', () => {
+  function candlestickInput(requiredControl = 'code') {
+    const input = timeSeriesInput();
+    const section: CandlestickSection = {
+      id: 'candles',
+      title: 'Price range',
+      kind: 'candlestick',
+      source: { dataset: 'metrics', view: 'quotes', time: 'quote_date' },
+      controls: [requiredControl],
+      requiredControl,
+      grain: 'day',
+      format: { type: 'number' },
+      open: { column: 'opening_value', label: 'Open' },
+      high: { column: 'highest_value', label: 'High' },
+      low: { column: 'lowest_value', label: 'Low' },
+      close: { column: 'closing_value', label: 'Close' },
+    };
+    return {
+      ...input,
+      section,
+      dashboard: {
+        ...input.dashboard,
+        sections: [section],
+        controls: [
+          {
+            id: requiredControl,
+            label: 'Code',
+            column: requiredControl,
+            options: ['A'],
+          },
+        ],
+      },
+    };
+  }
+
+  it.each(['code', 'constructor'])(
+    'requires a selection for an unset %s control before the gate and data query',
+    async (requiredControl) => {
+      const input = candlestickInput(requiredControl);
+      const resolveSectionGate = vi.fn(
+        async (): Promise<SectionGate> => ({
+          status: 'empty',
+        })
+      );
+      const fetchSectionData = vi.fn(async () => null);
+      const sut = loadSectionState;
+
+      const state = await sut({
+        ...input,
+        resolveSectionGate,
+        fetchSectionData,
+      });
+
+      expect(state).toEqual({ status: 'selection-required' });
+      expect(resolveSectionGate).not.toHaveBeenCalled();
+      expect(fetchSectionData).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each<{ name: string; data: SectionData | null }>([
+    { name: 'no data', data: null },
+    { name: 'no buckets', data: { truncated: false, buckets: [] } },
+    {
+      name: 'no final close',
+      data: {
+        truncated: false,
+        buckets: [{ period: '2026-01-29', values: [null, null, null, null] }],
+      },
+    },
+  ])('shows empty with $name after selection', async ({ data }) => {
+    const input = candlestickInput();
+    const sut = loadSectionState;
+
+    const state = await sut({
+      ...input,
+      selections: { code: 'A' },
+      fetchSectionData: async () => data,
     });
 
     expect(state).toEqual({ status: 'empty' });

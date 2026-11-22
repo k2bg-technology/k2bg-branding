@@ -42,6 +42,7 @@ function currencyViolations(
       case SectionKind.TREEMAP:
       case SectionKind.CALENDAR_HEATMAP:
       case SectionKind.TIME_SERIES:
+      case SectionKind.CANDLESTICK:
       case SectionKind.BARS:
       case SectionKind.MATRIX_HEATMAP:
       case SectionKind.PIVOT_TABLE:
@@ -494,6 +495,24 @@ function sectionControlViolations(definition: DashboardDefinition) {
   );
 }
 
+function requiredControlViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) => {
+    if (
+      section.kind !== SectionKind.CANDLESTICK ||
+      section.requiredControl === undefined ||
+      section.controls?.includes(section.requiredControl)
+    ) {
+      return [];
+    }
+    return [
+      {
+        path: ['sections', index, 'requiredControl'],
+        message: 'requiredControl must name one of the section controls',
+      },
+    ];
+  });
+}
+
 function distinctControlViolations(definition: DashboardDefinition) {
   return (definition.controls ?? []).flatMap((control, index) => {
     if (control.options !== 'distinct') {
@@ -755,6 +774,19 @@ function trendAxisGrainViolations(
     : [];
 }
 
+function candlestickGrainViolations(definition: DashboardDefinition) {
+  return definition.sections.flatMap((section, index) =>
+    section.kind === SectionKind.CANDLESTICK
+      ? trendAxisGrainViolations(
+          definition.grain,
+          section,
+          ['sections', index],
+          'candlestick section'
+        )
+      : []
+  );
+}
+
 function pivotTableViolations(
   definition: DashboardDefinition
 ): DefinitionViolation[] {
@@ -884,6 +916,8 @@ export function validateDefinitionRules(
     pivotTableViolations(definition),
     controlDeclarationViolations(definition),
     sectionControlViolations(definition),
+    requiredControlViolations(definition),
+    candlestickGrainViolations(definition),
     compositionReductionViolations(definition),
     treemapGroupViolations(definition),
     distinctControlViolations(definition),
