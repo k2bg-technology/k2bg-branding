@@ -167,6 +167,42 @@ export function formatTimestamp(
   );
 }
 
+/** Formats a candle heading with its year, and omits the day for monthly candles. */
+export function formatFullDate(
+  timestamp: number,
+  period: ChartPeriod,
+  timeZone: string = defaultTimeZone,
+  locale?: string
+): string {
+  if (period === ChartPeriod.YEAR) {
+    return formatTimestamp(timestamp, period, timeZone, locale);
+  }
+  if (locale !== undefined) {
+    const cacheKey = `${locale}|fullDate|${timeZone}`;
+    if (!localeFormatterCache.has(cacheKey)) {
+      try {
+        localeFormatterCache.set(
+          cacheKey,
+          new Intl.DateTimeFormat(locale, {
+            timeZone,
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+          })
+        );
+      } catch {
+        localeFormatterCache.set(cacheKey, null);
+      }
+    }
+    const formatter = localeFormatterCache.get(cacheKey);
+    if (formatter) {
+      return formatter.format(timestamp);
+    }
+  }
+  const { year, month, day } = wallClock(timestamp, timeZone);
+  return `${year}/${month}/${day}`;
+}
+
 function dateKey(clock: WallClock) {
   return `${clock.year}-${clock.month}-${clock.day}`;
 }

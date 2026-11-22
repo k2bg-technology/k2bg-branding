@@ -43,6 +43,23 @@ export interface TimeSeriesPoint {
   value: number | null;
 }
 
+export interface CandlestickDatum {
+  /** Start of the period the candle covers; identifies the candle and labels the axis. */
+  timestamp: number;
+  open: number | null;
+  high: number | null;
+  low: number | null;
+  close: number | null;
+}
+
+/** Tooltip row labels, already localized by the consuming app. */
+export interface CandlestickLabels {
+  open: string;
+  high: string;
+  low: string;
+  close: string;
+}
+
 export type ChartLineStyle = 'solid' | 'dashed';
 
 export interface TimeSeriesSeries {
