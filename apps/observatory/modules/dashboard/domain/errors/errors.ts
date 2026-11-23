@@ -14,6 +14,22 @@ export class AmbiguousLatestValueError extends DomainError {
   }
 }
 
+export class AmbiguousEarliestValueError extends DomainError {
+  constructor(sectionId: string, column: string) {
+    super(
+      `Section "${sectionId}" cannot resolve the earliest value for "${column}": several distinct values share the earliest source time`
+    );
+  }
+}
+
+export class DuplicateCandleTimeError extends DomainError {
+  constructor(sectionId: string, period: string) {
+    super(
+      `Section "${sectionId}" has duplicate candle source times in "${period}"`
+    );
+  }
+}
+
 export class AmbiguousSortKeyError extends DomainError {
   constructor(sectionId: string, column: string) {
     super(

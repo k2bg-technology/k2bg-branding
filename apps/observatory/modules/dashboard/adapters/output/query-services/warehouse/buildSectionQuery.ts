@@ -1,4 +1,5 @@
 import { SectionKind, type SectionQueryPlan } from '../../../../domain';
+import { buildCandlestickQuery } from './candlestick';
 import type { BuiltQuery } from './query';
 import { buildGroupedSectionQuery, buildStatTilesQuery } from './statTiles';
 import { buildTimeSeriesQuery } from './timeSeries';
@@ -13,6 +14,8 @@ export function buildSectionQuery(plan: SectionQueryPlan): BuiltQuery {
       return buildStatTilesQuery(plan);
     case SectionKind.TIME_SERIES:
       return buildTimeSeriesQuery(plan);
+    case SectionKind.CANDLESTICK:
+      return buildCandlestickQuery(plan);
     case SectionKind.CALENDAR_HEATMAP:
       return buildGroupedSectionQuery(plan, 'ASC');
     default:

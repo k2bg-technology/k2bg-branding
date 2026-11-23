@@ -1,5 +1,6 @@
 export * from './bars';
 export * from './calendarHeatmap';
+export * from './candlestick';
 export * from './composition';
 export * from './groupedValues';
 export * from './matrixHeatmap';

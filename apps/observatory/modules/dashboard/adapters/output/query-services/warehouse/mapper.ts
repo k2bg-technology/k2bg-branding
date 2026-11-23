@@ -8,6 +8,7 @@ import {
   parseBucketKey,
   parseCalendarDate,
   Reduction,
+  resolveCandle,
   resolveLatest,
   resolveSortKey,
   type ScatterQueryPlan,
@@ -48,6 +49,11 @@ import {
   X_VALUE_ALIAS,
   Y_VALUE_ALIAS,
 } from './aliases';
+import {
+  INCOMPLETE_ROW_COUNT_ALIAS,
+  ROW_COUNT_ALIAS,
+  TIME_COUNT_ALIAS,
+} from './candlestick';
 import { FIRST_DATE_ALIAS, LAST_DATE_ALIAS } from './query';
 
 function readCalendarDate(row: WarehouseRow, key: string): string {
@@ -127,6 +133,36 @@ export function toSectionData(
         `period must match ${plan.grain} grain, received ${JSON.stringify(period)}`
       );
     }
+    if (plan.kind === 'candlestick') {
+      const [open, , , close] = plan.measures;
+      return {
+        period,
+        values: resolveCandle(
+          {
+            values: [
+              readNullableNumber(row, valueColumnAlias(0)),
+              readNullableNumber(row, valueColumnAlias(1)),
+              readNullableNumber(row, valueColumnAlias(2)),
+              readNullableNumber(row, valueColumnAlias(3)),
+            ],
+            openDistinctCount: readDistinctCount(row, distinctCountAlias(0)),
+            closeDistinctCount: readDistinctCount(row, distinctCountAlias(3)),
+            incompleteRowCount: readDistinctCount(
+              row,
+              INCOMPLETE_ROW_COUNT_ALIAS
+            ),
+            timeCount: readDistinctCount(row, TIME_COUNT_ALIAS),
+            rowCount: readDistinctCount(row, ROW_COUNT_ALIAS),
+          },
+          {
+            sectionId: plan.sectionId,
+            period,
+            openColumn: open.column,
+            closeColumn: close.column,
+          }
+        ),
+      };
+    }
     return {
       period,
       values: plan.measures.map((measure, index) => {
@@ -153,20 +189,21 @@ export function toSectionData(
       }),
     };
   });
-  if (plan.kind !== 'time-series') {
+  if (plan.kind !== 'time-series' && plan.kind !== 'candlestick') {
     return { truncated: false, buckets };
   }
-  const displayFrom = plan.warmUp?.displayFrom ?? '';
+  const warmUpPlan = plan.kind === 'time-series' ? plan.warmUp : undefined;
+  const displayFrom = warmUpPlan?.displayFrom ?? '';
   const displayed = buckets.filter((bucket) => bucket.period >= displayFrom);
   const retained = displayed.slice(0, plan.bucketLimit);
   const warmUp = buckets.slice(
     retained.length,
-    retained.length + (plan.warmUp?.lookback ?? 0)
+    retained.length + (warmUpPlan?.lookback ?? 0)
   );
   return {
     truncated: displayed.length > plan.bucketLimit,
     buckets: [...retained].reverse(),
-    ...(plan.warmUp === undefined
+    ...(warmUpPlan === undefined
       ? {}
       : { warmUpBuckets: [...warmUp].reverse() }),
   };

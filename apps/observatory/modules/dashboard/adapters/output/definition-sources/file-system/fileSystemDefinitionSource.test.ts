@@ -94,6 +94,26 @@ describe('FileSystemDefinitionSource', () => {
       async (directory) => {
         const result = await new FileSystemDefinitionSource(directory).load();
         expect(result.issues).toEqual([]);
+        expect(result.definitions[0].sections.at(-1)).toEqual({
+          id: 'daily-candles',
+          title: 'Daily price range',
+          kind: 'candlestick',
+          source: {
+            dataset: 'sample_dataset',
+            view: 'daily_quotes',
+            time: 'quote_date',
+          },
+          controls: ['code'],
+          requiredControl: 'code',
+          grain: 'day',
+          window: 120,
+          format: { type: 'currency' },
+          open: { column: 'opening_value', label: 'Open' },
+          high: { column: 'highest_value', label: 'High' },
+          low: { column: 'lowest_value', label: 'Low' },
+          close: { column: 'closing_value', label: 'Close' },
+          colors: 'green-up',
+        });
         expect(
           result.definitions[0].sections.filter((section) =>
             [
@@ -2042,6 +2062,101 @@ describe('scatter definitions', () => {
         const result = await new FileSystemDefinitionSource(directory).load();
         expect(result.definitions).toEqual([]);
         expect(result.issues[0].path).toBe(path);
+      }
+    );
+  });
+});
+
+describe('candlestick definition loading', () => {
+  it.each([
+    { grain: 'month', colors: 'red-up' },
+    { grain: 'week', colors: 'green-up' },
+  ])('loads $grain candles with $colors colors', async ({ grain, colors }) => {
+    const section = {
+      id: 'candles',
+      title: 'Price range',
+      kind: 'candlestick',
+      source: { dataset: 'metrics', view: 'quotes', time: 'quote_date' },
+      grain,
+      window: 12,
+      format: { type: 'number' },
+      open: { column: 'opening_value', label: 'Open' },
+      high: { column: 'highest_value', label: 'High' },
+      low: { column: 'lowest_value', label: 'Low' },
+      close: { column: 'closing_value', label: 'Close' },
+      colors,
+    };
+    await withDefinitionDirectory(
+      { 'candles.json': createDefinition({ grain, sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.issues).toEqual([]);
+        expect(result.definitions[0]?.sections[0]).toMatchObject({
+          kind: 'candlestick',
+          grain,
+          colors,
+        });
+      }
+    );
+  });
+
+  it.each([
+    {
+      name: 'an unknown field',
+      overrides: { unexpected: true },
+      path: 'sections[0]',
+      message: /unrecognized key.*unexpected/i,
+    },
+    {
+      name: 'a missing close binding',
+      overrides: { close: undefined },
+      path: 'sections[0].close',
+      message: /expected object/i,
+    },
+    {
+      name: 'latest mode',
+      overrides: { period: 'latest' },
+      path: 'sections[0]',
+      message: /unrecognized key.*period/i,
+    },
+    {
+      name: 'hour grain',
+      overrides: { grain: 'hour' },
+      path: 'sections[0].grain',
+      message: /invalid option/i,
+    },
+  ])('reports $name at $path', async ({ overrides, path, message }) => {
+    const section = {
+      id: 'daily-candles',
+      title: 'Daily price range',
+      kind: 'candlestick',
+      source: { dataset: 'metrics', view: 'daily_quotes', time: 'quote_date' },
+      grain: 'day',
+      format: { type: 'number' },
+      open: { column: 'opening_value', label: 'Open' },
+      high: { column: 'highest_value', label: 'High' },
+      low: { column: 'lowest_value', label: 'Low' },
+      close: { column: 'closing_value', label: 'Close' },
+      ...overrides,
+    };
+    await withDefinitionDirectory(
+      { 'invalid.json': createDefinition({ sections: [section] }) },
+      async (directory) => {
+        const sut = new FileSystemDefinitionSource(directory);
+
+        const result = await sut.load();
+
+        expect(result.definitions).toEqual([]);
+        expect(result.issues).toEqual([
+          {
+            fileName: 'invalid.json',
+            path,
+            message: expect.stringMatching(message),
+          },
+        ]);
       }
     );
   });

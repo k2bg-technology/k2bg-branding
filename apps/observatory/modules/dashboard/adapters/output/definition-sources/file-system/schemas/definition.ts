@@ -8,6 +8,7 @@ import {
 } from '../../../../../domain';
 import { barsSectionSchema } from './bars';
 import { calendarHeatmapSectionSchema } from './calendarHeatmap';
+import { candlestickSectionSchema } from './candlestick';
 import { donutSectionSchema, treemapSectionSchema } from './composition';
 import { controlSchema } from './controls';
 import { matrixHeatmapSectionSchema } from './matrixHeatmap';
@@ -42,6 +43,7 @@ function supportsTimeZone(timeZone: string): boolean {
 const sectionSchemasByKind = {
   [SectionKind.STAT_TILES]: statTilesSectionSchema,
   [SectionKind.TIME_SERIES]: timeSeriesSectionSchema,
+  [SectionKind.CANDLESTICK]: candlestickSectionSchema,
   [SectionKind.TABLE]: tableSectionSchema,
   [SectionKind.BARS]: barsSectionSchema,
   [SectionKind.CALENDAR_HEATMAP]: calendarHeatmapSectionSchema,
@@ -133,6 +135,7 @@ const dashboardDefinitionSchemaBase = z.strictObject({
       accumulatingSince: z.string().min(1).optional(),
       availableFrom: z.string().min(1).optional(),
       notReady: z.string().min(1).optional(),
+      selectionRequired: z.string().min(1).optional(),
       nullCategory: z.string().min(1).optional(),
       missingValue: z.string().min(1).optional(),
       applyControls: z.string().min(1).optional(),

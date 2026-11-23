@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { validateDefinitionRules } from './rules';
 import type {
   CalendarHeatmapSection,
+  CandlestickSection,
   DashboardDefinition,
   DonutSection,
   MatrixHeatmapSection,
@@ -1680,5 +1681,82 @@ describe('scatter rules', () => {
         ],
       })
     ).toEqual([]);
+  });
+});
+
+describe('candlestick definition rules', () => {
+  function candles(overrides: Partial<CandlestickSection>): CandlestickSection {
+    return {
+      id: 'candles',
+      title: 'Price range',
+      kind: 'candlestick',
+      source: { dataset: 'metrics', view: 'quotes', time: 'quote_date' },
+      grain: 'day',
+      format: { type: 'number' },
+      open: { column: 'opening_value', label: 'Open' },
+      high: { column: 'highest_value', label: 'High' },
+      low: { column: 'lowest_value', label: 'Low' },
+      close: { column: 'closing_value', label: 'Close' },
+      ...overrides,
+    };
+  }
+
+  it.each([
+    {
+      name: 'week grain on a month dashboard',
+      section: candles({ grain: 'week', window: 8 }),
+      path: ['sections', 0, 'grain'],
+      message:
+        'Section grain "week" is not supported by dashboard grain "month"',
+    },
+    {
+      name: 'a missing window at the dashboard grain',
+      section: candles({ grain: undefined }),
+      path: ['sections', 0, 'window'],
+      message: 'A candlestick section at the dashboard grain requires window',
+    },
+    {
+      name: 'a required control outside the section',
+      section: candles({ controls: ['code'], requiredControl: 'region' }),
+      path: ['sections', 0, 'requiredControl'],
+      message: 'requiredControl must name one of the section controls',
+    },
+    {
+      name: 'a currency format without a dashboard currency',
+      section: candles({ format: { type: 'currency' } }),
+      path: ['sections', 0, 'format'],
+      message: 'A currency section requires dashboard currency',
+    },
+  ])('reports $name at its definition path', ({ section, path, message }) => {
+    const original = createDefinition();
+    const definition: DashboardDefinition = {
+      ...original,
+      currency: undefined,
+      controls: [
+        { id: 'code', label: 'Code', column: 'code', options: ['A'] },
+        { id: 'region', label: 'Region', column: 'region', options: ['North'] },
+      ],
+      sections: [
+        section,
+        {
+          id: 'other-candles',
+          title: 'Other prices',
+          kind: 'candlestick',
+          source: section.source,
+          grain: 'day',
+          format: { type: 'number' },
+          controls: ['code', 'region'],
+          open: section.open,
+          high: section.high,
+          low: section.low,
+          close: section.close,
+        },
+      ],
+    };
+    const sut = validateDefinitionRules;
+
+    const issues = sut(definition);
+
+    expect(issues).toEqual([{ path, message }]);
   });
 });

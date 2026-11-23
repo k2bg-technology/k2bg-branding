@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import type {
+  CandlestickSection,
   DashboardDefinition,
   Section,
   SourceDefinition,
+  StatTilesSection,
 } from '../../../domain';
 import { Period } from '../../../domain';
 import { ResolveSectionGate } from './useCase';
@@ -21,7 +23,7 @@ function dashboard(section: Section): DashboardDefinition {
   };
 }
 
-function tiles(): Section {
+function tiles(): StatTilesSection {
   return {
     id: 'headline',
     title: 'Headline',
@@ -57,6 +59,37 @@ function month(value: string) {
 }
 
 describe('ResolveSectionGate', () => {
+  it('counts day buckets for a daily candlestick on a month dashboard', async () => {
+    const section: CandlestickSection = {
+      id: 'daily-candles',
+      title: 'Daily candles',
+      kind: 'candlestick',
+      source: { dataset: 'metrics', view: 'daily_quotes', time: 'quote_date' },
+      grain: 'day',
+      format: { type: 'number' },
+      open: { column: 'opening_value', label: 'Open' },
+      high: { column: 'highest_value', label: 'High' },
+      low: { column: 'lowest_value', label: 'Low' },
+      close: { column: 'closing_value', label: 'Close' },
+      availability: { since: '2026-08-15', minimumBuckets: 30 },
+    };
+    const sut = sutWithBounds();
+
+    const state = await sut.execute({
+      dashboard: dashboard(section),
+      section,
+      selectedPeriod: month('2026-08'),
+      selections: {},
+    });
+
+    expect(state).toEqual({
+      status: 'accumulating',
+      since: '2026-08-15',
+      availableFrom: { grain: 'day', start: { date: '2026-09-14', hour: 0 } },
+      note: undefined,
+    });
+  });
+
   it('counts calendar heatmap availability in days on a month dashboard', async () => {
     const section: Section = {
       id: 'daily',
