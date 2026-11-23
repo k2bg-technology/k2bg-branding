@@ -1067,6 +1067,62 @@
         }
       ]
     },
+    "candlestickChart": {
+      "description": "Shows the open, high, low, and close of each period as a candlestick.",
+      "overview": "The wick spans the low to the high, and the body spans the open to the close. A close above the open produces a hollow body. A close below the open produces a solid body. A flat candle and a close-only tick use the neutral chart overflow color. The ordinal x axis gives each distinct timestamp an equal-width slot; when several candles share a timestamp, the last one in the input array is used. Only supplied periods occupy space, so omitted weekends or holidays leave no gaps. A non-null close with any other value missing appears as a horizontal tick at the close. A null close leaves the slot empty.",
+      "usage": "Pass period start timestamps in candles and localized tooltip row labels in labels. Set period for the displayed span and use timeZone and locale for date labels. The defaults for upColor and downColor are success and error, respectively. For the Japanese color convention, set upColor={ChartColor.ERROR} downColor={ChartColor.CHART_1}. Validate before rendering that low is at or below both open and close, and that high is at or above both. An empty candles array renders an empty, named chart surface. Render any empty state in the consuming app. Volume, overlays such as moving averages, and a legend are outside the scope of this chart.",
+      "accessibility": "The focusable chart surface uses label as its accessible name via aria-label. Tab to the chart and use the left and right arrow keys to move between periods. The tooltip lists the formatted open, high, low, and close in that order. A close tick shows only the close row, and a null close has no tooltip. The heading includes the year and month for ChartPeriod.YEAR, and also the day for other periods. Hollow and solid bodies distinguish direction for readers who have difficulty telling green and red apart. Keep tooltip text at a contrast ratio of at least 4.5:1 and provide a table with the same values.",
+      "doList": [
+        "Give the chart a label that identifies the measurement and time span",
+        "Provide localized row labels and format values with valueFormatter",
+        "Use the chart palette tokens for direction colors",
+        "Use null to represent a missing value",
+        "Provide a table view of the same data next to the chart"
+      ],
+      "dontList": [
+        "Treat equal spacing as evidence of equal elapsed time",
+        "Fill missing values with zero to complete a candle",
+        "Rely on red and green alone to communicate direction",
+        "Rely on the chart to validate the ordering of candle values",
+        "Use an empty chart surface as the only explanation for missing data"
+      ],
+      "relatedComponents": [
+        {
+          "name": "TimeSeriesChart",
+          "path": "/?path=/docs/components-chart-timeserieschart--docs",
+          "description": "Shows changes over time as lines, areas, or filled ranges"
+        },
+        {
+          "name": "BarChart",
+          "path": "/?path=/docs/components-chart-barchart--docs",
+          "description": "Compares individual values across categories as bars"
+        }
+      ],
+      "dependencies": [
+        {
+          "package": "recharts",
+          "version": "^3.10.1",
+          "reason": "Renders the responsive SVG chart, axes, and keyboard-accessible tooltip layer"
+        },
+        {
+          "package": "react",
+          "version": "^19.3.1",
+          "reason": "Core React library for component functionality"
+        }
+      ],
+      "references": [
+        {
+          "linkText": "Recharts documentation",
+          "url": "https://recharts.github.io/",
+          "description": "API reference for the charting library wrapped by this component"
+        },
+        {
+          "linkText": "WAI Tutorials: Complex Images",
+          "url": "https://www.w3.org/WAI/tutorials/images/complex/",
+          "description": "Guidance on providing text alternatives for charts and graphs"
+        }
+      ]
+    },
     "card": {
       "description": "Groups related content in a white card with a thin border and a subtle shadow.",
       "overview": "Card is the outer frame and composes Card.Header, Card.Title, Card.Description, and Card.Content. Content shares horizontal padding with Header.",

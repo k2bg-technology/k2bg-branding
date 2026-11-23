@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatTimestamp, getTimeAxisTicks } from './chartTicks';
+import {
+  formatFullDate,
+  formatTimestamp,
+  getTimeAxisTicks,
+} from './chartTicks';
 import { ChartPeriod } from './types';
 
 function dailyTimestamps(count: number) {
@@ -96,5 +100,32 @@ describe('getTimeAxisTicks', () => {
     const { ticks } = getTimeAxisTicks([], ChartPeriod.MONTH);
 
     expect(ticks).toEqual([]);
+  });
+});
+
+describe('formatFullDate', () => {
+  const timestamp = Date.UTC(2026, 11, 31, 16);
+
+  it('includes the year and day in UTC by default', () => {
+    const result = formatFullDate(timestamp, ChartPeriod.QUARTER);
+
+    expect(result).toBe('2026/12/31');
+  });
+
+  it('includes the local year and month for monthly candles', () => {
+    const result = formatFullDate(timestamp, ChartPeriod.YEAR, 'Asia/Tokyo');
+
+    expect(result).toBe('2027/1');
+  });
+
+  it('formats the full local date for the requested locale', () => {
+    const result = formatFullDate(
+      timestamp,
+      ChartPeriod.MONTH,
+      'Asia/Tokyo',
+      'en-GB'
+    );
+
+    expect(result).toBe('01/01/2027');
   });
 });

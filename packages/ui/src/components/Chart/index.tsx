@@ -4,6 +4,10 @@ export {
   type CalendarHeatmapDay,
   type CalendarHeatmapProps,
 } from './CalendarHeatmap';
+export {
+  CandlestickChart,
+  type CandlestickChartProps,
+} from './CandlestickChart';
 export type { HeatmapScaleLabels } from './chartHeatmapScale';
 export {
   DonutChart,
@@ -40,6 +44,8 @@ export {
 } from './TreemapChart';
 export {
   type BarSeries,
+  type CandlestickDatum,
+  type CandlestickLabels,
   ChartColor,
   type ChartHeight,
   ChartInterpolation,
